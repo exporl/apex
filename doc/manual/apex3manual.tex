@@ -1,0 +1,196 @@
+\documentclass[a4paper,12pt]{book}
+
+% APEX 3 user manual
+%
+% When editing the manual, please make use of the following commands:
+%
+% XML commands
+% \element  to denote an XML element, e.g. \element{procedure}
+% \id       to denote an ID in an XML file, e.g. \id{gain}
+% \xml      for any other XML fragment to be used inline
+% \begin{lstlising} for large inline XML fragments
+%
+% Other commands
+% \oxygen   to give specific information on the use of the OxygenXML program
+% \matlabcmd    for a matlab command
+% \filename for a file name
+% \apex     to print the name APEX
+
+% alt printscreen om screenshots te maken
+
+%% Uncomment to SHOW uncomplete chapters:
+%\newcommand{\incomplete}[1]{#1}
+%% Uncomment to HIDE uncomplete chapters:
+\newcommand{\incomplete}[1]{}
+
+
+\title{\apex User Manual}
+\author{Astrid van Wieringen, Tom Francart, Lot Van Deun}
+
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+
+\usepackage{a4wide}
+\usepackage{url}
+\usepackage[active]{srcltx}
+\usepackage{fancyhdr}
+\usepackage{makeidx}
+\usepackage{soul}           % highlight
+\usepackage{xspace}
+\usepackage[nolist]{acronym}
+%\usepackage[T1]{fontenc}
+%\usepackage{type1ec}
+\usepackage{bold-extra}
+\makeindex
+
+\pagestyle{fancy}
+\setlength{\headheight}{16pt}
+\renewcommand{\chaptermark}[1]{%
+\markboth{\chaptername
+\ \thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{%
+\markright{\thesection.\ #1}{}}
+\fancyhead[LE]{\bfseries\rightmark}
+\fancyhead[RO]{\bfseries\leftmark}
+\fancyhead[LO,RE]{}
+
+\usepackage{listings}
+\lstset{language=xml,%
+numbers=left,%
+tabsize=2,%
+basicstyle=\small,%
+frame=single,%
+columns=flexible,%
+basicstyle=\ttfamily,%
+escapeinside={(*@}{@*)},%
+%numbersep=25pt,%           %% don't overlap with other line numbers
+}
+
+%\lstset{tagstyle=\textbf}
+\lstset{markfirstintag=true}
+
+\newcommand{\element}[1]{\lstinline[markfirstintag=false]!<#1>!}
+\newcommand{\id}[1]{\lstinline!#1!}
+\newcommand{\attribute}[1]{\lstinline!#1!}
+\newcommand{\xml}[1]{\lstinline[markfirstintag=false]!#1!}
+
+\newcommand{\oxygen}[1]{\begin{verse}#1\end{verse}}
+
+
+\usepackage{booktabs}
+
+
+\newcommand{\matlabcmd}[1]{\texttt{#1}}
+
+% \newcommand{\concept}[1]{\texttt{#1}}
+% \newcommand{\module}[1]{\textsc{#1}}
+\newcommand{\concept}[1]{#1}
+\newcommand{\module}[1]{#1}
+
+
+\newcommand{\apex}{APEX~3\xspace}
+\newcommand{\filename}[1]{\texttt{#1}}
+
+%% PDF settings
+\usepackage{ifpdf}
+% epstopdf: Automatische Konvertierung EPS->PDF
+% benötigt pdflatex -shell-escape
+\ifpdf
+    \usepackage{epstopdf}
+\fi
+
+% hyperref: Verlinkte Referenzen
+% plainpages, pdfpagelabels: Ermöglicht die Verwendung mehrerer
+% nummerierter Abschnitte, die wieder bei 1 beginnen (z.B. Vorspann
+% roman, dann arabic), mit richtiger Kennzeichnung im Acrobat
+% Reader und ohne Warnungen wegen gleicher Seitenzahlen zu bekommen
+\usepackage[
+    \ifpdf{pdftex}
+    \else{hypertex}
+    \fi,
+    plainpages=false,pdfpagelabels=true]{hyperref}
+
+% PDF-Setup
+\hypersetup{
+pdftitle=APEX 3 users manual,
+  pdfsubject=manual,
+  pdfkeywords={APEX 3},
+  pdfauthor=Astrid van Wieringen,
+  plainpages=false,
+  pdfstartview=FitH 841,                % full page width, top of A4 page
+  bookmarksopen=true,                   % Show all bookmarks
+}
+
+\ifpdf
+    \hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+%	filecolor=black,
+%	urlcolor=black,
+	filecolor=blue,
+	urlcolor=magenta,
+    }
+\else
+    \hypersetup{
+	colorlinks=false,
+	linkcolor=black,
+	citecolor=black,
+	urlcolor=black,
+    }
+\fi
+
+
+\newcommand{\w}[1]{\hl{#1}}         % warn: to be removed in final copy
+
+\begin{document}
+
+\begin{acronym}
+\acro{gui}[GUI]{graphical user interface}
+\acro{xml}[XML]{eXtensible Markup Language}
+\acro{NIC}{Nucleus Implant Communicator}
+\acro{ci}[CI]{cochlear implant}
+\acro{ha}[HA]{hearing aid}
+\acro{amt}[AMT]{APEX Matlab Toolbox}
+\acro{srt}[SRT]{speech reception threshold}
+\end{acronym}
+
+
+
+\maketitle
+
+
+\section*{Warning}
+
+This is a preliminary version of the \apex user manual. It is still incomplete and bound to contain errors and inaccuracies. A message will be sent to the apexannounce mailing list when a full version is available.
+
+
+\newpage
+
+
+\tableofcontents
+
+
+\input{introduction}
+\input{basicconcepts}
+\input{creatingexperimentfiles}
+\input{examples}
+\incomplete{\input{examplestrategies}}
+\input{resultanalysis}
+
+\appendix
+
+\incomplete{\input{l34device}}          % no to be shown in preliminary version
+\incomplete{\input{matlab}}
+\incomplete{\input{plugins}}
+\incomplete{\input{customizing}}
+
+\bibliography{apexmanual}
+
+
+\printindex
+
+\end{document}

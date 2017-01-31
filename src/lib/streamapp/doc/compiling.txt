@@ -1,0 +1,55 @@
+/**
+
+ @page compiling
+
+@section sec_all general instructions
+
+normally you'll want to compile the code you want into a static library, but you can also use 
+just the source files you need.
+To make a library, you basically compile all source files into a library, including the platform 
+specific ones (those for the platform you use off course). Make sure exception support is turned on.
+
+@section sec_qt3 using Qt3 and qmake
+
+first make sure your environment is set (see srcV2-template.pro for what should be defined),
+make sure it contains QTDIR and QMAKESPEC, and make sure it finds your compiler and standard include paths.
+If you don't know how to do this, ask google, this is not a compiling-for-dummies manual.
+Execute these on a shell:
+@verbatim
+qmake src.pro
+make
+@endverbatim
+or for windows, first adjust the qmake.conf and remove the -DUNICODE line, then if you use nmake:
+@verbatim
+qmake src.pro
+nmake
+@endverbatim
+where src.pro is a copy of srcV2-template.pro which contains the config you want.
+
+@section sec_qt3vs using Qt and VisualStudio
+
+this is the easiest probably: open the streamapp.vcproj and hit build.
+The .vcproj was made for VS2005, if you use a lower version, just open the file with wordpad
+and put your version number om the first line. If it complains about unknown compiler options
+(/fp:precise for example), find a replacement for it, they are all there.
+
+@section seq_qt4 using Qt4 and qmake
+
+on linux you can do the same as in the first section, the difference is you get 2 makefiles, one
+for debug and one for release
+
+FIXME check if all options are really correct
+
+on windows, qmake has gotten even messier then in Qt3: for some reason the /MTd option is hardcoded
+in qmake, this is plainly stupid. Also, trolltech seem to think one cannot develop open source using 
+microsoft products, Qt4 free is only released for gcc, you need a patch for making it work with cl:
+again quite stupid, all basic microsoft tools are free of charge, including the IDE.
+Anyway, edit the qmake.conf (actually, you can just remove the entire DEFINES += line) After running 
+qmake you should open the generated makefile, and remove all /MDd occurences, they override /MTd, and
+the last one is probably the one you want.
+A nicer solution is to edit the msvc_nmake.cpp file before you build Qt, and fix the code starting at line 163
+to only use /MDd and /MD. This is a better options, since Qt itself won't be built using /MTd.
+
+FIXME find out how to exclude dlls, now it loads everything, network, xml, etc and none of them are ever used.
+
+*/

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.2/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.2/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment" version="1">
+  
+  
+
+  <!-- 
+  Regression test for AID (cfr Apex 2)
+  1. Sequential
+   
+    -->
+    
+   <procedure xsi:type="apex:adaptiveProcedureType">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>random</order>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>snr</adapt_parameter>
+      <start_value>3</start_value>
+      <stop_after_type>reversals</stop_after_type>
+      <stop_after>5</stop_after>
+      <larger_is_easier>true</larger_is_easier>
+      <stepsizes>
+        <stepsize begin="0" size="2"/>
+        <stepsize begin="2" size="1"/>
+       </stepsizes>
+    </parameters>
+    
+    <trials>
+      <trial id="trial1">
+        <answer>button_correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+      <trial id="trial2">
+        <answer>button_correct</answer>
+        <screen id="screen2"/>
+        <stimulus id="stimulus2"/>
+      </trial>
+      
+    </trials>
+   </procedure>
+  
+  <corrector xsi:type="apex:isequal"/> 
+    
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">true</feedback>
+    </reinforcement>
+    
+    <screen id="screen1">
+      <gridLayout height="2" width="2" id="main_layout">
+
+        <parameterlist id="paramlist" x="1" y="1">
+          <parameter name="original snr">snr</parameter>
+          <parameter name="5*snr+10" expression="5*x+10">snr</parameter>
+          <parameter name="5*snr-10" expression="5*x-10">snr</parameter>
+          <parameter name="-1*snr+0" expression="-1*x+0">snr</parameter>
+          <parameter name="-1*snr+3.7" expression="-1*x+3.7">snr</parameter>
+          <parameter>fixed</parameter>
+          <parameter name="markup">markupstring</parameter>
+        </parameterlist>
+        
+        <button x="1" y="2" id="button_correct">
+          <text>correct</text>
+        </button>
+        <button x="2" y="2" id="button_wrong">
+          <text>wrong</text>
+        </button>
+        
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button_correct"/>
+        <button id="button_wrong"/>
+        </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+    
+    <screen id="screen2">
+      <gridLayout height="2" width="1" id="min_layout">
+        <!--answerlabel x="1" y="1" id="helplabel"/-->
+        
+        <parameterlist x="1" y="1" id="parameterlist">
+          
+          <parameter>snr</parameter>      
+          <parameter>fixed</parameter>
+        </parameterlist>
+        
+        <gridLayout height="1" width="2" id="answer_layout" x="1" y="2">
+          <button x="1" y="1" id="button_c">
+            <text>Correct</text>
+          </button>
+          <button x="2" y="1" id="button_w">
+            <text>Wrong</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="button_c"/>
+        <button id="button_w"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  
+ <datablocks>
+   <uri_prefix>../stimuli</uri_prefix>
+   <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <uri>wd1.wav</uri>
+   </datablock>
+   <datablock id="rawdata2">
+     <device>wavdevice</device>
+     <uri>wd2.wav</uri>
+   </datablock>
+   
+   
+ </datablocks>
+  
+  <devices>
+   <device id="wavdevice" xsi:type="apex:wavDeviceType">
+            <driver>portaudio</driver>
+		<card>default</card>
+        <channels>2</channels>
+        <gain>0</gain>
+        <samplerate>44100</samplerate>
+        <buffersize>512</buffersize>
+   </device>
+ </devices>
+  
+  
+  
+  <filters>
+  <filter id="noisegen" xsi:type="apex:generator">
+    <device>wavdevice</device>
+    <channels>1</channels>
+    <continuous>false</continuous>
+    <type>noise</type>
+    <basegain>-20</basegain>
+    <gain id="snr">0</gain>
+    <frequency>0</frequency>
+    <phase>0</phase>
+  </filter>
+    
+  </filters>
+  
+  
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="fixed"/>
+      <parameter id="markupstring"/>
+    </fixed_parameters>
+    
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+     <fixedParameters>
+       <parameter id="fixed">1</parameter>
+       <parameter id="markupstring">word <b>bold</b></parameter>
+     </fixedParameters>
+    </stimulus>
+    
+    <stimulus id="stimulus2">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata2"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="fixed">2</parameter>
+        <parameter id="markupstring">word <i>italic</i></parameter>
+      </fixedParameters>
+    </stimulus>
+    </stimuli>
+  
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>noisegen</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    
+  </connections>
+  
+  
+</apex:apex>

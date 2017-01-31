@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.2/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.2/experiment.xsd"
+ xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+ version="1">
+  
+  
+
+  <!-- 
+  Regression test for adapting device parameters
+  
+  Result: gain of device varies according to user input
+    
+    -->
+    
+   <procedure xsi:type="apex:adaptiveProcedureType">
+    <parameters>
+      <presentations>100</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>gainR</adapt_parameter>
+      <start_value>0</start_value>
+      <stop_after_type>presentations</stop_after_type>
+      <stop_after>100</stop_after>
+      <larger_is_easier>false</larger_is_easier>
+      <stepsizes>
+        <stepsize begin="0" size="2"/>
+      </stepsizes>
+
+    </parameters>
+    
+    <trials>
+      <trial id="trial1" >
+        <answer>up</answer>
+        <screen id="screen1" />
+        <stimulus id="stimulus1" />
+      </trial>
+      
+    </trials>
+   </procedure>
+  
+<corrector xsi:type="apex:isequal" />
+  
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">false</feedback>
+    </reinforcement>
+    <screen id="screen1" >
+
+      <gridLayout height="1" width="3" id="main_layout">
+
+        <button x="1" y="1" id="up" >
+          <text>louder</text>
+        </button>
+        <button x="2" y="1" id="down" >
+          <text>quieter</text>
+        </button>
+        
+        <parameterlist id="pl" x="3" y="1">
+          <parameter>gainL</parameter>
+          <parameter>gainR</parameter>
+        </parameterlist>
+        
+        
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="up"/>
+        <button id="down"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  
+ <datablocks>
+   <uri_prefix>../stimuli</uri_prefix>
+   <datablock id="rawdata1" >
+      <device>wavdevice</device>
+      <uri>wd1.wav</uri>
+   </datablock>
+   
+ </datablocks><devices>
+   <device id="wavdevice" xsi:type="apex:wavDeviceType">
+            <driver>portaudio</driver>
+		<card>default</card>
+        <channels>2</channels>
+        <gain>0</gain>
+        <samplerate>44100</samplerate>
+        <buffersize>4096</buffersize>
+   </device>
+ </devices>
+  
+  
+  
+  <filters>
+<filter xsi:type="apex:amplifier" id="amplifier">
+  <device>wavdevice</device>
+  <channels>2</channels>
+  <basegain>0</basegain>
+  <gain id="gainL" channel="0">0</gain>
+  <gain id="gainR" channel="1">0</gain>
+</filter>    
+  </filters>
+  
+  <stimuli>
+    <fixed_parameters/>
+      
+    
+    <stimulus id="stimulus1" >
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1" />
+      </datablocks>
+      <variableParameters/>
+     <fixedParameters/>
+      </stimulus>
+       
+    </stimuli>
+    
+  
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>1</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>1</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>1</channel>
+      </to>
+    </connection>    
+    
+  </connections>
+  
+</apex:apex>

@@ -1,0 +1,250 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.2/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.2/experiment.xsd"
+ xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+ version="1">
+
+
+
+  <!--
+
+    Shows use of child mode: intro and outro movies, child panel, progressbar
+
+  -->
+
+  <procedure xsi:type="apex:adaptiveProcedureType">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <choices>3</choices>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>snr</adapt_parameter>
+      <start_value>3</start_value>
+      <stop_after_type>reversals</stop_after_type>
+      <stop_after>2</stop_after>
+      <larger_is_easier>true</larger_is_easier>
+      <stepsizes>
+        <stepsize begin="0" size="2"/>
+        <stepsize begin="2" size="1"/>
+      </stepsizes>
+    </parameters>
+
+    <trials>
+      <trial id="trial1" >
+        <screen id="screen1" />
+        <stimulus id="stimulus1" />
+        <stimulus id="stimulus2" />
+        <stimulus id="stimulus3" />
+        <stimulus id="stimulus4" />
+        <stimulus id="stimulus5" />
+        <standard id="standard1"/>
+      </trial>
+    </trials>
+  </procedure>
+
+  <corrector xsi:type="apex:alternatives">
+    <answers>
+      <answer number="1" value="button1"/>
+      <answer number="2" value="button2"/>
+      <answer number="3" value="button3"/>
+    </answers>
+  </corrector>
+
+  <screens>
+    <uri_prefix>../movies/</uri_prefix>
+    <general>
+      <showpanel>false</showpanel>
+    </general>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="3600">true</feedback>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    
+    <childmode>
+      <intro length="0">intro</intro>
+      <outro length="0">outro</outro>
+      <panel>reinforcement.swf</panel>
+    </childmode>
+    <screen id="screen1" >
+      <gridLayout height="3" width="3" id="answer_layout" x="1" y="1">
+        <flash x="1" y="2" id="button1">
+          <shortcut>LeftArrow</shortcut>
+          <uri>car/stillcar.swf</uri>
+          <feedback>
+            <highlight>car/rijden.swf</highlight>
+            <positive>car/goodcar.swf</positive>
+            <negative>car/badcar.swf</negative>
+          </feedback>
+        </flash>
+        <flash x="2" y="2" id="button2">
+          <shortcut>DownArrow</shortcut>
+          <uri>car/stillcar.swf</uri>
+          <feedback>
+            <highlight>car/rijden.swf</highlight>
+            <positive>car/goodcar.swf</positive>
+            <negative>car/badcar.swf</negative>
+          </feedback>
+        </flash>
+        <flash x="3" y="2" id="button3">
+          <shortcut>RightArrow</shortcut>
+          <uri>car/stillcar.swf</uri>
+          <feedback>
+            <highlight>car/rijden.swf</highlight>
+            <positive>car/goodcar.swf</positive>
+            <negative>car/badcar.swf</negative>
+          </feedback>
+        </flash>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+    <screen id="intro">
+      <gridLayout height="1" width="1" id="ilayout" x="1" y="1">
+        <flash x="1" y="1" id="blah" >
+          <shortcut>s</shortcut>
+          <uri>car/intro.swf</uri>
+        </flash>
+      </gridLayout>
+    </screen>
+    <screen id="outro">
+      <gridLayout height="1" width="1" id="olayout" x="1" y="1">
+        <flash x="1" y="1" id="oblah" >
+          <shortcut>s</shortcut>
+          <uri>car/outro.swf</uri>
+        </flash>
+      </gridLayout>
+    </screen>
+  </screens>
+
+
+  <datablocks>
+    <uri_prefix>../stimuli</uri_prefix>
+    <datablock id="rawdata1" >
+      <device>wavdevice</device>
+      <uri>wd1.wav</uri>
+    </datablock>
+    <datablock id="rawdata2" >
+      <device>wavdevice</device>
+      <uri>wd2.wav</uri>
+    </datablock>
+    <datablock id="rawdata3"  >
+      <device>wavdevice</device>
+      <uri>wd3.wav</uri>
+    </datablock>
+    <datablock id="rawdata4" >
+      <device>wavdevice</device>
+      <uri>wd4.wav</uri>
+    </datablock>
+    <datablock id="rawdata5"  >
+      <device>wavdevice</device>
+      <uri>wd5.wav</uri>
+    </datablock>
+    <datablock id="noisedata" >
+      <device>wavdevice</device>
+      <uri>ruisje.wav</uri>
+    </datablock>
+  </datablocks>
+
+
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>default</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>512</buffersize>
+    </device>
+  </devices>
+
+
+  <filters>
+  </filters>
+
+
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="snr"/>
+    </fixed_parameters>
+
+    <stimulus id="standard1" >
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="noisedata" />
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="snr">20</parameter>
+      </fixedParameters>
+    </stimulus>
+
+    <stimulus id="stimulus1" >
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1" />
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="snr">1</parameter>
+      </fixedParameters>
+    </stimulus>
+
+    <stimulus id="stimulus2" >
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata2" />
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="snr">2</parameter>
+      </fixedParameters>
+    </stimulus>
+
+    <stimulus id="stimulus3" >
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata3" />
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="snr">3</parameter>
+      </fixedParameters>
+    </stimulus>
+
+    <stimulus id="stimulus4" >
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata4" />
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="snr">4</parameter>
+      </fixedParameters>
+    </stimulus>
+
+    <stimulus id="stimulus5" >
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata5" />
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="snr">5</parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+
+  <connections/>
+  
+  <general>
+    <waitforstart>true</waitforstart>
+  </general>
+
+</apex:apex>

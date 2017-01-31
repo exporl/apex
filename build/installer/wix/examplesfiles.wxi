@@ -1,0 +1,1699 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.microsoft.com/wix/2003/01/wi"
+	xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+	
+	    <Component Id="ExamplesComp." DiskId="1"
+               Guid="">
+</Component>
+<Directory Id="DirIDxmlplugin" Name="3627." LongName="xmlplugin">
+    <Component Id="ExamplesCompxmlplugin" DiskId="1"
+               Guid="">
+<File Id="FileIDdatablockplugin29" Name="data6370.apx"
+                      LongName="datablockplugin.apx"
+                      Source="$(var.InstallPath)/examples/xmlplugin/datablockplugin.apx"
+                      />
+<File Id="FileIDautostimulus80" Name="auto2452.js"
+                      LongName="autostimulus.js"
+                      Source="$(var.InstallPath)/examples/xmlplugin/autostimulus.js"
+                      />
+<File Id="FileIDdatablockgenerator50" Name="data1669.js"
+                      LongName="datablockgenerator.js"
+                      Source="$(var.InstallPath)/examples/xmlplugin/datablockgenerator.js"
+                      />
+<File Id="FileIDscreenplugininlibrary75" Name="scre2074.apx"
+                      LongName="screenplugin-inlibrary.apx"
+                      Source="$(var.InstallPath)/examples/xmlplugin/screenplugin-inlibrary.apx"
+                      />
+<File Id="FileIDscreengenerator38" Name="scre3868.js"
+                      LongName="screengenerator.js"
+                      Source="$(var.InstallPath)/examples/xmlplugin/screengenerator.js"
+                      />
+<File Id="FileIDscreenplugininvalidscript72" Name="scre1555.apx"
+                      LongName="screenplugin-invalidscript.apx"
+                      Source="$(var.InstallPath)/examples/xmlplugin/screenplugin-invalidscript.apx"
+                      />
+<File Id="FileIDscreenplugininvalidxml8" Name="scre9384.apx"
+                      LongName="screenplugin-invalidxml.apx"
+                      Source="$(var.InstallPath)/examples/xmlplugin/screenplugin-invalidxml.apx"
+                      />
+<File Id="FileIDinvalidscript3" Name="inva5439.js"
+                      LongName="invalidscript.js"
+                      Source="$(var.InstallPath)/examples/xmlplugin/invalidscript.js"
+                      />
+<File Id="FileIDscreengeneratorinvalidxml31" Name="scre5798.js"
+                      LongName="screengenerator-invalidxml.js"
+                      Source="$(var.InstallPath)/examples/xmlplugin/screengenerator-invalidxml.js"
+                      />
+<File Id="FileIDscreengeneratorlibrary96" Name="scre2475.js"
+                      LongName="screengenerator-library.js"
+                      Source="$(var.InstallPath)/examples/xmlplugin/screengenerator-library.js"
+                      />
+<File Id="FileIDscreenplugin29" Name="scre929.apx"
+                      LongName="screenplugin.apx"
+                      Source="$(var.InstallPath)/examples/xmlplugin/screenplugin.apx"
+                      />
+<File Id="FileIDautotrials85" Name="auto6905.apx"
+                      LongName="autotrials.apx"
+                      Source="$(var.InstallPath)/examples/xmlplugin/autotrials.apx"
+                      />
+<File Id="FileIDautostimulus65" Name="auto1065.apx"
+                      LongName="autostimulus.apx"
+                      Source="$(var.InstallPath)/examples/xmlplugin/autostimulus.apx"
+                      />
+<File Id="FileIDscreengeneratormultiscreen31" Name="scre5970.js"
+                      LongName="screengenerator-multiscreen.js"
+                      Source="$(var.InstallPath)/examples/xmlplugin/screengenerator-multiscreen.js"
+                      />
+<File Id="FileIDstimulusgenerator37" Name="stim3130.js"
+                      LongName="stimulusgenerator.js"
+                      Source="$(var.InstallPath)/examples/xmlplugin/stimulusgenerator.js"
+                      />
+<File Id="FileIDscreenpluginmultiscreen6" Name="scre4874.apx"
+                      LongName="screenplugin-multiscreen.apx"
+                      Source="$(var.InstallPath)/examples/xmlplugin/screenplugin-multiscreen.apx"
+                      />
+<File Id="FileIDstimulusplugin65" Name="stim3553.apx"
+                      LongName="stimulusplugin.apx"
+                      Source="$(var.InstallPath)/examples/xmlplugin/stimulusplugin.apx"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDcontroller" Name="3265." LongName="controller">
+    <Component Id="ExamplesCompcontroller" DiskId="1"
+               Guid="">
+<File Id="FileIDmixermme94" Name="mixe9701.xml"
+                      LongName="mixer-mme.xml"
+                      Source="$(var.InstallPath)/examples/controller/mixer-mme.xml"
+                      />
+<File Id="FileIDpa541" Name="pa55576.xml"
+                      LongName="pa5.xml"
+                      Source="$(var.InstallPath)/examples/controller/pa5.xml"
+                      />
+<File Id="FileIDmixermmeoutofrange14" Name="mixe9008.xml"
+                      LongName="mixer-mmeoutofrange.xml"
+                      Source="$(var.InstallPath)/examples/controller/mixer-mmeoutofrange.xml"
+                      />
+<File Id="FileIDmixermmewrongchannel56" Name="mixe1748.xml"
+                      LongName="mixer-mmewrongchannel.xml"
+                      Source="$(var.InstallPath)/examples/controller/mixer-mmewrongchannel.xml"
+                      />
+<File Id="FileIDplugincontroller0" Name="plug8222.xml"
+                      LongName="plugincontroller.xml"
+                      Source="$(var.InstallPath)/examples/controller/plugincontroller.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDgeneral" Name="2276." LongName="general">
+    <Component Id="ExamplesCompgeneral" DiskId="1"
+               Guid="">
+<File Id="FileIDshowresults0" Name="show3684.xml"
+                      LongName="showresults.xml"
+                      Source="$(var.InstallPath)/examples/general/showresults.xml"
+                      />
+<File Id="FileIDautosave4" Name="auto5024.xml"
+                      LongName="autosave.xml"
+                      Source="$(var.InstallPath)/examples/general/autosave.xml"
+                      />
+<File Id="FileIDprefixinvalid58" Name="pref2997.xml"
+                      LongName="prefix-invalid.xml"
+                      Source="$(var.InstallPath)/examples/general/prefix-invalid.xml"
+                      />
+<File Id="FileIDprefixabsolutepath86" Name="pref7953.xml"
+                      LongName="prefix-absolutepath.xml"
+                      Source="$(var.InstallPath)/examples/general/prefix-absolutepath.xml"
+                      />
+<File Id="FileIDxmlerror38" Name="xmle9463.apx"
+                      LongName="xmlerror.apx"
+                      Source="$(var.InstallPath)/examples/general/xmlerror.apx"
+                      />
+<File Id="FileIDexitafter67" Name="exit2885.xml"
+                      LongName="exitafter.xml"
+                      Source="$(var.InstallPath)/examples/general/exitafter.xml"
+                      />
+<File Id="FileIDprefixfrommainconfig14" Name="pref1552.xml"
+                      LongName="prefix-frommainconfig.xml"
+                      Source="$(var.InstallPath)/examples/general/prefix-frommainconfig.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDscreen" Name="6754." LongName="screen">
+    <Component Id="ExamplesCompscreen" DiskId="1"
+               Guid="">
+<File Id="FileIDtextinputsetfocus22" Name="text3701.xml"
+                      LongName="textinput-setfocus.xml"
+                      Source="$(var.InstallPath)/examples/screen/textinput-setfocus.xml"
+                      />
+<File Id="FileIDscreenelementsslider31" Name="scre4679.xml"
+                      LongName="screenelements-slider.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-slider.xml"
+                      />
+<File Id="FileIDfeedbackshowcurrent60" Name="feed2884.xml"
+                      LongName="feedback-showcurrent.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-showcurrent.xml"
+                      />
+<File Id="FileIDstylesheetelements22" Name="styl3102.xml"
+                      LongName="stylesheet-elements.xml"
+                      Source="$(var.InstallPath)/examples/screen/stylesheet-elements.xml"
+                      />
+<File Id="FileIDcurrentfeedback99" Name="curr69.xml"
+                      LongName="currentfeedback.xml"
+                      Source="$(var.InstallPath)/examples/screen/currentfeedback.xml"
+                      />
+<File Id="FileIDscreenelementsspinbox74" Name="scre6589.xml"
+                      LongName="screenelements-spinbox.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-spinbox.xml"
+                      />
+<File Id="FileIDscreenelementslabelhtml64" Name="scre6553.xml"
+                      LongName="screenelements-label-html.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-label-html.xml"
+                      />
+<File Id="FileIDscreenelementslabelresize58" Name="scre4220.xml"
+                      LongName="screenelements-label-resize.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-label-resize.xml"
+                      />
+<File Id="FileIDscreenelementspicturesresize218" Name="scre3264.xml"
+                      LongName="screenelements-pictures-resize2.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-pictures-resize2.xml"
+                      />
+<File Id="FileIDscreenelementslabel69" Name="scre8893.xml"
+                      LongName="screenelements-label.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-label.xml"
+                      />
+<File Id="FileIDlayouthlayout59" Name="layo8817.xml"
+                      LongName="layout-hlayout.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-hlayout.xml"
+                      />
+<File Id="FileIDlayoutarcinvalidwidth1" Name="layo167.xml"
+                      LongName="layout-arc-invalidwidth.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-arc-invalidwidth.xml"
+                      />
+<File Id="FileIDlayoutgridstretchfactors21" Name="layo5624.xml"
+                      LongName="layout-grid-stretchfactors.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-grid-stretchfactors.xml"
+                      />
+<File Id="FileIDscreenelementsspinboxparameter77" Name="scre7032.xml"
+                      LongName="screenelements-spinbox-parameter.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-spinbox-parameter.xml"
+                      />
+<File Id="FileIDgeneralitiscreenpicture88" Name="gene6766.xml"
+                      LongName="general-itiscreen-picture.xml"
+                      Source="$(var.InstallPath)/examples/screen/general-itiscreen-picture.xml"
+                      />
+<File Id="FileIDpanelfeedbackpicturesfilenotfound87" Name="pane5916.apx"
+                      LongName="panel-feedbackpictures-filenotfound.apx"
+                      Source="$(var.InstallPath)/examples/screen/panel-feedbackpictures-filenotfound.apx"
+                      />
+<File Id="FileIDfeedbacknormal87" Name="feed3266.xml"
+                      LongName="feedback-normal.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-normal.xml"
+                      />
+<File Id="FileIDscreenelementsall86" Name="scre1427.xml"
+                      LongName="screenelements-all.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-all.xml"
+                      />
+<File Id="FileIDscreenelementspicturesfeedback77" Name="scre6775.xml"
+                      LongName="screenelements-pictures-feedback.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-pictures-feedback.xml"
+                      />
+<File Id="FileIDfeedbackplugin9" Name="feed2975.xml"
+                      LongName="feedback-plugin.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-plugin.xml"
+                      />
+<File Id="FileIDlayoutgridrowcolinvalid41" Name="layo9084.xml"
+                      LongName="layout-grid-rowcol-invalid.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-grid-rowcol-invalid.xml"
+                      />
+<File Id="FileIDlayoutarc82" Name="layo7359.xml"
+                      LongName="layout-arc.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-arc.xml"
+                      />
+<File Id="FileIDlayoutgridrowcol20" Name="layo3803.xml"
+                      LongName="layout-grid-rowcol.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-grid-rowcol.xml"
+                      />
+<File Id="FileIDlayoutgridnested79" Name="layo9571.xml"
+                      LongName="layout-grid-nested.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-grid-nested.xml"
+                      />
+<File Id="FileIDlayoutgrid39" Name="layo1239.xml"
+                      LongName="layout-grid.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-grid.xml"
+                      />
+<File Id="FileIDscreenelementspicturesinvalid16" Name="scre3495.xml"
+                      LongName="screenelements-pictures-invalid.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-pictures-invalid.xml"
+                      />
+<File Id="FileIDfeedbackonlywait66" Name="feed8075.apx"
+                      LongName="feedback-onlywait.apx"
+                      Source="$(var.InstallPath)/examples/screen/feedback-onlywait.apx"
+                      />
+<File Id="FileIDfeedbackledfeedbackshowcurrent29" Name="feed3691.xml"
+                      LongName="feedback-ledfeedback-showcurrent.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-ledfeedback-showcurrent.xml"
+                      />
+<File Id="FileIDscreenelementsbuttondisabled2" Name="scre4508.xml"
+                      LongName="screenelements-button-disabled.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-button-disabled.xml"
+                      />
+<File Id="FileIDlayoutmixed32" Name="layo5283.xml"
+                      LongName="layout-mixed.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-mixed.xml"
+                      />
+<File Id="FileIDbuttonshortcuts85" Name="butt2967.xml"
+                      LongName="button-shortcuts.xml"
+                      Source="$(var.InstallPath)/examples/screen/button-shortcuts.xml"
+                      />
+<File Id="FileIDfgcolor78" Name="fgco2921.xml"
+                      LongName="fgcolor.xml"
+                      Source="$(var.InstallPath)/examples/screen/fgcolor.xml"
+                      />
+<File Id="FileIDlayoutarcs76" Name="layo1399.xml"
+                      LongName="layout-arcs.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-arcs.xml"
+                      />
+<File Id="FileIDfeedbackmultistimboth32" Name="feed2190.xml"
+                      LongName="feedback-multistimboth.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-multistimboth.xml"
+                      />
+<File Id="FileIDfeedbackledfeedbacklocalization45" Name="feed6920.xml"
+                      LongName="feedback-ledfeedback-localization.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-ledfeedback-localization.xml"
+                      />
+<File Id="FileIDscreenelementsmatrix2" Name="scre8572.xml"
+                      LongName="screenelements-matrix.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-matrix.xml"
+                      />
+<File Id="FileIDscreenelementspictures90" Name="scre947.xml"
+                      LongName="screenelements-pictures.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-pictures.xml"
+                      />
+<File Id="FileIDscreenelementsparameterlist78" Name="scre4499.xml"
+                      LongName="screenelements-parameterlist.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-parameterlist.xml"
+                      />
+<File Id="FileIDnomenu97" Name="nome7842.xml"
+                      LongName="nomenu.xml"
+                      Source="$(var.InstallPath)/examples/screen/nomenu.xml"
+                      />
+<File Id="FileIDfeedbackanswer43" Name="feed4072.xml"
+                      LongName="feedback-answer.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-answer.xml"
+                      />
+<File Id="FileIDtextinputinputmasks25" Name="text5786.xml"
+                      LongName="textinput-inputmasks.xml"
+                      Source="$(var.InstallPath)/examples/screen/textinput-inputmasks.xml"
+                      />
+<File Id="FileIDscreenelementspicturesresize79" Name="scre6217.xml"
+                      LongName="screenelements-pictures-resize.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-pictures-resize.xml"
+                      />
+<File Id="FileIDscreenelementscheckbox78" Name="scre578.xml"
+                      LongName="screenelements-checkbox.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-checkbox.xml"
+                      />
+<File Id="FileIDflashdisabled92" Name="flas9236.xml"
+                      LongName="flash-disabled.xml"
+                      Source="$(var.InstallPath)/examples/screen/flash-disabled.xml"
+                      />
+<File Id="FileIDtextinputfont97" Name="text2253.xml"
+                      LongName="textinput-font.xml"
+                      Source="$(var.InstallPath)/examples/screen/textinput-font.xml"
+                      />
+<File Id="FileIDpanelnopanel94" Name="pane5529.xml"
+                      LongName="panel-nopanel.xml"
+                      Source="$(var.InstallPath)/examples/screen/panel-nopanel.xml"
+                      />
+<File Id="FileIDscreenelementssamename74" Name="scre6773.xml"
+                      LongName="screenelements-samename.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-samename.xml"
+                      />
+<File Id="FileIDfeedbacknohighlight87" Name="feed2737.xml"
+                      LongName="feedback-nohighlight.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-nohighlight.xml"
+                      />
+<File Id="FileIDscreenelementsallbutflash94" Name="scre4032.xml"
+                      LongName="screenelements-allbutflash.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-allbutflash.xml"
+                      />
+<File Id="FileIDfullscreen17" Name="full3216.xml"
+                      LongName="fullscreen.xml"
+                      Source="$(var.InstallPath)/examples/screen/fullscreen.xml"
+                      />
+<File Id="FileIDlayoutgridstretchfactorsinvalid13" Name="layo1742.xml"
+                      LongName="layout-grid-stretchfactors-invalid.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-grid-stretchfactors-invalid.xml"
+                      />
+<File Id="FileIDflashflashfeedback19" Name="flas4755.xml"
+                      LongName="flash-flashfeedback.xml"
+                      Source="$(var.InstallPath)/examples/screen/flash-flashfeedback.xml"
+                      />
+<File Id="FileIDfeedbackboth20" Name="feed7177.xml"
+                      LongName="feedback-both.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-both.xml"
+                      />
+<File Id="FileIDgeneralitiscreenannoyingtext98" Name="gene2437.xml"
+                      LongName="general-itiscreen-annoyingtext.xml"
+                      Source="$(var.InstallPath)/examples/screen/general-itiscreen-annoyingtext.xml"
+                      />
+<File Id="FileIDpanelfeedbackpictures20" Name="pane4760.apx"
+                      LongName="panel-feedbackpictures.apx"
+                      Source="$(var.InstallPath)/examples/screen/panel-feedbackpictures.apx"
+                      />
+<File Id="FileIDlayoutarcsingle83" Name="layo672.xml"
+                      LongName="layout-arc-single.xml"
+                      Source="$(var.InstallPath)/examples/screen/layout-arc-single.xml"
+                      />
+<File Id="FileIDscreenelementssliderhorizontal34" Name="scre3212.xml"
+                      LongName="screenelements-slider-horizontal.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-slider-horizontal.xml"
+                      />
+<File Id="FileIDpanelshowstopandrepeatbutton83" Name="pane386.xml"
+                      LongName="panel-showstopandrepeatbutton.xml"
+                      Source="$(var.InstallPath)/examples/screen/panel-showstopandrepeatbutton.xml"
+                      />
+<File Id="FileIDpanelshowrepeatbutton62" Name="pane7671.xml"
+                      LongName="panel-showrepeatbutton.xml"
+                      Source="$(var.InstallPath)/examples/screen/panel-showrepeatbutton.xml"
+                      />
+<File Id="FileIDscreenelementspicturenotfound10" Name="scre4469.xml"
+                      LongName="screenelements-picture-notfound.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-picture-notfound.xml"
+                      />
+<File Id="FileIDflashnormalfeedback87" Name="flas7451.xml"
+                      LongName="flash-normalfeedback.xml"
+                      Source="$(var.InstallPath)/examples/screen/flash-normalfeedback.xml"
+                      />
+<File Id="FileIDscreenelementspicturesdisabled7" Name="scre3444.xml"
+                      LongName="screenelements-pictures-disabled.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-pictures-disabled.xml"
+                      />
+<File Id="FileIDfeedbackmultistimshowcurrent95" Name="feed1602.xml"
+                      LongName="feedback-multistimshowcurrent.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-multistimshowcurrent.xml"
+                      />
+<File Id="FileIDfeedbackledfeedback61" Name="feed7455.xml"
+                      LongName="feedback-ledfeedback.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-ledfeedback.xml"
+                      />
+<File Id="FileIDscreenelementsanswerlabel9" Name="scre1704.xml"
+                      LongName="screenelements-answerlabel.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-answerlabel.xml"
+                      />
+<File Id="FileIDpanelshowstatuspicture7" Name="pane2704.xml"
+                      LongName="panel-showstatuspicture.xml"
+                      Source="$(var.InstallPath)/examples/screen/panel-showstatuspicture.xml"
+                      />
+<File Id="FileIDscreenelementslabelbgcolor51" Name="scre3163.xml"
+                      LongName="screenelements-label-bgcolor.xml"
+                      Source="$(var.InstallPath)/examples/screen/screenelements-label-bgcolor.xml"
+                      />
+<File Id="FileIDfeedbackmultistimnormal76" Name="feed3903.xml"
+                      LongName="feedback-multistimnormal.xml"
+                      Source="$(var.InstallPath)/examples/screen/feedback-multistimnormal.xml"
+                      />
+<File Id="FileIDpanelshowstopbutton23" Name="pane4049.xml"
+                      LongName="panel-showstopbutton.xml"
+                      Source="$(var.InstallPath)/examples/screen/panel-showstopbutton.xml"
+                      />
+</Component>
+<Directory Id="DirIDprefix" Name="5935." LongName="prefix">
+    <Component Id="ExamplesCompprefix" DiskId="1"
+               Guid="">
+<File Id="FileIDprefixapexconfig95" Name="pref9171.xml"
+                      LongName="prefix-apexconfig.xml"
+                      Source="$(var.InstallPath)/examples/screen/prefix/prefix-apexconfig.xml"
+                      />
+<File Id="FileIDprefixinline2" Name="pref5820.xml"
+                      LongName="prefix-inline.xml"
+                      Source="$(var.InstallPath)/examples/screen/prefix/prefix-inline.xml"
+                      />
+</Component>
+</Directory>
+</Directory>
+<Directory Id="DirIDl34" Name="7995." LongName="l34">
+    <Component Id="ExamplesCompl34" DiskId="1"
+               Guid="">
+<File Id="FileIDbilateral95" Name="bila3534.xml"
+                      LongName="bilateral.xml"
+                      Source="$(var.InstallPath)/examples/l34/bilateral.xml"
+                      />
+<File Id="FileIDsimpleQICdummy60" Name="simp5480.xml"
+                      LongName="simpleQIC-dummy.xml"
+                      Source="$(var.InstallPath)/examples/l34/simpleQIC-dummy.xml"
+                      />
+<File Id="FileIDmapping233" Name="mapp6919.xml"
+                      LongName="mapping2.xml"
+                      Source="$(var.InstallPath)/examples/l34/mapping2.xml"
+                      />
+<File Id="FileIDsimpleAseq40" Name="simp8655.xml"
+                      LongName="simpleAseq.xml"
+                      Source="$(var.InstallPath)/examples/l34/simpleAseq.xml"
+                      />
+<File Id="FileIDr126wizard96" Name="r1264332.xml"
+                      LongName="r126wizard.xml"
+                      Source="$(var.InstallPath)/examples/l34/r126wizard.xml"
+                      />
+<File Id="FileIDbilateralsinglepulse89" Name="bila8874.xml"
+                      LongName="bilateral-singlepulse.xml"
+                      Source="$(var.InstallPath)/examples/l34/bilateral-singlepulse.xml"
+                      />
+<File Id="FileIDmappingincompletemap54" Name="mapp6574.xml"
+                      LongName="mapping-incompletemap.xml"
+                      Source="$(var.InstallPath)/examples/l34/mapping-incompletemap.xml"
+                      />
+<File Id="FileIDaddinvalidfilter12" Name="addi8704.xml"
+                      LongName="addinvalidfilter.xml"
+                      Source="$(var.InstallPath)/examples/l34/addinvalidfilter.xml"
+                      />
+<File Id="FileIDinvaliddatablock60" Name="inva2115.xml"
+                      LongName="invaliddatablock.xml"
+                      Source="$(var.InstallPath)/examples/l34/invaliddatablock.xml"
+                      />
+<File Id="FileIDsimpleQIC22" Name="simp508.xml"
+                      LongName="simpleQIC.xml"
+                      Source="$(var.InstallPath)/examples/l34/simpleQIC.xml"
+                      />
+<File Id="FileIDL34Sync60" Name="L34S3411.xml"
+                      LongName="L34Sync.xml"
+                      Source="$(var.InstallPath)/examples/l34/L34Sync.xml"
+                      />
+<File Id="FileIDmapping155" Name="mapp3661.xml"
+                      LongName="mapping1.xml"
+                      Source="$(var.InstallPath)/examples/l34/mapping1.xml"
+                      />
+<File Id="FileIDsimpleXML2" Name="simp5262.xml"
+                      LongName="simpleXML.xml"
+                      Source="$(var.InstallPath)/examples/l34/simpleXML.xml"
+                      />
+<File Id="FileIDwordsQIC95" Name="word8128.xml"
+                      LongName="wordsQIC.xml"
+                      Source="$(var.InstallPath)/examples/l34/wordsQIC.xml"
+                      />
+<File Id="FileIDL34DummySync9" Name="L34D2757.xml"
+                      LongName="L34DummySync.xml"
+                      Source="$(var.InstallPath)/examples/l34/L34DummySync.xml"
+                      />
+<File Id="FileIDsetvolume18" Name="setv8500.xml"
+                      LongName="setvolume.xml"
+                      Source="$(var.InstallPath)/examples/l34/setvolume.xml"
+                      />
+<File Id="FileIDtriggertest99" Name="trig4855.xml"
+                      LongName="triggertest.xml"
+                      Source="$(var.InstallPath)/examples/l34/triggertest.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDdatablocks" Name="7566." LongName="datablocks">
+    <Component Id="ExamplesCompdatablocks" DiskId="1"
+               Guid="">
+<File Id="FileIDsimultaneous47" Name="simu7495.xml"
+                      LongName="simultaneous.xml"
+                      Source="$(var.InstallPath)/examples/datablocks/simultaneous.xml"
+                      />
+<File Id="FileIDdatablockloop76" Name="data7136.xml"
+                      LongName="datablock-loop.xml"
+                      Source="$(var.InstallPath)/examples/datablocks/datablock-loop.xml"
+                      />
+<File Id="FileIDdatablocknodevice3" Name="data8956.apx"
+                      LongName="datablock-nodevice.apx"
+                      Source="$(var.InstallPath)/examples/datablocks/datablock-nodevice.apx"
+                      />
+<File Id="FileIDdatablocknodeviceinvalid27" Name="data7737.apx"
+                      LongName="datablock-nodevice-invalid.apx"
+                      Source="$(var.InstallPath)/examples/datablocks/datablock-nodevice-invalid.apx"
+                      />
+<File Id="FileIDwavnotfound19" Name="wavn5476.xml"
+                      LongName="wavnotfound.xml"
+                      Source="$(var.InstallPath)/examples/datablocks/wavnotfound.xml"
+                      />
+<File Id="FileIDsilencedatablock99" Name="sile1481.xml"
+                      LongName="silencedatablock.xml"
+                      Source="$(var.InstallPath)/examples/datablocks/silencedatablock.xml"
+                      />
+<File Id="FileIDdatablockunconnected25" Name="data6721.xml"
+                      LongName="datablock-unconnected.xml"
+                      Source="$(var.InstallPath)/examples/datablocks/datablock-unconnected.xml"
+                      />
+<File Id="FileIDplaymatrixinvalidrow55" Name="play3325.xml"
+                      LongName="playmatrix-invalidrow.xml"
+                      Source="$(var.InstallPath)/examples/datablocks/playmatrix-invalidrow.xml"
+                      />
+<File Id="FileIDdatablocknotfound98" Name="data7368.xml"
+                      LongName="datablocknotfound.xml"
+                      Source="$(var.InstallPath)/examples/datablocks/datablocknotfound.xml"
+                      />
+<File Id="FileIDcopydatablock54" Name="copy749.xml"
+                      LongName="copydatablock.xml"
+                      Source="$(var.InstallPath)/examples/datablocks/copydatablock.xml"
+                      />
+<File Id="FileIDplaymatrix7" Name="play7400.xml"
+                      LongName="playmatrix.xml"
+                      Source="$(var.InstallPath)/examples/datablocks/playmatrix.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDfilters" Name="5501." LongName="filters">
+    <Component Id="ExamplesCompfilters" DiskId="1"
+               Guid="">
+<File Id="FileIDsinglepulsedefaultparameters3" Name="sing2504.xml"
+                      LongName="singlepulse-defaultparameters.xml"
+                      Source="$(var.InstallPath)/examples/filters/singlepulse-defaultparameters.xml"
+                      />
+<File Id="FileIDcomplexprocessing33" Name="comp813.xml"
+                      LongName="complexprocessing.xml"
+                      Source="$(var.InstallPath)/examples/filters/complexprocessing.xml"
+                      />
+<File Id="FileIDsinegenerator42" Name="sine9779.xml"
+                      LongName="sinegenerator.xml"
+                      Source="$(var.InstallPath)/examples/filters/sinegenerator.xml"
+                      />
+<File Id="FileIDrandomjump81" Name="rand114.xml"
+                      LongName="randomjump.xml"
+                      Source="$(var.InstallPath)/examples/filters/randomjump.xml"
+                      />
+<File Id="FileIDwavamplifierbadchannel63" Name="wava9913.xml"
+                      LongName="wavamplifier-badchannel.xml"
+                      Source="$(var.InstallPath)/examples/filters/wavamplifier-badchannel.xml"
+                      />
+<File Id="FileIDdataloopcontinuous94" Name="data9750.xml"
+                      LongName="dataloop-continuous.xml"
+                      Source="$(var.InstallPath)/examples/filters/dataloop-continuous.xml"
+                      />
+<File Id="FileIDwavfadeoutlin40" Name="wavf2436.xml"
+                      LongName="wavfadeoutlin.xml"
+                      Source="$(var.InstallPath)/examples/filters/wavfadeoutlin.xml"
+                      />
+<File Id="FileIDwavfadeoutcos0" Name="wavf2610.xml"
+                      LongName="wavfadeoutcos.xml"
+                      Source="$(var.InstallPath)/examples/filters/wavfadeoutcos.xml"
+                      />
+<File Id="FileIDamplifierdefaultparameters49" Name="ampl273.xml"
+                      LongName="amplifier-defaultparameters.xml"
+                      Source="$(var.InstallPath)/examples/filters/amplifier-defaultparameters.xml"
+                      />
+<File Id="FileIDamplifiersetgain68" Name="ampl1451.xml"
+                      LongName="amplifier-setgain.xml"
+                      Source="$(var.InstallPath)/examples/filters/amplifier-setgain.xml"
+                      />
+<File Id="FileIDdataloop46" Name="data8141.xml"
+                      LongName="dataloop.xml"
+                      Source="$(var.InstallPath)/examples/filters/dataloop.xml"
+                      />
+<File Id="FileIDgaininvalidchannel70" Name="gain7276.xml"
+                      LongName="gain-invalidchannel.xml"
+                      Source="$(var.InstallPath)/examples/filters/gain-invalidchannel.xml"
+                      />
+<File Id="FileIDdataloop2simultaneous20" Name="data5872.xml"
+                      LongName="dataloop-2simultaneous.xml"
+                      Source="$(var.InstallPath)/examples/filters/dataloop-2simultaneous.xml"
+                      />
+<File Id="FileIDwavamplifier40" Name="wava2631.xml"
+                      LongName="wavamplifier.xml"
+                      Source="$(var.InstallPath)/examples/filters/wavamplifier.xml"
+                      />
+<File Id="FileIDwavfadeincos88" Name="wavf9060.xml"
+                      LongName="wavfadeincos.xml"
+                      Source="$(var.InstallPath)/examples/filters/wavfadeincos.xml"
+                      />
+<File Id="FileIDfiltersonlyfilter89" Name="filt6702.xml"
+                      LongName="filters-onlyfilter.xml"
+                      Source="$(var.InstallPath)/examples/filters/filters-onlyfilter.xml"
+                      />
+<File Id="FileIDsinegensetgain85" Name="sine3828.xml"
+                      LongName="sinegen-setgain.xml"
+                      Source="$(var.InstallPath)/examples/filters/sinegen-setgain.xml"
+                      />
+<File Id="FileIDnoisegensetgain62" Name="nois6386.xml"
+                      LongName="noisegen-setgain.xml"
+                      Source="$(var.InstallPath)/examples/filters/noisegen-setgain.xml"
+                      />
+<File Id="FileIDfilterssinglepulsepolarity72" Name="filt3167.xml"
+                      LongName="filters-singlepulsepolarity.xml"
+                      Source="$(var.InstallPath)/examples/filters/filters-singlepulsepolarity.xml"
+                      />
+<File Id="FileIDsinegensetfrequency56" Name="sine1224.xml"
+                      LongName="sinegen-setfrequency.xml"
+                      Source="$(var.InstallPath)/examples/filters/sinegen-setfrequency.xml"
+                      />
+<File Id="FileIDwavfadeinlin42" Name="wavf8820.xml"
+                      LongName="wavfadeinlin.xml"
+                      Source="$(var.InstallPath)/examples/filters/wavfadeinlin.xml"
+                      />
+<File Id="FileIDdataloopjump31" Name="data1155.xml"
+                      LongName="dataloop-jump.xml"
+                      Source="$(var.InstallPath)/examples/filters/dataloop-jump.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDsoundcard" Name="5391." LongName="soundcard">
+    <Component Id="ExamplesCompsoundcard" DiskId="1"
+               Guid="">
+<File Id="FileIDasioinvalidbuffersize74" Name="asio5767.xml"
+                      LongName="asio-invalidbuffersize.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/asio-invalidbuffersize.xml"
+                      />
+<File Id="FileIDportaudio6channels59" Name="port1190.xml"
+                      LongName="portaudio-6channels.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/portaudio-6channels.xml"
+                      />
+<File Id="FileIDbufferunderrun60" Name="buff6730.xml"
+                      LongName="bufferunderrun.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/bufferunderrun.xml"
+                      />
+<File Id="FileIDbasicwavjack4" Name="basi1867.xml"
+                      LongName="basicwav-jack.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/basicwav-jack.xml"
+                      />
+<File Id="FileIDmixersetsoundmaxmixer45" Name="mixe2954.xml"
+                      LongName="mixer-setsoundmaxmixer.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/mixer-setsoundmaxmixer.xml"
+                      />
+<File Id="FileIDportaudioinvalidsamplerate65" Name="port4377.xml"
+                      LongName="portaudio-invalidsamplerate.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/portaudio-invalidsamplerate.xml"
+                      />
+<File Id="FileIDportaudioinvalidnumberofchannels8" Name="port3050.xml"
+                      LongName="portaudio-invalidnumberofchannels.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/portaudio-invalidnumberofchannels.xml"
+                      />
+<File Id="FileIDbufferunderrunplugin74" Name="buff3639.xml"
+                      LongName="bufferunderrun-plugin.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/bufferunderrun-plugin.xml"
+                      />
+<File Id="FileIDmixersetdefaultmmemixer14" Name="mixe364.xml"
+                      LongName="mixer-setdefaultmmemixer.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/mixer-setdefaultmmemixer.xml"
+                      />
+<File Id="FileIDbasicwavportaudio30" Name="basi2645.xml"
+                      LongName="basicwav-portaudio.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/basicwav-portaudio.xml"
+                      />
+<File Id="FileIDdefaultsettings24" Name="defa1192.apx"
+                      LongName="defaultsettings.apx"
+                      Source="$(var.InstallPath)/examples/soundcard/defaultsettings.apx"
+                      />
+<File Id="FileIDasioinvalidsamplerate54" Name="asio6777.xml"
+                      LongName="asio-invalidsamplerate.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/asio-invalidsamplerate.xml"
+                      />
+<File Id="FileIDcardnameinline55" Name="card2572.xml"
+                      LongName="cardname-inline.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/cardname-inline.xml"
+                      />
+<File Id="FileIDbasicwavcoreaudio96" Name="basi5058.xml"
+                      LongName="basicwav-coreaudio.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/basicwav-coreaudio.xml"
+                      />
+<File Id="FileIDwavpadzero82" Name="wav-2215.xml"
+                      LongName="wav-padzero.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/wav-padzero.xml"
+                      />
+<File Id="FileIDportaudiocardnotfound6" Name="port4760.xml"
+                      LongName="portaudio-cardnotfound.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/portaudio-cardnotfound.xml"
+                      />
+<File Id="FileIDportaudiobigbuffersize91" Name="port79.xml"
+                      LongName="portaudio-bigbuffersize.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/portaudio-bigbuffersize.xml"
+                      />
+<File Id="FileIDmono2channel46" Name="mono9022.xml"
+                      LongName="mono-2channel.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/mono-2channel.xml"
+                      />
+<File Id="FileIDportaudioinvalidcard48" Name="port9072.xml"
+                      LongName="portaudio-invalidcard.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/portaudio-invalidcard.xml"
+                      />
+<File Id="FileIDasioinvalidnumberofchannels0" Name="asio2542.xml"
+                      LongName="asio-invalidnumberofchannels.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/asio-invalidnumberofchannels.xml"
+                      />
+<File Id="FileIDasioinvalidcard90" Name="asio4786.xml"
+                      LongName="asio-invalidcard.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/asio-invalidcard.xml"
+                      />
+<File Id="FileIDbasicwavasio99" Name="basi5030.xml"
+                      LongName="basicwav-asio.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/basicwav-asio.xml"
+                      />
+<File Id="FileIDportaudioinvalidbuffersize10" Name="port7105.xml"
+                      LongName="portaudio-invalidbuffersize.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/portaudio-invalidbuffersize.xml"
+                      />
+<File Id="FileIDgaininvalidchannel80" Name="gain1875.xml"
+                      LongName="gain-invalidchannel.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/gain-invalidchannel.xml"
+                      />
+<File Id="FileIDclipping30" Name="clip1397.xml"
+                      LongName="clipping.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/clipping.xml"
+                      />
+<File Id="FileIDmixersetrmemixer9" Name="mixe3472.xml"
+                      LongName="mixer-setrmemixer.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/mixer-setrmemixer.xml"
+                      />
+<File Id="FileIDasiomultiplecard56" Name="asio2442.xml"
+                      LongName="asio-multiplecard.xml"
+                      Source="$(var.InstallPath)/examples/soundcard/asio-multiplecard.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDaudiometer_stimuli" Name="316." LongName="audiometer_stimuli">
+    <Component Id="ExamplesCompaudiometer_stimuli" DiskId="1"
+               Guid="">
+<File Id="FileID2000_stimulus96" Name="20006472.wav"
+                      LongName="2000_stimulus.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/2000_stimulus.wav"
+                      />
+<File Id="FileID2000_10sec76" Name="200033.wav"
+                      LongName="2000_10sec.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/2000_10sec.wav"
+                      />
+<File Id="FileID1000_stimulus88" Name="10007916.wav"
+                      LongName="1000_stimulus.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/1000_stimulus.wav"
+                      />
+<File Id="FileID250_stimulus75" Name="250_4957.wav"
+                      LongName="250_stimulus.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/250_stimulus.wav"
+                      />
+<File Id="FileID4000_stimulus16" Name="40002312.wav"
+                      LongName="4000_stimulus.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/4000_stimulus.wav"
+                      />
+<File Id="FileID1000_10sec73" Name="10002220.wav"
+                      LongName="1000_10sec.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/1000_10sec.wav"
+                      />
+<File Id="FileID500_10sec6" Name="500_4213.wav"
+                      LongName="500_10sec.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/500_10sec.wav"
+                      />
+<File Id="FileID500_stimulus72" Name="500_7533.wav"
+                      LongName="500_stimulus.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/500_stimulus.wav"
+                      />
+<File Id="FileID8000_10sec59" Name="80006352.wav"
+                      LongName="8000_10sec.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/8000_10sec.wav"
+                      />
+<File Id="FileID8000_stimulus85" Name="80003459.wav"
+                      LongName="8000_stimulus.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/8000_stimulus.wav"
+                      />
+<File Id="FileID4000_10sec87" Name="40004154.wav"
+                      LongName="4000_10sec.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/4000_10sec.wav"
+                      />
+<File Id="FileID250_10sec13" Name="250_4181.wav"
+                      LongName="250_10sec.wav"
+                      Source="$(var.InstallPath)/examples/audiometer_stimuli/250_10sec.wav"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDpluginfilter" Name="4737." LongName="pluginfilter">
+    <Component Id="ExamplesComppluginfilter" DiskId="1"
+               Guid="">
+<File Id="FileIDscamblespectrumfilter_calibration20" Name="scam4919.apx"
+                      LongName="scamblespectrumfilter_calibration.apx"
+                      Source="$(var.InstallPath)/examples/pluginfilter/scamblespectrumfilter_calibration.apx"
+                      />
+<File Id="FileIDmatlabfilter63" Name="matl5214.xml"
+                      LongName="matlabfilter.xml"
+                      Source="$(var.InstallPath)/examples/pluginfilter/matlabfilter.xml"
+                      />
+<File Id="FileIDscamblespectrumfilter44" Name="scam791.apx"
+                      LongName="scamblespectrumfilter.apx"
+                      Source="$(var.InstallPath)/examples/pluginfilter/scamblespectrumfilter.apx"
+                      />
+<File Id="FileIDpluginfilter9" Name="plug80.xml"
+                      LongName="pluginfilter.xml"
+                      Source="$(var.InstallPath)/examples/pluginfilter/pluginfilter.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDcorrector" Name="4001." LongName="corrector">
+    <Component Id="ExamplesCompcorrector" DiskId="1"
+               Guid="">
+<File Id="FileIDcvc7" Name="cvc7027.xml"
+                      LongName="cvc.xml"
+                      Source="$(var.InstallPath)/examples/corrector/cvc.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDstimuli" Name="943." LongName="stimuli">
+    <Component Id="ExamplesCompstimuli" DiskId="1"
+               Guid="">
+<File Id="FileIDwd451" Name="wd49494.wav"
+                      LongName="wd4.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/wd4.wav"
+                      />
+<File Id="FileIDsimpleL3459" Name="simp297.xml"
+                      LongName="simpleL34.xml"
+                      Source="$(var.InstallPath)/examples/stimuli/simpleL34.xml"
+                      />
+<File Id="FileIDruisje19" Name="ruis4400.wav"
+                      LongName="ruisje.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/ruisje.wav"
+                      />
+<File Id="FileIDwd546" Name="wd58704.wav"
+                      LongName="wd5.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/wd5.wav"
+                      />
+<File Id="FileIDmouse36" Name="mous4607.wav"
+                      LongName="mouse.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/mouse.wav"
+                      />
+<File Id="FileIDsin1000Hzshort58" Name="sin19784.wav"
+                      LongName="sin1000Hz-short.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/sin1000Hz-short.wav"
+                      />
+<File Id="FileIDwd255" Name="wd25940.wav"
+                      LongName="wd2.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/wd2.wav"
+                      />
+<File Id="FileIDsentence37" Name="sent3279.wav"
+                      LongName="sentence.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/sentence.wav"
+                      />
+<File Id="FileIDwavoutputtestdataloop54" Name="wavo2299.wav"
+                      LongName="wavoutputtest-dataloop.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/wavoutputtest-dataloop.wav"
+                      />
+<File Id="FileIDa_stimuli_datablocks50" Name="a_st7578.xml"
+                      LongName="a_stimuli_datablocks.xml"
+                      Source="$(var.InstallPath)/examples/stimuli/a_stimuli_datablocks.xml"
+                      />
+<File Id="FileIDwd666" Name="wd65808.wav"
+                      LongName="wd6.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/wd6.wav"
+                      />
+<File Id="FileIDsine20" Name="sine4126.wav"
+                      LongName="sine.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/sine.wav"
+                      />
+<File Id="FileIDwd156" Name="wd11377.wav"
+                      LongName="wd1.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/wd1.wav"
+                      />
+<File Id="FileIDwd729" Name="wd75158.wav"
+                      LongName="wd7.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/wd7.wav"
+                      />
+<File Id="FileID_Input44_284" Name="_Inp1576.wav"
+                      LongName="_Input44_2.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/_Input44_2.wav"
+                      />
+<File Id="FileIDwd1mono42" Name="wd1-441.wav"
+                      LongName="wd1-mono.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/wd1-mono.wav"
+                      />
+<File Id="FileIDwd332" Name="wd31770.wav"
+                      LongName="wd3.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/wd3.wav"
+                      />
+<File Id="FileIDclick85" Name="clic5522.wav"
+                      LongName="click.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/click.wav"
+                      />
+<File Id="FileIDhouse88" Name="hous9202.wav"
+                      LongName="house.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/house.wav"
+                      />
+<File Id="FileIDwivineruis87" Name="wivi3996.wav"
+                      LongName="wivineruis.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/wivineruis.wav"
+                      />
+<File Id="FileIDplaymatrixemptycell35" Name="play449.xml"
+                      LongName="playmatrix-emptycell.xml"
+                      Source="$(var.InstallPath)/examples/stimuli/playmatrix-emptycell.xml"
+                      />
+<File Id="FileIDbouwjaarv59" Name="bouw3780.wav"
+                      LongName="bouwjaarv.wav"
+                      Source="$(var.InstallPath)/examples/stimuli/bouwjaarv.wav"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDcalibration" Name="6351." LongName="calibration">
+    <Component Id="ExamplesCompcalibration" DiskId="1"
+               Guid="">
+<File Id="FileIDcalibrationautomatic30" Name="cali4775.xml"
+                      LongName="calibration-automatic.xml"
+                      Source="$(var.InstallPath)/examples/calibration/calibration-automatic.xml"
+                      />
+<File Id="FileIDcalibrationdataloop22" Name="cali8419.xml"
+                      LongName="calibration-dataloop.xml"
+                      Source="$(var.InstallPath)/examples/calibration/calibration-dataloop.xml"
+                      />
+<File Id="FileIDautocalibrationlocalization50" Name="auto2331.apx"
+                      LongName="autocalibration-localization.apx"
+                      Source="$(var.InstallPath)/examples/calibration/autocalibration-localization.apx"
+                      />
+<File Id="FileIDcalibrationkeepparameterstate88" Name="cali9139.xml"
+                      LongName="calibration-keepparameterstate.xml"
+                      Source="$(var.InstallPath)/examples/calibration/calibration-keepparameterstate.xml"
+                      />
+<File Id="FileIDcalibration29" Name="cali2706.xml"
+                      LongName="calibration.xml"
+                      Source="$(var.InstallPath)/examples/calibration/calibration.xml"
+                      />
+<File Id="FileIDcalibrationautomaticdummyslm82" Name="cali6434.xml"
+                      LongName="calibration-automatic-dummyslm.xml"
+                      Source="$(var.InstallPath)/examples/calibration/calibration-automatic-dummyslm.xml"
+                      />
+<File Id="FileIDcalibrationautomaticinvalidslm28" Name="cali5802.xml"
+                      LongName="calibration-automatic-invalidslm.xml"
+                      Source="$(var.InstallPath)/examples/calibration/calibration-automatic-invalidslm.xml"
+                      />
+<File Id="FileIDcalibrationconnections34" Name="cali7531.xml"
+                      LongName="calibration-connections.xml"
+                      Source="$(var.InstallPath)/examples/calibration/calibration-connections.xml"
+                      />
+<File Id="FileIDcalibrationstimnotfound28" Name="cali1464.xml"
+                      LongName="calibration-stimnotfound.xml"
+                      Source="$(var.InstallPath)/examples/calibration/calibration-stimnotfound.xml"
+                      />
+<File Id="FileIDcalibrationautomaticbk225025" Name="cali8268.xml"
+                      LongName="calibration-automatic-bk2250.xml"
+                      Source="$(var.InstallPath)/examples/calibration/calibration-automatic-bk2250.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDprocedure" Name="5501." LongName="procedure">
+    <Component Id="ExamplesCompprocedure" DiskId="1"
+               Guid="">
+<File Id="FileIDmultiprocedureonebyone20" Name="mult4079.xml"
+                      LongName="multiprocedure-onebyone.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiprocedure-onebyone.xml"
+                      />
+<File Id="FileIDtrialnostimulus18" Name="tria3409.xml"
+                      LongName="trial-nostimulus.xml"
+                      Source="$(var.InstallPath)/examples/procedure/trial-nostimulus.xml"
+                      />
+<File Id="FileIDheartrainprocedure_short88" Name="hear2228.apx"
+                      LongName="heartrainprocedure_short.apx"
+                      Source="$(var.InstallPath)/examples/procedure/heartrainprocedure_short.apx"
+                      />
+<File Id="FileIDselectrandom62" Name="sele8019.xml"
+                      LongName="selectrandom.xml"
+                      Source="$(var.InstallPath)/examples/procedure/selectrandom.xml"
+                      />
+<File Id="FileIDaidselectrandom0" Name="aid-4214.xml"
+                      LongName="aid-selectrandom.xml"
+                      Source="$(var.InstallPath)/examples/procedure/aid-selectrandom.xml"
+                      />
+<File Id="FileIDtimebetweentrials41" Name="time3420.apx"
+                      LongName="time-between-trials.apx"
+                      Source="$(var.InstallPath)/examples/procedure/time-between-trials.apx"
+                      />
+<File Id="FileIDadaptive_stopafter_trials40" Name="adap5701.xml"
+                      LongName="adaptive_stopafter_trials.xml"
+                      Source="$(var.InstallPath)/examples/procedure/adaptive_stopafter_trials.xml"
+                      />
+<File Id="FileIDidn1mono49" Name="idn17820.apx"
+                      LongName="idn1-mono.apx"
+                      Source="$(var.InstallPath)/examples/procedure/idn1-mono.apx"
+                      />
+<File Id="FileIDadp136" Name="adp1726.xml"
+                      LongName="adp1.xml"
+                      Source="$(var.InstallPath)/examples/procedure/adp1.xml"
+                      />
+<File Id="FileIDadaptive_stopafter_presentations59" Name="adap1130.xml"
+                      LongName="adaptive_stopafter_presentations.xml"
+                      Source="$(var.InstallPath)/examples/procedure/adaptive_stopafter_presentations.xml"
+                      />
+<File Id="FileIDmultistandardunique22" Name="mult8536.xml"
+                      LongName="multistandard-unique.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multistandard-unique.xml"
+                      />
+<File Id="FileIDmultiscreenidn120" Name="mult1894.xml"
+                      LongName="multiscreen idn1.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiscreen idn1.xml"
+                      />
+<File Id="FileIDsimple35" Name="simp180.apx"
+                      LongName="simple.apx"
+                      Source="$(var.InstallPath)/examples/procedure/simple.apx"
+                      />
+<File Id="FileIDextrasimple22" Name="extr6588.apx"
+                      LongName="extrasimple.apx"
+                      Source="$(var.InstallPath)/examples/procedure/extrasimple.apx"
+                      />
+<File Id="FileIDuniformint7" Name="unif1293.xml"
+                      LongName="uniform-int.xml"
+                      Source="$(var.InstallPath)/examples/procedure/uniform-int.xml"
+                      />
+<File Id="FileIDtrain268" Name="trai891.xml"
+                      LongName="train2.xml"
+                      Source="$(var.InstallPath)/examples/procedure/train2.xml"
+                      />
+<File Id="FileIDmultiprocedureconstanttrain45" Name="mult9424.xml"
+                      LongName="multiprocedure-constant-train.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiprocedure-constant-train.xml"
+                      />
+<File Id="FileIDmultiparametersfixed49" Name="mult7328.xml"
+                      LongName="multiparameters-fixed.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiparameters-fixed.xml"
+                      />
+<File Id="FileIDopensetconstant56" Name="open6844.apx"
+                      LongName="open set - constant.apx"
+                      Source="$(var.InstallPath)/examples/procedure/open set - constant.apx"
+                      />
+<File Id="FileIDrepeatuntillcorrectmultitrial87" Name="repe9361.xml"
+                      LongName="repeatuntillcorrect-multitrial.xml"
+                      Source="$(var.InstallPath)/examples/procedure/repeatuntillcorrect-multitrial.xml"
+                      />
+<File Id="FileIDrepeatuntillcorrectendaftertrials57" Name="repe131.xml"
+                      LongName="repeatuntillcorrect-endaftertrials.xml"
+                      Source="$(var.InstallPath)/examples/procedure/repeatuntillcorrect-endaftertrials.xml"
+                      />
+<File Id="FileIDmultiproceduremixed14" Name="mult8010.xml"
+                      LongName="multiprocedure-mixed.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiprocedure-mixed.xml"
+                      />
+<File Id="FileIDmultiprocedure19" Name="mult8965.xml"
+                      LongName="multiprocedure.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiprocedure.xml"
+                      />
+<File Id="FileIDheartrainprocedure56" Name="hear6019.apx"
+                      LongName="heartrainprocedure.apx"
+                      Source="$(var.InstallPath)/examples/procedure/heartrainprocedure.apx"
+                      />
+<File Id="FileIDnoanswer73" Name="noan668.apx"
+                      LongName="noanswer.apx"
+                      Source="$(var.InstallPath)/examples/procedure/noanswer.apx"
+                      />
+<File Id="FileIDcstmultistimulus95" Name="cst-3825.xml"
+                      LongName="cst-multistimulus.xml"
+                      Source="$(var.InstallPath)/examples/procedure/cst-multistimulus.xml"
+                      />
+<File Id="FileIDrandomchannel5" Name="rand7622.xml"
+                      LongName="randomchannel.xml"
+                      Source="$(var.InstallPath)/examples/procedure/randomchannel.xml"
+                      />
+<File Id="FileIDpluginprocedure64" Name="plug6278.apx"
+                      LongName="pluginprocedure.apx"
+                      Source="$(var.InstallPath)/examples/procedure/pluginprocedure.apx"
+                      />
+<File Id="FileIDmultiproceduretraintrain46" Name="mult9248.xml"
+                      LongName="multiprocedure-train-train.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiprocedure-train-train.xml"
+                      />
+<File Id="FileIDtrain114" Name="trai4652.xml"
+                      LongName="train1.xml"
+                      Source="$(var.InstallPath)/examples/procedure/train1.xml"
+                      />
+<File Id="FileIDchoicesrandomstimulusrandomstandard84" Name="choi2484.apx"
+                      LongName="choices-randomstimulus-randomstandard.apx"
+                      Source="$(var.InstallPath)/examples/procedure/choices-randomstimulus-randomstandard.apx"
+                      />
+<File Id="FileIDafcchoices81" Name="afc-2795.xml"
+                      LongName="afc-choices.xml"
+                      Source="$(var.InstallPath)/examples/procedure/afc-choices.xml"
+                      />
+<File Id="FileIDidn2skip56" Name="idn27492.apx"
+                      LongName="idn2-skip.apx"
+                      Source="$(var.InstallPath)/examples/procedure/idn2-skip.apx"
+                      />
+<File Id="FileIDpause_between_stimuli23" Name="paus2608.xml"
+                      LongName="pause_between_stimuli.xml"
+                      Source="$(var.InstallPath)/examples/procedure/pause_between_stimuli.xml"
+                      />
+<File Id="FileIDsoundquality28" Name="soun2792.xml"
+                      LongName="soundquality.xml"
+                      Source="$(var.InstallPath)/examples/procedure/soundquality.xml"
+                      />
+<File Id="FileIDmultiprocedurerandom26" Name="mult2980.xml"
+                      LongName="multiprocedure-random.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiprocedure-random.xml"
+                      />
+<File Id="FileIDmultiprocedureidn33" Name="mult4124.xml"
+                      LongName="multiprocedure-idn.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiprocedure-idn.xml"
+                      />
+<File Id="FileIDmultiparametersinvalid58" Name="mult9056.xml"
+                      LongName="multiparameters-invalid.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiparameters-invalid.xml"
+                      />
+<File Id="FileIDadaptive_stopafter_presentations_invalid2" Name="adap8705.xml"
+                      LongName="adaptive_stopafter_presentations_invalid.xml"
+                      Source="$(var.InstallPath)/examples/procedure/adaptive_stopafter_presentations_invalid.xml"
+                      />
+<File Id="FileIDidn1skip0" Name="idn18623.apx"
+                      LongName="idn1-skip.apx"
+                      Source="$(var.InstallPath)/examples/procedure/idn1-skip.apx"
+                      />
+<File Id="FileIDuniformdouble13" Name="unif4403.xml"
+                      LongName="uniform-double.xml"
+                      Source="$(var.InstallPath)/examples/procedure/uniform-double.xml"
+                      />
+<File Id="FileIDrepeatuntillcorrectsingletrial32" Name="repe8422.xml"
+                      LongName="repeatuntillcorrect-singletrial.xml"
+                      Source="$(var.InstallPath)/examples/procedure/repeatuntillcorrect-singletrial.xml"
+                      />
+<File Id="FileIDaid132" Name="aid16511.xml"
+                      LongName="aid1.xml"
+                      Source="$(var.InstallPath)/examples/procedure/aid1.xml"
+                      />
+<File Id="FileIDidn12" Name="idn11628.apx"
+                      LongName="idn1.apx"
+                      Source="$(var.InstallPath)/examples/procedure/idn1.apx"
+                      />
+<File Id="FileIDmultiparametersvariable14" Name="mult2042.xml"
+                      LongName="multiparameters-variable.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiparameters-variable.xml"
+                      />
+<File Id="FileIDmultiprocedureaid77" Name="mult5210.xml"
+                      LongName="multiprocedure-aid.xml"
+                      Source="$(var.InstallPath)/examples/procedure/multiprocedure-aid.xml"
+                      />
+<File Id="FileIDadp247" Name="adp27674.xml"
+                      LongName="adp2.xml"
+                      Source="$(var.InstallPath)/examples/procedure/adp2.xml"
+                      />
+<File Id="FileIDidn284" Name="idn21610.apx"
+                      LongName="idn2.apx"
+                      Source="$(var.InstallPath)/examples/procedure/idn2.apx"
+                      />
+<File Id="FileIDnostandardfound90" Name="nost6882.xml"
+                      LongName="nostandardfound.xml"
+                      Source="$(var.InstallPath)/examples/procedure/nostandardfound.xml"
+                      />
+<File Id="FileIDadaptive_stopafter_reversals78" Name="adap7529.xml"
+                      LongName="adaptive_stopafter_reversals.xml"
+                      Source="$(var.InstallPath)/examples/procedure/adaptive_stopafter_reversals.xml"
+                      />
+<File Id="FileIDafcuniquestandard34" Name="afc-9600.xml"
+                      LongName="afc-uniquestandard.xml"
+                      Source="$(var.InstallPath)/examples/procedure/afc-uniquestandard.xml"
+                      />
+<File Id="FileIDcontinuouswaitbeforefirst17" Name="cont5663.xml"
+                      LongName="continuous-waitbeforefirst.xml"
+                      Source="$(var.InstallPath)/examples/procedure/continuous-waitbeforefirst.xml"
+                      />
+<File Id="FileIDfixedparameternotfound90" Name="fixe3388.xml"
+                      LongName="fixedparameternotfound.xml"
+                      Source="$(var.InstallPath)/examples/procedure/fixedparameternotfound.xml"
+                      />
+</Component>
+<Directory Id="DirIDstepsizes" Name="5117." LongName="stepsizes">
+    <Component Id="ExamplesCompstepsizes" DiskId="1"
+               Guid="">
+<File Id="FileIDafterreversals42" Name="afte3817.xml"
+                      LongName="after-reversals.xml"
+                      Source="$(var.InstallPath)/examples/procedure/stepsizes/after-reversals.xml"
+                      />
+<File Id="FileIDb79" Name="b3680.xml"
+                      LongName="b.xml"
+                      Source="$(var.InstallPath)/examples/procedure/stepsizes/b.xml"
+                      />
+<File Id="FileIDa21" Name="a7808.xml"
+                      LongName="a.xml"
+                      Source="$(var.InstallPath)/examples/procedure/stepsizes/a.xml"
+                      />
+<File Id="FileIDc23" Name="c1578.xml"
+                      LongName="c.xml"
+                      Source="$(var.InstallPath)/examples/procedure/stepsizes/c.xml"
+                      />
+</Component>
+</Directory>
+</Directory>
+<Directory Id="DirIDclarion" Name="8544." LongName="clarion">
+    <Component Id="ExamplesCompclarion" DiskId="1"
+               Guid="">
+<File Id="FileIDadaptive_error92" Name="adap8914.xml"
+                      LongName="adaptive_error.xml"
+                      Source="$(var.InstallPath)/examples/clarion/adaptive_error.xml"
+                      />
+<File Id="FileIDadaptive21" Name="adap6717.xml"
+                      LongName="adaptive.xml"
+                      Source="$(var.InstallPath)/examples/clarion/adaptive.xml"
+                      />
+<File Id="FileIDtraining16" Name="trai9068.xml"
+                      LongName="training.xml"
+                      Source="$(var.InstallPath)/examples/clarion/training.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDparameters" Name="7073." LongName="parameters">
+    <Component Id="ExamplesCompparameters" DiskId="1"
+               Guid="">
+<File Id="FileIDrestoreparameter35" Name="rest3149.xml"
+                      LongName="restoreparameter.xml"
+                      Source="$(var.InstallPath)/examples/parameters/restoreparameter.xml"
+                      />
+<File Id="FileIDconnectionparameter2" Name="conn7452.xml"
+                      LongName="connectionparameter.xml"
+                      Source="$(var.InstallPath)/examples/parameters/connectionparameter.xml"
+                      />
+<File Id="FileIDdeviceparameter43" Name="devi9177.xml"
+                      LongName="deviceparameter.xml"
+                      Source="$(var.InstallPath)/examples/parameters/deviceparameter.xml"
+                      />
+<File Id="FileIDfilterchannelparameter242" Name="filt9859.xml"
+                      LongName="filterchannelparameter2.xml"
+                      Source="$(var.InstallPath)/examples/parameters/filterchannelparameter2.xml"
+                      />
+<File Id="FileIDconnectionparameterfilter54" Name="conn1701.xml"
+                      LongName="connectionparameterfilter.xml"
+                      Source="$(var.InstallPath)/examples/parameters/connectionparameterfilter.xml"
+                      />
+<File Id="FileIDdevicechannelparameter68" Name="devi2693.xml"
+                      LongName="devicechannelparameter.xml"
+                      Source="$(var.InstallPath)/examples/parameters/devicechannelparameter.xml"
+                      />
+<File Id="FileIDfilterchannelparameter73" Name="filt7418.xml"
+                      LongName="filterchannelparameter.xml"
+                      Source="$(var.InstallPath)/examples/parameters/filterchannelparameter.xml"
+                      />
+<File Id="FileIDspinboxparameter90" Name="spin7427.xml"
+                      LongName="spinboxparameter.xml"
+                      Source="$(var.InstallPath)/examples/parameters/spinboxparameter.xml"
+                      />
+<File Id="FileIDfilterparameter57" Name="filt714.xml"
+                      LongName="filterparameter.xml"
+                      Source="$(var.InstallPath)/examples/parameters/filterparameter.xml"
+                      />
+<File Id="FileIDwavfadeinout62" Name="wavf4998.xml"
+                      LongName="wavfadeinout.xml"
+                      Source="$(var.InstallPath)/examples/parameters/wavfadeinout.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDmovies" Name="4781." LongName="movies">
+    <Component Id="ExamplesCompmovies" DiskId="1"
+               Guid="">
+</Component>
+<Directory Id="DirIDcow" Name="9955." LongName="cow">
+    <Component Id="ExamplesCompcow" DiskId="1"
+               Guid="">
+</Component>
+</Directory>
+<Directory Id="DirIDfrog" Name="6076." LongName="frog">
+    <Component Id="ExamplesCompfrog" DiskId="1"
+               Guid="">
+</Component>
+</Directory>
+<Directory Id="DirIDbear" Name="9008." LongName="bear">
+    <Component Id="ExamplesCompbear" DiskId="1"
+               Guid="">
+</Component>
+</Directory>
+<Directory Id="DirIDsnail" Name="4801." LongName="snail">
+    <Component Id="ExamplesCompsnail" DiskId="1"
+               Guid="">
+</Component>
+</Directory>
+<Directory Id="DirIDdragon" Name="7391." LongName="dragon">
+    <Component Id="ExamplesCompdragon" DiskId="1"
+               Guid="">
+</Component>
+</Directory>
+<Directory Id="DirIDsnake" Name="33." LongName="snake">
+    <Component Id="ExamplesCompsnake" DiskId="1"
+               Guid="">
+</Component>
+</Directory>
+<Directory Id="DirIDmonkey" Name="6418." LongName="monkey">
+    <Component Id="ExamplesCompmonkey" DiskId="1"
+               Guid="">
+</Component>
+</Directory>
+<Directory Id="DirIDcar" Name="5919." LongName="car">
+    <Component Id="ExamplesCompcar" DiskId="1"
+               Guid="">
+</Component>
+</Directory>
+</Directory>
+<Directory Id="DirIDpictures" Name="7211." LongName="pictures">
+    <Component Id="ExamplesComppictures" DiskId="1"
+               Guid="">
+</Component>
+</Directory>
+<Directory Id="DirIDscreenplugin" Name="986." LongName="screenplugin">
+    <Component Id="ExamplesCompscreenplugin" DiskId="1"
+               Guid="">
+<File Id="FileIDscreengeneratoremptyresult60" Name="scre3503.js"
+                      LongName="screengenerator-emptyresult.js"
+                      Source="$(var.InstallPath)/examples/screenplugin/screengenerator-emptyresult.js"
+                      />
+<File Id="FileIDscreenpluginemptyresult10" Name="scre7556.apx"
+                      LongName="screenplugin-emptyresult.apx"
+                      Source="$(var.InstallPath)/examples/screenplugin/screenplugin-emptyresult.apx"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDresults" Name="9209." LongName="results">
+    <Component Id="ExamplesCompresults" DiskId="1"
+               Guid="">
+<File Id="FileIDapexresultsadp19" Name="apex2000.apx"
+                      LongName="apexresults-adp1.apx"
+                      Source="$(var.InstallPath)/examples/results/apexresults-adp1.apx"
+                      />
+<File Id="FileIDaddtofile27" Name="addt8834.xml"
+                      LongName="addtofile.xml"
+                      Source="$(var.InstallPath)/examples/results/addtofile.xml"
+                      />
+<File Id="FileIDxsltscript71" Name="xslt2621.xml"
+                      LongName="xsltscript.xml"
+                      Source="$(var.InstallPath)/examples/results/xsltscript.xml"
+                      />
+<File Id="FileIDrealtimeresultsprocedureparameterduring5" Name="real2161.xml"
+                      LongName="realtimeresults-procedureparameter-during.xml"
+                      Source="$(var.InstallPath)/examples/results/realtimeresults-procedureparameter-during.xml"
+                      />
+<File Id="FileIDrealtimeresultsprocedureparameterafter70" Name="real4543.xml"
+                      LongName="realtimeresults-procedureparameter-after.xml"
+                      Source="$(var.InstallPath)/examples/results/realtimeresults-procedureparameter-after.xml"
+                      />
+<File Id="FileIDresultparameters11" Name="resu8262.apx"
+                      LongName="resultparameters.apx"
+                      Source="$(var.InstallPath)/examples/results/resultparameters.apx"
+                      />
+<File Id="FileIDmatlabscript95" Name="matl1548.xml"
+                      LongName="matlabscript.xml"
+                      Source="$(var.InstallPath)/examples/results/matlabscript.xml"
+                      />
+<File Id="FileID41" Name="rtre5263.htm"
+                      LongName="rtresults-procedureparameter.html"
+                      Source="$(var.InstallPath)/examples/results/rtresults-procedureparameter.html"
+                      />
+<File Id="FileIDsubject75" Name="subj4325.xml"
+                      LongName="subject.xml"
+                      Source="$(var.InstallPath)/examples/results/subject.xml"
+                      />
+<File Id="FileIDxsltnotdefined72" Name="xslt3281.xml"
+                      LongName="xsltnotdefined.xml"
+                      Source="$(var.InstallPath)/examples/results/xsltnotdefined.xml"
+                      />
+<File Id="FileIDrealtimeresultsconfusionmatrix32" Name="real1855.xml"
+                      LongName="realtimeresults-confusionmatrix.xml"
+                      Source="$(var.InstallPath)/examples/results/realtimeresults-confusionmatrix.xml"
+                      />
+<File Id="FileID92" Name="rtre9027.htm"
+                      LongName="rtresults-confusionmatrix.html"
+                      Source="$(var.InstallPath)/examples/results/rtresults-confusionmatrix.html"
+                      />
+<File Id="FileIDxsltscripthere16" Name="xslt1931.xml"
+                      LongName="xsltscript-here.xml"
+                      Source="$(var.InstallPath)/examples/results/xsltscript-here.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDaudiometer" Name="2788." LongName="audiometer">
+    <Component Id="ExamplesCompaudiometer" DiskId="1"
+               Guid="">
+<File Id="FileIDpuretoneaudiometryhda20066" Name="pure6054.xml"
+                      LongName="pure-tone-audiometry-hda200.xml"
+                      Source="$(var.InstallPath)/examples/audiometer/pure-tone-audiometry-hda200.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDconnections" Name="3695." LongName="connections">
+    <Component Id="ExamplesCompconnections" DiskId="1"
+               Guid="">
+<File Id="FileIDconnectionsbywildcard66" Name="conn62.xml"
+                      LongName="connections-bywildcard.xml"
+                      Source="$(var.InstallPath)/examples/connections/connections-bywildcard.xml"
+                      />
+<File Id="FileIDconnectionsstereo2mono26" Name="conn8660.xml"
+                      LongName="connections-stereo2mono.xml"
+                      Source="$(var.InstallPath)/examples/connections/connections-stereo2mono.xml"
+                      />
+<File Id="FileIDconnectionsbyregexp72" Name="conn901.xml"
+                      LongName="connections-byregexp.xml"
+                      Source="$(var.InstallPath)/examples/connections/connections-byregexp.xml"
+                      />
+<File Id="FileIDchannel112" Name="chan7112.xml"
+                      LongName="channel-1.xml"
+                      Source="$(var.InstallPath)/examples/connections/channel-1.xml"
+                      />
+<File Id="FileIDconnectionsbyname96" Name="conn559.xml"
+                      LongName="connections-byname.xml"
+                      Source="$(var.InstallPath)/examples/connections/connections-byname.xml"
+                      />
+<File Id="FileIDconnectionsbynameinvalid7" Name="conn5243.xml"
+                      LongName="connections-byname-invalid.xml"
+                      Source="$(var.InstallPath)/examples/connections/connections-byname-invalid.xml"
+                      />
+<File Id="FileIDconnectionsallmixedmonostereo45" Name="conn3538.xml"
+                      LongName="connections-all-mixed-monostereo.xml"
+                      Source="$(var.InstallPath)/examples/connections/connections-all-mixed-monostereo.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDrandomgenerator" Name="6960." LongName="randomgenerator">
+    <Component Id="ExamplesComprandomgenerator" DiskId="1"
+               Guid="">
+<File Id="FileIDuniformint60" Name="unif4507.xml"
+                      LongName="uniform-int.xml"
+                      Source="$(var.InstallPath)/examples/randomgenerator/uniform-int.xml"
+                      />
+<File Id="FileIDrandomchannel10" Name="rand2958.xml"
+                      LongName="randomchannel.xml"
+                      Source="$(var.InstallPath)/examples/randomgenerator/randomchannel.xml"
+                      />
+<File Id="FileIDmultiinterval64" Name="mult4185.xml"
+                      LongName="multi-interval.xml"
+                      Source="$(var.InstallPath)/examples/randomgenerator/multi-interval.xml"
+                      />
+<File Id="FileIDuniformdouble34" Name="unif5186.xml"
+                      LongName="uniform-double.xml"
+                      Source="$(var.InstallPath)/examples/randomgenerator/uniform-double.xml"
+                      />
+<File Id="FileIDuniformsmallint97" Name="unif9905.xml"
+                      LongName="uniform-smallint.xml"
+                      Source="$(var.InstallPath)/examples/randomgenerator/uniform-smallint.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDdummydevice" Name="9923." LongName="dummydevice">
+    <Component Id="ExamplesCompdummydevice" DiskId="1"
+               Guid="">
+<File Id="FileIDdummydevice69" Name="dumm8566.xml"
+                      LongName="dummydevice.xml"
+                      Source="$(var.InstallPath)/examples/dummydevice/dummydevice.xml"
+                      />
+<File Id="FileIDdummyanyparameter40" Name="dumm8282.xml"
+                      LongName="dummy-anyparameter.xml"
+                      Source="$(var.InstallPath)/examples/dummydevice/dummy-anyparameter.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDmanual" Name="9618." LongName="manual">
+    <Component Id="ExamplesCompmanual" DiskId="1"
+               Guid="">
+<File Id="FileIDopensetidentification71" Name="open2050.apx"
+                      LongName="opensetidentification.apx"
+                      Source="$(var.InstallPath)/examples/manual/opensetidentification.apx"
+                      />
+<File Id="FileIDtrainingprocedure55" Name="trai3794.apx"
+                      LongName="trainingprocedure.apx"
+                      Source="$(var.InstallPath)/examples/manual/trainingprocedure.apx"
+                      />
+<File Id="FileIDgapdetection15" Name="gapd2856.apx"
+                      LongName="gapdetection.apx"
+                      Source="$(var.InstallPath)/examples/manual/gapdetection.apx"
+                      />
+<File Id="FileIDgapdetectionchild31" Name="gapd8816.apx"
+                      LongName="gapdetectionchild.apx"
+                      Source="$(var.InstallPath)/examples/manual/gapdetectionchild.apx"
+                      />
+<File Id="FileIDclosedsetword57" Name="clos994.apx"
+                      LongName="closedsetword.apx"
+                      Source="$(var.InstallPath)/examples/manual/closedsetword.apx"
+                      />
+<File Id="FileIDsentenceinnoise37" Name="sent8220.apx"
+                      LongName="sentenceinnoise.apx"
+                      Source="$(var.InstallPath)/examples/manual/sentenceinnoise.apx"
+                      />
+</Component>
+<Directory Id="DirIDgapfiles" Name="1735." LongName="gapfiles">
+    <Component Id="ExamplesCompgapfiles" DiskId="1"
+               Guid="">
+<File Id="FileIDg34" Name="g38529.wav"
+                      LongName="g3.wav"
+                      Source="$(var.InstallPath)/examples/manual/gapfiles/g3.wav"
+                      />
+<File Id="FileIDref50067" Name="ref59022.wav"
+                      LongName="ref500.wav"
+                      Source="$(var.InstallPath)/examples/manual/gapfiles/ref500.wav"
+                      />
+<File Id="FileIDg150" Name="g19588.wav"
+                      LongName="g1.wav"
+                      Source="$(var.InstallPath)/examples/manual/gapfiles/g1.wav"
+                      />
+<File Id="FileIDg573" Name="g52884.wav"
+                      LongName="g5.wav"
+                      Source="$(var.InstallPath)/examples/manual/gapfiles/g5.wav"
+                      />
+<File Id="FileIDg435" Name="g48416.wav"
+                      LongName="g4.wav"
+                      Source="$(var.InstallPath)/examples/manual/gapfiles/g4.wav"
+                      />
+<File Id="FileIDg247" Name="g26920.wav"
+                      LongName="g2.wav"
+                      Source="$(var.InstallPath)/examples/manual/gapfiles/g2.wav"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDsentences" Name="8001." LongName="sentences">
+    <Component Id="ExamplesCompsentences" DiskId="1"
+               Guid="">
+<File Id="FileIDsent473" Name="sent2057.wav"
+                      LongName="sent4.wav"
+                      Source="$(var.InstallPath)/examples/manual/sentences/sent4.wav"
+                      />
+<File Id="FileIDsent346" Name="sent2133.wav"
+                      LongName="sent3.wav"
+                      Source="$(var.InstallPath)/examples/manual/sentences/sent3.wav"
+                      />
+<File Id="FileIDnoise92" Name="nois4902.wav"
+                      LongName="noise.wav"
+                      Source="$(var.InstallPath)/examples/manual/sentences/noise.wav"
+                      />
+<File Id="FileIDsent113" Name="sent8782.wav"
+                      LongName="sent1.wav"
+                      Source="$(var.InstallPath)/examples/manual/sentences/sent1.wav"
+                      />
+<File Id="FileIDsent590" Name="sent2306.wav"
+                      LongName="sent5.wav"
+                      Source="$(var.InstallPath)/examples/manual/sentences/sent5.wav"
+                      />
+<File Id="FileIDsent267" Name="sent8421.wav"
+                      LongName="sent2.wav"
+                      Source="$(var.InstallPath)/examples/manual/sentences/sent2.wav"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDclosedset" Name="245." LongName="closedset">
+    <Component Id="ExamplesCompclosedset" DiskId="1"
+               Guid="">
+<File Id="FileIDmouse41" Name="mous2247.wav"
+                      LongName="mouse.wav"
+                      Source="$(var.InstallPath)/examples/manual/closedset/mouse.wav"
+                      />
+<File Id="FileIDnoise56" Name="nois3403.wav"
+                      LongName="noise.wav"
+                      Source="$(var.InstallPath)/examples/manual/closedset/noise.wav"
+                      />
+<File Id="FileIDstar19" Name="star8493.wav"
+                      LongName="star.wav"
+                      Source="$(var.InstallPath)/examples/manual/closedset/star.wav"
+                      />
+<File Id="FileIDfly43" Name="fly2642.wav"
+                      LongName="fly.wav"
+                      Source="$(var.InstallPath)/examples/manual/closedset/fly.wav"
+                      />
+</Component>
+</Directory>
+</Directory>
+<Directory Id="DirIDchildmode" Name="1915." LongName="childmode">
+    <Component Id="ExamplesCompchildmode" DiskId="1"
+               Guid="">
+<File Id="FileIDidn1waitforstart16" Name="idn16149.apx"
+                      LongName="idn1-waitforstart.apx"
+                      Source="$(var.InstallPath)/examples/childmode/idn1-waitforstart.apx"
+                      />
+<File Id="FileIDchildmodeskipintrooutro57" Name="chil8878.xml"
+                      LongName="childmode-skipintrooutro.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-skipintrooutro.xml"
+                      />
+<File Id="FileIDchildmodeonlyscreennormalpanel29" Name="chil9047.xml"
+                      LongName="childmode-onlyscreen+normalpanel.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-onlyscreen+normalpanel.xml"
+                      />
+<File Id="FileIDchildmodejustmovies40" Name="chil3442.xml"
+                      LongName="childmode-justmovies.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-justmovies.xml"
+                      />
+<File Id="FileIDchildmodesnakefull32" Name="chil4524.xml"
+                      LongName="childmode-snake-full.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-snake-full.xml"
+                      />
+<File Id="FileIDchildmodeonlyscreen75" Name="chil5744.xml"
+                      LongName="childmode-onlyscreen.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-onlyscreen.xml"
+                      />
+<File Id="FileIDchildmodeshortcuts51" Name="chil4905.xml"
+                      LongName="childmode-shortcuts.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-shortcuts.xml"
+                      />
+<File Id="FileIDchildmodewaitforstart17" Name="chil9636.xml"
+                      LongName="childmode-waitforstart.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-waitforstart.xml"
+                      />
+<File Id="FileIDchildmodenoprogress18" Name="chil570.xml"
+                      LongName="childmode-noprogress.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-noprogress.xml"
+                      />
+<File Id="FileIDextramovies64" Name="extr7728.apx"
+                      LongName="extramovies.apx"
+                      Source="$(var.InstallPath)/examples/childmode/extramovies.apx"
+                      />
+<File Id="FileIDchildmodenormalfeedback8" Name="chil7569.xml"
+                      LongName="childmode-normalfeedback.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-normalfeedback.xml"
+                      />
+<File Id="FileIDchildmodepoll52" Name="chil8052.xml"
+                      LongName="childmode-poll.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-poll.xml"
+                      />
+<File Id="FileIDchildmodefull68" Name="chil7230.xml"
+                      LongName="childmode-full.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-full.xml"
+                      />
+<File Id="FileIDchildmodeskipintrooutrodisabled52" Name="chil8909.xml"
+                      LongName="childmode-skipintrooutro-disabled.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-skipintrooutro-disabled.xml"
+                      />
+<File Id="FileIDchildmodemoviesintro48" Name="chil8216.xml"
+                      LongName="childmode-movies+intro.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-movies+intro.xml"
+                      />
+<File Id="FileIDchildmodefullL3424" Name="chil2469.xml"
+                      LongName="childmode-full-L34.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-full-L34.xml"
+                      />
+<File Id="FileIDchildmodecarfull21" Name="chil9647.xml"
+                      LongName="childmode-car-full.xml"
+                      Source="$(var.InstallPath)/examples/childmode/childmode-car-full.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDoutputtest" Name="2594." LongName="outputtest">
+    <Component Id="ExamplesCompoutputtest" DiskId="1"
+               Guid="">
+<File Id="FileIDwavoutputtestwd1wd254" Name="wavo6689.xml"
+                      LongName="wavoutputtest-wd1wd2.xml"
+                      Source="$(var.InstallPath)/examples/outputtest/wavoutputtest-wd1wd2.xml"
+                      />
+<File Id="FileIDwavoutputtestdataloop31" Name="wavo5943.xml"
+                      LongName="wavoutputtest-dataloop.xml"
+                      Source="$(var.InstallPath)/examples/outputtest/wavoutputtest-dataloop.xml"
+                      />
+<File Id="FileIDwavoutputtestwd189" Name="wavo7850.xml"
+                      LongName="wavoutputtest-wd1.xml"
+                      Source="$(var.InstallPath)/examples/outputtest/wavoutputtest-wd1.xml"
+                      />
+<File Id="FileIDwavoutputtestwd1wd2wd353" Name="wavo3394.xml"
+                      LongName="wavoutputtest-wd1wd2wd3.xml"
+                      Source="$(var.InstallPath)/examples/outputtest/wavoutputtest-wd1wd2wd3.xml"
+                      />
+</Component>
+</Directory>
+<Directory Id="DirIDinteractive" Name="5189." LongName="interactive">
+    <Component Id="ExamplesCompinteractive" DiskId="1"
+               Guid="">
+<File Id="FileIDsetgain59" Name="setg82.xml"
+                      LongName="setgain.xml"
+                      Source="$(var.InstallPath)/examples/interactive/setgain.xml"
+                      />
+<File Id="FileIDinvalidentry6" Name="inva9700.xml"
+                      LongName="invalid-entry.xml"
+                      Source="$(var.InstallPath)/examples/interactive/invalid-entry.xml"
+                      />
+</Component>
+</Directory>
+
+</Include>

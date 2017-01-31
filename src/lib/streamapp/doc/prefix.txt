@@ -1,0 +1,33 @@
+/**
+
+@page prefixes
+
+Here are some of the prefixes used and their meaning:
+
+@verbatim
+m   = member
+a   = argument
+g   = global  
+s   = static/file local
+
+mp  = member function changing member data
+mf  = member function not changing member data
+
+c   = constant
+v   = variable
+
+n   = integer (signed/unsigned)
+l   = long
+ul  = unsigned long
+s   = string
+sa  = array of strings
+e   = enum
+t   = struct/typedef
+d   = double
+f   = float
+b   = bool
+it  = iterator
+p   = pointer
+@endverbatim
+
+**/

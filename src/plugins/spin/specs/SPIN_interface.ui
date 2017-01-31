@@ -1,0 +1,2295 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <widget class="QTabWidget" name="Materials" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>711</width>
+      <height>571</height>
+     </rect>
+    </property>
+    <property name="toolTip" >
+     <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">sfe&lt;/p>&lt;/body>&lt;/html></string>
+    </property>
+    <property name="whatsThis" >
+     <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" color:#ffebcd;">fsfeefs&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+    </property>
+    <property name="currentIndex" >
+     <number>7</number>
+    </property>
+    <widget class="QWidget" name="tab_5" >
+     <attribute name="title" >
+      <string>Start</string>
+     </attribute>
+     <widget class="QLabel" name="label_93" >
+      <property name="geometry" >
+       <rect>
+        <x>100</x>
+        <y>90</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:12pt;">Name&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_148" >
+      <property name="geometry" >
+       <rect>
+        <x>100</x>
+        <y>150</y>
+        <width>46</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:12pt;">Date&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_66" >
+      <property name="geometry" >
+       <rect>
+        <x>170</x>
+        <y>100</y>
+        <width>181</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_67" >
+      <property name="geometry" >
+       <rect>
+        <x>170</x>
+        <y>150</y>
+        <width>181</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="toolButton_21" >
+      <property name="geometry" >
+       <rect>
+        <x>410</x>
+        <y>410</y>
+        <width>151</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>Save current settings</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listWidget" >
+      <property name="geometry" >
+       <rect>
+        <x>100</x>
+        <y>240</y>
+        <width>256</width>
+        <height>192</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text" >
+        <string>Hearcom</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>Lot - kindjes</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab" >
+     <attribute name="title" >
+      <string>Materials</string>
+     </attribute>
+     <widget class="QLabel" name="label" >
+      <property name="geometry" >
+       <rect>
+        <x>120</x>
+        <y>40</y>
+        <width>181</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:22pt;">Speech&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2" >
+      <property name="geometry" >
+       <rect>
+        <x>440</x>
+        <y>40</y>
+        <width>131</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:22pt;">Noise&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+      </property>
+     </widget>
+     <widget class="Line" name="line" >
+      <property name="geometry" >
+       <rect>
+        <x>333</x>
+        <y>30</y>
+        <width>20</width>
+        <height>501</height>
+       </rect>
+      </property>
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox" >
+      <property name="geometry" >
+       <rect>
+        <x>80</x>
+        <y>110</y>
+        <width>211</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text" >
+        <string>VU man</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>VU vrouw</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>NVA</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>LIST</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>LINT wd</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>LINT jw</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>LINT ag</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>LINT md</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_4" >
+      <property name="geometry" >
+       <rect>
+        <x>80</x>
+        <y>170</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:12pt;">List number&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit" >
+      <property name="geometry" >
+       <rect>
+        <x>200</x>
+        <y>170</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_2" >
+      <property name="geometry" >
+       <rect>
+        <x>410</x>
+        <y>110</y>
+        <width>221</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text" >
+        <string>VU speechweighted noise</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>NVA speechweighted noise</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>LIST speechweighted noise</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>LINT speechweighted noise</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>multitalker babble</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>ICRA noise</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_3" >
+     <attribute name="title" >
+      <string>Setup FF</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox" >
+      <property name="geometry" >
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>131</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="title" >
+       <string>GroupBox</string>
+      </property>
+      <widget class="QRadioButton" name="radioButton_2" >
+       <property name="geometry" >
+        <rect>
+         <x>10</x>
+         <y>50</y>
+         <width>121</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Headphones</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton" >
+       <property name="geometry" >
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>111</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Free Field</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2" >
+      <property name="geometry" >
+       <rect>
+        <x>20</x>
+        <y>120</y>
+        <width>621</width>
+        <height>421</height>
+       </rect>
+      </property>
+      <property name="title" >
+       <string>GroupBox</string>
+      </property>
+      <widget class="QLineEdit" name="lineEdit_7" >
+       <property name="geometry" >
+        <rect>
+         <x>210</x>
+         <y>60</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_9" >
+       <property name="geometry" >
+        <rect>
+         <x>210</x>
+         <y>40</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">(Start) Level&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_7" >
+       <property name="geometry" >
+        <rect>
+         <x>270</x>
+         <y>60</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Speech</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_9" >
+       <property name="geometry" >
+        <rect>
+         <x>270</x>
+         <y>90</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Noise</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_6" >
+       <property name="geometry" >
+        <rect>
+         <x>400</x>
+         <y>180</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Speech</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_10" >
+       <property name="geometry" >
+        <rect>
+         <x>400</x>
+         <y>210</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Noise</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_8" >
+       <property name="geometry" >
+        <rect>
+         <x>140</x>
+         <y>180</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Speech</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_11" >
+       <property name="geometry" >
+        <rect>
+         <x>140</x>
+         <y>210</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Noise</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_3" >
+       <property name="geometry" >
+        <rect>
+         <x>270</x>
+         <y>300</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Speech</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_5" >
+       <property name="geometry" >
+        <rect>
+         <x>270</x>
+         <y>330</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Noise</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_71" >
+       <property name="geometry" >
+        <rect>
+         <x>460</x>
+         <y>360</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_139" >
+       <property name="geometry" >
+        <rect>
+         <x>410</x>
+         <y>330</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Overall (start) level&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_16" >
+       <property name="geometry" >
+        <rect>
+         <x>410</x>
+         <y>360</y>
+         <width>46</width>
+         <height>14</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Speech&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_17" >
+       <property name="geometry" >
+        <rect>
+         <x>410</x>
+         <y>390</y>
+         <width>46</width>
+         <height>14</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Noise&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_23" >
+       <property name="geometry" >
+        <rect>
+         <x>210</x>
+         <y>90</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_21" >
+       <property name="geometry" >
+        <rect>
+         <x>340</x>
+         <y>210</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_20" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>180</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_19" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>210</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_18" >
+       <property name="geometry" >
+        <rect>
+         <x>210</x>
+         <y>300</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_17" >
+       <property name="geometry" >
+        <rect>
+         <x>210</x>
+         <y>330</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_74" >
+       <property name="geometry" >
+        <rect>
+         <x>460</x>
+         <y>390</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_24" >
+       <property name="geometry" >
+        <rect>
+         <x>340</x>
+         <y>180</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_145" >
+       <property name="geometry" >
+        <rect>
+         <x>540</x>
+         <y>330</y>
+         <width>71</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">(Start) SNR&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_75" >
+       <property name="geometry" >
+        <rect>
+         <x>540</x>
+         <y>370</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_3" >
+       <property name="geometry" >
+        <rect>
+         <x>220</x>
+         <y>170</y>
+         <width>91</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:12pt; color:#808080;">PRENTJE&lt;/span>&lt;/p>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; color:#808080;">BOOG&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_27" >
+       <property name="geometry" >
+        <rect>
+         <x>70</x>
+         <y>160</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">(Start) Level&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_26" >
+       <property name="geometry" >
+        <rect>
+         <x>330</x>
+         <y>160</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">(Start) Level&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15" >
+       <property name="geometry" >
+        <rect>
+         <x>200</x>
+         <y>280</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">(Start) Level&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="toolButton_7" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>380</y>
+         <width>162</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Advanced: uncorrelated noises</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_6" >
+     <attribute name="title" >
+      <string>Setup HP</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_5" >
+      <property name="geometry" >
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>131</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="title" >
+       <string>GroupBox</string>
+      </property>
+      <widget class="QRadioButton" name="radioButton_13" >
+       <property name="geometry" >
+        <rect>
+         <x>10</x>
+         <y>50</y>
+         <width>121</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Headphones</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_14" >
+       <property name="geometry" >
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>111</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Free Field</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_6" >
+      <property name="geometry" >
+       <rect>
+        <x>20</x>
+        <y>130</y>
+        <width>621</width>
+        <height>381</height>
+       </rect>
+      </property>
+      <property name="title" >
+       <string>GroupBox</string>
+      </property>
+      <widget class="QCheckBox" name="checkBox_14" >
+       <property name="geometry" >
+        <rect>
+         <x>450</x>
+         <y>110</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Speech</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_15" >
+       <property name="geometry" >
+        <rect>
+         <x>450</x>
+         <y>140</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Noise</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_16" >
+       <property name="geometry" >
+        <rect>
+         <x>160</x>
+         <y>110</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Speech</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_17" >
+       <property name="geometry" >
+        <rect>
+         <x>160</x>
+         <y>140</y>
+         <width>70</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Noise</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_72" >
+       <property name="geometry" >
+        <rect>
+         <x>360</x>
+         <y>260</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_19" >
+       <property name="geometry" >
+        <rect>
+         <x>310</x>
+         <y>260</y>
+         <width>46</width>
+         <height>14</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Speech&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_20" >
+       <property name="geometry" >
+        <rect>
+         <x>310</x>
+         <y>290</y>
+         <width>46</width>
+         <height>14</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Noise&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_26" >
+       <property name="geometry" >
+        <rect>
+         <x>380</x>
+         <y>140</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_27" >
+       <property name="geometry" >
+        <rect>
+         <x>100</x>
+         <y>110</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_28" >
+       <property name="geometry" >
+        <rect>
+         <x>100</x>
+         <y>140</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_76" >
+       <property name="geometry" >
+        <rect>
+         <x>360</x>
+         <y>290</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_31" >
+       <property name="geometry" >
+        <rect>
+         <x>380</x>
+         <y>110</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_77" >
+       <property name="geometry" >
+        <rect>
+         <x>470</x>
+         <y>270</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_25" >
+       <property name="geometry" >
+        <rect>
+         <x>370</x>
+         <y>80</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">(Start) Level&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_24" >
+       <property name="geometry" >
+        <rect>
+         <x>100</x>
+         <y>80</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">(Start) Level&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_144" >
+       <property name="geometry" >
+        <rect>
+         <x>320</x>
+         <y>220</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Overall (start) level&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_147" >
+       <property name="geometry" >
+        <rect>
+         <x>460</x>
+         <y>220</y>
+         <width>71</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">(Start) SNR&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_5" >
+       <property name="geometry" >
+        <rect>
+         <x>230</x>
+         <y>100</y>
+         <width>133</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt; color:#808080;">PRENTJE&lt;/span>&lt;/p>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; color:#808080;">HOOFDTELEFOON&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="toolButton_8" >
+       <property name="geometry" >
+        <rect>
+         <x>30</x>
+         <y>390</y>
+         <width>162</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Advanced: uncorrelated noises</string>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="toolButton_9" >
+       <property name="geometry" >
+        <rect>
+         <x>30</x>
+         <y>390</y>
+         <width>162</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Advanced: uncorrelated noises</string>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="toolButton_10" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>340</y>
+         <width>162</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Advanced: uncorrelated noises</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_8" >
+     <attribute name="title" >
+      <string>Uncorrnoise</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_4" >
+      <property name="geometry" >
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>131</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="title" >
+       <string>GroupBox</string>
+      </property>
+      <widget class="QRadioButton" name="radioButton_3" >
+       <property name="geometry" >
+        <rect>
+         <x>10</x>
+         <y>50</y>
+         <width>121</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Fixed</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_4" >
+       <property name="geometry" >
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>111</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text" >
+        <string>Random</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_8" >
+      <property name="geometry" >
+       <rect>
+        <x>220</x>
+        <y>50</y>
+        <width>331</width>
+        <height>221</height>
+       </rect>
+      </property>
+      <property name="title" >
+       <string>Free Field</string>
+      </property>
+      <widget class="QLabel" name="label_13" >
+       <property name="geometry" >
+        <rect>
+         <x>130</x>
+         <y>80</y>
+         <width>91</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:12pt; color:#808080;">PRENTJE&lt;/span>&lt;/p>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; color:#808080;">BOOG&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_8" >
+       <property name="geometry" >
+        <rect>
+         <x>130</x>
+         <y>40</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_11" >
+       <property name="geometry" >
+        <rect>
+         <x>240</x>
+         <y>110</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_10" >
+       <property name="geometry" >
+        <rect>
+         <x>130</x>
+         <y>180</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_9" >
+       <property name="geometry" >
+        <rect>
+         <x>30</x>
+         <y>110</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_18" >
+       <property name="geometry" >
+        <rect>
+         <x>130</x>
+         <y>20</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Start point&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_28" >
+       <property name="geometry" >
+        <rect>
+         <x>30</x>
+         <y>90</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Start point&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_23" >
+       <property name="geometry" >
+        <rect>
+         <x>130</x>
+         <y>160</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Start point&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_29" >
+       <property name="geometry" >
+        <rect>
+         <x>240</x>
+         <y>90</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Start point&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_33" >
+       <property name="geometry" >
+        <rect>
+         <x>90</x>
+         <y>110</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>s</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_32" >
+       <property name="geometry" >
+        <rect>
+         <x>190</x>
+         <y>50</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>s</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_30" >
+       <property name="geometry" >
+        <rect>
+         <x>300</x>
+         <y>110</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>s</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_31" >
+       <property name="geometry" >
+        <rect>
+         <x>190</x>
+         <y>180</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>s</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_9" >
+      <property name="geometry" >
+       <rect>
+        <x>220</x>
+        <y>290</y>
+        <width>331</width>
+        <height>221</height>
+       </rect>
+      </property>
+      <property name="title" >
+       <string>Headphones</string>
+      </property>
+      <widget class="QLineEdit" name="lineEdit_13" >
+       <property name="geometry" >
+        <rect>
+         <x>250</x>
+         <y>110</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_15" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>110</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_36" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>90</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Start point&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_38" >
+       <property name="geometry" >
+        <rect>
+         <x>250</x>
+         <y>90</y>
+         <width>71</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#000000;">Start point&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_39" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>110</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>s</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_41" >
+       <property name="geometry" >
+        <rect>
+         <x>310</x>
+         <y>110</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>s</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_35" >
+       <property name="geometry" >
+        <rect>
+         <x>110</x>
+         <y>80</y>
+         <width>133</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt; color:#808080;">PRENTJE&lt;/span>&lt;/p>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; color:#808080;">HOOFDTELEFOON&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_4" >
+     <attribute name="title" >
+      <string>Procedure</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_19" >
+      <property name="geometry" >
+       <rect>
+        <x>170</x>
+        <y>60</y>
+        <width>331</width>
+        <height>311</height>
+       </rect>
+      </property>
+      <property name="title" >
+       <string>GroupBox</string>
+      </property>
+      <widget class="QLabel" name="label_99" >
+       <property name="geometry" >
+        <rect>
+         <x>10</x>
+         <y>100</y>
+         <width>81</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#808080;">Stepsize:&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_46" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>130</y>
+         <width>21</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_112" >
+       <property name="geometry" >
+        <rect>
+         <x>40</x>
+         <y>130</y>
+         <width>46</width>
+         <height>14</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#808080;">Fixed&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_48" >
+       <property name="geometry" >
+        <rect>
+         <x>90</x>
+         <y>130</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_109" >
+       <property name="geometry" >
+        <rect>
+         <x>130</x>
+         <y>130</y>
+         <width>21</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:10pt; color:#808080;">dB&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_45" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>170</y>
+         <width>21</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_113" >
+       <property name="geometry" >
+        <rect>
+         <x>40</x>
+         <y>170</y>
+         <width>46</width>
+         <height>14</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:10pt; color:#808080;">Variable&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_49" >
+       <property name="geometry" >
+        <rect>
+         <x>90</x>
+         <y>170</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_50" >
+       <property name="geometry" >
+        <rect>
+         <x>90</x>
+         <y>210</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_117" >
+       <property name="geometry" >
+        <rect>
+         <x>130</x>
+         <y>170</y>
+         <width>59</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#808080;">dB at start&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_116" >
+       <property name="geometry" >
+        <rect>
+         <x>130</x>
+         <y>210</y>
+         <width>111</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#808080;">dB after 1 reversal&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_134" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>250</y>
+         <width>151</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#808080;">Repeat first until correct&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_12" >
+       <property name="geometry" >
+        <rect>
+         <x>170</x>
+         <y>250</y>
+         <width>21</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_30" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>40</y>
+         <width>21</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_29" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>16</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="font" >
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_11" >
+       <property name="geometry" >
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>14</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; color:#808080;">Fixed:&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_12" >
+       <property name="geometry" >
+        <rect>
+         <x>40</x>
+         <y>40</y>
+         <width>101</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:10pt; color:#808080;">speech level&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_14" >
+       <property name="geometry" >
+        <rect>
+         <x>40</x>
+         <y>60</y>
+         <width>101</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:10pt; color:#808080;">noise level&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QRadioButton" name="radioButton_9" >
+      <property name="geometry" >
+       <rect>
+        <x>30</x>
+        <y>40</y>
+        <width>111</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="font" >
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text" >
+       <string>Constant</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="radioButton_10" >
+      <property name="geometry" >
+       <rect>
+        <x>30</x>
+        <y>70</y>
+        <width>111</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="font" >
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text" >
+       <string>Adaptive</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2" >
+     <attribute name="title" >
+      <string>Options</string>
+     </attribute>
+     <widget class="QFrame" name="frame" >
+      <property name="geometry" >
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>621</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="frameShape" >
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow" >
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLineEdit" name="lineEdit_64" >
+       <property name="geometry" >
+        <rect>
+         <x>410</x>
+         <y>70</y>
+         <width>41</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>0</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_141" >
+       <property name="geometry" >
+        <rect>
+         <x>460</x>
+         <y>70</y>
+         <width>20</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>s</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_2" >
+       <property name="geometry" >
+        <rect>
+         <x>420</x>
+         <y>110</y>
+         <width>21</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_132" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>70</y>
+         <width>281</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt;">Time before first speech stimulus&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_128" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>110</y>
+         <width>281</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt;">Reinforcement&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_135" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>10</y>
+         <width>101</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:12pt;">Test&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_120" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>20</y>
+         <width>211</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt;">Noise stops between trials&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_104" >
+       <property name="geometry" >
+        <rect>
+         <x>410</x>
+         <y>10</y>
+         <width>19</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt;">yes&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_56" >
+       <property name="geometry" >
+        <rect>
+         <x>410</x>
+         <y>30</y>
+         <width>21</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_55" >
+       <property name="geometry" >
+        <rect>
+         <x>450</x>
+         <y>30</y>
+         <width>21</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_105" >
+       <property name="geometry" >
+        <rect>
+         <x>450</x>
+         <y>10</y>
+         <width>46</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt;">no&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_2" >
+      <property name="geometry" >
+       <rect>
+        <x>10</x>
+        <y>230</y>
+        <width>621</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <property name="frameShape" >
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow" >
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QRadioButton" name="radioButton_73" >
+       <property name="geometry" >
+        <rect>
+         <x>420</x>
+         <y>50</y>
+         <width>21</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_72" >
+       <property name="geometry" >
+        <rect>
+         <x>420</x>
+         <y>83</y>
+         <width>21</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_107" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>50</y>
+         <width>281</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt;">Experimenter screen&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_126" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>80</y>
+         <width>281</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt;">Subject screen&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_137" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>10</y>
+         <width>101</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt;">Screen&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_3" >
+      <property name="geometry" >
+       <rect>
+        <x>10</x>
+        <y>390</y>
+        <width>621</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="frameShape" >
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow" >
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLineEdit" name="lineEdit_65" >
+       <property name="geometry" >
+        <rect>
+         <x>410</x>
+         <y>80</y>
+         <width>41</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>6</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_4" >
+       <property name="geometry" >
+        <rect>
+         <x>420</x>
+         <y>42</y>
+         <width>21</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_133" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>80</y>
+         <width>281</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt;">Number of responses that count&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_130" >
+       <property name="geometry" >
+        <rect>
+         <x>80</x>
+         <y>50</y>
+         <width>281</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt;">Show results&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_136" >
+       <property name="geometry" >
+        <rect>
+         <x>20</x>
+         <y>10</y>
+         <width>101</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:12pt;">Results&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_7" >
+     <attribute name="title" >
+      <string>Calibrate</string>
+     </attribute>
+     <widget class="QComboBox" name="comboBox_4" >
+      <property name="geometry" >
+       <rect>
+        <x>200</x>
+        <y>50</y>
+        <width>131</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text" >
+        <string>Curtain room - RME 2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>Reverb room - RME 3</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_7" >
+      <property name="geometry" >
+       <rect>
+        <x>60</x>
+        <y>50</y>
+        <width>111</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt;">Hardware Setup:&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8" >
+      <property name="geometry" >
+       <rect>
+        <x>60</x>
+        <y>150</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt;">Unit:&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_5" >
+      <property name="geometry" >
+       <rect>
+        <x>200</x>
+        <y>150</y>
+        <width>131</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text" >
+        <string>dB SPL</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>dB A</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QTreeWidget" name="treeWidget" >
+      <property name="geometry" >
+       <rect>
+        <x>110</x>
+        <y>220</y>
+        <width>461</width>
+        <height>192</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text" >
+        <string>Select</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>Noise</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>Calibration</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string/>
+       </property>
+      </column>
+      <item>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="text" >
+        <string>LIST</string>
+       </property>
+       <property name="text" >
+        <string>-10</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="text" >
+        <string>ICRA</string>
+       </property>
+       <property name="text" >
+        <string>-12</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+      </item>
+     </widget>
+     <widget class="QPushButton" name="pushButton" >
+      <property name="geometry" >
+       <rect>
+        <x>120</x>
+        <y>430</y>
+        <width>141</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>Calibrate selected</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox" >
+      <property name="geometry" >
+       <rect>
+        <x>130</x>
+        <y>240</y>
+        <width>90</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>CheckBox</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_13" >
+      <property name="geometry" >
+       <rect>
+        <x>130</x>
+        <y>260</y>
+        <width>90</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text" >
+       <string>CheckBox</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

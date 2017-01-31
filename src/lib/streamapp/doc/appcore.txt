@@ -1,0 +1,505 @@
+/**
+
+  @page appcore
+
+@section sec_appintro introduction
+This page contains some basic information about the classes in the @c appcore namespace.
+@li @ref sec_appgeneral has general info
+@li @ref sec_appeofthread contains an example using threads, streams and callbacks
+@li @ref sec_appevtdisp illustrates event dispatching, threads and criticalsections
+
+@subsection sec_appgeneral general
+appcore's main aim is to ease working with threads and everything that's related to them. Therefore it contains platform-independent abstractions
+of all things needed to work with threads: the thread itself (@c IThread), something that you can suspend and signal a thread with (@c WaitableObject),
+and a mechanism to protect the thread against mutual access (@c CriticalSection).
+@note more abstractions will be added later (semaphore, mutex, notifier, occurence,...)
+
+appcore already provides implementations for win32, linux, c6x and psp. This is very nice, since now it doesn't matter on what platform
+you develop your thread, it will work on all others too.
+
+Apart from thread stuff, appcore has a pattern for event communication, singleton patterns, a factory pattern and some other
+tools used when creating applications.
+
+@subsection sec_appeofthread simple thread example
+In @ref sec_strcallback you were promised an example using the @c IEofChack callback mechanism, well here it is.
+
+Before you even start of thinking to use @c IThread, make sure you read and understand it's documentation.
+
+We will use 2 threads: the main application thread (0) that prints some time info, and another thread (1) that will do some work for us.
+The work will consist of running a @c Callback, so we implement it as a @c CallbackRunner. See the reference for what it is exactly, and 
+notice that an @c ISoundCard is also a @c CallbackRunner.
+To keep things interesting, the execution of (1) takes place only every 500mSec, else it would be over before you would even see it.
+The callback we use will be the @c ConnectionManager from the example in @ref sec_strconn. 
+
+We'll wrap that callback into an @c EofCheck callback to check when the input is finished; when that happens, 
+we let @c EofCheck call a @c WaitObjectCallback to inform (0) in a thread-safe way that everything has been done.
+This system is already put together in a streamapp class, namely @c EofCheckWaitCallback, so we'll use that.
+
+@note as said before, you cannot call 'stop' on a soundcard from within that soundcard's thread while it's running.
+The same goes for @c IThread, you cannot call mp_Stop() from within mp_Run() (you cannot expect a thread to wait for itself to stop, can you?).
+Or, regarding our example, we cannot put (1)->mp_stop() in the @c Callback that @c EofCheck calls when all input is read,
+because EofCheck is executed in (1).
+Hence, we must use a @c WaitObjectCallback (a callback that signals a @c WaitableObject when it's called), and wait for it in (0) to be signaled.
+Another way of doing this could be polling EofCheck in (0) instead of having it calling something back.
+
+Enough talking, here's the code for (1):
+@code
+class MyThread : public IThread, public CallbackRunner
+{
+public:
+  MyThread() :
+    m_pCallback( 0 ),
+    mc_Lock()
+  {}
+  ~MyThread()
+  {
+    mp_Stop( 1000 ); //stopping twice won't hurt, not stopping can be fatal
+  }
+
+  void mp_Run()
+  {
+    for( ;; )
+    {
+      mf_bWait( 500 );
+      if( mf_bThreadShouldStop() )  //never forget to check this
+        return;
+
+      mc_Lock.mf_Enter();
+      if( m_pCallback )
+        m_pCallback->mf_Callback(); //run callback if there is one
+      mc_Lock.mf_Leave();
+    }
+  }
+
+  bool mp_bStart( Callback& a_Callback )
+  {
+    mc_Lock.mf_Enter();
+    m_pCallback = &a_Callback;          //set callback
+    mc_Lock.mf_Leave();
+    mp_Start( IThread::priority_low );  //start thread
+    return true;
+  }
+
+  bool mp_bStop()
+  {
+    mp_Stop( 1000 );                    //wait for stop
+    m_pCallback = 0;                    //remove callback
+    return true;
+  }
+
+  bool mf_bIsRunning() const
+  { return m_pCallback != 0; }
+
+  bool mf_bIsBlocking() const
+  { return false; }                     //we're a thread so we don't block
+
+private:
+  Callback* m_pCallback;
+  const CriticalSection mc_Lock;
+};
+@endcode
+It doesn't do much, except for waiting 500mSec, then seeing if there's a callback, and run it if there is one.
+The class is thread-safe since it uses a @c CriticalSection, so you could eg call m_bStart() as much as you like, 
+everytime with a different @c Callback, while the thread is already running, and it won't crash your application.
+
+So now the application code:
+@code
+try
+{
+  //paste code from ConnectionManager example here
+  //"man" is the callback
+  //"pI1" and "pI2" are the 2 InputStreams from file.
+
+    //configure an eofcheck
+  EofCheckWaitCallback checker;
+  checker.mp_RegisterMasterCallback( man );
+  checker.mp_GetEofCheck()->mp_AddInputToCheck( *pI1 );
+  checker.mp_GetEofCheck()->mp_AddInputToCheck( *pI2 );
+
+    //start the thread
+  MyThread thread;
+  thread.mp_bStart( checker );
+
+    //do some work until everyhting is done
+  const WaitableObject& waiter = checker.mf_GetWaitObject();
+
+  for( ;; )
+  {
+    if( waiter.mf_eWaitForSignal( 100 ) == WaitableObject::wait_timeout )
+    {
+        //wait timed out, object not signaled, hence files not done
+      std::cout << "100 mSecs elapsed - input still being read" << std::endl;
+    }
+    else
+    {
+        //object signaled
+      std::cout << "input completely read - now stopping thread" << std::endl;
+      thread.mp_bStop();
+      break;
+    }
+  }
+
+  //don't forget to delete everything here!
+}
+catch( StringException& e )
+{
+  std::cout << "error" << e.mc_sError.c_str() << std::endl;
+}
+catch(...)
+{
+  std::cout << "!unhandled exception!" << std::endl;
+}
+@endcode
+
+@subsection sec_appevtdisp using event dispatching
+If your app has a lot of different modules, you might consider using the classes in events.h to have a generic way to control your app.
+The nice thing about the whole event system, is that you have a set of classes that can mimic any other class (since any method
+can be wrapped in a Dispatch() or Post() call). So you can write a whole bunch of classes that control the event classes,
+hereby effectively writing an application, without having to know anything at all about the actual implementation of
+the application's task.
+Now that's OO.
+
+The example below isn't a fancy application, but it shows how you can create one by implementing threaded event dispatching.
+Every interesting task in the application derives from @c IThreadedModule, which contains a default implementation of @c mp_DispatchEvent().
+It doesn't implement the @c IThread's mp_Run method, since this is the one in which the "interesting task" will happen.
+Before we can implement anything, we should define the type and data we will use. So, where you would normally write interfaces
+for all classes, now you write on which data these classes will act, and you replace the classes by @c IEventXXX stuff.
+
+Here is the type we will use for the template parameter:
+@code
+enum gt_eMyEventCode
+{
+  gc_eResetEvent,       // stop
+  gc_eStartEvent,       // start
+  gc_eConfigEvent1,     // config1
+  gc_eConfigEvent2,     // config2
+};
+@endcode
+
+And here is some of the data we will use:
+@code
+struct gt_ConfigEvent1  // will be sent with gc_eConfigEvent1
+{
+  void Reset()
+  {
+    m_sSomeString.clear();
+    m_nSomeNumber = 0;
+  }
+
+  std::string m_sSomeString;
+  unsigned    m_nSomeNumber;
+};
+
+struct gt_ConfigEvent2  // will be sent with gc_eConfigEvent2
+{
+  void Reset()
+  {
+    m_nSomeNumber = 0;
+  }
+
+  unsigned m_nSomeNumber;
+  unsigned m_nSomeNumber2;
+};
+@endcode
+
+Since writing @c blah<gt_eMyEventCode> all the time is a waste of time, prone to typos and reducing the life of your keyboard,
+ we typedef everything:
+@code
+typedef gt_eMyEventCode             EventType;
+typedef IEventDispatcher<EventType> MyEventDispatcher;
+typedef AdvEventRouter<EventType>   MyEventRouter;
+@endcode
+This also has the great advantage that once you decide to change the type to something else, you don't have to modify
+the entire source code, just these lines.
+
+Ok, now we're set to write the @c IThreadedModule. If you've made it this far in the documentation, everything should
+be perfectly clear:
+@code
+class IThreadedModule : public MyEventDispatcher, protected IThread
+{
+protected:
+    //reason for using protected constructor is that it's completely useless to
+    //have a public one: you can't do anything with the class anyway: it has a pure virtual function.
+  IThreadedModule( const std::string ac_sName ) :
+    IThread( ac_sName )
+  {}
+
+public:
+  virtual ~IThreadedModule()
+  {}
+
+    //contains default start/stop/query implementation
+  virtual void mp_DispatchEvent( const EventType& ac_tCode, gt_EventData a_pData = 0 )
+  {
+    const Lock L( mc_Lock );  //this will avoid nasty things when two threads call this function at the same time
+    if( ac_tCode == gc_eResetEvent )
+    {
+      IThread::mp_Stop( 1000 );
+    }
+    else if( ac_tCode == gc_eStartEvent )
+    {
+      IThread::mp_Start();
+    }
+  }
+
+protected:
+  void mp_Run() = 0;  // this will be implemented to do interesting stuff
+
+  const CriticalSection mc_Lock;  //this lock can be used by implementations too.
+};
+@endcode
+
+Now let's write some modules deriving form @c IThreadedModule. @c ModuleA will print a message in it's thread, that's it.
+The message and number of times to print it are defined in the @c gt_ConfigEvent1 data structure,
+so in the @c mp_DispatchEvent we expect a @c gc_eConfigEvent1.
+If we get this event, a_pData should have a pointer to a @c gt_ConfigEvent1. Notice the use of the word should:
+this is the achilles point of the whole event mechanism: you can cast @c void* to anything, that's why you should love it,
+but if you cast it to @c A* while it's actually @c B*, you're in trouble, as this will most certainly lead to accesses to 
+memory that you're not allowed to access, or that doesn't exist, and that is why you should take care with void*.
+@code
+class ModuleA : public IThreadedModule
+{
+public:
+  ModuleA( const std::string& ac_sName = "A" ) :
+    IThreadedModule( ac_sName )
+  {
+    m_Config.Reset();
+  }
+
+  ~ModuleA()
+  {}
+
+  void mp_DispatchEvent( const EventType& ac_tCode, gt_EventData a_pData )
+  {
+    IThreadedModule::mp_DispatchEvent( ac_tCode, a_pData );
+    const Lock L( mc_Lock );
+    if( ac_tCode == gc_eConfigEvent1 )
+    {
+      gt_ConfigEvent1* p = (gt_ConfigEvent1*) a_pData;
+      m_Config = *p;
+    }
+  }
+
+private:
+  void mp_Run()
+  {
+    while( !IThread::mf_bThreadShouldStop() )
+    {
+      mc_Lock.mf_Enter();
+      if( m_Config.m_nSomeNumber > 0 )
+      {
+        std::string sOutput;
+        sOutput = "I'm thread " + IThread::mf_sGetName() + " and I'll print ";
+        sOutput += m_Config.m_sSomeString + " " + toString( --m_Config.m_nSomeNumber ) + " more times.";
+        TRACE( sOutput )
+      }
+      mc_Lock.mf_Leave();
+      IThread::mf_bWait( 100 ); //wait some time
+    }
+  }
+
+  gt_ConfigEvent1 m_Config;
+};
+@endcode
+
+@c ModuleB will also print a message, but after it has printed it the number of times defined in it's @c gt_ConfigEvent2,
+it will wait some time, and then post a @c gt_ConfigEvent1 to let @c ModuleA print the same message.
+The printing is done via the @c TRACE macro, and there's a good reason for doing this, more about that later.
+@code
+class ModuleB : public IThreadedModule
+{
+public:
+  ModuleB( const std::string& ac_sName = "B" ) :
+    IThreadedModule( ac_sName )
+  {}
+
+  ~ModuleB()
+  {}
+
+  void mp_DispatchEvent( const EventType& ac_tCode, gt_EventData a_pData )
+  {
+    IThreadedModule::mp_DispatchEvent( ac_tCode, a_pData );
+    const Lock L( mc_Lock );
+    if( ac_tCode == gc_eConfigEvent2 )
+    {
+      gt_ConfigEvent2* p = (gt_ConfigEvent2*) a_pData;
+      m_Config = *p;
+    }
+  }
+
+private:
+  void mp_Run()
+  {
+    while( !IThread::mf_bThreadShouldStop() )
+    {
+      const Lock L( mc_Lock );
+      while( m_Config.m_nSomeNumber > 0 )
+      {
+        std::string sOutput;
+        sOutput = "I'm thread " + IThread::mf_sGetName() + " and I'll print hello hobbit ";
+        sOutput += toString( --m_Config.m_nSomeNumber ) + " more times.";
+        TRACE( sOutput )
+        IThread::mf_bWait( 100 );
+      }
+
+      IThread::sf_Sleep( m_Config.m_nSomeNumber2 ); //wait some time before posting to other threads
+
+      TRACE( "\n" )
+      TRACE( "I'm thread " + IThread::mf_sGetName() + " and I want ModuleA to print hello hobbit too." )
+
+      gt_ConfigEvent1 conf;
+      conf.m_nSomeNumber = 5;
+      conf.m_sSomeString = "hello hobbit";
+      mp_DispatchEventToListener( gc_eConfigEvent1, &conf );
+
+      mp_SetThreadShouldStop(); //stop here, our work is done
+    }
+  }
+
+  gt_ConfigEvent2 m_Config;
+};
+@endcode
+
+Now that we have created two different modules, it's about time we put them to work.
+First we declare the modules and give them a unique name, so when they start printing we know who prints what:
+@code
+ ModuleA modA( "A" );
+ ModuleA modA2( "A2" );
+ ModuleB modB( "B" );
+@endcode
+
+The next thing to do, is specifying the relations between all classes. We know @c modB will post an event that should be
+directed by both @c A modules, and we want all three modules to receive the start and stop events. It's clear this cannot be
+done without the intervention of a fourth class: suppose you write @c modB.mp_InstallEventDispatcher( &modA ), then @c modA
+will indeed receive the config event from @c modB, but that's it, no start or stop.
+So that fourth class has to route events from and to all 3 other classes. No wonder that it's interface is called @c IEventRouter.
+It works straightforward: all events go through the router, and you specify which event goes where by registering a class for it:
+@code
+MyEventRouter Router;
+
+Router.mp_RegisterEventDispatcher( &modA  , gc_eResetEvent );
+Router.mp_RegisterEventDispatcher( &modA2 , gc_eResetEvent );
+Router.mp_RegisterEventDispatcher( &modB  , gc_eResetEvent );
+Router.mp_RegisterEventDispatcher( &modA  , gc_eStartEvent );
+Router.mp_RegisterEventDispatcher( &modA2 , gc_eStartEvent );
+Router.mp_RegisterEventDispatcher( &modB  , gc_eStartEvent );
+
+Router.mp_RegisterEventDispatcher( &modA  , gc_eConfigEvent1 );
+Router.mp_RegisterEventDispatcher( &modA2 , gc_eConfigEvent1 );
+Router.mp_RegisterEventDispatcher( &modB  , gc_eConfigEvent2 );
+
+modB.mp_InstallEventDispatcher( &Router );
+@endcode
+
+All modules receive the start and reset events, and each one recieves the configevent it uses. Only @c ModuleB will
+also post events, it must post these to the router which will handle it further, therefor we install the router as @c EventDispatcher
+for @c modB.
+
+Important note: do not call for example 
+mp_DispatchEventToListener( gc_eResetEvent ) from within modB's thread, as you cannot stop a thread from within it's own
+thread function, but you should already know that
+
+A real application could offcourse automate this process, for example by supplying a "query" event, for which each module
+returns a list of all event types it can handle, and then it can be registered automatically for all these events when it is
+created through an EventRegisterer or something like that.
+
+Ok, now the first part of the TRACE macro story: all it does is calling utils::Tracer::sf_Trace(). Since this static method calls
+a pure virtual one, we should implement this, or nothing will be printed.
+For simplicity we'll implement it to print everything to std::cout :
+@code
+class MyTracer : public utils::Tracer
+{
+public:
+  MyTracer()
+  {}
+  ~MyTracer()
+  {}
+
+protected:
+  void mp_TraceOne( const std::string& ac_sMessage )
+  {
+    std::cout << ac_sMessage.c_str() << std::endl;
+  }
+};
+
+  //put this in main
+MyTracer tracer;
+utils::Tracer::sf_SetCurrentTracer( &tracer );
+@endcode
+Very simple, innit?
+
+Everything is setup now, lets do the real work. The code below is also put in @c main() for this example,
+but you can as well put in in a function that is called by a gui or so, and run it as many times as you want, it won't hurt.
+What it does should be quite obvious: it configures the two @c ModuleA instances to print "hello earth" 5 times, 
+then the @c ModuleB instance to print 6 times, and then it starts the whole thing. For simplicity we then just sleep 2 seconds,
+this could be replaced by polling all modules with a "query" event to see when they are done or so, the possibilities are endless.
+
+@code
+gt_ConfigEvent1 configA;
+configA.m_nSomeNumber = 5;
+configA.m_sSomeString = "hello earth";
+
+gt_ConfigEvent2 configB;
+configB.m_nSomeNumber = 6;
+configB.m_nSomeNumber2 = 500; //B will sleep 500 seconds before posting the event
+
+Router.mp_DispatchEvent( gc_eConfigEvent1, &configA );
+Router.mp_DispatchEvent( gc_eConfigEvent2, &configB );
+
+Router.mp_DispatchEvent( gc_eStartEvent );
+
+IThread::sf_Sleep( 2000 );
+
+Router.mp_DispatchEvent( gc_eResetEvent );
+@endcode
+
+Now compile and run, you expect to see "I'm thread A and I'll print hello earth 4 more times." and stuff like that, but 
+aaaargh, this really hurts, you made a nice application, checked everything, re-checked everything, and then the first time you 
+run it, it completely surprises you by coming up with something like this:
+"I'm thread B and I'll priI'm thread A1I'm threadA2nt", and it continues spitting out unreadable stuff. What on earth is going on?
+
+
+Little intermezzo now: you may wonder why streamapp's code is full of CriticalSections, well, if you really have no idea, then 
+you probably never wrote an application with more then one thread and shared data between them, and you never went through
+the horror of seeing that data change as if there were evil hobbits creating new connections on your FSB to route it somewhere else,
+after which the same hobbits generate a blue screen (or, for linux, just hang you pc without telling why).
+Sounds a bit like what you saw as output of the code above, not?
+No hobbits involved though, that's just what happens if two threads read and write to the same memory location at the same time.
+Note about "the same time": in computer hardware with a cpu there is no such thing as "the same time", since a cpu's pipeline only does one
+instruction at a time, but since it will contain subsequent instructions that are actually from different threads, it looks like
+it happens at the same time for the end-user application.
+
+So, the code above is perfect to illustrate why you *must* use @c CriticalSection. What happens is this: all 3 threads are putting stuff 
+on @c std::cout at the same time, and since @c std::cout is not made to be used in a multithreaded environment,
+ it just prints everything as it receives it. In this case, not a big disaster since @c std::cout is thread-safe, it won't corrupt it's 
+ memory, but it's not really what you want to see. Suppose you make a @c Tracer implementation that puts everything in a memory buffer,
+ the chance that your application raises a segmentation fault are seriously increasing though, as all 3 threads access the memory at the 
+ same time, and that can never be good.
+
+The solution is simple: adjust @c MyTracer like this:
+@code
+class MyTracer : public utils::Tracer
+{
+public:
+  MyTracer()
+  {}
+  ~MyTracer()
+  {}
+
+protected:
+  void mp_TraceOne( const std::string& ac_sMessage )
+  {
+    const Lock L( mc_Lock );
+    std::cout << ac_sMessage.c_str() << std::endl;
+  }
+
+  const CriticalSection mc_Lock;
+};
+@endcode
+Now only one thread can print it's message at a time, so every message will be put nicely after the previous one.
+
+
+
+
+
+*/

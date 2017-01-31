@@ -1,0 +1,388 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    
+    <xs:include schemaLocation="parameter.xsd"/>
+    
+    <xs:complexType name="filtersType">
+        <xs:sequence>
+            <xs:element name="filter" minOccurs="0" maxOccurs="unbounded"
+                type="apex:filterType">
+                <xs:annotation>
+                    <xs:documentation>Every filter/generator derives from this base
+                        type. All filters to be used are defined
+                        here.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    
+    <xs:complexType name="filterType">
+        <xs:annotation>
+            <xs:documentation>Base type for all filters</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="device" type="xs:IDREF">
+                <xs:annotation>
+                    <xs:documentation>ID of the device to which this filter belongs. The mode of the
+                        filter (online or offline) is determined by the device.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="channels" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>Number of channels</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="continuous" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>If continuous==true, the filter/generator keeps on running
+                        between trials (ie while the user is entering input). Only makes sense for
+                        generators.</xs:documentation>
+                    <!-- FIXME: move to generator -->
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+    
+    
+    
+    <xs:complexType name="channelGainType">
+        <xs:simpleContent>
+            <xs:extension base="apex:gainparam">
+                <xs:attribute name="channel" type="xs:nonNegativeInteger">
+                    <xs:annotation>
+                        <xs:documentation> Used to specify a single channel to apply gain to,
+                            instead of applying it to all channels at once.
+                            For example, for an amplifier having two channels, these are set independently by using
+                            <gain id="ch0" channel="0">-3.00</gain>
+                            <gain id="ch1" channel="1">-6.00</gain>
+                            Channels are zero based, ie the first channel is 0, the
+                            second 1 and so on.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:complexType name="generator">
+        <xs:annotation>
+            <xs:documentation>A generator is a filter without any input.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:filterType">
+                <xs:sequence>
+                    <xs:element name="type">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="noise">
+                                    <xs:annotation>
+                                        <xs:documentation>White noise (this is NOT gaussian
+                                            noise)</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <!--xs:enumeration value="square">
+                                    <xs:annotation>
+                                    <xs:documentation>Square wave with peak amplitude = total
+                                    gain</xs:documentation>
+                                    </xs:annotation>
+                                    </xs:enumeration-->
+                                <xs:enumeration value="sinus">
+                                    <xs:annotation>
+                                        <xs:documentation>Sinus with peak amplitude = total
+                                            gain</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <!--xs:enumeration value="triangle">
+                                    <xs:annotation>
+                                    <xs:documentation>Triangle with peak amplitude = total
+                                    gain</xs:documentation>
+                                    </xs:annotation>
+                                    </xs:enumeration-->
+                                <xs:enumeration value="singlepulse">
+                                    <xs:annotation>
+                                        <xs:documentation>Single pulse with peak amplitude = total
+                                            gain. The polarity is set using the "polarity"
+                                            parameter.</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="basegain" type="xs:double" default="0" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>The total gain is basegain+gain. Basegain is useful
+                                for amplitude normalization between different
+                                blocks</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="invertgain" type="xs:boolean" default="false" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Inverts the gain of the block (but not the basegain).
+                                Invertgain is useful for the attenuation of noise depending on an 
+                                SNR</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="gain" default="0" type="apex:gainparam">
+                        <xs:annotation>
+                            <xs:documentation>The total gain is basegain+gain. Gain is a parameter
+                                that can be changed by other modules</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="frequency" default="1000">
+                        <xs:annotation>
+                            <xs:documentation>Frequency: only makes sense for sinus, square and
+                                triangle</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:nonNegativeInteger">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="phase" default="0">
+                        <xs:annotation>
+                            <xs:documentation>Phase (rad): only makes sense for sinus, square and
+                                triangle</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:double">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="pulsewidth" default="1" type="xs:positiveInteger"
+                        minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Pulse width in samples. Currently only used for single pulse generator</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="polarity" minOccurs="0" default="positive">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="positive"/>
+                                <xs:enumeration value="negative"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="gainparam">
+        <xs:simpleContent>
+            <xs:extension base="xs:double">
+                <xs:attributeGroup ref="apex:filterParam"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="amplifier">
+        <xs:complexContent>
+            <xs:extension base="apex:filterType">
+                <xs:sequence>
+                    <xs:element name="basegain" type="apex:gainparam" default="0" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>The total gain is basegain+gain. Basegain is useful
+                                for amplitude normalization between different
+                                blocks</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="invertgain" type="xs:boolean" default="false" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Inverts the gain of the block (but not the basegain).
+                                Invertgain is useful for the attenuation of noise depending on an 
+                                SNR</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="gain" minOccurs="1" maxOccurs="unbounded"
+                        type="apex:channelGainType"> </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="fader">
+        <xs:complexContent>
+            <xs:extension base="apex:filterType">
+                <xs:sequence>
+                    <xs:element name="length" default="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Fade length in mSec.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:double">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                </xs:extension>
+                                
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="type" default="cosine">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Fader type: linear or cosine shaped.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="linear"/>
+                                <xs:enumeration value="cosine"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="direction" default="in">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Fader direction: fadein (beginning of stimulus) or
+                                fadeout(end of stimulus)
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="in"/>
+                                <xs:enumeration value="out"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="dataloop">
+        <xs:annotation>
+            <xs:documentation>Loops a datablock forever.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:filterType">
+                <xs:sequence>
+                    <xs:element name="datablock" type="xs:IDREF"/>
+                    <xs:element name="basegain" type="xs:double" default="0" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>The total gain is basegain+gain. Basegain is useful
+                                for amplitude normalization between different
+                                blocks</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="invertgain" type="xs:boolean" default="false" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Inverts the gain of the block (but not the basegain).
+                                Invertgain is useful for the attenuation of noise depending on an 
+                                SNR</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="gain" type="apex:gainparam"/>
+                    <xs:element name="randomjump" type="xs:boolean" default="false" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Jump to a random place in the datablock upon
+                                start. Only functional if randomjump=false</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="jump" type="xs:double" default="0" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Jump to a fixed place in the datablock when the 
+                                generator is started. The place is specified in seconds. Take care that 
+                                you do not jump further than the length of the wave file.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="hrtffiltersum">
+        <xs:complexContent>
+            <xs:extension base="apex:filterType">
+                <xs:sequence>
+                    
+                    <xs:element name="anglespeech" >
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:integer">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                        
+                    </xs:element>
+                    
+                    <xs:element name="anglenoise" >
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:integer">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                        
+                    </xs:element>
+                    <xs:element name="snr">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:integer">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                        
+                    </xs:element>
+                    <xs:element name="speechfile" >
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:integer">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                        
+                    </xs:element>
+                    <xs:element name="noisefile" >
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:integer">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="pluginfilter">
+        <xs:annotation>
+            <xs:documentation>Filter implemented by a binary plugin</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:filterType">
+                <xs:sequence>
+                    <xs:element name="plugin" type="xs:anyURI"/>
+                    <xs:element name="parameter" default="" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                    <xs:attribute name="name" type="xs:Name" use="required"/>
+                                    <xs:attribute name="channel" type="xs:nonNegativeInteger" use="optional"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    
+
+</xs:schema>

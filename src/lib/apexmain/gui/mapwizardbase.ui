@@ -1,0 +1,441 @@
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>MapWizardBase</class>
+  <widget class="Q3Wizard" name="MapWizardBase" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>553</width>
+        <height>355</height>
+      </rect>
+    </property>
+    <property name="caption" >
+      <string>Map Wizard</string>
+    </property>
+    <property name="icon" >
+      <pixmap/>
+    </property>
+    <widget class="QWidget" name="WizardPage" >
+      <attribute name="title" >
+        <string>Step 1: Select a Patient</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+        <property name="margin" >
+          <number>0</number>
+        </property>
+        <item>
+          <spacer name="spacer3_2" >
+            <property name="sizeHint" >
+              <size>
+                <width>25</width>
+                <height>25</height>
+              </size>
+            </property>
+            <property name="sizeType" >
+              <enum>Fixed</enum>
+            </property>
+            <property name="orientation" >
+              <enum>Vertical</enum>
+            </property>
+          </spacer>
+        </item>
+        <item>
+          <layout class="QHBoxLayout" >
+            <property name="margin" >
+              <number>0</number>
+            </property>
+            <item>
+              <widget class="Q3ListBox" name="listBoxPatient" >
+                <property name="sizePolicy" >
+                  <sizepolicy>
+                    <hsizetype>7</hsizetype>
+                    <vsizetype>1</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
+                </property>
+                <property name="minimumSize" >
+                  <size>
+                    <width>200</width>
+                    <height>145</height>
+                  </size>
+                </property>
+                <item>
+                  <property name="text" >
+                    <string>New Item</string>
+                  </property>
+                </item>
+              </widget>
+            </item>
+            <item>
+              <spacer name="spacer1_2_2" >
+                <property name="sizeHint" >
+                  <size>
+                    <width>75</width>
+                    <height>16</height>
+                  </size>
+                </property>
+                <property name="sizeType" >
+                  <enum>Expanding</enum>
+                </property>
+                <property name="orientation" >
+                  <enum>Horizontal</enum>
+                </property>
+              </spacer>
+            </item>
+            <item>
+              <widget class="Q3GroupBox" name="groupBoxPatient" >
+                <property name="sizePolicy" >
+                  <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
+                </property>
+                <property name="minimumSize" >
+                  <size>
+                    <width>225</width>
+                    <height>100</height>
+                  </size>
+                </property>
+                <property name="title" >
+                  <string>Patient Properties</string>
+                </property>
+                <layout class="QGridLayout" >
+                  <item rowspan="1" row="2" column="0" colspan="2" >
+                    <widget class="QLabel" name="textLabelDateImplant" >
+                      <property name="minimumSize" >
+                        <size>
+                          <width>200</width>
+                          <height>0</height>
+                        </size>
+                      </property>
+                      <property name="text" >
+                        <string>Date of Implantation</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item rowspan="1" row="0" column="0" colspan="2" >
+                    <widget class="QLabel" name="textLabelName" >
+                      <property name="text" >
+                        <string>Name:</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item rowspan="1" row="3" column="0" colspan="2" >
+                    <widget class="QLabel" name="textLabelImplantType" >
+                      <property name="text" >
+                        <string>Implant Type</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="1" column="0" >
+                    <widget class="QLabel" name="textLabelDateBirth" >
+                      <property name="sizePolicy" >
+                        <sizepolicy>
+                          <hsizetype>0</hsizetype>
+                          <vsizetype>5</vsizetype>
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                      <property name="minimumSize" >
+                        <size>
+                          <width>145</width>
+                          <height>0</height>
+                        </size>
+                      </property>
+                      <property name="text" >
+                        <string>Date of Birth:</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="1" column="1" >
+                    <widget class="QLabel" name="textLabelSex" >
+                      <property name="sizePolicy" >
+                        <sizepolicy>
+                          <hsizetype>0</hsizetype>
+                          <vsizetype>5</vsizetype>
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                      <property name="minimumSize" >
+                        <size>
+                          <width>45</width>
+                          <height>0</height>
+                        </size>
+                      </property>
+                      <property name="text" >
+                        <string>Sex:</string>
+                      </property>
+                    </widget>
+                  </item>
+                </layout>
+              </widget>
+            </item>
+          </layout>
+        </item>
+        <item>
+          <spacer name="spacer3" >
+            <property name="sizeHint" >
+              <size>
+                <width>25</width>
+                <height>25</height>
+              </size>
+            </property>
+            <property name="sizeType" >
+              <enum>Fixed</enum>
+            </property>
+            <property name="orientation" >
+              <enum>Vertical</enum>
+            </property>
+          </spacer>
+        </item>
+        <item>
+          <layout class="QHBoxLayout" >
+            <property name="margin" >
+              <number>0</number>
+            </property>
+            <item>
+              <widget class="QPushButton" name="pushButtonR126" >
+                <property name="minimumSize" >
+                  <size>
+                    <width>200</width>
+                    <height>25</height>
+                  </size>
+                </property>
+                <property name="text" >
+                  <string>Change Settings for the R126 Database</string>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <spacer name="spacer2" >
+                <property name="sizeHint" >
+                  <size>
+                    <width>296</width>
+                    <height>11</height>
+                  </size>
+                </property>
+                <property name="sizeType" >
+                  <enum>Expanding</enum>
+                </property>
+                <property name="orientation" >
+                  <enum>Horizontal</enum>
+                </property>
+              </spacer>
+            </item>
+          </layout>
+        </item>
+      </layout>
+    </widget>
+    <widget class="QWidget" name="WizardPage" >
+      <attribute name="title" >
+        <string>Step 2: Select a Map for the Selected Patient</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+        <property name="margin" >
+          <number>0</number>
+        </property>
+        <item>
+          <spacer name="spacer3_3" >
+            <property name="sizeHint" >
+              <size>
+                <width>25</width>
+                <height>25</height>
+              </size>
+            </property>
+            <property name="sizeType" >
+              <enum>Fixed</enum>
+            </property>
+            <property name="orientation" >
+              <enum>Vertical</enum>
+            </property>
+          </spacer>
+        </item>
+        <item>
+          <layout class="QHBoxLayout" >
+            <property name="margin" >
+              <number>0</number>
+            </property>
+            <item>
+              <widget class="Q3ListBox" name="listBoxMap" >
+                <property name="sizePolicy" >
+                  <sizepolicy>
+                    <hsizetype>7</hsizetype>
+                    <vsizetype>1</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
+                </property>
+                <property name="minimumSize" >
+                  <size>
+                    <width>200</width>
+                    <height>145</height>
+                  </size>
+                </property>
+                <item>
+                  <property name="text" >
+                    <string>New Item</string>
+                  </property>
+                </item>
+              </widget>
+            </item>
+            <item>
+              <spacer name="spacer1_2" >
+                <property name="sizeHint" >
+                  <size>
+                    <width>75</width>
+                    <height>16</height>
+                  </size>
+                </property>
+                <property name="sizeType" >
+                  <enum>Expanding</enum>
+                </property>
+                <property name="orientation" >
+                  <enum>Horizontal</enum>
+                </property>
+              </spacer>
+            </item>
+            <item>
+              <widget class="Q3GroupBox" name="groupBoxMap" >
+                <property name="sizePolicy" >
+                  <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
+                </property>
+                <property name="minimumSize" >
+                  <size>
+                    <width>220</width>
+                    <height>145</height>
+                  </size>
+                </property>
+                <property name="title" >
+                  <string>Map Properties</string>
+                </property>
+                <layout class="QVBoxLayout" >
+                  <item>
+                    <widget class="QLabel" name="textLabelDateCreation" >
+                      <property name="text" >
+                        <string>Creation Date:</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QLabel" name="textLabelRateStimulation" >
+                      <property name="sizePolicy" >
+                        <sizepolicy>
+                          <hsizetype>0</hsizetype>
+                          <vsizetype>5</vsizetype>
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                      <property name="minimumSize" >
+                        <size>
+                          <width>145</width>
+                          <height>0</height>
+                        </size>
+                      </property>
+                      <property name="text" >
+                        <string>Stimulation Rate:</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QLabel" name="textLabelMaxima" >
+                      <property name="text" >
+                        <string>Maxima:</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QLabel" name="textLabelRateTotal" >
+                      <property name="sizePolicy" >
+                        <sizepolicy>
+                          <hsizetype>0</hsizetype>
+                          <vsizetype>5</vsizetype>
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                      <property name="minimumSize" >
+                        <size>
+                          <width>200</width>
+                          <height>0</height>
+                        </size>
+                      </property>
+                      <property name="text" >
+                        <string>Total Stimulation Rate:</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QLabel" name="textLabelNumberMode" >
+                      <property name="text" >
+                        <string>Stimulation Mode:</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QLabel" name="textLabelNumberStrategy" >
+                      <property name="text" >
+                        <string>Strategy:</string>
+                      </property>
+                    </widget>
+                  </item>
+                </layout>
+              </widget>
+            </item>
+          </layout>
+        </item>
+        <item>
+          <spacer name="spacer5" >
+            <property name="sizeHint" >
+              <size>
+                <width>21</width>
+                <height>50</height>
+              </size>
+            </property>
+            <property name="sizeType" >
+              <enum>Minimum</enum>
+            </property>
+            <property name="orientation" >
+              <enum>Vertical</enum>
+            </property>
+          </spacer>
+        </item>
+      </layout>
+    </widget>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <connections>
+    <connection>
+      <sender>pushButtonR126</sender>
+      <signal>released()</signal>
+      <receiver>MapWizardBase</receiver>
+      <slot>R126SettingsClicked()</slot>
+    </connection>
+    <connection>
+      <sender>listBoxPatient</sender>
+      <signal>clicked(Q3ListBoxItem*)</signal>
+      <receiver>MapWizardBase</receiver>
+      <slot>PatientSelected(Q3ListBoxItem*)</slot>
+    </connection>
+    <connection>
+      <sender>listBoxMap</sender>
+      <signal>clicked(Q3ListBoxItem*)</signal>
+      <receiver>MapWizardBase</receiver>
+      <slot>MapSelected(Q3ListBoxItem*)</slot>
+    </connection>
+  </connections>
+</ui>

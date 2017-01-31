@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+
+  <?define MergePath="c:/Program Files/Common Files/Merge Modules" ?>
+  <?if $(env.QMAKESPEC) = "win32-msvc2008" ?>
+    <?define Crt90 ?>
+  <?endif ?>
+  <?if $(env.QMAKESPEC) = "win32-msvc2005" ?>
+    <?define Crt80 ?>
+  <?endif ?>
+  <?if $(env.QMAKESPEC) = "win32-msvc.net" ?>
+    <?define Crt71 ?>
+  <?endif ?>
+  <?if $(env.QMAKESPEC) = "win32-g++" Or $(env.QMAKESPEC) = "win32-x-g++" Or $(env.QMAKESPEC) = "win32-x-g++-4.2" ?>
+    <?define CrtMinGW ?>
+  <?endif ?>
+  <?if $(env.QMAKESPEC) = "win32-x-g++-4.2" ?>
+    <?define CrtGcc42 ?>
+  <?endif ?>
+  <?define Qt ?>
+  <?define InstallPath="bin/release-installed" ?>
+  <?include "main.wxi" ?>
+</Wix>

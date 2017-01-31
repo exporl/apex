@@ -1,0 +1,119 @@
+<ui version="4.0" >
+ <author></author>
+ <comment></comment>
+ <exportmacro></exportmacro>
+ <class>R216SettingsBase</class>
+ <widget class="QDialog" name="R216SettingsBase" >
+  <property name="windowTitle" >
+   <string>R126 Database Settings</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset/>
+  </property>
+  <property name="modal" >
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="margin" >
+    <number>0</number>
+   </property>
+   <property name="spacing" >
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="Q3GroupBox" name="groupBoxDataBase" >
+     <property name="title" >
+      <string>Database Location</string>
+     </property>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QRadioButton" name="radioButtonThisPc" >
+        <property name="text" >
+         <string>This Computer</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButtonRemotePc" >
+        <property name="text" >
+         <string>Remote Computer:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEditRemotePc" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="Q3GroupBox" name="groupBoxSoftware" >
+     <property name="title" >
+      <string>Software Version</string>
+     </property>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QRadioButton" name="radioButtonSV0" >
+        <property name="text" >
+         <string>R126 v1.1 to v1.3</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButtonSV1" >
+        <property name="text" >
+         <string>R126 v2.0</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButtonSV2" >
+        <property name="text" >
+         <string>R126 v2.1</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonTest" >
+     <property name="text" >
+      <string>Test Connection</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>Q3GroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>Qt3Support/Q3GroupBox</header>
+   <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

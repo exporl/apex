@@ -1,0 +1,40 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    
+    <xs:complexType name="prefixType">
+        <xs:annotation>
+            <xs:documentation>
+                A prefix can be specified inline (ie: here) or by specifying the ID of a prefix in the main configfile. 
+                You can specify a complete URI or part of it. Use a scheme if you want to specify an absolute url.
+                Example:
+                Absolute:     file:c:/program files/bla
+                Relative:     ./stimuli
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <!--xs:extension base="xs:anyURI"-->
+            <xs:extension base="xs:string">
+                <xs:attribute name="source" default="inline">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="inline">
+                                <xs:annotation>
+                                    <xs:documentation>The prefix will be specified in this element</xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                            <xs:enumeration value="apexconfig">
+                                <xs:annotation>
+                                    <xs:documentation>The prefix will be loaded from the apexconfig.xml file</xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    
+    
+    </xs:schema>

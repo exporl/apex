@@ -1,0 +1,162 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    
+    <xs:include schemaLocation="xmlgeneratingplugin.xsd"></xs:include>
+
+
+    <xs:complexType name="stimuliType">
+        <xs:sequence>
+            <xs:element name="fixed_parameters" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Fixed parameters describe fixed properties of
+                        every stimulus. They can be used by procedures to select a
+                        certain stimulus, they can be presented on the screen or can
+                        be used for the users own reference. They have no influence
+                        whatever on the actual sound/stimulation that is sent to the
+                        device when a particular stimulus is to be output. Every
+                        fixed stimulus that is used in any stimulus should be
+                        defined here. All fixed parameters defined here, should be
+                        present in all stimuli.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="parameter" minOccurs="0"
+                            maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="id" type="xs:ID" use="required"/>
+                                <xs:attribute name="useforresults" type="xs:boolean" use="optional" default="false"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="stimulus" type="apex:stimulusType"
+            maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element name="pluginstimuli" type="apex:pluginStimuliType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="pluginStimuliType">
+        <xs:complexContent>
+            <xs:extension base="apex:xmlGeneratingPluginType"></xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="stimulusType">
+        <xs:sequence>
+            <xs:element name="description" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Text description, for your own reference</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="datablocks" type="apex:datablocksType">
+                <xs:annotation>
+                    <xs:documentation>Combination of datablocks to be output</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="variableParameters" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>These parameters will be set just before the stimulus is
+                        output</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="id" type="xs:IDREF" use="required"
+                                            > </xs:attribute>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="fixedParameters" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Fixed parameters are properties of a stimulus that can be
+                        displayed or used to select a stimulus from a list based on a certain
+                        criterion.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType mixed="true">
+                                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                                    <xs:element name="b" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                                    <xs:element name="i" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                                    <xs:element name="u" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:choice>
+                                <xs:attribute name="id" type="xs:IDREF" use="required"/>
+                            </xs:complexType>
+                            
+                            
+                            <!--xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                <xs:attribute name="id" type="xs:IDREF" use="required"/>
+                                </xs:extension>
+                                </xs:simpleContent-->
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+    
+    <xs:complexType name="datablocksType">
+        <xs:annotation>
+            <xs:documentation>Specifies how a number of datablocks are to be combined. Datablocks
+                can be sequential or simultaneous. All tags can be nested
+                infinitely.</xs:documentation>
+        </xs:annotation>
+        <xs:choice minOccurs="0" maxOccurs="1">
+            <xs:element name="datablock">
+                <xs:complexType>
+                    <xs:attribute name="id" type="xs:Name" use="required"> </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="sequential" type="apex:datablocksSequentialType">
+                <xs:annotation>
+                    <xs:documentation>Present all child datablocks or child combinations of
+                        datablocks sequentially. The result is guaranteed gap-less when using a
+                        single device for all children.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="simultaneous" type="apex:datablocksSimultaneouslType">
+                <xs:annotation>
+                    <xs:documentation>Present all child datablocks or child combinations of
+                        datablocks simultaneously. The total length of this block is the length of
+                        the longest child block. Zero's or null stimulation will be added to shorter
+                        children if necessary (this is not guaranteed!).</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    
+    
+    <xs:complexType name="datablocksSequentialType">
+        <xs:group ref="apex:datablockGroup"/>
+    </xs:complexType>
+    <xs:complexType name="datablocksSimultaneouslType">
+        <xs:group ref="apex:datablockGroup"/>
+    </xs:complexType>
+    <xs:group name="datablockGroup">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded" minOccurs="2">
+                <xs:element name="datablock" type="apex:datablockRefType" minOccurs="0"/>
+                <xs:element name="sequential" type="apex:datablocksSequentialType" minOccurs="0"/>
+                <xs:element name="simultaneous" type="apex:datablocksSimultaneouslType"
+                    minOccurs="0"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+    
+    <xs:complexType name="datablockRefType">
+        <xs:attribute name="id" type="xs:IDREF" use="required"/>
+    </xs:complexType>
+    
+</xs:schema>

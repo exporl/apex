@@ -1,0 +1,6 @@
+Regression tests
+
+This directory contains several apex experiment files that should in any 
+case run and give the results defined in the file.
+Every feature should have a regression test.
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+
+    <xs:annotation>
+        <xs:documentation>Schema to be used to validate a document containing only devices</xs:documentation>
+    </xs:annotation>
+
+    <xs:include schemaLocation="devices.xsd"/>
+    <xs:element name="devices" type="apex:devicesType"/>
+</xs:schema>

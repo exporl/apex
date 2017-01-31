@@ -1,0 +1,9 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    
+    <xs:attributeGroup name="filterParam">
+        <xs:attribute name="id" type="xs:ID"/>
+    </xs:attributeGroup>
+
+</xs:schema>

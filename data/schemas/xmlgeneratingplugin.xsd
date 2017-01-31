@@ -1,0 +1,47 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    
+    <xs:complexType name="xmlGeneratingPluginType">
+        <xs:sequence>
+    <xs:element name="script" minOccurs="0">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    
+                    
+                    <xs:attribute name="source" use="required">
+                        <xs:simpleType>
+                            <xs:annotation>
+                                <xs:documentation>
+                                    If inline, the ECMAScript function must be defined inside this element, if file, the filename must be given
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="inline"/>
+                                <xs:enumeration value="file"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+        
+    </xs:element>        
+            
+            <xs:element name="parameter" default="" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="name" type="xs:Name" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            
+        </xs:sequence>
+        <!--xs:attribute name="id" type="xs:ID" use="required"/-->
+    </xs:complexType>
+    
+    
+    </xs:schema>

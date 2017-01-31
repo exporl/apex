@@ -1,0 +1,87 @@
+APEX 3 change log
+=================
+
+This document describes the changes in APEX per release.
+
+Changes in version 3.0.2
+------------------------
+- Improved the plugin procedure api
+- Added realtime result viewer
+- Added status picture
+- Added "edit apexconfig file" to help menu
+- Added new L34 file format: aseq
+- Fixed button foreground color problem
+- Various code refactoring
+- Added javascript results viewer (after experiment)
+- Refactored Flash implementation
+- Fixed problem in windows installer (libwriters.dll was not the correct
+file)
+- Fixed problem with SPIN schema location (breaking SPIN when installed
+in a path with a space in it)
+- Added connection matching by regular expression and wildcard
+- Fixed parameter reset problem: filters etc. are not reset any more during 
+an experiment.
+- Changed button highlighting
+
+Changes in version 3.0.1
+------------------------
+- Fixed feedback wait problem: if feedback is set to false, the feedback
+length is respected anyway
+- Simplify playmatrix: fixes L34 bimodal stimulation problems
+- Adapted examples from manual to new APEX features
+- Added missing jpeg files for examples from manual to installer
+
+
+Changes in version 3.0.0
+------------------------
+- Created msi based installer
+- Result analysis in HTML
+- Fixed threading problem when using a continuous dataloop generator
+
+
+Changes in version 3.0b5
+------------------------
+- Changed default results file extension to .apr
+- Renamed <path> in screenelements to <uri> for consistency with datablocks
+- Added version number to namespace
+- Moved <saveprocessedresults> and <showresults> from <general> to <results>
+- If an xslt script is given, an xml-stylesheet processing instruction
+is added to the results file
+- If the output clips, the clipping flag is reset after showing the
+clipping message (in the previous versions, the clipping message was
+shown each time)
+- Changed namespace of experiment files and apexconfig file to namespace
+that includes version number [Note that this requires all previous
+experiment files to be updated!]
+- Added plugin dialog and modified plugin loading mechanism
+- Results file: renamed corrector/currentanswer to corrector/answer
+and added corrector/correctanswer
+- Added html capable xslt script (for use with web browser)
+- Fixed datablock composition bug (simultaneous/sequential)
+
+Changes in version 3.0b4
+------------------------
+
+- If a screen prefix does not end in a directory delimiter, it is now 
+automatically added
+- Randomgenerator values are now reported for both stimuli and standards
+
+
+Changes in version 3.0b3
+------------------------
+- Fixed problem with not-found feedback pictures (data path was wrong)
+- If uniquestandard is set to true, in a fixed parameter adaptive experiment, 
+only standards will be selected that have the desired fixed parameter
+- Gray out pictures on screen when disabled
+- Fixed bug with stepsizes/reversals: the stepsize was changed 1 presentation 
+too late
+
+
+Changes in version 3.0b2
+------------------------
+- Various changes to schema
+- Various simplifications to schema
+- Added autocalibration
+
+
+Base: version 3.0b1

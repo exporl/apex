@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+
+    <xs:include schemaLocation="prefix.xsd"/>
+    <xs:include schemaLocation="xmlgeneratingplugin.xsd"/>
+
+    <xs:complexType name="datablockstype">
+        <xs:sequence>
+            <xs:element name="uri_prefix" type="apex:prefixType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The prefix for every filename used below.
+                        Only used if a filename is a relative path. This prefix
+                        is relative to the path of this experiment
+                    file.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="datablock" type="apex:datablockType"
+                maxOccurs="unbounded" minOccurs="0"> </xs:element>
+            <xs:element name="plugindatablocks" type="apex:pluginDatablocksType"
+                minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+
+    </xs:complexType>
+
+    <xs:complexType name="datablockType">
+        <xs:sequence>
+            <xs:element name="device" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> The device used to play the datablock. If
+                        no device is specified, and there is only one device in
+                        the experiment file, it will be used. Otherwise an error
+                        message will be shown.</xs:documentation>
+                </xs:annotation>
+
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:IDREF">
+                            <!--xs:attribute name="channel1" type="xs:nonNegativeInteger" default="0" use="optional"/>
+                                <xs:attribute name="channel2" type="xs:nonNegativeInteger" default="1" use="optional"/-->
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="description" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Text description, for your own
+                    reference</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="birth" type="xs:dateTime" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Time stamp of the last modification of the
+                        data file. If specified, it will be checked and an error
+                        will be shown if it does not match.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="checksum" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>MD5 checksum of the datablock. If
+                        check==true, apex will check whether the checksum
+                        matches and issue a warning if it doesn't. Is useful to
+                        ensure data integrity.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:hexBinary">
+                            <xs:attribute name="check" type="xs:boolean"
+                                use="optional"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:choice>
+                <xs:element name="uri" type="xs:anyURI">
+                    <xs:annotation>
+                        <xs:documentation>Filename of the corresponding
+                            datafile. If it is a relative path, it will be
+                            prefixed with the uri_prefix defined
+                        above.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="data">
+                    <xs:annotation>
+                        <xs:documentation>Direct data. If the data consists of
+                            XML code, it can be included directly inside this
+                            tag. Currently only works with L34 CI
+                        stimuli</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType mixed="true">
+                        <xs:sequence minOccurs="0">
+                            <xs:any processContents="skip"></xs:any>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:element name="channels" type="xs:positiveInteger" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Number of channels: defaults to the number
+                        of channels in a wav-file or to 1 in all other
+                    cases.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="loop" type="xs:positiveInteger" minOccurs="0"
+                maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Number of times the datablock should be
+                        looped</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="pluginDatablocksType">
+        <xs:complexContent>
+            <xs:extension base="apex:xmlGeneratingPluginType"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>

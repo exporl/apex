@@ -1,0 +1,550 @@
+/**
+
+  @mainpage StreamAppV2
+
+@section sec_intro introduction
+streamapp is a cross-platform framework containing some fundamental tools to write applications.
+In particular it is meant to write to write audio processing applications,
+complete with user interface, multithreading etc.
+Some features:
+-# It is written in modern C++, that is, it uses object-oriented C++ and avoids macros
+and other old C-style coding.
+-# It is cross-platform, known to compile not only on windows/linux pc's but also on much
+more dedicated devices like TexasInstrument's C6x series. It will also compile on mac,
+but you'll have to wait until I get hold on a mac before any IO operations will work since
+the endianess is different.
+-# The user interface classes are based on Trolltech's Qt3 library. If you don't like Qt or
+your target doesn't have a user interface, just don't compile the ui files, it won't
+break anything
+-#
+
+@section sec_note note
+streamapp is a framework and not an application, don't expect to find a plain class
+that plays sound through the soundcard. Use winamp or so for that.
+Some examples are provided though to explain how the most important classes work together.
+See Related Pages for that.
+
+
+
+  @page streamapp
+
+@section sec_strmain introduction
+
+This page contains general info about the main classes in streamapp and demonstrates how
+they work together using examples.
+@li @ref sec_strbasic covers basic information about streaming audio
+@li @ref sec_strfile tells something more about using files
+@li @ref sec_strsoundcard contains information about soundcards
+@li @ref sec_strproc has an example of how to use a processor
+@li @ref sec_strconnect shows how everything can be connected interactively
+@li @ref sec_strcallback shows how to work with callbacks
+@li @ref sec_strother gives info about copiling for other types
+
+
+@subsection sec_strbasic the basics
+Streamapp works with digital signals, so all audio/video/whatever signals are expressed
+using discrete samples, and those samples always come and go in subsequent blocks of fixed size.
+Digital signals normally also have more then one channel, hence the signals
+in streamapp will be expressed as subsequent blocks containing a number of channels,
+where each channel has the same number of samples:
+@verbatim
+            sample 0   sample 1   ...   sample n
+channel 0     x           x               x
+channel 1     x           x               x
+...
+channel n     x           x               x
+@endverbatim
+
+
+The class representing these blocks is @c MatrixAccess: it encapsulates access to 2-dimansional arrays of any type.
+Every class that has to deal with a signal will use MatrixAccess to access the samples.
+The rows of the matrix are the channels, the number of columns defines the number of
+samples per channel.
+@see matrix.h for a complete reference
+
+In the streamapp version used for pc, the samples are expressed using 64bit floating point values to maximize
+accuracy of all calculations. The typedef used is
+@code
+typedef double StreamType;
+typedef MatrixAccess<StreamType> Stream;
+@endcode
+so you can be quite sure you'll see the @c Stream object a lot.
+See @ref sec_strother for other types then double.
+
+The basic operation is defined by 3 classes: @c InputStream, @c OutputStream and @c IStreamProcessor:
+@li the Input, of which data is acquired ( Read() ), aka the source
+@li the Output, to which data is given( Write() ), aka the sink
+@li The Processor, which takes data and puts it out again ( first Write() data into it, followed by Read() data back == Process() )
+With these three one can describe the entire audio/video/whatever data operations: I->P->O.
+Off course I->O is also possible, but there aren't anymore possibilities to be found on this world.
+
+@note an @c I in front of a classname mostly stands for @c Interface: a class with some or only virtual functions,
+or more in general: a class that cannot be used as is, but needs reimplementing.
+
+@note if you wonder what all the funny prefixes on functions and variables mean, check @ref prefixes. The reason for using
+it is quite simple: once you use it you cannot live without it. If I need a global function but I cannot remember the name,
+I just start typing @i gf and my IDE presents me a list of global funtions. If I derive something from a class in one of those libraries
+that have all their classes bloated with stuff I will never use (qt, mfc, ...), I just type @i class::mf and I get a list of my getters.
+@i mp will show setters. If I see something with a @i c in it, I won't even try to change it, it's const.
+Numerous examples can follow, but you get the point.
+
+@note don't stare yourself blind on the @i stream naming. I don't care wath a stream actually is, I'm well aware of the fact it can be confusing,
+so you should just forget everything about it and remember this: @c Stream is a bunch of channels with samples, @c InputStream is used to read it, and @c OutputStream is used to write it.
+Btw there are a lot more funny names in streamapp.
+
+@see stream.h
+
+The sinks and sources used by streamapp to get these samples (soundcards, wavefiles, binary files,...)
+don't know about the Stream object however, let alone that they produce 64bit doubles.
+To get samples from these sources, some steps are used:
+@li @c AudioFormatReader and @c AudioFormatWriter define interfaces that can read/write any number of samples
+and channels, in a limited but sufficient number of formats (16bit, 24bit, 32bit and 64bit).
+  @see defines.h
+  @see audioformat.h
+@li @c AudioFormatConvertor is a @c Stream object that can read/write from/to the reader and writer
+mentioned above, and convert any of the formats to 64bit double.
+  @see audioformatconvertor.h
+@li @c AudioFormatReaderStream and @c AudioFormatWriterStream implement @c InputStream and @c OutputStream
+by combining @c AudioFormatReader and @c AudioFormatWriter with @c AudioFormatConvertor.
+  @see audioformatstream.h
+
+To get an @c InputStream that can read samples from a wave file for example, one must always
+use three steps: creating an AudioFormatReader object on a wavefile (this is the InputWaveFile class),
+checking if the file can be opened, and if so, creating an AudioFormatReaderStream
+for that object. This is boring, so StreamAppFactory is here to do these at once.
+
+Example: to get subsequent Stream objects (2D array of doubles) from a wave file,
+all you have to write is the following code:
+@code
+try
+{
+    //number of samples per block
+  const unsigned nSamples = 512;
+
+    //get input stream
+  InputStream* pIn = StreamAppFactory::sf_pInstance()->mf_pReaderStream( "in.wav", nSamples );
+
+    //see how many channels there are
+  std::cout << "in.wav has " << pIn->mf_nGetNumChannels() << " channels" <<std::endl;
+
+    //as long as there are samples left,
+    //keep on looping
+  while( !pIn->mf_bIsEndOfStream() )
+  {
+      //get the next n channels of 512 samples
+    const Stream& newBlock = pIn->Read();
+    std::cout << "got another block of samples" << std::endl;
+  }
+  std::cout << "all samples from the file are read" << std::endl;
+
+    //don't ever forget to clean up
+  delete pIn;
+}
+catch( StringException& e )
+{
+    //StreamAppFactory throws StringExceptions when something goes wrong,
+    //eg when a file was not found
+  std::cout << "error opening file: " << a.mc_sError.c_str() << std::endl;
+}
+@endcode
+
+@subsection sec_strfile about files
+
+We've seen how InputStream can Read() subsequent blocks of samples. There is also
+PositionableInputStream, using PositionableAudioFormatReader. All input from files
+will be implemented using these two, because files are "positionable": for finite input,
+like form a wave file, the total number of samples is known, and it is possible to get and set the
+the current position in the file.
+See the PositionableInputStream reference for the extra methods it defines.
+Here's an example that shows some of the things it does:
+
+@code
+try
+{
+    //number of samples per block
+  const unsigned nSamples = 512;
+
+    //get input stream
+  PositionableInputStream* pIn = StreamAppFactory::sf_pInstance()->mf_pReaderStream( "d:/_Input32.wav", nSamples );
+
+    //instead of starting at 0, skip one block
+  pIn->mp_SeekPosition( (unsigned long) nSamples );
+
+    //now read it; this block will contain samples 512 to 1023
+  pIn->Read();
+
+    //get the end
+  const unsigned long lEnd = pIn->mf_lTotalSamples();
+
+    //go somewhere near end
+  pIn->mp_SeekPosition( lEnd - 500L );
+
+    //read; this block will contain only 500 new samples, and 12 zeroes
+  pIn->Read();
+
+    //verify it were 500 samples
+  std::cout << "read " << pIn->mf_nGetNumSamplesRead() << " samples " << std::endl;
+
+    //since we passed the end, this asserts are always ok
+  assert( pIn->mf_bIsEndOfStream() == true );
+  assert( pIn->mf_lCurrentPosition() == lEnd );
+
+    //go back to start
+  pIn->mp_SeekPosition( 0L );
+
+    //now read it; this block will contain samples 0 to 511
+  pIn->Read();
+
+    //current position is now 512
+  std::cout << "current position: " << pIn->mf_lCurrentPosition() << std::endl;
+
+    //don't ever forget to clean up
+  delete pIn;
+}
+catch( StringException& e )
+{
+  std::cout << "error opening file: " << e.mc_sError.c_str() << std::endl;
+}
+@endcode
+
+It's quite obvious that you cannot do the things above with a soundcard, unless you have one that keeps
+all samples it ever recorded.
+For output files, it is not allowed to set the position (although this is easy to implement) since this
+would overwrite previous samples or create gaps.
+
+
+@subsection sec_strsoundcard about soundcards
+
+Apart for the ability to read and write digital samples, and convert these from/to
+true analog signals, a soundcard or AD-convertor also has this nice property that you cannot just get
+samples out of it anytime you want. You have to wait until the card says that new samples
+are ready, and to do this the card will use some kind of callback. The callback is
+the function that the card will call everytime it has sampled a block of samples at the
+input, and at the same time expects the application to provide new samples to output.
+
+In streamapp this is wrapped in an object, namely the @c Callback. @c Callback is a class with just
+one virtual function, @c mf_Callback(), and if you take a look at the @c ISoundCard interface,
+you see it has the @c mp_bStart() method which takes a @c Callback reference as argument.
+As you might have guessed, once started the @c ISoundCard of choice will call
+the @c mf_Callback() method of the @c Callback in the argument, everytime new samples are ready.
+So how do you get these samples? Easy: @c ISoundCard also provides methods to
+create an @c AudioFormatReader and @c AudioFormatWriter.
+Suppose you want to write a simple application that internally loops the soundcard
+signal, here's what you do to get a typical I->O operation (notice we use @c StreamAppFactory again to get all objects):
+@code
+
+class MyIOCallback : public Callback
+{
+public:
+  MyIOCallback( InputStream& read, OutputStream& write ) :
+    istr( read ),
+    ostr( write )
+  {}
+
+  ~MyIOCallback()
+  {}
+
+  void mf_Callback()
+  {
+      //just write what we read
+    ostr.Write( istr.Read() );
+  }
+
+private:
+  InputStream& istr;
+  OutputStream& ostr;
+}
+
+try
+{
+    //number of samples per block
+  const unsigned nSamples = 512;
+
+    //get default soundcard with stereo channels at 44.1 kHz
+  ISoundCard* pCard = StreamAppFactory::sf_pInstance()->mf_pSoundCard( PORTAUDIO, "default", 2, 2, 44100, nSamples )
+
+    //get input and output stream
+  InputStream* pI   = StreamAppFactory::sf_pInstance()->mf_pSoundCardIn( *pCard );
+  OutputStream* pO  = StreamAppFactory::sf_pInstance()->mf_pSoundCardOut( *pCard );
+
+    //create the callback
+  MyIOCallback cb( *pI, *pO );
+
+    //try to run
+  if(   pCard->mp_bStart( cb )   )
+  {
+      //soundcard is now periodically calling cb.mf_Callback();
+      //if you plug some signal in the input,
+      //it will come out again at the output
+      //we do this for 10 seconds, then it gets boring
+    IThread::sf_Sleep( 10000 );
+    pCard->mp_bStop();
+  }
+  else
+    std::cout << "soundcard didn't start??" << std::endl;
+
+    //don't ever forget to clean up
+  delete pO;
+  delete pI;
+  delete pCard;
+}
+catch( StringException& e )
+{
+    //StreamAppFactory throws StringExceptions when something goes wrong,
+    //eg when a file was not found or the soundcard refused opening
+  std::cout << "error: " << a.mc_sError.c_str() << std::endl;
+}
+@endcode
+
+If you're a bit creative (hopefully, else you'll get nowhere with this software),
+you already saw that if you replace pI of the example above with the pIn from the
+first example, you have your application playing sound from a file. Huray, here's your
+own winamp:
+@code
+//....
+    //get input stream from file instead of card
+  InputStream* pI = StreamAppFactory::sf_pInstance()->mf_pReaderStream( "in.wav", nSamples );
+
+    //make sure it's stereo too
+  assert( pI->mf_nGetNumChannels() == pCard->mf_nGetNumOutputChannels() );
+//....
+  if(   pCard->mp_bStart( cb )   )
+  {
+      //play file until it's finished
+    while( !pI->mf_bIsEndOfStream() )
+      IThread::sf_Sleep( 500 );
+    pCard->mp_bStop();
+  }
+//...
+@endcode
+
+Recording what goes into your soundcard is just a matter of replacing the pO by an
+@c OutputStream for a wavefile, again, use @c StreamAppFactory to get it.
+
+@note
+if you want to implement a new soundcard driver, you must implement everything from @c ISoundCard. This shouldn't be too hard: your card
+will provide you some means for reading and writing samples (wrap these in @c AudioFormatReader and @c AudioFromatWriter implementations),
+it will provide you some kind of callback to tell when samples are ready (make this call the @c Callback), and it will provide you
+a way to start and stop (indeed, the start and stop methods).
+Basically you pass an instance of an object to the callback, and make sure that both the @c ISoundCard implementation and the reader and writer know
+this object. From within the callback you access that object, set the appropriate data (pointers to in- and output buffers),
+and make it call the @c mf_Callback() function of the @c Callback passed to @c mp_bStart();
+Within @c mf_Callback() your reader and writer might get called, they just have to convert from and to 32bit samples.
+@see portaudiowrapper.cpp for how it's done there.
+
+@warning
+It is wise not to use any @c new or @c malloc and their counterparts inside a soundcard's callback: their implementation
+is system-specific and can be very slow, too slow to make it in time before the next callback arrives. Also, soundcard callbaks are
+very likely called from low-level interrupts which run in a high-priority thread that should never be interrupted. So
+you better make sure your code is fast enough to make it in time. Else, you'll get a "buffer overrun": suppose your code spends 1
+second in the callback, while the soundcards runs at 96kHz and a has buffersize of 1024 samples which is about 10mSec.
+This means that when the first callback is called, 10mSec later the soundcard will start to read it's (or yours) memory and send it out for DA
+conversion. Needless to say, not much of a decent signal will come out since only 10 samples were written to that memory, and the other samples might be plain junk.
+@see bufferdropcheck.h for a simple way to see if your app drops buffers.
+
+This won't however tell you everything, if you run your app on another pc or platform the results might be totally different.
+Example: in order to get bufferdrops on a simple (2Ghz cpu, 266Mhz FSB) pc, you can chain like 8 500taps FIR filters
+and work with 2 channels at a buffersize of 512 samples and maybe then it will drop. This was on a decently configured windows though,
+with a decently configured linux on the same pc it didn't really work out until using 8192 samples or so.
+
+@subsection sec_strproc and now for the processing
+the sections above showed how to get and write samples, but they didn't quite
+do something interesting with it, so let's insert a processor into the I->O example
+in @ref sec_strsoundcard, in order to get an I->P->O application.
+To achieve this we only need to change the @c MyIOCallback to also include an @c IStreamProcessor.
+No need to do this however, the class already exists and it's called @c Channel (because at the moment of writing it
+I was appearantly thinking of it as representing a @i channel between the input and the output it's configured for).
+
+
+All that's left now is to create a processor, let's make a hard limiter by cutting all samples above
+a certain value (@c m_dGain here). Since @c InputStream's read method returns a const reference, it's not allowed to
+change the samples in there (for the simple reason that the object must be usable for other processors too).
+So we keep a @c StreamBuf object, that is a @c Stream that has it's own memory (@c Stream just provides access to memory but it
+doesn't allocate any).
+@see matrix.h.
+
+Since @c StreamBuf needs to know how much to allocate, we put the number of channles and samples in the contstructor,
+these will never change during the run of the program.
+Working with a Stream is just like with an array, except that
+@code
+array[ 0 ][ 0 ] = 1;
+@endcode
+translates to
+@code
+array( 0, 0 ) = 1;
+@endcode
+and you get bounds checking for free, which is a Good Thing.
+
+@code
+  class MyLimiter : public StreamProcessor  //see StreamProcessor reference for why it's used
+  {
+  public:
+    MyLimiter( const unsigned nChan, const unsigned nSize, const double dInitialLimit = 0.7 ) :   //The range of the samples is -1.0 to 1.0.
+        StreamProcessor( nChan, nSize ),
+      m_Output( nChan, nSize ),
+      m_dGain( dInitialGain )
+    {}
+
+    ~MyLimiter()
+    {}
+
+    const Stream& mf_DoProcessing( const Stream& input )
+    {
+      for( unsigned i = 0 ; i < mc_nChan ; ++i )    //loop channels
+      {
+        for( unsigned j = 0 ; j < mc_nSize ; ++j )  //loop samples
+        {
+          const double& dCurSample = input( i, j ); //get current sample
+          if( dCurSample > m_dGain )                //check it
+            m_Output( i, j ) = m_dGain;             //set if above limit
+          else if( dCurSample < m_dGain )
+            m_Output( i, j ) = -m_dGain;
+          else
+            m_Output( i, j ) = dCurSample;
+        }
+      }
+      return m_Output;
+    }
+
+    //... some getters/setters here
+
+  private:
+    StreamBuf m_Output;   //buffer for output samples
+    StreamBuf m_Delay;    //buffer for keeping samples from previous block
+    double    m_dGain;    //limit gain
+    unsigned  m_bReset;   //true clears delayline
+  };
+@endcode
+
+To get this processor in the soundcard callback, replace the @c MyIOCallback cb( *pI, *pO ); line with this:
+@code
+MyLimiter limit( 2, nSamples, 0.8 );
+Channel cb;
+cb.mp_SetSource( pIn );
+cb.mp_SetSink( pO );
+cb.mp_SetProcessor( &limit );
+@endcode
+Run the example, and it will take soundcard input, clip all samples above 0.8 (or below -0.8), and output the result through the soundcard.
+@see processor.h for more examples.
+
+@subsection sec_strconnect connections
+In real life with real hardware, it is easy to plug cables in and out whenever you want, even while the hardware is running.
+streamapp provides the same functionality and more using the classes in connections.h.
+
+Basically you register any number of streams and processors, give them an id, and start connecting them.
+Continuing the analogy with hardware, here's an example. It only uses files, but as you should have read before this can as well
+be input and output from soundcards, a network stream, a generator, whatever.
+Our cd-player is obviously an @c InputStream, our filter bank is an @c IStreamProcesor, and for simplicity we consider our reel-to-reel as an @c OutputStream.
+( it has actually both input and output, so a true implementation would be a class that provides both @c InputStream and @c OutputStream.
+We cannot afford a decent filter bank so we use the limiter from @ref sec_strproc []-]
+
+We'll also use the @c MultiOutputWavefile class. This class creates as much wave files as it has channels, one for each channel to be precise.
+This is very handy if you need a lot of outputs and want them in one object, instead of creating all @c OutputWaveFiles seperately.
+
+Just step through the example and see your console for what's going on. Afterwards the 6 output files reflect the connections made.
+
+@code
+  try
+  {
+      //number of samples per block
+    const unsigned nSamples = 512;
+
+    StreamAppFactory* pFac = StreamAppFactory::sf_pInstance();
+
+      //get input streams
+    PositionableInputStream* pI1 = pFac->mf_pReaderStream( "d:/_Input32.wav", nSamples );
+    PositionableInputStream* pI2 = pFac->mf_pReaderStream( "d:/_Input32 short.wav", nSamples );
+    assert( pI1->mf_lSampleRate() == pI2->mf_lSampleRate() );
+    assert( pI1->mf_nGetNumChannels() == 2 );
+    assert( pI2->mf_nGetNumChannels() == 2 );
+
+      //get two processors
+    MyLimiter limit1( 2, 512, 0.8 );
+    MyLimiter limit2( 2, 512, 0.2 );
+
+      //get 6 channel output stream
+    MultiOutputWaveFile* pO1 = new MultiOutputWaveFile();
+    if( !pO1->mp_bOpen( 6, nSamples, pI1->mf_lSampleRate(), "d:/out" ) )
+      throw( StringException( "couldn't open output files" ) );
+
+      //register everything
+    ConnectionManager man;
+
+    man.mp_RegisterItem( "cdplayer1", pI1 );
+    man.mp_RegisterItem( "cdplayer2", pI2 );
+    man.mp_RegisterItem( "limiter1", &limit1 );
+    man.mp_RegisterItem( "limiter2", &limit2 );
+    man.mp_RegisterItem( "reeltoreel", pO1 );
+
+      //start messing around with cables
+    man.mp_Connect( "cdplayer1", "limiter1" );
+    man.mp_Connect( "cdplayer2", "limiter2" );
+    man.mp_Connect( "limiter1", "reeltoreel" );
+    man.mp_Connect( "limiter2", "reeltoreel" );
+
+      //print routes and run once
+    PrintVector( man.mf_saGetRoutes() );
+    man.mf_Callback();
+
+      //switch limiters and switch channels
+      //the existing connections will be removed,
+      //you can't plug a cable into a socket that has one already
+    man.mp_Connect( "cdplayer1", "limiter2", 0, 1 );
+    man.mp_Connect( "cdplayer1", "limiter2", 1, 0 );
+    man.mp_Connect( "cdplayer2", "limiter1", 0, 1 );
+    man.mp_Connect( "cdplayer2", "limiter1", 1, 0 );
+
+      //print routes and run once
+    PrintVector( man.mf_saGetRoutes() );
+    man.mf_Callback();
+
+      //disconnect and reconnect
+    man.mp_RemoveConnection( "limiter1", "reeltoreel", 0, 0 );
+    PrintVector( man.mf_saGetRoutes() );
+    man.mp_Connect( "limiter1", "reeltoreel", 0, 5 );
+
+      //print routes and run once
+    PrintVector( man.mf_saGetRoutes() );
+    man.mf_Callback();
+
+      //don't ever forget to clean up
+    delete pI1;
+    delete pI2;
+    delete pO1;
+  }
+  catch( StringException& e )
+  {
+    std::cout << "error: " << e.mc_sError.c_str() << std::endl;
+  }
+@endcode
+
+@subsection sec_strcallback about callbacks
+In allmost all examples above, a @c Callback was used in some way to execute the actual streaming operation. If your application has only one thread,
+eg because it just processes some files, you just process until the input is finished:
+@code
+while( !myInputStream.mf_bIsEndOfStream )
+  myCallback->mf_Callback();
+@endcode
+Inside the callback @c myInputStream gets read so after a while it's finished and the loop stops. Easy.
+Since this pattern ( callback - check - stop if eof ) will be used alot, and if using soundcards it will be used between threads,
+streamapp contains a system to handle this: having a second callback executed after the main callback. The main callback is the one that does
+interesting things with streams, the second callback is the one that checks every @c InputStream to see whether it's mf_bIsEndOfStream() method
+returns true. When all inputs are done, the second callback calls another user-defined @c Callback, in which appropriate actions are taken to stop
+running the callback.
+@see eofcheck.h for the definition of the @c Callback that does this.
+@see eofcheckcallbacks.h for implementations
+@see @ref sec_appeofthread for an example using threads
+
+@note never call ISoundCard's mp_bStop or mp_bStart methods from within the card's callback, since doing so will hang your application. (it'll keep
+on trying to enter a @c CriticalSection that is already entered, not much will happen anymore)
+This also means you can not call these functions from within the callback that's called when an IEofCheck finishes, since this is also executed
+in the soundcard's callback. That's not really a problem though, see the aforementioned example for what you should do.
+
+@subsection sec_strother other types
+If your app needs to work with eg shorts, just change @c StreamType to @c short and the rest will follow; only in theory hwoever:
+you also have to rewrite a part of @c AudioFormatConvertor since it contains no conversion to short currently, and for other classes
+the compiler might complain about type conversions (some classes you cannot use at all because they just require doubles, like those
+using Intel NSP libraries).
+@TODO make AudioFormatConvertor a template and provide template specializations
+
+**/

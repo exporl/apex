@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schemas.microsoft.com/wix/2003/01/wi file:/home/tom/temp/wix/doc/wix.xsd"
+	xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+
+	<?define InstallPath="bin/release-installed" ?>
+
+	<Product Name="APEX SPIN plugin" Id="F97586EB-8D87-4B8A-A4C0-CDFDC65A4E2B"
+		UpgradeCode="99D88BCB-60B6-4C01-BBF2-C2002926481C" Language="1033" Codepage="1252"
+		Version="1.0.0" Manufacturer="ExpORL">
+
+		<Package Id="????????-????-????-????-????????????" Keywords="Installer"
+			Description="APEX SPIN plugin Installer" Comments="TODO" Manufacturer="ExpORL"
+			InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252"/>
+
+		<Property Id="INSTALLDIR">
+			<RegistrySearch Id="ApexRegistry" Type="raw" Root="HKLM"
+				Key="Software\ExpORL\APEX3\Installation" Name="InstallDir"/>
+		</Property>
+
+
+		<Condition Message="APEX needs to be installed before installing the APEX SPIN plugin">
+			INSTALLDIR </Condition>
+
+		<Media Id="1" Cabinet="apex_spin.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1"/>
+		<Property Id="DiskPrompt" Value="APEX SPIN plugin Installation [1]"/>
+
+		<Property Id="ALLUSERS">2</Property>
+
+		<Directory Id="TARGETDIR" Name="SourceDir">
+
+			<!--Directory Id="ProgramMenuFolder" Name="PMenu" LongName="Programs">
+				<Directory Id="ProgramMenuDir" Name="APEX" LongName="APEX 3"/>
+			</Directory-->
+
+			<!--Component Id="InstallationRegistryComp" DiskId="1"
+				Guid="F5B8706C-D05F-473F-BD17-98B8CD492898">
+				<Registry Id="InstallationInstalldirRegistry" Root="HKLM"
+					Key="Software\ExpORL\APEX\Installation" Name="InstallDir" Action="write"
+					Type="string" Value="[INSTALLDIR]"/>
+			</Component-->
+
+			<Directory Id="ProgramFilesFolder" Name="PFiles">
+				<!--Directory Id="ExpOrlDir" Name="ExpOrl"-->
+				<Directory Id="INSTALLDIR" Name="apex">
+
+
+
+					<Directory Id="BinDir" Name="bin">
+						<Component Id="PluginComp" Guid="403DDCFC-FFAF-49D9-A3E5-C9629CAEDD83"
+							DiskId="1">
+							<File Id="FilePlugin" Name="spin.dll"
+								Source="$(var.InstallPath)/bin/spin.dll"/>
+						</Component>
+					</Directory>
+					
+					<Directory Id="ConfigDir" Name="config">
+						<Component Id="ConfigComp" Guid="D0A45F89-3E9F-4BAA-A9F3-983FC2F234F2"
+							DiskId="1">
+							<File Id="FileConfigfile" Name="spin.xml"
+								Source="$(var.InstallPath)/config/spin.xml"/>
+						</Component>
+					</Directory>
+					
+					<Directory Id="SchemaDir" Name="schemas">
+						<Component Id="SchemaComp" Guid="BC598C94-859A-4470-8894-0C4E156C2352"
+							DiskId="1">
+							<File Id="FileSchema" Name="spin.xsd"
+								Source="$(var.InstallPath)/schemas/spin.xsd"/>
+						</Component>
+					</Directory>
+					
+
+				</Directory>
+			</Directory>
+
+
+
+
+
+		</Directory>
+
+		<Feature Id="SPIN" Title="APEX SPIN plugin" Absent="disallow" AllowAdvertise="no"
+			Description="The complete program." ConfigurableDirectory="INSTALLDIR" Level="1">
+
+			<ComponentRef Id="PluginComp"/>
+			<ComponentRef Id="ConfigComp"/>
+			<ComponentRef Id="SchemaComp"/>
+		</Feature>
+
+	</Product>
+</Wix>

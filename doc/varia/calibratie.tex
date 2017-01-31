@@ -1,0 +1,121 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{a4wide}
+
+\usepackage[dutch]{babel}
+\usepackage[latin1]{inputenc}
+\selectlanguage{dutch}
+
+\usepackage{graphicx}
+
+% kleinere lists
+\usepackage[normalsections,,normalmargins,normalfloats,normalindent,normalleading,normaltitle,normalbib,normalbibnotes]{savetrees} 
+
+%opening
+\title{Apex 3 en Calibratie}
+\author{Tom Francart}
+
+\setlength{\itemsep}{0pt}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Digitale versus analoge signalen}
+
+Lezers vertrouwd met de begrippen digitaal signaal, RMS, kwantisatieruis en clipping kunnen onmiddellijk naar sectie~\ref{sec:opstelling} gaan.
+
+
+\subsection{Kwantisatie}
+
+Een digitaal signaal is gekwantiseerd in de tijd en in amplitude. 
+
+Kwantisatie in de tijd betekent voor een geluidssignaal dat er op vaste tijdstippen een waarde van het signaal bekend is. Tussen deze vaste tijdstippen hebben we geen informatie over het signaal. Zo wordt op een audio-cd bijvoorbeeld het geluid opgeslagen met een sample rate van 44100Hz, hetgeen betekent dat om de $22\mu s$ een waarde opgemeten wordt en bekend is. Eén waarde in de tijd noemt met een \emph{sample}.
+
+Kwantisatie in amplitude betekent dat zo'n sample niet om het even welke waarde kan aannemen, maar slechts een beperkt aantal vooraf vastgelegde waarden. Zo zouden we bijvoorbeeld de grootte van een sample kunnen voorstellen met een geheel getal tussen -4 en +4. Een sample kan dan de waarden -4, -3, -2, -1, 0, 1, 2, 3 of 4 aannemen en geen enkele andere waarde is mogelijk. $1.5$ kan dus niet. Je ziet direct dat als het aantal waarden dat mogelijk is, beperkt is, het signaal er erg ``hoekig'' zal uitzien. Als je naar zo'n signaal zou luisteren, zou het lijken alsof er veel ruis is op de achtergrond. Deze ruis noemt men \emph{kwantisatieruis}.
+
+In de praktijk worden doorgaans 16 bits gebruikt om een sample voor te stellen. Dat betekent dat alle gehele getallen tussen -32767 en +32768 gebruikt worden om een sample op te slaan.
+
+In een meer wiskundige voorstelling, zouden we ons signaal ook kunnen voorstellen als een rationaal getal tussen -1 en 1, waarbij nu dus wèl fractionele getallen zijn toegestaan. Let op: de kwantisatieruis verdwijnt niet door de samples op een andere manier voor te stellen: nu zijn immers nog steeds niet alle mogelijke waarden tussen -1 en 1 toegestaan, maar slechts een beperkt aantal (even veel als bij de voorstelling met gehele getallen), hoewel het nu minder duidelijk is welke waarden toegestaan zijn en welke niet. Je kan eenvoudig tussen beide voorstellingen omrekenen door elk sample te delen door of vermenigvuldigen met 32768 (indien we met 16 bits nauwkeurigheid werken).\footnote{Testvraagje: stel we werken met 8 bits nauwkeurigheid. Een sample heeft de waarde 214. Wat is de waarde van dit samples als we werken met 16 bits nauwkeurigheid? Wat is de waarde als we met de wiskundige voorstelling werken?}\footnote{Testvraagje: stel we werken met de wiskundige voorstelling. Een sample heeft de waarde $0.215$. Wat gebeurt er als we dit sample afspelen op een systeem dat met 16 bits nauwkeurigheid werkt?}
+
+\subsection{RMS waarde}
+
+Als we alle samples van een digitaal signaal met een bepaalde waarde vermenigvuldigen, zal het gehele signaal luider of stiller worden, naargelang die waarde. Van een digitaal signaal kunnen we dus ook een soort van luidheid weergeven. Deze luidheid wordt doorgaans berekend aan de hand van de RMS waarde: de wortel van het gemiddelde van de kwadraten van alle samples samen: $RMS=\sqrt{\frac{\sum_{i=1}^N s_i^2}{N}}$ (met $N$ het totaal aantal samples en $s_i$ het sample op tijdstip $i$).
+
+Stel nu dat we ons signaal voorstellen door alle samples tussen -1 en 1 te nemen (de meer wiskundige voorstelling uit voorgaande paragraaf). We kunnen nu de RMS waarde berekenen door elke sample te kwadrateren, dan het gemiddelde te nemen van alle samples en tenslotte de vierkantswortel van het resultaat te nemen. Aangezien elke sample tussen -1 en 1 ligt, zal het kwadraat tussen 0 en 1 liggen. Dit heeft als gevolg dat ook het gemiddelde en de vierkantswortel daarvan tussen 0 en 1 zullen liggen.
+
+Als we nu van ons resultaat de de logaritme nemen, krijgen we een waarde in dB. Aangezien onze vierkantswortel tussen 0 en 1 lag, zal deze waarde in dB steeds kleiner zijn dan 0. De RMS waarde van een digitaal signaal zal dus steeds een rationaal getal kleiner dan 0 zijn (indien we werken met de wiskundige voorstelling!).
+
+\subsection{Versterken en verzwakken van digitale signalen}
+
+Zoals eerder vermeld kunnen we het digitale signaal versterken of verzwakken door alle samples met een getal te vermenigvuldigen.
+
+Stel ons signaal bestaat in de wiskundige voorstelling uit de waarden [0.5 0.6 0.5 0.1 -0.1 -0.3] en we willen het versterken door met 1.5 te vermenigvuldigen. Dit levert ons de waarden [0.7500    0.9000    0.7500    0.1500   -0.1500   -0.4500] op. Al deze waarden liggen tussen -1 en 1. Er is dus geen probleem.
+
+Stel nu dat we ons signaal met factor 3 willen versterken. Dit levert de waarden [1.5000    1.8000    1.5000    0.3000   -0.3000   -0.9000] op. Merk op dat sommige waarden groter zijn dan 1, hetgeen verboden is door de definitie. Als een computer nu zo'n signaal tegenkomt, zal hij ofwel die waarden gelijkstellen aan 1 ofwel er 1 van aftrekken. Beide effecten zijn ongewenst omdat dat distorsie introduceert in ons signaal. Dit fenomeen noemt men \emph{clipping}. Voor psychoacoustiek of audiologische tests is het absoluut te vermijden!
+
+
+Stel nu dat we aan de andere kant ons signaal willen verzwakken. We zouden het bijvoorbeeld kunnen delen door 4. Dit levert ons de waarden [0.1250    0.1500    0.1250    0.0250   -0.0250   -0.0750] op. Stel nu even dat we voor de digitale voorstelling alle getallen gebruiken tussen -4 en 4. Als we dan omrekenen, levert ons dit de waarden [2.0000    2.4000    2.0000    0.4000   -0.4000   -1.2000] op. Aangezien fractionele gevallen niet zijn toegestaan in deze voorstelling, moeten we afronden naar [2     2     2     0     0    -1]. Merk op dat de eerste 3 waarden nu exact gelijk zijn (waarden als 2.6 zijn immers niet toegelaten). Het is duidelijk dat ook in dit geval ons signaal verstoord is. We spreken nu van \emph{kwantisatieruis}. Ook kwantisatieruis is in audiologische tests uiteraard te vermijden, maar in beperkte mate wel toelaatbaar. 
+
+Als we nu een ideaal niveau zoeken voor ons digitaal signaal, moeten we een afweging maken tussen clipping en kwantisatieruis. Merk echter op dat clipping in geen enkel geval toelaatbaar is, terwijl kwantisatieruis in beperkte mate getolereerd kan worden.\footnote{Testvraagje: wat is clipping?}\footnote{testvraagje: wat is kwantisatieruis?}\footnote{Testvraagje: stel je hebt een signaal waarvan de grootste sample (in abslute waarde) 0.458 is (in wiskundige voorstelling). Hoe stel je de ideale digitale luidheid in?}\footnote{Testvraagje: stel je hebt verschillende signalen waarvan het grootste sample respectievelijk 0.458, 3.548, 0.687 is (in wiskundige voorstelling). Hoe stel je de ideale digitale luidheid in voor elk signaal? De relatieve luidheid van de 3 signalen moet bewaard blijven.}.
+
+\subsection{Versterken en verzwakken van analoge signalen}
+
+Analoge signalen kan je versterken of verzwakken met een analoge versterker (een apart toestel). Ook hier kan bij het versterken clipping optreden als het uiteindelijke signaal groter is dan de apparatuur aankan. Controleer steeds de specificaties van de gebruikte apparatuur en hou de indicator-lampjes in het oog als je je luidste signaal afspeelt.
+
+Over kwantisatieruis moet je je hier minder zorgen maken, maar het principe is hetzelfde als bij digitale signalen: zorg ervoor dat het signaal op elk punt in de versterkings-keten zo groot mogelijk is, en stel in de laatste versterkingstrap de versterking zodanig in dat het signaal de gewenste akoestische luidheid heeft.\footnote{Testvraagje: stel we gebruiken een analoog mengpaneel om onze signalen te versterken. De beschikbare knopjes zijn een gain-knopje (van -15dB tot +15dB), net na de ingang. Vervolgens een kanaal-instelling (van -30dB tot 0dB) en vervolgens een uitgangs-versterking (van -30dB tot 0dB). Er is een indicator-lampje voor clipping. Hoe stel je de verschillende sliders in om een uiteindelijke luidheid van 65dBSPL te bekomen?}
+
+
+\section{Overzicht van de opstelling}
+
+\label{sec:opstelling}
+
+Onze opstelling bestaat uit een PC waarop Apex 3 draait. Apex 3 werkt uitsluitend met digitale signalen. Daaraan verbonden is een geluidskaart die het digitale signaal omzet in een analoog signaal. Aan de geluidskaart is een zogenaamde ``mixer'' verbonden waarmee je kan instellen hoe luid het geluid klinkt. Typisch kan je deze mixer instellen door op het luidspreker-icoontje rechts onder het scherm te klikken\footnote{dit geldt enkel voor windows systemen}. 
+
+Aan de geluidskaart verbinden we ofwel rechtstreeks een koptelefoon, ofwel een analoge versterker\footnote{als versterker kan bijvoorbeeld een audiometer gebruikt worden} met daaraan een koptelefoon verbonden.
+
+Onder calibratie verstaan we dat we alle mogelijke parameters zo instellen dat we exact weten welke geluidsdruk op welk moment aan het oor van de proefpersoon wordt aangeboden. De parameters die we kunnen instellen zijn de volgende:
+
+\begin{itemize}
+\item RMS waarde van de wav-bestandjes op de harde schijf
+\item RMS waarde van het digitaal signaal dat Apex uitstuurt
+\item Versterking van de geluidskaart (digitaal!)
+\item Versterking van de versterker (analoog)
+\end{itemize}
+
+\section{Vuistregels}
+
+In de praktijk streven we ernaar om nooit clipping te introduceren en de kwantisatieruis zo veel mogelijk te beperken. Dat eerste doen we door ervoor te zorgen dat geen enkele sample van het digitaal signaal boven de maximale waarde uitkomt.
+
+De kwantisatieruis beperken we door alle digitale signalen zo groot mogelijk te maken. We zetten dus in de eerste plaats de (digitale) versterking van de geluidskaart op maximum en stellen in de tweede plaats Apex zodanig in dat de geluiden zo luid mogelijk worden uitgestuurd zonder dat er clipping optreedt.
+
+In het ideale geval hebben we een extra (analoge) versterker/verzwakker, waarmee we de gewenste luidheid kunnen instellen nadat we voorgenoemde versterkingen zo hoog mogelijk hebben gezet. Let op dat er geen clipping optreedt in de analoge versterker.
+
+Indien we niet over een extra (analoge) versterker beschikken, verlagen we toch de digitale versterking, maar letten er goed op dat we niet te veel kwantisatieruis introduceren. Als dat toch het geval is, moeten we toch een extra versterker in gebruik nemen.
+
+
+\section{Calibratieprotocol}
+
+\begin{enumerate}
+
+\item Stel $T$ is de doelwaarde van onze calibratie, bijvoorbeeld $T=65dBSPL$\footnote{aan het oor van de proefpersoon zal voor het calibratiesignaal dus $65dBSPL$ worden aangeboden}.
+
+\item Stel eerste alle digitale niveaus in zodat die maximaal zijn zonder clipping te introduceren (maw: geluidsbestandjes zo luid mogelijk, gains in Apex zo luid mogelijk, digitale mixer van de geluidskaart op maximum). 
+
+\item Verbind nu een geluidsniveau-meter met de koptelefoon of stel hem op voor de luidspreker.
+
+\item Indien je over een extra (analoge) versterker beschikt, stel dan de versterker zo in dat ongeveer het gewenste niveau ($T$) afgelezen wordt op de geluidsniveau meter. Let op dat er in de analoge versterker geen clipping optreedt.
+
+\item Gebruik nu Apex om de fijnregeling van de calibratie te doen: stel de parameterwaarden zodanig in dat \emph{exact} het gewenste niveau afgelezen wordt.
+
+\end{enumerate}
+
+
+%\bibliographystyle{plainnat} 
+%\bibliography{/home/tom/bib/total.bib}
+
+
+
+\end{document}

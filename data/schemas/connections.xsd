@@ -1,0 +1,140 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    
+    <xs:include schemaLocation="parameter.xsd"/>
+    
+    <xs:complexType name="connectionsType">
+        <xs:sequence>
+            <xs:element name="connection" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="from" type="apex:connectFromType">
+                            <xs:annotation>
+                                <xs:documentation>The channel of the
+                                    filter/datablock where the connection is started
+                                    from.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="to" type="apex:connectToType">
+                            <xs:annotation>
+                                <xs:documentation>The channel of the device/filter
+                                    where the connection ends.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <!--xs:attribute name="device" type="xs:IDREF" use="required"/-->
+    </xs:complexType>
+    
+    <xs:complexType name="connectFromType">
+        <xs:sequence>
+            <!--xs:element name="id" type="xs:IDREF"/-->
+            <xs:element name="id">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="apex:idOrAll">
+                            <xs:attribute name="mode" default="name">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Method of matching the given id.
+                                    </xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="name">
+                                            <xs:annotation>
+                                                <xs:documentation>Exactly match the given ID</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:enumeration>
+                                        <xs:enumeration value="regexp">
+                                            <xs:annotation>
+                                                <xs:documentation>Use regular expression to match an ID</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:enumeration>
+                                        <xs:enumeration value="wildcard">
+                                            <xs:annotation>
+                                                <xs:documentation>Use wildcards (*,?,[]) to match an ID</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:enumeration>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+                
+            </xs:element>
+            <xs:element name="channel">
+                <xs:annotation>
+                    <xs:documentation>
+                        The channel to be used. Channels are zero based, ie the first
+                        channel is 0, the second 1, etc. This parameter can have an ID for later
+                        referral.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:unsignedInt">
+                            <xs:attributeGroup ref="apex:filterParam"> </xs:attributeGroup>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attributeGroup ref="apex:filterParam"/>
+    </xs:complexType>
+    <xs:complexType name="connectToType">
+        <xs:sequence>
+            <!--xs:element name="id" type="xs:IDREF"/-->
+            <xs:element name="id" type="xs:IDREF">
+            </xs:element>
+            <xs:element name="channel">
+                <xs:annotation>
+                    <xs:documentation> The channel to be used. Channels are zero based, ie the first
+                        channel is 0, the second 1, etc. This parameter can have an ID for later
+                        referral. 
+                        Channel -1 means mute.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="apex:unsignedPlus-1">
+                            <xs:attributeGroup ref="apex:filterParam"> </xs:attributeGroup>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attributeGroup ref="apex:filterParam"/>
+    </xs:complexType>
+    
+    <xs:simpleType name="all">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="_ALL_"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+
+    <xs:simpleType name="unsignedPlus-1">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="-1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    
+    <xs:simpleType name="idOrAll">
+        <xs:union memberTypes="apex:all xs:IDREF xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    A connection can start from any ID defined elsewhere
+                    or from all datablocks. All datablocks can be specified using the
+                    _ALL_ in this element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:union>
+    </xs:simpleType>
+
+</xs:schema>

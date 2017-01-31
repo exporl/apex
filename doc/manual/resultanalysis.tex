@@ -1,0 +1,117 @@
+\chapter{Analysing results}
+\label{chap:Results}
+\section{The results XML file}
+\index{The results XML file}
+
+After completion of the experiment a file containing results is
+always given. The default results file is in the XML format and it
+contains all the information about the course of the completed
+experiment.
+
+\apex automatically assigns a default name to the results file,
+namely it appends ``-apr'' to the name of the experiment file
+(e.g. closedsetword-apr). It will never overwrite an existing
+results file, but will append a number to results (e.g.
+closedsetword-apr-1) in the case of an existing results file.
+
+The results are stored in the element
+\begin{lstlisting}
+<apex:results>
+
+</apex:results>
+\end{lstlisting}
+
+The XML file contains \element{general} information, such as
+
+\begin{itemize}
+\item the testing date
+
+\item the testing duration
+
+\item the name of the XSLT script file (see~\ref{sec:Using XSLT
+transforms}).
+
+\item information on the procedure (eg: the adaptive parameter)
+
+\end{itemize}
+
+In addition, for each completed \element{trial} presented to the
+subject it includes
+
+\begin{itemize}
+\item details of the procedure (stimulus that was presented and
+the values of the variable parameters in the specific trial).
+
+\item the response that was chosen by the subject
+
+\item the outcome of the corrector
+
+\item possible errors of the output system/device (eg. underruns)
+
+\item the response time (time between the moment the buttons are
+ enabled and the moment an answer is given)
+
+
+\item in case a random generator was used: the value of the random
+generator in the specific trial
+\end{itemize}
+
+Remark: with an adaptive procedure the number of
+\element{reversals} is given
+
+If \element{saveprocessedresults} is \xml{true} in the experiment
+file the processed data will be appended to the XML file under
+\element{processed}
+
+The results file contains a lot of information. A summary of the
+relevant results can be obtained through an XSLT transform (see
+next paragraph).
+
+\section{Using XSLT transforms}
+
+An XSLT script transforms the results XML file to a summary of the
+results. For each \apex procedure a script is provided, which
+processes the results in an appropriate way according to the
+procedure (stimulus/response pairs, score, mean threshold of n
+reversals,...). You can also create your own scripts, provided you
+have some XSLT knowledge.
+
+If XSLT is specified in the experiment file \apex transforms the
+data. It is then possible to 1) show the results on the screen
+(\element{showresults}=\xml{true}) and/or 2) to save the processed
+results to a file (\element{saveprocessedresults}=\xml{true}).
+Then it is not necessary to execute the XSLT transform described
+in the next paragraph.
+
+\label{sec:Using XSLT transforms}
+
+\oxygen{ To execute an XSLT transform, a transformation scenario
+has to be configured once. This is done by clicking on the
+``Configure transformation scenario'' button in Oxygen. If you
+then click on ``new'', you can search for the appropriate XSLT
+script in \filename{scripts/xslt} (for the moment the names of the
+scripts correspond to the apex2 procedure names) and give it a
+name in the upper field of the ``edit scenario'' box. If you then
+click on ``transform now'', the processed results are shown
+immediately.}
+
+The processed results can be saved in the results XML file and/or
+shown immediately after a test (in the last case the program asks
+whether you want to see them or not).
+
+To give stimulus-response pairs, the XSLT transformation not only
+needs the results XML file, but also the experiment file. This
+experiment file is defined at the top of the results XML file.
+Take care that the correct path is given there.
+\newline
+\newline Example result commands in experiment xml file:
+\begin{verbatim}
+<general>
+    <showresults>true</showresults>
+    <saveprocessedresults>true</saveprocessedresults>
+    </general>
+
+ <results>
+   <xsltscript>idn.xsl</xsltscript>
+ </results>
+ \end{verbatim}

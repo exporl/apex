@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=APEX Psychophysical Experiments
+Comment=Aids in carrying out psychophysical experiments
+Exec=apex %f
+StartupNotify=true
+Terminal=false
+Type=Application
+Icon=exporl-apex.png
+Categories=Qt;AudioVideo

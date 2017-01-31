@@ -1,0 +1,114 @@
+
+
+\chapter{Plugins}
+\label{sec:plugins}
+
+\section{Introduction}
+Apex supports custom audio filter plugins. In this way, Apex can easily be extended without modifying Apex itself. A plugin is essentially an object that provides a processing function that accepts a block of samples and returns a processed block of samples.
+
+We will illustrate the process of creating a plugin by implementing an amplifier plugin. Note that Apex already contains an amplifier filter, making this example less useful in practice.
+
+Next to the aforementioned processing function, a filter can also contain parameters. Parameter values can be specified in the experiment xml file or set by another apex module.
+
+\label{sec:plugins}
+
+\section{Solving problems}
+
+using the plugin dialog
+
+
+\section{Example: amplifier}
+
+
+\subsection{The experiment file}
+
+Our example amplifier looks as follows in the experiment xml file:
+
+\begin{verbatim}
+<filter id="myAmplifier" xsi:type="apex:pluginfilter">
+    <device>wavdevice</device>
+    <channels>1</channels>
+    <continuous>false</continuous>
+    <plugin>amplifierplugin</plugin>
+    <parameter id="gain" name="gain">-10</parameter>
+</filter>
+\end{verbatim}
+
+\begin{description}
+ \item[plugin] Is the name of the binary plugin file you provide. If no extention is specified, Apex will guess one based on the current operating system.\footnote{On Linux, Apex tries to add the extention \texttt{.so} and the prefix \texttt{lib}. On Windows, Apex tries to add the extention \texttt{.dll}.}
+\item[Parameter] is defined for each parameter that the plugin accepts. On initialisation the plugin will be queried for each parameter whether it is valid. The \texttt{id} attribute is the parameter id to be referenced from elsewhere in the experiment file. The name is what the plugin uses to determine which internal parameter to modify.
+\end{description}
+
+
+\subsection{Build environment}
+
+To successfully build a plugin, you need the following things setup properly in your build environment:
+
+\begin{itemize}
+ \item A modern compiler, preferably the same as used for compiling Apex\footnote{On Linux we currently use gcc 4.1, on Windows we use Visual studio 2003.}
+\item The Qt libraries and build tools \url{http://trolltech.com/developer/downloads/qt/index}
+\item The file pluginfilterinterface.h
+\item Optional: the amplifier plugin example
+\end{itemize}
+
+
+
+\subsection{Creating the plugin}
+
+The main steps for creating and using a plugin are:
+
+\begin{itemize}
+ \item Create a header file (.h) for your plugin, defining classes inheriting from PluginFilterInterface and PluginFilterCreator. Include pluginfilterinterface.h in this header.
+\item Create a source files (.cpp) implementing all methods for your plugin.
+\item Create a .pro file for use with qmake to compile your plugin
+\item Compile your plugin using qmake and make
+\item Copy your plugin library to the Apex plugins directory
+\item Create an apex experiment file that refers to your plugin library
+\item Run Apex with the experiment file
+\end{itemize}
+\index{Plugin}
+
+The actual plugin is created by using the file \texttt{pluginfilterinterface.h} and inheriting from the PluginFilterInterface and PluginFilterCreator objects.
+
+The only purpose of the PluginFilterCreator object is to return an instance of your filter. In this way, it is possible to have multiple filters in one library. This is currently not implemented in Apex but only provided in the interface.
+
+The easiest way to implement your own filter, is to start from the amplifier example. We suggest that you use qmake to process a .pro file as follows:
+
+\begin{verbatim}
+TEMPLATE = lib
+
+TARGET = amplifierplugin
+CONFIG += plugin
+CONFIG += debug
+
+QT -= gui
+
+INCLUDEPATH += /path/to/pluginfilterinterface.h
+
+SOURCES += amplifierplugin.cpp
+HEADERS += amplifierplugin.h
+\end{verbatim}
+
+The most important part about the plugin .h file itself is to inherit from QObject and include the necessary macro's.
+
+\begin{verbatim}
+ class AmplifierPluginCreator : public QObject, public PluginFilterCreator
+{
+    Q_OBJECT
+    Q_INTERFACES (PluginFilterCreator)
+
+    ...
+\end{verbatim}
+
+In the .cpp file you should include the following:
+
+\begin{verbatim}
+Q_EXPORT_PLUGIN2(amplifierplugin, AmplifierPluginCreator)
+\end{verbatim}
+
+
+Then run qmake and make. Make sure that Apex can find your plugin library by putting it in the Apex plugins directory or by providing an absolute or relative path in the experiment xml file.
+
+Note that Apex might crash if your plugin crashes (i.e., overwrites memory it should not, etc.).
+
+If you want to know more about the general plugin mechanism, consult the Qt documentation on QPluginLoader and the Qt Plugin Howto (``The Lower-Level API: Extending Qt Applications'').

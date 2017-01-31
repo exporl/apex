@@ -1,0 +1,454 @@
+<ui version="4.0" >
+ <class>CalibrationDialog</class>
+ <widget class="QDialog" name="CalibrationDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>673</width>
+    <height>443</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Parameter Calibration</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <item>
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLabel" name="label_2" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string>Hardware Setup</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="hardware" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QGroupBox" name="groupBox_4" >
+       <property name="title" >
+        <string>Parameter</string>
+       </property>
+       <layout class="QVBoxLayout" >
+        <item>
+         <widget class="QListWidget" name="parameter" />
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_6" >
+       <property name="title" >
+        <string>Automatic Calibration</string>
+       </property>
+       <layout class="QVBoxLayout" >
+        <item>
+         <layout class="QHBoxLayout" >
+          <item>
+           <widget class="QLabel" name="label_6" >
+            <property name="text" >
+             <string>Database status</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="status" >
+            <property name="text" >
+             <string/>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" >
+          <item>
+           <widget class="QLabel" name="targetLabel" >
+            <property name="text" >
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="target" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" >
+          <item>
+           <widget class="QLabel" name="label_12" >
+            <property name="text" >
+             <string>Output parameter</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="outputDisplay" >
+            <property name="text" >
+             <string/>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" >
+          <item>
+           <widget class="QLabel" name="measuredLabel" >
+            <property name="text" >
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="measured" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QDialogButtonBox" name="calibrationButtons" >
+          <property name="standardButtons" >
+           <set>QDialogButtonBox::Apply</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QStackedWidget" name="clippingStack" >
+          <property name="currentIndex" >
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="clipping" >
+           <layout class="QVBoxLayout" >
+            <property name="leftMargin" >
+             <number>0</number>
+            </property>
+            <property name="topMargin" >
+             <number>0</number>
+            </property>
+            <property name="rightMargin" >
+             <number>0</number>
+            </property>
+            <property name="bottomMargin" >
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_14" >
+              <property name="font" >
+               <font>
+                <pointsize>15</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet" >
+               <string>background-color:yellow; color:red; font-size:20pt; font-weight: bold; border: 1pt solid red</string>
+              </property>
+              <property name="text" >
+               <string>The signal has clipped. Decrease the output signal until this message disappears.</string>
+              </property>
+              <property name="alignment" >
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="wordWrap" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="noClipping" >
+           <layout class="QHBoxLayout" >
+            <property name="leftMargin" >
+             <number>0</number>
+            </property>
+            <property name="topMargin" >
+             <number>0</number>
+            </property>
+            <property name="rightMargin" >
+             <number>0</number>
+            </property>
+            <property name="bottomMargin" >
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label" >
+              <property name="text" >
+               <string>For each parameter:
+  1. Specify the target amplitude that should be calibrated.
+  2. Start the stimulation.
+  3. Enter the measured amplitude and click on "Correct output parameter".
+  4. Repeat the last step until the target amplitude is reached.
+  6. Save the calibration.</string>
+              </property>
+              <property name="alignment" >
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" native="1" name="advanced" >
+       <layout class="QVBoxLayout" >
+        <property name="spacing" >
+         <number>0</number>
+        </property>
+        <property name="leftMargin" >
+         <number>0</number>
+        </property>
+        <property name="topMargin" >
+         <number>0</number>
+        </property>
+        <property name="rightMargin" >
+         <number>0</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="groupBox_3" >
+          <property name="title" >
+           <string>Manual Calibration</string>
+          </property>
+          <layout class="QGridLayout" >
+           <item row="0" column="0" >
+            <widget class="QLabel" name="label_4" >
+             <property name="text" >
+              <string>Output parameter</string>
+             </property>
+             <property name="buddy" >
+              <cstring>output</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" >
+            <widget class="QLineEdit" name="output" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2" >
+            <widget class="QSlider" name="outputSlider" >
+             <property name="maximum" >
+              <number>1000</number>
+             </property>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="tickPosition" >
+              <enum>QSlider::NoTicks</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2" >
+            <layout class="QHBoxLayout" >
+             <property name="spacing" >
+              <number>0</number>
+             </property>
+             <property name="leftMargin" >
+              <number>0</number>
+             </property>
+             <property name="topMargin" >
+              <number>0</number>
+             </property>
+             <property name="rightMargin" >
+              <number>0</number>
+             </property>
+             <property name="bottomMargin" >
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="minimum" >
+               <property name="font" >
+                <font>
+                 <pointsize>8</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text" >
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="average" >
+               <property name="font" >
+                <font>
+                 <pointsize>8</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text" >
+                <string/>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="maximum" >
+               <property name="font" >
+                <font>
+                 <pointsize>8</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text" >
+                <string/>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox" >
+          <property name="title" >
+           <string>Muted Parameters</string>
+          </property>
+          <layout class="QVBoxLayout" >
+           <item>
+            <widget class="QListWidget" name="muted" >
+             <property name="selectionMode" >
+              <enum>QAbstractItemView::MultiSelection</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_2" >
+          <property name="title" >
+           <string>Stimulus</string>
+          </property>
+          <layout class="QVBoxLayout" >
+           <item>
+            <widget class="QComboBox" name="stimulus" />
+           </item>
+           <item>
+            <widget class="QCheckBox" name="loop" >
+             <property name="text" >
+              <string>Loop</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>CalibrationDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CalibrationDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

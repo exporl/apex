@@ -1,0 +1,376 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{a4wide}
+
+%\usepackage[dutch]{babel}
+\usepackage[latin1]{inputenc}
+%\selectlanguage{dutch}
+
+% kleinere lists
+\usepackage[normalsections,,normalmargins,normalfloats,normalindent,normalleading,normaltitle,normalbib,normalbibnotes]{savetrees} 
+
+\usepackage{url}
+
+%opening
+\title{Apex 3.0 feature overview}
+\author{Tom Francart}
+
+\setlength{\itemsep}{0pt}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\vspace{2cm}
+
+
+This document describes the different features of Apex~3 and is not intended as a tutorial.
+
+\section{Platforms}
+
+Supported platforms:
+
+\begin{itemize}
+\item Linux
+\item Windows (all)
+\end{itemize}
+
+Future platforms:
+\begin{itemize}
+\item MAC
+\item Web
+\item embedded systems
+\end{itemize}
+
+Apex~3 uses the Qt\footnote{\url{http://www.troll.no}} cross-platform library and should be easily portable to other platforms. 
+
+
+\section{Basic features}
+
+\subsection{Experiment definition}
+
+XML, defined by W3C XML schema
+
+All parameters are thoroughly checked before the experiments starts.
+
+Example (shortened for clarity):
+
+\begin{verbatim}
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.kuleuven.be/exporl/Lab/Apex  apex-schema.xsd"
+  xmlns:apex="http://www.kuleuven.be/exporl/Lab/Apex" version="1">
+  
+   <procedure xsi:type="apex:constantProcedureType">
+    <parameters>
+      	...
+     </parameters>
+    
+    <trials>
+      <trial id="trial1" >
+        <screen id="screen1" />
+        <stimulus id="stimulus1" />
+        <standard id="standard1"/>
+      </trial>
+      ...
+    </trials>
+  </procedure>
+  
+ <datablocks>
+   <datablock id="rawdata1" module="wavdevice">
+      <device>wavdevice</device>
+      <description>sample raw datablock</description>
+      <birth>2005-05-19T00:00:00Z</birth>
+      <checksum>5E2854FE11</checksum>
+      <uri>file:wd1.wav</uri>
+   </datablock>
+   ...
+</datablocks>
+
+  <corrector>
+    <type>alternatives</type>
+    <answer_element id="buttongroup1"/>
+    <answers>
+        <answer number="1" value="button1"/>
+        <answer number="2" value="button2"/>
+        <answer number="3" value="button3"/>
+     </answers>
+  </corrector>
+  
+  <filters>
+  </filters>
+  
+  <screens>
+    <screen id="screen1" >
+      <gridLayout height="1" width="3" id="main_layout">
+        <button x="1" y="1" id="button1" >
+          <text>eerste</text>
+        </button>
+      	...
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+      </buttongroup>
+    </screen>
+  </screens>
+  
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="standard1" >
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="noisedata" />
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus> 
+    ...
+  </stimuli>    
+  <devices>
+    <device id="wavdevice" module="wavdevice">
+      <parameters>
+        <parameter type="driver" >portaudio</parameter>
+	   ...
+      </parameters>
+    </device>
+  </devices>
+</apex:apex>
+\end{verbatim}
+
+\subsubsection{Procedure}
+
+Various procedure parameters. Procedures are described in section~\ref{procedures}
+
+\subsubsection{Trials}
+
+Every experiment consists of a number of trials ($t>=1$). A trial consists of 1 screen and a number of stimuli ($s>=1$). $s$ can be $>1$ if the procedure adapts a fixed stimulus parameter. In that case, all the stimuli that can be chosen by the procedure must be stated in the trial. 
+
+\subsubsection{Datablocks}
+
+Simuli are built out of basic blocks of data. These datablocks are defined in the \texttt{<datablocks>} section. 
+
+A datablock can be fetched from disk but also from a network resource. It can be specified whether datablocks must be cached.
+
+A checksum should be given and be correct. In this way, altered stimuli are treated differently in the database. 
+
+Known datablock types:
+
+\begin{itemize}
+\item WAV (audio) with any number of channels
+\item qic/quf: \emph{unmapped} NICStream data
+\item l34: \emph{mapped} xml data for the l34 device
+\end{itemize}
+
+\subsubsection{Corrector}
+
+The user input is compared to the correct value using a corrector. Different types of correctors are available:
+
+\begin{description}
+\item[FCACorrector] Corrector for a forced choice $n$ alternatives experiment, gets the correct value from procedure
+\item[SentenceCorrector] Corrector for an open set sentence experiment, uses heuristics to take into account spelling mistakes
+\item[WordCorrector] Corrector for open set word experiments (eg NVA, BLU) with phoneme score
+\item[EqualCorrector] Simple corrector for checking for equality
+\end{description}
+
+
+\subsubsection{Filters}
+
+Before the datablocks are sent to the output device, different kinds of filters can be applied, in real time or beforehand.
+
+Filters can change a stream of one type or convert from one stream type (e.g. l34) to another type (e.g. wav). 
+
+\subsubsection{Generators}
+
+Generators can be inserted anywhere in the output configuration. The following types are implemented:
+
+\begin{description}
+\item[Whitenoise] White noise generator
+\item[Dataloop] Generator that loops a datablock, ensuring the absense of clicks or other artifacts. The datablock must meet certain criteria.
+\end{description}
+
+
+\subsubsection{Screens}
+
+Screens are completely defined in the experiment file. 
+
+Known elements:
+
+\begin{description}
+\item[button]
+\item[picture]
+\item[textinput] free form text input (restrictable)
+\item[label] text or simple html
+\item[movie] flash movie/animated gif
+\end{description}
+
+Known layouts:
+
+\begin{description}
+\item[gridlayout] a grid of elements
+\item[arclayout] an arc of elements, e.g. for a localisation experiment
+\end{description}
+
+Also an input element can be assigned a shortcut for quick access.
+
+\subsubsection{Stimuli}
+
+A stimulus is constructed from a series of datablocks. Datablocks can be combined simultaneously or sequentially. 
+
+A stimulus can have fixed parameters: properties inherent to the stimulus that cannot be changed by Apex. A stimulus can also have variable parameters: parameters values that are set in other apex modules, e.g. in filters. 
+
+\subsubsection{Devices}
+
+In this section, certain device parameters can be set and the devices are enumerated. Multiple, simultaneously operating devices are possible. In certain cases (e.g. L34 and wav), synchronicity is guaranteed. 
+
+
+\subsection{Procedures}
+
+\label{procedures}
+
+\begin{description}
+\item[Adaptive procedure] A fixed or variable parameter is adapted depending on the user input
+\item[Constant procedure] The trials are presented in order or in random order
+\item[Adjustment procedure] ?? idem adaptive procedure
+\item[Training procedure] The next stimulus is the stimulus corresponding to the last button. 
+\end{description}
+
+\subsection{Other features}
+
+\begin{itemize}
+\item Measurement of subject response times
+\item Stimulus generators: create stimuli based on a set of parameters
+\item Setting of user defined parameters by user defined layout elements
+\item Setting of user layout elements by user defined parameters
+\item Dummy user: a dummy user can be selected for testing procedures
+\item Setting of certain parameters via a GUI before the experiment starts
+\end{itemize}
+
+
+\section{Output devices}
+
+\subsection{Sound cards}
+
+Supported drivers:
+
+\begin{itemize}
+\item Portaudio (Linux/windows)
+\item ASIO (windows)
+\item DirectSound (windows)
+\item MME (windows)
+\end{itemize}
+
+
+\subsection{CI interfaces}
+
+Supported devices:
+
+\begin{description}
+\item Laura
+\item[NIC] (=NICv0)
+\item[NICStream] (=NICv1)
+\item[NICv2] (=L34)
+\item L34
+\item Clarion
+\end{description}
+
+\section{Storage of results}
+
+\subsection{XML}
+
+Results are stored extensively to an XML file or directly to a database. Also some preliminary analysis of the results is performed.
+
+Together with the results, a checksum of the original experiment file and the experiment description are stored so the results can always be tracked back the the right experiment.
+
+\subsection{Plain text}
+
+XSLT scripts are supplied to convert an XML result file to a plain text file that can be read using any analysis program.
+
+\subsection{Database}
+
+Cfr. section~\ref{database}
+
+
+
+\section{Child mode}
+
+cfr Apex~2:
+
+\begin{itemize}
+\item the possibility of playing an intro-fragment at the beginning of the experiment
+\item the presentation of stimuli by simultaneous moving cartoons
+\item feedback in such a way as to reinforce correct answers (smileys!)
+\item a short animation movie (= outro)
+\item that the experiment
+\end{itemize}
+
+\section{Meta features}
+
+Features that do not influence the experiments themselves but everything that surrounds them.
+
+\subsection{Backward compatibility}
+
+perl/xslt scripts are supplied to convert an Apex~2 experiment file to an Apex~3 xml file. 
+
+All Apex~2 features are implemented (verify with Apex~2 manual p14-18)
+
+\subsection{Dynamic library loading}
+
+Libraries are loaded on the fly and features are dis/enabled according to availibility of libraries.
+
+\subsection{Matlab toolbox}
+
+A matlab toolbox is supplied to generate experiment files and to analyse result files. 
+
+\subsection{Experiment file editor}
+
+An editor is supplied to easliy generate experiment files. 
+
+\subsection{Database}
+
+\label{database}
+
+Experiment files can be added to a database. The database contains a list of subjects, experimenters, experiments, stimuli, results and various other data. 
+
+Apex can connect directly to the database on a database server (e.g. MySQL) to retrieve data and insert results. In this way, data is never lost and an overview is always available using simple SQL statements. More advantages and an example can be found in \cite{BMS05}. 
+
+\subsection{Subject/Experiment selection}
+
+Apex~3 in conjunction with the database will be able to intelligently select an experiment to be conducted, based on the experimenter and subject. An interface will be supplied for experimenters to add experiments to be conducted. 
+
+Features:
+\begin{itemize}
+\item Latin square
+\item Sequential
+\item Random
+\end{itemize}
+
+\subsection{Subject map selection}
+
+Subject maps for Cochlear devices can be automatically retrieved from the R126 database using the map selection wizard. 
+
+Maps can also be defined in the device section.
+
+\subsection{Calibration}
+
+Apex~3 has features to automatically calibrate an audio device.
+
+\subsection{Documentation}
+
+This document will become a manual in the future.
+
+All code will be documented using Doxygen
+
+\subsection{Verification}
+
+Regression tests are supplied for each feature to test the program's integrity. These tests will be automated in the future.
+
+\bibliographystyle{plain} 
+\bibliography{/home/tom/bib/total.bib}
+
+
+
+\end{document}

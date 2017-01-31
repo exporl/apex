@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.2/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.2/experiment.xsd"
+ xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+ version="1">
+
+<!--
+	Shows synchronisation for L34 using a soundcard pulse
+	2 channels of stereo file are mixed into output ch 0
+	the pulse goes to ch 1 
+-->
+  <procedure xsi:type="apex:trainingProcedureType">
+    <parameters>
+      <presentations>100</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+    </parameters>
+    
+    <trials>
+      <trial id="trial1" >
+        <answer>button1</answer>
+        <screen id="screen1" />
+        <stimulus id="stimulus1" />
+      </trial>
+    </trials>
+  </procedure>
+
+  <corrector xsi:type="apex:isequal"/>
+    
+  <screens>
+    <screen id="screen1" >
+      <gridLayout height="1" width="2" >
+        <button x="2" y="1" id="button1" >
+          <text>Send</text>
+        </button>
+      </gridLayout>
+	<buttongroup id="buttongroup1">
+      	<button id="button1"/>
+	</buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>    
+  </screens>
+  
+ <datablocks>
+   <uri_prefix>../stimuli/</uri_prefix>
+<datablock id="rawdata1">
+      <device>soundcard</device>
+      <uri>click.wav</uri>
+    </datablock> 
+   <datablock id="l34data">
+     <device>l34</device>
+     <uri>fadein.qic</uri>
+   </datablock> 
+   <datablock id="waitforl34">
+     <device>soundcard</device>
+     <uri>silence:5</uri>
+   </datablock>
+</datablocks>
+
+  <devices>
+    <master>soundcard</master>
+    <device id="soundcard" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>default</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>2048</buffersize>
+    </device>
+    <device id="l34" xsi:type="apex:dummyDeviceType"/>
+  </devices>
+
+ 
+  <filters>
+    <filter id="pulsegen" xsi:type="apex:generator">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <type>singlepulse</type>
+      <basegain>0</basegain>
+      <gain>0</gain>
+      <frequency>0</frequency>
+      <phase>0</phase>
+      <pulsewidth>2</pulsewidth>
+    </filter>
+    
+    
+  </filters>
+
+  
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1" >
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+                <simultaneous>
+                  <sequential>
+                   <datablock id="waitforl34"/>
+                  <datablock id="rawdata1" />
+                  </sequential>
+                  <datablock id="l34data" />
+                </simultaneous>  
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+
+  </stimuli>
+
+<connections>
+	<connection>
+	  <from>
+	    <id>pulsegen</id>
+	    <channel>0</channel>
+	  </from>
+	  <to>
+	    <id>soundcard</id>
+	    <channel>0</channel>
+	  </to>
+	  </connection>
+<connection>
+  <from>
+    <id>rawdata1</id>
+    <channel>0</channel>
+  </from>
+  <to>
+    <id>soundcard</id>
+    <channel>1</channel>
+  </to>
+</connection>
+  <connection>
+    <from>
+      <id>waitforl34</id>
+      <channel>0</channel>
+    </from>
+    <to>
+      <id>soundcard</id>
+      <channel>1</channel>
+    </to>
+  </connection>
+  
+	
+</connections>
+  
+  
+
+    
+</apex:apex>
+

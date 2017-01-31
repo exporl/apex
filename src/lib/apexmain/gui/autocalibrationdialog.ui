@@ -1,0 +1,494 @@
+<ui version="4.0" >
+ <class>AutoCalibrationDialog</class>
+ <widget class="QDialog" name="AutoCalibrationDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>827</width>
+    <height>406</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Auto Parameter Calibration</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <property name="leftMargin" >
+    <number>9</number>
+   </property>
+   <property name="topMargin" >
+    <number>9</number>
+   </property>
+   <property name="rightMargin" >
+    <number>9</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>9</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_2" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string>Hardware Setup</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="hardware" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QGroupBox" name="groupBox_6" >
+       <property name="title" >
+        <string>Automatic Calibration</string>
+       </property>
+       <layout class="QVBoxLayout" >
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <property name="leftMargin" >
+         <number>9</number>
+        </property>
+        <property name="topMargin" >
+         <number>9</number>
+        </property>
+        <property name="rightMargin" >
+         <number>9</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>9</number>
+        </property>
+        <item>
+         <widget class="QTreeWidget" name="parameterTree" >
+          <column>
+           <property name="text" >
+            <string>Parameter</string>
+           </property>
+          </column>
+          <column>
+           <property name="text" >
+            <string>Old Value</string>
+           </property>
+          </column>
+          <column>
+           <property name="text" >
+            <string>New Value</string>
+           </property>
+          </column>
+          <column>
+           <property name="text" >
+            <string>Difference</string>
+           </property>
+          </column>
+          <column>
+           <property name="text" >
+            <string>Calibrated (Save)</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" >
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <property name="leftMargin" >
+           <number>0</number>
+          </property>
+          <property name="topMargin" >
+           <number>0</number>
+          </property>
+          <property name="rightMargin" >
+           <number>0</number>
+          </property>
+          <property name="bottomMargin" >
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label33" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text" >
+             <string>Status:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="status" >
+            <property name="text" >
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" >
+          <item>
+           <widget class="QLabel" name="label_7" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text" >
+             <string>Progress:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="progressBar" >
+            <property name="value" >
+             <number>24</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" native="1" name="advanced" >
+       <layout class="QGridLayout" >
+        <property name="leftMargin" >
+         <number>0</number>
+        </property>
+        <property name="topMargin" >
+         <number>0</number>
+        </property>
+        <property name="rightMargin" >
+         <number>0</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>0</number>
+        </property>
+        <item row="1" column="0" >
+         <widget class="QGroupBox" name="groupBox_3" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title" >
+           <string>Calibration Setting</string>
+          </property>
+          <layout class="QVBoxLayout" >
+           <item>
+            <widget class="QCheckBox" name="amplitudeCbox" >
+             <property name="text" >
+              <string>Override Calibration Amplitude</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" >
+             <property name="rightMargin" >
+              <number>0</number>
+             </property>
+             <property name="bottomMargin" >
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="amplitudeLbl" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize" >
+                <size>
+                 <width>110</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text" >
+                <string>Calibration Amplitude:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="amplitudeTxt" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="0" >
+         <widget class="QGroupBox" name="groupBox_2" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Expanding" hsizetype="Fixed" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize" >
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title" >
+           <string>SLM Parameters</string>
+          </property>
+          <layout class="QGridLayout" >
+           <item row="0" column="0" >
+            <widget class="QLabel" name="label" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize" >
+              <size>
+               <width>110</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Type measurement</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" >
+            <widget class="QComboBox" name="typeCbox" >
+             <item>
+              <property name="text" >
+               <string>RMS</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>Peak</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0" >
+            <widget class="QLabel" name="label3" >
+             <property name="minimumSize" >
+              <size>
+               <width>110</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Frequency weighting</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" >
+            <widget class="QComboBox" name="freqCbox" >
+             <item>
+              <property name="text" >
+               <string>A</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>C</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>Z</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="0" >
+            <widget class="QLabel" name="label4" >
+             <property name="minimumSize" >
+              <size>
+               <width>110</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Time weighting</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" >
+            <widget class="QComboBox" name="timeCbox" >
+             <item>
+              <property name="text" >
+               <string>F</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>S</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>I</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="3" column="0" >
+            <widget class="QLabel" name="label5" >
+             <property name="minimumSize" >
+              <size>
+               <width>110</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Percentile (0.01-1)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1" >
+            <widget class="QLineEdit" name="percTxt" />
+           </item>
+           <item row="4" column="0" >
+            <widget class="QLabel" name="label6" >
+             <property name="minimumSize" >
+              <size>
+               <width>110</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Time (s)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1" >
+            <widget class="QLineEdit" name="timeTxt" />
+           </item>
+           <item row="6" column="1" >
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>AutoCalibrationDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>328</x>
+     <y>420</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>328</x>
+     <y>221</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>AutoCalibrationDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>328</x>
+     <y>420</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>328</x>
+     <y>221</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

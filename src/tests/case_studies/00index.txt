@@ -1,0 +1,3 @@
+Examples of apex3 in use
+Demonstrate multiple features at once in a realistic scenario
+Including all stimuli and other resources

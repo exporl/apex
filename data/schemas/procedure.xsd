@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+
+    <xs:include schemaLocation="xmlgeneratingplugin.xsd"/>
+
+    <xs:complexType name="procedureType" abstract="true">
+        <xs:sequence> </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="optional">
+            <xs:annotation>
+                <xs:documentation>The ID is optional, except for child procedures of a
+                    multiprocedure. IDs are reported in the results file.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="adaptiveProcedureType">
+        <xs:annotation>
+            <xs:documentation>Adaptive procedure according to Levitt (1978) Adapts a certain
+                parameter according to the correctness of the last answer.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:procedureType">
+                <xs:sequence>
+                    <xs:element name="parameters" type="apex:adaptiveProcedureParametersType"/>
+                    <xs:element name="trials" type="apex:trialsType">
+                        <xs:annotation>
+                            <xs:documentation>Trials are selected according to the sequence
+                                parameter. A trial can contain multiple stimuli. If the parameter to
+                                be adapted is fixed, a stimulus is selected from this list according
+                                to the target value of the parameter of the procedure. If more than
+                                one stimulus has the same fixed parameter value, a random stimulus
+                                is selected out of this subset. If no exact match for the fixed
+                                parameter is found, the closest match is used. If the parameter to
+                                be adapted is variable, the value of the parameter is set right
+                                before stimulus output. </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="constantProcedureType">
+        <xs:annotation>
+            <xs:documentation>Every trial is presented a specified number of
+            times.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:procedureType">
+                <xs:sequence>
+                    <xs:element name="parameters" type="apex:constantProcedureParametersType"/>
+                    <xs:element name="trials" type="apex:trialsType">
+                        <xs:annotation>
+                            <xs:documentation>If a trial contains more than one stimulus, a random
+                                one will be selected.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="trainingProcedureType">
+        <xs:annotation>
+            <xs:documentation>The training procedure is the reverse of the constant procedure: a
+                stimulus is presented AFTER the uses gives input. The trial to be presented is
+                determined according to the user input. If no corresponding trial is found, an error
+                dialog box is shown. This procedure is designed to be used as a drop-in instead of
+                the constant procedure to let subjects perform training before starting the actual
+                experiment.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:procedureType">
+                <xs:sequence>
+                    <xs:element name="parameters" type="apex:trainingProcedureParametersType"/>
+                    <xs:element name="trials" type="apex:trialsType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="multiProcedureType">
+        <xs:annotation>
+            <xs:documentation>The multiprocedure contains several child procedures and selects
+                between them. This procedure ends when all child procedures have
+            ended.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:procedureType">
+                <xs:sequence>
+                    <xs:element name="parameters" type="apex:multiProcedureParametersType"/>
+                    <xs:element name="procedure" type="apex:procedureType" minOccurs="1"
+                        maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>All child procedures MUST have an
+                            ID</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="pluginProcedureType">
+        <xs:annotation>
+            <xs:documentation>TODO</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:procedureType">
+                <xs:sequence>
+                    <xs:element name="parameters" type="apex:pluginProcedureParametersType"/>
+                    <xs:element name="trials" type="apex:trialsType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!--xs:complexType name="parametersType">
+        <xs:sequence>
+        <xs:element name="parameter" type="apex:maybeIdParameterType" minOccurs="0"
+        maxOccurs="unbounded"/>
+        </xs:sequence>
+        </xs:complexType-->
+    <xs:complexType name="variableParametersType">
+        <xs:annotation>
+            <xs:documentation>Parameters defined in this section will be set before the stimulus is
+                played</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="parameter" type="apex:hasIdParameterType" minOccurs="0"
+                maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="fixedParametersType">
+        <xs:annotation>
+            <xs:documentation>Fixed parameters are properties of a stimulus</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="parameter" type="apex:maybeIdParameterType" minOccurs="0"
+                maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="procedureParametersType">
+        <xs:sequence>
+            <xs:element name="presentations" type="xs:positiveInteger" default="1">
+                <xs:annotation>
+                    <xs:documentation>Number of times every trial will be
+                    presented.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="skip" type="xs:integer" default="0" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Number of trials that will be presented before the actual
+                        presentations start. Eg if skip=2 and presentations=3 then first 2 trials
+                        will be presented and then 3*#trials. If the order is sequential, the
+                        skipped trials will be the first skip trials from the trial list, repeated
+                        if necessary. If the order is random, the skipped trials will be picked from
+                        the trial list without replacement, repeating this procedure if necessary
+                        (if skip>nTrials). Trials that are to be skipped in the results analysis are
+                        marked with the skip tag in the results file. Warning: this has not been
+                        thorougly checked for other procedures than constant.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="order">
+                <xs:annotation>
+                    <xs:documentation>The order in which to present the trials.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="random">
+                            <xs:annotation>
+                                <xs:documentation>Random is realized by creating a list of trials
+                                    before the experiment starts and shuffling this
+                                list</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="sequential">
+                            <xs:annotation>
+                                <xs:documentation>Trials are presented in order of appearance in the
+                                    experiment file</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="defaultstandard" minOccurs="0" maxOccurs="1" type="xs:Name">
+                <xs:annotation>
+                    <xs:documentation>The default standard: only relevant if choices>1 This standard
+                        will be used if no standard is defined in a certain
+                    trial.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="uniquestandard" minOccurs="0" maxOccurs="1" default="false"
+                type="xs:boolean">
+                <xs:annotation>
+                    <xs:documentation> If uniquestandard is true and multiple standards are defined
+                        per trial, Apex will try to present another standard in each interval of the
+                        trial. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="choices" minOccurs="0" default="1">
+                <xs:annotation>
+                    <xs:documentation>Number of choices: choices stimuli are presented, one of which
+                        is the stimulus. The others are the current standard (defined in the trial
+                        or the default standard). To be combined with an "alternatives"
+                    corrector.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:positiveInteger">
+                            <xs:attribute name="select" type="apex:selectChoicesType">
+                                <xs:annotation>
+                                    <xs:documentation>If select is defined, the stimulus will only
+                                        be presented in the intervals enumerated in the select
+                                        attribute. e.g.: if select="2,3", the stimulus will never
+                                        occur in interval 1, but only in 2 and 3</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="pause_between_stimuli" minOccurs="0" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation> If specified, a pause of n milliseconds will be introduced
+                        between successive stimulus/standard presentations </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="time_before_first_trial" minOccurs="0" type="xs:double" default="0">
+                <xs:annotation>
+                    <xs:documentation> If specified, apex will wait for the given number of seconds
+                        before starting the first stimulus of the first trial when the procedure is
+                        started. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="input_during_stimulus" type="xs:boolean" minOccurs="0" default="false"
+            />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="selectChoicesType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\d+(,\d+)*"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="maybeIdParameterType">
+        <xs:annotation>
+            <xs:documentation>Parameter with optional ID</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" type="xs:string" use="required"/>
+                <xs:attribute name="id" type="xs:ID" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="hasIdParameterType">
+        <xs:annotation>
+            <xs:documentation>Parameter with obligated ID</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:parameterType">
+                <xs:attribute name="id" type="xs:ID" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="parameterType">
+        <xs:annotation>
+            <xs:documentation>base type for all kinds of parameters</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+
+    <xs:complexType name="genericParameterType">
+        <xs:annotation>
+            <xs:documentation>Parameter with parameter name, value, and optional
+            ID</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="value" type="xs:string" use="required"/>
+                <xs:attribute name="id" type="xs:ID" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="adaptiveProcedureParametersType">
+        <xs:complexContent>
+            <xs:extension base="apex:procedureParametersType">
+                <xs:sequence>
+                    <xs:element name="nUp" type="xs:positiveInteger">
+                        <xs:annotation>
+                            <xs:documentation>Number of times the user has to give a correct answer
+                                before the parameter is adapted</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="nDown" type="xs:positiveInteger">
+                        <xs:annotation>
+                            <xs:documentation>Number of times the user has to give a wrong answer
+                                before the parameter is adapted</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="adapt_parameter" type="xs:IDREF" minOccurs="1"
+                        maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Parameter to be adapted. Can be a fixed, variable or
+                                general parameter. If more than one parameter is specified, all
+                                parameters will be set to the same value. Only the first parameter
+                                given can be a fixed parameter.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="start_value" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Start value of the parameter</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="stop_after_type">
+                        <xs:annotation>
+                            <xs:documentation>Criterion to be used to stop the procedure. The
+                                procedure will be stopped after stop_after instances of this
+                            event.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="reversals">
+                                    <xs:annotation>
+                                        <xs:documentation>Total number of reversals in the
+                                        staircase</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="trials">
+                                    <xs:annotation>
+                                        <xs:documentation>Total number of trials to be
+                                        presented</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="presentations">
+                                    <xs:annotation>
+                                        <xs:documentation>Corresponding to the above presentations
+                                            tag. Warning: the number of presentations as specified
+                                            in the presentations element will be used! Every
+                                            stimulus will be played the number of times specified in
+                                            the presentations element.</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <!-- stop after the parameters above are used -->
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="stop_after" type="xs:positiveInteger">
+                        <xs:annotation>
+                            <xs:documentation>The procedure ends after stop_after events of type
+                                stop_after_type</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="min_value" type="xs:double" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Minimal value of the parameter. If the procedure tries
+                                to go below this value, the parameter is saturated and saturation is
+                                reported on screen and in the results file.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="max_value" type="xs:double" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Maximal value of the parameter. If the procedure tries
+                                to go above this value, the parameter is saturated and saturation is
+                                reported on screen and in the results file.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <!--xs:element name="rev_for_mean" type="xs:positiveInteger" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Number of reversals to be taken for mean value.
+                                Currently only used in xslt scripts to convert/analyse the resuls
+                                file.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element-->
+                    <xs:element name="larger_is_easier" type="xs:boolean" default="true">
+                        <xs:annotation>
+                            <xs:documentation>Larger values of the parameter are easier than smaller
+                                values</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="repeat_first_until_correct" type="xs:boolean" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Repeat the first trial untill the answer is
+                            correct.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="stepsizes">
+                        <xs:annotation>
+                            <xs:documentation>Defines the stepsizes to be used to adapt the
+                                parameter</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="change_after" minOccurs="0">
+                                    <xs:annotation>
+                                        <xs:documentation>Change the stepsize after a certain number
+                                            of trials or a certain number of
+                                        reversals</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="trials"/>
+                                            <xs:enumeration value="reversals"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:element>
+                                <xs:element name="stepsize" maxOccurs="unbounded" minOccurs="1">
+                                    <xs:annotation>
+                                        <xs:documentation>The procedure uses a step of size "size"
+                                            after "begin" events of type "change_after" have occured
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                    <xs:complexType>
+                                        <xs:attribute name="begin" type="xs:nonNegativeInteger"
+                                            use="required"/>
+                                        <xs:attribute name="size" type="xs:double" use="required"/>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="constantProcedureParametersType">
+        <xs:complexContent>
+            <xs:extension base="apex:procedureParametersType">
+                <xs:sequence> </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="trainingProcedureParametersType">
+        <xs:complexContent>
+            <xs:extension base="apex:procedureParametersType">
+                <xs:sequence> </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="pluginProcedureParametersType">
+        <xs:complexContent>
+            <xs:extension base="apex:procedureParametersType">
+                <xs:sequence>
+                    <xs:element name="script" minOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>Name of the script to be used as plugin procedure
+                            TODO</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="adjust_parameter" type="xs:IDREF" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation> Parameter to be modified by the procedure
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                    <xs:attribute name="name" type="xs:Name" use="required"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="multiProcedureParametersType">
+        <xs:sequence>
+            <xs:element name="order">
+                <xs:annotation>
+                    <xs:documentation>Order of interleaving the child procedures.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="random"/>
+                        <xs:enumeration value="sequential"/>
+                        <xs:enumeration value="onebyone">
+                            <xs:annotation>
+                                <xs:documentation> Present the procedures one by one: only start the
+                                    next procedure if the previous one is finished
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="trialsType">
+        <xs:sequence>
+            <xs:element name="trial" type="apex:trialType" minOccurs="0" maxOccurs="unbounded">
+                <xs:key name="trialKey">
+                    <xs:selector xpath="apex:trial"> </xs:selector>
+                    <xs:field xpath="@apex:id"> </xs:field>
+                </xs:key>
+                <xs:keyref refer="apex:trialKey" name="stimulusRef">
+                    <xs:selector xpath="apex:stimulus"> </xs:selector>
+                    <xs:field xpath="apex:stimuli/apex:stimulus/apex:id"> </xs:field>
+                </xs:keyref>
+            </xs:element>
+            <xs:element name="plugintrials" type="apex:pluginTrialType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="trialType">
+        <xs:sequence>
+            <xs:element name="answer" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The correct answer for this trial. Can be the name of a screen
+                        element, a string, a number or mixed xml data.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType mixed="true">
+                    <xs:choice maxOccurs="unbounded" minOccurs="0">
+                        <xs:element name="key" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>Keyword, to be used by the
+                                corrector</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="skey" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>Part of a split keyword, to be used by the
+                                    corrector.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="answer_element" type="xs:IDREF" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Screen element that contains the user input to be used by the
+                        corrector.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="screen" type="apex:screenRefType">
+                <xs:annotation>
+                    <xs:documentation>Screen to be shown</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="stimulus" type="apex:stimulusRefType" minOccurs="0"
+                maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>One or more stimuli. An adaptive procedure using a fixed
+                        parameter will select one of these stimuli. Other procedures select a random
+                        stimulus if more than one is present. Notice that it is not guaranteed that
+                        all stimuli will be presented an equal number of times, in the case a random
+                        stimulus is selected here.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="standard" type="apex:stimulusRefType" minOccurs="0"
+                maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>The standard to be used when procedure/choices>1. The standard
+                        will be presented on every time-slot except for one when the stimulus is
+                        presented. If more than one standard is defined, a random standard will be
+                        selected for each presentation. If e.g. 3 standards are defined and
+                        choices=4, a possible sequence would be standard1 stimulus1 standard2
+                        standard1</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="screenRefType">
+        <!--xs:attribute name="id" type="xs:IDREF" use="required"> </xs:attribute-->
+        <xs:attribute name="id" type="xs:Name" use="required"> </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="stimulusRefType">
+        <xs:attribute name="id" type="xs:Name" use="required"> </xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="pluginTrialType">
+        <xs:complexContent>
+            <xs:extension base="apex:xmlGeneratingPluginType"></xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+</xs:schema>

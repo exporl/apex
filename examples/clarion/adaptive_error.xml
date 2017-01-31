@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.2/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.2/experiment.xsd"
+ xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+ version="1">
+
+  <procedure xsi:type="apex:adaptiveProcedureType">
+
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <choices>2</choices>
+      <nUp>5</nUp>
+      <nDown>5</nDown>
+      <adapt_parameter>istim</adapt_parameter>
+      <start_value>50</start_value>
+      <stop_after_type>presentations</stop_after_type>
+      <stop_after>100</stop_after>
+      <min_value>40</min_value>
+      <max_value>110</max_value>
+      <larger_is_easier>true</larger_is_easier>
+      <stepsizes>
+        <stepsize begin="0" size="5"/>
+      </stepsizes>
+    </parameters>
+
+    <trials>
+      <trial id="trial1" >
+        <screen id="screen1" />
+        <stimulus id="stimulus1" />
+      </trial>
+
+    </trials>
+  </procedure>
+
+
+  <corrector xsi:type="apex:isequal"/>
+
+  <screens>
+
+    <reinforcement>
+      <progressbar>false</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+
+    <screen id="screen1">
+
+      <gridLayout height="3" width="4" id="answer_layout">
+        <button x="2" y="2" id="up">
+          <text>up</text>
+        </button>
+        <button x="3" y="2" id="down">
+          <text>down</text>
+        </button>
+        <parameterlist id="list" x="2" y="1">
+          <parameter name="IStm">istim</parameter>
+        </parameterlist>
+      </gridLayout>
+
+      <buttongroup id="buttongroup1">
+        <button id="up"/>
+        <button id="down"/>
+      </buttongroup>
+
+      <default_answer_element>up</default_answer_element>
+
+    </screen>
+
+  </screens>
+
+  <datablocks>
+    <uri_prefix>file:D:/projects/apex/apex/tests/regression/clarion</uri_prefix>
+    <datablock id="data1">
+      <device>clarion</device>
+      <uri>PT_MP_RGE1.bExp</uri>
+    </datablock>
+  </datablocks>
+
+  <devices>
+    <master>clarion</master>
+    <device id="clarion" xsi:type="apex:clarionDeviceType">
+      <parameter name="Elec">9</parameter> 
+      <parameter name="TDurMs">500</parameter> 
+      <parameter id="istim" name="istim">50</parameter>
+      <parameter name="PhDurSteps">9</parameter> 
+      <parameter name="ps">concat(-1,1,zeros(102))</parameter> 
+    </device>
+  </devices>
+
+  <filters/>
+
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1" >
+      <description>Basic test stim</description>
+      <datablocks>
+        <datablock id="data1" />
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+
+<connections/>
+
+</apex:apex>
+
+

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schemas.microsoft.com/wix/2003/01/wi ../../../../../temp/wix/doc/wix.xsd"
+	xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+              <Feature Id="Examples" Title="Examples" Absent="allow"
+              AllowAdvertise="yes" Description="Example experiment files." Level="1">
+                    <ComponentRef Id="ExamplesComp."/>
+                    <ComponentRef Id="ExamplesCompxmlplugin"/>
+                    <ComponentRef Id="ExamplesCompcontroller"/>
+                    <ComponentRef Id="ExamplesCompgeneral"/>
+                    <ComponentRef Id="ExamplesCompscreen"/>
+                    <ComponentRef Id="ExamplesCompprefix"/>
+                    <ComponentRef Id="ExamplesCompl34"/>
+                    <ComponentRef Id="ExamplesCompdatablocks"/>
+                    <ComponentRef Id="ExamplesCompfilters"/>
+                    <ComponentRef Id="ExamplesCompsoundcard"/>
+                    <ComponentRef Id="ExamplesCompaudiometer_stimuli"/>
+                    <ComponentRef Id="ExamplesComppluginfilter"/>
+                    <ComponentRef Id="ExamplesCompcorrector"/>
+                    <ComponentRef Id="ExamplesCompstimuli"/>
+                    <ComponentRef Id="ExamplesCompcalibration"/>
+                    <ComponentRef Id="ExamplesCompprocedure"/>
+                    <ComponentRef Id="ExamplesCompstepsizes"/>
+                    <ComponentRef Id="ExamplesCompclarion"/>
+                    <ComponentRef Id="ExamplesCompparameters"/>
+                    <ComponentRef Id="ExamplesCompmovies"/>
+                    <ComponentRef Id="ExamplesCompcow"/>
+                    <ComponentRef Id="ExamplesCompfrog"/>
+                    <ComponentRef Id="ExamplesCompbear"/>
+                    <ComponentRef Id="ExamplesCompsnail"/>
+                    <ComponentRef Id="ExamplesCompdragon"/>
+                    <ComponentRef Id="ExamplesCompsnake"/>
+                    <ComponentRef Id="ExamplesCompmonkey"/>
+                    <ComponentRef Id="ExamplesCompcar"/>
+                    <ComponentRef Id="ExamplesComppictures"/>
+                    <ComponentRef Id="ExamplesCompscreenplugin"/>
+                    <ComponentRef Id="ExamplesCompresults"/>
+                    <ComponentRef Id="ExamplesCompaudiometer"/>
+                    <ComponentRef Id="ExamplesCompconnections"/>
+                    <ComponentRef Id="ExamplesComprandomgenerator"/>
+                    <ComponentRef Id="ExamplesCompdummydevice"/>
+                    <ComponentRef Id="ExamplesCompmanual"/>
+                    <ComponentRef Id="ExamplesCompgapfiles"/>
+                    <ComponentRef Id="ExamplesCompsentences"/>
+                    <ComponentRef Id="ExamplesCompclosedset"/>
+                    <ComponentRef Id="ExamplesCompchildmode"/>
+                    <ComponentRef Id="ExamplesCompoutputtest"/>
+                    <ComponentRef Id="ExamplesCompinteractive"/>
+        </Feature>
+</Include>

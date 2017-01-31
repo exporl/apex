@@ -1,0 +1,516 @@
+<ui version="4.0" >
+ <author></author>
+ <comment></comment>
+ <exportmacro></exportmacro>
+ <class>MapWizard</class>
+ <widget class="Q3Wizard" name="MapWizard" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>527</width>
+    <height>387</height>
+   </rect>
+  </property>
+  <widget class="QWidget" name="WizardPage1" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>515</width>
+     <height>296</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" >
+    <property name="margin" >
+     <number>0</number>
+    </property>
+    <property name="spacing" >
+     <number>6</number>
+    </property>
+    <item>
+     <spacer>
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType" >
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" >
+       <size>
+        <width>25</width>
+        <height>25</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="Q3ListBox" name="listBoxPatient" >
+        <property name="sizePolicy" >
+         <sizepolicy>
+          <hsizetype>7</hsizetype>
+          <vsizetype>1</vsizetype>
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize" >
+         <size>
+          <width>200</width>
+          <height>145</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer>
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType" >
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" >
+         <size>
+          <width>75</width>
+          <height>16</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="Q3GroupBox" name="groupBoxPatient" >
+        <property name="sizePolicy" >
+         <sizepolicy>
+          <hsizetype>0</hsizetype>
+          <vsizetype>0</vsizetype>
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize" >
+         <size>
+          <width>225</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="title" >
+         <string>Patient Properties</string>
+        </property>
+        <layout class="QGridLayout" >
+         <property name="margin" >
+          <number>11</number>
+         </property>
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <item row="2" column="0" colspan="2" >
+          <widget class="QLabel" name="textLabelDateImplant" >
+           <property name="minimumSize" >
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Date of Implantation</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="2" >
+          <widget class="QLabel" name="textLabelName" >
+           <property name="text" >
+            <string>Name:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="2" >
+          <widget class="QLabel" name="textLabelImplantType" >
+           <property name="text" >
+            <string>Implant Type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="textLabelDateBirth" >
+           <property name="sizePolicy" >
+            <sizepolicy>
+             <hsizetype>0</hsizetype>
+             <vsizetype>5</vsizetype>
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>145</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Date of Birth:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" >
+          <widget class="QLabel" name="textLabelSex" >
+           <property name="sizePolicy" >
+            <sizepolicy>
+             <hsizetype>0</hsizetype>
+             <vsizetype>5</vsizetype>
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>45</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Sex:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <spacer>
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType" >
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" >
+       <size>
+        <width>25</width>
+        <height>25</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="pushButtonR126" >
+        <property name="minimumSize" >
+         <size>
+          <width>270</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text" >
+         <string>Change Settings for the R126 Database</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer>
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType" >
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" >
+         <size>
+          <width>296</width>
+          <height>11</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="WizardPage2" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>515</width>
+     <height>296</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" >
+    <property name="margin" >
+     <number>0</number>
+    </property>
+    <property name="spacing" >
+     <number>6</number>
+    </property>
+    <item>
+     <spacer>
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType" >
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" >
+       <size>
+        <width>25</width>
+        <height>25</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="Q3ListBox" name="listBoxMap" >
+        <property name="sizePolicy" >
+         <sizepolicy>
+          <hsizetype>7</hsizetype>
+          <vsizetype>1</vsizetype>
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize" >
+         <size>
+          <width>200</width>
+          <height>145</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer>
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType" >
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" >
+         <size>
+          <width>75</width>
+          <height>16</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="Q3GroupBox" name="groupBoxMap" >
+        <property name="sizePolicy" >
+         <sizepolicy>
+          <hsizetype>0</hsizetype>
+          <vsizetype>0</vsizetype>
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize" >
+         <size>
+          <width>220</width>
+          <height>145</height>
+         </size>
+        </property>
+        <property name="title" >
+         <string>Map Properties</string>
+        </property>
+        <layout class="QVBoxLayout" >
+         <property name="margin" >
+          <number>11</number>
+         </property>
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="textLabelDateCreation" >
+           <property name="text" >
+            <string>Creation Date:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="textLabelRateStimulation" >
+           <property name="sizePolicy" >
+            <sizepolicy>
+             <hsizetype>0</hsizetype>
+             <vsizetype>5</vsizetype>
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>145</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Stimulation Rate:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="textLabelMaxima" >
+           <property name="text" >
+            <string>Maxima:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="textLabelRateTotal" >
+           <property name="sizePolicy" >
+            <sizepolicy>
+             <hsizetype>0</hsizetype>
+             <vsizetype>5</vsizetype>
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Total Stimulation Rate:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="textLabelNumberMode" >
+           <property name="text" >
+            <string>Stimulation Mode:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="textLabelNumberStrategy" >
+           <property name="text" >
+            <string>Strategy:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <spacer>
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType" >
+       <enum>QSizePolicy::Minimum</enum>
+      </property>
+      <property name="sizeHint" >
+       <size>
+        <width>21</width>
+        <height>50</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>Q3Wizard</class>
+   <extends>QDialog</extends>
+   <header>q3wizard.h</header>
+   <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>Q3ListBox</class>
+   <extends>Q3Frame</extends>
+   <header>q3listbox.h</header>
+   <container>0</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>Q3GroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>Qt3Support/Q3GroupBox</header>
+   <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButtonR126</sender>
+   <signal>released()</signal>
+   <receiver>MapWizard</receiver>
+   <slot>R126SettingsClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listBoxPatient</sender>
+   <signal>clicked(Q3ListBoxItem*)</signal>
+   <receiver>MapWizard</receiver>
+   <slot>PatientSelected(Q3ListBoxItem*)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listBoxMap</sender>
+   <signal>clicked(Q3ListBoxItem*)</signal>
+   <receiver>MapWizard</receiver>
+   <slot>MapSelected(Q3ListBoxItem*)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

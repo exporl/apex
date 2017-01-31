@@ -1,0 +1,1079 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SpinMainDlg</class>
+ <widget class="QWidget" name="SpinMainDlg">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>539</width>
+    <height>624</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>SPIN</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_6">
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="currentIndex">
+      <number>3</number>
+     </property>
+     <widget class="QWidget" name="mainTab">
+      <attribute name="title">
+       <string>Main</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_12">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <widget class="QLabel" name="label_20">
+           <property name="text">
+            <string>Subject name</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="nameLine"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>Speech</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Material:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="speechmaterialCmb"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="speechcategoryLbl">
+              <property name="text">
+               <string>Category:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>List:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QComboBox" name="listCmb"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="speechcategoryCmb"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>Noise</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_5">
+            <item row="0" column="0">
+             <widget class="QLabel" name="noisematerialLbl">
+              <property name="text">
+               <string>Material:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="noisematerialCmb">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="sizeAdjustPolicy">
+               <enum>QComboBox::AdjustToContents</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QLabel" name="noisedescriptionLbl">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="sizeIncrement">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QLabel" name="label_22">
+           <property name="text">
+            <string>Saved settings, click to load</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QListWidget" name="settingsList">
+             <property name="showDropIndicator" stdset="0">
+              <bool>false</bool>
+             </property>
+             <property name="selectionRectVisible">
+              <bool>true</bool>
+             </property>
+             <item>
+              <property name="text">
+               <string>default</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_11">
+             <item>
+              <widget class="QPushButton" name="saveSettingsBtn">
+               <property name="text">
+                <string>Save current settings</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="importSettingsBtn">
+               <property name="text">
+                <string>Import settings</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="exportSettingsBtn">
+               <property name="text">
+                <string>Export selected</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="removeSettingsBtn">
+               <property name="text">
+                <string>Remove selected</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="renameSettingsBtn">
+               <property name="text">
+                <string>Rename selected</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>131</width>
+                 <height>178</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="speakersTab">
+      <attribute name="title">
+       <string>Speakers</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_15">
+       <item row="0" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_10">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <widget class="QGroupBox" name="groupBox_3">
+             <property name="title">
+              <string>Speaker type</string>
+             </property>
+             <layout class="QGridLayout">
+              <item row="0" column="0">
+               <layout class="QVBoxLayout">
+                <item>
+                 <widget class="QRadioButton" name="freeFieldRadio">
+                  <property name="text">
+                   <string>Free field</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="headphoneRadio">
+                  <property name="text">
+                   <string>Headphones</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_8">
+             <property name="title">
+              <string>Lock levels</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="0" column="0">
+               <layout class="QVBoxLayout" name="verticalLayout">
+                <item>
+                 <widget class="QCheckBox" name="lockNoiseCheck">
+                  <property name="text">
+                   <string>Same noise level on all channels</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="lockSpeechCheck">
+                  <property name="text">
+                   <string>Same speech level on all channels</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_9">
+           <property name="title">
+            <string>Initial SNR</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="0">
+             <widget class="spin::gui::SnrWidget" name="snrWidget" native="true"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QStackedWidget" name="speakersStack">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="page">
+            <layout class="QGridLayout" name="gridLayout_16">
+             <item row="0" column="0">
+              <layout class="QHBoxLayout" name="horizontalLayout_11">
+               <item>
+                <widget class="spin::gui::StartLevelWidget" name="leftHpStartLevels" native="true"/>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_5">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>148</width>
+                   <height>17</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QLabel" name="hpPicLbl">
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_6">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>128</width>
+                   <height>14</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="spin::gui::StartLevelWidget" name="rightHpStartLevels" native="true"/>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_2">
+            <layout class="QGridLayout" name="gridLayout">
+             <item row="0" column="0">
+              <widget class="spin::gui::FreeFieldWidget" name="freeFieldWidget" native="true"/>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="procedureTab">
+      <attribute name="title">
+       <string>Procedure</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_11">
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QGroupBox" name="groupBox_4">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>Procedure type</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="0" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <item>
+               <widget class="QRadioButton" name="constProcRadio">
+                <property name="text">
+                 <string>Constant</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="adapProcRadio">
+                <property name="text">
+                 <string>Adaptive</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="adaptationBox">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="title">
+            <string>Adaptation</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_8">
+            <item row="0" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <widget class="QRadioButton" name="adaptSpeechRadio">
+                <property name="text">
+                 <string>Adapt speech level</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="adaptNoiseRadio">
+                <property name="text">
+                 <string>Adapt noise level</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>456</width>
+           <height>30</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="0">
+        <widget class="QGroupBox" name="stepsizeBox">
+         <property name="title">
+          <string>Stepsize (for speech):</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_9">
+          <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <widget class="QLabel" name="label_12">
+                <property name="text">
+                 <string>Initial stepsize</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="initStepsizeLine">
+                <property name="maximumSize">
+                 <size>
+                  <width>30</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_11">
+                <property name="text">
+                 <string>dB</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_13">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>If you want the stepsize to change after a given trial, fill in the number of this trial and the stepsize to change to and click 'Add'.</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string>Trial</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="trialLine">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>30</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_15">
+                <property name="text">
+                 <string>Stepsize</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="stepsizeLine">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>30</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_16">
+                <property name="text">
+                 <string>dB</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="addStepsizeBtn">
+                <property name="text">
+                 <string>Add</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QTableWidget" name="stepsizeTable">
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectRows</enum>
+                </property>
+                <property name="textElideMode">
+                 <enum>Qt::ElideMiddle</enum>
+                </property>
+                <property name="cornerButtonEnabled">
+                 <bool>false</bool>
+                </property>
+                <property name="rowCount">
+                 <number>0</number>
+                </property>
+                <property name="columnCount">
+                 <number>2</number>
+                </property>
+                <column>
+                 <property name="text">
+                  <string>Trial</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Stepsize</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QCheckBox" name="repeatFirstCheck">
+                <property name="text">
+                 <string>Repeat first trial until correct</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="optionsTab">
+      <attribute name="title">
+       <string>Options</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_12">
+       <item row="0" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_13">
+         <item>
+          <widget class="QGroupBox" name="groupBox_5">
+           <property name="title">
+            <string>Test</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_10">
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="noiseStopsCheck">
+              <property name="text">
+               <string>Noise stops between trials</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="reinforcementCheck">
+              <property name="text">
+               <string>Reinforcement</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QCheckBox" name="randTrialsCheck">
+              <property name="text">
+               <string>Randomize order of trials</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <item>
+               <widget class="QLabel" name="label_17">
+                <property name="text">
+                 <string>Time before first speech stimulus</string>
+                </property>
+                <property name="buddy">
+                 <cstring>timeBeforeLine</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="timeBeforeLine">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>30</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string>s</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_14">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="3" column="0">
+             <widget class="QCheckBox" name="exitAfterCheck">
+              <property name="text">
+               <string>Exit APEX after test</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_6">
+           <property name="title">
+            <string>Screen</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_15">
+                <item>
+                 <widget class="QRadioButton" name="expSitsRadio">
+                  <property name="text">
+                   <string>Experimenter sits in front of screen</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_14">
+                <item>
+                 <widget class="QRadioButton" name="subSitsRadio">
+                  <property name="text">
+                   <string>Subject sits in front of screen</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_12">
+              <item>
+               <widget class="QRadioButton" name="customScreenRadio">
+                <property name="text">
+                 <string>Custom</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="customScreenCombo"/>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_7">
+           <property name="title">
+            <string>Results</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_14">
+            <item row="0" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_18">
+                <item>
+                 <widget class="QCheckBox" name="showResultsCheck">
+                  <property name="text">
+                   <string>Show results after test</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_17">
+                <item>
+                 <widget class="QLabel" name="label_19">
+                  <property name="text">
+                   <string>Number of trials for average</string>
+                  </property>
+                  <property name="buddy">
+                   <cstring>nbResponsesLine</cstring>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="nbResponsesLine">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>30</width>
+                    <height>25</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_18">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_10">
+           <property name="title">
+            <string>System</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Soundcard</string>
+              </property>
+              <property name="buddy">
+               <cstring>soundCardCombo</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="soundCardCombo"/>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>497</width>
+             <height>98</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Calibration</string>
+      </attribute>
+      <widget class="QPushButton" name="calibrateBtn">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>170</y>
+         <width>102</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Calibrate</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_10">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="createExperimentBtn">
+       <property name="text">
+        <string>Create experiment</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>spin::gui::StartLevelWidget</class>
+   <extends>QWidget</extends>
+   <header>gui/startlevelwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>spin::gui::FreeFieldWidget</class>
+   <extends>QWidget</extends>
+   <header>gui/freefieldwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>spin::gui::SnrWidget</class>
+   <extends>QWidget</extends>
+   <header>gui/snrwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>nameLine</tabstop>
+  <tabstop>speechmaterialCmb</tabstop>
+  <tabstop>speechcategoryCmb</tabstop>
+  <tabstop>listCmb</tabstop>
+  <tabstop>noisematerialCmb</tabstop>
+  <tabstop>settingsList</tabstop>
+  <tabstop>saveSettingsBtn</tabstop>
+  <tabstop>importSettingsBtn</tabstop>
+  <tabstop>exportSettingsBtn</tabstop>
+  <tabstop>removeSettingsBtn</tabstop>
+  <tabstop>renameSettingsBtn</tabstop>
+  <tabstop>freeFieldRadio</tabstop>
+  <tabstop>headphoneRadio</tabstop>
+  <tabstop>lockNoiseCheck</tabstop>
+  <tabstop>lockSpeechCheck</tabstop>
+  <tabstop>constProcRadio</tabstop>
+  <tabstop>adapProcRadio</tabstop>
+  <tabstop>adaptSpeechRadio</tabstop>
+  <tabstop>adaptNoiseRadio</tabstop>
+  <tabstop>initStepsizeLine</tabstop>
+  <tabstop>trialLine</tabstop>
+  <tabstop>stepsizeLine</tabstop>
+  <tabstop>addStepsizeBtn</tabstop>
+  <tabstop>stepsizeTable</tabstop>
+  <tabstop>repeatFirstCheck</tabstop>
+  <tabstop>noiseStopsCheck</tabstop>
+  <tabstop>reinforcementCheck</tabstop>
+  <tabstop>randTrialsCheck</tabstop>
+  <tabstop>exitAfterCheck</tabstop>
+  <tabstop>timeBeforeLine</tabstop>
+  <tabstop>expSitsRadio</tabstop>
+  <tabstop>subSitsRadio</tabstop>
+  <tabstop>customScreenRadio</tabstop>
+  <tabstop>customScreenCombo</tabstop>
+  <tabstop>showResultsCheck</tabstop>
+  <tabstop>nbResponsesLine</tabstop>
+  <tabstop>soundCardCombo</tabstop>
+  <tabstop>calibrateBtn</tabstop>
+  <tabstop>createExperimentBtn</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,171 @@
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>R216SettingsBase</class>
+  <widget class="QDialog" name="R216SettingsBase" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>1</y>
+        <width>240</width>
+        <height>300</height>
+      </rect>
+    </property>
+    <property name="sizePolicy" >
+      <sizepolicy>
+        <hsizetype>0</hsizetype>
+        <vsizetype>0</vsizetype>
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+      </sizepolicy>
+    </property>
+    <property name="minimumSize" >
+      <size>
+        <width>240</width>
+        <height>300</height>
+      </size>
+    </property>
+    <property name="windowTitle" >
+      <string>R126 Database Settings</string>
+    </property>
+    <property name="windowIcon" >
+      <pixmap/>
+    </property>
+    <property name="modal" >
+      <bool>true</bool>
+    </property>
+    <widget class="Q3GroupBox" name="groupBoxDataBase" >
+      <property name="geometry" >
+        <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>220</width>
+          <height>120</height>
+        </rect>
+      </property>
+      <property name="sizePolicy" >
+        <sizepolicy>
+          <hsizetype>0</hsizetype>
+          <vsizetype>0</vsizetype>
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+        </sizepolicy>
+      </property>
+      <property name="title" >
+        <string>Database Location</string>
+      </property>
+      <widget class="QRadioButton" name="radioButtonRemotePc" >
+        <property name="geometry" >
+          <rect>
+            <x>20</x>
+            <y>55</y>
+            <width>111</width>
+            <height>21</height>
+          </rect>
+        </property>
+        <property name="text" >
+          <string>Remote Computer:</string>
+        </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEditRemotePc" >
+        <property name="geometry" >
+          <rect>
+            <x>35</x>
+            <y>85</y>
+            <width>161</width>
+            <height>21</height>
+          </rect>
+        </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButtonThisPc" >
+        <property name="geometry" >
+          <rect>
+            <x>20</x>
+            <y>25</y>
+            <width>111</width>
+            <height>21</height>
+          </rect>
+        </property>
+        <property name="text" >
+          <string>This Computer</string>
+        </property>
+      </widget>
+    </widget>
+    <widget class="Q3GroupBox" name="groupBoxSoftware" >
+      <property name="geometry" >
+        <rect>
+          <x>10</x>
+          <y>140</y>
+          <width>220</width>
+          <height>110</height>
+        </rect>
+      </property>
+      <property name="sizePolicy" >
+        <sizepolicy>
+          <hsizetype>0</hsizetype>
+          <vsizetype>0</vsizetype>
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+        </sizepolicy>
+      </property>
+      <property name="title" >
+        <string>Software Version</string>
+      </property>
+      <widget class="QRadioButton" name="radioButtonSV0" >
+        <property name="geometry" >
+          <rect>
+            <x>20</x>
+            <y>25</y>
+            <width>111</width>
+            <height>21</height>
+          </rect>
+        </property>
+        <property name="text" >
+          <string>R126 v1.1 to v1.3</string>
+        </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButtonSV1" >
+        <property name="geometry" >
+          <rect>
+            <x>20</x>
+            <y>50</y>
+            <width>111</width>
+            <height>21</height>
+          </rect>
+        </property>
+        <property name="text" >
+          <string>R126 v2.0</string>
+        </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButtonSV2" >
+        <property name="geometry" >
+          <rect>
+            <x>20</x>
+            <y>75</y>
+            <width>111</width>
+            <height>21</height>
+          </rect>
+        </property>
+        <property name="text" >
+          <string>R126 v2.1</string>
+        </property>
+      </widget>
+    </widget>
+    <widget class="QPushButton" name="pushButtonTest" >
+      <property name="geometry" >
+        <rect>
+          <x>50</x>
+          <y>265</y>
+          <width>140</width>
+          <height>21</height>
+        </rect>
+      </property>
+      <property name="text" >
+        <string>Test Connection</string>
+      </property>
+    </widget>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+</ui>

@@ -1,0 +1,564 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    
+    <xs:include schemaLocation="filters.xsd"/>
+    
+    <xs:complexType name="devicesType">
+        <xs:sequence>
+            <xs:element name="master" type="xs:IDREF" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The master device is that last one to be
+                        started after all stimuli are loaded for all devices. This
+                        feature can be used when using triggers to synchronize
+                        devices.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="device" type="apex:deviceType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>All real devices derive from this
+                        base.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="deviceType">
+        <xs:annotation>
+            <xs:documentation>Base type for all devices</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <!--xs:attribute name="mode" type="apex:deviceModesEnum" use="optional">
+            <xs:annotation>
+                <xs:documentation>Processing mode of this device. Impacts all associated
+                filters.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute-->
+    </xs:complexType>
+    <xs:complexType name="wavDeviceType">
+        <xs:complexContent>
+            <xs:extension base="apex:deviceType">
+                <xs:sequence>
+                    <xs:element name="driver" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Driver architecture to be used for sound
+                            output</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="portaudio">
+                                    <xs:annotation>
+                                        <xs:documentation>Portaudio is a cross-platform audio
+                                            framework</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="asio">
+                                    <xs:annotation>
+                                        <xs:documentation>ASIO is a proprietary windows/mac-only audio
+                                            framework by Steinberg. Use it if low latency/more then
+                                            2 channels is required.</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                                                <xs:enumeration value="coreaudio">
+                                    <xs:annotation>
+                                        <xs:documentation>CoreAudio is MacOsX' audio framework.</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="jack">
+                                    <xs:annotation>
+                                        <xs:documentation>Jack is a cross-platform audio
+                                            framework. A jack connection will be made to the "drivername" specified in the main config file.</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="card" type="xs:string" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Name of the soundcard to be used. Cards are defined in
+                                the main config file. Every soundcard in the system can be
+                                enumerated in the main configfile. Use the ID defined there.
+                                Otherwise the "default" card can be used.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="channels" type="xs:positiveInteger">
+                        <xs:annotation>
+                            <xs:documentation>Number of output channels to be used. This is
+                                restricted by the selected driver, with a maximum of 2 for
+                                portaudio.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="gain" type="apex:channelGainType" minOccurs="0"
+                        maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>Final gain of the device, implemented with a software
+                                mixer.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="samplerate">
+                        <xs:annotation>
+                            <xs:documentation>Sample rate of the device. Warning: not all sample
+                                rates are supported by all devices and some drivers automatically
+                                convert to other sample rates. Check your sound card
+                                documentation.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="16000"/>
+                                <xs:enumeration value="44100"/>
+                                <xs:enumeration value="96000"/>
+                                <xs:enumeration value="32000"/>
+                                <xs:enumeration value="48000"/>
+                                <xs:enumeration value="8000"/>
+                                <xs:enumeration value="22050"/>
+                                <xs:enumeration value="72000"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="buffersize" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation> Applies to the soundcard buffer size, not the internal apex buffer size.
+                                Larger sizes are
+                                more efficient, smaller sizes have smaller latencies.
+                                Some notes: for asio, latency is always ( 2 * buffersize + overhead ) / samplerate.
+                                The overhead is very small, eg 16 samples for an Rme Multiface.
+                                Portaudio however always uses a number of internal buffers, mostly 4. Hence, actual latency
+                                is ( 2 * 4 * buffersize + overhead ) / samplerate.
+                                For asio/jack: must be set to the system buffer size.
+                                </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:enumeration value="64"/>
+                            <xs:enumeration value="128"/>
+                            <xs:enumeration value="256"/>
+                            <xs:enumeration value="512"/>
+                            <xs:enumeration value="768"/>
+                            <xs:enumeration value="1024"/>
+                            <xs:enumeration value="2048"/>
+                            <xs:enumeration value="4096"/>
+                            <xs:enumeration value="8192"/>
+                            <xs:enumeration value="16384"/>
+                          </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="blocksize" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation> Applies to the block size that is used in the internal apex audio streams (for filters etc.).
+                                Larger sizes are more efficient, smaller sizes have smaller latencies.
+                                </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:enumeration value="64"/>
+                            <xs:enumeration value="128"/>
+                            <xs:enumeration value="256"/>
+                            <xs:enumeration value="512"/>
+                            <xs:enumeration value="768"/>
+                            <xs:enumeration value="1024"/>
+                            <xs:enumeration value="2048"/>
+                            <xs:enumeration value="4096"/>
+                            <xs:enumeration value="8192"/>
+                            <xs:enumeration value="16384"/>
+                          </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="buffersize_apex" minOccurs="0" >
+                        <xs:annotation>
+                            <xs:documentation>Size of internal apex sound buffer in seconds. This buffer ensures that no buffer
+                            underruns occur. The default value is 1s. If continuous filters are used, the system will need
+                            this amount of seconds before the next stimulus can be output.
+                            Note that the value in seconds is rounded down to the nearest multiple of 8192 samples
+                            (the buffersize used to fill the buffer):
+                            so using 1 second here, with a samplerate of 44100, the actual amount of time will be
+                            40960 samples / 44100 samples/sec = 0.9 seconds.
+                                If a buffersize smaller than 16384 samples is specified, a buffer of 16384 samples
+                                will be used.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:decimal">
+                                <xs:minExclusive value="0"></xs:minExclusive>
+                                <xs:maxInclusive value="60"></xs:maxInclusive>
+                            </xs:restriction>
+                        </xs:simpleType>
+                      <!--xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="0.5"/>
+                          <xs:enumeration value="1"/>
+                          <xs:enumeration value="1.5"/>
+                          <xs:enumeration value="2"/>
+                          <xs:enumeration value="3"/>
+                          <xs:enumeration value="4"/>
+                          <xs:enumeration value="5"/>
+                          <xs:enumeration value="10"/>
+                        </xs:restriction>
+                      </xs:simpleType-->
+                    </xs:element>
+                    <xs:element name="padzero" type="xs:nonNegativeInteger" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Add the given number of empty (filled with zero's) buffers
+                            to the output on the end of a stream. This avoids dropping of the last N frames on some
+                            soundcards (notoriously LynxOne)</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="setcardmixer" type="xs:boolean" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Set all output gains on the software mixer 0 dB to
+                                avoid quantization noise and set all input gains to -infinite dB to
+                                avoid picking up unwanted signals. The software mixer is is the
+                                mixer that is normally controlled using the windows mixer or the
+                                /dev/mixer interface. For all implementations of our knowledge this
+                                is a software mixer. Warning: not all soundcards are supported. All
+                                soundcards that support the windows mixer are
+                                supported. </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="cisim" type="apex:cisimType" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Parameters for automatic CI
+                            simulation</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="dummyDeviceType">
+        <xs:annotation>
+            <xs:documentation>Dummy device that does nothing. Useful to temporarily suppress output
+                of a certain device. Allows anything as parameters.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:deviceType">
+                <xs:sequence>
+                    <xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="mixerDeviceType" abstract="true">
+        <xs:annotation>
+            <xs:documentation>Base type for all mixer-type devices (id devices of which the essence is a gain parameter)</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:deviceType">
+                <xs:sequence>
+                    <xs:element name="gain" type="apex:channelGainType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+        <xs:complexType name="PA5">
+        <xs:complexContent>
+            <xs:extension base="apex:mixerDeviceType">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="soundcardmixer">
+        <xs:complexContent>
+            <xs:extension base="apex:mixerDeviceType">
+                <xs:sequence>
+                    <xs:element name="type">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="mme"/>
+                                <!--xs:enumeration value="rme"/ RME mixer code is broken  -->
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="pluginController">
+        <xs:annotation>
+            <xs:documentation>Plugin control device TODO</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:deviceType">
+                <xs:sequence>
+                    <xs:element name="plugin" type="xs:anyURI"/>
+                    <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded"> 
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                    <xs:attribute name="name" type="xs:Name" use="required"/>
+                                    <xs:attribute name="channel" type="xs:nonNegativeInteger" use="optional"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="L34DeviceType">
+        <xs:annotation>
+            <xs:documentation>Device using the NICv2 interface to the cochlear L34
+            device</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:deviceType">
+                <xs:sequence>
+                    <xs:element name="device_id" type="xs:nonNegativeInteger">
+                        <xs:annotation>
+                            <xs:documentation>Device number. Devices are ordered according to the
+                                assigned com-port (cfr device manager). Device 0 is a simulated
+                                device.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="implant">
+                        <xs:annotation>
+                            <xs:documentation>Implant type. CIC4==freedom</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="cic3"/>
+                                <xs:enumeration value="cic4"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+
+                    <xs:element name="trigger">
+                        <xs:annotation>
+                            <xs:documentation>Generate or use a trigger from the audio port.
+                                Currently the trigger button status is not checked (nicv2 doesn't
+                                allow this yet)</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="in"/>
+                                <xs:enumeration value="out"/>
+                                <xs:enumeration value="none"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <!--xs:element name="volume" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:double">
+                                <xs:minInclusive value="0"/>
+                                <xs:maxInclusive value="100"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element -->
+                    <xs:element name="volume" minOccurs="0">
+                        <xs:complexType>
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Volume parameter for L34 device. The current level (in clinical units) is calculated according the following formula:
+                                    round(t + (c-t) * volume/100 * mag)
+                                    Where:
+                                    t=treshold level
+                                    c=comfort level
+                                    volume=current value of volume parameter
+                                    mag=magnitude in qic file [0,1]
+                                </xs:documentation>
+                            </xs:annotation>
+                        <xs:simpleContent>
+                            <xs:extension base="apex:volumeParam">
+                                <xs:attributeGroup ref="apex:filterParam"/>
+                            </xs:extension>
+                        </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="defaultmap">
+                        <xs:annotation>
+                            <xs:documentation>Defines the default subject map to be
+                            used</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:choice>
+                                <xs:element name="inline" type="apex:L34Map">
+                                    <xs:annotation>
+                                        <xs:documentation>The map is defined
+                                        below</xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                                <xs:element name="from_r126">
+                                    <xs:annotation>
+                                        <xs:documentation>The user can select the map from the R126
+                                            wizard. R126 is the clinical fitting
+                                        software.</xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                            </xs:choice>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="L34Map">
+        <xs:sequence>
+            <xs:element name="number_electrodes">
+                <xs:simpleType>
+                    <xs:restriction base="xs:positiveInteger">
+                        <xs:maxInclusive value="22"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="mode" type="apex:L34ModeEnum"/>
+            <xs:element name="pulsewidth">
+                <xs:annotation>
+                    <xs:documentation>
+                        When using a Freedom processor, the maximum phasewidth is 429.8us
+                        When using an L34 processor, the maximum phasewidth is 434.4us
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minInclusive value="25"/>
+                        <xs:maxInclusive value="434.4"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="pulsegap">
+                <xs:annotation>
+                    <xs:documentation>
+                        When using a Freedom processor, the maximum phase gap is 57us
+                        When using an L34 processor, the maximum phase gap is 58us
+                        When using a cic3 implant, the minimum phase gap is 8us
+                        When using a cic4 implant, the minimum phase gap is 7us
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minInclusive value="7"/>
+                        <xs:maxInclusive value="58"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="period">
+                <xs:annotation>
+                <xs:documentation>
+                    When using a Freedom processor, the maximum period is 13078us
+                    When using an L34 processor, the maximum period is 13107us
+                    When using a cic3 implant, the minimum period is 70us
+                    When using a cic4 implant, the minimum period is 64.6us
+                </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minInclusive value="64.6"/>
+                        <xs:maxInclusive value="13107"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="channel" minOccurs="1" maxOccurs="22">
+                <xs:complexType>
+                    <xs:attribute name="number" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:positiveInteger">
+                                <xs:maxInclusive value="22"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="electrode" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:positiveInteger">
+                                <xs:maxInclusive value="22"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="threshold" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:nonNegativeInteger">
+                                <xs:maxInclusive value="255"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="comfort" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:nonNegativeInteger">
+                                <xs:maxInclusive value="255"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID"/>
+    </xs:complexType>
+    <xs:simpleType name="L34ModeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MP1+2"/>
+            <xs:enumeration value="BP"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="deviceModesEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="online">
+                <xs:annotation>
+                    <xs:documentation>All processing (mixing, filtering, ...) is done in real time
+                        while sending output</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <!--xs:enumeration value="offline">
+                <xs:annotation>
+                    <xs:documentation>All processing is done beforehand and the resulting output
+                        data is stored in memory. Not all devices support this
+                    mode.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration-->
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="clarionParameter">
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attributeGroup ref="apex:filterParam"/>
+                    <xs:attribute name="name" type="xs:Name" use="required"/>
+                </xs:extension>
+            </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="clarionDeviceType">
+        <xs:annotation>
+            <xs:documentation>Clarion device</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:deviceType">
+                <xs:sequence>
+                  <xs:element name="parameter" type="apex:clarionParameter" minOccurs="1" maxOccurs="unbounded">
+                      <xs:annotation>
+                        <xs:documentation>
+                          Any parameter known to Clarion. 
+                          If the parameter does not exist on the device, an error will be shown.
+                        </xs:documentation>
+                      </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="cisimType">
+        <xs:sequence>
+            <xs:element name="number_electrodes" type="xs:positiveInteger"/>
+            <xs:element name="pulserate" type="xs:integer"/>
+            <xs:element name="noiseband" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:IDREF">
+                            <xs:attribute name="electrode" type="xs:positiveInteger"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:simpleType name="volumeParam">
+        <xs:restriction base="xs:double">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,232 @@
+<ui version="4.0" >
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>784</width>
+    <height>368</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Dialog</string>
+  </property>
+  <widget class="QTreeWidget" name="treeWidget" >
+   <property name="geometry" >
+    <rect>
+     <x>30</x>
+     <y>40</y>
+     <width>461</width>
+     <height>192</height>
+    </rect>
+   </property>
+   <property name="selectionMode" >
+    <enum>QAbstractItemView::MultiSelection</enum>
+   </property>
+   <property name="indentation" >
+    <number>20</number>
+   </property>
+   <property name="rootIsDecorated" >
+    <bool>false</bool>
+   </property>
+   <property name="columnCount" >
+    <number>3</number>
+   </property>
+   <column>
+    <property name="text" >
+     <string>Parameter</string>
+    </property>
+   </column>
+   <column>
+    <property name="text" >
+     <string>Old value</string>
+    </property>
+   </column>
+   <column>
+    <property name="text" >
+     <string>New value</string>
+    </property>
+   </column>
+   <item>
+    <property name="text" >
+     <string>left</string>
+    </property>
+    <property name="text" >
+     <string>-10</string>
+    </property>
+    <property name="text" >
+     <string>?</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QProgressBar" name="progressBar" >
+   <property name="geometry" >
+    <rect>
+     <x>220</x>
+     <y>260</y>
+     <width>118</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="value" >
+    <number>24</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label" >
+   <property name="geometry" >
+    <rect>
+     <x>40</x>
+     <y>260</y>
+     <width>57</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Status:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2" >
+   <property name="geometry" >
+    <rect>
+     <x>110</x>
+     <y>260</y>
+     <width>81</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>measuring...</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton" >
+   <property name="geometry" >
+    <rect>
+     <x>40</x>
+     <y>300</y>
+     <width>124</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Calibrate selected</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2" >
+   <property name="geometry" >
+    <rect>
+     <x>180</x>
+     <y>300</y>
+     <width>80</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Stop</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_3" >
+   <property name="geometry" >
+    <rect>
+     <x>360</x>
+     <y>300</y>
+     <width>126</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Accept new values</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_4" >
+   <property name="geometry" >
+    <rect>
+     <x>400</x>
+     <y>260</y>
+     <width>91</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Advanced>></string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox" >
+   <property name="geometry" >
+    <rect>
+     <x>520</x>
+     <y>40</y>
+     <width>221</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="title" >
+    <string>SLM settings</string>
+   </property>
+   <widget class="QLabel" name="label_3" >
+    <property name="geometry" >
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>81</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>Freq weight</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox" >
+    <property name="geometry" >
+     <rect>
+      <x>110</x>
+      <y>60</y>
+      <width>71</width>
+      <height>26</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4" >
+    <property name="geometry" >
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>57</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>...</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5" >
+    <property name="geometry" >
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>...</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="pushButton_5" >
+   <property name="geometry" >
+    <rect>
+     <x>270</x>
+     <y>300</y>
+     <width>80</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Cancel</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

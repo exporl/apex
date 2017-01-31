@@ -1,0 +1,7 @@
+<nre:stream xmlns:nre='http://www.cochlear.com/nre'>
+<nic:sequence xmlns:nic='http://www.cochlear.com/nic' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.cochlear.com/nic nic-stimuli.xsd' >
+<stimulus><parameters><ae>1</ae><re>-1</re><cl>10</cl><t>99.0</t><pw>25.0</pw><pg>25.0</pg></parameters></stimulus>
+<stimulus><parameters><ae>2</ae><re>-1</re><cl>20</cl><t>99.0</t><pw>25.0</pw><pg>25.0</pg></parameters></stimulus>
+<stimulus><parameters><ae>3</ae><re>-1</re><cl>30</cl><t>99.0</t><pw>25.0</pw><pg>25.0</pg></parameters></stimulus>
+</nic:sequence>
+</nre:stream>

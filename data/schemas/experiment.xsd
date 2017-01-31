@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    
+    <xs:include schemaLocation="datablocks.xsd"/>
+    <xs:include schemaLocation="procedure.xsd"/>
+    <xs:include schemaLocation="screens.xsd"/>
+    <xs:include schemaLocation="devices.xsd"/>
+    <xs:include schemaLocation="connections.xsd"/>
+    <xs:include schemaLocation="stimuli.xsd"/>
+    
+    <xs:annotation>
+        <xs:documentation xml:lang="en-US"> Apex experiment file schema. Describes an entire Apex 3
+            experiment. An experiment consists of a series of trials. </xs:documentation>
+    </xs:annotation>
+    <xs:element name="apex">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="description" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation> Describes the entire experiment. Is reported in the
+                            results file. </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="procedure" type="apex:procedureType">
+                    <xs:annotation>
+                        <xs:documentation>Describes the procedure to be used. The procedure controls
+                            the sequence of trials that will be presented. Real procedures are
+                            derived from apex:procedureType.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="corrector" type="apex:correctorType">
+                    <xs:annotation>
+                        <xs:documentation>Describes the corrector to be used. The corrector compares
+                            the user input and the correct answer for a certain trail. Real
+                            correctors are derived from apex:correctorType</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="screens" type="apex:screensType">
+                    <xs:annotation>
+                        <xs:documentation>Defines one or more screens to be used elsewhere. A screen
+                            is what is visible on the computer screen at a certain instant of
+                        time.</xs:documentation>
+                    </xs:annotation>
+                    
+                    <xs:key name="screensKey">
+                        <xs:selector xpath="apex:screen"> </xs:selector>
+                        <xs:field xpath="@apex:id"> </xs:field>
+                    </xs:key>
+                </xs:element>
+                <xs:element name="datablocks" type="apex:datablockstype">
+                    <xs:annotation>
+                        <xs:documentation>A datablock is the smallest unit of output data used in
+                            Apex. Every sound or other stimulus file to be used elsewhere, is to be
+                            defined in this section.</xs:documentation>
+                    </xs:annotation>
+                    <xs:key name="datablockKey">
+                        <xs:selector xpath="apex:datablock"> </xs:selector>
+                        <xs:field xpath="@apex:id"> </xs:field>
+                    </xs:key>
+                    
+                </xs:element>
+                <xs:element name="devices" type="apex:devicesType">
+                    <xs:annotation>
+                        <xs:documentation>All output devices to be used are enumerated in this
+                            section. Before the experiment can be started, Apex tries to open them.
+                            The experiment only starts if all devices can be
+                        opened.
+                        Devices are started in alphabetical order of their id, except if a
+                            master is specified. They are 
+                            stopped in reverse alphabetical order. Thus if you want them 
+                            to be started or stopped in a certain order, you can change their
+                            IDs.
+                        </xs:documentation>
+                    </xs:annotation>
+                    
+                    <xs:key name="devicesKey">
+                        <xs:selector xpath="apex:device"> </xs:selector>
+                        <xs:field xpath="@apex:id"> </xs:field>
+                    </xs:key>
+                </xs:element>
+                <xs:element name="filters" type="apex:filtersType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Filters can be placed anywhere in the output network. They
+                            can be real filters, ie blocks that process data, or generators, ie
+                            blocks that generate data without any input data.</xs:documentation>
+                    </xs:annotation>
+                    
+                    <xs:key name="filterKey">
+                        <xs:selector xpath="apex:filter"> </xs:selector>
+                        <xs:field xpath="@apex:id"> </xs:field>
+                    </xs:key>
+                </xs:element>
+                <xs:element name="stimuli" type="apex:stimuliType">
+                    <xs:annotation>
+                        <xs:documentation>A stimulus is the whole of datablocks (for any number of
+                            devices) and parameters (fixed and variable) that is presented to the
+                            user at a certain instant of time.</xs:documentation>
+                    </xs:annotation>
+                    
+                    <xs:key name="stimulusKey">
+                        <xs:selector xpath="apex:stimulus"> </xs:selector>
+                        <xs:field xpath="@apex:id"> </xs:field>
+                    </xs:key>
+                </xs:element>
+                <xs:element name="connections" minOccurs="0" type="apex:connectionsType">
+                    <xs:annotation>
+                        <xs:documentation>In this section, connections can be made between
+                            datablocks, filters and devices. "from" is only possible for datablocks
+                            and filters, "to" is only possible for filters that accept input (thus
+                            no generators) and devices. Connections can only be made between
+                            elements belonging to the same device. If no connections are specified,
+                            Apex tries to make a default network by connecting all channels from
+                            _ALL_ (== all datablocks) to all channels from the datablocks' device.
+                            Default connections are not made when filters are present.
+                        </xs:documentation>
+                    </xs:annotation>
+                    
+                </xs:element>
+                <xs:element name="randomgenerators" minOccurs="0" type="apex:randomgeneratorsType">
+                    <xs:annotation>
+                        <xs:documentation>Randomgenerators generate random numbers according to a
+                            certain specification and can set any parameter defined elsewhere before
+                            stimulus output. All randomgenerators are asked to set their
+                            corresponding parameters right before a stimulus is
+                        output.</xs:documentation>
+                    </xs:annotation>
+                    
+                </xs:element>
+                <xs:element name="calibration" minOccurs="0" maxOccurs="1"
+                    type="apex:calibrationType">
+                    <xs:annotation>
+                        <xs:documentation>In this optional section, parameters for the built in
+                            calibration mechanism are defined. Calibration is the process of
+                            ensuring a relation between a digital stimulus level (dB) and the actual
+                            audio output (dBSPL). Calibration parameters are stored in profiles that
+                            are persistent between sessions. Profiles are stored in the
+                            apex/config/calibration directory and can be edited by hand if
+                        required.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="results" minOccurs="0" type="apex:resultsType">
+                    <xs:annotation>
+                        <xs:documentation>Parameters related to the presentation/analysis of the
+                            result of this experiment are defined here.</xs:documentation>
+                    </xs:annotation>
+                    
+                </xs:element>
+                <xs:element name="interactive" minOccurs="0" type="apex:interactiveType">
+                    <xs:annotation>
+                        <xs:documentation>For every entry in this section, the value of a certain
+                            element in this experiment file will be changed to the value set by the
+                            user in a GUI window.</xs:documentation>
+                    </xs:annotation>
+                    
+                </xs:element>
+                <xs:element name="general" minOccurs="0" type="apex:generalType">
+                    <xs:annotation>
+                        <xs:documentation>Some general experiment parameters are defined
+                        here.</xs:documentation>
+                    </xs:annotation>
+                    
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="version" use="optional" type="xs:positiveInteger">
+                    <xs:annotation>
+                      <xs:documentation>
+                        Apex will only load experiment files with the correct version
+                        attribute. Conversion scripts will be provided to convert to newer
+                        versions.
+                      </xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+              
+    
+    <xs:complexType name="calibstimType">
+        <xs:sequence>
+            <xs:element name="parameter" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation> Parameter to be calibrated using this stimulus.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:IDREF">
+                            <xs:attribute name="targetloudness" type="xs:double" use="required">
+                                <xs:annotation>
+                                    <xs:documentation>Target loudness value for calibration of this
+                                        parameter using this stimulus. Mostly in dBSPL. The aim of
+                                        the calibration is that this stimulus is presented at this
+                                        loudness in dBSPL to the subject.</xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:IDREF" use="required"/>
+    </xs:complexType>
+    
+    
+    
+    
+    
+    
+    
+    
+    <xs:simpleType name="nonEmptyString">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="correctorType" abstract="true">
+        <xs:annotation>
+            <xs:documentation>Base type for all correctors</xs:documentation>
+        </xs:annotation>
+        <xs:sequence> </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="isequal">
+        <xs:annotation>
+            <xs:documentation>Corrector that checks whether the inputs are exactly equal. Useful for
+                checking buttongroups or exact string matching.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:correctorType"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="cvc">
+        <xs:annotation>
+            <xs:documentation>Corrector that correct simple consonant-vowel-consonant
+            words</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:correctorType">
+                <xs:sequence>
+                    <xs:element name="language">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:Name">
+                                <xs:enumeration value="Dutch"/>
+                                <xs:enumeration value="English"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="alternatives">
+        <xs:annotation>
+            <xs:documentation>Corrector to be used in conjunction with a procedure/choices>1 tag,
+                for doing multiple alternatives forced choice experiments.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:correctorType">
+                <xs:sequence>
+                    <xs:element name="answers" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>All possible answers are specified here. A screen
+                                element is associated with a time slot.</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="answer" maxOccurs="unbounded">
+                                    <xs:complexType>
+                                        <xs:attribute name="number" type="xs:positiveInteger">
+                                            <xs:annotation>
+                                                <xs:documentation>Time slot of the
+                                                stimulus</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="value" type="xs:Name">
+                                            <xs:annotation>
+                                                <xs:documentation>Name of the screen element
+                                                  corresponding to the time
+                                                slot</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="randomgenerator" abstract="true">
+        <xs:annotation>
+            <xs:documentation>Base class for all randomgenerators</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="min" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>Minimum value of the random numbers</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="max" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>Maximum value of the random numbers</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="type">
+                <xs:annotation>
+                    <xs:documentation>Data type</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="double">
+                            <xs:annotation>
+                                <xs:documentation>Fractional number</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="int">
+                            <xs:annotation>
+                                <xs:documentation>Whole number</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="parameter" type="xs:IDREF">
+                <xs:annotation>
+                    <xs:documentation>Parameter to be set to the random value</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="uniform">
+        <xs:annotation>
+            <xs:documentation>Uniform random generator</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:randomgenerator"> </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="gaussian">
+        <xs:annotation>
+            <xs:documentation>Gaussian random generator. NOT IMPLEMENTED</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:randomgenerator"> </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="calibrationType">
+        <xs:annotation>
+            <xs:documentation>Calibration settings are stored in a calibration profile. Every
+                experiment file can have one profile. A profile contains certain parameter settings
+                that are supposed to impose a fixed relation between digital signal levels and
+                acoustical signal levels.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="soundlevelmeter" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Information necessary for automatic calibration using an interface to a sound level meter.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="plugin" type="xs:anyURI">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Filename of the souind level meter plugin to be used
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="transducer" type="xs:string" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Name of the transducer (microphone, ...) to be used by the SLM. Will only be set if your SLM supports it.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="frequency_weighting" default="Z">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="Z">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                No weighting: SPL
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="A"/>
+                                    <xs:enumeration value="C"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="time_weighting" default="S">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="S"/>
+                                    <xs:enumeration value="F"/>
+                                    <xs:enumeration value="I"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="type" default="RMS">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="RMS"/>
+                                    <xs:enumeration value="peak"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="percentile" type="xs:double" minOccurs="0" default="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Percentile of statistics on measurement. If 0 an instantaneous measurement will be made.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="time" type="xs:double" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Measurement time in seconds. If percentile is defined, time should be >0
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="accuracy" type="xs:double" minOccurs="0" default="0.5">
+                            <xs:annotation>
+                                <xs:documentation>Automatic calibration is repeated until the measured value is within the accuracy defined here of the target value</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="maxiterations" type="xs:positiveInteger" default="3" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Maximal number of iterations that can be done to reach the requested accuracy. If the requested accuracy is not reached after this number of iterations, the calibration fails
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="stimuli">
+                <xs:annotation>
+                    <xs:documentation>Stimuli that are used for calibration. These can be, and in
+                        some cases should be stimuli that are used in the actual
+                    experiment.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="stimulus" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="id" type="xs:IDREF" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="parameters">
+                <xs:annotation>
+                    <xs:documentation>Parameters that are used to calibrate the system. Generally
+                        some output gain parameters of the last stage (eg the wavdevice) are
+                    used.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="parameter" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="targetamplitude" type="xs:double">
+                                        <xs:annotation>
+                                            <xs:documentation>Target acoustical measurement of the
+                                                stimuli defined above during the experiment. Generally in
+                                            dBSPL.</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="calibrationamplitude" type="xs:double" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>Value to calibrate at. Generally in
+                                                dBSPL and higher than targetamplitude. Can be changed during calibration.</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="mute" type="xs:double" default="-150">
+                                        <xs:annotation>
+                                            <xs:documentation>Value to be used for the other
+                                                parameters while calibrating this parameter. Has no
+                                                effect on the actual calibration. Useful for eg
+                                                muting the other channel of a
+                                            headphone.</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="min" type="xs:double" default="-50" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>Minimum parameter value that can be set by the calibrator.</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="max" type="xs:double" default="10" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>Maximum parameter value that can be set by the calibrator.</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="id" type="xs:IDREF" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="profile" type="xs:Name" use="required"/>
+    </xs:complexType>
+    
+    <xs:complexType name="randomgeneratorsType">
+        <xs:sequence>
+            <xs:element name="randomgenerator" type="apex:randomgenerator"
+                minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="generalType">
+        <xs:sequence>
+            <xs:element name="exitafter" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Exit immediately after the experiment was
+                        finished. The "save results" dialog box is always
+                        shown.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="autosave" type="xs:boolean" minOccurs="0" default="false">
+                <xs:annotation>
+                    <xs:documentation>If defined, apex will automatically select a filename and 
+                        only present the user with a messagebox asking wheter to save the results yes or no</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="waitforstart" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        If true, the next trial is only presented after clicking the Start button,
+                        selecting Start from the Experiment menu or pressing F5.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="allowskip" type="xs:boolean" minOccurs="0" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        If true, the F7 key can be used to skip anything that takes a certain
+                        amount of time, eg intro/outro/iti
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="runoutputtest" type="xs:boolean" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Run test to compare output with input files. Only works for WavDevice, and
+                        the apex executable must be compiled with WRITEWAVOUTPUT defined.
+                        If set, the data send to the soundcard is also written to a file, and afterwards
+                        compared with the input. This allows to check if the entire processing/buffering works properly.
+                        If the input below is not specified, the test assumes all available datablocks were played
+                        sequential. Filters and connections are not taken into account. (eg if two datablocks are defined,
+                        the test just checks if the output is identical to the two wavefiles played right after each other).
+                        To allow testing filter/loop/connections functionality, create a wavefile that mimics all the processing,
+                        and specify the path below, and the test will use it to compare against the output.
+                        See the example tests for more info.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="outputtestinput" type="xs:anyURI" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Optional: path to a file to compare the output with.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="scriptlibrary" type="xs:anyURI" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Library of ECMAScript functions. Functions defined in this library can be used from any other script for the experiment.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="interactiveType">
+        <xs:sequence>
+            <xs:element name="entry" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="expression" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>XPath expression defining the element
+                                to be modified. The user will be alerted if the
+                                expression yields no results. If the expression
+                                yields more than one result, every element found
+                                will be modified. The modification takes place
+                                before validation, so the resulting document will
+                                not be used unless valid. Modifications will be
+                                reported in the results file.
+                                If expression is not present, the user input will be saved to the results file, but
+                                nothing will be modified.</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="type" use="required">
+                        <xs:annotation>
+                            <xs:documentation>Data type of the element to be
+                                modified. It impacts the dialog box presented to the
+                                user and prevents input of data of the wrong data
+                                type.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="int">
+                                    <xs:annotation>
+                                        <xs:documentation>An integer
+                                            number</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="double">
+                                    <xs:annotation>
+                                        <xs:documentation>A
+                                            number</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="string">
+                                    <xs:annotation>
+                                        <xs:documentation>Some
+                                            text</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="bool">
+                                    <xs:annotation>
+                                        <xs:documentation>Boolean value "true" or "false"</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="combo">
+                                    <xs:annotation>
+                                        <xs:documentation>Value from list. The list of options should be specified in default, separated by |</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="description" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation>Description of this entry, will be
+                                shown to the user. </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="default" type="xs:string" use="required">
+                        <xs:annotation>
+                            <xs:documentation>Default value for the
+                                replacement.</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="resultsType">
+        <xs:sequence>
+            <xs:element name="xsltscript" type="xs:anyURI" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>xslt script to be used to transform the output
+                        xml file in a more human readable format. Apex looks for
+                        xslt scripts in the path defined in the main config file. It
+                        defaults to apex/scripts/xslt</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="xsltscriptparameters" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Parameters to be passed to the xslt script. Each parameter will be set in the results file.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="name" type="xs:string"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="showresults" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Show the experiment results after
+                        transformation with the script defined in the results
+                        section in a dialog box. A dialog box will ask for
+                        confirmation before showing the results. This option will
+                        only work if an xslt script is defined and the results are
+                        successfully saved to disk. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="javascript" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="page" type="xs:anyURI" minOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>
+                                  URL of the HTML page to be shown in the results window. The page should have the appropriate javascript methods embedded.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="realtime" type="xs:boolean" minOccurs="0" default="true">
+                            <xs:annotation>
+                                <xs:documentation>
+                                   If realtime is true, an extra window will be created which will show
+                                    the results of the current experiment while the experiment is being executed.
+                                    Javascript embedded in the page will be executed upon each new trial.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="showafterexperiment" type="xs:boolean" minOccurs="0" default="false">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    If showafterexperiment is true, when the experiment is finished a dialog box will appear 
+                                    querying whether results should be shown. If the answer is affirmative, a new window will
+                                    be opened and the results will be shown after javascript processing.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+                </xs:element>
+           
+            <xs:element name="saveprocessedresults" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Save the experiment results after
+                        transformation at the end of the results xml file. This
+                        option will only work if an xslt script is defined and the
+                        results are successfully saved to disk.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="matlabscript" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Matlab script to be used for processing results. Will be added as an XML processing tag to the results file
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="subject" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Name of the test subject. Will be appended to the suggested results file name. Is typically modified at
+                        the beginning of an experiment using an interactive entry.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        
+    </xs:complexType>
+</xs:schema>
