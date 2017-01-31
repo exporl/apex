@@ -48,7 +48,8 @@ MultiProcedureParser::MultiProcedureParser(QWidget* parent) :
 
 void MultiProcedureParser::Parse(XERCES_CPP_NAMESPACE::DOMElement* p_base,
                                  data::ApexMultiProcedureConfig* config,
-                                 const QString& scriptLibraryFile)
+                                 const QString& scriptLibraryFile,
+                                 const QVariantMap& scriptParameters)
 {
     currentConfig=config;
     config->SetID( XMLutils::GetAttribute(p_base,gc_sID) );
@@ -78,7 +79,8 @@ void MultiProcedureParser::Parse(XERCES_CPP_NAMESPACE::DOMElement* p_base,
             ProcedureParser parser(m_parent);
             //Q_CHECK_PTR(fact);
             //ApexProcedureConfig* newconfig = fact->MakeProcedureConfig((DOMElement*)currentNode);
-            data::ApexProcedureConfig* newconfig = parser.Parse( (DOMElement*)currentNode, scriptLibraryFile);
+            data::ApexProcedureConfig* newconfig = parser.Parse( (DOMElement*)currentNode,
+                                                                 scriptLibraryFile, scriptParameters);
             Q_CHECK_PTR(newconfig);
             newconfig->SetID(id);
             //newconfig->SetProcedureFactory(fact);

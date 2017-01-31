@@ -96,7 +96,7 @@ EndConvert:
         QMessageBox::critical(NULL, tr("Error"), tr("Experiment file not found"));
 #endif
 //         m_state.mp_SetError();
-        return false;
+        return 0;
     }
 //     deleteModules();
 

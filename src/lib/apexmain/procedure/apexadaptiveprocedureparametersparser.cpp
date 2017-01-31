@@ -165,7 +165,7 @@ bool ApexAdaptiveProcedureParametersParser::ParseStepSizes(
             if (param->m_stepsizes.find(begin) != param->m_stepsizes.end())
             {
                 qDebug("Warning: duplicate stepsize found");
-                ErrorHandler::Get().addItem(StatusItem(StatusItem::WARNING, "AdaptiveProcedureParameters", "Warning: duplicate stepsize found"));
+                ErrorHandler::Get().addItem(StatusItem(StatusItem::Warning, "AdaptiveProcedureParameters", "Warning: duplicate stepsize found"));
                 // FIXME: use generic error reporting mechanism
             }
 

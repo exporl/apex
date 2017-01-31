@@ -43,7 +43,7 @@ class APEX_EXPORT ProcedureParser
 public:
     ProcedureParser(QWidget* parent);
 
-    data::ApexProcedureConfig* Parse ( XERCES_CPP_NAMESPACE::DOMElement* p_base, const QString& scriptLibraryFile);
+    data::ApexProcedureConfig* Parse ( XERCES_CPP_NAMESPACE::DOMElement* p_base, const QString& scriptLibraryFile, const QVariantMap &scriptParameters);
 
 private:
     QWidget* m_parent;

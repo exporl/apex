@@ -54,7 +54,7 @@ class ScriptExpander
        * parent: parent widget (for showing dialog boxes), if 0, no dialog
        * boxes will be shown
        */
-    ScriptExpander(QString libraryFile, QWidget* parent=0);
+    ScriptExpander(QString libraryFile, QVariantMap scriptParameters, QWidget* parent=0);
 
 
     /**
@@ -80,6 +80,7 @@ class ScriptExpander
                 XERCES_CPP_NAMESPACE::DOMNode* doc, QString id);
 
         QString m_libraryFile;
+        QVariantMap m_scriptParameters;
 
         QWidget* m_parent;
 

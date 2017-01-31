@@ -200,9 +200,9 @@ void Panel::mp_EnableRepeat( const bool ac_bVal )
     m_pRepeat->setDisabled( !ac_bVal );
 }
 
-void Panel::feedBack( const ScreenElementRunDelegate::mt_eFeedBackMode ac_eMode )
+void Panel::feedBack( const ScreenElementRunDelegate::FeedbackMode ac_eMode )
 {
-    if (ac_eMode != ScreenElementRunDelegate::mc_eOff) {
+    if (ac_eMode != ScreenElementRunDelegate::NoFeedback) {
         if (m_pMainWindowConfig->hasStatusPictureEnabled()) {
             m_pStatusPicture->setStatus(StatusPicture::STATUS_LISTENING);
         }
@@ -345,16 +345,16 @@ void ChildModePanel::mp_Show( const bool ac_bVal )
     }
 }
 
-void ChildModePanel::feedBack( const ScreenElementRunDelegate::mt_eFeedBackMode ac_eMode )
+void ChildModePanel::feedBack( const ScreenElementRunDelegate::FeedbackMode ac_eMode )
 {
     m_pMovie->gotoFrame( m_nCurrentProgressFrame );
 
-    if ( ac_eMode == ScreenElementRunDelegate::mc_eNegative )
+    if ( ac_eMode == ScreenElementRunDelegate::NegativeFeedback )
     {
         if ( m_nCurrentProgressFrame > 0 )
             --m_nCurrentProgressFrame;
     }
-    else if ( ac_eMode == ScreenElementRunDelegate::mc_ePositive )
+    else if ( ac_eMode == ScreenElementRunDelegate::PositiveFeedback )
         ++m_nCurrentProgressFrame;
 }
 

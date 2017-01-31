@@ -20,7 +20,11 @@
 #ifndef APEXTOOLS_UNIT_TEST_H
 #define APEXTOOLS_UNIT_TEST_H
 
-#include "testbench.h"
+#include <QtTest/QtTest>
+#include "../testmacros.h"
+#include "xml/xercesinclude.h"
+
+#include "xml/apexxmltools.h"
 
 namespace apex
 {
@@ -28,22 +32,20 @@ class StatusItem;
 class StatusReporter;
 }
 
-class ApexToolsTest : public ApexTest
+class ApexToolsTest : public QObject
 {
         Q_OBJECT
-        Q_INTERFACES(ApexTest)
-
-    public:
-
-        QString name() const;
 
     private slots:
 
+        void initTestCase();
         void testIirFilter();
         void testPeakFilter();
         void testStatusItem();
         void testStatusReporter();
         void testStatusDispatcher();
+        //void testResultViewer();      // Qt XSLT processor is not good enough
+        void cleanupTestCase();
 
     private:
 

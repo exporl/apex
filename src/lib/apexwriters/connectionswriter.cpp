@@ -23,6 +23,8 @@
 
 #include "xml/xercesinclude.h"
 
+#include <QDebug>
+
 using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::ApexXMLTools;
 

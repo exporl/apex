@@ -35,7 +35,7 @@ struct StatusReporterPrivate
 
 StatusReporter::StatusReporter() : d(new StatusReporterPrivate())
 {
-    setMinimumReportLevel(StatusItem::MESSAGE);
+    setMinimumReportLevel(StatusItem::Message);
     clearCounters();
 }
 
@@ -51,17 +51,17 @@ StatusReporter::~StatusReporter()
 
 void StatusReporter::addError(const QString& source, const QString& message)
 {
-    addItem(StatusItem(StatusItem::ERROR, source, message));
+    addItem(StatusItem(StatusItem::Error, source, message));
 }
 
 void StatusReporter::addWarning(const QString& source, const QString& message)
 {
-    addItem(StatusItem(StatusItem::WARNING, source, message));
+    addItem(StatusItem(StatusItem::Warning, source, message));
 }
 
 void StatusReporter::addMessage(const QString& source, const QString& message)
 {
-    addItem(StatusItem(StatusItem::MESSAGE, source, message));
+    addItem(StatusItem(StatusItem::Message, source, message));
 }
 
 void StatusReporter::addItem(const StatusItem& item)
@@ -73,13 +73,13 @@ void StatusReporter::addItem(const StatusItem& item)
     {
         switch (item.level())
         {
-            case StatusItem::ERROR:
+            case StatusItem::Error:
                 d->nbErrors++;
                 break;
-            case StatusItem::WARNING:
+            case StatusItem::Warning:
                 d->nbWarnings++;
                 break;
-            case StatusItem::MESSAGE:
+            case StatusItem::Message:
                 d->nbMessages++;
                 break;
             default:
@@ -109,10 +109,10 @@ void StatusReporter::setMinimumReportLevel(StatusItem::Level level)
     switch (level)
     {
         //yep, they all fall through
-        case StatusItem::UNUSED:  d->reportLevels |= StatusItem::UNUSED;
-        case StatusItem::MESSAGE: d->reportLevels |= StatusItem::MESSAGE;
-        case StatusItem::WARNING: d->reportLevels |= StatusItem::WARNING;
-        case StatusItem::ERROR:   d->reportLevels |= StatusItem::ERROR;
+        case StatusItem::Unused:  d->reportLevels |= StatusItem::Unused;
+        case StatusItem::Message: d->reportLevels |= StatusItem::Message;
+        case StatusItem::Warning: d->reportLevels |= StatusItem::Warning;
+        case StatusItem::Error:   d->reportLevels |= StatusItem::Error;
     }
 }
 

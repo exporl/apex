@@ -17,6 +17,7 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include <QtGlobal>
 #include "qt_msghandler.h"
 #include "callback/callback.h"
 #include <iostream>

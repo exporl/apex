@@ -36,7 +36,7 @@ namespace apex {
     public:
         FCACorrector (ExperimentRunDelegate& p_rd, const data::CorrectorData* data);
 
-        virtual bool Correct (const ApexScreenResult& p_answer);
+        virtual bool Correct (const ScreenResult& p_answer);
 
         virtual const QString GetCorrectAnswer (unsigned position = 0) const;
         

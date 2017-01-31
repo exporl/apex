@@ -31,8 +31,10 @@ using namespace XERCES_CPP_NAMESPACE;
 #include <QMap>
 #include <QString>
 #include <QScriptEngine>
+#include <QScriptEngineDebugger>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <iostream>
 
 
 using namespace apex::ApexXMLTools;
@@ -69,7 +71,7 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
 
     // parse XML into localscript and parameters. Localscript is the script
     // itself, either from inline or read from file
-    QMap<QString,QVariant> parameters;
+    QVariantMap parameters(m_scriptParameters);
     QString localscript;
     bool fromgeneral=true;
 
@@ -157,6 +159,7 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
         QFile file(mainPluginLibrary);
         if (! file.open(QIODevice::ReadOnly) )
         {
+            std::cout<<"MainpluginLibrary path value is: "<<mainPluginLibrary.toStdString()<<std::endl;
             throw ApexStringException("Cannot open main script library file: " +
                     mainPluginLibrary);
         }
@@ -169,6 +172,8 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
     qDebug("Executing XML plugin script");
 
     QScriptEngine m_scriptEngine;
+    QScriptEngineDebugger m_scriptEngineDebugger;
+    m_scriptEngineDebugger.attachTo(&m_scriptEngine);
 
     // create API
     XMLPluginAPI api;
@@ -259,12 +264,9 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
         // take dummy element and add all children
         DOMNodeList* childList = newNode->getChildNodes();
 
-        DOMNode* someChild;     // we will use this later to find our subtree
         while (childList->getLength()) {            // when inserting elements somewhere else, they disappear from the childList (ahem)
             DOMNode* currentNode = childList->item(0);
-            someChild = parent->insertBefore(currentNode, base);
-//            currentNode->getAttribute("id");
-//            qDebug(qPrintable(XMLutils::GetAttribute( currentNode, "id") ));
+            parent->insertBefore(currentNode, base);
         }
 
 
@@ -273,12 +275,7 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
 
         // revalidate the document, get the relevant part of the tree and
         // replace again. This gives us normalization
-        /*DOMDocument* newDocument = */Revalidate(doc);
-        // find our subtree (by ID)
-        //QString id (XMLutils::GetAttribute( someChild, "id") );
-        //Q_ASSERT(!id.isEmpty());
-        //DOMNode* subTree = findById(newDocument, id);
-        //Q_ASSERT(subTree);
+        Revalidate(doc);
     }
     catch (DOMException& e )
     {
@@ -296,7 +293,7 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
 
 XERCES_CPP_NAMESPACE::DOMNode* ScriptExpander::StringToDOM(QString s)
 {
-    qDebug("String to be converted: %s", qPrintable(s));
+    //qDebug("String to be converted: %s", qPrintable(s));
     DOMElement* root = ParseXMLDocument(s, false);
     return root;
 
@@ -449,8 +446,9 @@ DOMDocument* ScriptExpander::Revalidate(DOMNode* doc)
     return parser->getDocument();
 }
 
-ScriptExpander::ScriptExpander(QString libraryFile, QWidget* parent):
+ScriptExpander::ScriptExpander(QString libraryFile, QVariantMap scriptParameters, QWidget *parent):
         m_libraryFile(libraryFile),
+        m_scriptParameters(scriptParameters),
         m_parent(parent)
 {
 

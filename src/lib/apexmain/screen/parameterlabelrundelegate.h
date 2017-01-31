@@ -64,6 +64,8 @@ namespace apex
 
                 void connectSlots( gui::ScreenRunDelegate* d );
 
+                virtual void setEnabled( const bool );
+
             public slots:
                 void newStimulus( stimulus::Stimulus* );
 

@@ -25,6 +25,7 @@
 #include "stimulus/l34/l34datablock.h"
 #include "datablock/datablockdata.h"
 #include "map/apexmap.h"
+#include "stimulus/nucleus/nicstream/stimulation_mode.h"
 
 #include "services/paths.h"
 
@@ -34,9 +35,16 @@ using namespace apex;
 using namespace apex::stimulus;
 using namespace apex::data;
 
+/*
 QString ApexMainTest::name() const
 {
     return "libapex";
+}
+*/
+
+void ApexMainTest::initTestCase()
+{
+    xercesc::XMLPlatformUtils::Initialize();
 }
 
 void ApexMainTest::testQic()
@@ -200,11 +208,15 @@ void ApexMainTest::testL34DatablockQic()
         QFile file(d.path() + "/roos_qic.xml");
         QVERIFY(file.open(QIODevice::ReadOnly));
         QTextStream t(&file);
-        QString fromfile(t.readAll());
+        for (int i=0; i<xmldata.length(); ++i) {
+            QCOMPARE( xmldata.at(i), t.readLine(0));
+        }
         file.close();
 
+
+
         // Compare reference data
-        QCOMPARE(fromfile, xmldata.join("\n"));
+    //    QCOMPARE(fromfile, xmldata.join("\n"));
         
     } catch (ApexStringException &e) {
         qDebug() << e.what();
@@ -252,7 +264,7 @@ void ApexMainTest::testL34DatablockAseq()
     ChannelMap basemap;
 
     map.setNumberOfElectrodes(22);
-    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1+2"));
+    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1"));
     basemap.setPhaseWidth(25);
     basemap.setPhaseGap(25);
     basemap.setPeriod(150);
@@ -281,18 +293,22 @@ void ApexMainTest::testL34DatablockAseq()
         const L34XMLData& xmldata = datablock.GetMappedData(&map, 100);
 
         // Write data
-        QFile wfile(filename+"-out.xml");
+        /*QFile wfile(filename+"-out.xml");
         wfile.open(QIODevice::WriteOnly);
         QTextStream out(&wfile);
         out << xmldata.join("\n");
-        wfile.close();
+        wfile.close();*/
 
+        // Read reference data
         QFile file(testDir.path() + "/" + filename + ".xml");
         QVERIFY(file.open(QIODevice::ReadOnly));
         QTextStream t(&file);
-        QString fromfile(t.readAll());
+        for (int i=0; i<xmldata.length(); ++i) {
+            QCOMPARE( xmldata.at(i), t.readLine(0));
+        }
+        //QString fromfile(t.readAll());
         file.close();
-        QCOMPARE(fromfile, xmldata.join("\n"));
+        //QCOMPARE(fromfile, xmldata.join("\n"));
     } catch (ApexStringException &e) {
         QFAIL(e.what());
     }
@@ -332,7 +348,7 @@ void ApexMainTest::testL34DatablockAseqMapping()
     ChannelMap basemap;
 
     map.setNumberOfElectrodes(22);
-    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1+2"));
+    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1"));
     basemap.setPhaseWidth(25);
     basemap.setPhaseGap(25);
     basemap.setPeriod(150);
@@ -361,20 +377,22 @@ void ApexMainTest::testL34DatablockAseqMapping()
         const L34XMLData& xmldata = datablock.GetMappedData(&map, 100);
 
         // Write data
-        QFile file(testDir.path() + "/" +filename+".xml");
+        /*QFile file(testDir.path() + "/" +filename+".xml");
         file.open(QIODevice::WriteOnly);
         QTextStream out(&file);
         out << xmldata.join("\n");
-        file.close();
+        file.close();*/
 
         //qDebug(qPrintable(filename+".xml" + " to be read by checkmapping2.m"));
 
-        /*QFile file(testDir.path() + "/" + filename + ".xml");
+        QFile file(testDir.path() + "/" +filename+".xml");
         QVERIFY(file.open(QIODevice::ReadOnly));
         QTextStream t(&file);
-        QString fromfile(t.readAll());
+        for (int i=0; i<xmldata.length(); ++i) {
+            QCOMPARE( xmldata.at(i), t.readLine(0));
+        }
         file.close();
-        QCOMPARE(fromfile, xmldata.join("\n"));*/
+        //QCOMPARE(fromfile, xmldata.join("\n"));
     } catch (ApexStringException &e) {
         QFAIL(e.what());
     }
@@ -390,7 +408,7 @@ void ApexMainTest::testL34Datablock_invalid()
     ChannelMap basemap;
 
     map.setNumberOfElectrodes(22);
-    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1+2"));
+    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1"));
     basemap.setPhaseWidth(25);
     basemap.setPhaseGap(25);
     basemap.setPeriod(150);
@@ -439,7 +457,7 @@ void ApexMainTest::testL34InvalidCL()
     ApexMap map;
 
     map.setNumberOfElectrodes(22);
-    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1+2"));
+    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1"));
     basemap.setPhaseWidth(25);
     basemap.setPhaseGap(25);
     basemap.setPeriod(150);
@@ -472,19 +490,14 @@ void ApexMainTest::testL34InvalidCL()
 
 }
 
+void ApexMainTest::cleanupTestCase()
+{
+    xercesc::XMLPlatformUtils::Terminate();
+}
 
-Q_EXPORT_PLUGIN2(test_libapex, ApexMainTest);
+//generate standalnne binary for the test
+QTEST_MAIN(ApexMainTest)
 
-
-
-
-
-
-
-
-
-
-
-
-
+//no use of plugin for now
+//Q_EXPORT_PLUGIN2(test_libapex, ApexMainTest);
 

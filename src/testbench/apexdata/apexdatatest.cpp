@@ -28,14 +28,15 @@
 #include "corrector/correctordata.h"
 #include "map/apexmap.h"
 
+#include "random.h"
 #include "apextools.h"
 
 using namespace apex;
 using namespace apex::data;
 
-QString ApexDataTest::name() const
+void ApexDataTest::initTestCase()
 {
-    return "libdata";
+    xercesc::XMLPlatformUtils::Initialize();
 }
 
 void ApexDataTest::testSimpleParameters()
@@ -92,13 +93,15 @@ void ApexDataTest::testCalibrationParameterData()
 {
     TEST_COPY(CalibrationParameterData);
 
+    Random rand;
+
     //test the non-standard ctor
-    double minimumParameter = ApexTools::Randn();
-    double maximumParameter = ApexTools::Randn();
-    double defaultParameter = ApexTools::Randn();
-    double muteParameter = ApexTools::Randn();
-    double defaultTargetAmplitude = ApexTools::Randn();
-    double finalTargetAmplitude = ApexTools::Randn();
+    double minimumParameter = rand.nextDouble();
+    double maximumParameter = rand.nextDouble();
+    double defaultParameter = rand.nextDouble();
+    double muteParameter = rand.nextDouble();
+    double defaultTargetAmplitude = rand.nextDouble();
+    double finalTargetAmplitude = rand.nextDouble();
 
     CalibrationParameterData data(minimumParameter,
                                   maximumParameter,
@@ -246,18 +249,10 @@ void ApexDataTest::testSoundLevelMeterDataUnsupported_data()
     QTest::newRow("bad time2") << "z" << "s" << "rms"  << 0.0  << 0;
 }
 
-Q_EXPORT_PLUGIN2(test_libdata, ApexDataTest);
+void ApexDataTest::cleanupTestCase()
+{
+    xercesc::XMLPlatformUtils::Terminate();
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+//generate standalone binary for the test
+QTEST_MAIN(ApexDataTest)

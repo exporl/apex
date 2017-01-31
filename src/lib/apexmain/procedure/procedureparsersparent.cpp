@@ -47,11 +47,12 @@ ProcedureParsersParent::ProcedureParsersParent(QWidget* parent) :
 
 
 void ProcedureParsersParent::Parse ( XERCES_CPP_NAMESPACE::DOMElement* p_base,
-                              data::ApexProcedureConfig* c,
-                              const QString& scriptLibraryFile)
+                                     data::ApexProcedureConfig* c,
+                                     const QString& scriptLibraryFile,
+                                     const QVariantMap& scriptParameters)
 {
     currentConfig=c;
-    if ( !ParseTrials ( p_base, scriptLibraryFile) )
+    if ( !ParseTrials ( p_base, scriptLibraryFile, scriptParameters) )
     {
         throw ApexStringException ( "Could not parse trials" );
     }
@@ -66,7 +67,8 @@ void ProcedureParsersParent::Parse ( XERCES_CPP_NAMESPACE::DOMElement* p_base,
 
 
 
-bool ProcedureParsersParent::ParseTrials ( DOMElement * p_base, const QString& scriptLibraryFile)
+bool ProcedureParsersParent::ParseTrials ( DOMElement * p_base, const QString& scriptLibraryFile,
+                                           const QVariantMap& scriptParameters)
 {
     Q_ASSERT ( currentConfig != NULL );
     // parse trials block
@@ -81,7 +83,7 @@ bool ProcedureParsersParent::ParseTrials ( DOMElement * p_base, const QString& s
         const QString tag( XMLutils::GetTagName( currentNode ) );
         if (tag == "plugintrials") {
             qDebug("Script library: %s", qPrintable(scriptLibraryFile));
-            ScriptExpander expander(scriptLibraryFile, m_parent);
+            ScriptExpander expander(scriptLibraryFile, scriptParameters, m_parent);
             expander.ExpandScript(currentNode, "getTrials");
         }
     }

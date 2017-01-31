@@ -12,8 +12,11 @@ GILC="https://gilbert.med.kuleuven.be/apex/schemas/`cat ../../VERSION_SCHEMA`/ap
 
 RS="http://med.kuleuven.be/exporl/apex/result";
 
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
+
 for i in `find ../../data/schemas -name "*.xsd"`; do
-echo $i
+    echo "$i"
     if [ "$i" = "../../data/schemas/apexconfig.xsd" ]; then
 	sed -i "s|\\(targetNamespace=\"\\)[^\"]*|\\1$NSC|" "$i"
 	sed -i "s|\\(xmlns:apex=\"\\)[^\"]*|\\1$NSC|" $i
@@ -24,15 +27,20 @@ echo $i
     sed -i 's/\r//g'  "$i"
 done;
 
-
 for i in `find ../../examples -name "*.xml" -or -name "*.apx"`; do
-    echo $i
+    echo "$i"
+    sed -i "s|\\(schemaLocation=\"\\)[^\"]*|\\1$NS $GIL|" "$i"
+    sed -i "s|\\(xmlns:apex=\"\\)[^\"]*|\\1$NS|" "$i"
+done
+
+for i in `find ../../data/config -name "*.xml" -or -name "*.apx"`; do
+    echo "$i"
     sed -i "s|\\(schemaLocation=\"\\)[^\"]*|\\1$NS $GIL|" "$i"
     sed -i "s|\\(xmlns:apex=\"\\)[^\"]*|\\1$NS|" "$i"
 done
 
 for i in `find ../../data/xslt -name "*.xsl"`; do
-    echo $i
+    echo "$i"
     sed -i "s|\\(xmlns:apex=\"\\)[^\"]*|\\1$RS|" "$i"
 done
 
@@ -40,3 +48,5 @@ done
 CF="../../data/config/apexconfig.xml";
 sed -i "s|\\(schemaLocation=\"\\)[^\"]*|\\1$NSC $GILC|" $CF
 sed -i "s|\\(xmlns:apex=\"\\)[^\"]*|\\1$NSC|" $CF
+
+IFS=$SAVEIFS

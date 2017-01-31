@@ -43,7 +43,7 @@ private:
     const QByteArray message;
 };
 
-class APEXTOOLS_EXPORT ApexTrialNotFoundException: public ApexException
+class APEXTOOLS_EXPORT TrialDataNotFoundException: public ApexException
 {
 public:
     const char *what() const throw();

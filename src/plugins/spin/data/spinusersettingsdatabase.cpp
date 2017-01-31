@@ -342,6 +342,7 @@ class DatabasePrivate
         static const QString SUBJECT_STR;
         static const QString RANDOM_STR;
         static const QString SEQUENTIAL_STR;
+        static const QString DEFAULTSOUNDCARD_STR;
         static const QString RMEMULTIFACE_STR;
         static const QString RMEFIREFACEUC_STR;
         static const QString LYNXONE_STR;
@@ -359,6 +360,7 @@ const QString DatabasePrivate::EXPERIMENTER_STR("experimenter");
 const QString DatabasePrivate::SUBJECT_STR("subject");
 const QString DatabasePrivate::RANDOM_STR("random");
 const QString DatabasePrivate::SEQUENTIAL_STR("sequential");
+const QString DatabasePrivate::DEFAULTSOUNDCARD_STR("defaultsoundcard");
 const QString DatabasePrivate::RMEMULTIFACE_STR("rmemultiface");
 const QString DatabasePrivate::RMEFIREFACEUC_STR("rmefirefaceuc");
 const QString DatabasePrivate::LYNXONE_STR("lynxone");

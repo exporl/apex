@@ -103,7 +103,6 @@ namespace apex{
             bool waitUntil( const QString& STATE, int timeout );
 
             void SendPowerup(  );
-            int GetNumPowerupFrames();
 
             void LoadPlugin();
 
@@ -114,17 +113,23 @@ namespace apex{
             std::auto_ptr<ApexNreSocketInterface> m_pDevice;
 
 
-            QString         m_host;
-            bool            m_bPlaying;
-            bool                    m_bReady;                               // is the device ready to be started?
-            data::ApexMap*                m_pMap;
-            int                             m_iTriggerType;
-            int                             m_nDeviceNr;
-            bool                    m_bSendPowerup;                 // whether or not to send powerup frames before starting streaming
-            bool                    m_bPowerupSent;                 // is powerup already sent for this sequence?
-            long                    m_stimulusLength;               // length of the current stimulus in �s
-            QTime                   m_timeSinceStart;               // timer that will be started when the stimulus starts
-            float             m_volume;              // current output volume, in % (0-100)
+            QString m_host;
+            bool m_bPlaying;
+            // is the device ready to be started?
+            bool m_bReady;
+            data::ApexMap* m_pMap;
+            int m_iTriggerType;
+            int m_nDeviceNr;
+            // how many powerup frames to send before starting streaming
+            int m_nPowerupCount;
+            // is powerup already sent for this sequence?
+            bool m_bPowerupSent;
+            // length of the current stimulus in us
+            long m_stimulusLength;
+            // timer that will be started when the stimulus starts
+            QTime m_timeSinceStart;
+            // current output volume, in % (0-100)
+            float m_volume;
         };
     }
 }

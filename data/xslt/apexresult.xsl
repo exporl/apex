@@ -60,6 +60,18 @@
         </xsl:choose>
     </xsl:variable>
     
+    <!-- Show click position? -->
+    <xsl:variable name="showClickPosition">
+        <xsl:choose>
+            <xsl:when test="apex:results/trial[1]/screenresult/@xclickposition">
+                <xsl:text>1</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>0</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
     <xsl:template match="/">
         <!-- Determine whether choices >1 -->
         <xsl:variable name="choices">
@@ -101,6 +113,8 @@
             <xsl:text>procedure;</xsl:text>
         </xsl:if><xsl:text>trial;stimulus;correctanswer;corrector;useranswer</xsl:text><xsl:if test="$proceduretype='adaptive'">
             <xsl:text>;adaptiveparameter</xsl:text>
+        </xsl:if><xsl:if test="$showClickPosition='1'">
+            <xsl:text>;xclickposition;yclickposition</xsl:text>
         </xsl:if><xsl:for-each select="/apex:results/parameters/parameter[@name='showextra']"><xsl:text>;</xsl:text><xsl:value-of select="."/></xsl:for-each>
         <xsl:text>&#10;START&#10;</xsl:text>
         <xsl:apply-templates select="trial" mode="parser"/>
@@ -134,6 +148,9 @@
                     <th>Correct answer</th>
                     <th>Answer</th>
                     <th>Result</th>
+                    <xsl:if test="$showClickPosition='1'">
+                        <th>xclickposition</th><th>yclickposition</th>
+                    </xsl:if>
                     <xsl:if test="$proceduretype='adaptive'">
                         <th>Parameter</th>
                     </xsl:if>
@@ -190,6 +207,12 @@
         <xsl:value-of select="corrector/result"/>
         <xsl:text>;</xsl:text>
         <xsl:value-of select="corrector/answer"/>
+        <xsl:if test="$showClickPosition='1'">
+            <xsl:text>;</xsl:text>
+            <xsl:value-of select="screenresult/@xclickposition"/>
+            <xsl:text>;</xsl:text>
+            <xsl:value-of select="screenresult/@yclickposition"/>
+        </xsl:if>
         <xsl:if test="$proceduretype='adaptive'">
             <xsl:text>;</xsl:text>
             <xsl:value-of select="procedure/parameter"/>

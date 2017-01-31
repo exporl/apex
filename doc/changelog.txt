@@ -3,6 +3,15 @@ APEX 3 change log
 
 This document describes the changes in APEX per release.
 
+Changes in version 3.0.3
+------------------------
+- Save click coordinates for click on picture in results file
+- Fixed error in adaptive procedure: if fixed parameter was adapted,
+  and repeat_until_correct==true, the stimulus stayed the same
+- Fixed error using aseq: return electrode was always set to -1, 
+  unless specified in aseq file
+- Fixed error in uniform int random generator
+
 Changes in version 3.0.2
 ------------------------
 - Improved the plugin procedure api

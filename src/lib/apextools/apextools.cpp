@@ -40,6 +40,13 @@
 #include <ctime>
 #include <string>
 
+#ifdef Q_OS_WIN32
+#include <windows.h>        // Sleep
+#else
+#include <unistd.h>
+#endif
+
+
 namespace apex {
 
 // copied and modified from qobject.cpp
@@ -146,6 +153,17 @@ QString ApexTools::removeXmlTags(const QString& str)
     return result.remove(QRegExp("<[^<]+>"));
 }
 
+
+
+void ApexTools::milliSleep (unsigned millis)
+{
+#ifdef Q_OS_WIN32
+    Sleep (millis);
+#else
+    usleep (1000 * millis);
+#endif
+}
+
 /**
  * Generate a random number between lowest_number and highest_number.
  *
@@ -154,7 +172,7 @@ QString ApexTools::removeXmlTags(const QString& str)
  * @param highest_number
  * @return lowest_number<=int<=highest_number
  */
-int ApexTools::RandomRange(int lowest_number, int highest_number)
+/*int ApexTools::RandomRange(int lowest_number, int highest_number)
 {
         InitRand();
 
@@ -164,15 +182,13 @@ int ApexTools::RandomRange(int lowest_number, int highest_number)
 
         int range = highest_number - lowest_number;
         //return lowest_number + int(range * rand()/(RAND_MAX + 1.0));
-        /*int r=rand();
-        return lowest_number + r%range;*/
 
         int result=(int) (ran1()*(range+1) + lowest_number);
         Q_ASSERT(result>=lowest_number);
         Q_ASSERT(result<=highest_number);
 
         return result;
-}
+}*/
 
 /**
  * Generate a uniform float random number between lowest_number and highest_number.
@@ -182,7 +198,7 @@ int ApexTools::RandomRange(int lowest_number, int highest_number)
  * @param highest_number
  * @return
  */
-float ApexTools::RandomRange(double lowest_number, double highest_number) {
+/*float ApexTools::RandomRange(double lowest_number, double highest_number) {
         // FIXME: meer bits gebruiken?
 
         InitRand();
@@ -199,7 +215,7 @@ float ApexTools::RandomRange(double lowest_number, double highest_number) {
         result = (highest_number - lowest_number)*rand_zero_to_one + lowest_number;
 
         return result;
-}
+}*/
 
 
 /**
@@ -233,13 +249,16 @@ float ApexTools::RandomRange(double lowest_number, double highest_number) {
 
 //bool ApexTools::srandDone = false;
 
-void ApexTools::InitRand() {
+void ApexTools::InitRand(long seed) {
     static bool srandDone=false;
-        if (!srandDone) {
-                srand(static_cast<unsigned>(time(0)));
-                ran1(-static_cast<long>(time(0)));
-                srandDone=true;
+    if (!srandDone) {
+        if (seed==-1) {
+            seed=time(0);
         }
+        srand(static_cast<unsigned>(seed));
+        ran1(-static_cast<long>(seed));
+        srandDone=true;
+    }
 }
 
 
@@ -254,7 +273,7 @@ unsigned int RandomNumber::operator() (int count)
  * Cfr Numerical Recipes in C
  * @return
  */
-double ApexTools::Randn( )
+/*double ApexTools::Randn( )
 {
     static int iset=0;
     static double gset;
@@ -274,7 +293,7 @@ double ApexTools::Randn( )
         iset=0;
         return gset;
     }
-}
+}*/
 
 
 /*std::string ApexTools::Q2StdString(const QString & p )
@@ -332,6 +351,7 @@ bool ApexTools::bQStringToBoolean( const QString& ac_sBoolean ) {
 int ApexTools::maximumFontPointSize (const QString &text, const QSize &box,
         const QFont &originalFont)
 {
+    qDebug() << "getting point size for text" << text;
     const int width = box.width();
     const int height = box.height();
     QFont font (originalFont);

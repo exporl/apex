@@ -1,18 +1,19 @@
 BASEDIR = ../../..
-CLEBS *= buildplugin apextools apexdata apexmain
-TARGET = test_spin
+CLEBS *= apextools apexdata apexmain
+TARGET = spintest
+TEMPLATE = app
 include($$BASEDIR/clebs.pri)
 
-# WTF? TODO FIXME path???
+CONFIG *= qtestlib
+
+#TODO FIXME path???
 INCLUDEPATH *= .. ../../plugins/spin
 LIBS *= -lspin
 
-QT *= testlib
+QT *= testlib gui
 
 SOURCES *= \
     spintest.cpp \
 
 HEADERS *= \
     spintest.h \
-
-

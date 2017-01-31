@@ -60,7 +60,7 @@ DatablocksParser::~DatablocksParser()
  */
 data::DatablocksData DatablocksParser::Parse
     (XERCES_CPP_NAMESPACE::DOMElement* p_datablocks,
-     const QString& scriptLibraryFile)
+     const QString& scriptLibraryFile, const QVariantMap &scriptParameters)
 {
     //std::auto_ptr<data::DatablocksData> result(new data::DatablocksData);
     data::DatablocksData result;
@@ -72,7 +72,7 @@ data::DatablocksData DatablocksParser::Parse
         const QString tag( XMLutils::GetTagName( currentNode ) );
         if (tag == "plugindatablocks") {
             qDebug("Script library: %s", qPrintable(scriptLibraryFile));
-            ScriptExpander expander(scriptLibraryFile,
+            ScriptExpander expander(scriptLibraryFile, scriptParameters,
                                     m_parent);
             expander.ExpandScript(currentNode, "getDatablocks");
         }

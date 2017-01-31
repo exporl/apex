@@ -129,6 +129,8 @@ class SPIN_EXPORT SpinConfig
     Q_DECLARE_TR_FUNCTIONS(SpinConfig);
 public:
 
+    SpinConfig();
+
     ~SpinConfig(){}
 
     //getters
@@ -180,6 +182,11 @@ public:
     uint channelOfAngle(uint angle) const;
     QList<uint> channelList(SpeakerType which) const;
 
+    unsigned int soundcardBuffersize() const;
+    unsigned int soundcardBlocksize() const;
+    QString soundcardDriver() const;
+
+
     //setters
     void setPrefix(const apex::data::FilePrefix& prefix);
     void addSpeaker(unsigned channel, unsigned angle);
@@ -196,6 +203,10 @@ public:
     void setGainId(const QString& id);
     void setInternalRms(double rms);
     void setDefaultCalibration(double d);
+
+    void setSoundcardBuffersize(unsigned int v);
+    void setSoundcardBlocksize(unsigned int v);
+    void setSoundcardDriver(QString v);
 
     //tools
     void showContent();
@@ -223,6 +234,9 @@ private:
     //<general_setup>
     double intRms;
     double defaultCalib;
+    unsigned int m_soundcardBuffersize;
+    unsigned int m_soundcardBlocksize;
+    QString m_soundcardDriver;
 };
 
 } // ns data

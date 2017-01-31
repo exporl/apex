@@ -32,13 +32,18 @@
 #include <map>
 #include <vector>
 
+//TODO * replace all STL containers with Qt containers
+//     * rename all tFoo typedefs to Foo
 
 namespace apex
 {
+
+//TODO remove the typedefs in the apex namespace because they are so general
+//     that it's much clearer to just write them fully all the time.
 typedef std::vector<bool>                 tBooleanVector;
 typedef std::vector<QString>              tQStringVector;
 
-typedef QMap<QString, QString>            tParamMap; //TODO change to QMap
+typedef QMap<QString, QString>            tParamMap;
 typedef QPair<QString, QString>           tParamMapPair;
 typedef tParamMap::const_iterator         tParamMapCIt;
 typedef tParamMap::iterator               tParamMapIt;
@@ -59,7 +64,7 @@ typedef tUintQStringMap::iterator         tUintQStringMapIt;
 typedef tUintQStringMap::const_iterator   tUintQStringMapCIt;
 
 class ApexModule;
-typedef std::vector<ApexModule*>          tModules;
+typedef QList<ApexModule*>          ModuleList;
 
 typedef int tEventCode;
 
@@ -136,9 +141,9 @@ typedef QMap<QString, data::Screen*>             tScreenMap;
 typedef tScreenMap::iterator              tScreenMapIt;
 typedef tScreenMap::const_iterator        tScreenMapCIt;
 
-typedef QMap<QString, data::ScreenElement*>      tScreenElementMap;
-typedef tScreenElementMap::iterator       tScreenElementMapIt;
-typedef tScreenElementMap::const_iterator tScreenElementMapCIt;
+typedef QMap<QString, data::ScreenElement*>      ScreenElementMap;
+typedef ScreenElementMap::iterator       tScreenElementMapIt;
+typedef ScreenElementMap::const_iterator tScreenElementMapCIt;
 
 
 }

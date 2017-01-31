@@ -62,20 +62,13 @@ const QString MatrixRunDelegate::getText() const
     QStringList result;
 
     for (unsigned i = 0, size = m_groups.size(); i < size; ++i) {
-        result << "<answer>" +
-                    (element->buttons()[i][m_groups[i]->checkedId()]).name
-                + "</answer>";
+        const int id = m_groups[i]->checkedId();
+        result << "<answer>" + (id < 0 ?
+                QString() : element->buttons()[i][id].name) + "</answer>";
     }
 
     return result.join("\n");
 }
-
-//void MatrixRunDelegate::resizeEvent(QResizeEvent *e)
-//{
-//    QPushMatrix::resizeEvent(e);
-//    setFont (initialFont);
-//    ApexTools::shrinkTillItFits(this, element->getText(), QSize (2, 2));
-//}
 
 void MatrixRunDelegate::connectSlots(gui::ScreenRunDelegate* d)
 {
@@ -112,7 +105,7 @@ void MatrixRunDelegate::sendAnsweredSignal(int button)
 }
 
 MatrixRunDelegate::MatrixRunDelegate(ExperimentRunDelegate *p_rd,
-        QWidget *parent, const MatrixElement *e) :
+        QWidget *parent, const data::MatrixElement *e) :
       QWidget(parent),
       ScreenElementRunDelegate(p_rd, e),
       element(e)
@@ -126,11 +119,6 @@ MatrixRunDelegate::MatrixRunDelegate(ExperimentRunDelegate *p_rd,
         palette.setColor(QPalette::Active, QPalette::Button, QColor(e->getFGColor()));
         setPalette(palette);
     }
-
-    // set maximum height to N*font height
-    // QFontMetrics fm(font);
-    // setMaximumHeight(fm.height() * 5);
-    // setMinimumHeight(fm.height());
 }
 
 
@@ -138,7 +126,7 @@ void MatrixRunDelegate::makeMatrix()
 {
     QGridLayout *layout = new QGridLayout(this);
 
-    const MatrixElement::tMatrixButtons &buttons = element->buttons();
+    const data::MatrixElement::tMatrixButtons &buttons = element->buttons();
 
     // create one qbuttongroup per column
     m_groups.resize(buttons.size());
@@ -171,7 +159,16 @@ void MatrixRunDelegate::makeMatrix()
     }
 }
 
+void MatrixRunDelegate::clearText()
+{
+    for (unsigned i = 0, size = m_groups.size(); i < size; ++i) {
+        if (QAbstractButton *button = m_groups[i]->checkedButton()) {
+            m_groups[i]->setExclusive(false);
+            button->setChecked(false);
+            m_groups[i]->setExclusive(true);
+        }
+    }
 }
 
 }
-
+}

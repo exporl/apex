@@ -52,7 +52,7 @@ ApexMultiProcedure::~ApexMultiProcedure()
 }
 
 
-bool ApexMultiProcedure::NextTrial(bool p_answer, const ApexScreenResult* screenresult)
+bool ApexMultiProcedure::NextTrial(bool p_answer, const ScreenResult* screenresult)
 {
 #ifdef SHOWSLOTS
     qDebug("SLOT ApexMultiProcedure::NextTrial(bool p_answer)");
@@ -149,7 +149,8 @@ void ApexMultiProcedure::SelectProcedure( )
 
         while (1)
         {
-            int number = ApexTools::RandomRange(0, m_procedures.size()-1 );
+            //int number = ApexTools::RandomRange(0, m_procedures.size()-1 );
+            int number = m_random.nextUInt(m_procedures.size() );
             qDebug("Selecting procedure #%i", number);
 
             if (! m_procedures[number].proc->isFinished())
@@ -211,6 +212,16 @@ void ApexMultiProcedure::StartOutput()
 {
       (*m_curProc).proc->StartOutput();
 // called from ApexProcedure::Start()
+}
+
+void ApexMultiProcedure::StimulusDone()
+{
+      (*m_curProc).proc->StimulusDone();
+}
+
+void ApexMultiProcedure::RepeatOutput()
+{
+      (*m_curProc).proc->RepeatOutput();
 }
 
 QString ApexMultiProcedure::GetResultXML( ) const

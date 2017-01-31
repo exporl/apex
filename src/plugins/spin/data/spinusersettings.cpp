@@ -33,7 +33,7 @@ Options::Options() :
     showResults(true),
     nbResponsesThatCount(0),
     trialOrder(ORDER_INVALID),
-    soundCard(RmeMultiface)
+    soundCard(DefaultSoundcard)
 {
 }
 

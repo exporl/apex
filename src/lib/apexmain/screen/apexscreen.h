@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef APEXAPEXSCREEN_H
 #define APEXAPEXSCREEN_H
 
 #include "apexmodule.h"
-#include "apexscreenresult.h"
+#include "screen/screenresult.h"
 
 namespace apex {
 
@@ -38,17 +38,17 @@ class ApexScreen : public ApexModule
         ApexScreen(ExperimentRunDelegate& p_rd): ApexModule(p_rd) {};
 public:
         virtual QString GetResultXML() const;
-        const ApexScreenResult* GetLastResult() const {return &m_lastResult;};
+        const ScreenResult* GetLastResult() const {return &m_lastResult;};
 
 
         public slots:
-                void iAnswered(const ApexScreenResult* result);
+                void iAnswered(const ScreenResult* result);
 
         signals:
-                void Answered(const ApexScreenResult* result);                  // FIXME: moet ScreenAnswer class of zo worden
+                void Answered(const ScreenResult* result);                  // FIXME: moet ScreenAnswer class of zo worden
 
         private:
-                ApexScreenResult m_lastResult;
+                ScreenResult m_lastResult;
 };
 
 }

@@ -20,7 +20,7 @@
 #ifndef __APEXFILEDIALOG_H__
 #define __APEXFILEDIALOG_H__
 
-#include "servicemanager.h"
+#include "services/servicemanager.h"
 
 #include <QFileDialog>
 

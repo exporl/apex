@@ -20,6 +20,9 @@
 #include "generalparameters.h"
 #include "apextools.h"
 #include "xml/xercesinclude.h"
+#include "xml/apexxmltools.h"
+using namespace apex::ApexXMLTools;
+
 using namespace xercesc;
 using namespace apex::data;
 
@@ -37,7 +40,7 @@ GeneralParameters::~GeneralParameters()
 {
 }
 
-bool GeneralParameters::SetParameter(const QString& p_name, const QString& /*p_id*/, const QString& p_value, DOMElement*)
+bool GeneralParameters::SetParameter(const QString& p_name, const QString& /*p_id*/, const QString& p_value, DOMElement* p_element)
 {
   if (p_name == "exitafter") {
     m_bExitAfter = ApexTools::bQStringToBoolean( p_value );
@@ -49,15 +52,42 @@ bool GeneralParameters::SetParameter(const QString& p_name, const QString& /*p_i
     m_bAllowSkip = ApexTools::bQStringToBoolean( p_value );
   } else if (p_name == "runoutputtest") {
     m_bRunOutputTest = ApexTools::bQStringToBoolean( p_value );
-  }else if (p_name == "outputtestinput") {
+  } else if (p_name == "outputtestinput") {
     m_sOutputTestInput = p_value;
   } else if (p_name =="scriptlibrary") {
       m_scriptLibrary = p_value;
+  } else if (p_name =="scriptparameters") {
+
+      for ( DOMNode* it = p_element->getFirstChild() ; it != 0 ;
+              it = it->getNextSibling() )
+      {
+          if ( it->getNodeType() != DOMNode::ELEMENT_NODE )
+              continue;
+
+          DOMElement* currentNode = (DOMElement*) it;
+
+          const QString tag( XMLutils::GetTagName( it ) );
+
+          if (tag=="parameter")
+          {
+              QString name = XMLutils::GetAttribute( currentNode, "name" );
+              QVariant value = XMLutils::GetFirstChildText(currentNode);
+              m_scriptParameters[name]=value;
+          } else {
+              Q_ASSERT("Unknown tag");
+          }
+      }
+
   } else {
     Q_ASSERT(0 && "invalid tag");
     return false;
   }
   return true;
+}
+
+const QVariantMap &GeneralParameters::scriptParameters() const
+{
+    return m_scriptParameters;
 }
 
 bool GeneralParameters::operator==(const GeneralParameters& other) const

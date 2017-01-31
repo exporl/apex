@@ -59,6 +59,8 @@ public:
 
     const QString& GetScriptLibrary() const { return m_scriptLibrary; }
 
+    const QVariantMap& scriptParameters() const;
+
     bool operator==(const GeneralParameters& other) const;
 
 private:
@@ -70,6 +72,7 @@ private:
         bool m_bRunOutputTest;
         QString m_sOutputTestInput;
         QString m_scriptLibrary;
+        QVariantMap m_scriptParameters;
 };
 
 }

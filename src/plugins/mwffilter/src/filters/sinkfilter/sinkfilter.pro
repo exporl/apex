@@ -1,5 +1,5 @@
 BASEDIR = ../../../../../..
-CLEBS += filterplugin buildplugin syllib sndfile
+CLEBS += filterplugin buildplugin sndfile
 
 include ($$BASEDIR/clebs.pri)
 

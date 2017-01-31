@@ -51,18 +51,18 @@ class APEXDATA_EXPORT ConnectionData
         MatchType matchType() const;
         const QString& fromId() const;
         const QString& fromChannelId() const;
-        unsigned fromChannel() const;
+        int fromChannel() const;
         const QString& toId() const;
         const QString& toChannelId() const;
-        unsigned toChannel() const;
+        int toChannel() const;
         QString device() const;
 
         //setters
         void setMatchType(MatchType t);
         void setFromId(const QString& id);
-        void setFromChannel(unsigned channel, const QString& channelId = "");
+        void setFromChannel(int channel, const QString& channelId = "");
         void setToId(const QString& id);
-        void setToChannel(unsigned channel, const QString& channelId = "");
+        void setToChannel(int channel, const QString& channelId = "");
         void setDevice(QString id);
 
         ConnectionData& operator=(const ConnectionData& other);
@@ -78,9 +78,16 @@ class APEXDATA_EXPORT ConnectionsData : public QList<ConnectionData*>
 {
     public:
 
+        ConnectionsData();
         ~ConnectionsData();
 
         bool operator==(const ConnectionsData& other);
+
+    private:
+
+        //prevent copying
+        ConnectionsData(const ConnectionsData&);
+        ConnectionsData& operator=(const ConnectionsData&);
 
 };
 

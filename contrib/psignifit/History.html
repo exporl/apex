@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN"
+		"http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+	<title>psignifit development history</title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	 
+	<style type="text/css">
+	<!-- 
+		body {color: #000000; background-color: #FFFFFF; font-size: 12px;}
+		a:link {color: #0000DD; background-color: #FFFFFF;}
+		a:active {color: #FF0000; background-color: #FFFFFF;}
+		a:visited {color: #881133; background-color: #FFFFFF;}
+		div.aside {font-size: 75%;}
+	 -->
+	</style>
+</head>
+<body>
+
+<h2>Notes to self: plans for next release</h2>
+<p>	Future versions will involve a complete re-write in order to:</p>
+<ul>
+	<li>implement alternatives to Matlab wrapper (R, Octave, Mathematica...);</li>
+	<li>allow bootstrap to cycle over adaptive procedures - required for accurate coverage, and
+	    really there is no such thing as an experiment that uses "constant" stimuli in the sense
+	    that bootstrap methods in psychophysics have hitherto assumed (see thesis);</li>
+	<li>develop a more flexible system for inputting options (mainly for the purposes of adaptive
+	    procedures, which will involve an explosion of input parameters);</li>
+	<li>use non-parametric BCa;</li>
+	<li>allow fitting of arbitrary models (single psychometric functions just one possible plug-in);</li>
+	<li>re-write the psychometric functions so that "alpha" is always the threshold at f=0.5 and "beta"
+		always the slope at f=0.5;</li>
+	<li>use proper iterative "probit"-style fit to obtain initial guess, then do away with grid-search if possible;</li>
+	<li>get rid of Weibull shape and the "log-slope" option. In psychophysics, people generally only
+		use Weibull(x) when they are interested in log(x) - units. In this case, it is much simpler
+		to operate on data that have already been through the logarithmic transform, at which point the
+		Weibull in x can still be fitted by the using the Gumbel in log x. The latter causes no problems
+		with illegal real alpha and beta values, and the need for a special "slope with respect to log x"
+		option is dispensed with. These two factors together have been responsible for 90% of the spaghetti
+		code and 99% of the bugs in the previous releases.</li>
+</ul>
+<hr>
+<h2>Update on notes to self (2004/5)</h2>
+<p>Development on psignifit is now frozen, so none of the above will in fact happen.</p>
+<hr>
+
+
+<h2>Version 2.5.6 (18-Jan-2005)</h2>
+<p>
+	Engine:
+</p>
+<ul>
+	<li>new LAMBDA_EQUALS_GAMMA option for a particular kind of 2AFC-without-feedback design</li>
+</ul>
+<p>
+	Matlab toolbox:
+</p>
+<ul>
+	<li>Matlab R14 issues worked around</li>
+	<li>minor bugfix in the DEVIANCE function</li>
+	<li>minor improvements to plotting functions like PLOTPD, PLOTPF and PSYCHERRBAR (you can now pass in axes properties as well as line properties).</li>
+</ul>
+
+<h2>Version 2.5.41 (10-Sep-2002)</h2>
+<p>
+	This is simply an update to the toolbox m-files, to iron out the glitches caused by
+	backward-incompatibilities in the new Matlab R13.
+</p>
+<p>
+	Further slight changes were also made to the toolbox:
+</p>
+<ul>
+	<li>The default number of bootstrap runs in <samp>pfit.m</samp> is now 1999 instead of 999.</li>
+	<li>
+		The plotting flag (<samp>'plot'</samp>, <samp>'no plot'</samp>, <samp>'plot without stats'</samp>)
+		in <samp>pfit.m</samp> can now be passed <strong>either</strong> as the first string argument (as before)
+		<strong>or</strong> as a "dummy" batch option called <samp>PLOT_OPT</samp>.
+		This is in order to make things easier when writing wrappers for <samp>pfit</samp>.
+	</li>
+	<li>
+		The <samp>range</samp> function (which was causing a name conflict with the statistics toolbox)
+		has been removed from the <samp>pfcmp</samp> distribution.
+	</li>
+</ul>
+<p>
+	The C source should be functionally identical to 2.5.4, so I have not recompiled the binaries.
+</p>
+<hr>
+
+<h2>Version 2.5.4 (18-Apr-2002)</h2>
+<div class="aside">
+	(What happened to 2.5.3? I decided to follow the convention of using even
+	numbers in the least significant digit of the version number, in case some people think that the release
+	might not be "stable" - in fact my development process is not so sophisticated that I <em>ever</em>
+	release "cutting edge" builds or anything whose development hasn't reached a "stable" point. My version numbers are
+	in fact assigned more or less haphazardly, and are based on how drastic the differences seem to be
+	since I last managed to get a release posted. The next version will be 3.0.)
+</div>
+<p>
+	With this release, the name of the program has changed from "psychofit" to "psignifit".
+	This is to avoid confusion with other software - the name "psychofit" has been used before by others.
+	All of the source files now have lower-case names, and some of them have been renamed in
+	other ways. 
+</p>
+<p>
+	This version compiles in gcc in the new-look <a href="http://cygwin.com">cygwin</a>,
+	and can make executables and mex files that run either natively or on top of cygwin.
+	A primitive makefile is included.
+</p>
+<p>	A few bugs were fixed in the C code:</p>
+<ul>
+	<li>Fixed segmentation faults that happened on Windows when <samp>COMPUTE_STATS</samp> was turned off.</li>
+	<li>Fixed the fatal error that occurred when <samp>COMPUTE_PARAMS</samp> was turned off.</li>
+	<li>The initial size of the simplex could sometimes be set to an infinite number,
+	    resulting in a failure to converge - this was essentially a Weibull/log-slope problem,
+	    and has been solved by adding yet more strands to the spaghetti.</li>
+	<li>When the simplex failed to converge in the initial fit, the error message was
+	    misleading. Now it is less so.</li>
+</ul>
+<p>
+	Also, a glitch in the Matlab function <samp>psychostats.m</samp> was ironed out, whereby polynomial
+	fits to deviance residuals were carried out even if not enough residuals
+	existed, leading to an error.
+</p>
+<p>
+	Also in version 2.5.4, <samp>pfcmp</samp> was released. This is an extension to the Matlab toolbox,
+	for comparing two psychometric functions by Monte Carlo simulation.
+</p>
+<hr>
+
+<h2>Version 2.5.2 (01-Oct-2001)</h2>
+<p>
+	This version was used for extensive testing of bootstrap methods by Hill (D.Phil. thesis, University of Oxford, 2001). It was not released,
+	except on the CD accompanying the thesis. It includes minor bug fixes and improvements over 2.5.1 as follows:
+</p>
+<ul>
+	<li>A rare bug has been fixed: when the maximum-likelihood fit yielded thresholds very close to, but not equal to 0, tiny threshold confidence intervals were produced. This was a bug in the initialization of the simplex size, which has now been remedied.</li>
+	<li>Use of the option <samp>GEN_VALUES</samp> when <samp>RUNS</samp> is 0 used to cause an internal error. This is a non-sensical combination of options anyway, but throwing an internal error is confusing and unhelpful if this combination is entered by mistake. This has been fixed.</li>
+	<li>Use of an explicit <samp>GEN_PARAMS</samp> parameter set caused the <samp>FIX_...</samp> options always to fix at the value supplied in the generating parameter set. So, it was not possible to fix a parameter at the wrong value. Now it is.</li>
+	<li>The names of all the Matlab m-files, and their calls to each other, have been converted to lower case - this wasn't an issue on the case-insensitive filesystems of Windows and MacOS, but it made the toolbox unuseable on most UNIX systems.</li>
+	<li>The guess procedure for initializing the simplex has been improved (a transformed regression is used, according to the desired function shape) making the fitting procedure more reliable.</li>
+	<li>A new C function <samp>MatchShape</samp> is used to identify the desired psychometric function shape, allowing new functions to be added more easily.</li>
+</ul>
+<hr>
+
+<h2>Version 2.5.1 (03-Apr-2000)</h2>
+<p>
+	First success at making a Windows32 Matlab mex file - using Matlab 5.3 in conjunction with the free gcc port from
+	<a href = "http://sourceware.cygnus.com">Cygnus</a> (cygwin-b20).
+</p>
+<h4>New features (see the file "psych_options" for documentation)</h4>
+<ul>
+	<li>"Shift" and "slope" of the psychometric function (whose values can be interpreted without knowledge of which functional form of the psychometric function was chosen) can now be fixed, using <samp>FIX_SHIFT</samp> and <samp>FIX_SLOPE</samp></li>
+	<li>Non-flat priors can now be applied to parameters, or to shift and slope (using <samp>LAMBDA_PRIOR</samp>, <samp>SLOPE_PRIOR</samp>, etc). Raised cosine, Gaussian, and beta functions are currently implemented.</li>
+	<li>The <samp>REFIT</samp> option now defaults to TRUE when a bootstrap is performed. In "verbose" mode, When <samp>REFIT</samp> is set to FALSE (either explicitly or if a generating distribution is supplied by the user) a warning is printed to remind the user that the simulated stats are non-refitted.</li>
+</ul>
+
+<h4>Minor bug fixes:</h4>
+<ul>	
+	<li>Fixed a bug in the sorting of distributions that contain NaNs, which resulted in non-sensical confidence limits. (NaNs occur when the maximum-likelihood search fails to converge, which happens relatively rarely, and usually only with badly sampled data sets).</li>
+	<li>Fixed a bug which occurs when parameters are fixed, causing distributions of slopes or thresholds to have zero variance theoretically, but non-zero variance because of numerical precision constraints. Bias-correction and acceleration terms are now set to zero in such cases, eliminating NaNs from the corresponding LIMS matrices.</li>
+	<li>Fixed a bug in the algorithm for determining sensitivity analysis points, which occurred whenever the number of points needs to be reduced due to sparse coverage in parameter space (this may occur with small numbers of bootstrap runs or when alpha or beta is fixed).</li>
+	<li>Altered the "guess" procedure for initializing the simplex search:
+	<ul>
+		<li>an error is now issued if the user's priors have made guessing too difficult (surface too constrained)</li>
+		<li>fixed a bug which caused bad initialization in certain cases (<samp>SLOPE_LIMITS</samp> specified with <samp>SLOPE_OPT log</samp>, for some data sets)</li>
+	</ul>
+</li>
+	<li>Fixed a segmentation fault which somehow has escaped up till now -- only uncovered in the win32 mex file version.</li>
+</ul>
+
+<h4>Internal changes:</h4>
+<ul>
+	<li>Altered the internal algorithms for <samp>isnan()</samp> and <samp>isinf()</samp> from macros to functions - hopefully they will broaden compatibility with different compilers.</li>
+	<li>More object-oriented and expandable implementation of Bayesian priors, in a similar way to psychometric functions: each prior function is responsible for returning its name, description, and how many parameters it takes.</li>
+</ul>
+	
+<h4>Backward-compatibiliy of toolbox m-files with Matlab 5.1.x:<br>(not yet tried with Matlab 5.0.x)</h4>
+<ul>
+	<li>Replaced all <samp>try... catch...</samp> statements with <samp>eval('<var>try_condition</var>', '<var>catch_condition</var>')</samp></li>
+	<li>Replaced all occurrences of <samp>strcmpi(<var>a</var>, <var>b</var>)</samp> with <samp>strcmp(lower(<var>a</var>), lower(<var>b</var>))</samp></li>
+	<li>Wrote "patch" m-files for <samp>strjust</samp>, <samp>xlim</samp> and <samp>ylim</samp>, because it was easier than programming around their absence (in the case of <samp>xlim</samp> and <samp>ylim</samp>) or limited functionality (<samp>strjust</samp>).</li>
+</ul>
+<hr>
+
+<h2>Version 2.5 (25-Nov-1999)</h2>
+<p>
+	First release fully compliant with the Wichmann &amp; Hill papers. Engine compiled and ran successfully under MacOS on PowerPC, Digital UNIX on a DEC Alpha, and Linux, 16-bit DOS and 32-bit DOS on Intel machines. No mex file yet available for Windows Matlab: this is only because I don't know how to make one...
+</p>
+<ul>
+	<li>Incorporated the calculation of thresholds, slopes, and confidence limits into the engine.</li>
+	<li>Introduced BCa method for finding bootstrap confidence limits.</li>
+	<li>Overhauled the syntax for specifying output, to allow users to examine the extra calculation steps thus introduced.</li>
+	<li>Altered the method for choosing points in sensitivity analysis: points are now chosen on the surface of a likelihood-based joint confidence region in parameter space, spread out in alpha and beta as much as possible.</li>
+	<li>Calculation of sensitivity analysis points now occurs within the engine (iteration of the bootstrap procedure over those points is still external, requiring repeated calls to the engine from <samp>pfit.m</samp> or the equivalent).</li>
+</ul>
+<p>
+	(The above changes required extensive changes various aspects of the engine source code, removal of a great deal of Matlab code in the toolbox that now became redundant, and changes to the input options syntax - see updated "options" documentation)
+</p>
+<ul>
+	<li>Added a self-test routine to aid cross-platform development.</li>
+	<li>Fixed a bug which caused simplex searches to fail when compiled for DOS and Linux, yielding bad parameter estimates.</li>
+</ul>
+<hr>
+
+<h2>Version 2.0 (standalone version 2.0-alpha) (22-Jul-1999)</h2>
+<p>
+	First general release. Re-coded from scratch, in "strict ANSI C" with a view towards portability and optimization.
+	All input was as text, so that mex-file and standalone versions were just "wrappers" round the same core routines.
+	The engine compiled and ran correctly under MacOS on a PowerPC, and Digital UNIX on a DEC Alpha. <strong>Not</strong> for use on Intel systems.
+</p>
+<ul>
+	<li>Engine function was limited to providing bootstrap distributions of parameters and statistics.</li>
+	<li>The supporting Matlab toolbox files calculated thresholds and slopes, and determined confidence limits by the bootstrap quantile method (BCa method would be preferable).</li>
+	<li>In the central Matlab toolbox function, <samp>pfit.m</samp>, sensitivity analysis was performed by the "crude square" method: points were chosen on the sides and corners of a rectangle in parameter space, whose sides measured the 68% confidence intervals in alpha and beta.</li>
+	<li>Without Matlab, the standalone engine was an alpha release only - it could only, very crudely, give the mean and standard deviation of the bootstrap parameter distributions (NOT recommended for hypothesis testing).</li>
+</ul>
+<hr>
+
+<h2>Version 1 (1997-9)</h2>
+<p>
+	Implemented fitting and simulation as a compiled binary plug-in to Matlab (mex file) which
+	worked on Macintosh PowerPCs. This cut processing times by a factor of 50-100, but was
+	still poorly optimized. Functionality was very limited.
+</p>
+<hr>
+<h2>Version 0 (1996/7)</h2>
+<p>
+	First attempt at Monte Carlo simulation of a multi-dimensional Simplex search fitting psychometric functions
+	according to maximum likelihood. Implementation was Matlab scripts only: took 20-30 mins to do 1000 simulations.
+	Often failed to converge.
+</p>
+<hr>
+
+</body>
+</html>

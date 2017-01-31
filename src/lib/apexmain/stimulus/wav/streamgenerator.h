@@ -178,6 +178,8 @@ namespace apex
 
       double              mv_dSignalAmp;
       bool                mv_bContinuous;
+
+      Random             m_Random;
     };
 
       /**
@@ -281,7 +283,6 @@ namespace apex
           StreamGenerator( ac_nChan, ac_nBufferSize, ac_nFs ),
         m_Buf( ac_nChan, ac_nBufferSize, true )
       {
-          qDebug() << "noise generator" << deterministic;
           if (deterministic)
               randomGenerator.setSeed(0);
       }
@@ -437,8 +438,8 @@ namespace apex
           * @return a StreamGenerator (must be deleted by callee) or 0 if type isn't found.
           */
         static StreamGenerator* CreateGenerator(
-                const QString& ac_sType, data::FilterData* pParams,
-                unsigned long sr, unsigned bs, bool deterministic = false);
+            const QString& ac_sType, data::FilterData* pParams,
+            unsigned long sr, unsigned bs, bool deterministic = false);
     };
 
   }

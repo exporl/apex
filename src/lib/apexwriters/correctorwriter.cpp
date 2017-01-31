@@ -74,9 +74,45 @@ DOMElement* CorrectorWriter::addElement(DOMDocument* doc,
                     answers->appendChild(answer);
                 }
             }
+            break;
+        }
+        default:
+        {
+             qFatal("Invalid corrector type");
         }
     }
 
     corrector->setAttribute(X("xsi:type"), S2X(type));
     return corrector;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

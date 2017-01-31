@@ -20,7 +20,7 @@
 #ifndef APEX_ERRORLOGGER_H
 #define APEX_ERRORLOGGER_H
 
-#include "statusreporter.h"
+#include "statusdispatcher.h"
 #include "global.h"
 
 #include <QCoreApplication>
@@ -38,6 +38,15 @@ class APEXTOOLS_EXPORT ErrorLogger
     public:
 
         virtual ~ErrorLogger();
+
+        /**
+         * After a call to this method, all errors will also be reported
+         * to the given StatusReporter.
+         *
+         * @note We don't take ownership so it's the callers responsibility
+         *       to keep the pointer valid until destruction of this object.
+         */
+        void addErrorListener(StatusReporter* listener);
 
         /**
          * Returns a read-only reference to the StatusReporter.
@@ -61,7 +70,7 @@ class APEXTOOLS_EXPORT ErrorLogger
 
     private:
 
-        mutable std::auto_ptr<StatusReporter> errors;
+        mutable std::auto_ptr<StatusDispatcher> errors;
 };
 }
 

@@ -1,8 +1,15 @@
-answers=new Array();
-correctanswers=new Array();
-parametervalues=new Array();
-defaultx=new Array();
-defaulty=new Array();
+"use strict";
+
+var results = {};
+results.answers=new Array();
+results.correctanswers=new Array();
+results.parametervalues=new Array();
+results.xml=new Array();
+results.trials=new Array();
+results.stimuli=new Array();
+
+var defaultx=new Array();
+var defaulty=new Array();
 
 Array.prototype.unique =
 function() {
@@ -37,14 +44,14 @@ function newAnswer(xmlstring)
 
     var paramelement = $(xml).find("procedure > parameter");
     if (paramelement !== null) {
-	parametervalues.push( parseFloat(paramelement.text()) );
+	results.parametervalues.push( parseFloat(paramelement.text()) );
     }
 
     answer = parseFloat(answer.match(/-?\d+/));
     correctanswer =  parseFloat(correctanswer.match(/-?\d+/));
 
-    answers.push(answer);
-    correctanswers.push(correctanswer);
+    results.answers.push(answer);
+    results.correctanswers.push(correctanswer);
 }
 
 function extraPlot()
@@ -52,20 +59,20 @@ function extraPlot()
     var rms=0;	    // RMS error
     var abs=0;	    // absolute error
 
-    if (!answers.length)
+    if (!results.answers.length)
     	return;
 
-    for (var i=0; i<answers.length; ++i) {
-	rms += Math.pow( answers[i] - correctanswers[i], 2);
-	abs += Math.abs( answers[i] - correctanswers[i]);
+    for (var i=0; i<results.answers.length; ++i) {
+	rms += Math.pow( results.answers[i] - results.correctanswers[i], 2);
+	abs += Math.abs( results.answers[i] - results.correctanswers[i]);
     }
-    rms /= answers.length;
+    rms /= results.answers.length;
     rms = Math.sqrt(rms);
-    abs /= answers.length;
+    abs /= results.answers.length;
 
     var table="<tr><td>RMS error</td><td>" + rms.toFixed(1) + "</td></tr>";
     table+="<tr><td>Absolute error</td><td>" + abs.toFixed(1) + "</td></tr>";
-    table+="<tr><td>Trials</td><td>" + answers.length.toFixed(1) + "</td></tr>";
+    table+="<tr><td>Trials</td><td>" + results.answers.length.toFixed(1) + "</td></tr>";
     table = wrap("table", table);
 
     if ($("#errormeasures")[0].firstChild !== null)

@@ -21,6 +21,7 @@
 #define APEXAPEXMULTIPROCEDURE_H
 
 #include "apexprocedure.h"
+#include "random.h"
 
 namespace apex
 {
@@ -58,8 +59,10 @@ public:
 public slots:
     virtual void Start();
     //virtual void Stop();                  // moved to ApexProcedure
-    bool NextTrial(const bool p_answer, const ApexScreenResult* screenresult);
+    bool NextTrial(const bool p_answer, const ScreenResult* screenresult);
     virtual void FirstTrial();
+    virtual void StimulusDone();                            // react on stimulusdone from stimulusoutput
+    virtual void RepeatOutput();
 
 protected:
     //void ApexMultiProcedure::GetNextTrial();
@@ -71,6 +74,8 @@ private:
     tProcList::iterator m_curProc;                  // current procedure
 
     void SelectProcedure();
+
+    Random m_random;
 
     mutable int m_nNumtrials;
 };

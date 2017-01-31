@@ -118,6 +118,7 @@ class ExperimentRunDelegatePrivate
                 parent (parent),
                 deterministic(d),
                 autoAnswer(false),
+                blockSize(-1),
                 mod_timer(0),
                 mod_screen(0),
                 mod_procedure(0),
@@ -143,6 +144,7 @@ class ExperimentRunDelegatePrivate
         //Corrector* corrector;
 
         bool autoAnswer;
+        int blockSize;
 
 
         //modules
@@ -158,7 +160,7 @@ class ExperimentRunDelegatePrivate
         std::auto_ptr<stimulus::StimulusOutput> mod_output;
         std::auto_ptr<Feedback>                 mod_feedback;
 
-        tModules m_modules;   // list of the modules above
+        ModuleList m_modules;   // list of the modules above
 
 };
 }
@@ -342,10 +344,10 @@ void ExperimentRunDelegate::makeModules(ApexControl* apexControl)
                       apexControl->mainWindow(), SLOT(AddStatusMessage(QString)));
 
     // screen
-    QObject::connect (apexControl->mainWindow(), SIGNAL(Answered(const ApexScreenResult*)),
-             priv->mod_screen.get(), SLOT(iAnswered(const ApexScreenResult*)));
-    QObject::connect (priv->mod_screen.get(), SIGNAL(Answered(const ApexScreenResult*)),
-             apexControl, SLOT(Answered(const ApexScreenResult*)));
+    QObject::connect (apexControl->mainWindow(), SIGNAL(Answered(const ScreenResult*)),
+             priv->mod_screen.get(), SLOT(iAnswered(const ScreenResult*)));
+    QObject::connect (priv->mod_screen.get(), SIGNAL(Answered(const ScreenResult*)),
+             apexControl, SLOT(Answered(const ScreenResult*)));
     QObject::connect (apexControl->mainWindow(), SIGNAL(fileSaveAs()),
              priv->mod_resultsink.get(), SLOT(SaveAs()));
 
@@ -515,6 +517,7 @@ void ExperimentRunDelegate::MakeOutputDevices()
         {
         case TYPE_WAVDEVICE:
             device=new WavDevice( dynamic_cast<WavDeviceData*>(devData) );
+            priv->blockSize = (dynamic_cast<WavDevice*>(device))->GetBlockSize();
             break;
         case TYPE_L34:
             device=MakeL34Device(  (dynamic_cast<data::L34DeviceData*>(devData) ));
@@ -627,7 +630,7 @@ retryL34:
     catch (ApexStringException& /*e*/)
     {
         int result = QMessageBox::warning( 0, "Apex - L34device",
-                                           "Could not connect to L34 device " + p_Params->id() +
+                                           "Could not connect to device " + p_Params->deviceType() + "-" + p_Params->id() +
                                            "\nCheck whether the USB connection is ok and the L34 is switched on\n "
                                            "You can try to turn off and back on the L34\n"
                                            "Apex might have to be completely restarted",
@@ -899,7 +902,10 @@ Filter* ExperimentRunDelegate::MakeFilter( const QString& ac_sID,
         throw ApexStringException("No filters supported for other device types than wavDevice");
 
     unsigned sr=wavData->sampleRate();
-    unsigned long bs=wavData->blockSize();      // FIXME: blocksize can change at initialization of wavdevice
+
+    Q_ASSERT(priv->blockSize>0);
+    unsigned long bs=priv->blockSize;
+
 
 
     if ( ac_sType == sc_sFilterAmplifierType )
@@ -912,16 +918,14 @@ Filter* ExperimentRunDelegate::MakeFilter( const QString& ac_sID,
     {
         Q_ASSERT( wavData != NULL );
 
-        unsigned bs = wavData->blockSize();
         unsigned long sr = wavData->sampleRate();
         filter = new WavGenerator( ac_sID, ac_pParams->valueByType("type").toString() ,
-                                   ac_pParams, sr, bs, priv->deterministic );
+                                   ac_pParams, sr, priv->blockSize, priv->deterministic );
     }
     else if ( ac_sType == sc_sFilterDataLoopType )    //FIXME should be sc_sFilterGeneratorType with subtype DataLoop
     {
         Q_ASSERT( wavData != NULL );
 
-        unsigned bs = wavData->blockSize();
         unsigned long sr = wavData->sampleRate();
 
         //get datablock if needed
@@ -937,7 +941,7 @@ Filter* ExperimentRunDelegate::MakeFilter( const QString& ac_sID,
         }
 //            ac_pParams->mp_SetExtraData( pSrc );
 
-        DataLoopGeneratorFilter* gen = new DataLoopGeneratorFilter( ac_sID, sc_sFilterDataLoopType, ac_pParams, sr, bs );
+        DataLoopGeneratorFilter* gen = new DataLoopGeneratorFilter( ac_sID, sc_sFilterDataLoopType, ac_pParams, sr, priv->blockSize );
         gen->SetSource(pSrc);
 
         ((DataLoopGenerator*) gen->GetStreamGen() ) ->SetInputStream(pSrc->GetWavStream(bs, sr));
@@ -1087,7 +1091,7 @@ namespace apex
         return priv->mod_randomgenerators.get();
     }
 
-    const tModules* apex::ExperimentRunDelegate::modules() const
+    const ModuleList *apex::ExperimentRunDelegate::modules() const
     {
         return &priv->m_modules;
     }

@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet  href="https://gilbert.med.kuleuven.be/apex/xslt/idn.xsl" type="text/xsl"?>
+<apex:results experiment_file="file:/home/tom/data/apex/examples/results/xsltscript.xml" xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+<general>
+	<startdate>Fri Jul 6 14:29:33 2012</startdate>
+	<enddate>Fri Jul 6 14:29:41 2012</enddate>
+	<duration unit="seconds">8</duration>
+	<xsltscript>idn.xsl</xsltscript>
+</general>
+<trial id="trial1">
+<procedure >
+<stimulus>stimulus1</stimulus>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button2</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>button2</answer>
+<correctanswer>button1</correctanswer>
+</corrector>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>422</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial2">
+<procedure >
+<stimulus>stimulus2</stimulus>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button3</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>button3</answer>
+<correctanswer>button2</correctanswer>
+</corrector>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>279</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial3">
+<procedure >
+<stimulus>stimulus3</stimulus>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button2</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>button2</answer>
+<correctanswer>button3</correctanswer>
+</corrector>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>349</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<processed>
+
+Results from file:/home/tom/data/apex/examples/results/xsltscript.xml
+
+[Stimulus/answerstimulus pairs]
+stimulus1	stimulus2	stimulus3	
+
+
+[Stimulus/correct answer/response/correctorvalue]
+stimulus1	stimulus2	stimulus3	
+			
+
+false	false	false	
+
+[Score]
+0/3
+</processed>
+</apex:results>

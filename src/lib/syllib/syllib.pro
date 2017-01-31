@@ -7,14 +7,14 @@ TARGET = syllib
 DEFINES += SYL_MAKEDLL 
 
 SOURCES +=						\
-        adaptivewiener.cpp				\
+#        adaptivewiener.cpp				\
         arfilter.cpp					\
         firfilter.cpp					\
         threadedfirfilter.cpp				\
         vad.cpp						\
 
 HEADERS +=						\
-        adaptivewiener.h				\
+#        adaptivewiener.h				\
         arfilter.h					\
         exception.h					\
         eventthread.h					\

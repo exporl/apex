@@ -1,0 +1,691 @@
+<apex:speechmaterialfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.3/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.3/experiment.xsd"
+	xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment">
+	
+	
+	<noises>
+		<noise id="FIST_ltass">
+			<description>Long term average speech spectrum noise for FIST</description>
+			<name>FIST</name>
+			<uri>french/Fist/fistnoise.wav</uri>
+			<rms>-20.27</rms>
+			<speechmaterial>FIST</speechmaterial>
+		</noise>
+	</noises>
+	
+	<speechmaterial id="FIST">
+		<rms>-20.27</rms>
+		<list id="01">
+			<speechtoken id="fist0101">
+				<uri>french/Fist/fist0101.wav</uri>
+				<text>Elle n'est pas encore arrivée de l'aéroport</text>
+			</speechtoken>
+			<speechtoken id="fist0102">
+				<uri>french/Fist/fist0102.wav</uri>
+				<text>Une grotte est un lieu creusé dans la roche</text>
+			</speechtoken>
+			<speechtoken id="fist0103">
+				<uri>french/Fist/fist0103.wav</uri>
+				<text>Ces tartines de confitures sont délicieuses</text>
+			</speechtoken>
+			<speechtoken id="fist0104">
+				<uri>french/Fist/fist0104.wav</uri>
+				<text>Les spectateurs applaudissent le vainqueur</text>
+			</speechtoken>
+			<speechtoken id="fist0105">
+				<uri>french/Fist/fist0105.wav</uri>
+				<text>Il écoute la radio en déjeunant</text>
+			</speechtoken>
+			<speechtoken id="fist0106">
+				<uri>french/Fist/fist0106.wav</uri>
+				<text>Tout enfant doit obéissance à ses parents</text>
+			</speechtoken>
+			<speechtoken id="fist0107">
+				<uri>french/Fist/fist0107.wav</uri>
+				<text>Les fruits ne sont pas encore mûrs</text>
+			</speechtoken>
+			<speechtoken id="fist0108">
+				<uri>french/Fist/fist0108.wav</uri>
+				<text>Il faut arroser les plantes régulièrement </text>
+			</speechtoken>
+			<speechtoken id="fist0109">
+				<uri>french/Fist/fist0109.wav</uri>
+				<text>Le chef cuisinier porte une toque blanche</text>
+			</speechtoken>
+			<speechtoken id="fist0110">
+				<uri>french/Fist/fist0110.wav</uri>
+				<text>Elle est souffrante depuis ce matin</text>
+			</speechtoken>
+		</list>
+		<list id="02">
+			<speechtoken id="fist0201">
+				<uri>french/Fist/fist0201.wav</uri>
+				<text>Il apprend l'alphabet pour savoir lire</text>
+			</speechtoken>
+			<speechtoken id="fist0202">
+				<uri>french/Fist/fist0202.wav</uri>
+				<text>J'adore écouter cette musique</text>
+			</speechtoken>
+			<speechtoken id="fist0203">
+				<uri>french/Fist/fist0203.wav</uri>
+				<text>Elle parle lorsqu'elle rêve</text>
+			</speechtoken>
+			<speechtoken id="fist0204">
+				<uri>french/Fist/fist0204.wav</uri>
+				<text>Il est convoqué dans le bureau du directeur</text>
+			</speechtoken>
+			<speechtoken id="fist0205">
+				<uri>french/Fist/fist0205.wav</uri>
+				<text>L'accident s'est produit au carrefour</text>
+			</speechtoken>
+			<speechtoken id="fist0206">
+				<uri>french/Fist/fist0206.wav</uri>
+				<text>La neige empêcha l'avion d'atterrir</text>
+			</speechtoken>
+			<speechtoken id="fist0207">
+				<uri>french/Fist/fist0207.wav</uri>
+				<text>Le musée est fermé le mardi</text>
+			</speechtoken>
+			<speechtoken id="fist0208">
+				<uri>french/Fist/fist0208.wav</uri>
+				<text>Les colis sont dans la soute de l'avion </text>
+			</speechtoken>
+			<speechtoken id="fist0209">
+				<uri>french/Fist/fist0209.wav</uri>
+				<text>Son imagination lui joue des tours</text>
+			</speechtoken>
+			<speechtoken id="fist0210">
+				<uri>french/Fist/fist0210.wav</uri>
+				<text>La météo annonce du beau temps</text>
+			</speechtoken>
+		</list>
+		<list id="03">
+			<speechtoken id="fist0301">
+				<uri>french/Fist/fist0301.wav</uri>
+				<text>Ce pantalon est trop cher pour moi</text>
+			</speechtoken>
+			<speechtoken id="fist0302">
+				<uri>french/Fist/fist0302.wav</uri>
+				<text>Son garage a été complètement inondé</text>
+			</speechtoken>
+			<speechtoken id="fist0303">
+				<uri>french/Fist/fist0303.wav</uri>
+				<text>Il ne trouve pas de pantalon à sa taille</text>
+			</speechtoken>
+			<speechtoken id="fist0304">
+				<uri>french/Fist/fist0304.wav</uri>
+				<text>Elle se regarde dans le miroir</text>
+			</speechtoken>
+			<speechtoken id="fist0305">
+				<uri>french/Fist/fist0305.wav</uri>
+				<text>Elle a appris le karaté pour savoir se défendre</text>
+			</speechtoken>
+			<speechtoken id="fist0306">
+				<uri>french/Fist/fist0306.wav</uri>
+				<text>Ce geste m'a fait plaisir de sa part</text>
+			</speechtoken>
+			<speechtoken id="fist0307">
+				<uri>french/Fist/fist0307.wav</uri>
+				<text>Chaque matin je me rends à la gare</text>
+			</speechtoken>
+			<speechtoken id="fist0308">
+				<uri>french/Fist/fist0308.wav</uri>
+				<text>Il est content de son nouveau travail </text>
+			</speechtoken>
+			<speechtoken id="fist0309">
+				<uri>french/Fist/fist0309.wav</uri>
+				<text>Le berger rassemble son troupeau</text>
+			</speechtoken>
+			<speechtoken id="fist0310">
+				<uri>french/Fist/fist0310.wav</uri>
+				<text>Ce film d'horreur donne des cauchemars</text>
+			</speechtoken>
+		</list>
+		<list id="04">
+			<speechtoken id="fist0401">
+				<uri>french/Fist/fist0401.wav</uri>
+				<text>Il nettoie la vaisselle après le repas</text>
+			</speechtoken>
+			<speechtoken id="fist0402">
+				<uri>french/Fist/fist0402.wav</uri>
+				<text>Viens là que je t'embrasse</text>
+			</speechtoken>
+			<speechtoken id="fist0403">
+				<uri>french/Fist/fist0403.wav</uri>
+				<text>Je désire rencontrer vos amis</text>
+			</speechtoken>
+			<speechtoken id="fist0404">
+				<uri>french/Fist/fist0404.wav</uri>
+				<text>Les élections municipales approchent</text>
+			</speechtoken>
+			<speechtoken id="fist0405">
+				<uri>french/Fist/fist0405.wav</uri>
+				<text>Il cherche un appartement à louer</text>
+			</speechtoken>
+			<speechtoken id="fist0406">
+				<uri>french/Fist/fist0406.wav</uri>
+				<text>Elle est légèrement vêtue ce soir</text>
+			</speechtoken>
+			<speechtoken id="fist0407">
+				<uri>french/Fist/fist0407.wav</uri>
+				<text>La vie n'est pas toujours facile</text>
+			</speechtoken>
+			<speechtoken id="fist0408">
+				<uri>french/Fist/fist0408.wav</uri>
+				<text>Il boit du café au petit déjeuner </text>
+			</speechtoken>
+			<speechtoken id="fist0409">
+				<uri>french/Fist/fist0409.wav</uri>
+				<text>Cette région me plaît beaucoup</text>
+			</speechtoken>
+			<speechtoken id="fist0410">
+				<uri>french/Fist/fist0410.wav</uri>
+				<text>Ecoute les conseils de tes camarades d'école</text>
+			</speechtoken>
+		</list>
+		<list id="05">
+			<speechtoken id="fist0501">
+				<uri>french/Fist/fist0501.wav</uri>
+				<text>Cette cérémonie est longue et ennuyeuse</text>
+			</speechtoken>
+			<speechtoken id="fist0502">
+				<uri>french/Fist/fist0502.wav</uri>
+				<text>Le téléphone n'arrête pas de sonner</text>
+			</speechtoken>
+			<speechtoken id="fist0503">
+				<uri>french/Fist/fist0503.wav</uri>
+				<text>Elle regarde la télévision tous les soirs</text>
+			</speechtoken>
+			<speechtoken id="fist0504">
+				<uri>french/Fist/fist0504.wav</uri>
+				<text>Elle a de beaux cheveux noirs</text>
+			</speechtoken>
+			<speechtoken id="fist0505">
+				<uri>french/Fist/fist0505.wav</uri>
+				<text>Mon chien est très intelligent</text>
+			</speechtoken>
+			<speechtoken id="fist0506">
+				<uri>french/Fist/fist0506.wav</uri>
+				<text>Il n'a pas assez d'argent pour payer le loyer</text>
+			</speechtoken>
+			<speechtoken id="fist0507">
+				<uri>french/Fist/fist0507.wav</uri>
+				<text>Sa maison est au fond du passage</text>
+			</speechtoken>
+			<speechtoken id="fist0508">
+				<uri>french/Fist/fist0508.wav</uri>
+				<text>Il n'a confiance en personne </text>
+			</speechtoken>
+			<speechtoken id="fist0509">
+				<uri>french/Fist/fist0509.wav</uri>
+				<text>Un journal doit transmettre des informations exactes</text>
+			</speechtoken>
+			<speechtoken id="fist0510">
+				<uri>french/Fist/fist0510.wav</uri>
+				<text>Le téléphone ne fonctionne plus</text>
+			</speechtoken>
+		</list>
+		<list id="06">
+			<speechtoken id="fist0601">
+				<uri>french/Fist/fist0601.wav</uri>
+				<text>Le boucher n'a plus de mouton</text>
+			</speechtoken>
+			<speechtoken id="fist0602">
+				<uri>french/Fist/fist0602.wav</uri>
+				<text>Il a une maladie de cœur inquiétante</text>
+			</speechtoken>
+			<speechtoken id="fist0603">
+				<uri>french/Fist/fist0603.wav</uri>
+				<text>Cette conversation est difficile à suivre</text>
+			</speechtoken>
+			<speechtoken id="fist0604">
+				<uri>french/Fist/fist0604.wav</uri>
+				<text>Le chef d'orchestre dirige les musiciens</text>
+			</speechtoken>
+			<speechtoken id="fist0605">
+				<uri>french/Fist/fist0605.wav</uri>
+				<text>Cette histoire ne tient pas debout</text>
+			</speechtoken>
+			<speechtoken id="fist0606">
+				<uri>french/Fist/fist0606.wav</uri>
+				<text>Son vélo a heurté le trottoir</text>
+			</speechtoken>
+			<speechtoken id="fist0607">
+				<uri>french/Fist/fist0607.wav</uri>
+				<text>Le gardien a fermé la porte à clé</text>
+			</speechtoken>
+			<speechtoken id="fist0608">
+				<uri>french/Fist/fist0608.wav</uri>
+				<text>Ils ont pique-niqué sur l'herbe </text>
+			</speechtoken>
+			<speechtoken id="fist0609">
+				<uri>french/Fist/fist0609.wav</uri>
+				<text>Elle a beaucoup de connaissances en informatique</text>
+			</speechtoken>
+			<speechtoken id="fist0610">
+				<uri>french/Fist/fist0610.wav</uri>
+				<text>Il a perdu brusquement la tête</text>
+			</speechtoken>
+		</list>
+		<list id="07">
+			<speechtoken id="fist0701">
+				<uri>french/Fist/fist0701.wav</uri>
+				<text>Il allume une cigarette avec un briquet</text>
+			</speechtoken>
+			<speechtoken id="fist0702">
+				<uri>french/Fist/fist0702.wav</uri>
+				<text>Il vit en marge de la société</text>
+			</speechtoken>
+			<speechtoken id="fist0703">
+				<uri>french/Fist/fist0703.wav</uri>
+				<text>Ce marchand est très réputé dans le quartier</text>
+			</speechtoken>
+			<speechtoken id="fist0704">
+				<uri>french/Fist/fist0704.wav</uri>
+				<text>Son état de santé empire de jour en jour</text>
+			</speechtoken>
+			<speechtoken id="fist0705">
+				<uri>french/Fist/fist0705.wav</uri>
+				<text>Elle préfère le poisson à la viande</text>
+			</speechtoken>
+			<speechtoken id="fist0706">
+				<uri>french/Fist/fist0706.wav</uri>
+				<text>La femme enceinte va bientôt accoucher</text>
+			</speechtoken>
+			<speechtoken id="fist0707">
+				<uri>french/Fist/fist0707.wav</uri>
+				<text>Un grand rassemblement a eu lieu dans la capitale</text>
+			</speechtoken>
+			<speechtoken id="fist0708">
+				<uri>french/Fist/fist0708.wav</uri>
+				<text>Cet homme a un regard anxieux </text>
+			</speechtoken>
+			<speechtoken id="fist0709">
+				<uri>french/Fist/fist0709.wav</uri>
+				<text>Il se lève toujours à l'aurore</text>
+			</speechtoken>
+			<speechtoken id="fist0710">
+				<uri>french/Fist/fist0710.wav</uri>
+				<text>Patientez, je reviens tout de suite</text>
+			</speechtoken>
+		</list>
+		<list id="08">
+			<speechtoken id="fist0801">
+				<uri>french/Fist/fist0801.wav</uri>
+				<text>Le port du casque est obligatoire sur le chantier</text>
+			</speechtoken>
+			<speechtoken id="fist0802">
+				<uri>french/Fist/fist0802.wav</uri>
+				<text>Un orage a éclaté dans la nuit</text>
+			</speechtoken>
+			<speechtoken id="fist0803">
+				<uri>french/Fist/fist0803.wav</uri>
+				<text>La facture est plus élevée que prévu</text>
+			</speechtoken>
+			<speechtoken id="fist0804">
+				<uri>french/Fist/fist0804.wav</uri>
+				<text>Ils attendent depuis une heure</text>
+			</speechtoken>
+			<speechtoken id="fist0805">
+				<uri>french/Fist/fist0805.wav</uri>
+				<text>Elle hérita d'un oncle très riche</text>
+			</speechtoken>
+			<speechtoken id="fist0806">
+				<uri>french/Fist/fist0806.wav</uri>
+				<text>Il ne peut pas partir en vacances cette année</text>
+			</speechtoken>
+			<speechtoken id="fist0807">
+				<uri>french/Fist/fist0807.wav</uri>
+				<text>Il rêve de faire un long voyage</text>
+			</speechtoken>
+			<speechtoken id="fist0808">
+				<uri>french/Fist/fist0808.wav</uri>
+				<text>La route est dangereuse par temps de pluie</text>
+			</speechtoken>
+			<speechtoken id="fist0809">
+				<uri>french/Fist/fist0809.wav</uri>
+				<text>Elle a égaré son passeport dans l'avion</text>
+			</speechtoken>
+			<speechtoken id="fist0810">
+				<uri>french/Fist/fist0810.wav</uri>
+				<text>Les freins de sa voiture sont usés</text>
+			</speechtoken>
+		</list>
+		<list id="09">
+			<speechtoken id="fist0901">
+				<uri>french/Fist/fist0901.wav</uri>
+				<text>Il faut remplacer la vitre cassée</text>
+			</speechtoken>
+			<speechtoken id="fist0902">
+				<uri>french/Fist/fist0902.wav</uri>
+				<text>Le papier peint commence à se décoller</text>
+			</speechtoken>
+			<speechtoken id="fist0903">
+				<uri>french/Fist/fist0903.wav</uri>
+				<text>Le journaliste présente les dernières nouvelles</text>
+			</speechtoken>
+			<speechtoken id="fist0904">
+				<uri>french/Fist/fist0904.wav</uri>
+				<text>Il est parti en vacances en train</text>
+			</speechtoken>
+			<speechtoken id="fist0905">
+				<uri>french/Fist/fist0905.wav</uri>
+				<text>C'est un endroit idéal pour se promener</text>
+			</speechtoken>
+			<speechtoken id="fist0906">
+				<uri>french/Fist/fist0906.wav</uri>
+				<text>Cette excuse n'est pas valable</text>
+			</speechtoken>
+			<speechtoken id="fist0907">
+				<uri>french/Fist/fist0907.wav</uri>
+				<text>Sa fille est encore une adolescente</text>
+			</speechtoken>
+			<speechtoken id="fist0908">
+				<uri>french/Fist/fist0908.wav</uri>
+				<text>Je n'ai aucune confiance en elle</text>
+			</speechtoken>
+			<speechtoken id="fist0909">
+				<uri>french/Fist/fist0909.wav</uri>
+				<text>Il a découvert un trésor dans son jardin</text>
+			</speechtoken>
+			<speechtoken id="fist0910">
+				<uri>french/Fist/fist0910.wav</uri>
+				<text>Le clown fait la grimace sur la scène</text>
+			</speechtoken>
+		</list>
+		<list id="10">
+			<speechtoken id="fist1001">
+				<uri>french/Fist/fist1001.wav</uri>
+				<text>Son fils monte à cheval sans avoir peur</text>
+			</speechtoken>
+			<speechtoken id="fist1002">
+				<uri>french/Fist/fist1002.wav</uri>
+				<text>Son patron l'a renvoyé pour faute grave</text>
+			</speechtoken>
+			<speechtoken id="fist1003">
+				<uri>french/Fist/fist1003.wav</uri>
+				<text>Elle s'intéresse à l'histoire ancienne</text>
+			</speechtoken>
+			<speechtoken id="fist1004">
+				<uri>french/Fist/fist1004.wav</uri>
+				<text>La montre indique sept heures moins le quart</text>
+			</speechtoken>
+			<speechtoken id="fist1005">
+				<uri>french/Fist/fist1005.wav</uri>
+				<text>Le jeune délinquant a commis un délit</text>
+			</speechtoken>
+			<speechtoken id="fist1006">
+				<uri>french/Fist/fist1006.wav</uri>
+				<text>La visite de ce château vaut la peine</text>
+			</speechtoken>
+			<speechtoken id="fist1007">
+				<uri>french/Fist/fist1007.wav</uri>
+				<text>Gagner de l'argent est son seul objectif</text>
+			</speechtoken>
+			<speechtoken id="fist1008">
+				<uri>french/Fist/fist1008.wav</uri>
+				<text>C'est une histoire étrange qui s'est passée</text>
+			</speechtoken>
+			<speechtoken id="fist1009">
+				<uri>french/Fist/fist1009.wav</uri>
+				<text>Les éboueurs ramassent les ordures</text>
+			</speechtoken>
+			<speechtoken id="fist1010">
+				<uri>french/Fist/fist1010.wav</uri>
+				<text>Il travaille toute la journée</text>
+			</speechtoken>
+		</list>
+		<list id="11">
+			<speechtoken id="fist1101">
+				<uri>french/Fist/fist1101.wav</uri>
+				<text>Les œufs se sont cassés dans le panier</text>
+			</speechtoken>
+			<speechtoken id="fist1102">
+				<uri>french/Fist/fist1102.wav</uri>
+				<text>Ces fleurs sont parfumées</text>
+			</speechtoken>
+			<speechtoken id="fist1103">
+				<uri>french/Fist/fist1103.wav</uri>
+				<text>Il cherche à conquérir les cœurs</text>
+			</speechtoken>
+			<speechtoken id="fist1104">
+				<uri>french/Fist/fist1104.wav</uri>
+				<text>Il a été odieux avec elle</text>
+			</speechtoken>
+			<speechtoken id="fist1105">
+				<uri>french/Fist/fist1105.wav</uri>
+				<text>La joie se lit sur son visage</text>
+			</speechtoken>
+			<speechtoken id="fist1106">
+				<uri>french/Fist/fist1106.wav</uri>
+				<text>Il cache ses économies sous son matelas</text>
+			</speechtoken>
+			<speechtoken id="fist1107">
+				<uri>french/Fist/fist1107.wav</uri>
+				<text>Le moment est bien mal choisi</text>
+			</speechtoken>
+			<speechtoken id="fist1108">
+				<uri>french/Fist/fist1108.wav</uri>
+				<text>Le courrier a été expédié cette semaine</text>
+			</speechtoken>
+			<speechtoken id="fist1109">
+				<uri>french/Fist/fist1109.wav</uri>
+				<text>La douleur l'empêche de dormir calmement</text>
+			</speechtoken>
+			<speechtoken id="fist1110">
+				<uri>french/Fist/fist1110.wav</uri>
+				<text>Les intempéries ont causé des inondations</text>
+			</speechtoken>
+		</list>
+		<list id="12">
+			<speechtoken id="fist1201">
+				<uri>french/Fist/fist1201.wav</uri>
+				<text>Elle a de beaux bracelets en argent massif</text>
+			</speechtoken>
+			<speechtoken id="fist1202">
+				<uri>french/Fist/fist1202.wav</uri>
+				<text>La neige a provoqué des accidents graves</text>
+			</speechtoken>
+			<speechtoken id="fist1203">
+				<uri>french/Fist/fist1203.wav</uri>
+				<text>Elle s'est déclarée incompétente pour cela</text>
+			</speechtoken>
+			<speechtoken id="fist1204">
+				<uri>french/Fist/fist1204.wav</uri>
+				<text>J'espère bien te revoir prochainement</text>
+			</speechtoken>
+			<speechtoken id="fist1205">
+				<uri>french/Fist/fist1205.wav</uri>
+				<text>Je me suis levée trop tôt ce matin</text>
+			</speechtoken>
+			<speechtoken id="fist1206">
+				<uri>french/Fist/fist1206.wav</uri>
+				<text>Le taxi nous attend à l'aéroport</text>
+			</speechtoken>
+			<speechtoken id="fist1207">
+				<uri>french/Fist/fist1207.wav</uri>
+				<text>Il est né au mois de juillet</text>
+			</speechtoken>
+			<speechtoken id="fist1208">
+				<uri>french/Fist/fist1208.wav</uri>
+				<text>Les frites ne sont pas assez salées</text>
+			</speechtoken>
+			<speechtoken id="fist1209">
+				<uri>french/Fist/fist1209.wav</uri>
+				<text>Le tapis est couvert de poussière</text>
+			</speechtoken>
+			<speechtoken id="fist1210">
+				<uri>french/Fist/fist1210.wav</uri>
+				<text>Sa santé n'est vraiment pas bonne</text>
+			</speechtoken>
+		</list>
+		<list id="13">
+			<speechtoken id="fist1301">
+				<uri>french/Fist/fist1301.wav</uri>
+				<text>Il a commis une erreur lourde de conséquences</text>
+			</speechtoken>
+			<speechtoken id="fist1302">
+				<uri>french/Fist/fist1302.wav</uri>
+				<text>L'eau du bain est trop chaude</text>
+			</speechtoken>
+			<speechtoken id="fist1303">
+				<uri>french/Fist/fist1303.wav</uri>
+				<text>La neige tombe sans arrêt depuis deux jours</text>
+			</speechtoken>
+			<speechtoken id="fist1304">
+				<uri>french/Fist/fist1304.wav</uri>
+				<text>Elle accueille les gens aimablement</text>
+			</speechtoken>
+			<speechtoken id="fist1305">
+				<uri>french/Fist/fist1305.wav</uri>
+				<text>Excusez-moi pour le retard</text>
+			</speechtoken>
+			<speechtoken id="fist1306">
+				<uri>french/Fist/fist1306.wav</uri>
+				<text>Il n'arrivait pas à contrôler ses émotions</text>
+			</speechtoken>
+			<speechtoken id="fist1307">
+				<uri>french/Fist/fist1307.wav</uri>
+				<text>Elle a emprunté des livres à la bibliothèque</text>
+			</speechtoken>
+			<speechtoken id="fist1308">
+				<uri>french/Fist/fist1308.wav</uri>
+				<text>J'écris de la main droite</text>
+			</speechtoken>
+			<speechtoken id="fist1309">
+				<uri>french/Fist/fist1309.wav</uri>
+				<text>Il est allé se recueillir sur sa tombe</text>
+			</speechtoken>
+			<speechtoken id="fist1310">
+				<uri>french/Fist/fist1310.wav</uri>
+				<text>Je suis resté sans voix pendant trois jours</text>
+			</speechtoken>
+		</list>
+		<list id="14">
+			<speechtoken id="fist1401">
+				<uri>french/Fist/fist1401.wav</uri>
+				<text>Cette opération nécessite une chirurgie</text>
+			</speechtoken>
+			<speechtoken id="fist1402">
+				<uri>french/Fist/fist1402.wav</uri>
+				<text>Elle a peur des grosses araignées</text>
+			</speechtoken>
+			<speechtoken id="fist1403">
+				<uri>french/Fist/fist1403.wav</uri>
+				<text>Il a perdu sa montre dans le sable</text>
+			</speechtoken>
+			<speechtoken id="fist1404">
+				<uri>french/Fist/fist1404.wav</uri>
+				<text>L'émotion l'empêche de s'exprimer correctement</text>
+			</speechtoken>
+			<speechtoken id="fist1405">
+				<uri>french/Fist/fist1405.wav</uri>
+				<text>Le consentement des parents est nécessaire</text>
+			</speechtoken>
+			<speechtoken id="fist1406">
+				<uri>french/Fist/fist1406.wav</uri>
+				<text>Cette couverture tient chaud en hiver</text>
+			</speechtoken>
+			<speechtoken id="fist1407">
+				<uri>french/Fist/fist1407.wav</uri>
+				<text>Il est grand temps de partir</text>
+			</speechtoken>
+			<speechtoken id="fist1408">
+				<uri>french/Fist/fist1408.wav</uri>
+				<text>L'ascenseur est bloqué au rez-de-chaussée</text>
+			</speechtoken>
+			<speechtoken id="fist1409">
+				<uri>french/Fist/fist1409.wav</uri>
+				<text>Le bébé est arrivé plus tôt que prévu</text>
+			</speechtoken>
+			<speechtoken id="fist1410">
+				<uri>french/Fist/fist1410.wav</uri>
+				<text>Elle porte sa nouvelle robe</text>
+			</speechtoken>
+		</list>
+		<list id="training list 1">
+			<speechtoken id="fist0001">
+				<uri>french/Fist/training/fist0001.wav</uri>
+				<text>Elle achète des médicaments à la pharmacie</text>
+			</speechtoken>
+			<speechtoken id="fist0002">
+				<uri>french/Fist/training/fist0002.wav</uri>
+				<text>Les romans se trouvent sur des rayonnages</text>
+			</speechtoken>
+			<speechtoken id="fist0003">
+				<uri>french/Fist/training/fist0003.wav</uri>
+				<text>Les élections municipales ont lieu dimanche</text>
+			</speechtoken>
+			<speechtoken id="fist0004">
+				<uri>french/Fist/training/fist0004.wav</uri>
+				<text>Elle a failli périr dans un accident de la route</text>
+			</speechtoken>
+			<speechtoken id="fist0005">
+				<uri>french/Fist/training/fist0005.wav</uri>
+				<text>Merci pour ce joli cadeau</text>
+			</speechtoken>
+			<speechtoken id="fist0006">
+				<uri>french/Fist/training/fist0006.wav</uri>
+				<text>J'aime me promener dans les bois</text>
+			</speechtoken>
+			<speechtoken id="fist0007">
+				<uri>french/Fist/training/fist0007.wav</uri>
+				<text>Elle danse sur de la musique brésilienne</text>
+			</speechtoken>
+			<speechtoken id="fist0008">
+				<uri>french/Fist/training/fist0008.wav</uri>
+				<text>L'air de la montagne est très vivifiant </text>
+			</speechtoken>
+			<speechtoken id="fist0009">
+				<uri>french/Fist/training/fist0009.wav</uri>
+				<text>Elle est réceptionniste dans un hôtel</text>
+			</speechtoken>
+			<speechtoken id="fist0010">
+				<uri>french/Fist/training/fist0010.wav</uri>
+				<text>Elle a fait de longues études</text>
+			</speechtoken>
+		</list>
+		<list id="training list 2">
+			<speechtoken id="fist0011">
+				<uri>french/Fist/training/fist0011.wav</uri>
+				<text>Elle a connu un deuil prolongé</text>
+			</speechtoken>
+			<speechtoken id="fist0012">
+				<uri>french/Fist/training/fist0012.wav</uri>
+				<text>Il est tombé en descendant de cheval</text>
+			</speechtoken>
+			<speechtoken id="fist0013">
+				<uri>french/Fist/training/fist0013.wav</uri>
+				<text>Nous allons boire un verre en terrasse</text>
+			</speechtoken>
+			<speechtoken id="fist0014">
+				<uri>french/Fist/training/fist0014.wav</uri>
+				<text>Elle adore se rendre au théâtre</text>
+			</speechtoken>
+			<speechtoken id="fist0015">
+				<uri>french/Fist/training/fist0015.wav</uri>
+				<text>Cette pomme a un goût sucré</text>
+			</speechtoken>
+			<speechtoken id="fist0016">
+				<uri>french/Fist/training/fist0016.wav</uri>
+				<text>Cet appareil fonctionne sur le secteur</text>
+			</speechtoken>
+			<speechtoken id="fist0017">
+				<uri>french/Fist/training/fist0017.wav</uri>
+				<text>Mon bureau se trouve au premier étage</text>
+			</speechtoken>
+			<speechtoken id="fist0018">
+				<uri>french/Fist/training/fist0018.wav</uri>
+				<text>Le spectacle est dans la salle de concert</text>
+			</speechtoken>
+			<speechtoken id="fist0019">
+				<uri>french/Fist/training/fist0019.wav</uri>
+				<text>Ce chanteur a une voix de ténor</text>
+			</speechtoken>
+			<speechtoken id="fist0020">
+				<uri>french/Fist/training/fist0020.wav</uri>
+				<text>Les élèves se rendent à l'école</text>
+			</speechtoken>
+		</list>
+	</speechmaterial>
+</apex:speechmaterialfile>

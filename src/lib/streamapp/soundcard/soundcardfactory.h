@@ -39,6 +39,8 @@
 #endif
 #include "soundcard/portaudiowrapper.h"
 #include "soundcard/soundcard.h"
+#include "soundcard/qtaudiowrapper.h"
+#include "soundcard/dummysoundcard.h"
 
 #include <QDebug>
 
@@ -76,6 +78,8 @@ public:
         try {
             if (ac_eType == PORTAUDIO) {
                 return new PortAudioWrapper(ac_sDriverName);
+            } else if (ac_eType == DUMMY) {
+                    return new DummySoundcard(ac_sDriverName);
 #if defined(S_WIN32)
             } else if (ac_eType == ASIO) {
                 if (ac_sDriverName != sc_sDefault.toStdString())

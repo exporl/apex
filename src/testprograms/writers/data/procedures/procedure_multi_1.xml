@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<apex:procedure xsi:type="apex:multiProcedureType"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0/experiment ../../../../../../data/schemas/procedure-document.xsd"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0/experiment">
+    <parameters>
+        <order>sequential</order>
+    </parameters>
+    
+    
+    <procedure xsi:type="apex:constantProcedureType" id="procedure1">
+        <parameters>
+            <presentations>1</presentations>
+            <skip>0</skip>
+            <order>sequential</order>
+        </parameters>
+        
+        <trials>
+            <trial id="trial1">
+                <answer>button1</answer>
+                <screen id="screen1"/>
+                <stimulus id="stimulus1"/>
+            </trial>
+            <trial id="trial2">
+                <answer>button2</answer>
+                <screen id="screen1"/>
+                <stimulus id="stimulus2"/>
+            </trial>
+            <trial id="trial3">
+                <answer>button3</answer>
+                <screen id="screen1"/>
+                <stimulus id="stimulus3"/>
+            </trial>
+            
+        </trials>
+    </procedure>
+    
+    <procedure xsi:type="apex:constantProcedureType" id="procedure2">
+        <parameters>
+            <presentations>1</presentations>
+            <skip>0</skip>
+            <order>sequential</order>
+        </parameters>
+        
+        <trials>
+            
+            <trial id="trial4">
+                <answer>button4</answer>
+                <screen id="screen2"/>
+                <stimulus id="stimulus4"/>
+            </trial>
+            <trial id="trial5">
+                <answer>button5</answer>
+                <screen id="screen2"/>
+                <stimulus id="stimulus5"/>
+            </trial>
+            <trial id="trial6">
+                <answer>button6</answer>
+                <screen id="screen2"/>
+                <stimulus id="stimulus6"/>
+            </trial>
+            
+            
+        </trials>
+    </procedure>
+    
+    <procedure xsi:type="apex:multiProcedureType"  id="multiproc1">
+        <parameters>
+            <order>sequential</order>
+        </parameters>
+        
+        <procedure xsi:type="apex:constantProcedureType" id="foo">
+            <parameters>
+                <presentations>1</presentations>
+                <order>sequential</order>
+                <uniquestandard>0</uniquestandard>
+                <time_before_first_trial>0</time_before_first_trial>
+                <input_during_stimulus>0</input_during_stimulus>
+            </parameters>
+            <trials>
+                <trial id="trial1_2">
+                    <answer>button1</answer>
+                    <screen id="screen1"/>
+                    <stimulus id="stimulus1"/>
+                </trial>
+                <trial id="trial2_2">
+                    <answer>button2</answer>
+                    <screen id="screen1"/>
+                    <stimulus id="stimulus2"/>
+                </trial>
+                <trial id="trial3_2">
+                    <answer>button3</answer>
+                    <screen id="screen1"/>
+                    <stimulus id="stimulus3"/>
+                </trial>
+            </trials>
+        </procedure>
+        
+        <procedure xsi:type="apex:constantProcedureType" id="bar">
+            <parameters>
+                <presentations>1</presentations>
+                <order>sequential</order>
+                <uniquestandard>0</uniquestandard>
+                <time_before_first_trial>0</time_before_first_trial>
+                <input_during_stimulus>0</input_during_stimulus>
+            </parameters>
+            <trials>
+                <trial id="trial4_2">
+                    <answer>button4</answer>
+                    <screen id="screen2"/>
+                    <stimulus id="stimulus4"/>
+                </trial>
+                <trial id="trial5_2">
+                    <answer>button5</answer>
+                    <screen id="screen2"/>
+                    <stimulus id="stimulus5"/>
+                </trial>
+                <trial id="trial6_2">
+                    <answer>button6</answer>
+                    <screen id="screen2"/>
+                    <stimulus id="stimulus6"/>
+                </trial>
+            </trials>
+        </procedure>
+        
+    </procedure>
+    
+</apex:procedure>

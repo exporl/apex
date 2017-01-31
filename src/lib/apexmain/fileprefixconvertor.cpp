@@ -39,7 +39,7 @@ QString apex::FilePrefixConvertor::convert(data::FilePrefix p)
         const QString result (MainConfigFileParser::Get().
                 GetPrefix (p.value()));
         if (result.isEmpty())
-            ErrorHandler::Get().addItem( StatusItem(StatusItem::WARNING, "PrefixParser",
+            ErrorHandler::Get().addItem( StatusItem(StatusItem::Warning, "PrefixParser",
                               QString(tr("Prefix with ID %1 not found in main config file, trying with empty prefix")).arg(p.value())));
         prefix = result;
     } else {

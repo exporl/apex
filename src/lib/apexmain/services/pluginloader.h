@@ -20,7 +20,7 @@
 #define _RBA_SRC_LIB_PLUMBING_PLUGINUTILS_H_
 
 #include "global.h"
-#include "servicemanager.h"
+#include "services/servicemanager.h"
 #include "exceptions.h"
 
 #include <QObject>

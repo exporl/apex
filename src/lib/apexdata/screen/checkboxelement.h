@@ -36,27 +36,27 @@ Impements checkboxes in Apex3
 class APEXDATA_EXPORT CheckBoxElement:
             public ScreenElement
 {
-        QString text;
-    public:
-        CheckBoxElement(const QString& id, ScreenElement* parent);
-        ~CheckBoxElement();
+    QString text;
+public:
+    CheckBoxElement(const QString& id, ScreenElement* parent);
+    ~CheckBoxElement();
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
-        bool GetReset() const { return reset; };
-        void setText(const QString& t);
-        QString getText() const;
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor* v);
+    void visit(ScreenElementVisitor* v) const;
+    void setText(const QString& t);
+    QString getText() const;
+    Qt::CheckState getChecked() const;
 
-        const QString& GetParameter() const { return parameter; };
+    const QString& GetParameter() const { return parameter; };
 
-        bool operator==(const CheckBoxElement& other) const;
-    private:
-        QString parameter;
-        Qt::CheckState isChecked;
-        bool reset;
+    bool operator==(const CheckBoxElement& other) const;
 
+private:
+    QString parameter;
+    Qt::CheckState isChecked;
 };
+
 }
 }
 

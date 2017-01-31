@@ -23,7 +23,7 @@
 namespace apex
 {
 
-ErrorLogger::ErrorLogger() : errors(new StatusReporter())
+ErrorLogger::ErrorLogger() : errors(new StatusDispatcher())
 {
 }
 
@@ -31,7 +31,12 @@ ErrorLogger::~ErrorLogger()
 {
 }
 
-const apex::StatusReporter& ErrorLogger::logger() const
+void ErrorLogger::addErrorListener(StatusReporter* listener)
+{
+    errors->addReporter(listener, false);
+}
+
+const StatusReporter& ErrorLogger::logger() const
 {
     return *errors;
 }

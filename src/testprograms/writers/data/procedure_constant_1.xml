@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <apex:procedure xsi:type="apex:constantProcedureType"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://www.kuleuven.be/exporl/Lab/Apex ../../../../../data/schemas/procedure-document.xsd"
+		xmlns:apex="http://www.kuleuven.be/exporl/Lab/Apex">
+    <parameters>
+      <presentations>1000</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+    </parameters>
+    
+    <trials>
+      <trial id="trial1" >
+        <answer>button1</answer>
+        <screen id="screen1" />
+        <stimulus id="stimulus1" />
+      </trial>
+    </trials>
+</apex:procedure>

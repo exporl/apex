@@ -28,7 +28,7 @@ namespace apex
 {
   namespace editor
   {
-    using gui::tScreenElementMap;
+    using gui::ScreenElementMap;
 
     /**
      * Find an id for a ScreenElement.  The given base string will be
@@ -36,7 +36,7 @@ namespace apex
      * at the end, starting with 1.  The first id that is not present
      * in the given map takenIDs will be returned.
      */
-    QString findFreeID( const QString& base, const tScreenElementMap& takenIDs );
+    QString findFreeID( const QString& base, const ScreenElementMap& takenIDs );
 
     /**
      * Shorten a given string, and return a string of length smaller

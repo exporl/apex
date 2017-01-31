@@ -56,6 +56,7 @@ void SimpleRunner::Select (const QString& name)
         rvparam.setShowResults(true);
         rvparam.setSaveResults(false);
         ResultViewer rv(&rvparam, name, Paths::Get().GetXsltScriptsPath());
+        connect(&rv, SIGNAL(errorMessage(QString,QString)), this, SIGNAL(errorMessage(QString, QString)));
         QDir::setCurrent(QFileInfo(name).absolutePath());
         rv.ProcessResult();
         rv.show(false);

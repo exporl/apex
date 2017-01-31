@@ -78,10 +78,10 @@ private Q_SLOTS:
     void arFilter();
     void firFilter();
     void threadedFirFilter();
-    void hrtfMwf();
-    void hrtfMwf_data();
-    void hrtfMwfAdaptive();
-    void hrtfMwfAdaptive_data();
+//    void hrtfMwf();
+//    void hrtfMwf_data();
+//    void hrtfMwfAdaptive();
+//    void hrtfMwfAdaptive_data();
     void vad();
 };
 

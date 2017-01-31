@@ -5,7 +5,14 @@ DEFINES *= APEXWRITERS_MAKEDLL
 
 include($$BASEDIR/clebs.pri)
 
-QT *= gui
+QT += gui \
+    script \
+    svg \
+    xml \
+    webkit \
+    network \
+	xmlpatterns
+QT += qt3support
 
 TARGET = apexwriters
 

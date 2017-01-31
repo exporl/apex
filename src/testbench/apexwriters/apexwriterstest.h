@@ -20,21 +20,20 @@
 #ifndef WRITERS_UNIT_TEST_H
 #define WRITERS_UNIT_TEST_H
 
-#include "testbench.h"
+#include <QtTest/QtTest>
+#include "../testmacros.h"
+#include "xml/xercesinclude.h"
 
-class ApexWritersTest : public ApexTest
+class ApexWritersTest : public QObject
 {
         Q_OBJECT
-        Q_INTERFACES(ApexTest)
-
-    public:
-
-        QString name() const;
 
     private slots:
 
+        void initTestCase();
         void testExperiment_data();
         void testExperiment();
+        void cleanupTestCase();
 
     private:
 

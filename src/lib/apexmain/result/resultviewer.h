@@ -39,10 +39,10 @@ namespace apex {
     /**
       @author Tom Francart,,,
       */
-    class ResultViewer: QObject {
+    class ResultViewer: public QObject {
         Q_OBJECT                                        // we use the tr() function
     public:
-        ResultViewer(data::ResultParameters* p_param,
+        ResultViewer(const data::ResultParameters* p_param,
                 const QString& p_resultfile,
                 const QString& p_xsltpath=QString());
         void show(bool ask);
@@ -59,7 +59,10 @@ namespace apex {
         void showXslt();
         void showJavascript();
 
-        data::ResultParameters* m_pParam;
+        void setupDialog();
+        void showDialog();
+
+        const data::ResultParameters* m_pParam;
         QString m_sResultfile;
         QString m_sXsltPath;
         QUrl m_resultPagePath;
@@ -78,6 +81,9 @@ namespace apex {
         void loadFinished(bool ok);
         void exportToPdf();
         void print();
+
+    signals:
+        void errorMessage(const QString& source, const QString& message);
 
     };
 

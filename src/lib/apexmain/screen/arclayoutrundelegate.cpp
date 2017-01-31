@@ -37,7 +37,7 @@ namespace rundelegates
 ArcLayoutRunDelegate::ArcLayoutRunDelegate(ExperimentRunDelegate* p_parent,
     const ArcLayoutElement* e,
     QWidget* parent,
-    elementToRunningMapT& elementToRunningMap,
+    ElementToRunningMap& elementToRunningMap,
     const QFont& font ) :
     ScreenElementRunDelegate(p_parent, e),
     ArcLayout((ArcLayout::ArcType)e->getType(), 0 ),

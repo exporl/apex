@@ -157,7 +157,7 @@ namespace apex
           */
         ~ApexFeedbackPicture();
 
-        void feedBack( const ScreenElementRunDelegate::mt_eFeedBackMode mode );
+        void feedBack( const ScreenElementRunDelegate::FeedbackMode mode );
     };
 
     /**

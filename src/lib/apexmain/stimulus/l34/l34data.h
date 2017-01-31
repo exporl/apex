@@ -11,7 +11,6 @@ namespace apex
 namespace stimulus
 {
 
-const int L34_INVALID=-1000;
 
 class APEX_EXPORT L34Stimulus
 {
@@ -37,7 +36,7 @@ public:
         phaseWidth(-1),
         phaseGap(-1),
         activeElectrode(-1),
-        returnElectrode(L34_INVALID),
+        returnElectrode(0),
         currentLevel(-1)
     {
     }
@@ -54,7 +53,7 @@ public:
         phaseWidth  = -1;
         phaseGap    = -1;
         activeElectrode = -1;
-        returnElectrode = L34_INVALID;
+        returnElectrode = 0;
         currentLevel = -1;
     }
 
@@ -75,7 +74,7 @@ public:
 
         {
             activeElectrode = -1;
-            returnElectrode = L34_INVALID;
+            returnElectrode = 0;
             currentLevel = -1;
         }
 

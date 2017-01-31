@@ -60,7 +60,7 @@ namespace apex
         ExperimentRunDelegate* p_parent,
         const ArcLayoutElement* e,
         QWidget* parent,
-        elementToRunningMapT& elementToRunningMap,
+        ElementToRunningMap& elementToRunningMap,
         const QFont& font );
 
       const ScreenElement* getScreenElement() const;

@@ -39,7 +39,8 @@ class TrainingProcedureParser : public ProcedureParsersParent
 
 
         void Parse(XERCES_CPP_NAMESPACE::DOMElement* p_base,
-                   data::ApexProcedureConfig* c, const QString& scriptLibraryFile);
+                   data::ApexProcedureConfig* c, const QString& scriptLibraryFile,
+                   const QVariantMap& scriptParameters);
 
 
 

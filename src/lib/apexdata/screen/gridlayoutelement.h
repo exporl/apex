@@ -30,7 +30,7 @@ namespace apex
 namespace data
 {
 
-using gui::tScreenElementMap;
+using gui::ScreenElementMap;
 
 /**
  * The GridLayoutElement is an implementation of a \ref

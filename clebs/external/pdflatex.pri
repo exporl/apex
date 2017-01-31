@@ -11,9 +11,10 @@ clebsDependency(pdflatex) {
 		     ${QMAKE_FILE_BASE}.ilg ${QMAKE_FILE_BASE}.ind \
 		     ${QMAKE_FILE_BASE}.log ${QMAKE_FILE_BASE}.toc
     pdflatex.input = PDFLATEX_SOURCE
-    pdflatex.commands = pdflatex ${QMAKE_FILE_IN} && pdflatex ${QMAKE_FILE_IN} && pdflatex ${QMAKE_FILE_IN}
-    pdflatex.CONFIG = no_link
-		 
+    pdflatex.commands = pdflatex -interaction=nonstopmode ${QMAKE_FILE_IN} && pdflatex  -interaction=nonstopmode ${QMAKE_FILE_IN} && pdflatex  -interaction=nonstopmode ${QMAKE_FILE_IN}
+    pdflatex.CONFIG += no_link target_predeps
+    pdflatex.CONFIG -= gdb_dwarf_index
+
     pdflatex.variable_out = PDFLATEX_OUTPUT
     pdflatex.name = pdflatex
 

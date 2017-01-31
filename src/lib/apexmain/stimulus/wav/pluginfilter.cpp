@@ -27,6 +27,7 @@
 
 #include <QPluginLoader>
 #include <QString>
+#include <QDebug>
 
 namespace apex
 {
@@ -48,6 +49,9 @@ PluginFilter::PluginFilter (const QString &name,
     // FIXME error handling
 }
 
+PluginFilter::~PluginFilter()
+{
+}
 
 bool PluginFilter::SetParameter( const QString& type, const int channel, const QVariant& value )
 {

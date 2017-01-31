@@ -29,7 +29,7 @@
 namespace apex {
 
 class TrialResult;
-class ApexScreenResult;
+class ScreenResult;
 
 /**
 Apex result collector module
@@ -57,11 +57,11 @@ public:
 
         public slots:
                 /*void NewStimulus(const QString& p_name);
-                void Answer(const ApexScreenResult& p_answer);
+                void Answer(const ScreenResult& p_answer);
                 void NewAnswerCorrect(const bool p_correct);
                 void AnswerTime(const int p_time);*/
-                void Finished();
-                void SaveAs();
+                void Finished(bool askFilename=true);
+                void SaveAs(bool askFilename=true);
                 /*void SetCorrectAnswer(const unsigned p_answer);
                 void SetSaturation();
                 void SetTargetParam(const t_adaptParam p_param);*/
@@ -87,6 +87,7 @@ public:
                 std::vector<TrialResult*> m_Results;
 
                 QString m_filename;
+                QDateTime m_endTime;
                 bool m_bSaved;
 
 

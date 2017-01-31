@@ -26,6 +26,8 @@
 //includes from xerces
 #include "xml/xercesinclude.h"
 
+#include <QFileInfo>
+#include <QDir>
 #include <QDebug>
 
 using spin::data::SpinConfig;
@@ -53,8 +55,6 @@ SpinConfig SpinConfigFileParser::parse(QString file, QString schema)
             parseSpeakers(child, &config);
         else if (tag == "noises")
             parseNoises(child, &config);
-        else if (tag == "speechmaterials")
-            parseSpeech(child, &config);
         else if (tag == "subject_screen")
             parseSubjectScreen(child, &config);
         else if (tag == "experimenter_screen")
@@ -65,6 +65,10 @@ SpinConfig SpinConfigFileParser::parse(QString file, QString schema)
             parseIds(child, &config);
         else if (tag == "general_setup")
             parseGeneralData(child, &config);
+        else if (tag == "soundcard_setup")
+            parseSoundcardSetup(child, &config);
+        else if (tag == "speechmaterial_files")
+            parseSpeechFiles(child, &config, QFileInfo(file).path(), schema);
         else
             qFatal("SPIN Parser: unknown tag (%s).", qPrintable(tag));
     }
@@ -147,62 +151,143 @@ void SpinConfigFileParser::parseNoises(DOMNode* noises, SpinConfig* into)
     }
 }
 
-void SpinConfigFileParser::parseSpeech(DOMNode* speechmats, SpinConfig* into)
+void SpinConfigFileParser::parseSpeech(DOMNode* speechmat, SpinConfig* into)
 {
-    Q_ASSERT(XMLutils::GetTagName(speechmats) == "speechmaterials");
-    Q_ASSERT(speechmats->getNodeType() == DOMNode::ELEMENT_NODE);
+    Q_ASSERT(XMLutils::GetTagName(speechmat) == "speechmaterial");
+    Q_ASSERT(speechmat->getNodeType() == DOMNode::ELEMENT_NODE);
 
-    DOMNode* speechmat;
-    for (speechmat = speechmats->getFirstChild(); speechmat != NULL;
-            speechmat = speechmat->getNextSibling())
+    //get all childs of speechmat. there must be an <rms> child and either
+    //<list> or <category> childs.
+    spin::data::CategoryMap categoryMap;
+
+    double rms = XMLutils::FindChild(speechmat, "rms").toDouble();
+    QString vfm = XMLutils::FindChild(speechmat, "values_for_mean");
+
+    bool hasCategories = false;
+    DOMNodeList* catList =
+        ((DOMElement*)speechmat)->getElementsByTagName(X("category"));
+
+    for (int i = 0; catList->item(i) != NULL; i++)
     {
-        Q_ASSERT(XMLutils::GetTagName(speechmat) == "speechmaterial");
-        Q_ASSERT(speechmat->getNodeType() == DOMNode::ELEMENT_NODE);
+        hasCategories = true;
+        DOMNode* catElem = catList->item(i);
+        QString category = XMLutils::GetAttribute(catElem, "id");
 
-        //get all childs of speechmat. there must be an <rms> child and either
-        //<list> or <category> childs.
-        spin::data::CategoryMap categoryMap;
+        DOMNodeList* listElems =
+            ((DOMElement*)catElem)->getElementsByTagName(X("list"));
 
-        double rms = XMLutils::FindChild(speechmat, "rms").toDouble();
-        QString vfm = XMLutils::FindChild(speechmat, "values_for_mean");
+        addLists(listElems, &categoryMap, category);
 
-        bool hasCategories = false;
-        DOMNodeList* catList =
-            ((DOMElement*)speechmat)->getElementsByTagName(X("category"));
+        QString rmsString = XMLutils::FindChild(catElem, "rms");
+        if (!rmsString.isEmpty())
+            categoryMap.setRms(category, rmsString.toDouble());
+    }
 
-        for (int i = 0; catList->item(i) != NULL; i++)
-        {
-            hasCategories = true;
-            DOMNode* catElem = catList->item(i);
-            QString category = XMLutils::GetAttribute(catElem, "id");
+    if (!hasCategories)
+    {
+        DOMNodeList* listList =
+            ((DOMElement*)speechmat)->getElementsByTagName(X("list"));
+        addLists(listList, &categoryMap);   //no category
 
-            DOMNodeList* listElems =
-                ((DOMElement*)catElem)->getElementsByTagName(X("list"));
+        Q_ASSERT(!categoryMap.hasCategories());
+    }
+    else
+        Q_ASSERT(categoryMap.hasCategories());
 
-            addLists(listElems, &categoryMap, category);
+    QString id = XMLutils::GetAttribute(speechmat, "id");
 
-            QString rmsString = XMLutils::FindChild(catElem, "rms");
-            if (!rmsString.isEmpty())
-                categoryMap.setRms(category, rmsString.toDouble());
+    if (vfm.isEmpty())
+        into->addSpeechmaterial(id, rms, categoryMap);
+    else
+        into->addSpeechmaterial(id, rms, categoryMap, vfm.toUInt());
+}
+
+QStringList SpinConfigFileParser::expandWildcards(QString directory, QString fileIdentifier)
+{
+    QStringList pathParts = fileIdentifier.split(QDir::separator());
+
+    QStringList files;
+    foreach (QString pathPart, pathParts) {
+        QStringList filters;
+        filters << pathPart;
+
+        if (files.isEmpty()) {
+            QStringList entries = QDir(directory).entryList(filters);
+            if(entries.isEmpty()) {
+                files.clear();
+                break;
+            }
+
+            files << entries;
+        } else {
+            QStringList newFilePart;
+            bool breaked = false;
+            foreach (QString filePart, files) {
+                QStringList entries = QDir(directory + "/" + filePart).entryList(filters);
+                if(entries.isEmpty()) {
+                    files.clear();
+                    breaked = true;
+                    break;
+                }
+
+                foreach (QString entry, entries) {
+                    newFilePart << filePart + "/" + entry;
+                }
+            }
+
+            if(breaked) {
+                break;
+            }
+
+            files = newFilePart;
+        }
+    }
+
+    for (int i=0; i<files.size(); ++i) {
+        QFileInfo fi(QDir(directory), files[i]);
+        files[i] = fi.absoluteFilePath();
+    }
+
+    return files;
+}
+
+void SpinConfigFileParser::parseSpeechFiles(DOMNode *speechfiles, SpinConfig *into, QString path, QString schema)
+{
+    Q_ASSERT(XMLutils::GetTagName(speechfiles) == "speechmaterial_files");
+    Q_ASSERT(speechfiles->getNodeType() == DOMNode::ELEMENT_NODE);
+
+    DOMNode* speechfile;
+    for (speechfile = speechfiles->getFirstChild(); speechfile != NULL; speechfile = speechfile->getNextSibling()) {
+        Q_ASSERT(XMLutils::GetTagName(speechfile) == "speechmaterial_file");
+        Q_ASSERT(speechfile->getNodeType() == DOMNode::ELEMENT_NODE);
+        QString fileIdentifier = XMLutils::GetAttribute(speechfile, "href");
+        const QString matchType = XMLutils::GetAttribute(speechfile, "mode");
+
+        QStringList files;
+        if(matchType.isEmpty() || matchType == "name") {
+            QFileInfo fileInfo(QDir(path), fileIdentifier);
+            files << fileInfo.absoluteFilePath();
+        } else if (matchType == "wildcard") {
+            files = expandWildcards(path, fileIdentifier);
+        } else {
+            qFatal("Invalid match type");
         }
 
-        if (!hasCategories)
-        {
-            DOMNodeList* listList =
-                ((DOMElement*)speechmat)->getElementsByTagName(X("list"));
-            addLists(listList, &categoryMap);   //no category
+        foreach(QString file, files) {
+            DOMElement* root = XMLutils::ParseXMLDocument(file, true, schema);
+            Q_ASSERT(root != NULL);
 
-            Q_ASSERT(!categoryMap.hasCategories());
+            DOMNode* child;
+            for (child = root->getFirstChild(); child != NULL; child = child->getNextSibling()) {
+                Q_ASSERT(child->getNodeType() == DOMNode::ELEMENT_NODE);
+                QString tag = XMLutils::GetTagName(child);
+
+                if (tag == "speechmaterial")
+                    parseSpeech(child, into);
+                else if (tag == "noises")
+                    parseNoises(child, into);
+            }
         }
-        else
-            Q_ASSERT(categoryMap.hasCategories());
-
-        QString id = XMLutils::GetAttribute(speechmat, "id");
-
-        if (vfm.isEmpty())
-            into->addSpeechmaterial(id, rms, categoryMap);
-        else
-            into->addSpeechmaterial(id, rms, categoryMap, vfm.toUInt());
     }
 }
 
@@ -266,6 +351,25 @@ void SpinConfigFileParser::parseGeneralData(DOMNode* data, SpinConfig* into)
     into->setInternalRms(XMLutils::FindChild(data, "internal_rms").toDouble());
     into->setDefaultCalibration(XMLutils::FindChild(data, "default_calibration")
             .toDouble());
+}
+
+void SpinConfigFileParser::parseSoundcardSetup(DOMNode* data, SpinConfig* into)
+{
+    DOMNode* node;
+    for (node = data->getFirstChild(); node != 0;
+            node = node->getNextSibling())
+    {
+     //   Q_ASSERT(node->getNodeType() == DOMNode::ELEMENT_NODE);
+        QString tagname(XMLutils::GetTagName(node));
+        QString value(XMLutils::GetFirstChildText(node));
+
+        if (tagname == "blocksize")
+            into->setSoundcardBlocksize(value.toUInt());
+        else if (tagname == "buffersize")
+            into->setSoundcardBuffersize(value.toUInt());
+        else if (tagname == "driver")
+                    into->setSoundcardDriver(value);
+    }
 }
 
 void SpinConfigFileParser::addLists(DOMNodeList* lists, spin::data::CategoryMap* into,

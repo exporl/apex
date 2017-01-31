@@ -63,6 +63,11 @@ bool ApexPluginProcedureParametersParser::SetParameter(const QString p_name,
         param->m_adjust_parameter = p_value;
     } else if ( p_name == "script") {
         param->m_script = p_value;
+    } else if ( p_name == "debugger") {
+        if (p_value=="true" || p_value=="1")
+            param->m_debugger = true;
+        else
+            param->m_debugger = false;
     } else if ( p_name == "parameter") {
         QString name = XMLutils::GetAttribute(node, "name");
         param->m_paramList.append( data::tPluginProcedureParameter(name, p_value));

@@ -1,16 +1,11 @@
 BASEDIR = ../../..
-CLEBS *= buildplugin apextools apexdata
-TARGET = test_libdata
+CLEBS *= apextools apexdata
+TEMPLATE = app
+TARGET = datatest
 include($$BASEDIR/clebs.pri)
 
-# WTF? TODO FIXME path???
-INCLUDEPATH *= $$BASEDIR/src/testbench
-QT *= testlib
+CONFIG *= qtestlib
 
-SOURCES *= \
-    apexdatatest.cpp \
+SOURCES *= apexdatatest.cpp
 
-HEADERS *= \
-    apexdatatest.h \
-
-
+HEADERS *= apexdatatest.h

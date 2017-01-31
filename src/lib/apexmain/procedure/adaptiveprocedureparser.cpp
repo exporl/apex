@@ -35,9 +35,10 @@ AdaptiveProcedureParser::AdaptiveProcedureParser(QWidget* parent) :
 
 
 void AdaptiveProcedureParser::Parse(XERCES_CPP_NAMESPACE::DOMElement* p_base,
-           data::ApexProcedureConfig* c, const QString& scriptLibraryFile )
+           data::ApexProcedureConfig* c, const QString& scriptLibraryFile,
+                                    const QVariantMap& scriptParameters)
 {
-	ProcedureParsersParent::Parse(p_base, c, scriptLibraryFile);
+    ProcedureParsersParent::Parse(p_base, c, scriptLibraryFile, scriptParameters);
 }
 
 

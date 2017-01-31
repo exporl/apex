@@ -260,7 +260,7 @@ PlayMatrix* PlayMatrixCreator::sf_pShrinkedMatrix( const PlayMatrix* ac_pSrc, co
 #ifdef PRINTPLAYMATRIX
   sf_DoDisplay(pRet);
 #endif
-  
+
   QList<int> fullRows;
   for( unsigned i = 0 ; i < ac_nSim ; ++i ) {
       bool found=false;
@@ -292,10 +292,10 @@ PlayMatrix* PlayMatrixCreator::sf_pShrinkedMatrix( const PlayMatrix* ac_pSrc, co
         sf_DoDisplay(pRet);
 #endif
     }
-  
 
 
-      
+
+
 
   return pRet;
 }
@@ -328,7 +328,8 @@ bool PlayMatrixCreator::sf_bCheckMatrixValid( const PlayMatrix* a_pMatrix, const
           Q_ASSERT(a_DataBlocks.value( sCur));
         if( a_DataBlocks.value( sCur )->GetDevice() != sDevice )
         {
-          a_sError = "not every item from row " + qn( i ) + " is from the same device";
+          a_sError =
+            QString("not every item from row %1 is from the same device").arg(i);
           return false;
         }
       }
@@ -374,13 +375,13 @@ PlayMatrix* PlayMatrixCreator::sf_pCreateSubMatrix( const PlayMatrix* a_pMatrix,
   {
       for( unsigned j = 0 ; j < cnCols ; ++j )
       {
-          
+
         if ( (*a_pMatrix)( i, j ).isEmpty())
             continue;
 
         if( ac_sDevice ==
             a_DataBlocks.value( (*a_pMatrix)( i, j ) )->GetDevice() )  {
-                
+
             const QString& sCur = (*a_pMatrix) ( i, j );
             pTemp->mp_Set( i, j, sCur );
 

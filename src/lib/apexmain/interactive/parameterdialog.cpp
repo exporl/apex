@@ -200,10 +200,7 @@ void ParameterDialog::apply()
         const int type = entry->type;
         const QWidget * const widget = widgets[i];
 
-        if (xpath.isEmpty()) {
-            qDebug("Empty xpath expression found, not transforming");
-            continue;
-        }
+
 
         switch (type) {
         case IntValue:
@@ -226,6 +223,11 @@ void ParameterDialog::apply()
             break;
         default:
             qFatal("invalid type: %u", type);
+        }
+
+        if (xpath.isEmpty()) {
+            qDebug("Empty xpath expression found, not transforming");
+            continue;
         }
 
 //        qDebug("Applying expression %s of type %i", qPrintable(xpath), type);
@@ -272,7 +274,7 @@ void ParameterDialog::apply()
 
         if (!resultList.getLength()) {
             QMessageBox::warning(this, tr("Invalid query"),
-                    tr("Warning: your query \"%s\" did not return any results, "
+                    tr("Warning: your query \"%1\" did not return any results, "
                        "therefore the requested new value will be ignored.")
                     .arg(xpath));
             continue;

@@ -23,7 +23,7 @@
 #include <QPaintEvent>
 #include <QPixmap>
 #include <QPainter>
-
+#include <QPoint>
 
 
 
@@ -53,3 +53,16 @@ void PictureButtonWidget::paintEvent(QPaintEvent* e)
 	painter.drawPixmap( rect, pixmap, pixmap.rect() );
 }
 
+
+void PictureButtonWidget::mousePressEvent( QMouseEvent* ev )
+{
+    QPushButton::mousePressEvent(ev);
+
+    const QPoint pi = ev->pos();
+    QPointF pf;
+    pf.setX( ((qreal) pi.x()) / this->width() );
+    pf.setY( ((qreal) pi.y()) / this->height() );
+    emit mousePressed( pf );
+
+    //qDebug("Clicked PictureButtonWidget at (%f, %f)", pf.x(), pf.y());
+}

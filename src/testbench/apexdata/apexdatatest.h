@@ -20,7 +20,9 @@
 #ifndef APEXDATA_TEST_H
 #define APEXDATA_TEST_H
 
-#include "../testbench.h"
+#include <QtTest/QtTest>
+#include "../testmacros.h"
+#include "xml/xercesinclude.h"
 
 namespace apex
 {
@@ -32,16 +34,14 @@ class CorrectorData;
 }
 }
 
-class ApexDataTest : public ApexTest
+
+class ApexDataTest : public QObject
 {
         Q_OBJECT
-        Q_INTERFACES(ApexTest)
-
-    public:
-
-        QString name() const;
 
     private Q_SLOTS:
+
+        void initTestCase();
 
         void testSimpleParameters();
 
@@ -60,6 +60,8 @@ class ApexDataTest : public ApexTest
         void testSoundLevelMeterDataSupported_data();
         void testSoundLevelMeterDataUnsupported();
         void testSoundLevelMeterDataUnsupported_data();
+
+        void cleanupTestCase();
 
     private:
 

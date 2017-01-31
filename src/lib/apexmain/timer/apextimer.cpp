@@ -33,7 +33,7 @@ QString ApexTimer::GetResultXML( ) const
 {
     //qDebug("ApexTimer::GetResultXML\n");
 
-    QString temp("<responsetime>%1</responsetime>");
+    QString temp("<responsetime unit='ms'>%1</responsetime>");
     temp = temp.arg(m_result);
 //      m_result=-1;
 

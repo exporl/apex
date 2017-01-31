@@ -10,12 +10,12 @@ QVariant StimulusParameters::value(const QString& id) const
     return values.value(id);
 }
 
-void StimulusParameters::insert(const QString id, const QVariant value)
+void StimulusParameters::insert(const QString& id, const QVariant& value)
 {
     values[id]=value;
 }
 
-bool StimulusParameters::contains(QString id) const
+bool StimulusParameters::contains(const QString &id) const
 {
     return values.contains(id);
 }

@@ -23,6 +23,8 @@
 #include <map>
 #include <list>
 
+#include <QMap>
+
 namespace apex
 {
   namespace data
@@ -37,8 +39,7 @@ namespace apex
     class SpinBoxRunDelegate;
 	class CheckBoxRunDelegate;
 
-    typedef std::map<const ScreenElement*, ScreenElementRunDelegate*>
-      elementToRunningMapT;
+    typedef QMap<const ScreenElement*, ScreenElementRunDelegate*> ElementToRunningMap;
       
     typedef std::list<const SpinBoxRunDelegate*> spinBoxListT;
 	typedef std::list<const CheckBoxRunDelegate*> checkBoxListT;

@@ -38,9 +38,6 @@ namespace data
 namespace rundelegates
 {
 
-using data::MatrixElement;
-using data::ScreenElement;
-
 /**
  * The MatrixRunDelegate class is an implementation of
  * ScreenElementRunDelegate representing a MatrixElement.
@@ -51,34 +48,32 @@ class MatrixRunDelegate :
 {
     Q_OBJECT
 public:
-    MatrixRunDelegate(ExperimentRunDelegate* p_rd,
-            QWidget* parent, const MatrixElement *e);
+    MatrixRunDelegate(ExperimentRunDelegate* p_rd, QWidget* parent,
+            const data::MatrixElement *e);
 
-    const ScreenElement* getScreenElement() const;
+    const data::ScreenElement* getScreenElement() const;
 
     QWidget* getWidget();
     bool hasText() const;
     bool hasInterestingText() const;
     const QString getText() const;
+    void clearText();
     void connectSlots(gui::ScreenRunDelegate *d);
-
-Q_SIGNALS:
-    void answered(ScreenElementRunDelegate*);
-    // protected:
-    // void resizeEvent(QResizeEvent *e);
 
 public Q_SLOTS:
     void sendAnsweredSignal(int button);
 
+Q_SIGNALS:
+    void answered(ScreenElementRunDelegate*);
+
 private:
     void makeMatrix();
 
-    const MatrixElement *element;
+    const data::MatrixElement *element;
     QVector<QButtonGroup*> m_groups;
 };
 
 }
-
 }
 
 #endif

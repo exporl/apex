@@ -61,8 +61,9 @@ class APEXDATA_EXPORT PluginProcedureParameters : public ApexProcedureParameters
         friend class PluginProcedure;
         friend class PluginProcedureParametersParser;
 
-        const QString& GetScript() const { return m_script; };
-        const QString& GetAdjustParameter() const { return m_adjust_parameter;};
+        const QString GetScript() const { return m_script; };
+        const QString GetAdjustParameter() const { return m_adjust_parameter;};
+        bool  GetDebugger() const { return m_debugger; };
 
         virtual t_type GetType() const;
 
@@ -81,6 +82,7 @@ class APEXDATA_EXPORT PluginProcedureParameters : public ApexProcedureParameters
     private:
         QString m_script;
         QString m_adjust_parameter;
+        bool m_debugger;
 
         tPluginProcedureParameterList m_paramList;
 

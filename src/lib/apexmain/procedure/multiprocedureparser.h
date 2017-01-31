@@ -40,7 +40,7 @@ class MultiProcedureParser : public ProcedureParsersParent
 
 
         void Parse(XERCES_CPP_NAMESPACE::DOMElement* p_base,
-                   data::ApexMultiProcedureConfig* c, const QString& scriptLibraryFile);
+                   data::ApexMultiProcedureConfig* c, const QString& scriptLibraryFile, const QVariantMap &scriptParameters);
 
 
 

@@ -101,6 +101,11 @@ void Parameter::setOwner(const QString& owner)
     d->owner = owner;
 }
 
+void Parameter::setType(const QString& type)
+{
+    d->type = type;
+}
+
 QVariant Parameter::defaultValue() const
 {
     return d->defaultValue;

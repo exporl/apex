@@ -18,7 +18,7 @@
  *****************************************************************************/
  
 #include "fcacorrector.h"
-#include "screen/apexscreenresult.h"
+#include "screen/screenresult.h"
 #include "apexcontrol.h"
 
 //from libdata
@@ -52,7 +52,7 @@ void FCACorrector::SetCorrectAnswer (const unsigned p_answer)
     m_correctAnswer = QString::number(p_answer);
 }
 
-bool FCACorrector::Correct( const ApexScreenResult & p_answer )
+bool FCACorrector::Correct( const ScreenResult & p_answer )
 {
 #ifdef SHOWSLOTS
     qDebug("SLOT ApexFCACorrector::Answer");
@@ -64,8 +64,8 @@ bool FCACorrector::Correct( const ApexScreenResult & p_answer )
     QString answerElement = ApexControl::Get().GetCurrentAnswerElement();   // AnswerElement();
             
     QString wElement;  
-    ApexScreenResult::const_iterator p = p_answer.find(answerElement);
-    if ( p != p_answer.end() )
+    ScreenResult::const_iterator p = p_answer.map().find(answerElement);
+    if ( p != p_answer.map().end() )
             wElement = p.value();
     else {
             throw(ApexStringException(answerElement + tr("could not be found in the result from the screen")));              

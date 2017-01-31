@@ -56,7 +56,7 @@ namespace rundelegates
         void setText( const QString& text );
 
         void resizeEvent( QResizeEvent* e );
-        void setEnabled( const bool );
+        virtual void setEnabled( const bool );
     private:
         QString text;
         QFont initialFont;

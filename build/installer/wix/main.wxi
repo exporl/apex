@@ -7,7 +7,7 @@
 
 	<Product Name="APEX" Id="5AC5D6AA-B7FC-4CBC-BDBD-DAA945ED1316"
 		UpgradeCode="E7DA4D21-0679-494A-93D5-6865E2E05B6C" Language="1033" Codepage="1252"
-		Version="3.0.2" Manufacturer="ExpORL">
+		Version="3.0.0" Manufacturer="ExpORL">
 
 		<Package Id="????????-????-????-????-????????????" Keywords="Installer"
 			Description="APEX Installer" Comments="TODO" Manufacturer="ExpORL"
@@ -86,9 +86,12 @@
 								Source="$(var.InstallPath)/bin/apextools.dll"/>
 							<File Id="BinApexDataDll" Name="apexdata.DLL" LongName="apexdata.dll"
 								Source="$(var.InstallPath)/bin/apexdata.dll"/>
-							<File Id="BinApexWritersDll" Name="apexwrit.DLL"
+							    <File Id="BinApexWritersDll" Name="apexwrit.DLL"
 								LongName="apexwriters.dll"
 								Source="$(var.InstallPath)/bin/apexwriters.dll"/>
+							<File Id="BinPsignifitDll" Name="psignif.DLL"
+								LongName="psignifit.dll"
+								Source="$(var.InstallPath)/bin/psignifit.dll"/>
 						</Component>
 
 						<Component Id="BinPluginsComp" DiskId="1"
@@ -126,11 +129,11 @@
 						<?endif?>
 						
 						
-						<Component Id="BinBoostDllComp" DiskId="1" Guid="9E54F509-CB69-4CF6-9374-F1B3BBE5388D">
+						<!--Component Id="BinBoostDllComp" DiskId="1" Guid="9E54F509-CB69-4CF6-9374-F1B3BBE5388D">
 							 <File Id="BinBoostprogramoptionsDll" Name="BOOST_1.DLL"
-                  				LongName="boost_program_options-vc90-mt-1_37.dll"
-                  				Source="$(var.InstallPath)/bin/boost_program_options-vc90-mt-1_37.dll" />
-						</Component>
+                  				LongName="boost_program_options-vc100-mt-1_47.dll"
+                  				Source="$(var.InstallPath)/bin/boost_program_options-vc100-mt-1_47.dll" />
+						</Component-->
 
 						<Component Id="BinXercesDllComp" Guid="E428EAD8-A91D-4000-B8E1-031E5C27770B"
 							DiskId="1">
@@ -610,7 +613,7 @@
 			<!--ComponentRef Id="BinOtherExesComp" /-->
 			<ComponentRef Id="BinCoreDllComp"/>
 			<!--ComponentRef Id="BinContribDllComp" /-->
-			<ComponentRef Id="BinBoostDllComp"/>
+			<!--ComponentRef Id="BinBoostDllComp"/-->
 
 			<ComponentRef Id="BinPortaudioDllComp"/>
 			<!--ComponentRef Id="BinFftw3fDllComp" /-->
@@ -766,6 +769,27 @@
 		<?endif?>
 		<?endif?>
 
+	<?ifdef Crt100 ?>
+	    <!-- No msm files any more for vs2010?? -->
+	    <DirectoryRef Id="BinDir">
+		<Component Id="Bimsvc100Comp" DiskId="1"
+				Guid="110dac20-c1ca-11e1-a2cb-0010182f7ca4">
+			<File Id="Binmsvcr100dDll" Name="msvcr100.DLL" LongName="msvcr100.dll"
+					Source="$(var.InstallPath)/bin/msvcr100.dll"/>
+
+			<File Id="Binmsvcp100dDll" Name="msvcp100.DLL" LongName="msvcp100.dll"
+				Source="$(var.InstallPath)/bin/msvcp100.dll"/>
+	    </Component>
+	    </DirectoryRef>
+		<Feature Id="BinMsvc100Feature" Title="MSVC 2010 Runtime" Level="1"
+			Description="Microsoft Visual Studio runtime. You should not disable this feature unless you know what you do."
+			AllowAdvertise="no">
+			<ComponentRef Id="Bimsvc100Comp"/>
+		</Feature>
+
+	<?endif?>
+
+
 		<?ifdef Qt ?>
 		<?ifdef Debug ?>
 		<DirectoryRef Id="BinDir">
@@ -775,7 +799,9 @@
 					Source="$(var.InstallPath)/bin/QtCored4.dll"/>
 				<File Id="BinQtguidDll" Name="QTGUID_1.DLL" LongName="QtGuid4.dll"
 					Source="$(var.InstallPath)/bin/QtGuid4.dll"/>
-				<File Id="BinQtxmldDll" Name="QTXMLD_1.DLL" LongName="QtXmld4.dll"
+				    <File Id="BinQtxmlpatternsdDll" Name="QTXMLPD_1.DLL" LongName="QtXmlPatternsd4.dll"
+					Source="$(var.InstallPath)/bin/QtXmlPatternsd4.dll"/>
+				    <File Id="BinQtxmldDll" Name="QTXMLD_1.DLL" LongName="QtXmld4.dll"
 					Source="$(var.InstallPath)/bin/QtXmld4.dll"/>
 				<File Id="BinQtsvgdDll" Name="QTSVGD_1.DLL" LongName="QtSvgd4.dll"
 					Source="$(var.InstallPath)/bin/QtSvgd4.dll"/>
@@ -798,12 +824,16 @@
 					Source="$(var.InstallPath)/bin/QtGui4.dll"/>
 				<File Id="BinQtxmlDll" Name="QTXML4_1.DLL" LongName="QtXml4.dll"
 					Source="$(var.InstallPath)/bin/QtXml4.dll"/>
+				    <File Id="BinQtxmlpatternsDll" Name="QTXMLP_1.DLL" LongName="QtXmlPatterns4.dll"
+					Source="$(var.InstallPath)/bin/QtXmlPatterns4.dll"/>
 				<File Id="BinQtsvgDll" Name="QTSVG4_1.DLL" LongName="QtSvg4.dll"
 				Source="$(var.InstallPath)/bin/QtSvg4.dll"/>
 				<File Id="BinQtwebkitDll" Name="QTwk4_1.DLL" LongName="QtWebkit4.dll"
 				Source="$(var.InstallPath)/bin/QtWebkit4.dll"/>
 				<File Id="BinQtscriptDll" Name="QTsc4_1.DLL" LongName="QtScript4.dll"
 				Source="$(var.InstallPath)/bin/QtScript4.dll"/>
+				<File Id="BinQtscripttoolsDll" Name="QTsc4_2.DLL" LongName="QtScriptTools4.dll"
+					Source="$(var.InstallPath)/bin/QtScriptTools4.dll"/>
 				<File Id="BinQtNetworkDll" Name="Qnet_1.DLL" LongName="QtNetwork4.dll"
 					Source="$(var.InstallPath)/bin/QtNetwork4.dll"/>
 				<File Id="BinQtPhononDll" Name="phon_1.DLL" LongName="phonon4.dll"

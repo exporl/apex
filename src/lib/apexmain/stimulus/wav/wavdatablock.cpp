@@ -57,7 +57,9 @@ WavDataBlock::WavDataBlock(const data::DatablockData& data, const QUrl& filename
         qDebug("Warning using default number of channels (1) for silence datablock");
     } else {
         if( !filename.path().endsWith( ".wav" ) )
-            throw(ApexStringException("Invalid wav filename: should end in .wav"));
+            throw(ApexStringException(
+                    QString(tr("Invalid wav filename (%1): should end in .wav"))
+                    .arg(filename.path())));
 
         //check wavefile validity
         InputWaveFile w;

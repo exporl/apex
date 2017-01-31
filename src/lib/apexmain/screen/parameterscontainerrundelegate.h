@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef PARAMETERSCONTAINERRUNDELEGATE_H
 #define PARAMETERSCONTAINERRUNDELEGATE_H
 
@@ -27,37 +27,42 @@
 
 namespace apex
 {
-    namespace data
-    {
-        class ScreenElement;
-        class ParametersContainerElement;
-    }
 
-    
-    namespace stimulus
-    {
-        class Stimulus;
-    }
+class ParameterManager;
+
+namespace data
+{
+class ScreenElement;
+class ParametersContainerElement;
+}
 
 
-    namespace rundelegates
-    {
-        using data::ParametersContainerElement;
-        using data::ScreenElement;
+namespace stimulus
+{
+class Stimulus;
+}
 
-        /**
+
+namespace rundelegates
+{
+using data::ParametersContainerElement;
+using data::ScreenElement;
+
+/**
          * Base class for screen rundelegates dealing with parameters
          */
-        class ParametersContainerRunDelegate
-        {
-            public:
-                ParametersContainerRunDelegate( );
-                ~ParametersContainerRunDelegate();
+class ParametersContainerRunDelegate
+{
+public:
+    ParametersContainerRunDelegate( );
+    ~ParametersContainerRunDelegate();
 
-            protected:
-                double ParseExpression(const QString& p_expr, double value);
-        };
-    }
+
+protected:
+    double ParseExpression(const QString& p_expr, double value);
+    QVariant parameterValue(stimulus::Stimulus *stimulus, ParameterManager* pm, const QString &id);
+};
+}
 }
 
 #endif

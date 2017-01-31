@@ -33,10 +33,22 @@ namespace apex
 namespace stimulus
 {
 
+template <class T> class DataContainer: public QVector<T>
+{
+public:
+    T targetvalue (int i) const {
+        if (QVector<T>::size() == 0)
+            return T(-1);
+        if (QVector<T>::size() == 1)
+            return QVector<T>::at(0);
+        return QVector<T>::at(i);
+    }
+};
+
 class APEX_EXPORT AseqParser
 {
     Q_DECLARE_TR_FUNCTIONS(AseqParser)
-            
+
 public:
     AseqParser(const QByteArray &data);
 
@@ -67,7 +79,7 @@ private:
         return frames;
     }
 
-
+    static void checkElectrodes(const DataContainer<qint8> &electrodes, quint32 readlen);
 };
 
 }

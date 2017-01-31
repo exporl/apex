@@ -29,7 +29,7 @@ namespace apex
 {
 namespace data
 {
-using gui::tScreenElementMap;
+using gui::ScreenElementMap;
 
 /**
  * The EmptyElement is an implementation of a \ref ScreenElement
@@ -41,7 +41,7 @@ class APEXDATA_EXPORT EmptyElement
     public:
         EmptyElement(const QString& id, ScreenElement* parent);
 
-        static QString findFreeID(const tScreenElementMap& takenIDs);
+        static QString findFreeID(const ScreenElementMap& takenIDs);
 
         ElementTypeT elementType() const;
 

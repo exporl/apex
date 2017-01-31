@@ -16,6 +16,7 @@
 #include "services/errorhandler.h"
 #include "experimentdata.h"
 #include "apextools.h"
+#include "psignifitwrapper.h"
 
 
 #include <QWebView>
@@ -30,11 +31,18 @@ namespace apex {
 
     class RTRWebPage: public QWebPage
     {
-        public:
+        Q_OBJECT
+    public:
         RTRWebPage( QObject * parent = 0 );
 
         virtual void javaScriptConsoleMessage ( const QString & message,
-                        int lineNumber, const QString & sourceID );
+                                                int lineNumber, const QString & sourceID );
+
+    public slots:
+        void enablePsignifit();
+
+    private:
+        QScopedPointer<PsignifitWrapper> psignifitWrapper;
     };
 
     RTRWebPage::RTRWebPage( QObject * parent ):
@@ -49,22 +57,28 @@ namespace apex {
               const QString & sourceID )
     {
         QString m (
-            tr("Javascript error at line %1 of source %2: %3"));
+                tr("Javascript error at line %1 of source %2: %3"));
         m=message.arg(lineNumber).arg(sourceID).arg(message);
-                         
+
         qDebug() << m;
         ErrorHandler::Get().addWarning("RealtimeResultSink", m );
         QWebPage::javaScriptConsoleMessage( message, lineNumber, sourceID );
     }
 
+    void RTRWebPage::enablePsignifit()
+    {
+        psignifitWrapper.reset( new PsignifitWrapper() );
+        this->mainFrame()->addToJavaScriptWindowObject( "psignifit", psignifitWrapper.data() );
+    }
+
     class RTRNetworkAccessManager:
             public QNetworkAccessManager
     {
-        public:
-            RTRNetworkAccessManager(QObject * parent = 0 );
+    public:
+        RTRNetworkAccessManager(QObject * parent = 0 );
 
-        protected:
-            virtual QNetworkReply * createRequest ( Operation op, const QNetworkRequest & req, QIODevice * outgoingData = 0 );
+    protected:
+        virtual QNetworkReply * createRequest ( Operation op, const QNetworkRequest & req, QIODevice * outgoingData = 0 );
     };
 
     RTRNetworkAccessManager::RTRNetworkAccessManager(QObject * parent ):
@@ -104,8 +118,8 @@ namespace apex {
 
             if (!found)
                 ErrorHandler::Get().addWarning("RealtimeResultSink",
-                        tr("Resource not found: %1").arg(req.url().toString()));
-                
+                                               tr("Resource not found: %1").arg(req.url().toString()));
+
             newUrl.setScheme("file");
             newreq.setUrl( newUrl );
         }
@@ -120,12 +134,12 @@ namespace apex {
 
 
     class RTResultSinkPrivate {
-        public:
-            RTResultSinkPrivate(QWebView* wv);
-            ~RTResultSinkPrivate();            
-            QWebView* webView;
-            bool weOwnWebView;
-            //data::ResultParameters const* params;
+    public:
+        RTResultSinkPrivate(QWebView* wv);
+        ~RTResultSinkPrivate();
+        QWebView* webView;
+        bool weOwnWebView;
+        //data::ResultParameters const* params;
     };
 
 
@@ -148,101 +162,100 @@ namespace apex {
 
 
 
-/*RTResultSink::RTResultSink(const data::ResultParameters* const p_rp)
-    
+    /*RTResultSink::RTResultSink(const data::ResultParameters* const p_rp)
+
 {
     RTResultSink( p_rp->resultPage());
 }*/
 
-RTResultSink::RTResultSink(const QUrl& p_page, QWebView* webview):
-        d(new RTResultSinkPrivate(webview))
-{
-    //d->webView->load( m_rd.GetData().resultParameters()->resultPage());
+    RTResultSink::RTResultSink(const QUrl& p_page, QWebView* webview):
+            d(new RTResultSinkPrivate(webview))
+    {
+        //d->webView->load( m_rd.GetData().resultParameters()->resultPage());
+        QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
-    
-    /*QNetworkDiskCache* cache = new QNetworkDiskCache(nam);
+
+        /*QNetworkDiskCache* cache = new QNetworkDiskCache(nam);
     cache->setCacheDirectory( Paths::Get().GetScriptsPath() + "/cache");
     nam->setCache(cache);*/
-    d->webView->setWindowTitle(tr("Real-time results - APEX"));
-    
-    QWebPage* page = new RTRWebPage(d->webView);  // webView is parent, so the page will be deleted when webView is deleted
-    QNetworkAccessManager* nam = new RTRNetworkAccessManager(page);
-    page->setNetworkAccessManager(nam);
-    qDebug() << "loading page " << p_page;
-    page->mainFrame()->load( p_page );
-    d->webView->setPage(page);
-    Q_ASSERT(d->webView!=0);
-}
+        d->webView->setWindowTitle(tr("Real-time results - APEX"));
 
-
-RTResultSink::~RTResultSink()
-{
-    delete d;
-}
-
-void RTResultSink::show(bool visible)
-{
-    d->webView->setVisible(visible);
-}
-
-void RTResultSink::newAnswer (QString xml)
-{
-    qDebug("RTResultSink::newAnswer");
-
-    QString code( "newAnswer(\"" + ApexTools::escapeJavascriptString(xml)
-            + "\"); plot();");
-    
-    QVariant jr = d->webView->page()->mainFrame()->evaluateJavaScript(
-                                   code );
-
-    qDebug() << code;
-    qDebug() << "Javascript result: " << jr;
-
-}
-
-void RTResultSink::newResults ( QString xml )
-{
-    qDebug("RTResultSink::newResults");
-
-    /*QDomDocument doc("results");
-    doc.setContent(xml);
-    QDomElement docElem = doc.documentElement();
-    
-    QDomNode n = docElem.firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement(); // try to convert the node to an element.
-        if(!e.isNull() && e.tagName()=="trial") {
-            part = e.to
-        }
-        n = n.nextSibling();
-    }*/
-
-
-
-    QXmlStreamReader xsr( xml );
-    if (! xsr.error() == QXmlStreamReader::NoError)
-        qDebug("XMLStreamReader error: %s", qPrintable(xsr.errorString()));
-    while (!xsr.atEnd()) {
-        qint64 start = xsr.characterOffset();
-        xsr.readNext();
-        if (! xsr.error() == QXmlStreamReader::NoError)
-            qDebug("XMLStreamReader error: %s", qPrintable(xsr.errorString()));
-        //qDebug() << xsr.name();
-        if (xsr.isStartElement() && xsr.name() == "trial") {
-            while (! (xsr.isEndElement() && xsr.name() == "trial")) {
-                xsr.readNext();
-            }
-            xsr.readNext();
-            qint64 end = xsr.characterOffset();
-            
-            QString text(xml.mid(start-1, end-start-1));
-            //qDebug("* sending");
-            //qDebug() << text;
-            newAnswer( text );
-        }
+        QWebPage* page = new RTRWebPage(d->webView);  // webView is parent, so the page will be deleted when webView is deleted
+        QNetworkAccessManager* nam = new RTRNetworkAccessManager(page);
+        page->setNetworkAccessManager(nam);
+        connect( page->mainFrame(),  SIGNAL(javaScriptWindowObjectCleared()),
+                 page, SLOT(enablePsignifit()));
+        qDebug() << "loading page " << p_page;
+        page->mainFrame()->load( p_page );
+        d->webView->setPage(page);
+        Q_ASSERT(d->webView!=0);
     }
 
-}
+
+    RTResultSink::~RTResultSink()
+    {
+        delete d;
+    }
+
+    void RTResultSink::show(bool visible)
+    {
+        d->webView->setVisible(visible);
+    }
+
+    void RTResultSink::newAnswer (QString xml, bool doPlot)
+    {
+        qDebug("RTResultSink::newAnswer");
+
+        QString code( "newAnswer(\"" + ApexTools::escapeJavascriptString(xml)
+                      + "\");");
+        if (doPlot)
+            code += "plot();";
+
+        QVariant jr = d->webView->page()->mainFrame()->evaluateJavaScript(
+                code );
+
+        qDebug() << code;
+        qDebug() << "Javascript result: " << jr;
+
+    }
+
+    void RTResultSink::plot()
+    {
+        d->webView->page()->mainFrame()->evaluateJavaScript(
+                    "plot();" );
+    }
+
+    void RTResultSink::newResults ( QString xml )
+    {
+        qDebug("RTResultSink::newResults");
+
+
+        QXmlStreamReader xsr( xml );
+        if (! xsr.error() == QXmlStreamReader::NoError)
+            qDebug("XMLStreamReader error: %s", qPrintable(xsr.errorString()));
+        while (!xsr.atEnd()) {
+            qint64 start = xsr.characterOffset();
+            xsr.readNext();
+            if (! xsr.error() == QXmlStreamReader::NoError)
+                qDebug("XMLStreamReader error: %s", qPrintable(xsr.errorString()));
+            //qDebug() << xsr.name();
+            if (xsr.isStartElement() && xsr.name() == "trial") {
+                while (! (xsr.isEndElement() && xsr.name() == "trial")) {
+                    xsr.readNext();
+                }
+                xsr.readNext();
+                qint64 end = xsr.characterOffset();
+
+                QString text(xml.mid(start-1, end-start-1));
+                //qDebug("* sending");
+                //qDebug() << text;
+                newAnswer( text, false );
+            }
+        }
+
+    }
 
 
 }
+
+#include "rtresultsink.moc"

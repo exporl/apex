@@ -20,7 +20,9 @@
 #ifndef APEXDATATEST_H
 #define APEXDATATEST_H
 
-#include "testbench.h"
+#include <QtTest/QtTest>
+#include "../testmacros.h"
+#include "xml/xercesinclude.h"
 
 namespace apex
 {
@@ -33,16 +35,13 @@ class CorrectorData;
 }
 
 /** Test main apex library (libapex) **/
-class ApexMainTest : public ApexTest
+class ApexMainTest : public QObject
 {
         Q_OBJECT
-        Q_INTERFACES(ApexTest)
-
-    public:
-
-        QString name() const;
 
     private Q_SLOTS:
+
+        void initTestCase();
         void testQic();
         void testAseq();
         void testL34DatablockAseq();
@@ -53,7 +52,8 @@ class ApexMainTest : public ApexTest
         void testL34Datablock_invalid();
         void testL34DatablockQic();
         void testL34InvalidCL();
-
+        void cleanupTestCase();
+		
     private:
 
 

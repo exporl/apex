@@ -43,6 +43,8 @@ namespace stimulus
 
 class WavDataBlock : public WavCompatibleDataBlock
 {
+    Q_DECLARE_TR_FUNCTIONS(WavDataBlock)
+
 public:
     /**
      * Constructor.

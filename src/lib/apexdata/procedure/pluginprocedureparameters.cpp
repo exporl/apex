@@ -40,7 +40,8 @@ PluginProcedureParameters::PluginProcedureParameters(DOMElement* p_paramElement)
 }
 
 PluginProcedureParameters::PluginProcedureParameters()
-    : ApexProcedureParameters()
+    : ApexProcedureParameters(),
+      m_debugger(1)
 {
 }
 

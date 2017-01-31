@@ -5,15 +5,16 @@
 
 #include "status/statusreporter.h"
 #include "status/statusdispatcher.h"
-#include "status/screenstatusreporter.h"
+#include "status/consolestatusreporter.h"
 
-#include <typeinfo>
+#include "services/paths.h"
+
 
 using namespace apex;
 
-QString ApexToolsTest::name() const
+void ApexToolsTest::initTestCase()
 {
-    return "libtools";
+    xercesc::XMLPlatformUtils::Initialize();
 }
 
 void ApexToolsTest::testIirFilter()
@@ -132,14 +133,14 @@ void ApexToolsTest::testStatusItem()
     TEST_COPY_INIT(StatusItem, initStatusItem);
 
     StatusItem item = StatusItem().setSource("job").setMessage("hello");
-    QVERIFY(item.level() == StatusItem::UNUSED);
+    QVERIFY(item.level() == StatusItem::Unused);
     QVERIFY(item.source() == "job");
     QVERIFY(item.message() == "hello");
 }
 
 void ApexToolsTest::initStatusItem(StatusItem* item)
 {
-    item->setLevel(StatusItem::MESSAGE);
+    item->setLevel(StatusItem::Message);
     item->setSource("ApexToolsTest");
     item->setMessage("Test started");
 }
@@ -180,12 +181,12 @@ void ApexToolsTest::testStatusReporter()
     reporter.addMessage("test", "test started");
     QVERIFY(reporter.hasReported());
 
-    reporter << StatusItem(StatusItem::ERROR).setSource("here")
+    reporter << StatusItem(StatusItem::Error).setSource("here")
                                              .setMessage("blabla");
     QVERIFY(reporter.hasReported());
 
     StatusItem::List items;
-    items << StatusItem(StatusItem::WARNING) << StatusItem();
+    items << StatusItem(StatusItem::Warning) << StatusItem();
     reporter << items;
     QVERIFY(reporter.hasReported());
 
@@ -273,10 +274,43 @@ void ApexToolsTest::testStatusDispatcher()
     dispatch.addError("", "");
     QCOMPARE(dispatch.reporters().size(), 1);
     //QCOMPARE(typeid(dispatch.reporters().first()).name(), "ConsoleStatusReporter*");
-    dispatch.addReporter(new ScreenStatusReporter());
+    dispatch.addReporter(new ConsoleStatusReporter());
     QCOMPARE(dispatch.reporters().size(), 1);
     }
 }
 
-Q_EXPORT_PLUGIN2(test_libtools, ApexToolsTest);
+/*void ApexToolsTest::testResultViewer(){
+
+
+	apex::Paths paths;
+    QHash<QString,QString> hash;
+    QHash<QString,QVariant> hash2;
+
+    hash.insert("target","'html'");
+    hash2.insert("target","html");
+
+
+	QDir scriptDir(paths.GetBasePath());
+	scriptDir.cd("data/xslt");
+    QString script(scriptDir.path() + "/apexresult.xsl");
+	QDir documentDir(paths.GetBasePath());
+	documentDir.cd("data/tests/libtools");
+    QString document(documentDir.path() + "/xsltscript-results.apr");
+
+	QString mResultXalan = ApexXMLTools::XMLutils::transformXSLTXalan(document,script,hash);
+
+    QString mResultQt = ApexXMLTools::XMLutils::transformXSLTQt(document,script,hash2);
+
+
+    QCOMPARE(mResultXalan, mResultQt);
+
+}*/
+
+void ApexToolsTest::cleanupTestCase()
+{
+    xercesc::XMLPlatformUtils::Terminate();
+}
+
+//generate standalone binary for the test
+QTEST_MAIN(ApexToolsTest)
 

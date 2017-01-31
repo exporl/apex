@@ -7,18 +7,23 @@ CLEBS += +xalan \
     apextools \
     apexdata \
     apexwriters \
-    portaudio
+    portaudio \
+    psignifit
 unix:CLEBS *= jack
 DEFINES *= APEX_MAKEDLL
 include ($$BASEDIR/clebs.pri)
 CONFIG += qaxcontainer
+
 QT += gui \
     script \
+    scripttools \
     svg \
     xml \
     webkit \
-    network
-QT += qt3support
+    network \
+	xmlpatterns \
+	qt3support
+
 DEFINES += SETMIXER
 
 # TODO FIXME
@@ -150,7 +155,6 @@ HEADERS += apexloader.h \
     runner/pluginrunner.h \
     screen/answerlabelrundelegate.h \
     screen/apexscreen.h \
-    screen/apexscreenresult.h \
     screen/arclayoutrundelegate.h \
     screen/matrixrundelegate.h \
     screen/buttonrundelegate.h \
@@ -170,14 +174,14 @@ HEADERS += apexloader.h \
     screen/screenparser.h \
     screen/spinboxrundelegate.h \
     screen/texteditrundelegate.h \
-    services/application.h \
+#    services/application.h \
     services/errorhandler.h \
     services/filedialog.h \
     services/mainconfigfileparser.h \
-    services/paths.h \
-    services/servicemanager.h \
+#    services/paths.h \
+#    services/servicemanager.h \
     services/pluginloader.h \
-    services/debugapplication.h \
+#    services/debugapplication.h \
     stimulus/clarion/clariondatablock.h \
     stimulus/clarion/clariondatablock.h \
     stimulus/clarion/clariondevice.h \
@@ -307,7 +311,6 @@ SOURCES += apexloader.cpp \
     runner/pluginrunner.cpp \
     screen/answerlabelrundelegate.cpp \
     screen/apexscreen.cpp \
-    screen/apexscreenresult.cpp \
     screen/arclayoutrundelegate.cpp \
     screen/matrixrundelegate.cpp \
     screen/sliderrundelegate.cpp \
@@ -327,11 +330,11 @@ SOURCES += apexloader.cpp \
     screen/spinboxrundelegate.cpp \
     screen/screenparser.cpp \
     screen/texteditrundelegate.cpp \
-    services/application.cpp \
+#    services/application.cpp \
     services/filedialog.cpp \
     services/mainconfigfileparser.cpp \
-    services/paths.cpp \
-    services/servicemanager.cpp \
+#    services/paths.cpp \
+#    services/servicemanager.cpp \
     services/pluginloader.cpp \
     services/errorhandler.cpp \
     stimulus/clarion/clariondatablock.cpp \

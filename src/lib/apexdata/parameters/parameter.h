@@ -67,6 +67,7 @@ public:
     void setDefaultValue(const QVariant& value);
     void setId(const QString& id);
     void setOwner(const QString& owner);
+    void setType(const QString& type);
 
     QString toString() const;
     bool isValid() const;

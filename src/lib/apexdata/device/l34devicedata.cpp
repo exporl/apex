@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "l34devicedata.h"
 
 namespace apex
@@ -29,9 +29,11 @@ L34DeviceData::L34DeviceData(): DeviceData(TYPE_L34), apexMap(0)
 {
     setNumberOfChannels(1);
 
+    setValueByType("device_type", "L34");
     setValueByType("device_id", 1);
     setValueByType("implant", "cic3");
     setValueByType("trigger", "none");
+    setValueByType("powerup_count", 4000);
 }
 
 L34DeviceData::~L34DeviceData()
@@ -54,6 +56,12 @@ int L34DeviceData::deviceId() const
 {
     return valueByType("device_id").toInt();
 }
+
+const QString L34DeviceData::deviceType() const
+{
+    return valueByType("device_type").toString();
+}
+
 int L34DeviceData::triggerType() const
 {
     QString triggertype = valueByType("trigger").toString();
@@ -67,6 +75,11 @@ int L34DeviceData::triggerType() const
 
     qFatal("invalid trigger type");
     return -1;
+}
+
+int L34DeviceData::powerupCount() const
+{
+    return valueByType("powerup_count").toInt();
 }
 
 float L34DeviceData::volume() const

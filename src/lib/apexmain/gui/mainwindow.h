@@ -47,7 +47,7 @@ class ConsoleStatusReporter;
 
   class MRU;
   class ApexControl;
-  class ApexScreenResult;
+  class ScreenResult;
 
   namespace gui
   {
@@ -133,6 +133,9 @@ class ConsoleStatusReporter;
           */
       void ReclaimFocus();
 
+      QString fetchVersion() const;
+      QString fetchDiffstat() const;
+
     public slots:
       /**
        * Set a new screen.
@@ -154,10 +157,10 @@ class ConsoleStatusReporter;
        * @param ac_eMode the kind of feedback
        * @param ac_sID the element to put feedback on
        */
-      void FeedBack( const ScreenElementRunDelegate::mt_eFeedBackMode& ac_eMode, const QString& ac_sID );
+      void FeedBack( const ScreenElementRunDelegate::FeedbackMode& ac_eMode, const QString& ac_sID );
 
       /**
-       * Same as FeedBack( ScreenElement::mc_eHighLight, ac_sID ).
+       * Same as FeedBack( ScreenElement::HighlightFeedback, ac_sID ).
        * @param ac_sID the element to highlight
        */
       void HighLight( const QString& ac_sID );
@@ -216,7 +219,7 @@ class ConsoleStatusReporter;
       void updateStatusReporting();
 
     signals:
-     void Answered( const ApexScreenResult* a_Answer );
+     void Answered( const ScreenResult* a_Answer );
        //!NOTE see ApexMainWndBase for all other signals
      void StopOutput();
      void RepeatOutput();

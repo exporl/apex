@@ -97,6 +97,10 @@
 #include <QUrl>
 #include <QMessageBox>
 #include <QDomDocument>
+#include <QXmlQuery>
+#include <QDebug>
+
+#include <limits>
 
 using namespace apex::XMLKeys;
 using namespace apex::ApexXMLTools;
@@ -125,11 +129,13 @@ apex::ExperimentParser::ExperimentParser( const QString & configFilename) :
 {
     LogErrorsToApex(&m_progress);
 
-    CFParse();
+
 }
 
 data::ExperimentData* apex::ExperimentParser::parse(bool interactive)
 {
+    CFParse();
+
     m_interactive=interactive;
     if (!m_document)
     {
@@ -137,7 +143,8 @@ data::ExperimentData* apex::ExperimentParser::parse(bool interactive)
         throw ParseException();
     }
     qDebug("ExperimentParser: parsing...");
-    if (ApplyXpathModifications() == false || Parsefile() == false)
+
+    if (!ApplyXpathModifications() || !Parsefile())
         throw ParseException();
 
     std::auto_ptr<QMap<QString, data::RandomGeneratorParameters*> >
@@ -153,7 +160,6 @@ data::ExperimentData* apex::ExperimentParser::parse(bool interactive)
             ctrlDevData(new data::DevicesData(GetControlDevices()));
     std::auto_ptr<data::DatablocksData>
             datablocksData(new data::DatablocksData(GetDatablocksData()));
-
     return new data::ExperimentData(GetConfigFilename(),
                                     GetScreens(),
                                     GetProcedureConfig(),
@@ -179,7 +185,7 @@ data::ExperimentData* apex::ExperimentParser::parse(bool interactive)
  */
 bool apex::ExperimentParser::ApplyXpathModifications()
 {
-    gui::ApexMainWindow* mwp = NULL;
+    gui::ApexMainWindow* mwp = 0;
     if (m_interactive)
         mwp = ApexControl::Get().GetMainWnd();
 
@@ -192,11 +198,13 @@ bool apex::ExperimentParser::ApplyXpathModifications()
     if (result)
         pd.apply();
     else
+    {
         result = QMessageBox::warning(mwp,
                 tr("Interactive changes not applied"),
                 tr("Warning: no changes were applied, do you want to continue"
                    " with the unmodified document?"),
                 QMessageBox::No, QMessageBox::Yes) == QMessageBox::Yes;
+    }
 
     m_parameterDialogResults.reset(pd.results());
 
@@ -221,14 +229,16 @@ bool apex::ExperimentParser::Parsefile ()
     parameterManagerData.reset(new data::ParameterManagerData());
 
     bool bSuccess = true;
-
+    QString currentTag = "general";
 
     // first parse general
     DOMNode* baseNode = m_document->getDocumentElement();
-    DOMNode* generalNode = XMLutils::FindChildNode(baseNode,
-                           "general");
+    DOMNode* generalNode = XMLutils::FindChildNode(baseNode, "general");
+
     if (generalNode)
         bSuccess &= ParseGeneral((DOMElement*)generalNode);
+    else
+        m_generalParameters.reset( new data::GeneralParameters() );
 
     for (DOMNode* currentNode=m_document->getDocumentElement()->getFirstChild();
          currentNode!=0; currentNode=currentNode->getNextSibling())
@@ -267,13 +277,18 @@ bool apex::ExperimentParser::Parsefile ()
         // NOP
         else
         {
-            m_progress.addWarning( "ExperimentParser::Parsefile",
-                                   QString("Unknown Tag %1").arg(tag) );
+            m_progress.addWarning("ExperimentParser::Parsefile",
+                                  tr("Unknown tag \"%1\"").arg(currentTag));
         }
     }
 
-    if ( !bSuccess )
+    if (!bSuccess)
+    {
+        m_progress.addError("ExperimentParser::Parsefile",
+                            tr("Error parsing element \"%1\"").arg(currentTag));
+
         return false;
+    }
 
 
     if (!DoExtraValidation())
@@ -318,10 +333,11 @@ bool apex::ExperimentParser::ParseConnections( DOMElement* p_base )
             for (data::ConnectionsData::const_iterator it=connectionDatas->begin();                 it!=connectionDatas->end(); ++it)
             {
                 if ((**it).duplicateOf(*cd))
-                    m_progress.addWarning("Connetions",
-                                          "Duplicate connection from " +
-                                          cd->fromId() + " to " +
-                                          cd->toId());
+                {
+                    m_progress.addWarning("Connections",
+                                          tr("Duplicate connection from %1 to %2")
+                                             .arg(cd->fromId()).arg(cd->toId()));
+                }
             }
 
 
@@ -517,7 +533,8 @@ bool apex::ExperimentParser::ParseDatablocks(DOMElement* p_datablocks)
         scriptLibrary = m_generalParameters->GetScriptLibrary();
 
     m_datablocksdata = parser.Parse(p_datablocks,
-                       scriptLibrary);
+                                    scriptLibrary,
+                                    m_generalParameters->scriptParameters()  );
 
     return true;
 }
@@ -561,13 +578,14 @@ bool apex::ExperimentParser::ParseScreens( DOMElement* p_base )
     if (m_generalParameters.get())
         scriptLibrary = m_generalParameters->GetScriptLibrary();
 
-    gui::ApexMainWindow* mwp = NULL;
+    gui::ApexMainWindow* mwp = 0;
     if (m_interactive)
         mwp = ApexControl::Get().GetMainWnd();
     parser::ScreensParser parser(mwp);
 
-    screens.reset( parser.ParseScreens(p_base,
-                                       scriptLibrary ));
+    screens.reset(parser.ParseScreens(p_base, scriptLibrary,
+                                      m_generalParameters->scriptParameters(),
+                                      parameterManagerData.get() ));
 
     if (!screens.get())
         return false;
@@ -757,7 +775,8 @@ bool apex::ExperimentParser::ParseProcedure(DOMElement* p_base)
 
     try
     {
-        procedureData.reset (parser.Parse ( p_base, scriptLibrary));
+        procedureData.reset (parser.Parse ( p_base, scriptLibrary,
+                                            m_generalParameters->scriptParameters() ));
     }
     catch ( ApexStringException e )
     {
@@ -785,7 +804,8 @@ bool apex::ExperimentParser::ParseStimuli( DOMElement* p_base )
         mwp = ApexControl::Get().GetMainWnd();
     parser::StimuliParser parser(mwp);
 
-    parser.Parse(p_base, m_stimuli.get(), scriptLibrary);
+    parser.Parse(p_base, m_stimuli.get(), scriptLibrary,
+                 m_generalParameters->scriptParameters() );
 
     return true;
 
@@ -848,7 +868,8 @@ bool apex::ExperimentParser::DoExtraValidation()
         CheckFilters() &&
         CheckTrials() &&
         CheckStimuli() &&
-        CheckDevices();
+        CheckDevices() &&
+        CheckRandomGenerators();
 
     // turn of feedback for training procedure
     //FIXME
@@ -1033,6 +1054,19 @@ bool apex::ExperimentParser::CheckDevices()
     return true;
 }
 
+
+bool apex::ExperimentParser::CheckRandomGenerators()
+{
+
+    foreach (data::RandomGeneratorParameters* params, m_randomgenerators) {
+        if (params->m_nType == params->TYPE_UNIFORM && params->m_nValueType==params->VALUE_INT &&
+                ( params->m_dMin != (int)params->m_dMin || params->m_dMax != (int)  params->m_dMax ))
+            m_progress.addWarning("ExperimentParser::CheckRandomGenerators",
+                                  tr("Limits of uniform int random generator are not integers, results may be unexpected"));
+    }
+    return true;
+
+}
 
 bool apex::ExperimentParser::ParseRandomGenerators(DOMElement* p_base )
 {

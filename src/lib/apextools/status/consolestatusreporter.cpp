@@ -34,37 +34,35 @@ namespace apex
 
 void ConsoleStatusReporter::report(const StatusItem& error)
 {
-    std::ostream& stream = error.level() >= StatusItem::ERROR ? std::cerr :
+/*    std::ostream& stream = error.level() >= StatusItem::Error ? std::cerr :
                                                                 std::cout;
 
     switch (error.level())
     {
-        case StatusItem::ERROR:
+        case StatusItem::Error:
             stream << COLOR_ERROR;
             break;
-        case StatusItem::WARNING:
+        case StatusItem::Warning:
             stream << COLOR_WARNING;
             break;
-        case StatusItem::MESSAGE:
+        case StatusItem::Message:
             stream << COLOR_MESSAGE;
             break;
         default:
             break;
-    }
+    }*/
 
-    QString src = error.source().isEmpty() ? "Apex" : qPrintable(error.source());
-    QStringList msgLines = error.message().split("\n");
+    QString src = error.source().isEmpty() ? "APEX" : qPrintable(error.source());
+    qDebug("%s:: %s", qPrintable(src), qPrintable(error.message()));
 
-    stream << qPrintable(src) << ": " << qPrintable(msgLines.takeFirst());
-
-    Q_FOREACH (QString line, msgLines)
+  /*  Q_FOREACH (QString line, msgLines)
     {
         stream << std::endl
-               << std::setw(src.size() + line.size() + 2)
+               << std::setw(src.size() + line.size() + 1)
                << qPrintable(line);
     }
 
-    stream << COLOR_RESET << std::endl;
+    stream << COLOR_RESET; //<< std::endl;*/
 }
 
 }

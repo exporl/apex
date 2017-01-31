@@ -113,6 +113,7 @@ typedef QVector<double> tGains;
           * soundcard's OutputStream, then it calls mp_InitIO()
           * to setup callbacks and buffering etc.
           * @param ac_Config reference to the config details
+          * @param driver overrides the driver set in ac_Config
           * @param ac_bTryDefaultBufferSize if true and the buffersize specified in ac_Config
           * is invalid for the soundcard, try to open the card with it's default buffersize.
           * Using this size will always succeed (unless the other parameters are wrong off course).
@@ -121,7 +122,8 @@ typedef QVector<double> tGains;
           * @param a_sErr set to soundcard specific error code if opening fails
           * @return mc_eOk for success, else use mf_sGetErrorString()
           */
-      mt_eOpenStatus mp_eSetSoundcard( const data::WavDeviceData& ac_Config, const bool ac_bTryDefaultBufferSize, std::string& a_sErr );
+      mt_eOpenStatus mp_eSetSoundcard( const data::WavDeviceData& ac_Config,
+                                       const QString driver,const bool ac_bTryDefaultBufferSize, std::string& a_sErr );
 
         /**
           * Get the default buffersize for the card that was
@@ -206,7 +208,7 @@ typedef QVector<double> tGains;
           * @param ac_nNewChannel new channel
           * @param ac_bIsFromConnection true for from, false for to connection
           */
-      void mp_RewireConnection( tConnection& a_Connection, const unsigned ac_nNewChannel, const bool ac_bIsFromConnection );
+      void mp_RewireConnection( tConnection& a_Connection, const int ac_nNewChannel, const bool ac_bIsFromConnection );
 
         /**
           * Check if all inputs (wavefiles) are connected.
@@ -288,6 +290,8 @@ typedef QVector<double> tGains;
        */
       virtual void Prepare();
 
+      int GetBlockSize() const;
+
       static const unsigned     sc_nMaxBusInputs;
       static const std::string  sc_sOutputName;
       static const std::string  sc_sOffLineOutputName;
@@ -310,6 +314,7 @@ typedef QVector<double> tGains;
       ISoundCard*                 m_pCard;
       //unsigned                    m_nDefaultBufSize;
       unsigned                    m_soundcardBufferSize;        //! buffer size that the soundcard uses, is not necessarily the same as the buffersize in wavdevicedata
+      unsigned                    m_blockSize;
       BufferDropCheck*            m_pSoundcardBufferDropCheck;
       BufferDropCallback*         m_pSoundcardbufferDroppedCallback;
       BufferDropCallback*         m_pBigBufferDroppedCallback;

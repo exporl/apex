@@ -91,7 +91,9 @@ DOMElement* DevicesWriter::addElement(DOMDocument* doc, const DevicesData& data)
                 break;
 
             default:
-                qFatal("WRITER: unknown device type: %u", devData->deviceType());
+                qCritical("WRITER: unknown device type: %u", devData->deviceType());
+
+                break;
         }
     }
 
@@ -140,6 +142,8 @@ void DevicesWriter::finishAsWav(DOMElement* dev, const WavDeviceData& data)
     dev->appendChild(XMLutils::CreateTextElement(doc, "samplerate", data.sampleRate()));
     if ( data.bufferSize() != -1)
         dev->appendChild(XMLutils::CreateTextElement(doc, "buffersize", data.bufferSize()));
+    if ( data.blockSize() != -1)
+        dev->appendChild(XMLutils::CreateTextElement(doc, "blocksize", data.blockSize()));
     dev->appendChild(XMLutils::CreateTextElement(doc, "padzero", data.valueByType("padzero").toString()));
 }
 
@@ -199,7 +203,8 @@ void DevicesWriter::finishAsL34(DOMElement* dev, const L34DeviceData& data)
     //TODO don't know where to get these
 
     //create all the <channel> elements
-    for (ApexMap::const_iterator it = map->begin(); it != map->end(); it++)
+    //skip first element because it's the powerup stimulus
+    for (ApexMap::const_iterator it = map->begin() + 1; it != map->end(); it++)
     {
         //NOTE ApexMap inherits from std::map<int,ChannelMap>
 

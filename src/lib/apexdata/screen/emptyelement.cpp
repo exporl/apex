@@ -41,7 +41,7 @@ void EmptyElement::visit( ScreenElementVisitor* v ) const
     v->visitEmpty( this );
 }
 
-QString EmptyElement::findFreeID( const tScreenElementMap& takenIDs )
+QString EmptyElement::findFreeID( const ScreenElementMap& takenIDs )
 {
     int i = 0;
     while ( true ) {

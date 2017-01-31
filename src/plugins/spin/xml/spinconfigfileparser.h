@@ -58,8 +58,10 @@ class SPIN_EXPORT SpinConfigFileParser
                                   data::SpinConfig* into);
         static void parseNoises(XERCES_CPP_NAMESPACE::DOMNode* noises,
                                 data::SpinConfig* into);
-        static void parseSpeech(XERCES_CPP_NAMESPACE::DOMNode* speechmats,
+        static void parseSpeech(XERCES_CPP_NAMESPACE::DOMNode* speechmat,
                                 data::SpinConfig* into);
+        static void parseSpeechFiles(XERCES_CPP_NAMESPACE::DOMNode* speechfiles,
+                                data::SpinConfig* into, QString path, QString schema);
         static void parseSubjectScreen(XERCES_CPP_NAMESPACE::DOMNode* screen,
                                 data::SpinConfig* into);
         static void parseExperimenterScreen(XERCES_CPP_NAMESPACE::DOMNode* screen,
@@ -70,8 +72,11 @@ class SPIN_EXPORT SpinConfigFileParser
                              data::SpinConfig* into);
         static void parseGeneralData(XERCES_CPP_NAMESPACE::DOMNode* data,
                                      data::SpinConfig* into);
+        static void parseSoundcardSetup(XERCES_CPP_NAMESPACE::DOMNode* data,
+                                     data::SpinConfig* into);
         static void addLists(XERCES_CPP_NAMESPACE::DOMNodeList* lists,
                              data::CategoryMap* into, QString category = "");
+        static QStringList expandWildcards(QString directory, QString fileIdentifier);
 };
 
 } //ns parser

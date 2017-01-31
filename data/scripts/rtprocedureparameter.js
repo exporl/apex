@@ -1,26 +1,30 @@
 function plot()
 {
-    plotProcedureParameter(parametervalues);
-    tableProcedureParameter(parametervalues);
-    lastvalueProcedureParameter(parametervalues);
-    meanrevsProcedureParameter(parametervalues);
+    plotProcedureParameter(results.parametervalues);
+    tableProcedureParameter(results.parametervalues);
+    lastvalueProcedureParameter(results.parametervalues);
+    meanrevsProcedureParameter(results.parametervalues);
+    meantrialsProcedureParameter(results.parametervalues);
+    reversalsProcedureParameter(results.parametervalues);
+    valuesProcedureParameter(results.parametervalues);
+    if (typeof extraPlot == 'function') {
+	extraPlot();
+    }
 }
 
                                             
 function tableProcedureParameter(parametervalues)
 {
     var table=wrap("tr", "<th>Trial</th><th>Answer</th><th>Parameter</th>");
-    for (var i=0; i<answers.length; ++i)
+    for (var i=0; i<results.answers.length; ++i)
     	table+=wrap("tr", 
     		wrap("td", i+1)+
-		wrap("td", answers[i])+
+		wrap("td", results.answers[i])+
 		wrap("td", parametervalues[i])
 		);
     table=wrap("table", table);
 
-   if ($("#procedureparametertable")[0].firstChild !== null)
-	$("#procedureparametertable > table").remove();
-    $("#procedureparametertable").append(table);
+    replaceContent("procedureparametertable", table);
 }
 
 
@@ -65,25 +69,13 @@ function plotProcedureParameter(parametervalues)
 
 function lastvalueProcedureParameter(parametervalues)
 {
-    if ( $("#procedureparameterlastvalue").length == 0 ) { 
-    	print("----------- procedureparameterlastvalue not found");
-    	return;
-    }
-    if ( $("#procedureparameterlastvalue")[0].firstChild !== null)
-	 $("#procedureparameterlastvalue >*").remove();
-
-    $("#procedureparameterlastvalue").append('<p><b>Last value:</b> ' + parametervalues[parametervalues.length-1] + '</p>');
+    replaceContent("procedureparameterlastvalue",
+	    '<p><b>Last value:</b> ' + parametervalues[parametervalues.length-1] + '</p>');
 }
 
-
-function meanrevsProcedureParameter(parametervalues)
+function getReversals(parametervalues) 
 {
-    // Check if reversalsForMean is defined
-    var rfm = 6;
-    if (typeof(reversalsForMean) != "undefined")
-    	rfm = reversalsForMean;
-
-    // Get reversals
+ // Get reversals
     var reversals = Array();
     var up = 0;
     var down = 0;
@@ -106,6 +98,18 @@ function meanrevsProcedureParameter(parametervalues)
     }
     reversals.push(parametervalues[parametervalues.length-1]);
 
+    return reversals;
+}
+
+function meanrevsProcedureParameter(parametervalues)
+{
+    // Check if reversalsForMean is defined
+    var rfm = 6;
+    if (typeof(reversalsForMean) != "undefined")
+    	rfm = reversalsForMean;
+
+    // Get reversals
+    var reversals = getReversals(parametervalues);
     var nrevs = Math.min(rfm, reversals.length);
 
     // Calculate average
@@ -113,16 +117,82 @@ function meanrevsProcedureParameter(parametervalues)
     for (var i=reversals.length-nrevs; i<reversals.length; ++i) {
 	sum += reversals[i];
     }
-    var value = sum/nrevs;
-
-    if ( $("#procedureparametermeanrevs").length == 0 ) { 
-    	print("----------- procedureparametermeanrevs not found");
-    	return;
+    var average = sum/nrevs; 
+    
+    // Calculate std
+    sum = 0;
+    for (var i=reversals.length-nrevs; i<reversals.length; ++i) {
+	sum += Math.pow(reversals[i] - average, 2);
     }
-    if ( $("#procedureparametermeanrevs")[0].firstChild !== null)
-	 $("#procedureparametermeanrevs >*").remove();
+    var std = Math.sqrt(sum/nrevs);
 
-    $("#procedureparametermeanrevs").append('<p><b>Mean of last ' + nrevs + ' reversals:</b> ' + value + '</p>');
+    replaceContent("procedureparametermeanrevs",
+	    '<p><b>Mean (std) last ' 
+	    + nrevs + ' reversals:</b> ' + average + 
+	    ' (&plusmn;' + Math.round(std*1000)/1000 + ')</p>');
+
 }
 
 
+function meantrialsProcedureParameter(parametervalues)
+{
+    // Check if reversalsForMean is defined
+    var rfm = 6;
+    if (typeof(trialsForMean) != "undefined")
+    	rfm = trialsForMean;
+
+    var nvalues = Math.min(rfm, parametervalues.length);
+
+    // Calculate average
+    var sum = 0;
+    for (var i=parametervalues.length-nvalues; i<parametervalues.length; ++i) {
+	sum += parametervalues[i];
+    }
+    var average = sum/nvalues;
+
+    // Calculate std
+    sum = 0;
+    for (var i=parametervalues.length-nvalues; i<parametervalues.length; ++i) {
+	sum += Math.pow(parametervalues[i] - average, 2);
+    }
+    var std = Math.sqrt(sum/nvalues);
+
+    replaceContent("procedureparametermeantrials", 
+	    '<p><b>Mean (std) last ' 
+	    + nvalues + ' trials:</b> ' + average + 
+	    ' (&plusmn' + Math.round(std*1000)/1000 + ')</p>');
+}
+
+
+
+
+function reversalsProcedureParameter(parametervalues)
+{
+    if (! $("#procedureparametervalues") ) {
+    	return;
+    }
+
+    var s = "";
+    for (var i=0; i<parametervalues.length; ++i) {
+	s += parametervalues[i] + " ";
+    }
+
+    replaceContent("procedureparametervalues", "<b>Parameter values:</b> " + s);
+}
+ 
+function valuesProcedureParameter(parametervalues)
+{
+   if (! $("#procedureparameterreversals") ) {
+    	return;
+    }
+
+    var revs = getReversals(parametervalues);
+
+    var s = "";
+    for (var i=0; i<revs.length; ++i) {
+	s += revs[i] + " ";
+    }
+
+    replaceContent("procedureparameterreversals", "<b>Reversals:</b> " + s);
+
+}

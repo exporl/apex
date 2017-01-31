@@ -58,7 +58,7 @@ namespace apex
         ExperimentRunDelegate* p_exprd,
         const GridLayoutElement* e,
         QWidget* parent,
-        elementToRunningMapT& elementToRunningMap,
+        ElementToRunningMap& elementToRunningMap,
         const QFont& font );
 
     /*~GridLayoutRunDelegate() {

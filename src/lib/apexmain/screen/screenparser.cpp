@@ -55,6 +55,9 @@ using namespace XERCES_CPP_NAMESPACE;
 //#include "gui/mainwindow.h"
 #include "screen/screensdata.h"
 
+#include "parameters/parametermanagerdata.h"
+#include "parameters/parameter.h"
+
 //from libtools
 #include "apextools.h"
 #include "gui/arclayout.h"
@@ -214,7 +217,7 @@ Screen* ScreenParser::createScreen( DOMElement* a_pElement )
     ButtonGroup* buttonGroup = 0;
     ScreenElement* rootElement = 0;
     QString defaultAnswer;
-    tScreenElementMap idToElementMap;
+    ScreenElementMap idToElementMap;
 
     const QString screenID = XMLutils::GetAttribute( a_pElement, gc_sID );
 
@@ -289,8 +292,9 @@ Screen* ScreenParser::createScreen( DOMElement* a_pElement )
     return screen;
 }
 
-ScreenParser::ScreenParser( ScreensData* s )
-        : screens( s )
+ScreenParser::ScreenParser( ScreensData* s, data::ParameterManagerData* pmd )
+        : screens( s ),
+          parameterManagerData(pmd)
 {
 }
 
@@ -301,7 +305,7 @@ Screen* ScreenParser::createTestScreen()
     const QString screenID = "testscreen"+ QString::number( nCreated++ );
 
     GridLayoutElement* gle = new GridLayoutElement( layoutID, 0, 5, 5, data::tStretchList(), data::tStretchList() );
-    tScreenElementMap idToElementMap;
+    ScreenElementMap idToElementMap;
 
     ScreenElement* p1 = createTestScreenElement( gle );
     ScreenElement* p2 = createTestScreenElement( gle );
@@ -328,7 +332,7 @@ ScreenElement* ScreenParser::createTestScreenElement( ScreenElement* parent )
     return e;
 }
 
-ButtonGroup* ScreenParser::createButtonGroup( DOMElement* a_pElement, const tScreenElementMap& p_idToElementMap  )
+ButtonGroup* ScreenParser::createButtonGroup( DOMElement* a_pElement, const ScreenElementMap& p_idToElementMap  )
 {
     ButtonGroup* pRet = new ButtonGroup( XMLutils::GetAttribute( a_pElement, gc_sID ) );
 
@@ -427,7 +431,7 @@ ScreenParser::mt_FeedBackPaths* ScreenParser::parseFeedBackPaths(
 }
 
 ScreenLayoutElement* ScreenParser::createLayout(
-    DOMElement* element, ScreenElement* parent, tScreenElementMap& elements )
+    DOMElement* element, ScreenElement* parent, ScreenElementMap& elements )
 {
     ScreenLayoutElement* ret = 0;
 
@@ -589,7 +593,7 @@ ScreenLayoutElement* ScreenParser::createLayout(
 }
 
 ScreenElement* ScreenParser::createElement(
-    DOMElement* element, ScreenElement* parent, tScreenElementMap& elements )
+    DOMElement* element, ScreenElement* parent, ScreenElementMap& elements )
 {
     const QString tag = XMLutils::GetTagName( element );
 
@@ -600,7 +604,7 @@ ScreenElement* ScreenParser::createElement(
 }
 
 ScreenElement* ScreenParser::createNonLayoutElement(
-    DOMElement* element, ScreenElement* parent, tScreenElementMap& elements )
+    DOMElement* element, ScreenElement* parent, ScreenElementMap& elements )
 {
     ScreenElement* ret = 0;
     const QString tag = XMLutils::GetTagName( element );
@@ -784,6 +788,14 @@ ScreenElement* ScreenParser::createNonLayoutElement(
                     return 0;
                 }
                 temp->setDefault(filename);
+                temp->setUriId(
+                            XMLutils::GetAttribute(currentNode, "id"));
+                if (! temp->getUriId().isEmpty() && parameterManagerData) {
+                    parameterManagerData->registerParameter(
+                                temp->getUriId(),
+                                data::Parameter("Picture", "string", temp->getDefault(),
+                                                0, true, temp->getUriId()));
+                }
             }
             else if ( tag == gc_sFeedback )
             {

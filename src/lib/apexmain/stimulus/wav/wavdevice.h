@@ -185,8 +185,9 @@ class WavDevice : public OutputDevice {
           */
         bool GetInfo( const unsigned ac_nType, void* a_pInfo ) const;
 
+        int GetBlockSize() const;
 
-        virtual void SetSilenceBefore( double time ) { m_SilenceBefore=time;};
+        virtual void SetSilenceBefore( double time ) {m_SilenceBefore=time;};
 
     private:
         void SetConnectionParams();
@@ -201,7 +202,7 @@ class WavDevice : public OutputDevice {
         bool                mv_bOffLine;
         std::string         mv_sOffLine;//temp
         unsigned            mv_nOffLine;//
-        double              m_SilenceBefore;
+        float              m_SilenceBefore;
         tSeqMap             m_InputStreams;
         tGenMap             m_Generators;
         tWavFilters         m_InformFilters;

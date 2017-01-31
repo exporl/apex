@@ -1,6 +1,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.3/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment">
     
     <xs:include schemaLocation="filters.xsd"/>
     
@@ -46,10 +46,20 @@
                         </xs:annotation>
                         <xs:simpleType>
                             <xs:restriction base="xs:string">
+                                <xs:enumeration value="dummy">
+                                    <xs:annotation>
+                                        <xs:documentation>Dummy soundcard</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
                                 <xs:enumeration value="portaudio">
                                     <xs:annotation>
                                         <xs:documentation>Portaudio is a cross-platform audio
                                             framework</xs:documentation>
+                                    </xs:annotation>
+                                </xs:enumeration>
+                                <xs:enumeration value="qtaudio">
+                                    <xs:annotation>
+                                        <xs:documentation>Qt Multimedia framework</xs:documentation>
                                     </xs:annotation>
                                 </xs:enumeration>
                                 <xs:enumeration value="asio">
@@ -70,6 +80,7 @@
                                             framework. A jack connection will be made to the "drivername" specified in the main config file.</xs:documentation>
                                     </xs:annotation>
                                 </xs:enumeration>
+                          
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:element>
@@ -115,7 +126,7 @@
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:element>
-                    <xs:element name="buffersize" minOccurs="0">
+                    <xs:element name="buffersize" minOccurs="0" type="xs:positiveInteger">
                         <xs:annotation>
                             <xs:documentation> Applies to the soundcard buffer size, not the internal apex buffer size.
                                 Larger sizes are
@@ -127,41 +138,13 @@
                                 For asio/jack: must be set to the system buffer size.
                                 </xs:documentation>
                         </xs:annotation>
-                        <xs:simpleType>
-                          <xs:restriction base="xs:string">
-                            <xs:enumeration value="64"/>
-                            <xs:enumeration value="128"/>
-                            <xs:enumeration value="256"/>
-                            <xs:enumeration value="512"/>
-                            <xs:enumeration value="768"/>
-                            <xs:enumeration value="1024"/>
-                            <xs:enumeration value="2048"/>
-                            <xs:enumeration value="4096"/>
-                            <xs:enumeration value="8192"/>
-                            <xs:enumeration value="16384"/>
-                          </xs:restriction>
-                        </xs:simpleType>
                     </xs:element>
-                    <xs:element name="blocksize" minOccurs="0">
+                    <xs:element name="blocksize" minOccurs="0" type="xs:positiveInteger">
                         <xs:annotation>
                             <xs:documentation> Applies to the block size that is used in the internal apex audio streams (for filters etc.).
-                                Larger sizes are more efficient, smaller sizes have smaller latencies.
+                                Larger sizes are more efficient, smaller sizes have smaller latencies. If not defined, the soundcard buffersize will be used.
                                 </xs:documentation>
                         </xs:annotation>
-                        <xs:simpleType>
-                          <xs:restriction base="xs:string">
-                            <xs:enumeration value="64"/>
-                            <xs:enumeration value="128"/>
-                            <xs:enumeration value="256"/>
-                            <xs:enumeration value="512"/>
-                            <xs:enumeration value="768"/>
-                            <xs:enumeration value="1024"/>
-                            <xs:enumeration value="2048"/>
-                            <xs:enumeration value="4096"/>
-                            <xs:enumeration value="8192"/>
-                            <xs:enumeration value="16384"/>
-                          </xs:restriction>
-                        </xs:simpleType>
                     </xs:element>
                     <xs:element name="buffersize_apex" minOccurs="0" >
                         <xs:annotation>
@@ -197,9 +180,8 @@
                     </xs:element>
                     <xs:element name="padzero" type="xs:nonNegativeInteger" minOccurs="0">
                         <xs:annotation>
-                            <xs:documentation>Add the given number of empty (filled with zero's) buffers
-                            to the output on the end of a stream. This avoids dropping of the last N frames on some
-                            soundcards (notoriously LynxOne)</xs:documentation>
+                            <xs:documentation>If smaller than 16: add padzero*8196 samples to the end of each stream. If larger than 16: add padzero samples to the end of each stream. 
+                                This avoids dropping of the last N frames on some soundcards (notoriously LynxOne and FirefaceUC)</xs:documentation>
                         </xs:annotation>
                     </xs:element>
                     <xs:element name="setcardmixer" type="xs:boolean" minOccurs="0">
@@ -307,6 +289,17 @@
         <xs:complexContent>
             <xs:extension base="apex:deviceType">
                 <xs:sequence>
+                    <xs:element name="device_type" minOccurs="0" default="L34">
+                        <xs:annotation>
+                            <xs:documentation>Type of device</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="L34"/>
+                                <xs:enumeration value="SP12"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
                     <xs:element name="device_id" type="xs:nonNegativeInteger">
                         <xs:annotation>
                             <xs:documentation>Device number. Devices are ordered according to the
@@ -348,6 +341,13 @@
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:element -->
+                    <xs:element name="powerup_count" minOccurs="0" default="4000" type="xs:nonNegativeInteger">
+                        <xs:annotation>
+                            <xs:documentation>Number of powerup pulses to send.
+                                No powerup pulses will be sent if this is set
+                                to 0.</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
                     <xs:element name="volume" minOccurs="0">
                         <xs:complexType>
                             <xs:annotation>
@@ -489,6 +489,8 @@
     <xs:simpleType name="L34ModeEnum">
         <xs:restriction base="xs:string">
             <xs:enumeration value="MP1+2"/>
+            <xs:enumeration value="MP1"/>
+            <xs:enumeration value="MP2"/>
             <xs:enumeration value="BP"/>
         </xs:restriction>
     </xs:simpleType>
@@ -554,7 +556,7 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:simpleType name="volumeParam">
         <xs:restriction base="xs:double">
             <xs:minInclusive value="0"/>

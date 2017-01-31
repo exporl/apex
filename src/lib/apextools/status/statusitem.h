@@ -42,7 +42,7 @@ struct StatusItemPrivate;
  * Supports the "named parameter" idiom:
  * @code
  * StatusReporter rep;
- * rep << StatusItem(StatusItem::ERROR)
+ * rep << StatusItem(StatusItem::Error)
  *              .setSource("Apex")
  *              .setMessage("Some error...");
  * @endcode
@@ -55,14 +55,14 @@ class APEXTOOLS_EXPORT StatusItem
 
         enum Level
         {
-            UNUSED  = 0x0,   //use when there's nothing to report
-            MESSAGE = 0x1,
-            WARNING = 0x2,
-            ERROR   = 0x4
+            Unused  = 0x0,   //use when there's nothing to report
+            Message = 0x1,
+            Warning = 0x2,
+            Error   = 0x4
         };
         Q_DECLARE_FLAGS(Levels, Level);
 
-        StatusItem(Level level = UNUSED, const QString& source  = "",
+        StatusItem(Level level = Unused, const QString& source  = "",
                                          const QString& message = "");
         StatusItem(const StatusItem& other);
         ~StatusItem();

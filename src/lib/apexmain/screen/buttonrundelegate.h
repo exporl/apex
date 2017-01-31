@@ -61,7 +61,7 @@ namespace apex
       bool hasInterestingText() const;
       const QString getText() const;
       void connectSlots( gui::ScreenRunDelegate* d );
-      void feedBack(const mt_eFeedBackMode& mode);
+      void feedBack(const FeedbackMode& mode);
     signals:
       void answered( ScreenElementRunDelegate* );
     protected:

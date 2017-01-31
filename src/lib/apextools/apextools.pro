@@ -1,12 +1,20 @@
 BASEDIR = ../../..
 CLEBS += xerces \
     builddll \
-    globalincludes
+    globalincludes \
+	xalan
 DEFINES *= APEXTOOLS_MAKEDLL
 include ($$BASEDIR/clebs.pri)
 win32:LIBS *= -lshell32 # ShellExecute
 QT += gui \
-    script
+    script \
+    svg \
+    xml \
+    webkit \
+    network \
+	xmlpatterns
+QT += qt3support
+	
 HEADERS += global.h \
     apextools.h \
     apexrandom.h \
@@ -32,7 +40,11 @@ HEADERS += global.h \
     programoptions/optioncontext.h \
     programoptions/optionparser.h \
     xml/xercesinclude.h \
-    xml/xalaninclude.h
+    xml/xalaninclude.h \
+    services/servicemanager.h \
+    services/application.h \
+    services/paths.h
+
 SOURCES += apextools.cpp \
     random.cpp \
     pathtools.cpp \
@@ -52,4 +64,8 @@ SOURCES += apextools.cpp \
     optionutils.cpp \
     desktoptools.cpp \
     programoptions/optionparser.cpp \
-    programoptions/optioncontext.cpp
+    programoptions/optioncontext.cpp \
+    services/servicemanager.cpp \
+    services/application.cpp \
+    services/paths.cpp
+

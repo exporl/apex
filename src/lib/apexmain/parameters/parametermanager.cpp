@@ -71,7 +71,7 @@ void ParameterManager::setParameter(const QString& id, const QVariant& value,
         qDebug() << "ParameterManager::SetParameter: cannot set parameter"
                  << id << "to value" << value.toString();
 
-        apex::StatusItem info(StatusItem::ERROR, "ParameterManager",
+        apex::StatusItem info(StatusItem::Error, "ParameterManager",
                           "unknown parameter: " + id);
         showContents();
     }

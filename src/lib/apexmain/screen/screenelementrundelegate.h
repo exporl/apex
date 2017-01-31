@@ -77,16 +77,16 @@ namespace apex
       /**
        * Feedback mode.
        */
-      enum mt_eFeedBackMode
+      enum FeedbackMode
       {
-        mc_eOff,        //!< no feedback
-        mc_eHighLight,  //!< white border
-        mc_eNegative,   //!< red border
-        mc_ePositive    //!< green border
+        NoFeedback,         //!< no feedback
+        HighlightFeedback,  //!< white border
+        NegativeFeedback,   //!< red border
+        PositiveFeedback    //!< green border
       };
 
     protected:
-      mt_eFeedBackMode feedBackMode;
+      FeedbackMode feedBackMode;
       ScreenElementRunDelegate(ExperimentRunDelegate* p_parent, const data::ScreenElement* const d);
     public:
       QString getID() const;
@@ -95,8 +95,8 @@ namespace apex
        * fine, but some element types override it with their proper
        * implementation.
        */
-      virtual void feedBack( const mt_eFeedBackMode& mode );
-      mt_eFeedBackMode getFeedBackMode() const;
+      virtual void feedBack( const FeedbackMode& mode );
+      FeedbackMode getFeedbackMode() const;
       virtual ~ScreenElementRunDelegate();
 
       /**
@@ -179,6 +179,11 @@ namespace apex
       virtual QLayout* getLayout();
 
       /**
+        * Return the relative position of the mouse click
+        */
+      virtual const QPointF getClickPosition( ) const;
+
+      /**
        * Clear the text.
        */
       virtual void clearText();
@@ -194,11 +199,13 @@ namespace apex
             void setFgColor(QWidget* target, const QString& color);
 
             ExperimentRunDelegate* m_rd;
+            QPointF lastClickPosition;
 
         private:
             bool isValidColor(const QString& color);
             
             const data::ScreenElement* const  element;
+
     };
 
   }

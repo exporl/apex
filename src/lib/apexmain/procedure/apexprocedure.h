@@ -36,7 +36,7 @@ class PluginProcedureAPI;
 namespace apex
 {
 
-class ApexScreenResult;
+class ScreenResult;
 
 using namespace stimulus;
 
@@ -106,7 +106,7 @@ public slots:
     virtual void Stop();
     virtual void RepeatOutput();
     //virtual void SetResult()=0;
-    virtual bool NextTrial(const bool result, const ApexScreenResult* screenresult);
+    virtual bool NextTrial(const bool result, const ScreenResult* screenresult);
     virtual void StimulusDone();                            // react on stimulusdone from stimulusoutput
 
     virtual void FirstTrial()=0; //[ stijn ] prepare first trial
@@ -123,6 +123,7 @@ public slots:
 public:         // signal replacements
     void NewTrial(const QString& p_name);
     virtual void StartOutput();
+    virtual void doDeterministicGeneration();
 
 signals:
     //[ stijn ] added SendMessage and removed the virtual keyword
@@ -184,13 +185,17 @@ protected:
     int m_CurrentCorrectAnswer;     // if procedure determines the correct answer (ie AFC procedure) this variable holds it
     int m_nTrials;                  // number of current trial
     QString m_currentStimulus;      // currently playing stimulus
+    QDateTime m_trialStartTime;// Starting time of current stimulus
     QStringList m_currentStandards; // played standards (for results)
     QString m_id;                   // id of this procedure
+
+    Random randomGenerator;
+    Random choicesRandomGenerator;
 
 private:
     int m_nCurrentOutputStimulus;           // number of the current output stimulus (useful for afc)
 
-    Random randomGenerator;
+
 };
 
 }

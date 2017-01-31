@@ -115,22 +115,22 @@ void FlashPlayerRunDelegate::mp_StartWait()
     fw->play();
 }
 
-void FlashPlayerRunDelegate::feedBack(const mt_eFeedBackMode& mode)
+void FlashPlayerRunDelegate::feedBack(const FeedbackMode& mode)
 {
     if (element->getOverrideFeedback())
     {
         switch (mode)
         {
-        case mc_eOff:
+        case NoFeedback:
             setMovie(element->getDefault());
             break;
-        case mc_eHighLight:
+        case HighlightFeedback:
             setMovie(element->getHighlight());
             break;
-        case mc_ePositive:
+        case PositiveFeedback:
             setMovie(element->getPositive());
             break;
-        case mc_eNegative:
+        case NegativeFeedback:
             setMovie(element->getNegative());
             break;
         };
@@ -146,7 +146,7 @@ void FlashPlayerRunDelegate::setEnabled( const bool e )
     bool value = e;
     if (element->getDisabled())     // never enable if disabled==true
         value=false;
-    
+
     fw->setEnabled(e);
 }
 

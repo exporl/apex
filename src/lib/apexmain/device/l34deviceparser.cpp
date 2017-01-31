@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "l34deviceparser.h"
 #include "device/l34devicedata.h"
 #include "map/apexmap.h"
@@ -72,24 +72,13 @@ void L34DeviceParser::AddParameter(data::SimpleParameters* p, XERCES_CPP_NAMESPA
             q->setMap(pmap);
 
             ErrorHandler::Get().addItems(mapfac.logger().items());
+        // the following are handled by SimpleParametersParser
         } else if (type=="trigger") {
-
-/*            if (p_value=="in")
-                m_iTriggerType=TRIGGER_IN;
-            else if (p_value=="out")
-                m_iTriggerType=TRIGGER_OUT;
-            else if (p_value=="none")
-                m_iTriggerType=TRIGGER_NONE;
-            else {
-                qDebug("Invalid trigger type");
-                return false;
-            }*/
+        } else if (type=="powerup_count") {
         } else if (type=="device_id") {
-//            m_nDeviceID=p_value.toInt();
+        } else if (type=="device_type") {
         } else if (type=="volume") {
-//            m_volume=p_value.toFloat();
         } else if (type=="implant") {
-//            m_implantType=p_value;
         } else {
             throw ApexStringException( "Unknown tag " +  type + " in L34DeviceData::SetParameter");
         }

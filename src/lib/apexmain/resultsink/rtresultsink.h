@@ -21,7 +21,7 @@ class QWebView;
 
 namespace apex {
 
-    class ApexScreenResult;
+    class ScreenResult;
     //class ExperimentRunDelegate;
     class RTResultSinkPrivate;
 
@@ -47,11 +47,12 @@ public:
 
     void show(bool visible=true);
 
-    //void newAnswer ( const ApexScreenResult* r, bool correct);
+    //void newAnswer ( const ScreenResult* r, bool correct);
 
 public slots:
     //! Add a single <trial> block to the results
-    void newAnswer( QString xml );
+    void newAnswer( QString xml, bool doPlot=true);
+    void plot();
 
     //! Add a whole results file to the results <apex:results>
     void newResults ( QString xml );

@@ -1,0 +1,43 @@
+- Finish procedure refactory:
+-- fix test bench (add a few things to writers)
+-- Implement missing procedures (multiprocedure)
+-- fix remaining differences between original and refactory implementation
+-- Check: Start timer / input during stimulus
+-- Error handling plugin procedure in refactory
+-- Procedure refactory: result XML with AFC corrector
+
+- Merge from master into procedure-refactory:  apexresultsink: use PR
+
+
+- Finish sound output system refactory (BERTHA)
+-- Test with new testbench
+-- Implement missing modules
+-- Implement experiment file upgrade
+-- Remove streamapp
+
+- Upgrade to new version of portaudio
+
+- Remove Xalan (XPath)
+-- Replace XPath by Xslt (implemented by Qt)
+-- Rewrite Xalan results analysis by Javascript
+
+- Windows stuff:
+-- Fix MinGW build (ASIO)
+-- Implement "upgrade" in wix installer (upgrade to v3?)
+
+- Validate/Fix reaction times
+
+- Screens in HTML/javascript
+-- Implement a few layouts
+-- Convert existing screens to javascript/html
+
+- Make internet version
+
+- Merge script context
+
+- Update manual
+-- Upgrade to new schema
+-- New features: javascript, plugins, ...
+
+- Javascript resuls: use highcharts? http://www.highcharts.com/
+

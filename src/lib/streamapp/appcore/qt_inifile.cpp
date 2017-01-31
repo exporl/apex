@@ -51,12 +51,12 @@ INLINE QString f_ToString( const bool  ac_bValue )
 
 INLINE QString f_ToString( const double ac_fValue )
 {
-  return qn( ac_fValue );
+  return QString::number( ac_fValue );
 }
 
 INLINE QString f_ToString( const int ac_iValue )
 {
-  return qn( ac_iValue );
+  return QString::number( ac_iValue );
 }
 
 INLINE bool  f_BoolFromString( const QString & ac_sString )

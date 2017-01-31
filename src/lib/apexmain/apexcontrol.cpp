@@ -207,10 +207,13 @@ ApexControl::ApexControl() :
     connect( m_Wnd, SIGNAL( autoAnswerClicked(bool) ), this, SLOT( setAutoAnswer(bool) ) );
     connect( m_Wnd, SIGNAL(repeatStimulus()), this, SLOT( RepeatOutput()));
     connect( m_Wnd, SIGNAL( showStimulus() ), this, SLOT( ShowStimulus() ) );
-    connect( this , SIGNAL( NewScreen( gui::ScreenRunDelegate*) ), m_Wnd, SLOT( SetScreen( gui::ScreenRunDelegate*) ) );
+    connect( this , SIGNAL( NewScreen( gui::ScreenRunDelegate*) ), m_Wnd,
+             SLOT( SetScreen( gui::ScreenRunDelegate*) ) );
     connect(mod_experimentselector.get(),
             SIGNAL (Selected (data::ExperimentData*)), this,
             SLOT (newExperiment (data::ExperimentData*)));
+    connect(mod_experimentselector.get(), SIGNAL(errorMessage(QString, QString)),
+            this, SLOT(errorMessage(QString,QString)));
 
     //make sure to quit when everything is closed
     connect (m_app, SIGNAL (lastWindowClosed()), this, SLOT (fileExit()));
@@ -287,7 +290,7 @@ bool ApexControl::configure()
 {
     Paths& pPaths = Paths::Get();
 
-    m_error.addMessage( "APEX", tr("Apex version ") + APEX_VERSION + tr(", ") + SVN_REVISION );
+    m_error.addMessage("APEX", tr("Apex version %1, %2").arg(APEX_VERSION).arg(m_Wnd->fetchVersion()));
     m_error.addMessage("APEX", tr("Compiled with Qt version ") + QT_VERSION_STR);
     m_error.addMessage("APEX", tr("Running with Qt version ") + qVersion());
     m_error.addMessage("APEX",
@@ -388,6 +391,7 @@ void ApexControl::parsecmdline()
    autoAnswer = false;
    deterministicRandom = false;
    noResults = false;
+   autoSaveResults = false;
    exitAfter = false;
 
    OptionContext context(tr("[OPTION...] experimentfile"),
@@ -420,7 +424,10 @@ void ApexControl::parsecmdline()
                                       << OptionEntry(tr("noresults"), QLatin1Char('n'), 0,
                                                      OptionEntry::NoArgument, &noResults,
                                                      tr("Do not handle results in any way after an experiment"))
-                                      << OptionEntry(tr("exitafter"), QLatin1Char('n'), 0,
+                                      << OptionEntry(tr("autosaveresults"), 0, 0,
+                                                     OptionEntry::NoArgument, &autoSaveResults,
+                                                     tr("Automatically save results after the experiment"))
+                                      << OptionEntry(tr("exitafter"), QLatin1Char('x'), 0,
                                                      OptionEntry::NoArgument, &exitAfter,
                                                      tr("Quit Apex after an experiment is done"))
                                       ));
@@ -439,6 +446,10 @@ void ApexControl::parsecmdline()
    if (listSoundcards) {
        ShowSoundcards();
        return;
+   }
+   if (deterministicRandom) {
+       Random::setDeterministic(true);
+       ApexTools::InitRand(0);
    }
 
 
@@ -509,8 +520,10 @@ bool ApexControl::newExperiment(data::ExperimentData* data)
         experimentRunDelegate->makeModules(this);
         m_state.mp_SetState( tState::mc_eLoaded );
 
-        if (deterministicRandom)
+        if (deterministicRandom) {
             experimentRunDelegate->modRandomGenerators()->doDeterministicGeneration();
+            experimentRunDelegate->modProcedure()->doDeterministicGeneration();
+        }
 
         if (autoAnswer)
         {
@@ -546,9 +559,6 @@ bool ApexControl::newExperiment(data::ExperimentData* data)
     {
         m_error.addWarning("ApexControl" , "DONE" );
         PrepareExperiment();
-
-        if (autoStartExperiments)
-            Start();
 
         return true;
     }
@@ -606,6 +616,8 @@ void ApexControl::fileOpen()
     mod_experimentselector.reset(new SimpleRunner);
     connect(mod_experimentselector.get(), SIGNAL(Selected(data::ExperimentData*)),
             this, SLOT(newExperiment(data::ExperimentData*)));
+    connect(mod_experimentselector.get(), SIGNAL(errorMessage(QString, QString)),
+            this, SLOT(errorMessage(QString,QString)));
 
     mod_experimentselector->SelectFromDir (m_Wnd->GetOpenDir());
 }
@@ -638,6 +650,8 @@ void ApexControl::mruFileOpen(const QString& filename)
     mod_experimentselector.reset(new SimpleRunner);
     connect(mod_experimentselector.get(), SIGNAL(Selected(data::ExperimentData*)),
             this, SLOT(newExperiment(data::ExperimentData*)));
+    connect(mod_experimentselector.get(), SIGNAL(errorMessage(QString, QString)),
+            this, SLOT(errorMessage(QString,QString)));
 
     mod_experimentselector->Select (filename);
 }
@@ -676,7 +690,7 @@ void ApexControl::StartTimer()
     experimentRunDelegate->modTimer()->start();
 }
 
-void ApexControl::Answered( const ApexScreenResult* ac_Answer )
+void ApexControl::Answered( const ScreenResult* ac_Answer )
 {
 #ifdef SHOWSLOTS
     qDebug("SLOT ApexControl::Answered");
@@ -708,15 +722,15 @@ void ApexControl::Answered( const ApexScreenResult* ac_Answer )
         if ( experiment->screensData()->feedbackOn() == HIGHLIGHT_CORRECT)
             highlight_element = experimentRunDelegate->modCorrector()->GetCorrectAnswer();
         else if ( experiment->screensData()->feedbackOn() == HIGHLIGHT_ANSWER)
-            highlight_element = experimentRunDelegate->modScreen()->GetLastResult()->value(
+            highlight_element = experimentRunDelegate->modScreen()->GetLastResult()->map().value(
                                     GetCurrentAnswerElement())  ;
 
         if ( experiment->screensData()->hasFeedbackEnabled() )
         {
 
             m_Wnd->FeedBack( m_state.m_bResult ?
-                             ScreenElementRunDelegate::mc_ePositive :
-                             ScreenElementRunDelegate::mc_eNegative,
+                             ScreenElementRunDelegate::PositiveFeedback :
+                             ScreenElementRunDelegate::NegativeFeedback,
                              highlight_element);
             nFeedBackLength = experiment->screensData()->feedbackLength();
             if ( !nFeedBackLength )
@@ -736,7 +750,7 @@ void ApexControl::Answered( const ApexScreenResult* ac_Answer )
         m_Wnd->ReclaimFocus();
 
         if ( nFeedBackLength >= 0 ) {
-            qDebug("Feedback: waiting for %dms", nFeedBackLength);
+            //qDebug("Feedback: waiting for %dms", nFeedBackLength);
             mc_pControlThread->mp_StartWaitOnTimer( nFeedBackLength, tState::mc_eFeedbackDone );
         }
     }
@@ -750,11 +764,8 @@ void ApexControl::Answered( const ApexScreenResult* ac_Answer )
 //[ controlthread ]
 void ApexControl::customEvent( QEvent* e )
 {
-
     try
     {
-
-
         if ( e->type() == appcore::QDispatchedEvent<>::sc_QDispatchedEventType )
         {
             const int nEventType = ( (appcore::QDispatchedEvent<>*)e )->mc_nEventType;
@@ -766,6 +777,11 @@ void ApexControl::customEvent( QEvent* e )
                 m_Wnd->ClearScreen();
                 experimentRunDelegate->modProcedure()->FirstTrial();
                 m_Wnd->ExperimentLoaded();
+
+                if (autoStartExperiments)
+                    QTimer::singleShot(100, this, SLOT(Start()));
+                    //Start();
+
             }
             else if ( nEventType == tState::mc_eStarted )
             {
@@ -896,7 +912,7 @@ void ApexControl::customEvent( QEvent* e )
     }
     catch (ApexStringException& e)
     {
-        ErrorHandler::Get().addItem(StatusItem(StatusItem::ERROR,"Control thread",  e.what()) );
+        ErrorHandler::Get().addItem(StatusItem(StatusItem::Error,"Control thread",  e.what()) );
     }
 
 }
@@ -946,6 +962,10 @@ void ApexControl::NewStimulus( const QString& ac_sStimulus )
     experimentRunDelegate->modOutput()->LoadStimulus( ac_sStimulus, false );
     //experimentRunDelegate->modOutput()->LoadStimulus( ac_sStimulus, true );
     experimentRunDelegate->modOutput()->PlayStimulus();
+    // [Tom] Moved here from apexprocedure to improve accuracy
+    if (experiment->procedureConfig()->GetParameters()->GetInputDuringStimulus()) {
+        StartTimer();
+    }
     m_state.mp_SetState( tState::mc_eStim );
     mc_pControlThread->mp_StartWaitOnObject( -1, &experimentRunDelegate->modOutput()->GetStimulusEnd(), tState::mc_eStimDone );
 }
@@ -1041,7 +1061,7 @@ void ApexControl::SaveAndClose()
 
     if (!noResults && experimentRunDelegate->modResultSink())
     {
-        experimentRunDelegate->modResultSink()->Finished();
+        experimentRunDelegate->modResultSink()->Finished(!autoSaveResults);
         if ( experimentRunDelegate->modResultSink()->IsSaved())
         {
             if (experiment->resultParameters()->showResultsAfter()
@@ -1052,6 +1072,7 @@ void ApexControl::SaveAndClose()
                                 experimentRunDelegate->modResultSink()->GetFilename(),
                                 Paths::Get().GetXsltScriptsPath()
                                );
+                connect(&rv, SIGNAL(errorMessage(QString,QString)), this, SLOT(errorMessage(QString, QString)));
                 bool result=rv.ProcessResult();
 
                 if (result)
@@ -1243,6 +1264,9 @@ void apex::ApexControl::startPluginRunner()
 
     connect(mod_experimentselector.get(), SIGNAL(Selected(data::ExperimentData*)),
             this, SLOT(newExperiment(data::ExperimentData*)));
+    connect(mod_experimentselector.get(),
+            SIGNAL(errorMessage(const QString&, const QString&)),
+            this, SLOT(errorMessage(const QString&, const QString&)));
 
     mod_experimentselector->Select(QString());
 }

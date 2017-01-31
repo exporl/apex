@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.2/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.2/experiment.xsd"
-  xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment" version="1">
+  xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.3/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.3/experiment.xsd"
+  xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment" version="1">
   <!-- 
  Gap detection
   -->

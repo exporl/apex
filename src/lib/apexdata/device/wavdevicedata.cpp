@@ -35,7 +35,7 @@ WavDeviceData::WavDeviceData() : DeviceData(TYPE_WAVDEVICE)
     setValueByType("samplerate", 44100);
     setValueByType("buffersize", -1);
 //    setValueByType("defaultbuffersize", 8192);
-    setValueByType("blocksize", 8192);
+    setValueByType("blocksize", 8192);      // Note: if set to -1, the sound card buffer size will be used by default
     setValueByType("buffersize_apex", 1);
     setValueByType("padzero", 0);
     setValueByType("setcardmixer", false);
@@ -65,9 +65,9 @@ void WavDeviceData::setInternalBufferSize (double bs)
     setValueByType ("buffersize_apex", bs);
 }
 
-unsigned WavDeviceData::blockSize() const
+int WavDeviceData::blockSize() const
 {
-    return valueByType ("blocksize").toUInt();
+    return valueByType ("blocksize").toInt();
 }
 
 void WavDeviceData::setBlockSize(unsigned bs)

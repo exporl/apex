@@ -30,7 +30,7 @@ namespace apex {
     {
     class CorrectorData;
     }
-    class ApexScreenResult;
+    class ScreenResult;
 
     class Corrector : public ApexModule {
         Q_OBJECT
@@ -39,7 +39,7 @@ namespace apex {
         virtual QString GetResultXML() const;
 
     public:
-        virtual bool Correct (const ApexScreenResult& p_answer);
+        virtual bool Correct (const ScreenResult& p_answer);
         virtual bool GetLastResult() const { return m_currentResult; };
 
         virtual const QString GetCorrectAnswer (unsigned p_position = 0) const;

@@ -24,7 +24,7 @@
 #include "services/mainconfigfileparser.h"
 #include "services/paths.h"
 
-#include "screen/apexscreenresult.h"
+#include "screen/screenresult.h"
 
 //from libtools
 #include "procedure/pluginprocedureparameters.h"
@@ -47,11 +47,16 @@ PluginProcedure::PluginProcedure ( ExperimentRunDelegate& p_rd, data::ApexProced
 
     // construct script filename
     QString scriptname = ((data::PluginProcedureParameters*)m_procedureConfig->GetParameters())->GetScript();
+    m_doDebug = ((data::PluginProcedureParameters*)m_procedureConfig->GetParameters())->GetDebugger();
 
     QString newname = Paths::findReadableFile (((data::PluginProcedureParameters*)
                 m_procedureConfig->GetParameters())->GetScript(),
         QStringList() << Paths::Get().GetNonBinaryPluginPath(),
         QStringList() << ".js");
+
+    if (m_doDebug) {
+        m_scriptEngineDebugger.attachTo(&m_scriptEngine);
+    }
 
     if (newname.isEmpty())
         throw ApexStringException("Cannot find procedure plugin file " +
@@ -80,7 +85,7 @@ PluginProcedure::PluginProcedure ( ExperimentRunDelegate& p_rd, data::ApexProced
 
 
     // attach the main script library to the current script
-    int nApiLines;          // number of lines in the API, used to calculate correct error message line
+    int nApiLines=0;          // number of lines in the API, used to calculate correct error message line
     QString mainPluginLibrary(
         MainConfigFileParser::Get().GetPluginScriptLibrary());
     if ( ! mainPluginLibrary.isEmpty() ) {
@@ -91,12 +96,15 @@ PluginProcedure::PluginProcedure ( ExperimentRunDelegate& p_rd, data::ApexProced
                     mainPluginLibrary);
         }
 
-        QString append = file.readAll();
-        nApiLines=append.count("\n")+1;
+        //QString append = file.readAll();
+        m_scriptEngine.evaluate(file.readAll());
+
+    }
+     /*   nApiLines=append.count("\n")+1;
         
         scriptdata=append + "\n" + scriptdata;
         file.close();
-    }
+    }*/
 
     // set procedureparameters as properties of params object
     qDebug("Setting properties");
@@ -178,11 +186,11 @@ void PluginProcedure::StartOutput()
     ApexProcedure::StartOutput();
 }
 
-bool PluginProcedure::NextTrial ( const bool p_answer, const ApexScreenResult* screenresult  )
+bool PluginProcedure::NextTrial ( const bool p_answer, const ScreenResult* screenresult  )
 {
-    // convert ApexScreenResult to QVariantMap
+    // convert ScreenResult to QVariantMap
     QVariantMap s;
-    for (ApexScreenResult::const_iterator it=screenresult->begin(); it!=screenresult->end(); ++it) {
+    for (ScreenResult::const_iterator it=screenresult->begin(); it!=screenresult->end(); ++it) {
         s.insert( it.key(), it.value());
     }
 

@@ -76,19 +76,14 @@ QString createTempDirectory (const QString prefix=QString())
 #endif
 }
 
-QString SpinTest::name() const
-{
-    return "spin";
-}
-
 void SpinTest::initTestCase()
 {
-    //xercesc::XMLPlatformUtils::Initialize();         // setup XML environment
+    xercesc::XMLPlatformUtils::Initialize();         // setup XML environment
 }
 
 void SpinTest::cleanupTestCase()
 {
-    //xercesc::XMLPlatformUtils::Terminate();
+    xercesc::XMLPlatformUtils::Terminate();
 }
 
 void SpinTest::testSnrDefined()
@@ -182,7 +177,6 @@ double totalNoiseGain(ExperimentData& d)
 
  void SpinTest::testTotalGain()
  {
-     QSKIP("Ask Tom if this test should pass", SkipAll);
      QDir d( qApp->applicationDirPath() );
      d.cdUp();
      d.cdUp();
@@ -227,7 +221,7 @@ double totalNoiseGain(ExperimentData& d)
      s.setSubjectName("subjectname");
      s.setSpeechmaterial(targetSpeechmaterial);
      s.setSpeechcategory(targetCategory);
-     s.setNoisematerial("listvrouw_ltass");
+     s.setNoisematerial("LISTvrouw_ltass");
      s.setList(targetList);
      s.setSpeakerType(HEADPHONE);
      levels.noise=50;
@@ -290,7 +284,7 @@ double totalNoiseGain(ExperimentData& d)
 
 void SpinTest::testCalibration()
 {
-    QSKIP("Skipping calibration test", SkipAll);
+    QSKIP("Skipping calibration test - calibration not implemented", SkipAll);
 
     try
     {
@@ -359,7 +353,7 @@ void SpinTest::testCalibration()
     }
     catch (int e)
     {
-        qFatal("Damn, stop throwing f*cking ints: %i", e);
+        qFatal("Stop throwing ints: %i", e);
     }
     catch (const char* e)
     {
@@ -367,7 +361,7 @@ void SpinTest::testCalibration()
     }
     catch (...)
     {
-        qFatal("WTF???");
+        qFatal("something else thrown???");
     }
 }
 
@@ -394,7 +388,7 @@ void SpinTest::testAdaptiveWithoutNoise()
     s.setSubjectName("subjectname");
     s.setSpeechmaterial(targetSpeechmaterial);
     s.setSpeechcategory(targetCategory);
-    s.setNoisematerial("listvrouw_ltass");
+    s.setNoisematerial("LISTvrouw_ltass");
     s.setList(targetList);
     s.setSpeakerType(HEADPHONE);
     levels.speech = 60;
@@ -456,7 +450,7 @@ void SpinTest::testAdaptiveWithNoiseAdaption()
     s.setSubjectName("subjectname");
     s.setSpeechmaterial(targetSpeechmaterial);
     s.setSpeechcategory(targetCategory);
-    s.setNoisematerial("listvrouw_ltass");
+    s.setNoisematerial("LISTvrouw_ltass");
     s.setList(targetList);
     s.setSpeakerType(HEADPHONE);
     levels.noise = 60;
@@ -491,7 +485,7 @@ void SpinTest::testAdaptiveWithNoiseAdaption()
             -10.0);
     QCOMPARE(static_cast<ApexAdaptiveProcedureParameters*>
             (experiment->procedureConfig()->GetParameters())->largerIsEasier(),
-            false);
+            true);
 
     // remove temporary file
     QDir(dir).remove(expfile);
@@ -510,6 +504,13 @@ void SpinTest::testAudioDriver_data()
         << "asio" << 2u;
     QTest::newRow("lynxone") << unsigned(LynxOne)
         << "portaudio" << 1u;
+#ifdef Q_OS_WIN32
+    QTest::newRow("defaultsoundcard") << unsigned(DefaultSoundcard)
+        << "asio" << 1u;
+#else
+    QTest::newRow("defaultsoundcard") << unsigned(DefaultSoundcard)
+        << "portaudio" << 1u;
+#endif
 }
 
 void SpinTest::testAudioDriver()
@@ -539,7 +540,7 @@ void SpinTest::testAudioDriver()
     s.setSubjectName("subjectname");
     s.setSpeechmaterial(targetSpeechmaterial);
     s.setSpeechcategory(targetCategory);
-    s.setNoisematerial("listvrouw_ltass");
+    s.setNoisematerial("LISTvrouw_ltass");
     s.setList(targetList);
     s.setSpeakerType(FREE_FIELD);
     levels.noise = 60;
@@ -580,4 +581,5 @@ void SpinTest::testAudioDriver()
     QDir::root().rmdir(dir);
 }
 
-Q_EXPORT_PLUGIN2(test_spin, SpinTest);
+//generate the stand alone test binary
+QTEST_MAIN(SpinTest)

@@ -27,6 +27,8 @@
 namespace apex
 {
 
+bool Random::deterministic = false;
+
 class RandomPrivate
 {
 public:
@@ -40,7 +42,15 @@ public:
 Random::Random() :
     d(new RandomPrivate)
 {
-    setSeed (QDateTime::currentDateTime().toTime_t());
+    if (deterministic)
+        setSeed (0);
+    else
+        setSeed (QDateTime::currentDateTime().toTime_t());
+}
+
+void Random::setDeterministic(bool p)
+{
+    deterministic = p;
 }
 
 Random::Random (quint64 seed) :
@@ -123,8 +133,8 @@ unsigned Random::nextUInt() const
 unsigned Random::nextUInt (unsigned int n) const
 {
     // n is a power of 2
-    if ((n & -int (n)) == n) // cast silences warning
-        return (n * quint64 (next (32))) >> 32;
+    /*if ((n & -int (n)) == n) // cast silences warning
+        return (n * quint64 (next (32))) >> 32;*/
     unsigned bits, val;
     do {
         bits = next (32);
@@ -146,6 +156,19 @@ qint64 Random::nextLongLong() const
 quint64 Random::nextULongLong() const
 {
     return (quint64 (next (32)) << 32) + next (32);
+}
+
+unsigned Random::nextULongLong (const quint64 n) const
+{
+    // n is a power of 2
+    if ((n & -int (n)) == n) // cast silences warning
+        return (n * quint64 (next (32))) >> 32;
+    unsigned bits, val;
+    do {
+        bits = nextULongLong();
+        val = bits % n;
+    } while (bits - val > ULONG_MAX - (n - 1));
+    return val;
 }
 
 void Random::setSeed (quint64 seed)

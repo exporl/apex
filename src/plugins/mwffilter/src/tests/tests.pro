@@ -10,8 +10,8 @@ SOURCES +=						\
 	arfilter.cpp					\
 	filesink.cpp					\
 	firfilter.cpp					\
-	hrtfmwf.cpp					\
-	hrtfmwfadapt.cpp				\
+#	hrtfmwf.cpp					\
+#	hrtfmwfadapt.cpp				\
 	tester.cpp					\
 	threadedfirfilter.cpp				\
 	vad.cpp						\

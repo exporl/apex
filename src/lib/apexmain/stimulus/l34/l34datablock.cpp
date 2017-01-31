@@ -216,7 +216,7 @@ void L34DataBlock::ConvertToMappedXMLData(data::ApexMap* pMap, float volume) con
         mappedForVolume=volume;
 
     }
-    else if(!file_extension.compare("qicext")) {
+    /*else if(!file_extension.compare("qicext")) {
 
         int refEl = (*pMap).defaultMap().referenceElectrode();
         QString header =
@@ -340,7 +340,9 @@ void L34DataBlock::ConvertToMappedXMLData(data::ApexMap* pMap, float volume) con
         // bIsXMLData=true;
         mappedForVolume=volume;
 
-    }  else if(!file_extension.compare("aseq")) {
+    }
+*/
+    else if(!file_extension.compare("aseq")) {
         Q_ASSERT(m_Data.size());
         //L34Stimulus firstStimulus = m_Data[0];
         
@@ -361,6 +363,9 @@ void L34DataBlock::ConvertToMappedXMLData(data::ApexMap* pMap, float volume) con
 
         if (period==-1)
             period=defaultMap.period();
+
+        if (returnElectrode==0)
+            returnElectrode=defaultMap.referenceElectrode();
 
         // fixme: return electrode
         
@@ -394,6 +399,8 @@ void L34DataBlock::ConvertToMappedXMLData(data::ApexMap* pMap, float volume) con
         int stimuliSeqLen  = strlen(templ_rep)+1000;
         // buffer for printf      
         char* printbuffer = (char*) malloc(stimuliSeqLen);
+
+        m_length = 0;
 
         m_XMLData.push_back(NIC_STREAM_OPEN);
         m_XMLData.push_back(NIC_SEQUENCE_OPEN);
@@ -458,7 +465,7 @@ void L34DataBlock::ConvertToMappedXMLData(data::ApexMap* pMap, float volume) con
 //                qDebug("t=%d, c=%d, m=%f, cl=%d", t, c, prevStim.magnitude, cl);
             }
 
-            if (prevStim.returnElectrode!=L34_INVALID)
+            if (prevStim.returnElectrode!=0)
                 returnElectrode=prevStim.returnElectrode;
 
             if (prevStim.phaseWidth!=-1)
@@ -491,7 +498,7 @@ void L34DataBlock::ConvertToMappedXMLData(data::ApexMap* pMap, float volume) con
                     sprintf(printbuffer, templ_rep, repetitions,
                         ae, returnElectrode, cl, period, phaseWidth, phaseGap);
             }
-            
+            m_length += period*(float)repetitions;
                 
             m_XMLData.push_back(printbuffer);
             repetitions=1;
@@ -524,7 +531,7 @@ bool L34DataBlock::canMap(data::ApexMap* pMap) const
     int channel             = m_Data[0].channel;
     int magnitude           = m_Data[0].magnitude;
 
-    if (activeElectrode==-1 || returnElectrode==L34_INVALID) {
+    if (activeElectrode==-1) {
         if (channel==-1)
             return false;
 
@@ -538,8 +545,8 @@ bool L34DataBlock::canMap(data::ApexMap* pMap) const
     
     const data::ChannelMap& defaultMap( pMap->defaultMap());
 
-    if ( returnElectrode == L34_INVALID &&
-         defaultMap.referenceElectrode()== L34_INVALID)
+    if ( returnElectrode == 0 &&
+         defaultMap.referenceElectrode()== 0)
         return false;
 
     if ( currentLevel==-1 && magnitude==-1)

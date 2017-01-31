@@ -23,7 +23,7 @@
 #include "comparator.h"
 #include "screen/screen.h"
 #include "procedure/apextrial.h"
-#include "screen/apexscreenresult.h"
+#include "screen/screenresult.h"
 #include "apexcontrol.h"
 
 using namespace apex;
@@ -35,7 +35,7 @@ Corrector::Corrector (ExperimentRunDelegate& p_rd, const data::CorrectorData* da
 {
 }
 
-bool Corrector::Correct (const ApexScreenResult& p_answer)
+bool Corrector::Correct (const ScreenResult& p_answer)
 {
     #ifdef SHOWSLOTS
     qDebug ("Slot ApexCorrector::Answer( const QString & p_answer )");
@@ -48,9 +48,9 @@ bool Corrector::Correct (const ApexScreenResult& p_answer)
     // get wanted element from screen
     QString wElement;
 
-    ApexScreenResult::const_iterator p = p_answer.find (answerElement);
+    ScreenResult::const_iterator p = p_answer.map().find (answerElement);
     bool result = false;
-    if (p != p_answer.end()) {
+    if (p != p_answer.map().end()) {
         wElement = p.value();
         m_currentAnswer = wElement;
         m_correctAnswer = GetCorrectAnswer (0);

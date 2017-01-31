@@ -147,25 +147,25 @@ void ApexCentralWidget::paintEvent( QPaintEvent* /*e*/ )
         QPen pen;
         assert( m_pFeedBack->getWidget() );
         const QRect& rex( m_pFeedBack->getWidget()->geometry() );
-        const ScreenElementRunDelegate::mt_eFeedBackMode& eMode =
-            m_pFeedBack->getFeedBackMode();
+        const ScreenElementRunDelegate::FeedbackMode& eMode =
+            m_pFeedBack->getFeedbackMode();
 
-        if ( eMode == ScreenElementRunDelegate::mc_eOff )
+        if ( eMode == ScreenElementRunDelegate::NoFeedback )
         {
             pen.setColor( m_ScreenBG );
             m_bFeedBackDirty = false;
         }
-        else if ( eMode == ScreenElementRunDelegate::mc_eHighLight )
+        else if ( eMode == ScreenElementRunDelegate::HighlightFeedback )
         {
             pen.setColor( m_High );
             m_bFeedBackDirty = true;
         }
-        else if ( eMode == ScreenElementRunDelegate::mc_eNegative )
+        else if ( eMode == ScreenElementRunDelegate::NegativeFeedback )
         {
             pen.setColor( m_Bad );
             m_bFeedBackDirty = true;
         }
-        else if ( eMode == ScreenElementRunDelegate::mc_ePositive )
+        else if ( eMode == ScreenElementRunDelegate::PositiveFeedback )
         {
             pen.setColor( m_Good );
             m_bFeedBackDirty = true;

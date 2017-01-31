@@ -51,6 +51,10 @@ public:
      */
     Random();
 
+    /** If true, seed will be 0 for all random generators instantiated from then on
+      */
+    static void setDeterministic(bool d);
+
     /** Creates a new pseudorandom number generator, starting with the
      * specified seed, using <code>setSeed(seed);</code>.
      *
@@ -172,6 +176,7 @@ public:
      * @return the next pseudorandom value
      */
     quint64 nextULongLong() const;
+    unsigned nextULongLong(const quint64 n) const;
 
     /** Sets the seed for this pseudorandom number generator.  As described
      * above, two instances of the same random class, starting with the same
@@ -180,6 +185,7 @@ public:
      * @param seed the new seed
      */
     virtual void setSeed (quint64 seed);
+
 
 protected:
     /**
@@ -194,6 +200,7 @@ protected:
 
 private:
     RandomPrivate *d;
+    static bool deterministic;
 };
 
 } // namespace rba

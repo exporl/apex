@@ -91,13 +91,13 @@ void WavFader::Prepare()
 
 void WavFader::mp_SetFadeLength ( const double ac_dMSec )
 {
-    qDebug ( "WavFader: setting fade length to %f", ac_dMSec);
+    //qDebug ( "WavFader: setting fade length to %f", ac_dMSec);
     m_dFadeLength = dataconversion::gf_nSamplesFromMsec< unsigned > ( GetSampleRate(), ac_dMSec );
 }
 
 void WavFader::mp_SetStreamLength ( const unsigned long ac_nSamples )
 {
-    qDebug("Streamlength: %lu samples", ac_nSamples);
+    //qDebug("Streamlength: %lu samples", ac_nSamples);
     if ( m_bFadeIn )
     {
         m_pProc->mp_SetGateOn ( 0 );

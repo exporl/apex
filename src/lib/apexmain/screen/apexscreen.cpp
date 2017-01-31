@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "apexscreen.h"
-#include "apexscreenresult.h"
+#include "screen/screenresult.h"
 #include "gui/mainwindow.h"
 #include "apexcontrol.h"
 #include "experimentparser.h"
@@ -26,7 +26,8 @@
 using namespace apex;
 using namespace apex::gui;
 
-void ApexScreen::iAnswered(const ApexScreenResult* result) {
+void ApexScreen::iAnswered(const ScreenResult* result) {
+    qDebug("***iAnswered");
     m_lastResult = *result;
     ApexControl::Get().GetMainWnd()->EnableScreen(false);
     emit( Answered(result));

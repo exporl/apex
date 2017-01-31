@@ -19,6 +19,8 @@
 
 #include "connection/connection.h"
 
+#include "services/errorhandler.h"
+
 #include "device/mixer/imixer.h"
 #include "device/mixer/mixerfactory.h"
 #include "device/mixer/mixerparameters.h"
@@ -38,8 +40,6 @@
 #include "wavdatablock.h"
 #include "wavdevice.h"
 #include "wavfilter.h"
-
-#include <appcore/qt_utils.h>
 
 #include <soundcard/bufferdropcheck.h>
 #include <soundcard/soundcardfactory.h>
@@ -132,7 +132,6 @@ WavDevice::WavDevice( data::WavDeviceData* p_data):
      //try validate drivername from device with mainconfig's name entries
     QString driver(data->driverString());      //asio/portaudio
     QString card(data->cardName());
-    bool    bRme = false;                           //set to true if it's an Rme, needed for getting mixer
 
     if (!driver.isEmpty() && !card.isEmpty()) {
         const stimulus::SndDriversMap* drvrs       = MainConfigFileParser::Get().GetSoundCardDrivers();
@@ -158,8 +157,6 @@ WavDevice::WavDevice( data::WavDeviceData* p_data):
                 throw ApexStringException("Driver " + driver + " does not exist. Check your mainconfig.xml file.");
             } else {
                 driver = drv->m_sDevType;
-                if (card == "RME")
-                    bRme = true;
                 m_card = drv->m_sDriverName;
                 m_driver = drv->m_sDevType;
             }
@@ -174,22 +171,27 @@ WavDevice::WavDevice( data::WavDeviceData* p_data):
 
 
     //parse non-default params
-    QString sDriver = m_driver;
-    if (! sDriver.isEmpty()) {
+    //QString sDriver = m_driver;
+    if (! m_driver.isEmpty()) {
 
         //see if we support this driver
 #if !defined( WIN32 ) && !defined( __APPLE__ )
-        sf_CheckDriverType(sDriver, ASIO);
+        //sf_CheckDriverType(m_driver, ASIO);
+        if (m_driver == "asio") {
+            ErrorHandler::Get().addWarning("WavDevice", "ASIO driver not supported on this platform, falling back to portaudio");
+            m_driver = "portaudio";
+        }
+
 #endif
 #if defined( WIN32 )
-        sf_CheckDriverType(sDriver, JACK);
+        sf_CheckDriverType(m_driver, JACK);
 #endif
 
     }
 
 
     std::string sErr;
-    WavDeviceIO::mt_eOpenStatus nOk = m_IO.mp_eSetSoundcard( *p_data, true, sErr );
+    WavDeviceIO::mt_eOpenStatus nOk = m_IO.mp_eSetSoundcard( *p_data, m_driver, true, sErr );
     if( nOk == WavDeviceIO::mc_eDefBufferSize )
     {
         //issue a warning; TODO get this to ErrorLogger somehow
@@ -216,7 +218,11 @@ WavDevice::WavDevice( data::WavDeviceData* p_data):
             {
                 sTemp = dlg.GetSelectedItem();
                 m_IO.sf_SetDriverName( sTemp, *p_data );
-                nOk = m_IO.mp_eSetSoundcard( *p_data, true, sErr );
+
+                //Get the prefix of the driver name
+                m_driver = sTemp.mid(0, sTemp.indexOf("."));
+
+                nOk = m_IO.mp_eSetSoundcard( *p_data, m_driver, true, sErr );
                 if( nOk != WavDeviceIO::mc_eOK )
                 {
                   if( nOk == WavDeviceIO::mc_eDefBufferSize )
@@ -347,7 +353,7 @@ void WavDevice::AddInput( const DataBlock& ac_DataBlock )
 #endif
 
     PosAudioFormatStream* p = ((WavDataBlock*) &ac_DataBlock )->
-            GetWavStream(data->blockSize(), data->sampleRate());
+            GetWavStream(m_IO.GetBlockSize(), data->sampleRate());
     ApexSeqStream* pS = new ApexSeqStream( p, true );
 
     mp_AddSeqStream( pS, ac_DataBlock.GetID() );
@@ -387,7 +393,7 @@ void WavDevice::SetSequence( const DataBlockMatrix* ac_pSequence )
             DataBlock* pCur = ac_pSequence->operator()( j, i );
             if ( pCur )
             {
-                if ( !m_IO.m_pConnMan->mf_bIsRegistered( sq( pCur->GetID() ) ) )
+                if (!m_IO.m_pConnMan->mf_bIsRegistered(pCur->GetID().toStdString()))
                     AddInput( *pCur );
 //                qDebug("%s", qPrintable(pCur->GetID()));
             }
@@ -401,19 +407,26 @@ void WavDevice::SetSequence( const DataBlockMatrix* ac_pSequence )
     {
         //create inputstream with nZeroPads * buffersize samples to add after longest row
         const unsigned nZeroPads = data->valueByType( gc_sPadZero ).toUInt();
-        SilentReader* p = new SilentReader( 1, data->sampleRate(), (unsigned long) (nZeroPads * data->blockSize()));
-        PosAudioFormatStream* ps = new PosAudioFormatStream( p, data->blockSize(), true, true );
+        unsigned long padZeroSamples;
+        if (nZeroPads<16)
+            padZeroSamples = nZeroPads * 8192;
+        else
+            padZeroSamples = nZeroPads;
+        //qDebug("Pad zero samples: %ld", padZeroSamples);
+        SilentReader* p = new SilentReader( 1, data->sampleRate(), padZeroSamples);
+        PosAudioFormatStream* ps = new PosAudioFormatStream( p,  GetBlockSize(), true, true );
         pZeroPad = new ApexSeqStream( ps, true );
         //add it
         mp_AddSeqStream( pZeroPad, gc_sPadZero );
     }
 
+    //qDebug() << "*****Checking if silence is needed" << m_SilenceBefore;
     unsigned long startOffset = 0;          // the actual stimulus will begin after offset
     if (m_SilenceBefore)
     {
         startOffset=(unsigned long) m_SilenceBefore*data->sampleRate();
 
-        qDebug() << "Adding extra silence of " + QString::number(m_SilenceBefore) + "s";
+        //qDebug() << "Adding extra silence of " + QString::number(m_SilenceBefore) + "s";
 
     }
 
@@ -431,7 +444,7 @@ void WavDevice::SetSequence( const DataBlockMatrix* ac_pSequence )
                 const QString& c_sCur( ac_pSequence->operator()( j, i )->GetID() );
                 if ( !c_sCur.isEmpty() )
                 {
-                    const std::string sCur( sq( c_sCur ) );
+                    const std::string sCur(c_sCur.toStdString());
                     tSeqCIt itCur = m_InputStreams.find( sCur );
                     if ( i == 0 )
                     {
@@ -450,7 +463,7 @@ void WavDevice::SetSequence( const DataBlockMatrix* ac_pSequence )
                             if (d)
                             {
                                 const QString qsPre = d->GetID();
-                                const std::string sPre( sq(qsPre) );
+                                const std::string sPre(qsPre.toStdString());
                                 tSeqCIt itPre = m_InputStreams.find( sPre );
                                 if ( itCur != m_InputStreams.end() && itPre != m_InputStreams.end() )
                                 {
@@ -561,7 +574,7 @@ bool WavDevice::AllDone()
     std::cout<< "WavDevice: AllDone "<<std::endl;
 #endif
 
-//  qDebug("Wavdevice::Leaving AllDone()");
+//     qDebug("Wavdevice::Leaving AllDone()");
     m_SilenceBefore=0;
 
     // check for clipping
@@ -576,7 +589,7 @@ void WavDevice::CheckClipping() {
     for ( streamapp::tUnsignedBoolMapCIt it = zork.begin() ; it != itE ; ++it )
     {
         if ( (*it).second ) {
-            xmlresults.append( XMLize::f_SingleTag( XMLize::sc_sClippedTag + XMLize::sc_sEqualTag + qn( (*it).first ) + XMLize::sc_sEndTag ) );     //<clipped channel ="0"/>
+            xmlresults.append( XMLize::f_SingleTag( XMLize::sc_sClippedTag + XMLize::sc_sEqualTag + QString::number( (*it).first ) + XMLize::sc_sEndTag ) );     //<clipped channel ="0"/>
 
             QApplication::postEvent( &ApexControl::Get(),
                             new ErrorEvent(
@@ -584,13 +597,13 @@ void WavDevice::CheckClipping() {
 
 (StatusItem
 
-::ERROR
+::Error
 , "WavDevice",
                                     "Soundcard output clipped")
                                         ) );
         }
     }
-    xmlresults.append( XMLize::f_SingleTag( XMLize::sc_sBufferDropTag + XMLize::sc_sEqualTag + qn( m_IO.m_pSoundcardbufferDroppedCallback->mf_nGetNumDrops() ) + XMLize::sc_sEndTag ) );  //<buffer underruns="0"/>
+    xmlresults.append( XMLize::f_SingleTag( XMLize::sc_sBufferDropTag + XMLize::sc_sEqualTag + QString::number( m_IO.m_pSoundcardbufferDroppedCallback->mf_nGetNumDrops() ) + XMLize::sc_sEndTag ) );  //<buffer underruns="0"/>
 
     m_IO.m_pSoundcardWriterStream->mp_ResetClipped();
 }
@@ -675,7 +688,7 @@ bool WavDevice::SetParameter ( const QString& type, const int channel, const QVa
     }
    else if (type.startsWith("connection"))
     {
-        
+
         // Get default parameter value:
 /*        data::ParameterName p(
                             m_pParameters->GetParameterByType(type.mid(11,-1)));
@@ -710,34 +723,27 @@ void WavDevice::SetConnectionParams() {
         QString connectionID(type.mid(11,-1));
         //qDebug(qPrintable("WavDevice::SetParameter: Setting parameter for connection with id " + connectionID));
 
-        bool bRet = false;
         const tConnections::size_type c_nSize = m_NamedConnections.size();
-        for ( tConnections::size_type i = 0 ; i < c_nSize ; ++i )
-        {
+        for ( tConnections::size_type i = 0 ; i < c_nSize ; ++i ) {
             tConnection& cur = m_NamedConnections[ i ];
-            if ( QString::compare( cur.m_sFromChannelID, connectionID ) == 0 )
-            {
-                const unsigned nNewFromChannel = (unsigned) value.toInt();
+            if ( QString::compare( cur.m_sFromChannelID, connectionID ) == 0 ) {
+                const int nNewFromChannel = value.toInt();
 
                 qDebug("Reconnecting %s from channel %d to channel %d",
                        qPrintable(cur.m_sFromChannelID),
                                   cur.m_nFromChannel, nNewFromChannel);
-                
+
                 if ( nNewFromChannel != cur.m_nFromChannel ) //don't change if it's the same
                     m_IO.mp_RewireConnection( cur, nNewFromChannel, true );
-                bRet = true;
-            }
-            else if ( QString::compare( cur.m_sToChannelID, connectionID ) == 0 )
-            {
-                const unsigned nNewToChannel = (unsigned) value.toInt();
+            } else if ( QString::compare( cur.m_sToChannelID, connectionID ) == 0 ) {
+                const int nNewToChannel = value.toInt();
 
                 qDebug("Reconnecting %s from channel %d to channel %d",
                        qPrintable(cur.m_sToChannelID),
                                   cur.m_nToChannel, nNewToChannel);
-                
+
                 if ( nNewToChannel != cur.m_nToChannel )
                     m_IO.mp_RewireConnection( cur, nNewToChannel, false );
-                bRet = true;
             }
         }
 
@@ -747,16 +753,12 @@ void WavDevice::SetConnectionParams() {
       //now check if we can run
     if( !m_IO.mf_bAllInputsConnected() )
     {
-      QApplication::postEvent( &ApexControl::Get(), new ErrorEvent( StatusItem
-
- (
-          StatusItem
-
-::ERROR
-,
-          "WavDevice",
-          "Some datablocks scheduled to play are not connected."
-        "Check your connections (that may be changed by a parameter)") ) );
+        QApplication::postEvent( &ApexControl::Get(),
+                                 new ErrorEvent( StatusItem (
+                                                     StatusItem::Error,
+                                                     "WavDevice",
+                                                     "Some datablocks scheduled to play are not connected."
+                                                     "Check your connections (that may be changed by a parameter)") ) );
     }
 
     m_connection_param_cache.clear();
@@ -803,13 +805,13 @@ bool WavDevice::GetInfo( const unsigned ac_nType, void* a_pInfo ) const
 // {
 //     //run
 //     PlayAll();
-// 
+//
 //     //close the outputfile by replacing it with a new one
 //     ++mv_nOffLine;
 //     std::string temp = toString( mv_nOffLine ) + m_IO.sc_sOffLineOutputName;
 //     AudioFormatWriter* pRepl = StreamAppFactory::sf_pInstance()->mf_pWriter( temp, data->GetNumberOfChannels(), data->GetSampleRate() );
 //     m_IO.m_pSoundcardWriterStream->mp_ReplaceWriter( pRepl, true );
-// 
+//
 //     //create the datablock with the closed outputfile
 //     data::DatablockData p;
 //     p.m_nChannels = data->GetNumberOfChannels();
@@ -818,10 +820,10 @@ bool WavDevice::GetInfo( const unsigned ac_nType, void* a_pInfo ) const
 //     p.SetID(GetID());
 //     QUrl url( mv_sOffLine.data() );
 //     WavDataBlock* pRet = new WavDataBlock(p, url, 0);
-// 
+//
 //     //set filename to new name
 //     mv_sOffLine = temp;
-// 
+//
 //     return pRet;
 // }
 
@@ -834,4 +836,9 @@ void WavDevice::Prepare()
 {
     SetConnectionParams();
     m_IO.Prepare();
+}
+
+int WavDevice::GetBlockSize() const
+{
+    return m_IO.GetBlockSize();
 }

@@ -22,19 +22,29 @@
 
 #include <QPushButton>
 #include <QPaintEvent>
+#include <QMouseEvent>
+#include <QPointF>
 #include <QPixmap>
 
 
-class PictureButtonWidget: public QPushButton {    
+class PictureButtonWidget: public QPushButton {
+    Q_OBJECT
+
     public:
         PictureButtonWidget(QWidget* parent=0);
 	void paintEvent(QPaintEvent*);
+        virtual void mousePressEvent( QMouseEvent* ev );
 	void setPixmap(QPixmap p);
 	void setBorderSize(int s);
 
-	private:
-		QPixmap pixmap;
-		int bordersize;
+    signals:
+        // QPointF are the relative coordinates of the point where the user clicked
+        void mousePressed( const QPointF& );
+
+
+    private:
+        QPixmap pixmap;
+        int bordersize;
 };
 
 

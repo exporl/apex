@@ -22,9 +22,9 @@
 
 
 
-        const char* ApexTrialNotFoundException::what() const throw()
+        const char* TrialDataNotFoundException::what() const throw()
         {
-            return "ApexTrialNotFoundException";
+            return "TrialDataNotFoundException";
         }
 
 

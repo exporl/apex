@@ -56,11 +56,12 @@ namespace parser
 }
 
 data::ScreensData* ScreensParser::ParseScreens(
-    XERCES_CPP_NAMESPACE::DOMElement* p_base, /*MainWindowConfig* mainWndConfig,*/
-                                             QString scriptLibraryFile)
-{
+            XERCES_CPP_NAMESPACE::DOMElement* p_base, /*MainWindowConfig* mainWndConfig,*/
+            QString scriptLibraryFile, QVariantMap scriptParameters,
+            data::ParameterManagerData* pmd)
+    {
     data::ScreensData* screens=new data::ScreensData();
-    std::auto_ptr<ScreenParser> m_screenParser(new ScreenParser( screens ));
+    std::auto_ptr<ScreenParser> m_screenParser(new ScreenParser( screens, pmd ));
 
 
 //start with default font
@@ -73,7 +74,7 @@ data::ScreensData* ScreensParser::ParseScreens(
     {
         const QString tag( XMLutils::GetTagName( currentNode ) );
         if (tag == "pluginscreens") {
-            ScriptExpander expander(scriptLibraryFile, m_parent);
+            ScriptExpander expander(scriptLibraryFile, scriptParameters, m_parent);
             expander.ExpandScript(currentNode, "getScreens");
         }
     }
@@ -169,7 +170,7 @@ data::ScreensData* ScreensParser::ParseScreens(
                     screens->addFeedbackPlugin( plugin, params);
                 }
                 else
-                    ErrorHandler::Get().addItem( StatusItem(StatusItem::WARNING,
+                    ErrorHandler::Get().addItem( StatusItem(StatusItem::Warning,
                                       "ExperimentConfigFileParser::ParseScreens",
                                       "Unknown tag: " + tag ));
             }
@@ -199,14 +200,14 @@ data::ScreensData* ScreensParser::ParseScreens(
                     qDebug("%s", qPrintable (file));
                     if ( !QFile::exists(absPath))
                     {
-                        ErrorHandler::Get().addItem( StatusItem(StatusItem::ERROR,"ScreenParser",
+                        ErrorHandler::Get().addItem( StatusItem(StatusItem::Error,"ScreenParser",
                                           "Cannot find panel movie: " + file));
                         return false;
                     }
                     screens->setPanelMovie(file);
                 }
                 else
-                    ErrorHandler::Get().addItem( StatusItem(StatusItem::WARNING,"ExperimentConfigFileParser::ParseScreens",
+                    ErrorHandler::Get().addItem( StatusItem(StatusItem::Warning,"ExperimentConfigFileParser::ParseScreens",
                                       "Unknown tag: " + tag ));
             }
             screens->m_eMode = data::gc_eChild;
@@ -234,7 +235,7 @@ data::ScreensData* ScreensParser::ParseScreens(
                     screens->setInterTrialLength(XMLutils::GetAttribute( reinf, gc_sLength ).toUInt());
                 }
                 else
-                    ErrorHandler::Get().addItem( StatusItem(StatusItem::WARNING,
+                    ErrorHandler::Get().addItem( StatusItem(StatusItem::Warning,
                                       "ExperimentConfigFileParser::ParseScreens",
                                       "Unknown tag: " + tag ));
             }
@@ -267,7 +268,7 @@ data::ScreensData* ScreensParser::ParseScreens(
         }
         else
         {
-            ErrorHandler::Get().addItem( StatusItem(StatusItem::WARNING,"ExperimentConfigFileParser::ParseScreens", "Unknown tag: " + tag ));
+            ErrorHandler::Get().addItem( StatusItem(StatusItem::Warning,"ExperimentConfigFileParser::ParseScreens", "Unknown tag: " + tag ));
         }
     }
 

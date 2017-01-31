@@ -50,7 +50,7 @@ ProcedureParser::ProcedureParser(QWidget* parent) :
 }
 
 data::ApexProcedureConfig* ProcedureParser::Parse ( XERCES_CPP_NAMESPACE::DOMElement* p_base,
-        const QString& scriptLibraryFile)
+        const QString& scriptLibraryFile, const QVariantMap& scriptParameters)
 {
     QString procType = XMLutils::GetAttribute ( p_base, "xsi:type" );
     data::ApexProcedureConfig* conf;
@@ -59,25 +59,25 @@ data::ApexProcedureConfig* ProcedureParser::Parse ( XERCES_CPP_NAMESPACE::DOMEle
     {
         AdaptiveProcedureParser parser(m_parent);
         conf = new data::ApexProcedureConfig();
-        parser.Parse ( p_base, conf, scriptLibraryFile);
+        parser.Parse ( p_base, conf, scriptLibraryFile, scriptParameters);
     }
     else if ( procType == "apex:constantProcedureType" )
     {
         ConstantProcedureParser parser(m_parent);
         conf = new data::ApexProcedureConfig();
-        parser.Parse ( p_base, conf, scriptLibraryFile);
+        parser.Parse ( p_base, conf, scriptLibraryFile, scriptParameters);
     }
     else if ( procType == "apex:trainingProcedureType" )
     {
         TrainingProcedureParser parser(m_parent);
         conf = new data::ApexProcedureConfig();
-        parser.Parse ( p_base, conf, scriptLibraryFile);
+        parser.Parse ( p_base, conf, scriptLibraryFile, scriptParameters);
     }
     else if ( procType == "apex:multiProcedureType" )
     {
         MultiProcedureParser parser(m_parent);
         data::ApexMultiProcedureConfig* multiConf = new data::ApexMultiProcedureConfig();
-        parser.Parse( p_base, multiConf, scriptLibraryFile);
+        parser.Parse( p_base, multiConf, scriptLibraryFile, scriptParameters);
         multiConf->ShowChildren();
         return multiConf;
     }
@@ -85,7 +85,7 @@ data::ApexProcedureConfig* ProcedureParser::Parse ( XERCES_CPP_NAMESPACE::DOMEle
     {
         PluginProcedureParser parser(m_parent);
         conf = new data::ApexProcedureConfig();
-        parser.Parse ( p_base, conf, scriptLibraryFile);
+        parser.Parse ( p_base, conf, scriptLibraryFile, scriptParameters);
     }
     else
     {

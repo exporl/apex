@@ -31,6 +31,7 @@ namespace apex
 namespace data
 {
 class ScreensData;
+class ParameterManagerData;
 }
 
 //class MainWindowConfig;
@@ -47,8 +48,9 @@ class APEX_EXPORT ScreensParser: public Parser
 
 
         data::ScreensData* ParseScreens(
-                                       XERCES_CPP_NAMESPACE::DOMElement* p_base,
-                                       QString scriptLibraryFile);
+                XERCES_CPP_NAMESPACE::DOMElement* p_base,
+                QString scriptLibraryFile, QVariantMap scriptParameters,
+                data::ParameterManagerData* pmd);
 
 
     private:

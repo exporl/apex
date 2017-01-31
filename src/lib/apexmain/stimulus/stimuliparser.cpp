@@ -52,7 +52,7 @@ namespace apex {
 }
 
 void apex::parser::StimuliParser::Parse(XERCES_CPP_NAMESPACE::DOMElement * p_base, data::StimuliData * c,
-                                             QString scriptLibraryFile)
+                                             QString scriptLibraryFile, const QVariantMap& scriptParameters)
 {
 
     Q_ASSERT(c);
@@ -64,7 +64,7 @@ void apex::parser::StimuliParser::Parse(XERCES_CPP_NAMESPACE::DOMElement * p_bas
     {
         const QString tag( XMLutils::GetTagName( currentNode ) );
         if (tag == "pluginstimuli") {
-            ScriptExpander expander(scriptLibraryFile, m_parent);
+            ScriptExpander expander(scriptLibraryFile, scriptParameters, m_parent);
             expander.ExpandScript(currentNode, "getStimuli");
         }
     }
@@ -177,11 +177,14 @@ StimulusParameters apex::parser::StimuliParser::CreateStimulusParameters( DOMEle
     Q_ASSERT(base);
 
     StimulusParameters param;
-    
-    for (DOMNode* currentNode=base->getFirstChild(); currentNode!=0; currentNode=currentNode->getNextSibling()) {
-        assert(currentNode);
-        if (currentNode->getNodeType() == DOMNode::ELEMENT_NODE) {
-            DOMElement* el = (DOMElement*) currentNode;
+
+    for (DOMNode* currentNode=base->getFirstChild(); currentNode!=0; currentNode=currentNode->getNextSibling())
+    {
+        Q_ASSERT(currentNode != 0);
+
+        if (currentNode->getNodeType() == DOMNode::ELEMENT_NODE)
+        {
+            DOMElement* el = static_cast<DOMElement*>(currentNode);
 
             const QString id    = XMLutils::GetAttribute( el, gc_sID );
             const QString value = XMLutils::NodeToString( el );           // can contain markup (eg fixed parameter with <b>)
@@ -189,13 +192,11 @@ StimulusParameters apex::parser::StimuliParser::CreateStimulusParameters( DOMEle
             Q_ASSERT( !id.isEmpty() );
 
             param.insert(id,value);
-
-
-        } else {
-            qFatal("Could not parse node");
         }
+        else
+            qFatal("Could not parse node");
     }
-    
+
     return param;
 }
 

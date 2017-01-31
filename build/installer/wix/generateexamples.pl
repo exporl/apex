@@ -79,7 +79,7 @@ sub processpath {
          next if ($file eq "." or $file eq "..");
 
          if (-f $fullpath) {
-             if ( $file =~ /(.*)\.(xml|apx|wav|js|html)$/) {
+             if ( $file =~ /(.*)\.(xml|apx|wav|js|html|qic|aseq)$/) {
                  push(@files, $file);
              }
          } elsif (-d $fullpath) {
@@ -115,7 +115,7 @@ FFF
          foreach my $file (@files) {
              my $fullpath = $path . "/" . $file;
 
-             $file =~ /(.*)\.(xml|apx|wav|jpg|js)$/;
+             $file =~ /(.*)\.(xml|apx|wav|jpg|js|qic|aseq|html)$/;
              my $barename=$1;
              my $ext=$2;
 

@@ -1,0 +1,100 @@
+This document describes how to use APEX with git and gerrit.
+
+
+Documentation
+-------------
+
+Check out the following sites for more information:
+http://gerrit-documentation.googlecode.com/svn/Documentation/2.4.2/intro-quick.html
+http://git-scm.com/book
+
+Or more extensively:
+http://gerrit-documentation.googlecode.com/svn/Documentation/2.4.2/index.html
+
+Our gerrit server resides at 
+ssh://gilbert.med.kuleuven.be:29418
+http://gilbert.med.kuleuven.be:6666
+Only accessible from within KU Leuven (or using a vpn or tunnel)
+
+Global setup
+------------
+
+* In your global git config (~/.gitconfig) set the following:
+[user]
+    name = <Your name>
+    email = <Your e-mail address>
+[branch]
+    autosetupmerge = false
+    autosetuprebase = always
+
+* Create an SSH key
+ssh-keygen -t rsa -C "your@email.com"
+
+* Log in to the web interface (gilbert:6666) and add your _public_ key,
+and choose a username (used below for ssh access).
+
+* Get the APEX source code from the server
+git clone ssh://gilbert.med.kuleuven.be:29418/apex.git
+
+* add hook for changeid
+scp -p -P 29418 username@gilbert.med.kuleuven.be:hooks/commit-msg .git/hooks/
+
+
+Making changes (coding)
+-----------------------
+
+* Create a new branch for each separate feature you want to add and switch to it.
+  Make sure you choose a good descriptive name for the feature.
+git checkout --track -b <feature>
+
+* Commit your changes to the _local_ repository
+git add / git commit -a -v
+
+* Get new changes from server
+git pull
+
+* Push your changes to temporary branch on server
+git push -f origin HEAD:refs/temp/<feature>
+
+* Send your changes to the server to be reviewed:
+
+  - Create new feature_submission branch (assuming you are currently in the feature branch)
+    git checkout --track -b feature_submission
+
+  - Combine all commits into one  
+    git merge --squash <feature>
+
+  - Send to server
+    git push origin HEAD:refs/for/master
+    
+    Note that this step is different from standard git: we
+    are pushing to refs/for/<branchname> which is a virtual branch
+    created by gerrit. You patch will only be included in a 
+    real branch after review.
+    Note that you can only push one single commit. If you
+    did multiple (local) commits, you need to squash them like
+    described below.
+
+
+  - If your patch did not pass review, you need to make
+    the requested changes, and then squash your multiple
+    commits and repeat the previous step. 
+    If you have only one commit, you can use 
+    git commit --amend
+    and then push to gerrit.
+    If you have more than one commit, you need to squach them
+    into one. Squashing is done as follows (example to squash 3 commits):
+    git rebase -i HEAD~3
+    You'll get a list of commits. Now pick one and change
+    the word in front of the others into "squash". Thereafter
+    you'll get the chance to change the commit message.
+    Make sure that in your commit message you preserve the same 
+    change-id as in your initial patch, so gerrit can recognise
+    it.
+    It is possible that gerrit complains that you don't have the right
+    permissions to merge when you try to push. You can solve this by
+    executing the command:
+    git rebase origin/<branch>
+    After this you should be able to push.
+
+    More info at http://git-scm.com/book/en/Git-Tools-Rewriting-History

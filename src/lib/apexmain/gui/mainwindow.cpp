@@ -24,7 +24,7 @@
 #include "screen/screensdata.h"
 #include "screen/screenelement.h"
 #include "screen/screenelementrundelegate.h"
-#include "screen/apexscreenresult.h"
+#include "screen/screenresult.h"
 
 #include "services/application.h"
 #include "services/paths.h"
@@ -63,6 +63,12 @@ using namespace apex;
 using namespace apex::gui;
 using apex::data::gc_eChild;
 using apex::data::gc_eNormal;
+
+const QString defaultStyleSheet(
+//        "QPushButton[role=\"none\"]{background-color: yellow}"
+        "QPushButton[role=\"highlight\"]{background-color: #ffff90}\n"
+        "QPushButton[role=\"positive\"]{background-color: green}\n"
+        "QPushButton[role=\"negative\"]{background-color: red}\n");
 
 ApexMainWindow::ApexMainWindow( QWidget* /*a_pParent*/ ) :
         ApexMainWndBase(),
@@ -208,7 +214,7 @@ void ApexMainWindow::SetScreen( gui::ScreenRunDelegate* ac_Screen )
 
     //m_pCentral->mp_SetScreen( runningScreen->getLayout() );
     runningScreen->getWidget()->setStyleSheet(
-    m_rd->GetData().screensData()->style()
+        defaultStyleSheet + m_rd->GetData().screensData()->style()
     );
 
     m_pCentral->setScreenWidget(runningScreen->getWidget());
@@ -245,15 +251,15 @@ void ApexMainWindow::EnableScreen( const bool ac_bEnable /*= true*/ )
             qDebug ("Automatically selecting %s", qPrintable (elem));
 
 
-            static ApexScreenResult result;
-            result.clear();
+            static ScreenResult result;
+            result.map().clear();
 
-            result[ runningScreen->getScreen()->getButtonGroup()->getID() ] = elem;
+            result.map()[ runningScreen->getScreen()->getButtonGroup()->getID() ] = elem;
 
             runningScreen->addInterestingTexts( result );
 
 
-            //QMetaObject::invokeMethod (this, "Answered", Qt::QueuedConnection, Q_ARG (const ApexScreenResult*, &result));
+            //QMetaObject::invokeMethod (this, "Answered", Qt::QueuedConnection, Q_ARG (const ScreenResult*, &result));
 
             emit Answered( &result );
 
@@ -276,16 +282,16 @@ void ApexMainWindow::ReclaimFocus()
 
 /******************************************** FEEDBACK ***************************************************************************/
 
-void ApexMainWindow::FeedBack( const ScreenElementRunDelegate::mt_eFeedBackMode& ac_eMode, const QString& ac_sID )
+void ApexMainWindow::FeedBack( const ScreenElementRunDelegate::FeedbackMode& ac_eMode, const QString& ac_sID )
 {
     //the element
     if ( runningScreen )
     {
 
-        if ( ac_eMode != ScreenElementRunDelegate::mc_eHighLight ||
+        if ( ac_eMode != ScreenElementRunDelegate::HighlightFeedback ||
             m_rd->GetData().screensData()->hasShowCurrentEnabled() ) {
 
-            runningScreen->feedBack( ac_eMode, ac_sID );
+            runningScreen->feedback( ac_eMode, ac_sID );
             if (runningScreen->getFeedBackElement())
                 m_rd->modFeedback()->
                 highLight(runningScreen->getFeedBackElement()->getID() );
@@ -295,7 +301,7 @@ void ApexMainWindow::FeedBack( const ScreenElementRunDelegate::mt_eFeedBackMode&
     }
 
     //the panel
-    if ( m_pPanel && ac_eMode != ScreenElementRunDelegate::mc_eHighLight )
+    if ( m_pPanel && ac_eMode != ScreenElementRunDelegate::HighlightFeedback )
         m_pPanel->feedBack( ac_eMode );
 
     //make sure to repaint before feedback period is over
@@ -306,15 +312,15 @@ void ApexMainWindow::FeedBack( const ScreenElementRunDelegate::mt_eFeedBackMode&
 
 void ApexMainWindow::HighLight( const QString& ac_sID )
 {
-    FeedBack( ScreenElementRunDelegate::mc_eHighLight, ac_sID );
+    FeedBack( ScreenElementRunDelegate::HighlightFeedback, ac_sID );
 }
 
 void ApexMainWindow::EndFeedBack()
 {
     if ( m_pCurFeedback )
-        runningScreen->feedBack( ScreenElementRunDelegate::mc_eOff, m_pCurFeedback );
+        runningScreen->feedback( ScreenElementRunDelegate::NoFeedback, m_pCurFeedback );
     if ( m_pPanel )
-        m_pPanel->feedBack( ScreenElementRunDelegate::mc_eOff );
+        m_pPanel->feedBack( ScreenElementRunDelegate::NoFeedback );
     m_rd->modFeedback()->clear();
     m_pCentral->repaint();
 }
@@ -322,25 +328,27 @@ void ApexMainWindow::EndFeedBack()
 void ApexMainWindow::EndHighLight()
 {
     if ( m_pCurFeedback )
-        runningScreen->feedBack( ScreenElementRunDelegate::mc_eOff, m_pCurFeedback );
+        runningScreen->feedback( ScreenElementRunDelegate::NoFeedback, m_pCurFeedback );
     m_rd->modFeedback()->clear();
     m_pCentral->repaint();
 }
 
 void ApexMainWindow::AnswerFromElement( ScreenElementRunDelegate* ac_Element )
 {
-    static ApexScreenResult result;
+    static ScreenResult result;
     result.clear();
 
     //add element id if buttongroup
     if ( runningScreen->getScreen()->getButtonGroup() )
     {
         if ( runningScreen->getScreen()->getButtonGroup()->IsElement( ac_Element->getID() ) )
-            result[ runningScreen->getScreen()->getButtonGroup()->getID() ] = ac_Element->getID();
+            result.map()[ runningScreen->getScreen()->getButtonGroup()->getID() ] = ac_Element->getID();
     }
 
     runningScreen->addInterestingTexts( result );
     runningScreen->addScreenParameters( result );
+
+    result.setLastClickPosition( ac_Element->getClickPosition() );
 
     emit Answered( &result );
 }
@@ -548,11 +556,44 @@ void ApexMainWindow::AddStatusMessage( const QString& ac_sMessage )
         m_pPanel->mp_SetText( ac_sMessage );
 }
 
+QString ApexMainWindow::fetchVersion() const {
+    QFile commitFile(Paths::Get().GetDocPath() + QLatin1String("commit.txt"));
+    QString version;
+    if (commitFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString diffstat = QString::fromLocal8Bit(commitFile.readAll());
+        QStringList lines = diffstat.split(QLatin1Char('\n'));
+        QString firstLine = lines.value(0);
+        QString hash = firstLine.section(QLatin1Char(' '), 1, 1).left(6);
+        QString dateLine = lines.filter(QRegExp(QLatin1String("^Date: .*"))).value(0);
+        QString date = dateLine.section(QLatin1Char(' '), 1);
+        version = QString::fromLatin1("(%1) - %2").arg(hash, date);
+    }
+
+    return version;
+}
+
+QString ApexMainWindow::fetchDiffstat() const {
+    QFile commitFile(Paths::Get().GetDocPath() + QLatin1String("commit.txt"));
+    QString diffstat;
+    if (commitFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        diffstat = QString::fromLocal8Bit(commitFile.readAll());
+    }
+
+    return diffstat;
+}
+
+
 void ApexMainWindow::helpAbout()
 {
-    QMessageBox::information (NULL, tr("APEX 3"),
-            tr ("Apex v3.0\nAll copyrights Exp. ORL, KULeuven\n"
-                "Contact tom.francart@med.kuleuven.be for more information"));
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("APEX 3"));
+    msgBox.setText(tr("Apex v3.0 %1\n"
+                "All copyrights Exp. ORL, KULeuven\n"
+                "Contact tom.francart@med.kuleuven.be for more information").arg(fetchVersion()));
+    msgBox.setDetailedText(fetchDiffstat());
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.exec();
 }
 
 void ApexMainWindow::helpContents()

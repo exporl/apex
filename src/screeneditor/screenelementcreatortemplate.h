@@ -46,7 +46,7 @@ namespace apex
         {
           return elName;
         };
-      const QString getFreeID( const tScreenElementMap& takenIDs ) const;
+      const QString getFreeID( const ScreenElementMap& takenIDs ) const;
     };
 
     template <typename ElementType>
@@ -59,14 +59,14 @@ namespace apex
     ScreenElement* ScreenElementCreatorTemplate<ElementType>::create(
       ScreenElement* parent, Screen* screen ) const
     {
-      ElementType* ret = new ElementType( getFreeID( screen->getIDToElementMap() ), parent );
+      ElementType* ret = new ElementType( getFreeID( screen->idToElementMap() ), parent );
       ret->fillChildrenWithEmpties( screen );
       return ret;
     }
 
     template <typename ElementType>
     const QString ScreenElementCreatorTemplate<ElementType>::getFreeID(
-      const tScreenElementMap& takenIDs ) const
+      const ScreenElementMap& takenIDs ) const
     {
       return findFreeID( getElementName(), takenIDs );
     }

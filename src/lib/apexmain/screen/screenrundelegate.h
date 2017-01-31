@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef SCREENRUNDELEGATE_H
 #define SCREENRUNDELEGATE_H
 
@@ -34,7 +34,7 @@
 namespace apex
 {
 
-class ApexScreenResult;
+class ScreenResult;
 class ExperimentRunDelegate;
 
 namespace gui
@@ -43,7 +43,7 @@ namespace gui
 using data::Screen;
 using data::ScreenElement;
 using rundelegates::ScreenElementRunDelegate;
-using rundelegates::elementToRunningMapT;
+using rundelegates::ElementToRunningMap;
 using rundelegates::spinBoxListT;
 using rundelegates::SpinBoxRunDelegate;
 
@@ -58,21 +58,21 @@ using rundelegates::SpinBoxRunDelegate;
  * class would just keep the ScreenElementRunDelegates in a
  * vector, then it could just iterate over them and look for the
  * one corresponding to a certain ScreenElement.  In that sense,
- * the map is meant for optimisation.
+ * the map is meant for optimization.
  *
  * In order to retrieve all ScreenElementRunDelegates of this
  * ScreenRunDelegate, you should iterate over the values of the
  * elementToRunningMap.  They are not kept here in any other way.
  */
-class ScreenRunDelegate
-            : public QObject
+class ScreenRunDelegate : public QObject
 {
         Q_OBJECT
 
     public:
-        ScreenRunDelegate( ExperimentRunDelegate* p_exprd,
-                           const data::Screen* screen, QWidget* parent,
-                           const QString& defaultFont, int defaultFontSize );
+
+        ScreenRunDelegate(ExperimentRunDelegate* p_exprd,
+                          const data::Screen* screen, QWidget* parent,
+                          const QString& defaultFont, int defaultFontSize );
         ~ScreenRunDelegate();
 
         QLayout* getLayout();
@@ -82,41 +82,51 @@ class ScreenRunDelegate
         QWidget* getWidget();
 
 
-        void feedBack( const ScreenElementRunDelegate::mt_eFeedBackMode& mode,
-                       const QString feedbackElementID );
-        void feedBack( const ScreenElementRunDelegate::mt_eFeedBackMode& mode,
-                       ScreenElementRunDelegate* feedBackElem );
+        void feedback(ScreenElementRunDelegate::FeedbackMode mode,
+                    const QString& feedbackElementId);
+        void feedback(ScreenElementRunDelegate::FeedbackMode mode,
+                      ScreenElementRunDelegate* feedbackElement);
 
         void enableWidgets( bool enable );
+        bool widgetsEnabled() const;
         void showWidgets();
         void hideWidgets();
         // clear user input if any
         void clearText();
         // add interesting texts from elements in the screen to the
         // result
-        void addInterestingTexts( ApexScreenResult& result );
-        void addScreenParameters( ApexScreenResult& result );
+        void addInterestingTexts( ScreenResult& result );
+        void addScreenParameters( ScreenResult& result );
 
         const Screen* getScreen() const;
 
         ScreenElementRunDelegate* getFeedBackElement();
         QString getDefaultAnswerElement() const;
 
+        /**
+         * Emits newAnswer(QString)
+         */
+        void setAnswer(const QString& answer);
+
     signals:
+
         void answered( ScreenElementRunDelegate* );
         void newStimulus( stimulus::Stimulus* );
-        void newAnswer( const QString& );
+        void newAnswer(QString);
+
     private:
+
         QLayout* layout;
         std::auto_ptr<QWidget> widget;
 
         const data::Screen* screen;
-        ScreenElementRunDelegate* feedBackElement;
+        ScreenElementRunDelegate* feedbackElement;
         ScreenElementRunDelegate* rootElement;
-        elementToRunningMapT elementToRunningMap;
-        spinBoxListT spinBoxList;     //! list of all spin boxes, to be used for quickly having them set parameters, only necessary for performance
+        ElementToRunningMap elementToRunningMap;
+        spinBoxListT spinBoxList;     //!< list of all spin boxes, to be used for quickly having them set parameters, only necessary for performance
         QString defaultFont;
         int defaultFontSize;
+        bool enabled;
 };
 
 }

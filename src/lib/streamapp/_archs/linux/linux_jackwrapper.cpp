@@ -445,7 +445,7 @@ namespace streamapp
             ::memcpy( pAdd, ac_pcJackNames[ i ], nNameLen );
             pAdd[ nNameLen ] = 0;
             const std::string sAdd( pAdd );
-            delete pAdd;
+            delete[] pAdd;
             if( !f_bHasElement( a_Dest, sAdd ) )
               a_Dest.push_back( sAdd );
           }

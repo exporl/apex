@@ -90,7 +90,7 @@ namespace apex
       void mp_LayoutNow();
 
         /**
-          * Override settig background color to know what to draw for feedback == mc_eOff
+          * Override settig background color to know what to draw for feedback == NoFeedback
           * @param ac_Color the color
           */
       void setBackgroundColor( const QColor& ac_Color );

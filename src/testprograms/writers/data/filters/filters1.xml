@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<apex:filters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0/experiment ../../../../../../data/schemas/filters-document.xsd"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0/experiment" >
+    
+    <filter id="pulsegen" xsi:type="apex:generator">
+        <device>soundcard</device>
+        <channels>1</channels>
+        <continuous>false</continuous>
+        <type>singlepulse</type>
+        <basegain>0</basegain>
+        <gain>0</gain>
+        <frequency>0</frequency>
+        <phase>0</phase>
+        <pulsewidth>2</pulsewidth>
+    </filter>   
+    
+    <filter xsi:type="apex:generator" id="generator">
+        <device>wavdevice</device>
+        <channels>1</channels>
+        <continuous>true</continuous>
+        <type>noise</type>
+        <basegain>0</basegain>
+        <gain id="gain">0</gain>
+        <frequency>0</frequency>
+        <phase>0</phase>
+        <polarity>positive</polarity>
+    </filter>
+    
+    <filter xsi:type="apex:generator" id="singen1">
+        <device>soundcard1</device>
+        <channels>1</channels>
+        <continuous>false</continuous>
+        <type>sinus</type>
+        <basegain>-14</basegain>
+        <gain id="gain2">0</gain>
+        <frequency id="freq">10000</frequency>
+        <phase>0</phase>
+    </filter>
+    
+</apex:filters>

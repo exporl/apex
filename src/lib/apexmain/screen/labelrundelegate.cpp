@@ -54,6 +54,8 @@ namespace rundelegates
             pos=i;
         }
     }
+    if (pos==-1)
+        return;
     QFontMetrics fm(minfont);
     setMinimumWidth( fm.width(l.at(pos)));
     setMinimumHeight( (fm.height()+fm.lineSpacing())*l.size());

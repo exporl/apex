@@ -67,7 +67,7 @@ ArcLayoutElement::ArcLayoutElement(const QString& id, ScreenElement* parent)
 
 void ArcLayoutElement::fillChildrenWithEmpties(Screen* screen)
 {
-    const tScreenElementMap& takenIDs = screen->getIDToElementMap();
+    const ScreenElementMap& takenIDs = screen->idToElementMap();
     bool centertaken = false;
     std::vector<bool> filled(getWidth(), false);
 

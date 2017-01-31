@@ -197,7 +197,7 @@ ApexAdaptiveProcedure::~ApexAdaptiveProcedure()
 {
 }
 
-bool ApexAdaptiveProcedure::NextTrial(bool p_answer, const ApexScreenResult* screenresult)
+bool ApexAdaptiveProcedure::NextTrial(bool p_answer, const ScreenResult* screenresult)
 {
 #ifdef SHOWSLOTS
     qDebug("Slot ApexAdaptiveProcedure::NextTrial(bool)");
@@ -267,17 +267,18 @@ bool ApexAdaptiveProcedure::NextTrial(bool p_answer, const ApexScreenResult* scr
     FindMinMaxParam(nextTrial);
 
     Stimulus* nextStimulus;
-    if (m_nStartStatus==START_FIRST && m_param->m_bFirstUntilCorrect && p_answer==false && m_lastSelectedStimulus)
+    // [Tom] Removed: a stimulus should be selected in case a fixed parameter changed, we just keep the current trial
+    /*if (m_nStartStatus==START_FIRST && m_param->m_bFirstUntilCorrect && p_answer==false && m_lastSelectedStimulus)
     {
         Q_CHECK_PTR(m_lastSelectedStimulus);
         nextStimulus = m_lastSelectedStimulus;
         SetVarParam(m_adaptParam);
     }
     else
-    {
-        nextStimulus = GetStimulus(m_adaptParam, nextTrial);
-        m_lastSelectedStimulus = nextStimulus;
-    }
+    {*/
+    nextStimulus = GetStimulus(m_adaptParam, nextTrial);
+    m_lastSelectedStimulus = nextStimulus;
+    //}
     Q_CHECK_PTR(nextTrial);
     Q_CHECK_PTR(nextStimulus);
 
@@ -392,11 +393,8 @@ Stimulus* ApexAdaptiveProcedure::GetStimulus(data::t_adaptParam p_target, data::
         try
         {
             Stimulus* newStim = m_rd.GetStimulus(p_trial->GetStimulus());
-
             SetVarParam(p_target);
-
             return newStim;
-
         }
         catch (...)
         {
@@ -412,15 +410,11 @@ Stimulus* ApexAdaptiveProcedure::GetStimulus(data::t_adaptParam p_target, data::
                 qPrintable(m_param->m_adapt_parameters.first()));
 #endif
 
-
         Stimulus* result=SelectStimulusFromList(p_trial->GetStimuli(),
                 p_target);
-
-        SetVarParam(p_target);     // set remaining variable parameters
-
+        m_adaptParam = result->GetFixParameters()->value( m_param->m_adapt_parameters.first() ).toDouble();
+        SetVarParam(m_adaptParam);     // set remaining variable parameters
         return result;
-        //}
-
     }
 }
 
@@ -438,7 +432,10 @@ Stimulus* ApexAdaptiveProcedure::SelectStimulusFromList(
 
 
     data::t_adaptParam maxValue=abs(value.toDouble()-p_target);
+
+#ifdef DEBUGADP
     Stimulus* maxStimulus = currentStimulus;
+#endif
 
     for (tStimulusList::const_iterator it = list.begin(); it!=list.end(); ++it)
     {
@@ -455,7 +452,9 @@ Stimulus* ApexAdaptiveProcedure::SelectStimulusFromList(
         else if (abs(value-p_target)<maxValue)
         {
             maxValue = abs(value-p_target);
+#ifdef DEBUGADP
             maxStimulus = currentStimulus;
+#endif
         }
     }
 
@@ -488,7 +487,9 @@ Stimulus* ApexAdaptiveProcedure::SelectStimulusFromList(
 #ifdef DEBUGADP
     qDebug("Returning random stimulus from the list containing %u items", unsigned(results.size()));
 #endif
-    Stimulus* result = results.at( ApexTools::RandomRange((int)results.size()-1) );
+    //Stimulus* result = results.at( ApexTools::RandomRange((int)results.size()-1) );
+    Stimulus* result = results.at( m_random.nextUInt(results.size()) );
+
 #ifdef DEBUGADP
     qDebug("Parameter value: %s",
             qPrintable(result->GetFixParameters()->value(m_param->m_adapt_parameters.first()).toString()));

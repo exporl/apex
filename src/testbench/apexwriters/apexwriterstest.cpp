@@ -1,4 +1,4 @@
-    /******************************************************************************
+/******************************************************************************
  * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
  *                                                                            *
  * This file is part of APEX 3.                                               *
@@ -36,11 +36,11 @@
 
 //xercesc
 #include "xml/xercesinclude.h"
+#include <iostream>
 
-
-QString ApexWritersTest::name() const
+void ApexWritersTest::initTestCase()
 {
-    return "libwriters";
+    xercesc::XMLPlatformUtils::Initialize();
 }
 
 QString ApexWritersTest::outfileName(const QString& infile)
@@ -55,7 +55,7 @@ void ApexWritersTest::testExperiment_data()
 
 //    testDir.setPath(experimentsDir);
 //    testDir.setPath(testDir.absolutePath());
-// 
+//
 //     Q_FOREACH(QString testFile, testDir.entryList(
 //                 QStringList() << "*.xml" << "*.apx")) {
 //         QTest::newRow("experiment") << testFile;
@@ -64,7 +64,7 @@ void ApexWritersTest::testExperiment_data()
     apex::Paths paths;
     QDir testDir(paths.GetBasePath());
 
-    if (!testDir.cd("data/tests") || !testDir.cd(name()))
+    if (!testDir.cd("data/tests") || !testDir.cd("libwriters"))
     {
         qDebug() << "cannot find data for the writers test";
         return;
@@ -114,13 +114,20 @@ void ApexWritersTest::testExperiment()
     apex::data::ExperimentData* data;
     try
     {
+//        std::cout<<"exception in the constructor"<<std::endl;
         apex::ExperimentParser parser(testFile);
+//        std::cout<<"exception in the parse function"<<std::endl;
 
         data = parser.parse(false);
+//        std::cout<<"jump"<<endl;
     }
     catch (ApexStringException e)
     {
         QFAIL(qPrintable(QString("Could not parse test file: %1").arg(e.what())));
+    }
+    catch (...)
+    {
+        QFAIL(qPrintable(QString("Unknown exception while parsing %1").arg(testFile)));
     }
 
     qDebug() << "parsed initial experiment file";
@@ -156,6 +163,10 @@ void ApexWritersTest::testExperiment()
         qDebug() << "exception: " << e.what();
         QFAIL("written xml file could not be validated");
     }
+    catch (...)
+    {
+        QFAIL(qPrintable(QString("Unknown exception while parsing %1").arg(outFile)));
+    }
 
     qDebug() << "parsed written data";
 
@@ -163,4 +174,10 @@ void ApexWritersTest::testExperiment()
     QVERIFY(*data == *data2);
 }
 
-Q_EXPORT_PLUGIN2(test_libwriters, ApexWritersTest);
+void ApexWritersTest::cleanupTestCase()
+{
+    xercesc::XMLPlatformUtils::Terminate();
+}
+
+//generate standalone binary for the test case
+QTEST_MAIN(ApexWritersTest)

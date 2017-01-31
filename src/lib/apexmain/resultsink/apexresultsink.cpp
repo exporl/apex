@@ -45,7 +45,7 @@ using apex::ApexXMLTools::XMLutils;
 const QString apex::ApexResultSink::c_fileFooter( "</apex:results>\n");
 const QString apex::ApexResultSink::resultsExtension( ".apr");
 
-void apex::ApexResultSink::SaveAs( ) {
+void apex::ApexResultSink::SaveAs(bool askFilename ) {
 #ifdef SHOWSLOTS
     qDebug("ApexResultSink::Finished( )");
 #endif
@@ -62,7 +62,6 @@ void apex::ApexResultSink::SaveAs( ) {
 
 
     MakeFilenameUnique();
-//    qDebug("m_filename=%s", qPrintable (m_filename));
 
     // save data if any
     if (m_Results.size() <= 0) {
@@ -76,11 +75,14 @@ void apex::ApexResultSink::SaveAs( ) {
 
 #ifndef NOSAVE
 
-    bool askFilename=true;
-    QString saveFileName;
+    QString saveFileName(m_filename);
+
+    if (m_rd.GetData().generalParameters()->GetAutoSave()) {
+        askFilename=false;
+    }
     while (1) {
 
-        if (m_rd.GetData().generalParameters()->GetAutoSave()) {
+        /*if (m_rd.GetData().generalParameters()->GetAutoSave()) {
             askFilename=false;
             int answer = QMessageBox::question(0, tr("Save?"), QString(tr("Do you want to save the results in file %1?")).arg(m_filename), tr("Save"), tr("Change filename"), tr("Discard"));
             if (answer==0)
@@ -89,7 +91,7 @@ void apex::ApexResultSink::SaveAs( ) {
                 askFilename=true;
             else if (answer==2)
                 return;
-        }
+        }*/
 
         if (askFilename)
             saveFileName = FileDialog::Get().mf_sGetAnyFile(m_filename, tr("APEX savedata (*%1);;XML Files (*.xml);;All files (*)").arg(resultsExtension) );
@@ -130,8 +132,9 @@ void apex::ApexResultSink::SaveAs( ) {
 }
 
 
-void apex::ApexResultSink::Finished( ) {
-    SaveAs();
+void apex::ApexResultSink::Finished(bool askFilename ) {
+    m_endTime = QDateTime::currentDateTime();
+    SaveAs(askFilename);
 
     emit(Saved());
 
@@ -271,8 +274,8 @@ void apex::ApexResultSink::PrintXMLFooter( QTextStream & out ) {
 
 
 void apex::ApexResultSink::PrintIntro(QTextStream& out) {
-    QDateTime end;
-    end=QDateTime::currentDateTime();
+    /*QDateTime end;
+    end=QDateTime::currentDateTime();*/
 
     QString xsltscript = m_rd. GetData().
             resultParameters()->GetXsltScript();
@@ -301,9 +304,9 @@ void apex::ApexResultSink::PrintIntro(QTextStream& out) {
         out << "\t<description>" << description << "</description>" << endl;
     }
 
-    out << "\t<startdate>" << XMLutils::xmlEscapedText(ApexControl::Get().GetStartTime().toString()) << "</startdate>" << endl;
-    out << "\t<enddate>" << XMLutils::xmlEscapedText(end.toString()) << "</enddate>" << endl;
-    out << "\t<duration unit=\"seconds\">" << ApexControl::Get().GetStartTime().secsTo(end) << "</duration>" << endl;
+    out << "\t<startdate>" << XMLutils::xmlEscapedText(ApexControl::Get().GetStartTime().toString(Qt::ISODate)) << "</startdate>" << endl;
+    out << "\t<enddate>" << XMLutils::xmlEscapedText(m_endTime.toString(Qt::ISODate)) << "</enddate>" << endl;
+    out << "\t<duration unit=\"seconds\">" << ApexControl::Get().GetStartTime().secsTo(m_endTime) << "</duration>" << endl;
     if ( m_rd.GetData().resultParameters()) {
         if (!xsltscript.isEmpty())
             out << "\t<xsltscript>" << xsltscript << "</xsltscript>" << endl;
@@ -357,14 +360,12 @@ void apex::ApexResultSink::CollectResults( ) {
 
     m_Results.push_back(currentTrial);
 
+    const ModuleList* modules = m_rd.modules();
 
-    const std::vector<ApexModule*>* modules = m_rd.modules();
+    for (ModuleList::const_iterator it = modules->begin(); it != modules->end(); ++it)
+    {
+        QString x((*it)->GetResultXML());
 
-    for (std::vector<ApexModule*>::const_iterator it = modules->
-            begin();
-            it!=modules->end();
-            ++it) {
-        QString x( (*it)->GetResultXML() );
         if (!x.isEmpty())
             currentTrial->extra += x + "\n";
     }
@@ -383,12 +384,12 @@ QString apex::ApexResultSink::GetResultXML( ) const
 const QString apex::ApexResultSink::CollectEndResults( ) {
     QString result;
 
-    const std::vector<ApexModule*>* modules = m_rd.modules();
+    const ModuleList* modules = m_rd.modules();
 
-    for (std::vector<ApexModule*>::const_iterator it = modules->
-            begin();
-            it!=modules->end();
-            ++it) {
+    for (ModuleList::const_iterator it = modules->
+         begin();
+         it!=modules->end();
+         ++it) {
         result += (*it)->GetEndXML();
     }
 

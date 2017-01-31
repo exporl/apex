@@ -83,8 +83,9 @@ const QString ApexTrial::GetRandomStimulus( ) const
                 return *(m_stimuli.begin());
 
         tStimulusList::const_iterator p = m_stimuli.begin();
-        int rs = ApexTools::RandomRange(0, ((int)m_stimuli.size())-1 ); // stimulus number to be used
-        qDebug("ApexTrial::GetRandomStimulus: Selecting random stimulus #%i", rs);
+        //int rs = ApexTools::RandomRange(0, ((int)m_stimuli.size())-1 ); // stimulus number to be used
+        int rs = mRandom.nextUInt(((int)m_stimuli.size()) ); // stimulus number to be used
+        qDebug("TrialData::GetRandomStimulus: Selecting random stimulus #%i", rs);
         for (int i=0; i<rs; ++i)
                 ++p;
         //Q_ASSERT(p!=m_stimuli.end());
@@ -103,7 +104,8 @@ const QString ApexTrial::GetStimulus(  ) const
 {
 //    qDebug("ApexTrial::GetStimulus " );
         if (m_stimuli.size()!=1) {
-                int pos = ApexTools::RandomRange((int)m_stimuli.size()-1) ;
+                //int pos = ApexTools::RandomRange((int)m_stimuli.size()-1) ;
+                int pos = mRandom.nextUInt(((int)m_stimuli.size())) ;
                 qDebug("Returning random stimulus #%i", pos);
                 tStimulusList::const_iterator it= m_stimuli.begin();
                 for (int i=0; i<pos; ++i)
@@ -143,7 +145,8 @@ const QString ApexTrial::GetRandomStandard( ) const
 {
 
     if (m_standards.size()>1) {
-        int pos = ApexTools::RandomRange((int)m_standards.size()-1) ;
+        //int pos = ApexTools::RandomRange((int)m_standards.size()-1) ;
+        int pos = mRandom.nextUInt((int)m_standards.size()) ;
         qDebug ("Returning random standard #%i", pos);
         tStimulusList::const_iterator it= m_standards.begin();
         for (int i=0; i<pos; ++i)

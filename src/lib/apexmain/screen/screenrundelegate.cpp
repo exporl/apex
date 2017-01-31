@@ -28,7 +28,7 @@
 #include "screen/screenelement.h"
 #include "screen/spinboxelement.h"
 #include "screen/spinboxrundelegate.h"
-#include "screen/apexscreenresult.h"
+#include "screen/screenresult.h"
 
 #include "services/errorhandler.h"
 
@@ -42,42 +42,43 @@ namespace gui
 
 using data::ScreenElement;
 
-void ScreenRunDelegate::feedBack(
-    const ScreenElementRunDelegate::mt_eFeedBackMode& mode,
-    const QString feedbackElementID )
+void ScreenRunDelegate::feedback(ScreenElementRunDelegate::FeedbackMode mode,
+                                 const QString& feedbackElementId)
 {
-    const tScreenElementMap& elems( screen->getIDToElementMap() );
-    tScreenElementMap::const_iterator i = elems.find( feedbackElementID );
-    if( i != elems.end() )
+    QString warning;
+
+    if (screen->idToElementMap().contains(feedbackElementId))
     {
-        ScreenElement* fbelem = i.value();
-        elementToRunningMapT::iterator i = elementToRunningMap.find( fbelem );
-        if ( i == elementToRunningMap.end() )
-            qDebug( "ScreenRunDelegate::feedBack (rundelegate for %s): not found", qPrintable (feedbackElementID));
-        feedBack( mode, i->second );
+        ScreenElement* element = screen->idToElementMap()[feedbackElementId];
+
+        if (elementToRunningMap.contains(element))
+            feedback(mode, elementToRunningMap[element]);
+        else
+            warning = tr("No rundelegate found for %1").arg(feedbackElementId);
     }
-    else {
-     // qDebug ("ScreenRunDelegate::FeedBack (%s): not found", qPrintable (feedbackElementID));
-        ErrorHandler::Get().addItem(StatusItem(StatusItem::WARNING, tr("Feedback"),
-            QString(tr("Cannot show feedback, %1 not found")).arg(
-                    feedbackElementID)));
+    else
+        warning = tr("No screen found for %1").arg(feedbackElementId);
+
+    if (!warning.isEmpty())
+    {
+        QString message = tr("Cannot show feedback because: %1").arg(warning);
+        ErrorHandler::Get().addWarning(tr("Feedback"), message);
     }
 }
 
-void ScreenRunDelegate::feedBack(
-    const ScreenElementRunDelegate::mt_eFeedBackMode& mode,
-    ScreenElementRunDelegate* feedBackElem )
+void ScreenRunDelegate::feedback(ScreenElementRunDelegate::FeedbackMode mode,
+                                 ScreenElementRunDelegate* feedbackElement)
 {
-  if ( feedBackElem )
-  {
-    feedBackElem->feedBack( mode );
-    feedBackElement = feedBackElem;
-  }
+    if (feedbackElement != 0)
+    {
+        feedbackElement->feedBack(mode);
+        this->feedbackElement = feedbackElement;
+    }
 }
 
 ScreenElementRunDelegate* ScreenRunDelegate::getFeedBackElement()
 {
-    return feedBackElement;
+    return feedbackElement;
 }
 
 ScreenRunDelegate::~ScreenRunDelegate()
@@ -93,8 +94,8 @@ QString ScreenRunDelegate::getDefaultAnswerElement() const
 ScreenRunDelegate::ScreenRunDelegate( ExperimentRunDelegate* p_exprd,
                                       const Screen* s, QWidget* parent,
                                       const QString& df, int dfs )
-    : layout( 0 ), widget(new QWidget(0)), screen( s ), feedBackElement( 0 ), rootElement( 0 ),
-      defaultFont( df ), defaultFontSize( dfs )
+    : layout( 0 ), widget(new QWidget(0)), screen( s ), feedbackElement( 0 ), rootElement( 0 ),
+      defaultFont( df ), defaultFontSize( dfs ), enabled(false)
 {
     Q_UNUSED (parent);
 
@@ -111,20 +112,20 @@ ScreenRunDelegate::ScreenRunDelegate( ExperimentRunDelegate* p_exprd,
           widget.get(), elementToRunningMap, font );
 
   rootElement = delcreator.createRunDelegate( screen->getRootElement() );
-  for( elementToRunningMapT::const_iterator it = elementToRunningMap.begin();
+  for( ElementToRunningMap::const_iterator it = elementToRunningMap.begin();
        it != elementToRunningMap.end(); ++it )
   {
-    ScreenElementRunDelegate* p = it->second;
+    ScreenElementRunDelegate* p = it.value();
     p->connectSlots( this );
 
     //qDebug("elementToRunningMap: %p -> %p", it->first, it->second);
   }
 
   // create spinboxlist:
-  for ( elementToRunningMapT::const_iterator it=elementToRunningMap.begin(); it!=elementToRunningMap.end(); ++it) {
-    if ( (*it).first->elementType()==ScreenElement::SpinBox) {
-        spinBoxList.push_back(dynamic_cast<SpinBoxRunDelegate*>(  it->second));
-        qDebug("Adding %s to spinBoxList", qPrintable ((*it).first->getID()));
+  for ( ElementToRunningMap::const_iterator it=elementToRunningMap.begin(); it!=elementToRunningMap.end(); ++it) {
+    if ( it.key()->elementType()==ScreenElement::SpinBox) {
+        spinBoxList.push_back(dynamic_cast<SpinBoxRunDelegate*>(  it.value()));
+        qDebug("Adding %s to spinBoxList", qPrintable (it.key()->getID()));
     }
   }
 
@@ -139,10 +140,12 @@ ScreenRunDelegate::ScreenRunDelegate( ExperimentRunDelegate* p_exprd,
 
 void ScreenRunDelegate::enableWidgets( bool enable )
 {
-  for( elementToRunningMapT::const_iterator it = elementToRunningMap.begin();
+  enabled = enable;
+
+  for( ElementToRunningMap::const_iterator it = elementToRunningMap.begin();
        it != elementToRunningMap.end(); ++it )
   {
-    ScreenElementRunDelegate* p = it->second;
+    ScreenElementRunDelegate* p = it.value();
     p->setEnabled( enable );
     if( enable )
     {
@@ -153,12 +156,17 @@ void ScreenRunDelegate::enableWidgets( bool enable )
   }
 }
 
+bool ScreenRunDelegate::widgetsEnabled() const
+{
+    return enabled;
+}
+
 void ScreenRunDelegate::showWidgets()
 {
-  for( elementToRunningMapT::const_iterator it = elementToRunningMap.begin();
+  for( ElementToRunningMap::const_iterator it = elementToRunningMap.begin();
        it != elementToRunningMap.end(); ++it )
   {
-    ScreenElementRunDelegate* p = it->second;
+    ScreenElementRunDelegate* p = it.value();
     if ( p->getWidget() )
       p->getWidget()->show();
   }
@@ -166,10 +174,10 @@ void ScreenRunDelegate::showWidgets()
 
 void ScreenRunDelegate::hideWidgets()
 {
-  for( elementToRunningMapT::const_iterator it = elementToRunningMap.begin();
+  for( ElementToRunningMap::const_iterator it = elementToRunningMap.begin();
        it != elementToRunningMap.end(); ++it )
   {
-    ScreenElementRunDelegate* p = it->second;
+    ScreenElementRunDelegate* p = it.value();
     if ( p->getWidget() )
         p->getWidget()->hide();
   }
@@ -183,25 +191,25 @@ QLayout* ScreenRunDelegate::getLayout()
 void ScreenRunDelegate::clearText()
 {
   //clear user input if any
-  for( elementToRunningMapT::const_iterator it = elementToRunningMap.begin();
+  for( ElementToRunningMap::const_iterator it = elementToRunningMap.begin();
        it != elementToRunningMap.end(); ++it )
   {
-    ScreenElementRunDelegate* p = it->second;
+    ScreenElementRunDelegate* p = it.value();
     if( p->hasText() )
       p->clearText();
   }
 }
 
-void ScreenRunDelegate::addInterestingTexts( ApexScreenResult& result )
+void ScreenRunDelegate::addInterestingTexts( ScreenResult& result )
 {
   //add everything else that doesn't belong to buttongroup
-  for( elementToRunningMapT::const_iterator it = elementToRunningMap.begin();
+  for( ElementToRunningMap::const_iterator it = elementToRunningMap.begin();
        it != elementToRunningMap.end(); ++it )
   {
-    ScreenElementRunDelegate* el = it->second;
+    ScreenElementRunDelegate* el = it.value();
 //      qDebug(el->getID() + " hastext: " + QString::number( el->hasText()) + " hasinterestingtext " + QString::number( el->hasInterestingText()));
     if( el->hasText() && el->hasInterestingText() ) {
-      result[ el->getID() ] = el->getText();
+      result.map()[ el->getID() ] = el->getText();
      }
      /* else {
                 qDebug("not interesting");
@@ -213,7 +221,7 @@ void ScreenRunDelegate::addInterestingTexts( ApexScreenResult& result )
  * Add values of parameters that are directly set by screenelements (eg SpinBox)
  * @param result
  */
-void ScreenRunDelegate::addScreenParameters( ApexScreenResult& result )
+void ScreenRunDelegate::addScreenParameters( ScreenResult& result )
 {
     for ( spinBoxListT::const_iterator it = spinBoxList.begin(); it!=spinBoxList.end(); ++it) {
         if ( ! (*it)->GetElement()->GetParameter().isEmpty() && ! (*it)->text().isEmpty())
@@ -230,6 +238,11 @@ const Screen* ScreenRunDelegate::getScreen() const
 QWidget* ScreenRunDelegate::getWidget()
 {
     return widget.get();
+}
+
+void ScreenRunDelegate::setAnswer(const QString& answer)
+{
+    emit newAnswer(answer);
 }
 
 }

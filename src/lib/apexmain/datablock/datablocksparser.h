@@ -58,7 +58,7 @@ public:
     ~DatablocksParser();
 
     data::DatablocksData Parse(XERCES_CPP_NAMESPACE::DOMElement* dom,
-                               const QString& scriptLibraryFile );
+                               const QString& scriptLibraryFile, const QVariantMap& scriptParameters );
 
     data::DatablockData* ParseDatablock(
                                         XERCES_CPP_NAMESPACE::DOMElement* p_datablock,

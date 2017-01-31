@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<apex:screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0/experiment ../../../../../../data/schemas/screens-document.xsd"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0/experiment" >
+    <uri_prefix>"test"</uri_prefix>
+    <general>
+        <stopbutton>true</stopbutton>
+        <repeatbutton>true</repeatbutton>
+        <showpanel>true</showpanel>
+        <showmenu>true</showmenu>
+        <fullscreen>true</fullscreen>
+        <intertrialscreen length="25">screen1</intertrialscreen>
+    </general>
+    <reinforcement>
+        <progressbar>true</progressbar>
+        <feedback length="300">true</feedback>
+    </reinforcement>
+    <style_apex>"apexstyle"</style_apex>
+    <style>"style"</style>
+    <childmode>
+        <intro>screen1</intro>
+        <outro>screen1</outro>
+        <!--panel>movie</panel-->
+    </childmode>
+    <defaultFont>"arial"</defaultFont>
+    <defaultFontsize>12</defaultFontsize>
+    <screen id="screen1">
+        <gridLayout height="2" width="3" id="main_layout">
+            
+            <button x="1" y="1" id="button1">
+                <text>1</text>
+            </button>
+            
+        </gridLayout>
+        <buttongroup id="buttongroup1">
+            <button id="button1"/>
+        </buttongroup>
+        <default_answer_element>buttongroup1</default_answer_element>
+    </screen>    
+</apex:screens>

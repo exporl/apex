@@ -31,21 +31,6 @@ namespace apex
 namespace stimulus
 {
 
-    template <class T>
-    class DataContainer:
-        public QVector<T>
-    {
-        public:
-            T targetvalue ( int i ) {
-                if (QVector<T>::size()==0)
-                    return T(-1);
-                else if (QVector<T>::size()==1)
-                    return QVector<T>::at(0);
-                else 
-                    return QVector<T>::at (i);
-            }
-    };
-
 AseqParser::AseqParser(const QByteArray &data) :
     data(data)
 {
@@ -53,6 +38,14 @@ AseqParser::AseqParser(const QByteArray &data) :
 
 AseqParser::~AseqParser()
 {
+}
+
+void AseqParser::checkElectrodes(const DataContainer<qint8> &electrodes, quint32 readlen)
+{
+    for (unsigned i = 0; i < readlen; ++i) {
+        if (electrodes.targetvalue(i) < -3 || electrodes.targetvalue(i) > 22)
+            throw ApexStringException(tr("Invalid electrode"));
+    }
 }
 
 L34Data AseqParser::GetData()
@@ -63,7 +56,7 @@ L34Data AseqParser::GetData()
     buffer.setData(data);
     buffer.open(QIODevice::ReadOnly);
     //QDataStream d(&buffer);
-    
+
     check(readID(),"RIFF");
     quint32 length=readLength();
     if ((int)length!=data.size())
@@ -130,7 +123,7 @@ L34Data AseqParser::GetData()
     if (activeElectrodesFound && channelsFound)
         throw ApexStringException(
             tr("Both electrodes and channels defined"));
-    
+
     // Read chunks
     qint64 maxLen=-1;
     while (1) {
@@ -143,30 +136,27 @@ L34Data AseqParser::GetData()
         quint32 readlen=0;
         if (id=="AELE") {
             readlen=readData<qint8>(activeElectrodes, len);
-            for (unsigned i=0; i<readlen; ++i) {
-                if ( activeElectrodes.targetvalue(i) < 0 ||
-                     activeElectrodes.targetvalue(i) > 22 )
-                     throw ApexStringException(tr("Invalid active electrode"));
-            }
-        } else if (id=="RELE")
+            checkElectrodes(activeElectrodes, readlen);
+        } else if (id=="RELE") {
             readlen=readData<qint8>(returnElectrodes, len);
-        else if (id=="CURL")
+            checkElectrodes(returnElectrodes, readlen);
+        } else if (id=="CURL") {
             readlen=readData<quint8>(currentLevels, len);
-        else if (id=="PHWI")
+        } else if (id=="PHWI") {
             readlen=readData<float>(phaseWidths, len);
-        else if (id=="PHGA")
+        } else if (id=="PHGA") {
             readlen=readData<float>(phaseGaps, len);
-        else if (id=="PERI")
+        } else if (id=="PERI") {
             readlen=readData<float>(periods, len);
-        else if (id=="CHAN") {
+        } else if (id=="CHAN") {
             readlen=readData<qint8>(channels, len);
             for (unsigned i=0; i<readlen; ++i) {
                 if ( channels.targetvalue(i) < 0 )
                     throw ApexStringException(tr("Invalid channel"));
             }
-        } else if (id=="MAGN")
+        } else if (id=="MAGN") {
             readlen=readData<float>(magnitudes, len);
-        else {
+        } else {
             if (len%2)
                 ++len;      // padding
             buffer.seek(buffer.pos()+len);
@@ -180,26 +170,27 @@ L34Data AseqParser::GetData()
             maxLen=readlen;
 
     }
-    
+
     buffer.close();
 
     // Convert vectors into L34Data structure
     L34Data ldata(maxLen);
     for (long i=0; i<maxLen; ++i) {
         // FIXME: check range of values
-        
+
         ldata[i]=L34Stimulus(channels.targetvalue(i),
                              magnitudes.targetvalue(i),
                              periods.targetvalue(i),
                              phaseWidths.targetvalue(i),
                              phaseGaps.targetvalue(i),
                              activeElectrodes.targetvalue(i),
-                             returnElectrodes.targetvalue(i),
+                             returnElectrodes.size()?
+                                 returnElectrodes.targetvalue(i):0,
                              currentLevels.size()?
-                             currentLevels.targetvalue(i):-1 );
+                                currentLevels.targetvalue(i):-1 );
         // currentLevels is unsigned char, so cannot return -1
     }
-    
+
     return ldata;
 }
 

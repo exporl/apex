@@ -52,6 +52,10 @@ namespace apex{
         return "jack";
       else if( ac_eType == COREAUDIO )
         return "coreaudio";
+      else if( ac_eType == QTAUDIO )
+        return "qtaudio";
+      else if( ac_eType == DUMMY )
+        return "dummy";
       else
       {
         assert( 0 && "this devtype does not exist" );
@@ -75,6 +79,10 @@ namespace apex{
         return JACK;
       else if( ac_sType == "coreaudio" )
         return COREAUDIO;
+      else if( ac_sType == "qtaudio")
+        return QTAUDIO;
+      else if( ac_sType == "dummy" )
+        return DUMMY;
       else
       {
         assert( 0 && "this devtype does not exist" );

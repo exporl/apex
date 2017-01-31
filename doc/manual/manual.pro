@@ -17,7 +17,8 @@ contains(CLEBS_DEPENDENCIES, pdflatex) {
 
 
     manual.files *= apex3manual.pdf
-    
+    manual.CONFIG += no_check_exist
+
 } else {
     DESTDIR = .
     TEMPLATE = subdirs

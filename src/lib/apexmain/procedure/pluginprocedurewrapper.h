@@ -23,7 +23,7 @@
 #include "../apexcontrol.h"
 #include "../runner/experimentrundelegate.h"
 #include "../screen/apexscreen.h"
-#include "../screen/apexscreenresult.h"
+#include "screen/screenresult.h"
 #include "pluginprocedureinterface.h"
 
 #include <QtCore/QObject>
@@ -33,7 +33,7 @@
 
 
 namespace apex {
-    class ApexScreenResult;
+    class ScreenResult;
 }
 
 /**
@@ -96,9 +96,9 @@ class PluginProcedureWrapper: public PluginProcedureInterface {
         virtual const QString GetResultXML() const  {
             // TODO: Hack - pass last screenresult so that calculations done
             // here can access values on the last screen
-            const apex::ApexScreenResult *screenResult = apex::ApexControl::Get().GetCurrentExperimentRunDelegate().modScreen()->GetLastResult();
+            const apex::ScreenResult *screenResult = apex::ApexControl::Get().GetCurrentExperimentRunDelegate().modScreen()->GetLastResult();
             QVariantMap s;
-            QMapIterator<QString, QString> i(*screenResult);
+            QMapIterator<QString, QString> i((*screenResult).map());
             while (i.hasNext()) {
                 i.next();
                 s.insert(i.key(), i.value());

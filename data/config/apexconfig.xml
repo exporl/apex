@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.2/config https://gilbert.med.kuleuven.be/apex/schemas/3.0.2/apexconfig.xsd"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/config" version="1">
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.3/config https://gilbert.med.kuleuven.be/apex/schemas/3.0.3/apexconfig.xsd"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/config" version="1">
     <paths>
         <perl>/usr/bin/perl</perl>
         <pluginScriptLibrary>pluginscriptlibrary.js</pluginScriptLibrary>
@@ -18,7 +18,6 @@
         <card id="Audiophile">
             <drivername driver="asio">M-Audio Audiophile</drivername>
             <drivername driver="portaudio">M-Audio Audiophile USB</drivername>
-            <drivername driver="coreaudio">M-Audio Audiophile USB</drivername>
         </card>
         <card id="SoundMax">
             <drivername driver="asio">NULL</drivername>
@@ -28,13 +27,12 @@
             <drivername driver="asio">default</drivername>
             <drivername driver="portaudio">default</drivername>
             <drivername driver="jack">default</drivername>
-            <drivername driver="coreaudio">default</drivername>
+            <drivername driver="dummy">default</drivername>
         </card>
         <card id="macdefaultout">
             <drivername driver="asio">NULL</drivername>
             <drivername driver="portaudio">Built-in Output</drivername>
             <drivername driver="jack">NULL</drivername>
-            <drivername driver="coreaudio">Built-in Output</drivername>
         </card>
     </soundcards>
     <prefixes>

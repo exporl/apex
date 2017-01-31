@@ -23,7 +23,7 @@ namespace apex
 {
   namespace editor
   {
-    QString findFreeID( const QString& base, const tScreenElementMap& takenIDs )
+    QString findFreeID( const QString& base, const ScreenElementMap& takenIDs )
     {
       QString s = base;
       s.replace( ' ', QString() );

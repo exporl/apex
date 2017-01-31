@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.2/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.2/experiment.xsd"
- xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
+ xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.3/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.3/experiment.xsd"
+ xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment"
  version="1">
   
   <!-- 
@@ -128,13 +128,11 @@
     <datablock id="rawdata3" >
       <device>wavdevice</device>
       <description>sample raw datablock</description>
-      <birth>2005-05-19T00:00:00Z</birth>
       <uri>wd3.wav</uri>
     </datablock>
     <datablock id="rawdata4" >
       <device>wavdevice</device>
       <description>sample raw datablock</description>
-      <birth>2005-05-19T00:00:00Z</birth>
       <uri>wd4.wav</uri>
     </datablock>
     <datablock id="rawdata5">
@@ -145,7 +143,6 @@
     <datablock id="rawdata6">
       <device>wavdevice</device>
       <description>sample raw datablock</description>
-      <birth>2005-05-19T00:00:00Z</birth>
       <uri>wd6.wav</uri>
     </datablock>
   </datablocks>

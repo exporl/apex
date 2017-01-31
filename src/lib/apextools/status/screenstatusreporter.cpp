@@ -45,7 +45,7 @@ void ScreenStatusReporter::report(const apex::StatusItem& e)
 {
     window->addItem(&e);
 
-    if (e.level() >= StatusItem::ERROR)
+    if (e.level() >= StatusItem::Error)
         window->raise();
 }
 

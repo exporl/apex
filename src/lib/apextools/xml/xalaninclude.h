@@ -5,6 +5,7 @@
   #pragma GCC visibility push(default)
 #endif
 
+
 #include <xalanc/Include/PlatformDefinitions.hpp>
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 #include <xalanc/XSLT/XSLTInputSource.hpp>

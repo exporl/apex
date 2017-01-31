@@ -86,7 +86,7 @@ AutoCalibration::AutoCalibration(ExperimentRunDelegate *runDelegate,
         qDebug("%s", qPrintable(trans.at(i)));
 
     if (!slmData.valueByType("transducer").toString().isEmpty()) {
-    
+
         if(!SLM->setTransducer(slmData.valueByType("transducer").toString())){
             error = SLM->errorString();
             QMessageBox::information(0, "Autocalibration - construction failed",
@@ -239,7 +239,7 @@ int AutoCalibration::frequencyWeightingType(QString type)
     if ( type == "C" )
         return SoundLevelMeter::C_Weighting;
 
-    qFatal(0 && "unknown frequency weighting type");
+    qFatal("unknown frequency weighting type");
     return -1;
 }
 

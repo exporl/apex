@@ -25,6 +25,12 @@
 #include "gui/ratiolayout.h"
 #include "fileprefixconvertor.h"
 
+#include "runner/experimentrundelegate.h"
+#include "parameters/parametermanager.h"
+#include "services/errorhandler.h"
+#include "stimulus/stimulus.h"
+
+
 //from libtools
 #include "apextools.h"
 
@@ -69,7 +75,9 @@ PictureRunDelegate::PictureRunDelegate(
 
     m_button->setBorderSize(5);
     //connect( this, SIGNAL( released() ), this, SLOT( sendAnsweredSignal() ) );
-    connect( m_button, SIGNAL( clicked() ), this, SLOT( sendAnsweredSignal() ) );
+    //connect( m_button, SIGNAL( clicked() ), this, SLOT( sendAnsweredSignal() ) );
+    connect( m_button, SIGNAL( mousePressed( const QPointF ) ),
+             this, SLOT( sendAnsweredSignal( const QPointF& ) ) );
 
     m_pPixMap = new QPixmap(ApexTools::addPrefix(element->getDefault(),
                              FilePrefixConvertor::convert(element->prefix())));
@@ -122,8 +130,9 @@ PictureRunDelegate::PictureRunDelegate(
     //m_button->setScaledContents(true);        // FIXME: keep aspect ratio
 }
 
-void PictureRunDelegate::sendAnsweredSignal()
+void PictureRunDelegate::sendAnsweredSignal( const QPointF& point)
 {
+    lastClickPosition = point;
     emit answered( this );
 }
 
@@ -131,19 +140,22 @@ void PictureRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
 {
     connect( this, SIGNAL( answered( ScreenElementRunDelegate* ) ),
              d, SIGNAL( answered( ScreenElementRunDelegate* ) ) );
+
+    connect( d, SIGNAL( newStimulus( stimulus::Stimulus* ) ),
+             this, SLOT( newStimulus( stimulus::Stimulus* ) ) );
 }
 
-void PictureRunDelegate::feedBack( const mt_eFeedBackMode& mode )
+void PictureRunDelegate::feedBack( const FeedbackMode& mode )
 {
     if ( element->getOverrideFeedback() )
     {
-        if ( mode == ScreenElementRunDelegate::mc_eOff )
+        if ( mode == ScreenElementRunDelegate::NoFeedback )
             m_button->setPixmap( *m_pPixMap );
-        else if ( mode == ScreenElementRunDelegate::mc_eNegative )
+        else if ( mode == ScreenElementRunDelegate::NegativeFeedback )
             m_button->setPixmap( *m_pNegative );
-        else if ( mode == ScreenElementRunDelegate::mc_ePositive )
-            m_button->setPixmap( *m_pPixMap );
-        else if ( mode == ScreenElementRunDelegate::mc_eHighLight )
+        else if ( mode == ScreenElementRunDelegate::PositiveFeedback )
+            m_button->setPixmap( *m_pPositive);
+        else if ( mode == ScreenElementRunDelegate::HighlightFeedback )
             m_button->setPixmap( *m_pHighLight );
     }
     else ScreenElementRunDelegate::feedBack( mode );
@@ -166,6 +178,48 @@ void PictureRunDelegate::mouseReleaseEvent ( QMouseEvent * /*event*/ )
     emit(released());
 
 }
+
+void PictureRunDelegate::newStimulus( stimulus::Stimulus* stimulus ) {
+    QString value;
+    QString id( element->getUriId() );
+    if (id.isEmpty())
+        return;
+
+    ParameterManager* pm = m_rd->GetParameterManager();
+
+    if ( stimulus->GetVarParameters()->contains(id))  {
+        value=stimulus->GetVarParameters()->value(id).toString();
+    } else if (pm->parameterValue(id).isValid()) {
+        value=pm->parameterValue(id).toString();
+    } else {
+        qDebug() << "Could not find parameter " << id;
+    }
+
+    QPixmap* t = new QPixmap(ApexTools::addPrefix(value,
+                             FilePrefixConvertor::convert(element->prefix())));
+
+    if ( t ) {
+        delete m_pPixMap;
+        m_pPixMap = t;
+        m_button->setPixmap( *m_pPixMap );
+
+        QStyleOption opt(0);
+        opt.palette = QApplication::palette();
+
+        if ( element->getDisabled().isEmpty()) {
+            delete m_pDisabled;
+            m_pDisabled = new QPixmap( style()->generatedIconPixmap(QIcon::Disabled,
+                                                                    *m_pPixMap, &opt) );
+        }
+
+    } else {
+        ErrorHandler::Get().addWarning("Picture", QString("Could not open image %1").arg(value));
+    }
+
+    qDebug() << "PictureRunDelegate: param " << id << " = " << value;
+
+}
+
 
 }
 }

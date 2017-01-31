@@ -24,11 +24,16 @@
 
 #include "xercesinclude.h"
 
-#include <qstring.h>
+#include <QString>
+#include <QVariant>
 #include <string>
 #include "../exceptions.h"
 
+
+
 #include <QDateTime>
+#include <QHash>
+
 
 //give a warning when using the xml classes in places where we should not
 //use it. eg libdata
@@ -166,9 +171,16 @@ class APEXTOOLS_EXPORT XMLutils
 
         static bool WriteElement(xercesc::DOMElement* e, QString filename);
         static QString elementToString(xercesc::DOMElement* e);
-
+        static QString wrapTag(const QString& tag, const QVariant& value);
         static QString xmlEscapedText (const QString &text);
         static QString xmlEscapedAttribute (const QString &text);
+		
+        static QString transformXSLTXalan (const QString &document,
+                                           const QString &script,
+                                           const QHash<QString,QString> hash);
+        static QString transformXSLTQt (const QString &document,
+                                        const QString &script,
+                                        const QHash<QString,QVariant> hash);
 };
 }//end ns ApexXMLTools
 }//end ns apex
@@ -200,6 +212,8 @@ class APEXTOOLS_EXPORT DOMTreeErrorReporter : public xercesc::ErrorHandler
         bool fSawErrors;
         apex::StatusReporter* m_pHandler;
 };
+
+
 
 // This needs to be a macro and no function otherwise the QString is already out of scope
 

@@ -44,6 +44,8 @@
   #include <utils/stringutils.h>
 #endif
 
+#include <QStringList>
+
 //#define PRINTBUFFER
 
 using namespace appcore;
@@ -88,14 +90,15 @@ public:
       * @param a_pCheck the object that checks for input being read
       * @param a_pBuffer the buffer
       */
-    WavDeviceBufferThread(const data::WavDeviceData *data, IEofCheck* a_pCheck, BufferedProcessing* a_pBuffer ) :
+    WavDeviceBufferThread(const data::WavDeviceData *data, IEofCheck* a_pCheck, BufferedProcessing* a_pBuffer, unsigned blockSize ) :
         IThread( "WavDeviceBufferThread" ),
         data (data),
         mv_bEof( true ),
         mv_bContinuous( false ),
         m_pEofChecker( a_pCheck ),
         m_pFillBufferCallback( 0 ),
-        m_pBuffer( a_pBuffer )
+        m_pBuffer( a_pBuffer ),
+        m_blockSize(blockSize)
     {
         mp_Start();
     }
@@ -113,7 +116,8 @@ public:
       */
   void mp_Run()
   {
-    const unsigned nBlockSize = data->blockSize();
+    //const unsigned nBlockSize = data->blockSize();
+      const unsigned nBlockSize = m_blockSize;
     while( !mf_bThreadShouldStop() )
     {
       mc_WriteLock.mf_Enter();        // lock "this object" (ie StartRun, AbortRun, Stopped)
@@ -226,6 +230,7 @@ private:
   IEofCheck*          m_pEofChecker;
   Callback*           m_pFillBufferCallback;
   BufferedProcessing* m_pBuffer;
+  unsigned              m_blockSize;
 
   const CriticalSection mc_WriteLock;
   const CriticalSection mc_EofLock;
@@ -398,6 +403,7 @@ apex::stimulus::WavDeviceIO::WavDeviceIO(const data::WavDeviceData* const ac_Con
   m_pCard                           ( 0 ),
 //  m_nDefaultBufSize                 ( 0 ),
   m_soundcardBufferSize             ( 0 ),
+  m_blockSize                       ( 0 ),
   m_pSoundcardBufferDropCheck       ( new BufferDropCheck( false ) ),
   m_pSoundcardbufferDroppedCallback ( new BufferDropCallback( "soundcard" ) ),
   m_pBigBufferDroppedCallback       ( new BufferDropCallback( "buffer" ) ),
@@ -429,9 +435,14 @@ WavDeviceIO::~WavDeviceIO()
   delete m_pSoundcardWriterCallback;
 }
 
-WavDeviceIO::mt_eOpenStatus WavDeviceIO::mp_eSetSoundcard( const apex::data::WavDeviceData& ac_Config,
+WavDeviceIO::mt_eOpenStatus WavDeviceIO::mp_eSetSoundcard( const apex::data::WavDeviceData& ac_Config, const QString driver,
                                                            const bool ac_bTryDefaultBufferSize, std::string& a_sErr )
 {
+    QString useDriver(driver);
+    if (driver.isEmpty()) {
+        useDriver = ac_Config.driverString();
+    }
+
   if( m_pCard )
     assert( 0 && "soundcard switching not implemented" );
 
@@ -440,11 +451,11 @@ WavDeviceIO::mt_eOpenStatus WavDeviceIO::mp_eSetSoundcard( const apex::data::Wav
   try
   {
       //create driver
-	  qDebug("Card name: %s, Driver name: %s", qPrintable(ac_Config.cardName()), qPrintable(ac_Config.driverString()) );
-    m_pCard = SoundCardFactory::CreateSoundCard(
-            ac_Config.cardName().toStdString(),
-                                  stimulus::fSndStringToEnum (ac_Config.driverString()) ,
-                                          a_sErr );
+      qDebug("Card name: %s, Driver name: %s", qPrintable(ac_Config.cardName()), qPrintable(useDriver) );
+      m_pCard = SoundCardFactory::CreateSoundCard(
+                  ac_Config.cardName().toStdString(),
+                  stimulus::fSndStringToEnum (useDriver) ,
+                  a_sErr );
     if( !m_pCard )
     {
 		qDebug("Could not create sound card");
@@ -453,13 +464,13 @@ WavDeviceIO::mt_eOpenStatus WavDeviceIO::mp_eSetSoundcard( const apex::data::Wav
     }
 
       //check specs
-	tSoundCardInfo info;
-	qDebug("num of sample rates=%u", info.m_SampleRates.size());
-    //tSoundCardInfo info = m_pCard->mf_GetInfo();
-	info = m_pCard->mf_GetInfo();
+    tSoundCardInfo info = m_pCard->mf_GetInfo();
+	qDebug("num of sample rates=%u", unsigned(info.m_SampleRates.size()));
+
+
 
 	//qDebug("nBufSizeUsed=%u", nBufSizeUsed);
-	qDebug("num of sample rates=%u", info.m_SampleRates.size());
+	qDebug("num of sample rates=%u", unsigned(info.m_SampleRates.size()));
     qDebug("# channels: %i", ac_Config.numberOfChannels());
     if( !info.mf_bCanOutputChannels( ac_Config.numberOfChannels() ) )
     {
@@ -478,7 +489,9 @@ WavDeviceIO::mt_eOpenStatus WavDeviceIO::mp_eSetSoundcard( const apex::data::Wav
         qDebug("Warning: requested soundcard buffer size (%d) not suppored, to the default: %d",
                ac_Config.bufferSize(), info.m_nDefaultBufferSize);
 
-    if( ac_Config.bufferSize()==-1 || !info.mf_bCanBufferSize( ac_Config.bufferSize() ) )
+    if( ac_Config.bufferSize()==-1)
+        nBufSizeUsed = info.m_nDefaultBufferSize;
+    else if (!info.mf_bCanBufferSize( ac_Config.bufferSize() ) )
     {
       if( ac_bTryDefaultBufferSize )
       {
@@ -494,6 +507,14 @@ WavDeviceIO::mt_eOpenStatus WavDeviceIO::mp_eSetSoundcard( const apex::data::Wav
 
     qDebug("Using sound driver buffer size %ld", nBufSizeUsed);
     m_soundcardBufferSize=nBufSizeUsed;
+
+    // Set block size to the same if nothing is requested
+    if ( ac_Config.blockSize() == -1 )
+        m_blockSize = m_soundcardBufferSize;
+    else
+        m_blockSize = ac_Config.blockSize();
+
+    qDebug("Block size: %d", m_blockSize);
 
       //open driver
     if( !m_pCard->mp_bOpenDriver( 0, ac_Config.numberOfChannels(),
@@ -532,18 +553,18 @@ void WavDeviceIO::mp_InitIO()
     //create the buffer
   const double dBufferSizeWanted =
           mc_Config.internalBufferSize() * (double) mc_Config.sampleRate();
-          
+
   unsigned nBufferSize =
           math::gf_RoundToMultiple(
           dataconversion::roundDoubleToIntT< unsigned >( dBufferSizeWanted ),
-          mc_Config.blockSize(), false );
-          
-  if( nBufferSize < 2 * mc_Config.blockSize())
-    nBufferSize = 2 * mc_Config.blockSize();
+          m_blockSize, false );
+
+  if( nBufferSize < 2 * m_blockSize)
+    nBufferSize = 2 * m_blockSize;
 //#ifdef PRINTBUFFER
   qDebug( "Internal sound buffer size: %d samples", nBufferSize );
 //#endif
-  m_pBuffer = new BufferedProcessing( mc_Config.blockSize(),
+  m_pBuffer = new BufferedProcessing( m_blockSize,
                                       m_soundcardBufferSize, mc_Config.numberOfChannels(),
                                       nBufferSize );
   m_pBuffer->mp_InstallBufferUnderrunCallback( m_pBigBufferDroppedCallback );
@@ -584,7 +605,7 @@ void WavDeviceIO::mp_InitIO()
 
     //create buffer thread, it will fill the buffer until it's full
     //or until no more samples are available
-  m_pBufferThread = new WavDeviceBufferThread( &mc_Config, m_pEofCheck, m_pBuffer );
+  m_pBufferThread = new WavDeviceBufferThread( &mc_Config, m_pEofCheck, m_pBuffer, m_blockSize );
 
     //streaming now shouldn't stop when no more input samples
     //are available, because they are used to read ahead;
@@ -621,7 +642,7 @@ void WavDeviceIO::mp_AddConnectItem( ConnectItem* a_pItem, const std::string& ac
 
 void WavDeviceIO::mp_AddConnection( const tConnection& ac_Connection, const bool /*ac_bMixToFile */)
 {
-  if( ac_Connection.m_nFromChannel != sc_nInfinite && ac_Connection.m_nToChannel != sc_nInfinite )
+  if( ac_Connection.m_nFromChannel >= 0 && ac_Connection.m_nToChannel >= 0 )
   {
     m_pConnMan->mp_Connect( ac_Connection.m_sFromID.toAscii().data(), ac_Connection.m_sToID.toAscii().data(),
       ac_Connection.m_nFromChannel, ac_Connection.m_nToChannel );
@@ -653,14 +674,14 @@ void WavDeviceIO::mp_RemoveConnection( const std::string& ac_sID )
 #endif
 }
 
-void WavDeviceIO::mp_RewireConnection( tConnection& a_Connection, const unsigned ac_nNewChannel, const bool ac_bIsFromConnection )
+void WavDeviceIO::mp_RewireConnection( tConnection& a_Connection, const int ac_nNewChannel, const bool ac_bIsFromConnection )
 {
   mp_RemoveConnection( a_Connection );
   if( ac_bIsFromConnection )
     a_Connection.m_nFromChannel = ac_nNewChannel;
   else
     a_Connection.m_nToChannel = ac_nNewChannel;
-  if( ac_nNewChannel != sc_nInfinite )
+  if( ac_nNewChannel != (int) sc_nInfinite )
     mp_AddConnection( a_Connection, false );
   mv_bConnectError = !m_pConnMan->mf_bAllInputsConnected();
 }
@@ -729,6 +750,7 @@ void WavDeviceIO::mp_Finish()
   if( m_pCard && !mv_bConnectError )
   {
     m_pCard->mp_bStop();
+    //m_pCard->mp_bCloseDriver();
     m_pBufferThread->mp_AbortRun();
   }
 }
@@ -842,6 +864,8 @@ QStringList WavDeviceIO::sf_saGetDriverNames()
   sf_AppendDrvrNames( PORTAUDIO, list );
   sf_AppendDrvrNames( COREAUDIO, list );
   sf_AppendDrvrNames( JACK, list );
+  sf_AppendDrvrNames( DUMMY, list );
+  sf_AppendDrvrNames( QTAUDIO, list );
   return list;
 }
 
@@ -863,4 +887,9 @@ void WavDeviceIO::sf_SetDriverName( const QString& ac_sDriverName, apex::data::W
 
   /*a_Config.SetDeviceType( fSndStringToEnum( ac_sDriverName.left( iPos ) ) );
   a_Config.SetParameterByType("driver",ac_sDriverName.right( ac_sDriverName.length() - ( iPos + 1 ) ));*/
+}
+
+int WavDeviceIO::GetBlockSize() const
+{
+    return m_blockSize;
 }

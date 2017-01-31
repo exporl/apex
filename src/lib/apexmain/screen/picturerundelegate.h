@@ -23,6 +23,7 @@
 #include "screen/pictureelement.h"
 
 #include "screenelementrundelegate.h"
+#include "parameterscontainerrundelegate.h"
 
 #include <QLabel>
 #include <QPushButton>
@@ -66,18 +67,20 @@ public:
     QWidget* getWidget();
     void connectSlots(gui::ScreenRunDelegate* d);
 
-    void feedBack(const mt_eFeedBackMode& mode);
+    void feedBack(const FeedbackMode& mode);
 
     // get mouse clicks
     void mouseReleaseEvent ( QMouseEvent * event ) ;
-
     void setEnabled(const bool e);
 
 signals:
     void answered(ScreenElementRunDelegate*);
     void released();
+
+public slots:
+     void newStimulus( stimulus::Stimulus* );
 private slots:
-    void sendAnsweredSignal();
+    void sendAnsweredSignal( const QPointF& );
 private:
     //QLabel* m_label;
     PictureButtonWidget* m_button;

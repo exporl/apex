@@ -36,7 +36,7 @@ namespace apex
   {
     using data::ScreenElement;
     using data::Screen;
-    using gui::tScreenElementMap;
+    using gui::ScreenElementMap;
 
     /**
      * The ScreenElementCreator class is a simple abstract base class.

@@ -28,6 +28,7 @@
 #include "runner/experimentrundelegate.h"
 #include "apexmodule.h"
 #include "stimulus.h"
+#include "stimulus/wav/wavdevice.h"
 #include "playmatrix.h"
 #include "device/controllers.h"
 #include "device/controldevice.h"
@@ -193,6 +194,7 @@ StimulusOutput::StimulusOutput(ExperimentRunDelegate& p_rd) :
 
 StimulusOutput::~StimulusOutput( )
 {
+    UnLoadStimulus();
   CloseDevices();
   delete mc_pWaitThread;
     //these are copies, not created through factory, so delete them
@@ -363,7 +365,7 @@ void StimulusOutput::LoadStimulus( Stimulus* ac_Stimulus, const bool p_restorePa
       //load datablocks
     const PlayMatrix* pCurMat = m_pCurStim->GetPlayMatrix();
 
-    if( pCurMat )
+    if( pCurMat  && pCurMat->mf_nGetBufferSize() > 0 && pCurMat->mf_nGetChannelCount() > 0)
     {
       if( mc_eMode == singlesequence || mc_eMode == onlysequence )  //FIXME make enum or'able
         LoadAll( pCurMat );
@@ -716,3 +718,5 @@ QString StimulusOutput::GetEndXML() const
 
   return result;
 }
+
+

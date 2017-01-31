@@ -41,7 +41,7 @@ ParameterLabelRunDelegate::ParameterLabelRunDelegate(
     QWidget* parent, const ParameterLabelElement* e, const QFont& defaultFont ) :
         LabelRunDelegateBase( p_exprd, parent, e, defaultFont ), element( e )
 {
-    qDebug() << "creating param label";
+    //qDebug() << "creating param label";
 }
 
 
@@ -60,25 +60,13 @@ void ParameterLabelRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
 
 
 void ParameterLabelRunDelegate::newStimulus( stimulus::Stimulus* stimulus ) {
-    const data::StimulusParameters* varParam = stimulus->GetVarParameters();
-    const data::StimulusParameters* fixParam = stimulus->GetFixParameters();
 
 
     QVariant value;
     QString id( element->getParameter().id );
     QString expression (  element->getParameter().expression );
 
-    QVariant pmvalue( m_rd->GetParameterManager()->
-                      parameterValue(id));
-    qDebug() << "ParameterLabelRunDelegate: param value for" << id << "=" << pmvalue;
-    if (pmvalue.isValid()){
-        value=pmvalue.toString();
-    } else if ( varParam->contains(id))
-    {
-        value=varParam->value(id).toString();
-    } else if (fixParam->contains(id)) {
-        value=fixParam->value(id).toString();
-    }
+    value = parameterValue(stimulus,  m_rd->GetParameterManager(), id);
 
     if (! expression.isEmpty()) {
         double newvalue=ParseExpression(expression,
@@ -88,7 +76,16 @@ void ParameterLabelRunDelegate::newStimulus( stimulus::Stimulus* stimulus ) {
 
     setText(value.toString());
 
+    //qDebug("Setting parameter %s of element %s to %s",, id value.toString())
+
 }
+
+void ParameterLabelRunDelegate::setEnabled( const bool e)
+{
+    QLabel::setEnabled( e );
+}
+
+
 
 
 }

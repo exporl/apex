@@ -45,7 +45,8 @@ QString UniformRandomGenerator::GetNextValue()
     if (m_param->m_nValueType == data::RandomGeneratorParameters::VALUE_INT)
     {
         //int result = (int) ApexTools::RandomRange((int)m_param->m_dMin, (int)m_param->m_dMax);
-        int result = generator.nextDouble(qCeil(m_param->m_dMin), qFloor(m_param->m_dMax) + 1);
+        //int result = generator.nextDouble(qCeil(m_param->m_dMin), qFloor(m_param->m_dMax) + 1);
+        int result = (int) generator.nextUInt(qFloor(m_param->m_dMax - m_param->m_dMin)) + m_param->m_dMin;
         sResult = QString::number(result);
     }
     else if (m_param->m_nValueType == data::RandomGeneratorParameters::VALUE_DOUBLE)

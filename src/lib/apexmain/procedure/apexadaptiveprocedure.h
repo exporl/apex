@@ -25,6 +25,7 @@
 //#include "apexprocedure.h"
 #include "apexconstantprocedure.h"
 #include "adaptiveprocedure.h"
+#include "random.h"
 //#include "apexadaptiveprocedureparameters.h"
 
 namespace apex {
@@ -56,7 +57,7 @@ public:
 
 public slots:
     // void Start();                        // implemented in ApexConstantProcedure
-    virtual bool NextTrial(const bool result, const ApexScreenResult* screenresult);
+    virtual bool NextTrial(const bool result, const ScreenResult* screenresult);
 
 /*signals:
     void Saturated();*/ //replaced by SendMessage
@@ -95,6 +96,8 @@ private:
     int m_prevReversals;            // number of reversals in the previous trial
 
     Stimulus*   m_lastSelectedStimulus;
+
+    Random m_random;
 
     mutable bool m_CheckAdaptVariableParameter_cache;
     mutable bool m_CheckAdaptVariableParameter_isCached;

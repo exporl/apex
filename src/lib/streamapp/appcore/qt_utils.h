@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
   /**
     * @file qt_utils.h
     * This file contains some utilities that are handy when using Qt.
@@ -58,11 +58,11 @@
     * @param a number (int/uns/float/double/long/...)
     * @return QString::number( a )
     */
-template<class tType>
-INLINE QString qn( tType a )
-{
-  return QString::number( a );
-}
+// template<class tType>
+// INLINE QString qn( tType a )
+// {
+//   return QString::number( a );
+// }
 
 namespace
 {

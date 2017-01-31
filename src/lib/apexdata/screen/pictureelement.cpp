@@ -18,6 +18,7 @@
  *****************************************************************************/
 
 #include "pictureelement.h"
+#include "parameterscontainerelement.h"
 
 #include "screenelementvisitor.h"
 
@@ -62,9 +63,19 @@ QString PictureElement::getDisabled() const
     return disabledPath;
 }
 
+QString PictureElement::getUriId() const
+{
+       return uriId;
+}
+
 void PictureElement::setDefault(const QString& p)
 {
     defaultPath = p;
+}
+
+void PictureElement::setUriId(const QString &p)
+{
+    uriId = p;
 }
 
 void PictureElement::setPositive(const QString& p)

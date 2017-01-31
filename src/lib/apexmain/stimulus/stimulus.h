@@ -120,6 +120,8 @@ class Stimulus : public FactoryElement
             return m_DeviceDataBlocks;
         }
 
+        const data::StimulusData* data() const {return &m_data;}
+
         void ConstructDevDBlockMap( const tDeviceMap& ac_Devices, tDataBlockMap& a_DataBlocks );
 
     private:

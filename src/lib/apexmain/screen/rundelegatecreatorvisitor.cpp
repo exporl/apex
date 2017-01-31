@@ -60,7 +60,7 @@ namespace rundelegates
 RunDelegateCreatorVisitor::RunDelegateCreatorVisitor(
     ExperimentRunDelegate* p_exprd,
     QWidget* p,
-    elementToRunningMapT& etrm,
+    ElementToRunningMap& etrm,
     const QFont& df)
         : parent(p), elementToRunningMap(etrm), defaultFont(df),
                  lastcreated(0),  m_rd(p_exprd)

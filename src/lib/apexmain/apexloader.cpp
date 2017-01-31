@@ -45,7 +45,9 @@ int ApexLoader::Load( int argc, char *argv[] )
 #endif
 
     // make sure apex does not crash if the user tries to close the console window
-#ifdef Q_OS_WIN32
+    // disabled until we can make sure that apex is still closable if not
+    // responding/crashing
+#if defined(Q_OS_WIN32) && 0
     HWND console = GetConsoleWindow();
     if (console) {
         SetConsoleCtrlHandler(NULL, true);

@@ -15,35 +15,32 @@ pluginProcedure.prototype.NextTrial = function(answer, screenresult) {
     
     // Get first trial from api
     trials = api.GetTrials();
-    for (t in trials) {
-        if (t==0) {
-            targettrial = trials[t].id;
-            targetstimulus = trials[t].GetStimulus();
-            targetscreen = trials[t].screen;
-            break;
-        }
+
+    if (ntrial==trials.length+1) {
+    	return "";
     }
-    
+
+    targettrial = trials[ntrial-1].id;
+    targetstimulus = trials[ntrial-1].GetStimulus();
+    targetscreen = trials[ntrial-1].screen;
+
     print("Testprocedure: last answer to buttongroup1: " + screenresult["buttongroup1"]);
     
     print("Testprocedure: using stimulus " + targetstimulus);
     print("Testprocedure: using trial " + targettrial);
     print("Testprocedure: using screen " + targetscreen);
     
-    if (ntrial-1==params.presentations)
-        api.Finished();
-    
     api.SetParameter("gain", -10+ntrial);
     
     api.CreateOutputList(targettrial, targetstimulus);
     api.SetScreen(targetscreen);
-    return "trial1";
+    return targettrial;
 }
 
 
 pluginProcedure.prototype.FirstTrial = function() {
     print("TestProcedure FirstTrial called");   
-    
+        // debugger;
     api.SetNumTrials(params.presentations);
     
     //api.MessageBox("PluginProcedure::FirstTrial");

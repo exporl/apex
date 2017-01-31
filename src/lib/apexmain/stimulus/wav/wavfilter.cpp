@@ -25,7 +25,6 @@
 #include <processors/processor.h>
 #include <processors/processor.h>
 #include <appcore/threads/locks.h>
-#include <appcore/qt_utils.h>
 #include <processors/processor.h>
 
 #include "filter/wavparameters.h"
@@ -81,9 +80,9 @@ bool  WavAmplifier::SetParameter( const QString& type, const int channel, const 
     const double dGain = ((data::WavFilterParameters*)m_Params)->baseGain() +
         (((data::WavFilterParameters*)m_Params)->invertGain() ? -value.toDouble() : +value.toDouble());
 
-#ifdef PRINTWAVFILTER
+//#ifdef PRINTWAVFILTER
     qDebug( "new gain value for %s: %f", qPrintable (GetID()), dGain);
-#endif
+//#endif
 
 
     if( channel != -1 )

@@ -39,7 +39,7 @@ namespace data
 class ScreenElement;
 class ButtonGroup;
 
-using gui::tScreenElementMap;
+using gui::ScreenElementMap;
 
 /**
  * The Screen class represents a single screen.  It contains only
@@ -54,8 +54,7 @@ using gui::tScreenElementMap;
  * contain a buttongroup ( list of id's grouped together ), and
  * knows about a default answer element.
  */
-class APEXDATA_EXPORT Screen
-            : public FactoryElement
+class APEXDATA_EXPORT Screen : public FactoryElement
 {
     public:
         /**
@@ -71,12 +70,12 @@ class APEXDATA_EXPORT Screen
          * Normally this is only called by the parser.
          */
         Screen(const QString& id, ScreenElement* rootElement,
-               const tScreenElementMap& idToElementMap,
+               const ScreenElementMap& idToElementMap,
                ButtonGroup* buttonGroup = 0,
                const QString& defaultAnswer = QString());
         virtual ~Screen();
 
-        const tScreenElementMap& getIDToElementMap() const;
+        const ScreenElementMap& idToElementMap() const;
         const QString getDefaultAnswerElement() const;
         ScreenElement* getRootElement();
         const ScreenElement* getRootElement() const;
@@ -92,12 +91,12 @@ class APEXDATA_EXPORT Screen
          */
         void addElement(ScreenElement* e);
         void deleteElement(ScreenElement* e);
-        
+
         bool operator==(const Screen& other) const;
         bool operator!=(const Screen& other) const;
-        
+
     private:
-        tScreenElementMap idToElementMap;
+        ScreenElementMap m_idToElementMap;
         ScreenElement* rootElement;
         ButtonGroup* buttonGroup;
         QString defaultAnswer;

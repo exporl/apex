@@ -44,9 +44,7 @@ public:
                  data::PluginFilterData *parameters,
                  unsigned long sr, unsigned bs);
 
-     ~PluginFilter()
-     {
-     }
+     ~PluginFilter();
 
     //!wavdevice needs to know how to cast us
     virtual bool mf_bIsRealFilter() const

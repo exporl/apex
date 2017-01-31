@@ -23,7 +23,6 @@
 #include "filter/filterdata.h"
 #include "audiosamplebuffer.h"
 #include "apextools.h"
-#include <appcore/qt_utils.h>
 #include <utils/stringutils.h>
 #include <iostream>
 #include "stimulus/wav/wavdeviceio.h"
@@ -59,7 +58,8 @@ void DataLoopGenerator::SetInputStream( PositionableInputStream* const ac_pInput
     if ( m_bRandom )
     {
         const unsigned long nSamples = m_pData->mf_lTotalSamples() / m_pData->mf_nGetNumLoops();
-        const unsigned long lPos = (unsigned long) ApexTools::RandomRange( 0.0, (double) nSamples );
+        //const unsigned long lPos = (unsigned long) ApexTools::RandomRange( 0.0, (double) nSamples );
+        const unsigned long lPos = m_Random.nextULongLong( nSamples );
         m_pData->mp_SeekPosition( lPos );
         std::cout << "Random started at " + toString( lPos ) + " out of " + toString( nSamples ) + " samples." << std::endl;
     } else if (m_jump) {
@@ -89,8 +89,8 @@ DataLoopGenerator::~DataLoopGenerator()
 }
 
 StreamGenerator* StreamGeneratorFactory::CreateGenerator(
-        const QString &ac_sType, data::FilterData *pParams, unsigned long lFs,
-        unsigned nBuffSize, bool deterministic)
+    const QString &ac_sType, data::FilterData *pParams, unsigned long lFs,
+    unsigned nBuffSize, bool deterministic)
 {
     data::WavFilterParameters* params = (data::WavFilterParameters*) pParams;
     Q_CHECK_PTR(params);

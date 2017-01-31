@@ -44,7 +44,7 @@ class APEXDATA_EXPORT WavDeviceData : public DeviceData
         double internalBufferSize() const;
         int bufferSize() const;
         //unsigned defaultBufferSize() const;
-        unsigned blockSize() const;
+        int blockSize() const;
         unsigned long sampleRate() const;
         QString cardName() const;
 

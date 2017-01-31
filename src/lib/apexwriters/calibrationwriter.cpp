@@ -66,6 +66,14 @@ DOMElement* CalibrationWriter::addSoundLevelMeter(DOMDocument* doc,
 
     DOMElement* slm = doc->createElement(X("soundlevelmeter"));
 
+    //plugin
+    Q_ASSERT(data.hasParameter("plugin"));
+    slm->appendChild(XMLutils::CreateTextElement(doc, "plugin",
+                                        data.valueByType("plugin").toString()));
+
+    //transducer
+    appendParameterTo(slm, doc, "transducer", data);
+
     //frequence_weighting
     QString fw = data.frequencyWeightingType();
     Q_ASSERT(!fw.isEmpty());

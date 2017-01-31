@@ -22,7 +22,7 @@
 #include "corrector/corrector.h"
 #include "screen/apexscreen.h"
 
-#include "screen/apexscreenresult.h"
+#include "screen/screenresult.h"
 
 #include "stimulus/stimulus.h"
 #include "stimulus/stimulusoutput.h"
@@ -62,8 +62,10 @@ ApexProcedure::ApexProcedure(ExperimentRunDelegate& p_rd,
     m_nTrials(0),
     m_id(config->GetID())
 {
-    if (deterministic)
+    if (deterministic) {
         randomGenerator.setSeed(0);
+        choicesRandomGenerator.setSeed(0);
+    }
 
 #ifdef PRINTPROCEDURE
     qDebug("New Apexprocedure, id=" + m_id);
@@ -182,7 +184,7 @@ void ApexProcedure::ExperimentFinished( ) {
  * Next StartOutput should be called
  * @param
  */
-bool ApexProcedure::NextTrial( bool, const ApexScreenResult* ) {
+bool ApexProcedure::NextTrial( bool, const ScreenResult* ) {
 #ifdef SHOWSLOTS
     qDebug("SLOT ApexProcedure::NextTrial( bool result )");
 #endif
@@ -241,9 +243,10 @@ void ApexProcedure::StimulusDone( )
 
     } else {
         // if not already enabled, enable
-        if ( !m_procedureConfig->GetParameters()->m_input_during_stimulus)
+        if ( !m_procedureConfig->GetParameters()->m_input_during_stimulus) {
+            ApexControl::Get().StartTimer();
             emit(EnableScreen(true));
-        ApexControl::Get().StartTimer();
+        }
     }
 
     m_bFirstPresentation=false;
@@ -297,7 +300,7 @@ void ApexProcedure::CreateOutputList( data::ApexTrial * p_trial, Stimulus* p_sti
     int pos;
     const data::Choices& c = m_procedureConfig->GetParameters()->GetChoices();
     while (1) {
-        pos = randomGenerator.nextUInt(nChoices) + 1;
+        pos = choicesRandomGenerator.nextUInt(nChoices) + 1;
         //pos= ApexTools::RandomRange(1, nChoices );
 
         data::Choices::const_iterator it;
@@ -317,6 +320,7 @@ void ApexProcedure::CreateOutputList( data::ApexTrial * p_trial, Stimulus* p_sti
     QString defaultStandard;
     if ( p_trial->GetRandomStandard().isEmpty()) {
         defaultStandard = m_procedureConfig->GetParameters()->m_defaultstandard;
+        qDebug("Using default standard %s", qPrintable(defaultStandard));
         useDefaultStandard=true;
     }
 
@@ -434,27 +438,34 @@ void ApexProcedure::StartOutput( )
 
     m_nCurrentOutputStimulus=1;
 
-    // enable screen if config file says so
-    if ( m_procedureConfig->GetParameters()->m_input_during_stimulus)
-        emit(EnableScreen(true));
 
     if ( m_bFirstPresentation &&  m_procedureConfig->GetParameters()->m_time_before_first_stimulus) {
 
 
         stimulus::tDeviceMap& devs = m_rd.GetDevices();
         for (stimulus::tDeviceMap::const_iterator it=devs.begin(); it!=devs.end(); ++it) {
-//            if ( (*it).second->CanOffLine()) {       // it is a wav device
-//                stimulus::WavDevice* d = (stimulus::WavDevice*) (*it).second;
-                it.value()->SetSilenceBefore(m_procedureConfig->GetParameters()->m_time_before_first_stimulus);
-//            }
+            it.value()->SetSilenceBefore(m_procedureConfig->GetParameters()->m_time_before_first_stimulus);
         }
     }
+
+    // enable screen if config file says so
+    if ( m_procedureConfig->GetParameters()->m_input_during_stimulus) {
+        emit(EnableScreen(true));
+        ApexControl::Get().StartTimer();
+    }
+
+    m_trialStartTime = QDateTime::currentDateTime();
 
     StimulusDone();
 
 
     return;
 
+}
+
+void ApexProcedure::doDeterministicGeneration()
+{
+    randomGenerator.setSeed(0);
 }
 
 void ApexProcedure::NewTrial( const QString & p_name )
@@ -482,6 +493,8 @@ QString ApexProcedure::XMLBody()  const
 {
     QString temp;
 
+    temp += "<trial_start_time>" +  m_trialStartTime.toString(Qt::ISODate) + "</trial_start_time>\n";
+
     if (m_CurrentCorrectAnswer!=-1) {
         temp+= "<correct_answer>%1</correct_answer>\n";
         temp=temp.arg(m_CurrentCorrectAnswer);
@@ -490,7 +503,7 @@ QString ApexProcedure::XMLBody()  const
     if ( m_nTrials<=m_procedureConfig->GetParameters()->m_skip)
         temp += "<skip/>\n";
 
-    temp+="<stimulus>"+m_currentStimulus+"</stimulus>\n";
+    temp+="<stimulus>" + m_currentStimulus + "</stimulus>\n";
 
     for (int i=0; i<m_currentStandards.size(); ++i) {
         temp+="<standard>"+m_currentStandards.at(i)+"</standard>\n";

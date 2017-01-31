@@ -103,20 +103,25 @@ bool apex::data::ButtonGroup::operator==(const apex::data::ButtonGroup& other) c
 {
     if (size() != other.size())
         return false;
-    
+
     //check if all element of this are also element of other
     for (const_iterator it = begin(); it != end(); it++)
     {
         if (!other.IsElement(*it))
             return false;
     }
-    
+
     //check if all elements of other are also elements of this
     for (const_iterator it = other.begin(); it != other.end(); it++)
     {
         if (!IsElement(*it))
             return false;
     }
-    
+
     return id == other.id;
+}
+
+bool apex::data::ButtonGroup::operator!=(const apex::data::ButtonGroup& other) const
+{
+    return !(*this == other);
 }

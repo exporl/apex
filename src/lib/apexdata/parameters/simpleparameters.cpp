@@ -22,6 +22,7 @@
 
 //from libtools
 #include "exceptions.h"
+#include <apextools.h>
 
 #include <QDebug>
 
@@ -216,7 +217,7 @@ SimpleParameters& SimpleParameters::operator=(const SimpleParameters& other)
 
 bool SimpleParameters::operator==(const SimpleParameters& other) const
 {
-    return  d->parameters == other.d->parameters &&
+    return  ApexTools::haveSameContents(d->parameters, other.d->parameters) &&
             d->id == other.d->id &&
             d->xsiType == other.d->xsiType;
 }

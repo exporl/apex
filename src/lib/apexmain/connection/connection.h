@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __CONNECTION_H_
 #define __CONNECTION_H_
 
 #include "connection/connectiondata.h"
-#include <appcore/qt_utils.h>
 
 #include <QMap>
 #include <QString>
@@ -59,8 +58,8 @@ namespace apex
 
             QString   m_sFromID;        //!< the element where the connection originates
             QString   m_sToID;          //!< the element where the connection ends
-            unsigned  m_nFromChannel;   //!< the originating channel
-            unsigned  m_nToChannel;     //!< the ending channel
+            int       m_nFromChannel;   //!< the originating channel
+            int       m_nToChannel;     //!< the ending channel
             QString   m_sFromChannelID; //!< optional ID, used when changing connections as a variable parameter
             QString   m_sToChannelID;   //!< @see m_sFromChannelID
 
@@ -70,9 +69,13 @@ namespace apex
             */
             QString mf_sPrint() const
             {
-                const QString sFrom( m_sFromChannelID + " : from " + m_sFromID + " channel " + qn( m_nFromChannel ) );
-                const QString sTo( m_sToChannelID + " : to " + m_sToID + " channel " + qn( m_nToChannel ) );
-                return QString( sFrom + " " + sTo );
+                return QString("%1 : from %2 channel %3 %4 : to %5 channel %6")
+                            .arg(m_sFromChannelID)
+                            .arg(m_sFromID)
+                            .arg(m_nFromChannel)
+                            .arg(m_sToChannelID)
+                            .arg(m_sToID)
+                            .arg(m_nToChannel);
             }
         };
 

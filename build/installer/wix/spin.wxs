@@ -59,6 +59,24 @@
 							DiskId="1">
 							<File Id="FileConfigfile" Name="spin.xml"
 								Source="$(var.InstallPath)/config/spin.xml"/>
+
+							<File Id="FileSpeechMaterialFist" Name="s_fist.xml" LongName="speechmaterial_fist.xml"
+								Source="$(var.InstallPath)/config/speechmaterial_fist.xml"/>
+							<File Id="FileSpeechMaterialFrMatrix" Name="s_frm.xml" LongName="speechmaterial_frmatrix.xml"
+								Source="$(var.InstallPath)/config/speechmaterial_frmatrix.xml"/>
+							<File Id="FileSpeechMaterialHint" Name="s_hint.xml" LongName="speechmaterial_hint.xml"
+								Source="$(var.InstallPath)/config/speechmaterial_hint.xml"/>
+							<File Id="FileSpeechMaterialLilliput" Name="s_li.xml" LongName="speechmaterial_lilliput.xml"
+								Source="$(var.InstallPath)/config/speechmaterial_lilliput.xml"/>
+							<File Id="FileSpeechMaterialLint" Name="s_lint.xml" LongName="speechmaterial_lint.xml"
+								Source="$(var.InstallPath)/config/speechmaterial_lint.xml"/>
+							<File Id="FileSpeechMaterialLins" Name="s_list.xml" LongName="speechmaterial_list.xml"
+								Source="$(var.InstallPath)/config/speechmaterial_list.xml"/>
+							<File Id="FileSpeechMaterialNva" Name="s_nva.xml" LongName="speechmaterial_nva.xml"
+								Source="$(var.InstallPath)/config/speechmaterial_nva.xml"/>
+							<File Id="FileSpeechMaterialVu" Name="s_vu.xml" LongName="speechmaterial_vu.xml"
+								Source="$(var.InstallPath)/config/speechmaterial_vu.xml"/>
+							
 						</Component>
 					</Directory>
 					

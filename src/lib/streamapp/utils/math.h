@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __STREAMAPPMATH_H__
 #define __STREAMAPPMATH_H__
 
@@ -37,7 +37,7 @@ namespace math
     /**
       * Square root of 2
       */
-  const double gc_dSqrt2 = pow( 2.0, 0.5 );
+  //const double gc_dSqrt2 = pow( 2.0, 0.5 );
 
     /**
       * Phi

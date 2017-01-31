@@ -22,16 +22,23 @@
 #include "xmldocumentgetter.h"
 #include "version.h"
 #include "status/statusreporter.h"
+#include "xml/xalaninclude.h"
 
+#include <iostream>
+#include <sstream>
+
+#include <QXmlQuery>
+#include <QHash>
 #include <QFile>
 
 using namespace xercesc;
-
+using namespace xalanc;
 #include "xmlkeys.h"
 using namespace apex::XMLKeys;
 
 #include <iostream>
 using namespace std;
+
 #include <assert.h>
 
 namespace apex
@@ -42,12 +49,71 @@ namespace ApexXMLTools
 namespace
 {
 
+
 void sf_CheckNode(  DOMNode* p )
 {
     Q_ASSERT(p);
     Q_ASSERT(p->getNodeType() == DOMNode::ELEMENT_NODE);
 }
 
+}
+
+QString XMLutils::transformXSLTXalan (const QString &document,
+                                      const QString &script, const QHash<QString,QString> hash)
+{
+   XalanTransformer::initialize();
+
+      XalanTransformer transformer;
+#ifdef USEXALANFORMATNUMBER
+    xalanc::ICUFormatNumberFunctor(transformer.getMemoryManager());
+#endif
+
+	//make target stream with char buf
+    std::ostringstream ostrTarget;
+	XSLTResultTarget targ(ostrTarget);
+
+	if (hash["target"]!="'html'"){
+	xalanc::XalanStdOutputStream xsos (ostrTarget);
+    xalanc::XalanOutputStreamPrintWriter xospw(xsos);
+    xalanc::FormatterToText textFormatter(xospw);
+    targ = XSLTResultTarget(textFormatter);
+	}
+
+	QHashIterator<QString,QString> i(hash);
+	while (i.hasNext()) {
+		i.next();
+		const XalanDOMString key("target");
+		const XalanDOMString expression("'html'");
+		transformer.setStylesheetParam(key,expression);
+	 }
+
+	XSLTInputSource xmlin(QFile::encodeName(document));
+    XSLTInputSource sheet(QFile::encodeName(script));
+    transformer.transform(xmlin,sheet,targ);
+
+    XalanTransformer::terminate();
+	
+	//make sure buffer has an endline and construct QString with it
+    ostrTarget << std::ends;
+	return ostrTarget.str().c_str();	
+		
+}
+
+QString XMLutils::transformXSLTQt (const QString &document, const QString &script, const QHash<QString,QVariant> hash)
+{
+	QString bla("    ");
+
+	QXmlQuery query(QXmlQuery::XSLT20);
+    QHashIterator<QString,QVariant> i(hash);
+	while (i.hasNext()) {
+		i.next();
+        query.bindVariable(i.key(), i.value());
+	 }
+	query.setFocus(QUrl(document));
+	query.setQuery(QUrl(script));
+	query.evaluateTo(&bla);
+
+    return bla;
 }
 
 const QString XMLutils::GetTagName(DOMElement *element)
@@ -369,6 +435,11 @@ QString XMLutils::elementToString(XERCES_CPP_NAMESPACE::DOMElement* e)
     return X2S(domWriter->writeToString(*e));
 }
 
+QString XMLutils::wrapTag(const QString& tag, const QVariant& value)
+{
+     return QString("<%1>%2</%3>").arg(tag).arg(value.toString()).arg(tag);
+}
+
 // These two functions are a hack, and there should be escaping everywhere TODO
 QString XMLutils::xmlEscapedText (const QString &text)
 {
@@ -430,3 +501,4 @@ void DOMTreeErrorReporter::LogToApex( apex::StatusReporter* a_Handler )
 {
     m_pHandler = a_Handler;
 }
+

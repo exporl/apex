@@ -44,7 +44,7 @@ namespace apex
     class ApexScreen;
     class RandomGenerators;
     class ParameterDialogResults;
-    class ApexScreenResult;
+    class ScreenResult;
     class ApexControlThread;
     class ExperimentRunDelegate;
     class ExperimentRunner;
@@ -152,7 +152,7 @@ public slots:
   // replacement slots, we replace these slots to control the order of events
   void SetCorrectAnswer(unsigned);
   void NewStimulus( const QString& );     //load a new stimulus
-  void Answered( const ApexScreenResult* );
+  void Answered( const ScreenResult* );
 
   void deletePluginCache();
   void editApexconfig();
@@ -196,6 +196,7 @@ private:
   bool autoAnswer;
   bool deterministicRandom;
   bool noResults;
+  bool autoSaveResults;
   bool exitAfter;
 
     /**

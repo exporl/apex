@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "checkboxelement.h"
 
 #include "screenelementvisitor.h"
@@ -28,9 +28,10 @@ namespace apex
 namespace data
 {
 
-CheckBoxElement::CheckBoxElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent ),
-	text( QObject::tr( "<No text set>" ) ), isChecked(Qt::Unchecked), reset(false)
+CheckBoxElement::CheckBoxElement(const QString& id, ScreenElement* parent) :
+    ScreenElement(id, parent),
+    text(QObject::tr("<No text set>")),
+    isChecked(Qt::Unchecked)
 {
 }
 
@@ -38,7 +39,7 @@ CheckBoxElement::~CheckBoxElement()
 {
 }
 
-void CheckBoxElement::setText( const QString& t )
+void CheckBoxElement::setText(const QString& t)
 {
     text = t;
 }
@@ -48,14 +49,19 @@ QString CheckBoxElement::getText() const
     return text;
 }
 
-void CheckBoxElement::visit( ScreenElementVisitor* v )
+Qt::CheckState CheckBoxElement::getChecked() const
 {
-    v->visitCheckBox( this );
+	return isChecked;
 }
 
-void CheckBoxElement::visit( ScreenElementVisitor* v ) const
+void CheckBoxElement::visit(ScreenElementVisitor* v)
 {
-    v->visitCheckBox( this );
+    v->visitCheckBox(this);
+}
+
+void CheckBoxElement::visit(ScreenElementVisitor* v) const
+{
+    v->visitCheckBox(this);
 }
 
 ScreenElement::ElementTypeT CheckBoxElement::elementType() const

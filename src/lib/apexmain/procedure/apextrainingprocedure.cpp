@@ -18,8 +18,8 @@
  *****************************************************************************/
 
 #include "apextrainingprocedure.h"
-#include "../screen/apexscreenresult.h"
-#include "../screen/apexscreen.h"
+#include "screen/screenresult.h"
+#include "screen/apexscreen.h"
 #include "apextools.h"
 #include "apexcontrol.h"
 
@@ -48,7 +48,7 @@ ApexTrainingProcedure::~ApexTrainingProcedure()
 }
 
 
-bool ApexTrainingProcedure::NextTrial(bool p_answer, const ApexScreenResult* screenresult) {
+bool ApexTrainingProcedure::NextTrial(bool p_answer, const ScreenResult* screenresult) {
 #ifdef SHOWSLOTS
         qDebug("SLOT ApexConstantProcedure::NextTrial(bool p_answer)");
 #endif
@@ -64,8 +64,8 @@ bool ApexTrainingProcedure::NextTrial(bool p_answer, const ApexScreenResult* scr
 
         // get last answer
         QString answerElement=ApexControl::Get().GetCurrentAnswerElement();
-        const ApexScreenResult* sr = m_rd.modScreen()->GetLastResult();
-        ApexScreenResult::const_iterator p = sr->find(answerElement);
+        const ScreenResult* sr = m_rd.modScreen()->GetLastResult();
+        ScreenResult::const_iterator p = sr->find(answerElement);
         QString answer;
         if ( p != sr->end() )  {
                 answer = p.value();

@@ -33,6 +33,7 @@ class RandomGenerator;
 class UniformRandomGenerator;
 class GaussianRandomGenerator;
 class RandomGeneratorFactory;
+class ExperimentParser;
 
 namespace data
 {
@@ -61,6 +62,7 @@ class APEXDATA_EXPORT RandomGeneratorParameters : public data::ApexParameters
         friend class apex::UniformRandomGenerator;
         friend class apex::GaussianRandomGenerator;
         friend class apex::RandomGeneratorFactory;
+        friend class apex::ExperimentParser;
 
     protected:
         double m_dMin;

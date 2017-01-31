@@ -174,17 +174,17 @@ void ParameterListRunDelegate::newStimulus( stimulus::Stimulus* stimulus )
     qDebug("ApexParameterlist::NewStimulus: Getting parameters from stimulus id=" + stimulus->GetID());
 #endif
     model->clear();
-    const data::StimulusParameters* varParam = stimulus->GetVarParameters();
-    const data::StimulusParameters* fixParam = stimulus->GetFixParameters();
+    /*const data::StimulusParameters* varParam = stimulus->GetVarParameters();
+    const data::StimulusParameters* fixParam = stimulus->GetFixParameters();*/
 
     for ( ParameterListElement::ParameterListT::const_iterator it=
               element->getParameterList().begin();
           it!=element->getParameterList().end(); ++it)
     {
         ModelData d;
-        QString value;
+        QVariant value;
 
-        QVariant pmvalue( m_rd->GetParameterManager()->parameterValue((*it).id));
+        /*QVariant pmvalue( m_rd->GetParameterManager()->parameterValue((*it).id));
         if (pmvalue.isValid()){
             value=pmvalue.toString();
         } else if ( varParam->contains((*it).id))
@@ -192,7 +192,9 @@ void ParameterListRunDelegate::newStimulus( stimulus::Stimulus* stimulus )
             value=varParam->value((*it).id).toString();
         } else if (fixParam->contains((*it).id)) {
             value=fixParam->value((*it).id).toString();
-        }
+        }*/
+
+        value = parameterValue(stimulus,  m_rd->GetParameterManager(), (*it).id);
 
         if (! (*it).expression.isEmpty()) {
             double newvalue=ParseExpression((*it).expression,value.toDouble());
@@ -200,7 +202,7 @@ void ParameterListRunDelegate::newStimulus( stimulus::Stimulus* stimulus )
         }
 
         d.name = (*it).GetName();
-        d.value = value;
+        d.value = value.toString();
         model->push_back( d );
     }
     model->dataChanged();

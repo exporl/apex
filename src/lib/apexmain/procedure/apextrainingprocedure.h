@@ -56,7 +56,7 @@ public slots:
     virtual void Start();
 //      virtual void Stop();
 
-    virtual bool NextTrial(const bool result, const ApexScreenResult* screenresult);
+    virtual bool NextTrial(const bool result, const ScreenResult* screenresult);
     /*      virtual void StimulusDone();*/
 
     virtual void FirstTrial(); //[ stijn ] prepare first trial*/
@@ -64,7 +64,7 @@ public slots:
 private:
     data::ApexTrial* m_currentTrial;
 
-    Random randomGenerator;
+    //Random randomGenerator;
 };
 
 }

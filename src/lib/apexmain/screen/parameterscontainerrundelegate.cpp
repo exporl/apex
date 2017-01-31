@@ -22,6 +22,10 @@
 //from libdata
 #include "screen/parameterscontainerelement.h"
 
+#include "stimulus/stimulusparameters.h"
+#include "stimulus/stimulus.h"
+#include "parameters/parametermanager.h"
+
 #include <QRegExp>
 #include <QStringList>
 
@@ -66,6 +70,29 @@ double ParametersContainerRunDelegate::ParseExpression(
     if (sign=="-")
         b=-b;
     return a*value+b;
+}
+
+QVariant ParametersContainerRunDelegate::parameterValue(stimulus::Stimulus* stimulus, ParameterManager* pm, const QString& id )
+{
+    QVariant value;
+    const data::StimulusParameters* varParam = stimulus->GetVarParameters();
+    const data::StimulusParameters* fixParam = stimulus->GetFixParameters();
+
+
+    QVariant pmvalue( pm->parameterValue(id));
+
+    if (pmvalue.isValid()){
+        value=pmvalue.toString();
+    } else if ( varParam->contains(id))  {
+        value=varParam->value(id).toString();
+    } else if (fixParam->contains(id)) {
+        value=fixParam->value(id).toString();
+    } else {
+        qDebug() << "Could not find parameter " << id;
+    }
+
+
+    return value;
 }
 
 

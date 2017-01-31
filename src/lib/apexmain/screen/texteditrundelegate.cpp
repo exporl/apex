@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "texteditrundelegate.h"
 
 #include "screen/texteditelement.h"
@@ -58,6 +58,8 @@ TextEditRunDelegate::TextEditRunDelegate(
     QString sMask = e->getInputMask();
     if ( sMask == "numbers" )
         setValidator( new QIntValidator( -32768, 32767, this ) );
+    else if (sMask.startsWith(QLatin1Char('/')))
+        setValidator(new QRegExpValidator(QRegExp(sMask.mid(1)), this));
     else
         setInputMask( sMask );
 }
@@ -101,15 +103,16 @@ void TextEditRunDelegate::setText( const QString& t )
 
 void TextEditRunDelegate::clearText()
 {
-    setText( element->getText() );
+    setText(element->getText());
 }
 
-}
-}
-
-void apex::rundelegates::TextEditRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
+void TextEditRunDelegate::connectSlots(gui::ScreenRunDelegate* d)
 {
-    connect( this, SIGNAL( answered( ScreenElementRunDelegate* ) ),
-             d, SIGNAL( answered( ScreenElementRunDelegate* ) ) );
+    connect(this, SIGNAL(answered(ScreenElementRunDelegate*)),
+            d, SIGNAL(answered(ScreenElementRunDelegate*)));
+}
+
+}
+
 }
 

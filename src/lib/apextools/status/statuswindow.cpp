@@ -43,11 +43,11 @@ static const QColor sf_SetColor( const StatusItem::Level a_Type )
 {
     switch ( a_Type )
     {
-        case StatusItem::ERROR:
+        case StatusItem::Error:
             return Qt::red;
-        case StatusItem::WARNING:
+        case StatusItem::Warning:
             return QColor( 0, 0x88, 0 ); //less flashy than Qt::green
-        case StatusItem::MESSAGE:
+        case StatusItem::Message:
             return Qt::gray;
         default:
             return Qt::black;
@@ -231,19 +231,19 @@ StatusWindow::StatusWindow(StatusItem::Levels reportLevels) :
 
     errorsAction = new QAction(tr("Errors"), m_List);
     errorsAction->setCheckable(true);
-    errorsAction->setChecked(reportLevels & StatusItem::ERROR);
+    errorsAction->setChecked(reportLevels & StatusItem::Error);
     levelsMenu->addAction(errorsAction);
     connect(errorsAction, SIGNAL(triggered(bool)), this, SLOT(updateLevels()));
 
     warningsAction = new QAction(tr("Warnings"), m_List);
     warningsAction->setCheckable(true);
-    warningsAction->setChecked(reportLevels & StatusItem::WARNING);
+    warningsAction->setChecked(reportLevels & StatusItem::Warning);
     levelsMenu->addAction(warningsAction);
     connect(warningsAction, SIGNAL(triggered(bool)), this, SLOT(updateLevels()));
 
     messagesAction = new QAction(tr("Messages"), m_List);
     messagesAction->setCheckable(true);
-    messagesAction->setChecked(reportLevels & StatusItem::MESSAGE);
+    messagesAction->setChecked(reportLevels & StatusItem::Message);
     levelsMenu->addAction(messagesAction);
     connect(messagesAction, SIGNAL(triggered(bool)), this, SLOT(updateLevels()));
 
@@ -316,11 +316,11 @@ void StatusWindow::updateLevels()
     StatusItem::Levels levels;
 
     if (errorsAction->isChecked())
-        levels |= StatusItem::ERROR;
+        levels |= StatusItem::Error;
     if (warningsAction->isChecked())
-        levels |= StatusItem::WARNING;
+        levels |= StatusItem::Warning;
     if (messagesAction->isChecked())
-        levels |= StatusItem::MESSAGE;
+        levels |= StatusItem::Message;
 
     emit levelsChanged(levels);
 }

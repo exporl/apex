@@ -22,6 +22,8 @@
 
 #ifdef Q_OS_WIN32
 #include <windows.h>            // Sleep()
+#else
+#include <unistd.h>
 #endif
 
 void milliSleep (unsigned millis)

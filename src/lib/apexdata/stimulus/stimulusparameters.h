@@ -18,8 +18,8 @@ class APEXDATA_EXPORT StimulusParameters
 
     public:
         QVariant value(const QString& id) const;
-        void insert(const QString id, const QVariant value);
-        bool contains(QString id) const;
+        void insert(const QString& id, const QVariant& value);
+        bool contains(const QString& id) const;
         const QMap<QString,QVariant>& map() const;
         bool isEmpty() const;
 

@@ -15,6 +15,8 @@ win32:CLEBS *= +asio
 unix:CLEBS *= +jack
 include($${BASEDIR}/clebs.pri)
 
+#QT += multimedia
+
 # set main config
 debug:TARGET = streamappd
 release:TARGET = streamapp
@@ -167,8 +169,15 @@ unix {
 }
 
 !NOSOUNDCARD {
-  SOURCES += soundcard/bufferdropcheck.cpp
-  HEADERS += soundcard/bufferdropcheck.h
+  SOURCES += \
+      soundcard/bufferdropcheck.cpp \
+      #soundcard/qtaudiowrapper.cpp \
+      soundcard/dummysoundcard.cpp
+
+  HEADERS += \
+      soundcard/bufferdropcheck.h \
+      soundcard/qtaudiowrapper.h \
+      soundcard/dummysoundcard.h
 
   !NOPORTAUDIO {
     SOURCES +=  soundcard/portaudiowrapper.cpp

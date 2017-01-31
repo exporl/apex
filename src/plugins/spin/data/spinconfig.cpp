@@ -134,6 +134,14 @@ double Speechmaterial::rmsOfCategory(QString category) const
 
 // SpinConfig ==================================================================
 
+SpinConfig::SpinConfig():
+    m_soundcardBuffersize(0),
+    m_soundcardBlocksize(0)
+{
+
+}
+
+
 const apex::data::FilePrefix& SpinConfig::uri_prefix() const
 {
     return prefix;
@@ -395,6 +403,36 @@ void SpinConfig::setDefaultCalibration(double d)
 void SpinConfig::setInternalRms(double rms)
 {
     intRms = rms;
+}
+
+void SpinConfig::setSoundcardBuffersize(unsigned int v)
+{
+    m_soundcardBuffersize = v;
+}
+
+void SpinConfig::setSoundcardBlocksize(unsigned int v)
+{
+    m_soundcardBlocksize = v;
+}
+
+void SpinConfig::setSoundcardDriver(QString v)
+{
+    m_soundcardDriver = v;
+}
+
+unsigned int SpinConfig::soundcardBuffersize() const
+{
+    return m_soundcardBuffersize;
+}
+
+unsigned int  SpinConfig::soundcardBlocksize() const
+{
+    return m_soundcardBlocksize;
+}
+
+QString SpinConfig::soundcardDriver() const
+{
+    return m_soundcardDriver;
 }
 
 void SpinConfig::showContent()

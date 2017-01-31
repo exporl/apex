@@ -1,6 +1,12 @@
-answers=new Array();
-correctanswers=new Array();
-parametervalues=new Array();
+"use strict";
+
+var results = {};
+results.answers=new Array();
+results.correctanswers=new Array();
+results.parametervalues=new Array();
+results.xml=new Array();
+results.trials=new Array();
+results.stimuli=new Array();
 
 Array.prototype.unique =
 function() {
@@ -22,6 +28,14 @@ function wrap(element, content)
     return "<" + element + ">" + content + "</" + element + ">";
 }
 
+function replaceContent(id, s) 
+{
+    var sel = $("#" + id);
+    if (!sel) {
+    	return;
+    }
+    sel.html(s);
+}
 
 function newAnswer(xmlstring)
 {
@@ -33,14 +47,23 @@ function newAnswer(xmlstring)
     var answer = $(xml).find("corrector > answer").text();
     var result = $(xml).find("corrector > result").text();
     var correctanswer = $(xml).find("corrector > correctanswer").text();
+    var trial = $(xml).find("trial").attr("id");
 
     var paramelement = $(xml).find("procedure > parameter");
     if (paramelement !== null) {
-	parametervalues.push( parseFloat(paramelement.text()) );
+	results.parametervalues.push( parseFloat(paramelement.text()) );
     }
 
-    answers.push(answer);
-    correctanswers.push(correctanswer);
+    results.answers.push(answer);
+    results.correctanswers.push(correctanswer);
+    results.trials.push(trial);
+
+    results.xml.push(xmlstring);
+
+    if (typeof extraNewAnswer == 'function') {
+	extraNewAnswer(xmlstring);
+    }
+
 }
 
 

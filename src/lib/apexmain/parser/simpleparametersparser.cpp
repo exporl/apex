@@ -77,6 +77,7 @@ void SimpleParametersParser::Parse(XERCES_CPP_NAMESPACE::DOMElement* base,
             channel=sChannel.toInt();
 
 
+        //qDebug("Adding parameter %s with value %s to %s", qPrintable(type), qPrintable(value.toString()), qPrintable(id));
         AddParameter(p, (DOMElement*) currentNode, owner, type, id, value, channel);
 
     }

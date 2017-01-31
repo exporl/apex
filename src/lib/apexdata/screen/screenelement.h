@@ -21,7 +21,7 @@
 #define SCREENELEMENT_H
 
 #include "apextypedefs.h"
-#include "fileprefix.h"
+#include "../fileprefix.h"
 
 #include <vector>
 #include <QString>
@@ -36,7 +36,7 @@ namespace apex
 namespace data
 {
 
-using gui::tScreenElementMap;
+using gui::ScreenElementMap;
 
 class ScreenElement;
 class ScreenElementVisitor;

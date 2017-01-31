@@ -21,6 +21,7 @@
 #define _CONSOLEERROR_H
 
 #include <iostream>
+#include <QDebug>
 
 #include "statusreporter.h"
 

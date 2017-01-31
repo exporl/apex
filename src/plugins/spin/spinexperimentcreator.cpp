@@ -307,7 +307,7 @@ apex::data::ApexProcedureConfig* SpinExperimentCreator::createProcedureConfig() 
                             calibrationLevel(channel));
             }
         } else { //adapt noise; add gain id of each channel with noise
-            params->setLargerIsEasier(true);
+            params->setLargerIsEasier(true);   // Needs to be true, because in filters invertgain is set to true for adapting noise
             Q_FOREACH(uint channel, config.channelList(settings.speakerType())) {
                 data::SpeakerLevels levels;
                 if (settings.speakerType() == data::HEADPHONE)
@@ -378,6 +378,14 @@ apex::data::DevicesData* SpinExperimentCreator::createDevicesData() const
     wavdevice->setId(constants::DEVICE_ID);
     //[job setDefault] wavdevice->setDefaultParameterValues();//so called "simple" parameters:)
     wavdevice->setDriverString(driverString());
+
+    if (config.soundcardBlocksize())
+        wavdevice->setBlockSize(config.soundcardBlocksize());
+
+    if (config.soundcardBuffersize())
+        wavdevice->setBufferSize(config.soundcardBuffersize());
+
+
     unsigned padding = padZero();
     if (padding > 0)
         wavdevice->setValueByType("padzero", padding);
@@ -652,10 +660,11 @@ apex::data::ConnectionsData* SpinExperimentCreator::createConnectionsData() cons
         if (levels.hasNoise)
         {
             if (settings.noiseStopsBetweenTrials()) {
+                // [Tom] Changed from "channel" to "0": the faders only have one channel
                 data->push_back(createConnection(noiseFilterId(channel),
-                            "fadein_" + noiseFilterId(channel), channel));
+                            "fadein_" + noiseFilterId(channel), 0));
                 data->push_back(createConnection("fadein_" + noiseFilterId(channel),
-                            "fadeout_" + noiseFilterId(channel), channel));
+                            "fadeout_" + noiseFilterId(channel), 0));
                 data->push_back(createConnection("fadeout_" + noiseFilterId(channel),
                             constants::DEVICE_ID, channel));
             } else {
@@ -750,14 +759,26 @@ apex::data::ResultParameters* SpinExperimentCreator::createResultParameters() co
 
 QString SpinExperimentCreator::driverString() const
 {
+    if (! config.soundcardDriver().isEmpty())
+        return config.soundcardDriver();
+
     switch (settings.soundCard()) {
-    case RmeMultiface:
-    case RmeFirefaceUc:
-        return QLatin1String("asio");
-    case LynxOne:
-    default:
+        case RmeMultiface:
+        case RmeFirefaceUc:
+            return QLatin1String("asio");
+        case LynxOne:
+            return QLatin1String("portaudio");
+        case DefaultSoundcard:
+#ifdef Q_OS_WIN32
+        return QLatin1String("asio");       // make sure 24bit precision is used
+#else
         return QLatin1String("portaudio");
+#endif
+    default:
+        qFatal("Invalid sound card");
     }
+
+    return QString();       // avoid compiler warning
 }
 
 unsigned SpinExperimentCreator::padZero() const
@@ -777,8 +798,10 @@ unsigned SpinExperimentCreator::padZero() const
         // stimulus, pad with some zeros to prevent that
         return 1;
     case RmeMultiface:
-    default:
         return 0;
+    default:
+        // Just in case, for all soundcards
+        return 1;
     }
 }
 

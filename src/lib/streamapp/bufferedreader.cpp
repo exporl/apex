@@ -109,10 +109,11 @@ unsigned long BufferedReader::Read( void** a_pBuf, const unsigned ac_nSamples )
     nCanRead = ac_nSamples;
     if( lFifoLeft < nCanRead )
     {
-      if( m_pCallback )
+      if( m_pCallback ) {
         m_pCallback->mf_Callback();
-      else
+      } else {
         DBG( "buffer underrun" );
+      }
       nCanRead = 0; //total loss
     }
   }

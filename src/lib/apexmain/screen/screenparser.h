@@ -54,6 +54,7 @@ namespace apex
     class ScreenLayoutElement;
     class ButtonGroup;
     class ScreensData;
+    class ParameterManagerData;
   }
 
   namespace gui
@@ -85,7 +86,8 @@ namespace apex
        * Create a new ScreenParser, that will store its created
        * screens in the given \ref ScreensData instance.
        */
-      ScreenParser( data::ScreensData* screens );
+      ScreenParser( data::ScreensData* screens,
+                    data::ParameterManagerData* pmd=0);
 
       /**
        * Set the base path for relative paths.
@@ -124,11 +126,11 @@ namespace apex
       ScreenElement* createTestScreenElement( ScreenElement* parent);
 
       ScreenLayoutElement* createLayout(
-          XERCES_CPP_NAMESPACE::DOMElement* e, ScreenElement* parent, tScreenElementMap& elements );
+          XERCES_CPP_NAMESPACE::DOMElement* e, ScreenElement* parent, ScreenElementMap& elements );
       ScreenElement* createElement(
-        XERCES_CPP_NAMESPACE::DOMElement* e, ScreenElement* parent, tScreenElementMap& elements );
+        XERCES_CPP_NAMESPACE::DOMElement* e, ScreenElement* parent, ScreenElementMap& elements );
       ScreenElement* createNonLayoutElement(
-        XERCES_CPP_NAMESPACE::DOMElement* e, ScreenElement* parent, tScreenElementMap& elements );
+        XERCES_CPP_NAMESPACE::DOMElement* e, ScreenElement* parent, ScreenElementMap& elements );
 
       /**
        * Struct for parsing feedback media paths
@@ -161,7 +163,7 @@ namespace apex
        * @param idToElementMap Used for input validation
        * @return the newly created ButtonGroup, or 0 for error (call GetError() for description)
        */
-      data::ButtonGroup* createButtonGroup( XERCES_CPP_NAMESPACE::DOMElement* a_pElement, const tScreenElementMap& p_idToElementMap );
+      data::ButtonGroup* createButtonGroup( XERCES_CPP_NAMESPACE::DOMElement* a_pElement, const ScreenElementMap& p_idToElementMap );
 
       /**
        * Shortcut for adding 'Unknown Tag' error
@@ -176,7 +178,7 @@ namespace apex
 
     private:
       data::ScreensData* screens;
-
+      data::ParameterManagerData* parameterManagerData;
       data::FilePrefix   m_sPath;
     };
   }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.3/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment">
     
     <xs:include schemaLocation="prefix.xsd"></xs:include>
     <xs:include schemaLocation="xmlgeneratingplugin.xsd"></xs:include>
@@ -563,8 +563,8 @@
     
     <xs:complexType name="showparameterType">
         <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="name" type="xs:string">
+            <xs:extension base="xs:Name">
+                <xs:attribute name="name">
                     <xs:annotation>
                         <xs:documentation>Parameter name to show in the
                             list</xs:documentation>
@@ -577,6 +577,7 @@
                             and b are floats</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -785,7 +786,8 @@
                         <xs:annotation>
                             <xs:documentation>Input mask to restrict what can be typed in the textbox.
                                 Defined in the Qt documentation. If inputmask=="numbers", only numeric input
-                                will be allowed.</xs:documentation>
+                                will be allowed. If inputmask starts with a / (slash), the remainder will be 
+                                used as a regular expression for QRegExpValidator.</xs:documentation>
                         </xs:annotation>
                     </xs:element>
                 </xs:sequence>
@@ -819,13 +821,20 @@
       <xs:complexContent>
         <xs:extension base="apex:screenElementType">
           <xs:sequence>
-              <xs:element name="uri" type="xs:anyURI">
+              <xs:element name="uri">
                   <xs:annotation>
-                    <xs:documentation> Filename of the picture. The format can be any of: PNG, BMP,
-                        XBM, XPM, JPEG, MNG, GIF, PBM (P1 or P4), PGM (P2 or P5), and PPM (P3 or
-                        P6). If path is relative, it will be prefixed with the prefix given
-                    above.</xs:documentation>
+                      <xs:documentation> Filename of the picture. The format can be any of: PNG, BMP,
+                          XBM, XPM, JPEG, MNG, GIF, PBM (P1 or P4), PGM (P2 or P5), and PPM (P3 or
+                          P6). If path is relative, it will be prefixed with the prefix given
+                          above.</xs:documentation>
                   </xs:annotation>
+                  <xs:complexType>
+                     <xs:simpleContent>
+                         <xs:extension base="xs:anyURI">
+                             <xs:attribute name="id" type="xs:ID"></xs:attribute>
+                         </xs:extension>
+                     </xs:simpleContent>
+                  </xs:complexType>
               </xs:element>
             <xs:element name="feedback" type="apex:feedbackPathsType" minOccurs="0" maxOccurs="1">
               <xs:annotation>

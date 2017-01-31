@@ -29,6 +29,7 @@
 #include "xml/xercesinclude.h"
 
 #include <QStringList>
+#include <QDebug>
 
 using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::ApexXMLTools;
@@ -122,14 +123,18 @@ DOMElement* StimuliWriter::addDatablocks(DOMDocument *doc,
     {
         case StimulusDatablocksContainer::DATABLOCKS:
 
-            Q_ASSERT(data.count() == 1);
+            Q_ASSERT(data.count() <= 1);
             Q_ASSERT(data.id.isEmpty());
-            element->appendChild(addDatablocks(doc, data[0]));
+
+            if (!data.isEmpty())
+                element->appendChild(addDatablocks(doc, data[0]));
+
             break;
 
         case StimulusDatablocksContainer::DATABLOCK:
 
             Q_ASSERT(!data.id.isEmpty());
+
             element->setAttribute(X("id"), S2X(data.id));
             break;
 
@@ -137,8 +142,10 @@ DOMElement* StimuliWriter::addDatablocks(DOMDocument *doc,
         case StimulusDatablocksContainer::SIMULTANEOUS:
 
             Q_ASSERT(data.id.isEmpty());
+
             Q_FOREACH(StimulusDatablocksContainer datablock, data)
-            element->appendChild(addDatablocks(doc, datablock));
+                element->appendChild(addDatablocks(doc, datablock));
+
             break;
 
         default:

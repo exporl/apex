@@ -34,8 +34,8 @@ struct ConnectionDataPrivate
     MatchType matchType;
     QString   fromId;        //!< the element where the connection originates
     QString   toId;          //!< the element where the connection ends
-    unsigned  fromChannel;   //!< the originating channel
-    unsigned  toChannel;     //!< the ending channel
+    int       fromChannel;   //!< the originating channel
+    int       toChannel;     //!< the ending channel
     QString   fromChannelId; //!< optional ID, used when changing connections as a variable parameter
     QString   toChannelId;   //!< optional ID, used when changing connections as a variable parameter
     QString   deviceId;
@@ -101,13 +101,16 @@ const QString& ConnectionData::fromChannelId() const
     return d->fromChannelId;
 }
 
-unsigned ConnectionData::fromChannel() const
+int ConnectionData::fromChannel() const
 {
     return d->fromChannel;
 }
 
-void ConnectionData::setFromChannel(unsigned channel, const QString& channelId)
+void ConnectionData::setFromChannel(int channel, const QString& channelId)
 {
+    if (channel < -1)
+        channel = -1;
+
     d->fromChannel = channel;
     d->fromChannelId = channelId;
 }
@@ -127,13 +130,16 @@ const QString& ConnectionData::toChannelId() const
     return d->toChannelId;
 }
 
-unsigned ConnectionData::toChannel() const
+int ConnectionData::toChannel() const
 {
     return d->toChannel;
 }
 
-void ConnectionData::setToChannel(unsigned channel, const QString& channelId)
+void ConnectionData::setToChannel(int channel, const QString& channelId)
 {
+    if (channel < -1)
+        channel = -1;
+
     d->toChannel = channel;
     d->toChannelId = channelId;
 }
@@ -175,6 +181,10 @@ QString ConnectionData::device() const
 void ConnectionData::setDevice(QString id)
 {
     d->deviceId = id;
+}
+
+ConnectionsData::ConnectionsData()
+{
 }
 
 ConnectionsData::~ConnectionsData()

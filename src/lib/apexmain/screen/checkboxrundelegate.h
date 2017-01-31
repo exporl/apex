@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef CHECKBOXRUNDELEGATE_H
 #define CHECKBOXRUNDELEGATE_H
 
@@ -26,49 +26,50 @@
 
 namespace apex
 {
-  namespace data
-  {
+
+namespace data
+{
     class ScreenElement;
     class CheckBoxElement;
-  }
+}
 
-  namespace rundelegates
-  {
-    using data::CheckBoxElement;
-    using data::ScreenElement;
+namespace rundelegates
+{
 
-    /**
-     * The CheckBoxRunDelegate class is an implementation of
-     * ScreenElementRunDelegate representing a CheckBoxElement.
-     */
-    class CheckBoxRunDelegate
-      : public QCheckBox, public ScreenElementRunDelegate
-    {
-      Q_OBJECT
+class CheckBoxRunDelegate :
+    public QCheckBox,
+    public ScreenElementRunDelegate
+{
+    Q_OBJECT
+public:
+    CheckBoxRunDelegate(ExperimentRunDelegate* p_exprd, QWidget* parent,
+            const data::CheckBoxElement* e, const QFont& defaultFont);
 
-      QFont initialFont;
-      const CheckBoxElement* element;
-    public:
-        CheckBoxRunDelegate( ExperimentRunDelegate* p_exprd,
-                             QWidget* parent, const CheckBoxElement* e,
-                         const QFont& defaultFont );
+    const data::ScreenElement* getScreenElement() const;
 
-      const ScreenElement* getScreenElement() const;
+    QWidget* getWidget();
+    bool hasText() const;
+    bool hasInterestingText() const;
+    const QString getText() const;
+    void clearText();
+    void connectSlots(gui::ScreenRunDelegate *d);
+    const data::CheckBoxElement* GetElement() const;
 
-      QWidget* getWidget();
-      bool hasText() const;
-      bool hasInterestingText() const;
-      const QString getText() const;
-      void connectSlots( gui::ScreenRunDelegate* d );
-	  const CheckBoxElement* GetElement() const { return element; };
-    signals:
-      void answered( ScreenElementRunDelegate* );
-    protected:
-      void resizeEvent( QResizeEvent* e );
-    public slots:
-      void sendAnsweredSignal();
-    };
-  }
+protected:
+    void resizeEvent(QResizeEvent* e);
+
+public Q_SLOTS:
+    void sendAnsweredSignal();
+
+Q_SIGNALS:
+    void answered(ScreenElementRunDelegate*);
+
+private:
+    QFont initialFont;
+    const data::CheckBoxElement* element;
+};
+
+}
 }
 
 #endif

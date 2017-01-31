@@ -49,9 +49,11 @@ class APEXDATA_EXPORT L34DeviceData : public DeviceData
 
         ApexMap* map() const;
         int deviceId() const;
+        const QString deviceType() const;
         int triggerType() const;
         float volume() const;
         const QString implantType() const;
+        int powerupCount() const;
 
         //setters
 

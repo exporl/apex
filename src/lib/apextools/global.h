@@ -75,6 +75,12 @@
 #define APEXTOOLS_EXPORT APEX_IMPORT_DECL
 #endif
 
+#ifdef PSIGNIFIT_MAKEDLL
+#define PSIGNIFIT_EXPORT APEX_EXPORT_DECL
+#else
+#define PSIGNIFIT_EXPORT APEX_IMPORT_DECL
+#endif
+
 
 #define DECLARE_PRIVATE(Class)                                              \
         inline Class##Private* dataFunc()                                   \

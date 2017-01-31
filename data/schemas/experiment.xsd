@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.2/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.3/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment">
     
     <xs:include schemaLocation="datablocks.xsd"/>
     <xs:include schemaLocation="procedure.xsd"/>
@@ -30,7 +30,7 @@
                             derived from apex:procedureType.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
-                <xs:element name="corrector" type="apex:correctorType">
+                <xs:element name="corrector" type="apex:correctorType" minOccurs="0">
                     <xs:annotation>
                         <xs:documentation>Describes the corrector to be used. The corrector compares
                             the user input and the correct answer for a certain trail. Real
@@ -296,12 +296,12 @@
         <xs:sequence>
             <xs:element name="min" type="xs:double">
                 <xs:annotation>
-                    <xs:documentation>Minimum value of the random numbers</xs:documentation>
+                    <xs:documentation>Minimum value of the random numbers (inclusive)</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="max" type="xs:double">
                 <xs:annotation>
-                    <xs:documentation>Maximum value of the random numbers</xs:documentation>
+                    <xs:documentation>Maximum value of the random numbers (exclusive)</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="type">
@@ -579,6 +579,27 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="scriptparameters" minOccurs="0">
+                <xs:complexType>
+                    <xs:annotation>
+                        <xs:documentation>
+                            Scriptparameters will be made available to all modules that use ECMAScript, such as plugin datablocks, stimuli, trials and procedures.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:sequence>
+                        <xs:element name="parameter" default="" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="name" type="xs:Name" use="required"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="interactiveType">

@@ -235,6 +235,7 @@ class APEX_EXPORT ExperimentParser: public ConfigFileParser
         bool CheckFilters();
         bool CreateMissing();
         bool CheckDevices();
+        bool CheckRandomGenerators();
 
         bool FixStimuli();
 

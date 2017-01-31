@@ -31,6 +31,7 @@
 
 //from libtools
 #include "global.h"
+#include "random.h"
 
 namespace apex {
 
@@ -91,6 +92,7 @@ public slots:           // have to be slots to be used in QtScript
                 QString m_ID;
                 //QString m_standard;
                 tStimulusList m_standards;
+                Random mRandom;
 
 };
 

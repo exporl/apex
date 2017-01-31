@@ -89,7 +89,7 @@ L34Device::L34Device( const QString& ac_sHost,
     m_pMap(NULL),
     m_iTriggerType(ac_params->triggerType()),
     m_nDeviceNr(ac_params->deviceId()),
-    m_bSendPowerup(true),
+    m_nPowerupCount(ac_params->powerupCount()),
     m_bPowerupSent(false),
     m_stimulusLength(0),
     m_volume(ac_params->volume())
@@ -98,7 +98,7 @@ L34Device::L34Device( const QString& ac_sHost,
 #error OBSOLETE
 #endif
 
-    QString qsdevice("L34");
+    QString qsdevice(ac_params->deviceType());
 
     qsdevice += "-" + ac_params->implantType();
     qsdevice += "-%1";
@@ -253,7 +253,7 @@ void L34Device::AddInput( const DataBlock& ac_DataBlock )
     //send to device
     assert( ac_DataBlock.GetDevice() == GetID() );
 
-    if (!m_bPowerupSent && m_bSendPowerup)
+    if (!m_bPowerupSent && m_nPowerupCount > 0)
         SendPowerup();
 
     const L34XMLData d(  ((L34DataBlock&)ac_DataBlock).GetMappedData(m_pMap, m_volume) );
@@ -437,9 +437,9 @@ bool L34Device::AllDone( )
 
     if (m_stimulusLength) {         // try to not poll while we're sure the stimulus hasn't finished (polling is extremely blocking)
         int msSinceStart =  m_timeSinceStart.elapsed();
-        long sleeptime = m_stimulusLength/1000 - msSinceStart + 10 ;        // 10ms margin
+        long sleeptime = m_stimulusLength/1000 - msSinceStart;
         if (sleeptime>0) {
-            qDebug("Waiting %d ms for stimulation to end", int (sleeptime));
+            qDebug("Waiting %d ms for stimulation to end (total stimulus duration=%d ms)",(int) sleeptime, (int) m_stimulusLength/1000);
             appcore::IThread::sf_Sleep(sleeptime ); // 10ms safety margin
             qDebug("End wait");
         } else {
@@ -447,12 +447,12 @@ bool L34Device::AllDone( )
         }
 
     }
-    bool wResult = waitUntil("finished", "stopped",30000);       // TODO: set timeout to length of stimulus
+    bool wResult = waitUntil("finished", "stopped",60000);       // TODO: set timeout to length of stimulus
     //bool wResult=true;
     if (!wResult) {
         if (m_iTriggerType==data::TRIGGER_IN) {
             qDebug("Timeout waiting for 'Stopped' status\nTrigger did probably not occur.");
-            QMessageBox::critical(0, "Timeout",  QString("Timeout waiting for 'finished/stopped' status"), QMessageBox::Abort, QMessageBox::NoButton );
+            QMessageBox::critical(0, "Timeout",  QString("Timeout waiting for 'finished/stopped' status\nCheck that the soundcard is set as master device."), QMessageBox::Abort, QMessageBox::NoButton );
         } else
             qDebug("Timeout waiting for 'Stopped' status\nCheck all connections.");
     }
@@ -476,17 +476,14 @@ void L34Device::SetMap (data::ApexMap* p_map)
 
 void L34Device::SendPowerup(  )
 {
+    Q_ASSERT(m_nPowerupCount > 0);
 
-    //const float powerup_period = m_pMap->m_defaultMap.GetPeriod();
     const float powerup_period = 70;            // +- 14000pps
-
 
     QTime time;
     time.restart();
 
-    int nFrames=GetNumPowerupFrames();
-    qDebug("Number of powerup frames: %s", qPrintable(QString::number(nFrames)));
-
+    qDebug("Number of powerup frames: %s", qPrintable(QString::number(m_nPowerupCount)));
 
     QString data(QString(NIC_SEQUENCE_OPEN) +  "<stimulus repeat='%1'><parameters>"
         "<pw>25</pw><pg>8</pg>"
@@ -495,27 +492,19 @@ void L34Device::SendPowerup(  )
         "<cl>0</cl>"
         "<t>" + QString::number(powerup_period,'g',15) + "</t>"
         "</parameters></stimulus>" + QString(NIC_SEQUENCE_END));
-    data=data.arg(nFrames);
+    data=data.arg(m_nPowerupCount);
     m_pDevice->send( data );
-
 
 #ifdef DEBUGL34
     qDebug("** Time in SendPowerup: "+  QString::number(time.elapsed()));
     showStatus();
 #endif
 
-    m_stimulusLength += long (nFrames * powerup_period);
+    m_stimulusLength += long (m_nPowerupCount * powerup_period);
 
     m_bPowerupSent=true;
 }
 
-
-int L34Device::GetNumPowerupFrames()
-{
-    // we need to send 50ms of powerup
-    //    return (int) (1e6*0.3/m_pMap->m_defaultMap.GetPeriod() +0.5);
-    return 4000;
-}
 
 QString L34Device::GetEndXML() const
 {

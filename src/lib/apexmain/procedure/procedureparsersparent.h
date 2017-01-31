@@ -49,10 +49,10 @@ public:
     */
     ProcedureParsersParent(QWidget* parent);
     void Parse ( XERCES_CPP_NAMESPACE::DOMElement* p_base,
-                    data::ApexProcedureConfig* c, const QString& scriptLibraryFile);
+                    data::ApexProcedureConfig* c, const QString& scriptLibraryFile, const QVariantMap &scriptParameters);
 
 protected:
-    virtual bool ParseTrials ( XERCES_CPP_NAMESPACE::DOMElement* p_parent, const QString& scriptLibraryFile);
+    virtual bool ParseTrials ( XERCES_CPP_NAMESPACE::DOMElement* p_parent, const QString& scriptLibraryFile, const QVariantMap &scriptParameters);
 
     data::ApexProcedureConfig* currentConfig;
 

@@ -40,7 +40,7 @@ public:
     virtual unsigned GetProgress() const;
 
 public slots:
-    bool NextTrial(const bool p_answer, const ApexScreenResult* screenresult);
+    bool NextTrial(const bool p_answer, const ScreenResult* screenresult);
     virtual void FirstTrial();
 
 protected:

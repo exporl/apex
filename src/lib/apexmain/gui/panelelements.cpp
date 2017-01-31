@@ -43,15 +43,15 @@ apex::gui::ApexFeedbackPicture::ApexFeedbackPicture( QWidget* a_pParent,
     setMinimumWidth( okPixmap->width());
 }
 
-void apex::gui::ApexFeedbackPicture::feedBack( const ScreenElementRunDelegate::mt_eFeedBackMode mode )
+void apex::gui::ApexFeedbackPicture::feedBack( const ScreenElementRunDelegate::FeedbackMode mode )
 {
-    if ( mode == ScreenElementRunDelegate::mc_eOff )
+    if ( mode == ScreenElementRunDelegate::NoFeedback )
         setPixmap( QPixmap() );
-    else if ( mode == ScreenElementRunDelegate::mc_eNegative )
+    else if ( mode == ScreenElementRunDelegate::NegativeFeedback )
         setPixmap( *nokPixmap );
-    else if ( mode == ScreenElementRunDelegate::mc_ePositive )
+    else if ( mode == ScreenElementRunDelegate::PositiveFeedback )
         setPixmap( *okPixmap );
-    else if ( mode == ScreenElementRunDelegate::mc_eHighLight )
+    else if ( mode == ScreenElementRunDelegate::HighlightFeedback )
         setPixmap( QPixmap() );
 }
 

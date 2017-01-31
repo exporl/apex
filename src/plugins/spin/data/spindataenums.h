@@ -30,7 +30,7 @@ enum ProcedureType { INVALID_PROCEDURE, CONSTANT, ADAPTIVE };
 enum Order { ORDER_INVALID, ORDER_RANDOM, ORDER_SEQUENTIAL };
 enum Material { NO_MATERIAL, SPEECH, NOISE };
 enum Person { INVALID_PERSON, EXPERIMENTER, SUBJECT };
-enum SoundCard { RmeMultiface, RmeFirefaceUc, LynxOne };
+enum SoundCard { DefaultSoundcard, RmeMultiface, RmeFirefaceUc, LynxOne };
 enum { RANDOM = -1 };
 
 }//ns data

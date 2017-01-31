@@ -23,6 +23,7 @@
 #include "apexprocedure.h"
 
 #include <QScriptEngine>
+#include <QScriptEngineDebugger>
 
 class PluginProcedureWrapper;
 
@@ -32,7 +33,7 @@ namespace apex
 
 class PluginProcedureAPI;
 
-class ApexScreenResult;
+class ScreenResult;
 
 /** PluginProcedure: interface between Apex and a QtScript plugin procedure
 */
@@ -52,7 +53,7 @@ public slots:
     virtual void StartOutput();
     //virtual void Start();
     //virtual void Stop();                  // moved to ApexProcedure
-    bool NextTrial ( const bool p_answer, const ApexScreenResult* p_screenresult );
+    bool NextTrial ( const bool p_answer, const ScreenResult* p_screenresult );
     virtual void FirstTrial();
 
 private:
@@ -62,6 +63,8 @@ private:
     std::auto_ptr<PluginProcedureWrapper> m_plugin;
     std::auto_ptr<PluginProcedureAPI> m_api;
     QScriptEngine m_scriptEngine;
+    QScriptEngineDebugger m_scriptEngineDebugger;
+    bool m_doDebug;
     QScriptValue m_classname;
 };
 

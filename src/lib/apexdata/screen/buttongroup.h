@@ -83,6 +83,7 @@ class APEXDATA_EXPORT ButtonGroup : /*public std::list<QString>,*/ public Factor
         bool IsElement(const QString& ac_sID) const;
         
         bool operator==(const ButtonGroup& other) const;
+        bool operator!=(const ButtonGroup& other) const;
     private:
 
         QList<QString> buttonIds;

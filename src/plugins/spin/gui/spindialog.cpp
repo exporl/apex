@@ -81,6 +81,7 @@ void SpinDialog::setupUi()
     widgets.customScreenCombo->addItems(configuration.customScreensDescriptions());
     widgets.customScreenCombo->setVisible(widgets.customScreenRadio->isChecked());
 
+    widgets.soundCardCombo->addItem(tr("Default"), data::DefaultSoundcard);
     widgets.soundCardCombo->addItem(tr("RME Multiface"), data::RmeMultiface);
     widgets.soundCardCombo->addItem(tr("RME Fireface UC"), data::RmeFirefaceUc);
     widgets.soundCardCombo->addItem(tr("LynxOne"), data::LynxOne);
@@ -141,17 +142,22 @@ void SpinDialog::setupConnections()
     connect(widgets.customScreenRadio, SIGNAL(toggled(bool)),
             widgets.customScreenCombo, SLOT(setVisible(bool)));
 
-    //contents changed connections
+    //contents changed connections: main tab
+    connect(widgets.nameLine, SIGNAL(textChanged(QString)),
+            this, SLOT(setContentsChanged()));
+
+    //contents changed connections: speakers
     connect(widgets.freeFieldWidget, SIGNAL(contentsChanged()),
             this, SLOT(setContentsChanged()));
     connect(widgets.leftHpStartLevels, SIGNAL(contentsChanged()),
             this, SLOT(setContentsChanged()));
     connect(widgets.rightHpStartLevels, SIGNAL(contentsChanged()),
             this, SLOT(setContentsChanged()));
-    connect(widgets.nameLine, SIGNAL(textChanged(QString)),
-            this, SLOT(setContentsChanged()));
     connect(widgets.freeFieldRadio, SIGNAL(toggled(bool)),
             this, SLOT(setContentsChanged()));
+    // TODO: anything missing here?
+
+    //contents changed connections: procedure
     connect(widgets.constProcRadio, SIGNAL(toggled(bool)),
             this, SLOT(setContentsChanged()));
     connect(widgets.adaptNoiseRadio, SIGNAL(toggled(bool)),
@@ -162,7 +168,17 @@ void SpinDialog::setupConnections()
             this, SLOT(setContentsChanged()));
     connect(widgets.repeatFirstCheck, SIGNAL(toggled(bool)),
             this, SLOT(setContentsChanged()));
+
+    //contents changed connections: options
+    connect(widgets.noiseStopsCheck,  SIGNAL(toggled(bool)),
+            this, SLOT(setContentsChanged()));
+    connect(widgets.reinforcementCheck, SIGNAL(toggled(bool)),
+            this, SLOT(setContentsChanged()));
+    connect(widgets.randTrialsCheck, SIGNAL(toggled(bool)),
+            this, SLOT(setContentsChanged()));
     connect(widgets.exitAfterCheck, SIGNAL(toggled(bool)),
+            this, SLOT(setContentsChanged()));
+    connect(widgets.timeBeforeLine, SIGNAL(textChanged(QString)),
             this, SLOT(setContentsChanged()));
     connect(widgets.expSitsRadio, SIGNAL(toggled(bool)),
             this, SLOT(setContentsChanged()));
@@ -171,6 +187,10 @@ void SpinDialog::setupConnections()
     connect(widgets.customScreenRadio, SIGNAL(toggled(bool)),
             this, SLOT(setContentsChanged()));
     connect(widgets.customScreenCombo, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(setContentsChanged()));
+    connect(widgets.showResultsCheck, SIGNAL(toggled(bool)),
+            this, SLOT(setContentsChanged()));
+    connect(widgets.nbResponsesLine, SIGNAL(textChanged(QString)),
             this, SLOT(setContentsChanged()));
     connect(widgets.soundCardCombo, SIGNAL(currentIndexChanged(int)),
             this, SLOT(setContentsChanged()));
@@ -354,7 +374,14 @@ const data::SpinUserSettings SpinDialog::currentSettings()
         settings.setRepeatFirst(widgets.repeatFirstCheck->isChecked());
     }
 
+    // options tab
     settings.setNoiseStopsBetweenTrials(widgets.noiseStopsCheck->isChecked());
+    settings.setReinforcement(widgets.reinforcementCheck->isChecked());
+    settings.setTrialOrder(widgets.randTrialsCheck->isChecked() ?
+            data::ORDER_RANDOM : data::ORDER_SEQUENTIAL);
+    settings.setExitAfter(widgets.exitAfterCheck->isChecked());
+    settings.setTimeBeforeFirstStimulus(widgets.timeBeforeLine->
+            text().toDouble());
 
     if (widgets.customScreenRadio->isChecked())
         settings.setCustomScreen(widgets.customScreenCombo->currentText());
@@ -363,14 +390,10 @@ const data::SpinUserSettings SpinDialog::currentSettings()
         settings.setPersonBeforeScreen(widgets.expSitsRadio->isChecked() ?
                 data::EXPERIMENTER : data::SUBJECT );
     }
-    settings.setTimeBeforeFirstStimulus(widgets.timeBeforeLine->
-            text().toDouble());
-    settings.setReinforcement(widgets.reinforcementCheck->isChecked());
+
     settings.setShowResults(widgets.showResultsCheck->isChecked());
-    settings.setExitAfter(widgets.exitAfterCheck->isChecked());
     settings.setNbResponsesThatCount(widgets.nbResponsesLine->text().toUInt());
-    settings.setTrialOrder(widgets.randTrialsCheck->isChecked() ?
-            data::ORDER_RANDOM : data::ORDER_SEQUENTIAL);
+
     settings.setSoundCard(spin::data::SoundCard(widgets.soundCardCombo->itemData
             (widgets.soundCardCombo->currentIndex()).toUInt()));
 
@@ -639,21 +662,24 @@ void SpinDialog::loadSettings(const QString& name)
             Q_ASSERT(hasInitial);
     }
 
-    //options
+    //options tab
     widgets.noiseStopsCheck->setChecked(settings.noiseStopsBetweenTrials());
+    widgets.reinforcementCheck->setChecked(settings.reinforcement());
+    widgets.randTrialsCheck->setChecked(settings.trialOrder() == data::ORDER_RANDOM);
+    widgets.exitAfterCheck->setChecked(settings.exitAfter());
+    widgets.timeBeforeLine->setText
+        (QString::number(settings.timeBeforeFirstStimulus()));
 
-    if (settings.personBeforeScreen() == data::EXPERIMENTER )
+    if (settings.personBeforeScreen() == data::EXPERIMENTER)
         widgets.expSitsRadio->setChecked(true);
-    else if (settings.personBeforeScreen() == data::SUBJECT )
+    else if (settings.personBeforeScreen() == data::SUBJECT)
         widgets.subSitsRadio->setChecked(true);
-    else //custom screen
-    {
+    else { //custom screen
         widgets.customScreenRadio->setChecked(true);
 
         int index = widgets.customScreenCombo->findText(settings.customScreen());
 
-        if (index == -1)
-        {
+        if (index == -1) {
             QMessageBox::warning(this, tr("Unknown custom screen"),
                    tr("Your settings refer to the custom screen \"%1\" "
                       "but this screen does not seem to exist anymore.\n"
@@ -661,18 +687,16 @@ void SpinDialog::loadSettings(const QString& name)
                            .arg(settings.customScreen()));
 
             widgets.subSitsRadio->setChecked(true);
-        }
-        else
+        } else
             widgets.customScreenCombo->setCurrentIndex(index);
     }
 
-    widgets.timeBeforeLine->setText(QString::number(
-                                    settings.timeBeforeFirstStimulus()));
-    widgets.reinforcementCheck->setChecked(settings.reinforcement());
     widgets.showResultsCheck->setChecked(settings.showResults());
-    widgets.exitAfterCheck->setChecked(settings.exitAfter());
-    widgets.nbResponsesLine->setText(QString::number(
-                                     settings.nbResponsesThatCount()));
+    widgets.nbResponsesLine->setText
+        (QString::number(settings.nbResponsesThatCount()));
+
+    widgets.soundCardCombo->setCurrentIndex
+        (widgets.soundCardCombo->findData(settings.soundCard()));
 
     dialogContentsChanged = false;
 }

@@ -35,6 +35,7 @@ public:
     {
         m_file = new QFile( QString("L34output.xml"));
         m_file->open( QIODevice::WriteOnly);
+        Q_ASSERT(m_file->isOpen());
         m_stream=new QTextStream(m_file);
         *m_stream << "<nic>" << endl;
     }
@@ -65,7 +66,7 @@ public:
                 receiveText = QLatin1String("streaming<code>1<code>6");
             }
         }
-        *m_stream << message;
+        *m_stream << message << endl;
         return QString();
     }
 

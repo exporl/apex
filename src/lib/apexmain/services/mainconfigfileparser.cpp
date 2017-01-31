@@ -48,7 +48,7 @@ namespace apex {
             m_xslt_path_online("https://gilbert.med.kuleuven.be/apex/xslt"),
             m_SndDrivers(new SndDriversMap())
     {
-
+        m_plugin_script_library = "pluginscriptlibrary.js";
     }
 
     bool MainConfigFileParser::CFParse() {
@@ -79,8 +79,12 @@ namespace apex {
             m_xslt_path_online = XMLutils::GetFirstChildText( tnode );
 
 
-        if ( (tnode = XMLutils::GetElementsByTagName( pathnode, "pluginScriptLibrary" )) )
+        if ( (tnode = XMLutils::GetElementsByTagName( pathnode, "pluginscriptlibrary" )) ){
             m_plugin_script_library = XMLutils::GetFirstChildText( tnode );
+//            std::string scriptlibraryST = m_plugin_script_library.toUtf8().constData();
+//            std::cout<<"m_plugin_script_library in the XXXXCFParse function is: ******#######"<<scriptlibraryST<<endl;
+        }
+
 
         tnode = XMLutils::GetElementsByTagName( root, "soundcards" );
         Q_ASSERT(tnode);
@@ -187,5 +191,7 @@ const QString apex::MainConfigFileParser::GetPluginScriptLibrary()
 {
     QString filename( Paths::Get().GetNonBinaryPluginPath() +
                       m_plugin_script_library);
+//    std::cout<<"Filename returned by getplugin script library is: "<<filename.toStdString()<<std::endl;
+//    std::cout<<"Value of m_plugin_script_library is: "<<m_plugin_script_library.toStdString()<<std::endl;
     return filename;
 }

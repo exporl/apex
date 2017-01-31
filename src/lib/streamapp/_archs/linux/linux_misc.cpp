@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "linux_headers.h"
 #include "utils/tracer.h"
 #include <stdarg.h>
@@ -35,7 +35,7 @@ void utils::Tracer::sf_TraceDebug( const std::string& text )
 
 void utils::Tracer::sf_TraceDebugPrintf( const char* format, ... )
 {
-  static char buf[ sc_nMaxTextSize ]; 
+  static char buf[ sc_nMaxTextSize ];
   va_list args;
   va_start( args, format );
   vsprintf( buf, format, args );

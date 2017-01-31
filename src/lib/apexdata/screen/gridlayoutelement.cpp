@@ -76,7 +76,7 @@ int GridLayoutElement::getNumberOfChildPlaces() const
 
 void GridLayoutElement::fillChildrenWithEmpties( Screen* s )
 {
-    const tScreenElementMap& takenIDs = s->getIDToElementMap();
+    const ScreenElementMap& takenIDs = s->idToElementMap();
     std::vector<std::vector<bool> > filled( getWidth() );
     for ( int i = 0; i < getWidth(); ++i )
         filled[i].resize(getHeight(), false );

@@ -67,7 +67,7 @@ public:
             type(type),
             description(description),
             defaultvalue(defaultvalue),
-            result(QLatin1String("fromdialog")),
+            result(QLatin1String("?")),
             succeeded(false)
         {
         }

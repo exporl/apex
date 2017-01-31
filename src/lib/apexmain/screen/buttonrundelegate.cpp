@@ -129,19 +129,19 @@ apex::rundelegates::ButtonRunDelegate::ButtonRunDelegate(
     setMaximumHeight( fm.height()*5 );
     setMinimumHeight( fm.height());
 
-    feedBack(ScreenElementRunDelegate::mc_eOff );
+    feedBack(ScreenElementRunDelegate::NoFeedback );
 }
 
 
 void apex::rundelegates::ButtonRunDelegate::feedBack
-        (const mt_eFeedBackMode& mode)
+        (const FeedbackMode& mode)
 {
     QColor newFGColor_enabled, newFGColor_disabled;
     QColor newBGColor_enabled, newBGColor_disabled;
     QPalette dp;        // default palette
 
     
-    if ( mode == ScreenElementRunDelegate::mc_eOff )    {
+    if ( mode == ScreenElementRunDelegate::NoFeedback )    {
         //setDown(false);
         setProperty("role", "none");
         setStyleSheet(styleSheet());
@@ -164,15 +164,15 @@ void apex::rundelegates::ButtonRunDelegate::feedBack
                                            QPalette::Button);
         }
 
-    } else if ( mode == ScreenElementRunDelegate::mc_eHighLight ) {
+    } else if ( mode == ScreenElementRunDelegate::HighlightFeedback ) {
         setProperty("role", "highlight");
         setStyleSheet(styleSheet());
         newBGColor_disabled=QColor(0xff, 0xff, 0x90);      // light yellow
-    } else if ( mode == ScreenElementRunDelegate::mc_eNegative ) {
+    } else if ( mode == ScreenElementRunDelegate::NegativeFeedback ) {
         setProperty("role", "negative");
         setStyleSheet(styleSheet());
         newBGColor_disabled=Qt::red;
-    } else if ( mode == ScreenElementRunDelegate::mc_ePositive ) {
+    } else if ( mode == ScreenElementRunDelegate::PositiveFeedback ) {
         setProperty("role", "positive");
         setStyleSheet(styleSheet());
         newBGColor_disabled=Qt::darkGreen;

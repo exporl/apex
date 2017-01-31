@@ -1,6 +1,4 @@
-/******************************************************************************
- * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
- *                                                                            *
+/**************
  * This file is part of APEX 3.                                               *
  *                                                                            *
  * APEX 3 is free software: you can redistribute it and/or modify             *

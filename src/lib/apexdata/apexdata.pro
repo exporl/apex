@@ -5,7 +5,14 @@ DEFINES*=APEXDATA_MAKEDLL
 
 include ($$BASEDIR/clebs.pri)
 
-#QT *= gui
+QT += gui \
+    script \
+    svg \
+    xml \
+    webkit \
+    network \
+	xmlpatterns
+QT += qt3support
 
 # WTF? TODO FIXME path???
 INCLUDEPATH += .
@@ -81,6 +88,7 @@ HEADERS += \
     screen/sliderelement.h \
     screen/spinboxelement.h \
     screen/texteditelement.h \
+    screen/screenresult.h \
     stimulus/stimulidata.h \
     stimulus/stimulusdata.h \
     stimulus/stimulusparameters.h \
@@ -155,6 +163,7 @@ SOURCES += \
     screen/sliderelement.cpp \
     screen/spinboxelement.cpp \
     screen/texteditelement.cpp \
+    screen/screenresult.cpp \
     stimulus/stimulidata.cpp \
     stimulus/stimulusdata.cpp \
     stimulus/stimulusparameters.cpp \

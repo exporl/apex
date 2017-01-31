@@ -20,16 +20,13 @@
 #ifndef WRITERS_UNIT_TEST_H
 #define WRITERS_UNIT_TEST_H
 
-#include "testbench.h"
+#include <QtTest/QtTest>
+#include "../testmacros.h"
+#include "xml/xercesinclude.h"
 
-class SpinTest : public ApexTest
+class SpinTest : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(ApexTest)
-
-    public:
-
-        QString name() const;
 
     private Q_SLOTS:
 

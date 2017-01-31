@@ -1,6 +1,6 @@
 function plot()
 {
-    m=getConfusionMatrix(correctanswers, answers);
+    m=getConfusionMatrix(results.correctanswers, results.answers);
     showConfusionMatrixTable(m);
     rPlotConfusionMatrix(m);
     if (typeof extraPlot == 'function') {
@@ -50,9 +50,9 @@ function getConfusionMatrix(stimulus,response)
 	}
     }
 
-    for (i=0; i<answers.length; ++i) {
-	var ia = panswers.indexOf( answers[i] );
-	var ic = pcorrectanswers.indexOf( correctanswers[i] );
+    for (i=0; i<results.answers.length; ++i) {
+	var ia = panswers.indexOf( results.answers[i] );
+	var ic = pcorrectanswers.indexOf( results.correctanswers[i] );
 	matrix[ic][ia] += 1;
     }
 
@@ -107,9 +107,9 @@ function rPlotConfusionMatrix(m)
 	}
     }
 
-    r.g.txtattr.font = "11px 'Fontin Sans', Fontin-Sans, sans-serif";
+//    r.txtattr.font = "11px 'Fontin Sans', Fontin-Sans, sans-serif";
 
-    r.g.dotchart(10, 10, 620, 260, xs, ys, data,
+    r.dotchart(10, 10, 620, 260, xs, ys, data,
 	    {symbol: "o", max: 10,
 heat: true,
 axis: "0 0 1 1",

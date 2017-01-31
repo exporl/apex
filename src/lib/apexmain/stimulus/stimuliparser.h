@@ -50,7 +50,8 @@ class APEX_EXPORT StimuliParser:
 
         void Parse(XERCES_CPP_NAMESPACE::DOMElement* p_base,
                    data::StimuliData* c,
-                   QString scriptLibraryFile);
+                   QString scriptLibraryFile,
+                   const QVariantMap& scriptParameters);
 
 
     private:

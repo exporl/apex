@@ -1,5 +1,5 @@
 BASEDIR = ..
-CLEBS_INSTALL *= xalan xerces portaudio fftw3 boost-po iowkit sndfile
+CLEBS_INSTALL *= xalan xerces portaudio fftw3 iowkit sndfile
 include($$BASEDIR/clebs.pri)
 
 OBJECTS_DIR =
@@ -9,8 +9,7 @@ schemas.path = $$DATADIR/schemas
 schemas.files = schemas/*.xsd
 
 config.path = $$CONFDIR
-config.files = config/apexconfig.xml 
-config.files += config/spin.xml
+config.files = config/*.xml 
 
 plugins.path = $$DATADIR/plugins
 plugins.files = plugins/*
@@ -42,10 +41,12 @@ win32 {
         installfiles *= QtXmld4.dll QtCored4.dll QtGuid4.dll QtSvgd4.dll
         installfiles *= QtNetworkd4.dll QtScriptd4.dll QtWebKitd4.dll phonond4.dll
         installfiles *= QAxContainerd.dll QtXmlPatternsd4.dll QtTestd4.dll
+        installfiles *= QtScriptToolsd4.dll
     } else {
         installfiles *= QtXml4.dll QtCore4.dll QtGui4.dll QtSvg4.dll
         installfiles *= QtNetwork4.dll QtScript4.dll QtWebKit4.dll phonon4.dll
         installfiles *= QAxContainer.dll QtXmlPatterns4.dll QtTest4.dll
+        installfiles *= QtScriptTools4.dll
     }
     win32-g++|win32-x-g++*:installfiles *= mingwm10.dll libgcc_s_dw2-1.dll
     win32-x-g++-4.2:installfiles *= libgcc_sjlj_1.dll libstdc++_sjlj_6.dll
@@ -90,10 +91,22 @@ win32 {
         mfc.files += $${WINDOWSDIR}/MFC71u.dll
         mfc.files += $${WINDOWSDIR}/msvcp71.dll
         mfc.files += $${WINDOWSDIR}/msvcr71d.dll
-            mfc.files += $${WINDOWSDIR}/msvcr71.dll
+        mfc.files += $${WINDOWSDIR}/msvcr71.dll
 
         mfc.path = $$BINDIR
         INSTALLS *= mfc
     }
-    
+
+    win32-msvc2010: {
+        # MFC
+        WINDOWSDIR = c:/windows/system32
+
+        mfc.files += $${WINDOWSDIR}/msvcp100.dll
+        mfc.files += $${WINDOWSDIR}/msvcr100d.dll
+        mfc.files += $${WINDOWSDIR}/msvcr100.dll
+
+        mfc.path = $$BINDIR
+        INSTALLS *= mfc
+    }
+
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<apex:screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0/experiment ../../../../../../data/schemas/screens-document.xsd"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0/experiment" >
+    <uri_prefix>"test"</uri_prefix>
+    <screen id="screen1" >
+        <gridLayout height="1" width="2" >
+            <button x="2" y="1" id="button1" >
+                <text>Send</text>
+            </button>
+        </gridLayout>
+        <buttongroup id="buttongroup1">
+            <button id="button1"/>
+        </buttongroup>
+        <default_answer_element>buttongroup1</default_answer_element>
+    </screen>    
+</apex:screens>

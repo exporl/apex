@@ -61,14 +61,14 @@ class RunDelegateCreatorVisitor
             : public ScreenElementVisitor
 {
     QWidget* parent;
-    elementToRunningMapT& elementToRunningMap;
+    ElementToRunningMap& elementToRunningMap;
     QFont defaultFont;
     ScreenElementRunDelegate* lastcreated;
 public:
     RunDelegateCreatorVisitor(
         ExperimentRunDelegate* p_exprd,
         QWidget* parent,
-        elementToRunningMapT& elementToRunningMap,
+        ElementToRunningMap& elementToRunningMap,
         const QFont& defaultFont);
 
     ScreenElementRunDelegate* createRunDelegate(const ScreenElement* e);

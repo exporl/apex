@@ -109,7 +109,7 @@ namespace apex
         Calibrator*  modCalibrator() const;
         stimulus::StimulusOutput* modOutput() const;
         Feedback* modFeedback() const;
-        const tModules* modules() const;
+        const ModuleList* modules() const;
 
 
         ScreenRunDelegate* GetScreen (const QString& id );

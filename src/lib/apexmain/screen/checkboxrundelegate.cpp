@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "screen/screenrundelegate.h"
 #include "gui/guidefines.h"
 
@@ -55,17 +55,15 @@ bool CheckBoxRunDelegate::hasInterestingText() const
 
 const QString CheckBoxRunDelegate::getText() const
 {
-	bool state = (checkState() == Qt::Checked);
-	return QString::number(state);
+    bool state = checkState() == Qt::Checked;
+    return QString::number(state);
 }
 
-void CheckBoxRunDelegate::resizeEvent( QResizeEvent* e )
+void CheckBoxRunDelegate::resizeEvent(QResizeEvent* e)
 {
-    QCheckBox::resizeEvent (e);
+    QCheckBox::resizeEvent(e);
     setFont (initialFont);
-    ApexTools::shrinkTillItFits (this, getText(), QSize (2, 2));
-
-  //QCheckBox::setCheckState(checkState());
+    ApexTools::shrinkTillItFits(this, getText(), QSize (2, 2));
 }
 
 void CheckBoxRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
@@ -74,33 +72,43 @@ void CheckBoxRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
              d, SIGNAL( answered( ScreenElementRunDelegate* ) ) );
 }
 
-}
-}
-
-void apex::rundelegates::CheckBoxRunDelegate::sendAnsweredSignal()
+void CheckBoxRunDelegate::sendAnsweredSignal()
 {
     emit answered( this );
 }
 
-apex::rundelegates::CheckBoxRunDelegate::CheckBoxRunDelegate(
-        ExperimentRunDelegate* p_exprd,
-    QWidget* parent, const CheckBoxElement* e, const QFont& defaultFont ) :
-      QCheckBox( parent ),
-      ScreenElementRunDelegate(p_exprd, e),
-      element( e )
+CheckBoxRunDelegate::CheckBoxRunDelegate(ExperimentRunDelegate* p_exprd,
+        QWidget* parent, const data::CheckBoxElement* e, const QFont& defaultFont) :
+    QCheckBox(parent),
+    ScreenElementRunDelegate(p_exprd, e),
+    element(e)
 {
-   QCheckBox::setText( e->getText() );
+   QCheckBox::setText(e->getText());
 
    QFont font = defaultFont;
-   if ( element->getFontSize() != -1 )
-       font.setPointSize( element->getFontSize() );
-   QCheckBox::setFont( font );
+   if (element->getFontSize() != -1)
+       font.setPointSize(element->getFontSize());
+   QCheckBox::setFont(font);
 
    QPalette plt;
    plt.setColor(QPalette::WindowText, Qt::red);
    QCheckBox::setPalette(plt);
    initialFont = font;
 
-   QCheckBox::setCheckState(checkState());
+   QCheckBox::setCheckState(element->getChecked());
+}
+
+void CheckBoxRunDelegate::clearText()
+{
+
+   QCheckBox::setCheckState(element->getChecked());
+}
+
+const data::CheckBoxElement* CheckBoxRunDelegate::GetElement() const
+{
+    return element;
+}
+
+}
 }
 

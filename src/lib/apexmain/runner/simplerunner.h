@@ -39,6 +39,8 @@ class SimpleRunner : public ExperimentRunner
         void Finished();
     private:
         QString path;
+    signals:
+        void errorMessage(const QString& source, const QString& message);
 };
 }
 

@@ -77,7 +77,7 @@ namespace apex
             /**
           * Implementation of the ScreenElementRunDelegate method.
           */
-            void feedBack( const mt_eFeedBackMode& mode );
+            void feedBack( const FeedbackMode& mode );
 
             /**
           * Implementation of the ScreenElementRunDelegate method.

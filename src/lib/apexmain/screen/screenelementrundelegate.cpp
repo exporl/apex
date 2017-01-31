@@ -37,6 +37,8 @@ namespace apex
 {
 namespace rundelegates
 {
+
+
 bool ScreenElementRunDelegate::hasText() const
 {
     return false;
@@ -53,8 +55,9 @@ const QString ScreenElementRunDelegate::getText() const
 }
 
 ScreenElementRunDelegate::ScreenElementRunDelegate(ExperimentRunDelegate* p_parent,const data::ScreenElement* const d) :
-        feedBackMode(mc_eOff),
+        feedBackMode(NoFeedback),
         m_rd(p_parent),
+        lastClickPosition(-1, -1),
         element(d)
 {
 
@@ -73,7 +76,14 @@ void ScreenElementRunDelegate::connectSlots(
     // signals/slots
 }
 
-ScreenElementRunDelegate::mt_eFeedBackMode ScreenElementRunDelegate::getFeedBackMode() const
+
+
+const QPointF ScreenElementRunDelegate::getClickPosition ( ) const
+{
+    return lastClickPosition;
+}
+
+ScreenElementRunDelegate::FeedbackMode ScreenElementRunDelegate::getFeedbackMode() const
 {
     return feedBackMode;
 }
@@ -89,7 +99,7 @@ ScreenElementRunDelegate::~ScreenElementRunDelegate()
     //qDebug("~ %s", qPrintable(element->getID()));
 }
 
-void ScreenElementRunDelegate::feedBack(const mt_eFeedBackMode& mode)
+void ScreenElementRunDelegate::feedBack(const FeedbackMode& mode)
 {
     feedBackMode = mode;
 }

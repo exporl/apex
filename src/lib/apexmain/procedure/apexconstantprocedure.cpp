@@ -38,7 +38,7 @@ ApexConstantProcedure::ApexConstantProcedure(ExperimentRunDelegate& p_rd,
 }
 
 
-bool ApexConstantProcedure::NextTrial(bool p_answer, const ApexScreenResult* screenresult)
+bool ApexConstantProcedure::NextTrial(bool p_answer, const ScreenResult* screenresult)
 {
 #ifdef SHOWSLOTS
     qDebug("SLOT ApexConstantProcedure::NextTrial(bool p_answer), id=" + m_id);

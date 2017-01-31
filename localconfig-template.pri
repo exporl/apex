@@ -7,6 +7,9 @@
 # Uncomment for release version
 #RELEASE = 1
 
+# Uncomment if nmake has trouble with long command lines
+# CLEBS *= nosilent
+
 # Uncomment to override make files that want precompiled headers
 #CLEBS -= pch
 

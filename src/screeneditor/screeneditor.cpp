@@ -220,7 +220,7 @@ namespace apex
         new GridLayoutElement( "gridlayout1", 0, 3, 2, data::tStretchList(),
                              data::tStretchList());
 
-      apex::gui::tScreenElementMap idToElementMap;
+      apex::gui::ScreenElementMap idToElementMap;
 
       for ( int x = 0; x < 3; ++x )
       {

@@ -32,7 +32,9 @@ namespace streamapp
     ASIO,       //!< SteinBerg ASIO; see www.steinberg.net/Steinberg/Developers.asp for the license !!!
     PORTAUDIO,  //!< PortAudio
     JACK,       //!< Jack
-    COREAUDIO   //!< OsX CoreAudio
+    COREAUDIO,  //!< OsX CoreAudio
+    QTAUDIO,    //!< Qt Multimedia framework
+    DUMMY       //!< Dummy soundcard
   };
 
     /**

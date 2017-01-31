@@ -24,6 +24,7 @@
 #include "services/paths.h"
 #include "services/mainconfigfileparser.h"
 
+#include "xml/apexxmltools.h"
 #include "xml/xercesinclude.h"
 #include "xml/xalaninclude.h"
 
@@ -51,7 +52,13 @@ XALAN_USING_XALAN(XSLTResultTarget);
 #include <QWebView>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QFile>
+#include <QTextStream>
+#include <QIODevice>
+#include <QXmlQuery>
+#include <QHash>
 
+static const char* ERROR_SOURCE = "ResultViewer";
 
 using namespace apex;
 
@@ -60,7 +67,7 @@ namespace
     const unsigned sc_nBufferSize = 4096;
 }
 
-ResultViewer::ResultViewer(data::ResultParameters* p_param,
+ResultViewer::ResultViewer(const data::ResultParameters* p_param,
         const QString& p_resultfile, const QString& p_xsltpath):
     m_pParam(p_param),
     m_sResultfile(p_resultfile),
@@ -181,13 +188,16 @@ backtoscript:
     }
 
 
-    XalanTransformer::initialize();
+
+ XalanTransformer::initialize();
 
 
     XalanTransformer transformer;
 #ifdef USEXALANFORMATNUMBER
     xalanc::ICUFormatNumberFunctor(transformer.getMemoryManager());
 #endif
+
+
 
     XSLTInputSource xmlin(QFile::encodeName(document));
     XSLTInputSource sheet(QFile::encodeName(script));
@@ -272,23 +282,40 @@ void ResultViewer::show(bool ask)
         return;
     }
 
-    if (m_javascriptOK)
+    if (m_javascriptOK && m_xsltOK) {
+        emit errorMessage("ResultViewer", "Both Javascript and XSLT results were requested. Only javascript results analysis will be shown");
         showJavascript();
-
-    if (m_xsltOK)
+    } else if (m_javascriptOK) {
+        showJavascript();
+    } else if (m_xsltOK) {
         showXslt();
+    }
 
     return;
 }
 
+void ResultViewer::setupDialog()
+{
+    m_dialog = new QDialog;
+    m_ui = new Ui_ResultViewer;
+    m_ui->setupUi(m_dialog);
+    connect(m_ui->buttonExport, SIGNAL(clicked(bool)),
+            this, SLOT(exportToPdf()));
+    connect(m_ui->buttonPrint, SIGNAL(clicked(bool)),
+            this, SLOT(print()));
+}
+
+void ResultViewer::showDialog()
+{
+    m_dialog->exec();
+    delete(m_ui);
+    delete(m_dialog);
+}
 
 void ResultViewer::showXslt()
 {
-    QDialog Window;
-    Ui_ResultViewer Ui_Window;
-    Ui_Window.setupUi(&Window);
-   // Ui_Window.textEdit->append(m_result);
-   // Ui_Window.webView->setHtml(m_result_html);
+    setupDialog();
+
     QString contentType;
     if ( m_result_html.contains("html")) {
         if ( m_result_html.contains("xml")  )
@@ -298,16 +325,13 @@ void ResultViewer::showXslt()
     } else
         contentType="text/plain";
 
-
     qDebug("HTML\n----------------");
     qDebug()<<m_result_html;
     qDebug("Text\n----------------");
     qDebug()<<m_result_text;
 
-    Ui_Window.webView->setContent(m_result_html, contentType);
-    Window.exec();
-
-
+    m_ui->webView->setContent(m_result_html, contentType);
+    showDialog();
 
 // #define WEBKIT
 // #ifdef WEBKIT
@@ -319,31 +343,25 @@ void ResultViewer::showXslt()
 
 void ResultViewer::showJavascript()
 {
-    //QDialog Window;
-    m_dialog = new QDialog;
-    m_ui = new Ui_ResultViewer;
-    m_ui->setupUi(m_dialog);
+    setupDialog();
     connect(m_ui->webView, SIGNAL(loadFinished(bool)),
             this, SLOT(loadFinished(bool)));
-    connect(m_ui->buttonExport, SIGNAL(clicked(bool)),
-            this, SLOT(exportToPdf()));
-    connect(m_ui->buttonPrint, SIGNAL(clicked(bool)),
-            this, SLOT(print()));
 
     m_dialog->setWindowTitle(tr("APEX Results - %1").
         arg(QFileInfo(m_sResultfile).fileName()) );
 
     m_rtr = new RTResultSink( m_resultPagePath, m_ui->webView );
-    m_dialog->exec();
+    showDialog();
     delete(m_rtr);
-    delete(m_ui);
-    delete(m_dialog);
 }
 
 void ResultViewer::loadFinished(bool ok)
 {
-    if (!ok)
-        throw ApexStringException(tr("ResultViewer: cannot load results page"));
+    if (!ok) {
+        m_dialog->close();
+        emit errorMessage(ERROR_SOURCE, tr("ResultViewer: cannot load results page"));
+        return;
+    }
     // TODO: set script name
 
     //    rtr.show();
@@ -355,6 +373,7 @@ void ResultViewer::loadFinished(bool ok)
         QTextStream stream(&resultsfile);
 
         m_rtr->newResults( stream.readAll() );
+        m_rtr->plot();
         qDebug("Showing rtresultsink");
         //        rtr.show();
     }

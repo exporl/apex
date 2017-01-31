@@ -60,14 +60,9 @@ public:
         void SetLength(long mus) { m_length=mus; }        //! Set length to mus microseconds
         long GetLength() const { return m_length; }       //! Add mus microseconds to length
         void AddToLength(long mus) { m_length+=mus;}
-        /*
-        void AddToLength(long mus) { m_length+=mus;)
-        void SetLength(long mus) { m_length=mus; }
-        long GetLength() const { return m_length; };*/
-
 
 private:
-    long m_length;
+    long m_length;        // length in microseconds
 
 };
 
@@ -104,7 +99,7 @@ private:
     mutable L34XMLData m_XMLData;
     mutable bool bIsXMLData;              // determines whether the stimulus is XML data and thus doesn't have to be mapped
     mutable float mappedForVolume;            //! the volume parameter for which the mapping is done, is -1 if no xml data is available
-    mutable long m_length;                          //! datablock length in microseconds
+    mutable double m_length;                          //! datablock length in microseconds
 };
 }
 }

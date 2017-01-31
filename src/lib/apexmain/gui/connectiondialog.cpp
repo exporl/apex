@@ -188,7 +188,7 @@ void ConnectionDialog::setDelegate (const ExperimentRunDelegate &delegate)
     dotInput << "ranksep=1.5;";
     dotInput << "node [shape=plaintext];";
     QMap<QString, unsigned> idMap;
-    QMap<QString, unsigned> portMap;
+    QMap<QString, int> portMap;
     const ParameterManager * const manager = delegate.GetParameterManager();
     stimulus::tConnectionsMap connections = delegate.GetConnections();
     QMapIterator<QString, stimulus::tConnections> i (connections);

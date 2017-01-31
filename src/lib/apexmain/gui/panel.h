@@ -118,7 +118,7 @@ namespace apex
        * specified by mode.
        */
       virtual void feedBack(
-          const ScreenElementRunDelegate::mt_eFeedBackMode mode ) = 0;
+          const ScreenElementRunDelegate::FeedbackMode mode ) = 0;
 
         /**
           * Set the config.
@@ -161,7 +161,7 @@ namespace apex
         *   the default panel on the right hand side of the screen.
         *   Has start/stop/pause/status/feedback/emergency/progress.
         *   Derives form ScreenElement, but with constraints: the signal ms_Answered is not
-        *   used and neither is the FeedBackMode mc_eHighLight.
+        *   used and neither is the FeedbackMode HighlightFeedback.
         ************************************************************************************ */
     class Panel : public QWidget, public IPanel
     {
@@ -219,7 +219,7 @@ namespace apex
           * For child mode: one frame forward or backward in the movie.
           * @param ac_eMode only positive/negative and off are supported
           */
-      void feedBack( const ScreenElementRunDelegate::mt_eFeedBackMode ac_eMode );
+      void feedBack( const ScreenElementRunDelegate::FeedbackMode ac_eMode );
 
         /**
           * Set the progressbar position.
@@ -278,7 +278,7 @@ namespace apex
         *   the childmode panel.
         *   Has a flash movie
         *   Derives form ScreenElement, but with constraints: the signal ms_Answered is not
-        *   used and neither is the FeedBackMode mc_eHighLight.
+        *   used and neither is the FeedbackMode HighlightFeedback.
         ************************************************************************************ */
     class ChildModePanel : public QWidget, public IPanel
     {
@@ -320,7 +320,7 @@ namespace apex
           * For child mode: one frame forward or backward in the movie.
           * @param ac_eMode only positive/negative and off are supported
           */
-      void feedBack( const ScreenElementRunDelegate::mt_eFeedBackMode ac_eMode );
+      void feedBack( const ScreenElementRunDelegate::FeedbackMode ac_eMode );
 
         /**
           * Set the progressbar position.

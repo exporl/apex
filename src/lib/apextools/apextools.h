@@ -62,13 +62,14 @@ class APEXTOOLS_EXPORT ApexTools
         static QString addPrefix(const QString& base, const QString& prefix);
         static QString absolutePath(const QString& path);
         static QString boolToString(bool b);
-        static int RandomRange(int lowest_number, int highest_number=0);
+        /*static int RandomRange(int lowest_number, int highest_number=0);
         static float RandomRange(double lowest_number, double highest_number=0);
-        static double Randn();
-        static void InitRand();
+        static double Randn();*/
+        static void InitRand(long seed=-1);
         //static std::string Q2StdString(const QString& p);
         static bool bQStringToBoolean( const QString& ac_sBoolean );
         static QString removeXmlTags(const QString& str);
+        static void milliSleep (unsigned millis);
 
         static void ReplaceCharInString( QString& a_StringToSearch, const QChar& ac_ToReplace, const QString& ac_ReplaceWith );
         static void ReplaceWhiteSpaceWithNBSP( QString& a_StringToSearch );

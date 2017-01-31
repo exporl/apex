@@ -148,7 +148,7 @@ namespace apex { namespace stimulus { namespace details
       for( tConnections::size_type i = 0  ; i < m_Connections.size() ; ++i )
       {
         const tConnection& cur = m_Connections[ i ];
-        if( cur.m_nToChannel != streamapp::sc_nInfinite )
+        if( cur.m_nToChannel != (int) streamapp::sc_nInfinite )
           if( cur.m_sToID == ac_sToID )
             m_Map[ cur.m_nToChannel ] = true;
       }
@@ -167,7 +167,7 @@ namespace apex { namespace stimulus { namespace details
       for( tConnections::size_type i = 0  ; i < m_Connections.size() ; ++i )
       {
         const tConnection& cur = m_Connections[ i ];
-        if( cur.m_nFromChannel != streamapp::sc_nInfinite )
+        if( cur.m_nFromChannel != (int) streamapp::sc_nInfinite )
           if( cur.m_sFromID == ac_sFromID )
             m_Map[ cur.m_nFromChannel ] = true;
       }
@@ -291,8 +291,8 @@ const tConnection& ConnectionRunDelegateCreator::mf_IsValid( const tConnection& 
   {
     bFound = true;
     sDevice = itF.value()->GetDevice();
-    if( ac_Connection.m_nFromChannel != streamapp::sc_nInfinite )
-        if( ac_Connection.m_nFromChannel >= itF.value()->GetParameters().nbChannels())
+    if( ac_Connection.m_nFromChannel != (int) streamapp::sc_nInfinite )
+        if( ac_Connection.m_nFromChannel >= (int) itF.value()->GetParameters().nbChannels())
         details::f_ThrowNotEnoughOutput( ac_Connection.m_sFromID );
   }
 
@@ -305,7 +305,7 @@ const tConnection& ConnectionRunDelegateCreator::mf_IsValid( const tConnection& 
       bFound = true;
       sDevice = itFi.value()->GetDevice();
       if( ac_Connection.m_nFromChannel != streamapp::sc_nInfinite )
-          if( ac_Connection.m_nFromChannel >= itFi.value()->GetParameters().numberOfChannels() )
+          if( ac_Connection.m_nFromChannel >= (int) itFi.value()->GetParameters().numberOfChannels() )
           details::f_ThrowNotEnoughOutput( ac_Connection.m_sFromID );
     }
   }

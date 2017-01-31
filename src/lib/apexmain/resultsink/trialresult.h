@@ -23,7 +23,7 @@
 #include <qdatetime.h>
 #include <qstring.h>
 
-#include "screen/apexscreenresult.h"
+#include "screen/screenresult.h"
 #include "procedure/adaptiveprocedure.h"
 
 namespace apex {
@@ -45,7 +45,7 @@ public:
     QString name;
     QString stimulus;
     QString extra;                          // extra xml data
-    ApexScreenResult screenResult;
+    ScreenResult screenResult;
     QDateTime timestamp;
     bool correctorResult;
     int answerTime;                         // # of ms before answer

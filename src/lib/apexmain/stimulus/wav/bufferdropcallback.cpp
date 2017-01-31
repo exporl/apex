@@ -27,7 +27,7 @@ using namespace apex::stimulus;
 
 BufferDropCallback::BufferDropCallback( const QString& ac_sDropSource ) :
   mv_nDrops( 0 ),
-  m_pError( StatusItem::ERROR, ac_sDropSource, "!!!!! buffer underrun !!!!!" ) 
+  m_pError( StatusItem::Error, ac_sDropSource, "!!!!! buffer underrun !!!!!" ) 
 {
 }
 

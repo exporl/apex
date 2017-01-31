@@ -87,7 +87,7 @@ DOMElement* DatablocksWriter::addElement(DOMDocument* doc, const data::Datablock
 
          if (!d->uri().isEmpty())
             datablock->appendChild(
-                XMLutils::CreateTextElement(doc, "uri" , d->uri().toString()));
+                        XMLutils::CreateTextElement(doc, "uri" , d->uri().toString().replace(' ', "%20") ));
 
          if (!d->directData().isEmpty())
             datablock->appendChild(

@@ -34,7 +34,7 @@ const QString PREFIX_TRIAL                  = "trial";
 const QString PREFIX_GAIN                   = "gain";
 
 //silent datablock
-const double  SILENT_DATABLOCK_LENGTH       = 500.0;
+const double  SILENT_DATABLOCK_LENGTH       = 1000.0;
 const QString SILENT_DATABLOCK_ID           = PREFIX_DATABLOCK + "_silence";
 const QString SILENT_DATABLOCK_URI          = "silence:" + QString::number(
                                                     SILENT_DATABLOCK_LENGTH);
