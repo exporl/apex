@@ -1,0 +1,6 @@
+    <filter xsi:type="apex:amplifier" id="amplifier" >
+      <device>wavdevice</device>
+      <channels>2</channels>
+      <basegain>-10</basegain>
+      <gain>-10</gain>
+    </filter>

@@ -17,28 +17,24 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "stimuliparser.h"
+#include "apexdata/stimulus/stimulidata.h"
+#include "apexdata/stimulus/stimulusdata.h"
+#include "apexdata/stimulus/stimulusparameters.h"
 
-//from libdata
-#include "stimulus/stimulidata.h"
-#include "stimulus/stimulusdata.h"
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
 
 #include "parser/scriptexpander.h"
 
-#include "stimulus/stimulusparameters.h"  // fixme
-using apex::data::StimulusParameters;
-
 #include "playmatrix.h"
+#include "stimuliparser.h"
 
+using apex::data::StimulusParameters;
 using apex::data::StimuliData;
 using apex::data::StimulusDatablocksContainer;
-
-#include "xml/xmlkeys.h"
-#include "xml/apexxmltools.h"
 using namespace apex::XMLKeys;
 using namespace apex::ApexXMLTools;
-
-#include "xml/xercesinclude.h"
 using namespace XERCES_CPP_NAMESPACE;
 
 #include <QDebug>
@@ -127,7 +123,7 @@ void apex::parser::StimuliParser::ParseStimulus(
             if (  currentNode->getNodeType() == DOMNode::TEXT_NODE)
                 continue;
 
-            qDebug("Node type: %d",  currentNode->getNodeType());
+            qCDebug(APEX_RS, "Node type: %d",  currentNode->getNodeType());
             qFatal("Invalid node type");
         }
 
@@ -144,7 +140,7 @@ void apex::parser::StimuliParser::ParseStimulus(
         {
             //target.m_playMatrix = CreatePlayMatrix( el );  // FIXME
             target.m_datablocksContainer = CreateDatablocksContainer(el);
-            //qDebug() << target.m_datablocksContainer.toString();
+            //qCDebug(APEX_RS) << target.m_datablocksContainer.toString();
         }
         else if (tag == "variableParameters")
         {
@@ -167,7 +163,7 @@ void apex::parser::StimuliParser::ParseStimulus(
     // add to map
     currentData->insert(target.m_id, target);
 
-    //qDebug("Parsed stimulus %s", qPrintable(target.m_id));
+    //qCDebug(APEX_RS, "Parsed stimulus %s", qPrintable(target.m_id));
 
 }
 

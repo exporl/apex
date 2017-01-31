@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: Regression test - 4 Intervals - 4 Choices, select interval 2-3
+  @description: Four intervals are possible= 'noise noise noise een', 'noise noise een noise', 'noise een noise noise' and 'een noise noise noise'. However only possibility number "2" and "3" are selected
+                So you can hear 'noise een noise noise' or 'noise noise een noise'. You have to click on the button corresponding with "een'.
+  @how: constantProcedure - intervals- count/possibilities: 4, select(ion): 2 and 3
+-->
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <intervals count="4" select="2,3">
+    <interval number="1" element="button1"/>
+    <interval number="2" element="button2"/>
+    <interval number="3" element="button3"/>
+    <interval number="4" element="button4"/>
+   </intervals>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+    <standard id="standard1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">false</feedback>
+   <showcurrent>true</showcurrent>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout id="main_layout" width="4" height="1">
+    <button id="button1" x="1" y="1">
+     <text>1</text>
+    </button>
+    <button id="button2" x="2" y="1">
+     <text>2</text>
+    </button>
+    <button id="button3" x="3" y="1">
+     <text>3</text>
+    </button>
+    <button id="button4" x="4" y="1">
+     <text>4</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+    <button id="button3"/>
+    <button id="button4"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="noisedata">
+   <device>wavdevice</device>
+   <uri>ruisje.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>4096</buffersize>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters>
+   <parameter id="snr"/>
+  </fixed_parameters>
+  <stimulus id="standard1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="noisedata"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="snr">20</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="snr">1</parameter>
+   </fixedParameters>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

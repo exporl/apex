@@ -1,0 +1,45 @@
+ <!-- @doc
+  @what: Example HTML file for the flow runner
+  @description: The flow runner allows to chain multiple experiments together. When first started this HTML page will be shown, and after the experiment the user will be returned to this page.
+  @how: the function api.runExperiment allows to start a new experiment. When the experiment is finished, the function callback will be called by APEX, with as argument the name of the results file.
+  -->
+<html>
+        <head>
+                <title>Flow runner</title>
+
+                <script src="apex:rtresults.js"></script>
+
+                <script>
+                function callback(filename) {
+                        var xml = api.getFile(filename);
+                }
+                api.savedFile.connect(callback);
+
+                function exp1() {
+                        api.runExperiment("apex:examples/procedure/extrasimple.apx");
+                }
+                function exp2() {
+                        api.runExperiment("../../examples/procedure/adaptive-1up-1down.apx");
+                }
+                function exp3() {
+                        expressions = {
+                        "apex:apex/results[1]/subject[1]": "Piet Snot"
+                };
+                        api.runExperiment("apex:examples/interactive/extrasimple.apx", expressions);
+                }
+                function exp4() {
+                        api.runExperiment("apex:examples/procedure/extrasimple.apx", {}, "results.apr");
+                }
+                function exp5() {
+                        api.runExperiment(api.fromCurrentDir("../procedure/extrasimple.apx"));
+                }
+                </script>
+        </head>
+        <body>
+                <button onclick="exp1()">Extra simple</button>
+                <button onclick="exp2()">Adaptive</button>
+                <button onclick="exp3()">Interactive</button>
+                <button onclick="exp4()">Extra simple with results</button>
+                <button onclick="exp5()">Relative paths</button>
+        <body>
+</html>

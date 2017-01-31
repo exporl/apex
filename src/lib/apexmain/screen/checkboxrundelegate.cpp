@@ -17,13 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "screen/screenrundelegate.h"
+#include "apexdata/screen/checkboxelement.h"
+
+#include "apextools/apextools.h"
+
 #include "gui/guidefines.h"
 
-#include "screen/checkboxelement.h"
 #include "screen/checkboxrundelegate.h"
-
-#include "apextools.h"
+#include "screen/screenrundelegate.h"
 
 #include <QColor>
 #include <QPalette>

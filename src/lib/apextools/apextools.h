@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXAPEXTOOLS_H
-#define APEXAPEXTOOLS_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_APEXTOOLS_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_APEXTOOLS_H_
 
 #include "global.h"
 
@@ -106,6 +106,9 @@ class APEXTOOLS_EXPORT ApexTools
         static QStringList unique(const QStringList& list);
 
         static QStringList toStringList(const QList<int> intList);
+
+        static QString fetchDiffstat();
+        static QString fetchVersion();
 
         /**
          * Workaround for buggy Qt function

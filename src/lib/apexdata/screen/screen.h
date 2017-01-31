@@ -17,16 +17,17 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SCREEN_H
-#define SCREEN_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREEN_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREEN_H_
 
-#include "apextypedefs.h"
-#include "factoryelement.h"
+#include "../factoryelement.h"
 
-#include <vector>
+#include "apextools/apextypedefs.h"
+#include "apextools/global.h"
+
 #include <QString>
 
-#include "global.h"
+#include <vector>
 
 class QWidget;
 

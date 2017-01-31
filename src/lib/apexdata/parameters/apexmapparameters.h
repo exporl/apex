@@ -17,13 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXAPEXMAPPARAMETERS_H
-#define APEXAPEXMAPPARAMETERS_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_APEXMAPPARAMETERS_H_
+#define _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_APEXMAPPARAMETERS_H_
 
-#include "apextypedefs.h"
-#include "global.h"
+#include "apextools/apextypedefs.h"
+#include "apextools/global.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
+
 namespace XERCES_CPP_NAMESPACE
 {
 class DOMElement;
@@ -74,7 +75,7 @@ class APEXDATA_EXPORT ApexMapParameters//: public apex::tParamMap
         void insert(tParamMapPair pair);
         void remove(const QString& name);
         void erase(tParamMapIt it);
-		bool isEmpty() const;
+                bool isEmpty() const;
 
         /**
           * Parses a a DOMElement containing parameters.

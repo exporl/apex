@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef __APEXRANDOM_H__
-#define __APEXRANDOM_H__
+
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_APEXRANDOM_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_APEXRANDOM_H_
 // random function from numerical recipes
 
 #define IA 16807
@@ -49,8 +49,8 @@ safeguards. Returns a uniform random deviate between 0.0 and 1.0 (exclusive of t
 values). Call with idum a negative integer to initialize; thereafter, do not alter idum between
 successive deviates in a sequence. RNMX should approximate the largest floating value that is
 less than 1.
- * @param idum 
- * @return 
+ * @param idum
+ * @return
  */
 float ran1(long *idum) {
     int j;
@@ -82,9 +82,9 @@ float ran1(long *idum) {
     iy=iv[j];
     iv[j] = *idum;
     if ((temp=AM*iy) > RNMX)
-        return RNMX;       
+        return RNMX;
     else
         return temp;
 }
 
-#endif //#ifndef __APEXRANDOM_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXTOOLS_APEXRANDOM_H_

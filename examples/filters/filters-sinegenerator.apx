@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8'?>
+ <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!-- @doc
+  @what: Test of setting frequency parameter of sine generator - frequency of sinus varies according to user input
+  @description: A sinus is playing in the left ear when you click on one of the 3 buttons. If you click on 100Hz/1000Hz/defaults, the frequency of the sinus changes to 100Hz/1000Hz/10 000Hz.
+  @how: filter: 1 generator: sinus (10 000Hz) - 3 stimuli: 3x silence with adjusted parameters (frequency: 100Hz/1000Hz/no change) -  continuous: false
+    -->
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial100">
+    <answer>b100</answer>
+    <screen id="screen1"/>
+    <stimulus id="s100"/>
+   </trial>
+   <trial id="trial1000">
+    <answer>b1000</answer>
+    <screen id="screen1"/>
+    <stimulus id="s1000"/>
+   </trial>
+   <trial id="trialdef">
+    <answer>bdef</answer>
+    <screen id="screen1"/>
+    <stimulus id="sdef"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>false</progressbar>
+   <feedback>false</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout height="2" width="2" id="answer_layout" x="1" y="2">
+    <button id="b100" x="1" y="1">
+     <text>100Hz</text>
+    </button>
+    <button id="b1000" x="2" y="1">
+     <text>1000Hz</text>
+    </button>
+    <button id="bdef" x="2" y="2">
+     <text>defaults</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="b100"/>
+    <button id="b1000"/>
+    <button id="bdef"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>file:../stimuli</uri_prefix>
+  <datablock id="silence">
+   <device>soundcard1</device>
+   <uri>silence:1000</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="soundcard1" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters>
+  <filter id="singen1" xsi:type="apex:generator">
+   <device>soundcard1</device>
+   <channels>1</channels>
+   <continuous>false</continuous>
+   <type>sinus</type>
+   <basegain>-14</basegain>
+   <gain id="gain">0</gain>
+   <frequency id="freq">10000</frequency>
+   <phase>0</phase>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="s100">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <sequential>
+     <datablock id="silence"/>
+    </sequential>
+   </datablocks>
+   <variableParameters>
+    <parameter id="gain">-3</parameter>
+    <parameter id="freq">100</parameter>
+   </variableParameters>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="s1000">
+   <description>silence</description>
+   <datablocks>
+    <sequential>
+     <datablock id="silence"/>
+    </sequential>
+   </datablocks>
+   <variableParameters>
+    <parameter id="gain">-3</parameter>
+    <parameter id="freq">1000</parameter>
+   </variableParameters>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="sdef">
+   <description>silence</description>
+   <datablocks>
+    <sequential>
+     <datablock id="silence"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>_ALL_</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard1</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>singen1</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard1</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+ </connections>
+</apex:apex>

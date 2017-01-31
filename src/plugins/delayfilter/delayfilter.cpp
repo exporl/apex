@@ -16,12 +16,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "pluginfilterinterface.h"
+#include "apexmain/filter/pluginfilterinterface.h"
 
 #include <QStringList>
 
 #ifdef Q_OS_WIN32
-#include <windows.h>            // Sleep()
+#include <windows.h>        // Sleep
 #else
 #include <unistd.h>
 #endif
@@ -41,6 +41,9 @@ class DelayFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA  (IID "apex.delayfilter")
+#endif
 public:
     virtual QStringList availablePlugins() const;
 
@@ -48,7 +51,9 @@ public:
             unsigned channels, unsigned blocksize, unsigned fs) const;
 };
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN2 (delayfilter, DelayFilterCreator)
+#endif
 
 class DelayFilter:
     public QObject,
@@ -75,7 +80,7 @@ private:
 };
 
 
-// DelayFilter =============================================================
+// DelayFilter =================================================================
 
 DelayFilter::DelayFilter (unsigned channels, unsigned blockSize) :
     channels (channels),
@@ -131,7 +136,7 @@ void DelayFilter::process (double * const *data)
     milliSleep(delay);
 }
 
-// DelayFilterCreator ======================================================
+// DelayFilterCreator ==========================================================
 
 QStringList DelayFilterCreator::availablePlugins() const
 {

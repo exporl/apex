@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __LOCKS_H_
 #define __LOCKS_H_
 
-#include "defines.h"
+#include "../../defines.h"
 #include "criticalsection.h"
 
 namespace appcore

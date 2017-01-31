@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _SCREENERROR_H
-#define _SCREENERROR_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_STATUS_SCREENSTATUSREPORTER_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_STATUS_SCREENSTATUSREPORTER_H_
 
-#include "status/statusreporter.h"
+#include "statusreporter.h"
 
 #include <QObject>
 

@@ -1,0 +1,451 @@
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!--  @doc
+   @what: Calibration file needed for experiment SPIN-LIST-vrouw_01-koen-nederlands
+   @description: To calibrate the noise for the experiment SPIN-LIST-vrouw_01-koen-nederlands
+   @how: see <calibration>
+  -->
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <uniquestandard>0</uniquestandard>
+      <corrector xsi:type="apex:isequal"/>
+      <time_before_first_trial>0</time_before_first_trial>
+      <input_during_stimulus>0</input_during_stimulus>
+    </parameters>
+    <trials>
+      <trial id="trial_LIST_man_jwz711">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_man_jwz711"/>
+      </trial>
+      <trial id="trial_LIST_man_jwz320">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_man_jwz320"/>
+      </trial>
+      <trial id="trial_LIST_man_jwz11">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_man_jwz11"/>
+      </trial>
+      <trial id="trial_LIST_man_jwz10">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_man_jwz10"/>
+      </trial>
+      <trial id="trial_LIST_man_jwz21">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_man_jwz21"/>
+      </trial>
+      <trial id="trial_LIST_man_jwz16">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_man_jwz16"/>
+      </trial>
+      <trial id="trial_LIST_man_jwz49">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_man_jwz49"/>
+      </trial>
+      <trial id="trial_LIST_man_jwz17">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_man_jwz17"/>
+      </trial>
+      <trial id="trial_LIST_man_jwz29">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_man_jwz29"/>
+      </trial>
+      <trial id="trial_LIST_man_jwz88">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_man_jwz88"/>
+      </trial>
+    </trials>
+  </procedure>
+
+  <screens>
+    <general>
+      <repeatbutton>true</repeatbutton>
+      <showpanel>true</showpanel>
+      <showmenu>true</showmenu>
+    </general>
+    <reinforcement>
+      <progressbar>1</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+    <screen id="experimenter_screen">
+
+      <gridLayout height="2" id="main_layout" rowstretch="1,2" width="1">
+        <gridLayout col="1" columnstretch="1,4" height="4" id="parameter_layout" row="1" rowstretch="1,1,2,2" width="2">
+          <label col="1" id="snrlabel" row="1">
+            <text>snr</text>
+      </label>
+          <parameterlabel col="2" id="snr" row="1">
+            <parameter>gain</parameter>
+      </parameterlabel>
+          <label col="1" id="sentence" row="2">
+            <text>zin</text>
+      </label>
+          <parameterlabel col="2" id="sentence" row="2">
+            <parameter>sentence</parameter>
+      </parameterlabel>
+    </gridLayout>
+        <gridLayout col="1" height="1" id="answer_layout" row="2" width="2">
+          <button id="correct" x="1" y="1">
+            <text>Correct</text>
+      </button>
+          <button id="wrong" x="2" y="1">
+            <text>Wrong</text>
+      </button>
+    </gridLayout>
+  </gridLayout>
+
+      <buttongroup id="buttongroup">
+        <button id="correct"/>
+        <button id="wrong"/>
+  </buttongroup>
+
+      <default_answer_element>buttongroup</default_answer_element>
+
+</screen>  </screens>
+
+  <datablocks>
+    <uri_prefix source="apexconfig">speechmaterials</uri_prefix>
+    <datablock id="datablock_LIST_man_jwz10">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/jwz10.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_man_jwz11">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/jwz11.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_man_jwz16">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/jwz16.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_man_jwz17">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/jwz17.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_man_jwz21">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/jwz21.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_man_jwz29">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/jwz29.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_man_jwz320">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/jwz320.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_man_jwz49">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/jwz49.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_man_jwz711">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/jwz711.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_man_jwz88">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/jwz88.wav</uri>
+    </datablock>
+    <datablock id="datablock_noise">
+      <device>soundcard</device>
+      <uri>dutch/LISTman/noise/jwruis.wav</uri>
+    </datablock>
+    <datablock id="datablock_silence">
+      <device>soundcard</device>
+      <uri>silence:1000</uri>
+    </datablock>
+  </datablocks>
+
+  <devices>
+    <master>soundcard</master>
+    <device id="soundcard" xsi:type="apex:wavDeviceType">
+      <driver>asio</driver>
+      <card>default</card>
+      <channels>4</channels>
+      <gain channel="0" id="gain0">0</gain>
+      <gain channel="1" id="gain1">0</gain>
+      <gain channel="2" id="gain2">0</gain>
+      <gain channel="3" id="gain3">0</gain>
+      <samplerate>44100</samplerate>
+      <blocksize>8192</blocksize>
+      <padzero>1</padzero>
+    </device>
+  </devices>
+
+  <filters>
+    <filter id="amplifier" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>-2.0878</basegain>
+      <invertgain>false</invertgain>
+      <gain id="gain">0</gain>
+    </filter>
+    <filter id="dataloop_channel0" xsi:type="apex:dataloop">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>true</continuous>
+      <datablock>datablock_noise</datablock>
+      <basegain>-2.9432</basegain>
+      <invertgain>false</invertgain>
+      <gain id="noisegain_channel0">0</gain>
+      <randomjump>true</randomjump>
+      <jump>0</jump>
+    </filter>
+    <filter id="dataloop_channel1" xsi:type="apex:dataloop">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>true</continuous>
+      <datablock>datablock_noise</datablock>
+      <basegain>-2.9432</basegain>
+      <invertgain>false</invertgain>
+      <gain id="noisegain_channel1">0</gain>
+      <randomjump>true</randomjump>
+      <jump>0</jump>
+    </filter>
+    <filter id="dataloop_channel3" xsi:type="apex:dataloop">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>true</continuous>
+      <datablock>datablock_noise</datablock>
+      <basegain>-2.9432</basegain>
+      <invertgain>false</invertgain>
+      <gain id="noisegain_channel3">0</gain>
+      <randomjump>true</randomjump>
+      <jump>0</jump>
+    </filter>
+  </filters>
+
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="sentence"/>
+    </fixed_parameters>
+    <stimulus id="calibrationstimulus">
+      <datablocks>
+        <datablock id="datablock_silence"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">calibration</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="noisestimulus">
+      <datablocks>
+        <datablock id="datablock_noise"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">calibration</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_man_jwz10">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_man_jwz10"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">Hij heeft zijn &lt;b&gt;been&lt;/b&gt; &lt;b&gt;gebroken&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_man_jwz11">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_man_jwz11"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">Zij &lt;b&gt;droeg&lt;/b&gt; een &lt;b&gt;nieuwe&lt;/b&gt; &lt;b&gt;jas&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_man_jwz16">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_man_jwz16"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">&lt;b&gt;Vorig&lt;/b&gt; &lt;b&gt;jaar&lt;/b&gt; heb ik een &lt;b&gt;huis&lt;/b&gt; &lt;b&gt;gekocht&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_man_jwz17">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_man_jwz17"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">De &lt;b&gt;politie&lt;/b&gt; &lt;u&gt;hield&lt;/u&gt; de &lt;b&gt;automobilist&lt;/b&gt; &lt;u&gt;aan&lt;/u&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_man_jwz21">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_man_jwz21"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">Het heeft de &lt;b&gt;hele&lt;/b&gt; &lt;b&gt;nacht&lt;/b&gt; &lt;b&gt;gesneeuwd&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_man_jwz29">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_man_jwz29"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">Deze &lt;b&gt;bibliotheek&lt;/b&gt; &lt;b&gt;verhuurt&lt;/b&gt; &lt;b&gt;boeken&lt;/b&gt; en &lt;b&gt;muziek&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_man_jwz320">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_man_jwz320"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">De &lt;b&gt;buit&lt;/b&gt; is &lt;b&gt;verdeeld&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_man_jwz49">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_man_jwz49"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">Hij &lt;b&gt;ligt&lt;/b&gt; &lt;b&gt;zeven&lt;/b&gt; &lt;b&gt;dagen&lt;/b&gt; in het &lt;b&gt;ziekenhuis&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_man_jwz711">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_man_jwz711"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">&lt;b&gt;Melk&lt;/b&gt; is &lt;b&gt;gezond&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_man_jwz88">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_man_jwz88"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">&lt;b&gt;Tijdens&lt;/b&gt; het &lt;b&gt;ongeval&lt;/b&gt; &lt;b&gt;kwamen&lt;/b&gt; &lt;b&gt;drie&lt;/b&gt; &lt;b&gt;mensen&lt;/b&gt; om het &lt;b&gt;leven&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>dataloop_channel0</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>dataloop_channel1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>dataloop_channel3</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>3</channel>
+      </to>
+    </connection>
+  </connections>
+
+  <calibration profile="spin-LISTman_ltass">
+    <stimuli>
+      <stimulus id="calibrationstimulus"/>
+      <stimulus id="noisestimulus"/>
+    </stimuli>
+    <parameters>
+      <parameter id="gain0">
+        <targetamplitude>65</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>10</max>
+      </parameter>
+      <parameter id="gain1">
+        <targetamplitude>65</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>10</max>
+      </parameter>
+      <parameter id="gain3">
+        <targetamplitude>65</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>10</max>
+      </parameter>
+    </parameters>
+  </calibration>
+
+  <results>
+    <page>apex:resultviewer.html</page>
+  </results>
+
+  <general>
+    <allowskip>true</allowskip>
+  </general>
+
+</apex:apex>

@@ -17,18 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef DEVICESWRITER_H
-#define DEVICESWRITER_H
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_DEVICESWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_DEVICESWRITER_H_
 
-/**
- *@author Job Noorman
- */
+#include "apextools/global.h"
 
-//#include "device/devicedata.h"
+#include "apextools/xml/xercesinclude.h"
 
-#include "global.h"
-
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
 class DOMDocument;
@@ -46,7 +41,6 @@ class L34DeviceData;
 
 namespace writer
 {
-using namespace XERCES_CPP_NAMESPACE;
 
 class APEXWRITERS_EXPORT DevicesWriter
 {
@@ -57,7 +51,7 @@ class APEXWRITERS_EXPORT DevicesWriter
         *@param doc the document to place the element in
         *@param data the data to create the element with
         */
-        static DOMElement* addElement ( DOMDocument* doc, const data::DevicesData& data );
+        static XERCES_CPP_NAMESPACE::DOMElement* addElement (XERCES_CPP_NAMESPACE::DOMDocument* doc, const data::DevicesData& data );
     private:
         /**
          * Finishes a partly created <device> element as a wavdevice
@@ -65,14 +59,14 @@ class APEXWRITERS_EXPORT DevicesWriter
          * @param dev the <device> element that needs to be finished
          * @param data the data to finish this element with
          */
-        static void finishAsWav ( DOMElement* dev, const data::WavDeviceData& data );
+        static void finishAsWav (XERCES_CPP_NAMESPACE::DOMElement* dev, const data::WavDeviceData& data );
         /**
          * Finishes a partly created <device> element as an l34device
          *
          * @param dev the <device> element that needs to be finished
          * @param data the data to finish this element with
          */
-        static void finishAsL34 ( DOMElement* dev, const data::L34DeviceData& data );
+        static void finishAsL34 (XERCES_CPP_NAMESPACE::DOMElement* dev, const data::L34DeviceData& data );
 };
 }
 }

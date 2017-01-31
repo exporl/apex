@@ -16,12 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __DYNSTRLIST_H__
 #define __DYNSTRLIST_H__
 
-#include "containers/ownedarray.h"
 #include "../_fromv3/core/mpl/if.h"
+
+#include "containers/ownedarray.h"
+
+#include <QtGlobal>
 
 namespace streamapp
 {
@@ -81,7 +84,7 @@ namespace streamapp
       if( tArray::mf_nGetNumItems() == 0 )
         mv_nSize = a_pItem->mf_nGetBufferSize();
       else
-        assert( mv_nSize == a_pItem->mf_nGetBufferSize() );
+        Q_ASSERT( mv_nSize == a_pItem->mf_nGetBufferSize() );
       mv_nChan += a_pItem->mf_nGetNumChannels();
       tArray::mp_AddItem( a_pItem );
       mp_UpdateMemory();

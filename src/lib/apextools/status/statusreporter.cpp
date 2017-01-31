@@ -67,7 +67,7 @@ void StatusReporter::addMessage(const QString& source, const QString& message)
 void StatusReporter::addItem(const StatusItem& item)
 {
     d->items << item;
-    //qDebug() << "adding item with source" << item.source() << "and level" << item.level();
+    //qCDebug(APEX_RS) << "adding item with source" << item.source() << "and level" << item.level();
 
     if (doReport(item))
     {

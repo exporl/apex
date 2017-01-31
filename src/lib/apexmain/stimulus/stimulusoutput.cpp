@@ -16,35 +16,49 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "stimulus/stimulusparameters.h"
+
+#include "apexdata/device/devicesdata.h"
+
+#include "apexdata/experimentdata.h"
+
+#include "apexdata/stimulus/stimulusparameters.h"
+
+#include "connection/connection.h"
+
+#include "device/controldevice.h"
+#include "device/controllers.h"
+
 #include "parameters/parametermanager.h"
-#include "stimulusoutput.h"
+
+#include "runner/experimentrundelegate.h"
+
+#include "services/errorhandler.h"
+
+#include "streamapp/appcore/events/events.h"
+#include "streamapp/appcore/events/qt_events.h"
+
+#include "streamapp/appcore/threads/criticalsection.h"
+#include "streamapp/appcore/threads/thread.h"
+#include "streamapp/appcore/threads/waitableobject.h"
+
+#include "streamapp/utils/vectorutils.h"
+
+#include "wavstimulus/wavdevice.h"
+
+#include "apexcontrol.h"
+#include "apexmodule.h"
 #include "datablock.h"
 #include "filter.h"
 #include "filtertypes.h"
-#include "connection/connection.h"
-#include "apexcontrol.h"
-#include "runner/experimentrundelegate.h"
-#include "apexmodule.h"
-#include "stimulus.h"
-#include "stimulus/wav/wavdevice.h"
 #include "playmatrix.h"
-#include "device/controllers.h"
-#include "device/controldevice.h"
-#include <utils/vectorutils.h>
-#include <appcore/events/events.h>
-#include <appcore/threads/thread.h>
-#include <appcore/events/qt_events.h>
-#include <appcore/threads/waitableobject.h>
-#include <appcore/threads/criticalsection.h>
-
-//from libdata
-#include "experimentdata.h"
-#include "device/devicesdata.h"
+#include "stimulus.h"
+#include "stimulusoutput.h"
 
 #include <QMessageBox>
 
+#include <QtGlobal>
+
+//from libdata
 using namespace apex;
 using namespace stimulus;
 
@@ -187,14 +201,14 @@ StimulusOutput::StimulusOutput(ExperimentRunDelegate& p_rd) :
   ConnectFilters();
 
     ResetParams();
-  
+
     //start thread
   mc_pWaitThread->mp_Start( appcore::IThread::priority_verylow );
 }
 
 StimulusOutput::~StimulusOutput( )
 {
-    UnLoadStimulus();
+  UnLoadStimulus();
   CloseDevices();
   delete mc_pWaitThread;
     //these are copies, not created through factory, so delete them
@@ -218,7 +232,7 @@ void StimulusOutput::SetMaster( const QString& ac_sID )
   if( !ac_sID.isEmpty() )
   {
     m_pMaster = m_rd.GetDevice( ac_sID );
-    assert( m_pMaster );
+    Q_ASSERT( m_pMaster );
   }
 }
 
@@ -333,7 +347,7 @@ void StimulusOutput::PlayStimulus()
          //play sims
        PlayAndWaitInThread();
      }*/
-    assert( 0 );
+    Q_ASSERT( 0 );
   }
   else
   {
@@ -351,7 +365,7 @@ void StimulusOutput::LoadStimulus( const QString& ac_Stimulus, const bool p_rest
 void StimulusOutput::LoadStimulus( Stimulus* ac_Stimulus, const bool p_restoreParams )
 {
 #ifdef SHOWSLOTS
-  qDebug("SLOT StimulusOutput::LoadStimulus " + ac_Stimulus);
+  qCDebug(APEX_RS, "SLOT StimulusOutput::LoadStimulus " + ac_Stimulus);
 #endif
   if( !m_pCurStim )
   {
@@ -359,7 +373,7 @@ void StimulusOutput::LoadStimulus( Stimulus* ac_Stimulus, const bool p_restorePa
 
    if (p_restoreParams)
         ResetParams();
-    HandleParams( *m_pCurStim->GetVarParameters() );
+    HandleParams();
 
 
       //load datablocks
@@ -384,7 +398,7 @@ void StimulusOutput::LoadStimulus( Stimulus* ac_Stimulus, const bool p_restorePa
   }
   else
   {
-    qDebug( "StimulusOutput::LoadStimulus called before unloading!" );
+    qCDebug(APEX_RS, "StimulusOutput::LoadStimulus called before unloading!" );
     QMessageBox::warning(0, "error", "StimulusOutput::LoadStimulus called before unloading!", "OK");
 //    throw( 0 ); //leave this here to enforce proper control behaviour!
   }
@@ -489,12 +503,12 @@ void StimulusOutput::LoadAll( const PlayMatrix* ac_pMat )
 #ifdef PRINTPLAYMATRIX
       PlayMatrixCreator::sf_DoDisplay( ac_pMat );
 #endif
-      
+
     PlayMatrix* toPlay = PlayMatrixCreator::sf_pCreateSubMatrix( ac_pMat,
             m_DataBlocks, itB.key() );
 
 #ifdef PRINTPLAYMATRIX
-    qDebug("After sf_pCreateSubMatrix, for device %s",
+    qCDebug(APEX_RS, "After sf_pCreateSubMatrix, for device %s",
           qPrintable(itB.key()));
     PlayMatrixCreator::sf_DoDisplay( toPlay );
 #endif
@@ -514,13 +528,13 @@ void StimulusOutput::LoadFilters()
   {
     const QString& sOutput = it.value()->GetDevice();
     tDeviceMapCIt itDev = m_pDevices.find( sOutput );
-    assert( itDev != m_pDevices.end() );
+    Q_ASSERT( itDev != m_pDevices.end() );
 
     OutputDevice* p = itDev.value();
     if( p->IsOffLine() )                                 //switch to offline device, unless filter is contineuous
       //if( !(*it).second->HasParameter( "continuous" ) )
         p = m_OffLineDevices.value( sOutput );
-    assert( p );
+    Q_ASSERT( p );
 
     p->AddFilter( *(it.value()) );
     ++it;
@@ -539,10 +553,10 @@ void StimulusOutput::LoadOneSim( const PlayMatrix* a_cpMat, const unsigned ac_nS
     {
 //      const DataBlock*  pDBlock = ApexControl::Get().GetDatablock( sDBlock );
         const DataBlock*  pDBlock = m_rd.GetDatablock( sDBlock );
-      assert( pDBlock );
+      Q_ASSERT( pDBlock );
       const QString&    sDevice = pDBlock->GetDevice();
       tDeviceMapCIt it = m_pDevices.find( sDevice );
-      assert( it != m_pDevices.end() && "unknown device" );
+      Q_ASSERT( it != m_pDevices.end() && "unknown device" );
       it.value()->AddInput( *pDBlock );
     }
   }
@@ -561,7 +575,7 @@ void StimulusOutput::LoadOneSim( const PlayMatrix* a_cpMat, const unsigned ac_nS
 //       cur.m_sFromID = p->GetID();
 //       cur.m_sToID = pDev->GetID();
 //       const unsigned nChannels = p->GetParameters().m_nChannels;
-// 
+//
 //       for( unsigned i = 0 ; i < nChannels ; ++i )
 //       {
 //         cur.m_nFromChannel = i;
@@ -604,35 +618,12 @@ void StimulusOutput::ResetParams() {
     }
 }
 
-void StimulusOutput::HandleParams( const data::StimulusParameters& ac_pPar )
+
+void StimulusOutput::HandleParams()
 {
-      //make a copy since the parameters are re-used by procedure!!
-    data::StimulusParameters pars( ac_pPar );
-
-    // FIXME: reset these parameters between stimuli (not only between trials)
-
-    // send parameters to ParameterManager
-    const QMap<QString,QVariant>& map= pars.map();
-    for (QMap<QString,QVariant>::const_iterator it = map.begin(); it != map.end(); ++it )
-    {
-        const QString sParamID( it.key() );
-        const QString sParamVal( it.value().toString() );
-
-        m_rd.GetParameterManager()->setParameter(sParamID, sParamVal,true);
-    }
-
-
     SendParametersToClients();
-    
-    // remove the parameters from the parametermanager (the next stimulus might have other parameters)
-    for (QMap<QString,QVariant>::const_iterator it = map.begin(); it != map.end(); ++it )
-    {
-        const QString sParamID( it.key() );
-        const QString sParamVal( it.value().toString() );
-
-        m_rd.GetParameterManager()->resetParameter(sParamID);
-    }
 }
+
 
 void StimulusOutput::SendParametersToClients() {
     // ask each filter to parse its parameters
@@ -667,9 +658,19 @@ void StimulusOutput::PrepareClients() {
     }
 }
 
+void StimulusOutput::setSilenceBeforeNextStimulus(double seconds)
+{
+    for (tDeviceMap::const_iterator dev = m_pDevices.begin();
+         dev != m_pDevices.end();
+         ++dev)
+    {
+        (*dev)->SetSilenceBefore(seconds);
+    }
+}
+
 bool StimulusOutput::HandleParam( const QString& ac_sID, const QVariant& ac_sValue )
 {
-  qDebug("StimulusOutput::HandleParam: %s to value %s", qPrintable (ac_sID), qPrintable (ac_sValue.toString()));
+  qCDebug(APEX_RS, "StimulusOutput::HandleParam: %s to value %s", qPrintable (ac_sID), qPrintable (ac_sValue.toString()));
 
   data::Parameter name( m_rd.GetParameterManager()->parameter(ac_sID) );
 

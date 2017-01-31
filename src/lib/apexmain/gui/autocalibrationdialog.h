@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (C) 2007  Pieter Verlinde								          *
+ * Copyright (C) 2007  Pieter Verlinde                                                                    *
  *                                                                            *
  * This program is free software; you can redistribute it and/or modify       *
  * it under the terms of the GNU General Public License as published by       *
@@ -20,8 +20,8 @@
  * AutoCalibration widget declaration.
  */
 
-#ifndef _APEX_SRC_GUI_AUTOCALIBRATIONDIALOG_H_
-#define _APEX_SRC_GUI_AUTOCALIBRATIONDIALOG_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_AUTOCALIBRATIONDIALOG_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_AUTOCALIBRATIONDIALOG_H_
 
 #include <QDialog>
 #include <QList>
@@ -51,86 +51,86 @@ public:
     AutoCalibrationDialog (QWidget *parent = NULL);
 
     /**Destroys the calibration dialog.
-	 */
+         */
 
     ~AutoCalibrationDialog();
 
-	/** Sets the parameter QTreeView
-	 *
-	 */
-	void setParameterList(const QList<QStringList> &values);
+        /** Sets the parameter QTreeView
+         *
+         */
+        void setParameterList(const QList<QStringList> &values);
 
-	/** Sets the soundlevelmeter parameter QTreeView
-	 *
-	 */
-	void setSlmParameters(const QStringList& data);
+        /** Sets the soundlevelmeter parameter QTreeView
+         *
+         */
+        void setSlmParameters(const QStringList& data);
 
-	/* Sets the progressbar
-	 *
-	 */
-	void setProgressBar(int min, int max, int pos);
-	/* Sets the status message
-	 *
-	 */
-	void setStatus(const QString& status);
-	/**
-	 * Sets the calibrating status.
-	 */
-	void setCalibrating (bool calibrating);
-	/**
-	 * Selects the current parameter beïng calibrated
-	 * @param parameter the parameter currently beïng calibrated
-	 */
-	void setCurrentParameterCalibrated(const QString& parameter);
+        /* Sets the progressbar
+         *
+         */
+        void setProgressBar(int min, int max, int pos);
+        /* Sets the status message
+         *
+         */
+        void setStatus(const QString& status);
+        /**
+         * Sets the calibrating status.
+         */
+        void setCalibrating (bool calibrating);
+        /**
+         * Selects the current parameter beïng calibrated
+         * @param parameter the parameter currently beïng calibrated
+         */
+        void setCurrentParameterCalibrated(const QString& parameter);
 
-	/**
-	 * Returns the selected parameters to save (marked checkboxes)
-	 */
-	QStringList getSelectedParametersToSave();
-	/**
-	 * Returns the selected parameters to calibrate
-	 */
-	QStringList getSelectedParametersToCalibrate();
+        /**
+         * Returns the selected parameters to save (marked checkboxes)
+         */
+        QStringList getSelectedParametersToSave();
+        /**
+         * Returns the selected parameters to calibrate
+         */
+        QStringList getSelectedParametersToCalibrate();
 
-	/**
-	 * Updates a single parameter in the treewidget
-	 * @param value the new output value
-	 * @param difference difference between old & new parameter
-	 */
-	void updateParameter(const QString& parameter, const QString& value, const QString& difference = "-");
+        /**
+         * Updates a single parameter in the treewidget
+         * @param value the new output value
+         * @param difference difference between old & new parameter
+         */
+        void updateParameter(const QString& parameter, const QString& value, const QString& difference = "-");
 
-	/**
-	 * Indicates the signal has clipped for the given parameter
-	 */
-	void setClipped(const QString& parameter);
+        /**
+         * Indicates the signal has clipped for the given parameter
+         */
+        void setClipped(const QString& parameter);
 
-	/**
-	 * Resets the parameter QTreeWidget
-	 */
-	void newMeasurement();
-	/*
-	 * Returns the target calibration amplitude from
-	 * the advanced field
-	 */
-	QString targetAmplitude() const;
-	/*
-	 * Sets the target calibration amplitude from
-	 * the advanced field
-	 */
-	void setTargetAmplitude(const QString&);
+        /**
+         * Resets the parameter QTreeWidget
+         */
+        void newMeasurement();
+        /*
+         * Returns the target calibration amplitude from
+         * the advanced field
+         */
+        QString targetAmplitude() const;
+        /*
+         * Sets the target calibration amplitude from
+         * the advanced field
+         */
+        void setTargetAmplitude(const QString&);
 
-	/**
-	 * Selects all parameters by default in the treewidget
-	 * to autocalibrate.
-	 */
-	void selectAllParamersByDefault();
+        /**
+         * Selects all parameters by default in the treewidget
+         * to autocalibrate.
+         */
+        void selectAllParamersByDefault();
 
-	/**
-	 * Close the window by calling the accept/reject slot
-	 *
-	 * @param save save the measured results
-	 */
-	void finalize(bool save);
+        /**
+         * Close the window by calling the accept/reject slot
+         *
+         * @param save save the measured results
+         */
+        void finalize(bool save);
 
 public Q_SLOTS:
 
@@ -140,17 +140,17 @@ public Q_SLOTS:
      * @param advanced true if the advanced interface should be shown, false
      * otherwise
      */
-	void showAdvanced (bool advanced);
+        void showAdvanced (bool advanced);
 
-	/**
-	 * Enables the textbox where the user can define his own
-	 * calibration amplitude.
-	 *
-	 * @param checkState the state of the chechbox
-	 */
-	void enableUserDefinedCalibrationAmplitude(int checkState);
+        /**
+         * Enables the textbox where the user can define his own
+         * calibration amplitude.
+         *
+         * @param checkState the state of the chechbox
+         */
+        void enableUserDefinedCalibrationAmplitude(int checkState);
 
-	/** Sets the available hardware setups. This determines which setups the
+        /** Sets the available hardware setups. This determines which setups the
      * user can select in the UI. If the currently selected value is not
      * available in the new list, the currently selected hardware setup will
      * be reset.
@@ -180,7 +180,7 @@ public Q_SLOTS:
      */
     QString hardwareSetup() const;
 
-	/** Reenables elements that were disabled by a call to #disable().
+        /** Reenables elements that were disabled by a call to #disable().
      *
      * @see #disable()
      */
@@ -195,17 +195,17 @@ public Q_SLOTS:
     void disable();
 
 
-	/**
-	 * Following slots get called when one of the soundlevelmeter
-	 * parameters is changed within the advanced window.
-	 */
-	void slmTypeChanged(const QString&);
-	void slmFreqWeighChanged(const QString&);
-	void slmTimeWeighChanged(const QString&);
-	void slmPercChanged(const QString&);
-	void slmTimeChanged(const QString&);
+        /**
+         * Following slots get called when one of the soundlevelmeter
+         * parameters is changed within the advanced window.
+         */
+        void slmTypeChanged(const QString&);
+        void slmFreqWeighChanged(const QString&);
+        void slmTimeWeighChanged(const QString&);
+        void slmPercChanged(const QString&);
+        void slmTimeChanged(const QString&);
 Q_SIGNALS:
-	    /** Emitted when the user (or program) changes the hardware setup. The
+            /** Emitted when the user (or program) changes the hardware setup. The
      * passed \c value can only be one of the entries in the string list
      * set by #setHardwareSetups() or an empty string.
      *
@@ -213,43 +213,43 @@ Q_SIGNALS:
      * selected
      */
     void hardwareSetupChanged (const QString &value);
-	/** Emitted when the user requests to manage the hardware setups. You
+        /** Emitted when the user requests to manage the hardware setups. You
      * can query and set the hardware setups with #hardwareSetups() and
      * #setHardwareSetups().
      */
     void manageHardwareSetups();
 
-	/** Stops the autocalibration
-	 */
-	void stopAutoCalibration();
-	/** Start autocalibrating the selected parameters
-	 */
-	void calibrateAllParameters();
-	/** Go back to the manual calibration window
-	 */
-	void calibrateManually();
+        /** Stops the autocalibration
+         */
+        void stopAutoCalibration();
+        /** Start autocalibrating the selected parameters
+         */
+        void calibrateAllParameters();
+        /** Go back to the manual calibration window
+         */
+        void calibrateManually();
 
-	/** Signal is emitted when one of the soundlevelmeter
-	 *  parameters has changed.
-	 *
-	 *  @param the parameter that has changed
-	 *  @param the new value
-	 */
-	void slmParameterChanged(const QString&, const QString&);
+        /** Signal is emitted when one of the soundlevelmeter
+         *  parameters has changed.
+         *
+         *  @param the parameter that has changed
+         *  @param the new value
+         */
+        void slmParameterChanged(const QString&, const QString&);
 
-	/**
-	 * When the user unchecks the advanced calibration amplitude
-	 * checkbox, Autocalibration has to set the default value back.
-	 */
-	void advancedCalibrationAmplitudeUnchecked();
+        /**
+         * When the user unchecks the advanced calibration amplitude
+         * checkbox, Autocalibration has to set the default value back.
+         */
+        void advancedCalibrationAmplitudeUnchecked();
 
-	/**
-	 * User presses cancel
-	 */
-	void beforeCancel();
+        /**
+         * User presses cancel
+         */
+        void beforeCancel();
 
 private:
-    std::auto_ptr<AutoCalibrationDialogPrivate> d;
+    QScopedPointer<AutoCalibrationDialogPrivate> d;
 
     friend class AutoCalibrationDialogPrivate;
 };

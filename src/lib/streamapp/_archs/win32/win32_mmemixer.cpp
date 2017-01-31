@@ -16,13 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "../../utils/stringexception.h"
+#include "../../utils/stringutils.h"
+#include "../../utils/vectorutils.h"
+
+#include "win32_headers.h"
 #include "win32_mmemixer.h"
 #include "win32_mmemixerimpl.h"
-#include "win32_headers.h"
-#include "utils/stringexception.h"
-#include "utils/stringutils.h"
-#include "utils/vectorutils.h"
+
+#include <QtGlobal>
 
 using namespace utils;
 using namespace streamapp;
@@ -131,7 +134,7 @@ INLINE void MmeMixer::mp_SetMasterInputGain( const GainType ac_dGainIndB )
 
 INLINE void MmeMixer::mp_SetMasterInputGain( const GainType ac_dGainIndB, const unsigned ac_nChannel )
 {
-  assert( ac_nChannel < mf_nGetNumHardwareInputs() );
+  Q_ASSERT( ac_nChannel < mf_nGetNumHardwareInputs() );
   m_pMasterIn->mp_SetValue( ac_dGainIndB, ac_nChannel );
 }
 
@@ -144,7 +147,7 @@ INLINE void MmeMixer::mp_SetMasterOutputGain( const GainType ac_dGainIndB )
 
 INLINE void MmeMixer::mp_SetMasterOutputGain( const GainType ac_dGainIndB, const unsigned ac_nChannel )
 {
-  assert( ac_nChannel < mf_nGetNumHardwareOutputs() );
+  Q_ASSERT( ac_nChannel < mf_nGetNumHardwareOutputs() );
   m_pMasterOut->mp_SetValue( ac_dGainIndB, ac_nChannel );
 }
 
@@ -175,28 +178,28 @@ INLINE unsigned MmeMixer::mf_nGetNumHardwareOutputs() const
 
 INLINE GainType MmeMixer::mf_dGetMasterInputGain( const unsigned ac_nChannel ) const
 {
-  assert( ac_nChannel < mf_nGetNumMasterInputs() );
+  Q_ASSERT( ac_nChannel < mf_nGetNumMasterInputs() );
   return m_pMasterIn->mf_dGetValue( ac_nChannel );
 }
 
 INLINE GainType MmeMixer::mf_dGetMasterOutputGain( const unsigned ac_nChannel ) const
 {
-  assert( ac_nChannel < mf_nGetNumHardwareOutputs() );
+  Q_ASSERT( ac_nChannel < mf_nGetNumHardwareOutputs() );
   return m_pMasterOut->mf_dGetValue( ac_nChannel );
 }
 
 INLINE void MmeMixer::mp_SetGain( const GainType ac_dGainIndB, const unsigned ac_nInputChannel, const unsigned ac_nOutputChannel )
 {
-  assert( ac_nInputChannel < mf_nGetNumSoftwareInputs() + mf_nGetNumHardwareInputs() );
-  assert( ac_nOutputChannel < mf_nGetNumHardwareOutputs() );
+  Q_ASSERT( ac_nInputChannel < mf_nGetNumSoftwareInputs() + mf_nGetNumHardwareInputs() );
+  Q_ASSERT( ac_nOutputChannel < mf_nGetNumHardwareOutputs() );
   IMixerElement* p = m_Picker.mf_pGetElement( ac_nInputChannel );
   p->mp_SetValue( ac_dGainIndB, ac_nOutputChannel );
 }
 
 INLINE GainType MmeMixer::mf_dGetGain( const unsigned ac_nInputChannel, const unsigned ac_nOutputChannel ) const
 {
-  assert( ac_nInputChannel < mf_nGetNumSoftwareInputs() + mf_nGetNumHardwareInputs() );
-  assert( ac_nOutputChannel < mf_nGetNumHardwareOutputs() );
+  Q_ASSERT( ac_nInputChannel < mf_nGetNumSoftwareInputs() + mf_nGetNumHardwareInputs() );
+  Q_ASSERT( ac_nOutputChannel < mf_nGetNumHardwareOutputs() );
   const IMixerElement* p = m_Picker.mf_pGetElement( ac_nInputChannel );
   return p->mf_dGetValue( ac_nOutputChannel );
 }
@@ -219,13 +222,13 @@ INLINE const std::string& MmeMixer::mf_sGetMasterInputName( const unsigned /*ac_
 
 INLINE const std::string& MmeMixer::mf_sGetMasterOutputName( const unsigned ac_nChannel ) const
 {
-  assert( ac_nChannel < mf_nGetNumHardwareOutputs() );
+  Q_ASSERT( ac_nChannel < mf_nGetNumHardwareOutputs() );
   return m_pMasterOut->mf_sGetName( ac_nChannel );
 }
 
 INLINE const std::string& MmeMixer::mf_sGetInputName( const unsigned ac_nChannel ) const
 {
-  assert( ac_nChannel < mf_nGetNumSoftwareInputs() + mf_nGetNumHardwareInputs() );
+  Q_ASSERT( ac_nChannel < mf_nGetNumSoftwareInputs() + mf_nGetNumHardwareInputs() );
   const IMixerElement* p = m_Picker.mf_pGetElement( ac_nChannel );
   return p->mf_sGetName( ac_nChannel );
 }
@@ -237,7 +240,7 @@ INLINE const std::string& MmeMixer::mf_sGetOutputName( const unsigned ac_nChanne
 
 INLINE void MmeMixer::mp_SelectMasterInput( const unsigned ac_nInputChannel )
 {
-  assert( ac_nInputChannel < mf_nGetNumHardwareInputs() );
+  Q_ASSERT( ac_nInputChannel < mf_nGetNumHardwareInputs() );
   MixerElementPicker::mt_SearchElement p = m_Picker.mf_GetElement( ac_nInputChannel );
   MmeInputControls* pp = (MmeInputControls*) p.mc_Elements;
   pp->mp_SelectInputForMux( p.mc_ElementIndex );

@@ -63,11 +63,11 @@ char gErrorContext[128];
 /* from fitprefs.c : */
 	extern unsigned short gMeshResolution, gMeshIterations;
 	extern double gEstimateGamma, gEstimateLambda;
-	
+
 	extern boolean gLogSlopes, gCutPsi;
 	extern DataFormat gDataFormat;
 	extern boolean gDoBootstrapT;
-	
+
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void AllocateDataSet(DataSetPtr data, short nPoints)
@@ -96,7 +96,7 @@ void BCATerms(MatrixBundle *bndl, matrix ldot)
 	matrix ldot_lf;
 	double R, biasCount, mean, meanOfCubes, variance, val;
 	boolean variation;
-	
+
 	ldot_lf = m_mult(mNewMatrix, ldot, bndl->lff);
 	m_allocate(bndl->bc);
 	m_allocate(bndl->acc);
@@ -138,17 +138,17 @@ void BCATerms(MatrixBundle *bndl, matrix ldot)
 void BootstrapT(ModelPtr model, double *params, DataSetPtr data, OutputPtr out, unsigned short rowIndex)
 {
 	matrix pfish, pcov, tDeriv, sDeriv;
-	
+
 	pfish = ExpectedFisher(mNewMatrix, model->shape, params, data, model);
 	pcov = m_inverse(mNewMatrix, pfish);
 	tDeriv = m_new(mNewData, m2D, kNumberOfParams, out->nCuts);
 	sDeriv = m_new(mNewData, m2D, kNumberOfParams, out->nCuts);
-	
+
 	Derivs(tDeriv, sDeriv, model, model->shape, params, out->nCuts, out->cuts);
 	VarianceEstimates(&out->params, rowIndex, pfish, pcov, NULL);
 	VarianceEstimates(&out->thresholds, rowIndex, pfish, pcov, tDeriv);
 	VarianceEstimates(&out->slopes, rowIndex, pfish, pcov, sDeriv);
-	
+
 	m_free(sDeriv);
 	m_free(tDeriv);
 	m_free(pcov);
@@ -164,7 +164,7 @@ double CalculateDeviance(DataSetPtr data, double *expected)
 	for(i = 0; i < data->nPoints; i++) {
 		ourVal = expected[i];
 		satVal = data->nRight[i] / (data->nRight[i] + data->nWrong[i]);
-		
+
 		ourVal = xlogy_j(data->nRight[i], ourVal) + xlogy_j(data->nWrong[i], 1.0 - ourVal);
 		satVal = xlogy_j(data->nRight[i], satVal) + xlogy_j(data->nWrong[i], 1.0 - satVal);
 		deviance += 2 * (satVal - ourVal);
@@ -184,7 +184,7 @@ void CheckModel(ModelPtr model, boolean checkFreeParams)
 			SetPrior(&model->tailConstraint, NULL, 0, NULL);
 		}
 		else if(!legal_x(model->shape, model->xValAtChance)) JError("X_AT_CHANCE value (%lg) is illegal for the %s function", model->xValAtChance, FunctionName(model->shape));
-	}	
+	}
 	for(i = 0; i < kNumberOfParams; i++) {
 		if(!p[i].free) SetPrior(&p[i].constraint, NULL, 0, NULL);
 		if(!checkFreeParams && p[i].free) continue;
@@ -205,7 +205,7 @@ boolean CheckParams(PsychDistribFuncPtr shape, double *params, char *errFmt, ...
 	double temp;
 	va_list ap;
 	boolean good = TRUE;
-	
+
 	if(!legal_alpha(shape, (temp = params[ALPHA])))
 		{good = FALSE; if(errFmt) sprintf(errStr, "alpha = %lg is illegal for the %s function", temp, FunctionName(shape));}
 	else if(!legal_beta(shape, (temp = params[BETA])))
@@ -218,7 +218,7 @@ boolean CheckParams(PsychDistribFuncPtr shape, double *params, char *errFmt, ...
 /*]*/
 	else if((temp = params[GAMMA] + params[LAMBDA]) >= 1.0)
 		{good = FALSE; if(errFmt) sprintf(errStr, "illegal value gamma + lambda = %lg (must be < 1)", temp);}
-	
+
 	if(*errStr) {
 		va_start(ap, errFmt);
 		vsprintf(contextStr, errFmt, ap);
@@ -226,7 +226,7 @@ boolean CheckParams(PsychDistribFuncPtr shape, double *params, char *errFmt, ...
 		if(*contextStr) sprintf(contextStr + strlen(contextStr), ": ");
 		JError("%s%s", contextStr, errStr);
 	}
-	
+
 	return good;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -236,7 +236,7 @@ void CollateData(DataSetPtr dest, DataSetPtr src, double * alsoCollate)
 	unsigned short newPoints, i;
 	DataSet tempDest, tempSrc;
 	double lastX;
-	
+
 	if(isnan(src->x[0])) {
 		if(dest != src) DuplicateDataSet(dest, src);
 		return;
@@ -245,7 +245,7 @@ void CollateData(DataSetPtr dest, DataSetPtr src, double * alsoCollate)
 	AllocateDataSet(&tempDest, src->nPoints);
 	DuplicateDataSet(&tempSrc, src);
 	SortDoubles((alsoCollate ? 4 : 3), tempSrc.nPoints, tempSrc.x, tempSrc.nRight, tempSrc.nWrong, alsoCollate);
-	
+
 	newPoints = 0;
 	for(i = 0; i < tempSrc.nPoints; i++) {
 		if(newPoints == 0 || lastX != tempSrc.x[i]) {
@@ -278,13 +278,13 @@ int Core(DataSetPtr data, ModelPtr model, GeneratingInfoPtr gen, OutputPtr out)
 	clock_t t;
 	double *predicted = NULL;
 	enum {useFittedParams, useUserParams, useUserProbabilities};
-	
+
 	if(gen->nRuns) gBugRef = gen->randomSeed;
 	CheckModel(model, FALSE);
-	
+
 	initialFitRequired =  gen->nRuns == 0;
 	bootstrap = gen->nRuns > 0 && model->shape == gen->shape && !gen->gotParams && gen->psi == NULL;
-	
+
 	if(gen->psi) {
 		if(gen->nPoints != data->nPoints) JError("number of generating values must match number of stimulus values");
 		for(i = 0; i < gen->nPoints; i++)
@@ -299,7 +299,7 @@ int Core(DataSetPtr data, ModelPtr model, GeneratingInfoPtr gen, OutputPtr out)
 		gen->psi = NULL;
 	}
 	if(gen->gotParams) CheckParams(gen->shape, gen->params, "error in generating parameters");
-		
+
 	for(gotY = FALSE, i = 0; i < data->nPoints; i++)
 		if(data->nRight[i] > 0.0) {gotY = TRUE; break;}
 	gotX = (data->x != NULL && !isnan(data->x[0]));
@@ -308,7 +308,7 @@ int Core(DataSetPtr data, ModelPtr model, GeneratingInfoPtr gen, OutputPtr out)
 	simFitsRequired = (gen->nRuns > 0 && out->doParams);
 	functionUsedToGenerate = (gen->nRuns > 0 && (genSource == useUserParams || genSource == useFittedParams));
 	doBCA = (out->doParams && functionUsedToGenerate && model->shape == gen->shape && gotX);
-	
+
     if(initialFitRequired && !gotY) {
         JError("cannot perform initial fit: no responses were supplied in the data set");
         return 0;
@@ -373,7 +373,7 @@ int Core(DataSetPtr data, ModelPtr model, GeneratingInfoPtr gen, OutputPtr out)
 		if(!m_first(m_allocate(out->slopes.est))) Bug("Core(): failed to allocate matrix for estimated slopes");
                 for(i = 0; i < (int)  out->nCuts; i++) ThresholdAndSlope(gen->shape, gen->params, out->cuts[i], m_addr(out->thresholds.est, 2, i), m_addr(out->slopes.est, 2, i), NONE);
 	}
-	
+
 	if(out->doStats && gotY) {
 		if(genSource == useUserProbabilities) predicted = CopyVals(NULL, gen->psi, data->nPoints, sizeof(double));
 		else {
@@ -388,19 +388,19 @@ int Core(DataSetPtr data, ModelPtr model, GeneratingInfoPtr gen, OutputPtr out)
 					NULL, NULL);
 		}
 		if(out->verbose && genSource == useFittedParams && gen->nRuns == 0)
-			printf("Stats for estimated parameters:\n    D = %lg,  r_pd = %lg, r_kd = %lg\n", out->stats.est->vals[0], out->stats.est->vals[1], out->stats.est->vals[2]);
+			fprintf(stderr, "Stats for estimated parameters:\n    D = %lg,  r_pd = %lg, r_kd = %lg\n", out->stats.est->vals[0], out->stats.est->vals[1], out->stats.est->vals[2]);
 	}
 	if(gen->nRuns) {
 		if(out->verbose) {
-                        if(genSource == useFittedParams) printf("running %lu simulations using fitted parameters\n", gen->nRuns);
-                        else if(genSource == useUserParams) printf("running %lu simulations using %s(x; {%lg, %lg, %lg, %lg})\n", gen->nRuns, FunctionName(gen->shape), gen->params[ALPHA], gen->params[BETA], gen->params[GAMMA], gen->params[LAMBDA]);
-                        else printf("running %lu simulations using user-supplied generating values\n", gen->nRuns);
+                        if(genSource == useFittedParams) fprintf(stderr, "running %lu simulations using fitted parameters\n", gen->nRuns);
+                        else if(genSource == useUserParams) fprintf(stderr, "running %lu simulations using %s(x; {%lg, %lg, %lg, %lg})\n", gen->nRuns, FunctionName(gen->shape), gen->params[ALPHA], gen->params[BETA], gen->params[GAMMA], gen->params[LAMBDA]);
+                        else fprintf(stderr, "running %lu simulations using user-supplied generating values\n", gen->nRuns);
 			if(out->stats.est->vals) {
-				printf("Stats for generating distribution:\n    D = %lg,  r_pd = %lg, r_kd = %lg\n", out->stats.est->vals[0], out->stats.est->vals[1], out->stats.est->vals[2]);
-				if(!out->refit) printf("NB: simulated stats will use generating distribution (psi_gen) rather\nthan re-fitted parameters (theta*). Degrees of freedom of the process\nused to obtain psi_gen are therefore not taken into account.\n");
+				fprintf(stderr, "Stats for generating distribution:\n    D = %lg,  r_pd = %lg, r_kd = %lg\n", out->stats.est->vals[0], out->stats.est->vals[1], out->stats.est->vals[2]);
+				if(!out->refit) fprintf(stderr, "NB: simulated stats will use generating distribution (psi_gen) rather\nthan re-fitted parameters (theta*). Degrees of freedom of the process\nused to obtain psi_gen are therefore not taken into account.\n");
 			}
 			if(gAdaptPtr) CReportAdaptiveProcedure();
-                        printf("random seed: %lu", gen->randomSeed);
+                        fprintf(stderr, "random seed: %lu", gen->randomSeed);
 			FlushPrintBuffer(FALSE);
 		}
 		if(out->ySim->output) m_allocate(out->ySim);
@@ -409,7 +409,7 @@ int Core(DataSetPtr data, ModelPtr model, GeneratingInfoPtr gen, OutputPtr out)
 		if(out->doParams) {
 			AllocateMatrixBundle(&out->params, doBCA);
 			if(doBCA) {
-				m_allocate(out->fisher);			
+				m_allocate(out->fisher);
 				ExpectedFisher(out->fisher, gen->shape, gen->params, data, model);
 				m_inverse(out->pcov, out->fisher);
 				m_allocate(out->ldot);
@@ -420,7 +420,7 @@ int Core(DataSetPtr data, ModelPtr model, GeneratingInfoPtr gen, OutputPtr out)
 				AllocateMatrixBundle(&out->slopes, doBCA);
 				if(doBCA) {
 					m_identity(out->params.deriv, kNumberOfParams);
-					Derivs(out->thresholds.deriv, out->slopes.deriv, model, gen->shape, gen->params, out->nCuts, out->cuts); 
+					Derivs(out->thresholds.deriv, out->slopes.deriv, model, gen->shape, gen->params, out->nCuts, out->cuts);
 					m_normalize(m_copy(out->params.lff, out->pcov), 1);
 					m_normalize(m_mult(out->thresholds.lff, out->pcov, out->thresholds.deriv), 1);
 					m_normalize(m_mult(out->slopes.lff, out->pcov, out->slopes.deriv), 1);
@@ -431,7 +431,7 @@ int Core(DataSetPtr data, ModelPtr model, GeneratingInfoPtr gen, OutputPtr out)
 		}
 		t = clock();
 		MonteCarlo(data, model, gen, out);
-		if(out->verbose) printf("%.2lg seconds.\n", (double)(clock()-t)/(double)CLOCKS_PER_SEC);
+		if(out->verbose) fprintf(stderr, "%.2lg seconds.\n", (double)(clock()-t)/(double)CLOCKS_PER_SEC);
 	}
 	if(out->verbose) FlushPrintBuffer(FALSE);
 	if(out->doParams && genSource != useUserProbabilities && gen->shape == model->shape) /* && gotY && gotX) */
@@ -478,11 +478,11 @@ short CountFreeParams(ModelPtr model)
 matrix CPE(matrix cpe, matrix est, matrix sim)
 {
 	long nSamples, nCols, count;
-	
+
 	if(est == NULL || est->vals == NULL || m_getsize(est, 1) != 1) return NULL;
 	if(sim == NULL || sim->vals == NULL || (nSamples = m_getsize(sim, 1)) == 0) return NULL;
 	if((nCols = m_getsize(est, 2)) != m_getsize(sim, 2)) Bug("CPE(): mismatched number of columns");
-	
+
 	if(cpe == NULL) cpe = m_new(mNewData, m2D, 1, nCols);
 	if(cpe->vals == NULL) m_allocate(cpe);
 	if(m_first(cpe) && m_first(est) && m_first(sim)) do {
@@ -501,7 +501,7 @@ void Derivs(matrix tDeriv, matrix sDeriv, ModelPtr model, PsychDistribFuncPtr sh
 {
 	unsigned short i, j;
 	double *tAddr, *sAddr;
-	
+
 	for(j = 0; j < nCuts; j++) {
 		m_setpoint(tDeriv, 0, j);
 		m_setpoint(sDeriv, 0, j);
@@ -519,10 +519,10 @@ double * DevianceResiduals(double *rBuffer, double *expected, DataSetPtr data, d
 {
 	double r, w, y, p, d;
 	int i;
-	
+
 	if(rBuffer == NULL) rBuffer = New(double, data->nPoints);
 	if(deviance) *deviance = 0.0;
-	
+
 	for(i = 0; i < data->nPoints; i++) {
 		r = data->nRight[i];
 		w = data->nWrong[i];
@@ -532,7 +532,7 @@ double * DevianceResiduals(double *rBuffer, double *expected, DataSetPtr data, d
 		rBuffer[i] = ((p < y) ? sqrt(d) : -sqrt(d));
 		if(deviance) *deviance += d;
 	}
-	
+
 	return rBuffer;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -548,7 +548,7 @@ double DiffLogAllPriors(ModelPtr model, double *p, ArgIdentifier wrt)
 	result = 0.0;
 
 	if(!model->theta[wrt1].free || !model->theta[wrt2].free) return 0.0;
-	
+
 	if(!CheckParams(model->shape, p, NULL)) return NAN;
 
 	/* NB if any priors are added, removed or changed, the procedure Priors() must also be adjusted */
@@ -592,16 +592,16 @@ double DiffLoglikelihood(PsychDistribFuncPtr shape, double *params, ArgIdentifie
 	boolean doubleDiff;
 	ArgIdentifier wrt1, wrt2;
 	double dpsi1, dpsi2, temp;
-	
+
 	result = 0.0;
 	doubleDiff = DoubleDiff(wrt, &wrt1, &wrt2);
-	
+
 	for(i = 0; i < data->nPoints; i++) {
 		r = data->nRight[i];
 		w = data->nWrong[i];
 		dpsi = DiffPsi(shape, params, data->x[i], &psi, wrt);
 		result += dpsi * (r / psi - w / (1.0 - psi));
-	
+
 		if(doubleDiff) {
 			dpsi1 = DiffPsi(shape, params, data->x[i], NULL, wrt1);
 			dpsi2 = DiffPsi(shape, params, data->x[i], NULL, wrt2);
@@ -618,11 +618,11 @@ double DiffPsi(PsychDistribFuncPtr shape, double *params, double x, double *retu
 {
 	double f, scaleF;
 	ArgIdentifier wrt1, wrt2;
-	
+
 	f = prob(shape, params[ALPHA], params[BETA], x);
 	scaleF = 1.0 - params[GAMMA] - params[LAMBDA];
 	if(returnPsi) *returnPsi = params[GAMMA] + scaleF * f;
-	
+
 	if(!DoubleDiff(wrt, &wrt1, &wrt2)) {
 		switch(wrt) {
 			case ALPHA:
@@ -656,8 +656,8 @@ void DoStats(double *predicted, DataSetPtr data, double *chronIndex,
 {
 	double *k, *r;
 	boolean dispose_r, dispose_k;
-	int i, nPoints;	
-	
+	int i, nPoints;
+
 	if(data == NULL || data->nPoints == 0 || predicted == NULL) return;
 	nPoints = data->nPoints;
 	dispose_r = (rSpace == NULL);
@@ -679,7 +679,7 @@ void DoStats(double *predicted, DataSetPtr data, double *chronIndex,
 		} /* residuals are now back in r, with the NANs squeezed out, and k contains consecutive positive integers */
 		*returnKRCorr = CorrelationCoefficient(nPoints, k, r);
 	}
-		
+
 	if(dispose_k) Destroy(k);
 	if(dispose_r) Destroy(r);
 }
@@ -738,10 +738,10 @@ double * ExpectedValues(double *expected, unsigned short nPoints, double *x,
 	int i;
 	double scaleF;
 
-	CheckParams(shape, params, "error in %s", description);		
+	CheckParams(shape, params, "error in %s", description);
 	if(expected == NULL) expected = New(double, nPoints);
 	scaleF = 1.0 - params[GAMMA] - params[LAMBDA];
-	for(i = 0; i < nPoints; i++) expected[i] = params[GAMMA] + scaleF * prob(shape, params[ALPHA], params[BETA], x[i]);	
+	for(i = 0; i < nPoints; i++) expected[i] = params[GAMMA] + scaleF * prob(shape, params[ALPHA], params[BETA], x[i]);
 	return expected;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -771,7 +771,7 @@ void ExportDataSet(DataSetPtr data, matrix m, double * chronIndex)
 void FakeFit(ModelPtr model, double *paramsOut,
 				unsigned short nPoints, double *srcX, double *srcPsi,
 				PsychDistribFuncPtr srcShape, double *srcParams)
-{	
+{
 	DataSetPtr oldDataSetPtr;
 	ModelPtr oldModelPtr;
 	boolean oldConversionFlag;
@@ -782,7 +782,7 @@ void FakeFit(ModelPtr model, double *paramsOut,
 
 	double begin, end, perf;
 	unsigned short i;
-	
+
 	if(nPoints < 2) Bug("FakeFit(): at least 2 points required");
 	useFunc = (srcShape != NULL && srcParams != NULL);
 	if(useFunc && srcPsi != NULL) Bug("FakeFit(): must fit using psi values, or function parameters, not both");
@@ -810,7 +810,7 @@ void FakeFit(ModelPtr model, double *paramsOut,
 		tempData.nWrong[i] = 1000.0 - tempData.nRight[i];
 	}
 	get_mlmt_info(&oldDataSetPtr, &oldModelPtr, &oldConversionFlag);
-	FitPsychometricFunction(&tempData, &tempModel, paramsOut, FALSE);	
+	FitPsychometricFunction(&tempData, &tempModel, paramsOut, FALSE);
 	set_mlmt_info(oldDataSetPtr, oldModelPtr, oldConversionFlag);
 	DisposeDataSet(&tempData);
 }
@@ -827,7 +827,7 @@ void FindSensParams(matrix sensParams, matrix insideMatrix, matrix pSim, unsigne
 	boolean legalParams;
 	DataSet fakeData;
 	boolean gotX, gotY;
-	
+
 	if(sensParams == NULL || nPoints == 0) return;
 	if(gen->shape != model->shape || gen->psi != NULL || !gen->gotParams || gen->nRuns == 0) return;
         if(!m_first(pSim) || m_getsize(pSim, 1) != (int) gen->nRuns || m_getsize(pSim, 2) != kNumberOfParams) Bug("FindSensParams(): pSim is invalid or has incorrect shape");
@@ -857,11 +857,11 @@ void FindSensParams(matrix sensParams, matrix insideMatrix, matrix pSim, unsigne
 		}
 		data = &fakeData;
 	}
-	
+
 	m_setsize(insideMatrix, m1D, gen->nRuns); m_first(insideMatrix);
 	inside = (insideMatrix ? m_allocate(insideMatrix)->vals : New(double, gen->nRuns));
-	
-	
+
+
 	m_first(pSim); slice = m_slice(pSim, m1D, gen->nRuns);
 	for(i = 0; i < kNumberOfParams; i++, m_moveslice(slice, pSim, 2, 1)) {
 		sorted = m_sortvals(sorted, slice);
@@ -880,10 +880,10 @@ void FindSensParams(matrix sensParams, matrix insideMatrix, matrix pSim, unsigne
 		alpha = (p[ALPHA] - gen->params[ALPHA]) / scaling[ALPHA];
 		beta = (p[BETA] - gen->params[BETA]) / scaling[BETA];
 		theta[i] = atan2(beta, alpha) * 180.0 / pi;
-		r[i] = alpha*alpha + beta*beta;		
+		r[i] = alpha*alpha + beta*beta;
 		m_step(pSim, 1, 1); m_next(scores);
 	}
-	
+
 	m_sortvals(sorted, scores);
 	contourVal = Quantile(coverage, sorted, gen->nRuns);
 	contourTol = (Quantile(0.841, sorted, gen->nRuns) - Quantile(0.159, sorted, gen->nRuns)) / 100.0;
@@ -956,17 +956,17 @@ int FitCore(double *pIn, double *pOut, boolean *pFree)
 {
 	int iterations, i;
 	boolean oldGammaFree;
-	
+
 	oldGammaFree = pFree[GAMMA];
 	if(gLambdaEqualsGamma) pFree[GAMMA] = FALSE;
 
 	for(i = 0; i < kNumberOfParams; i++) pOut[i] = pIn[i];
         iterations = SimplexSearch(kNumberOfParams, pOut, pFree, gPsychSimplexSizes, mlmt); // REFINE;
 	if(iterations < 0) for(i = 0; i < kNumberOfParams; i++) pOut[i] = NAN;
-	
+
 	pFree[GAMMA] = oldGammaFree;
 	if(gLambdaEqualsGamma) pOut[GAMMA] = pOut[LAMBDA];
-	
+
 	return (iterations < 0) ? -1 : 0;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -986,8 +986,8 @@ short FitPsychometricFunction(DataSetPtr data, ModelPtr model, double *paramsOut
         return  -1;
     }
 	if(verbose) {
-		printf("fitting to original data\ninitial: {");
-		for(i = 0; i < kNumberOfParams; i++) printf("%s = %lg%s", model->theta[i].name, model->theta[i].guess, (i == kNumberOfParams - 1) ? "}\n" : ", ");
+		fprintf(stderr, "fitting to original data\ninitial: {");
+		for(i = 0; i < kNumberOfParams; i++) fprintf(stderr, "%s = %lg%s", model->theta[i].name, model->theta[i].guess, (i == kNumberOfParams - 1) ? "}\n" : ", ");
 	}
 	CheckModel(model, TRUE);
 	for(i = 0; i < kNumberOfParams; i++) {
@@ -1003,8 +1003,8 @@ short FitPsychometricFunction(DataSetPtr data, ModelPtr model, double *paramsOut
 	for(i = 0; i < kNumberOfParams; i++) model->theta[i].fitted = p[i];
 	DisposeDataSet(&tempData);
 	if(verbose) {
-		printf("  final: {");
-		for(i = 0; i < kNumberOfParams; i++) printf("%s = %lg%s", model->theta[i].name, model->theta[i].fitted, (i == kNumberOfParams - 1) ? "}\n" : ", ");
+		fprintf(stderr, "  final: {");
+		for(i = 0; i < kNumberOfParams; i++) fprintf(stderr, "%s = %lg%s", model->theta[i].name, model->theta[i].fitted, (i == kNumberOfParams - 1) ? "}\n" : ", ");
 	}
 	return err;
 }
@@ -1021,7 +1021,7 @@ void FixParam(Param theta[], short whichParam, double value)
 void FreeParam(Param theta[], short whichParam)
 {
 	if(whichParam<0 || whichParam > kNumberOfParams-1)
-		Bug("FreeParam(): parameter number must be from 0 to %d", kNumberOfParams-1);	
+		Bug("FreeParam(): parameter number must be from 0 to %d", kNumberOfParams-1);
 	theta[whichParam].free = TRUE;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -1036,9 +1036,9 @@ void GenerateFakeDataSet(DataSetPtr data1, double *expected1, double *nObs1,
 {
 	long trial, boundary1, boundary2, carryOn, pt1, pt2;
 	double randNumber;
-	
+
 	if(data1 == data2) data2 = NULL;
-	
+
 	boundary1 = boundary2 = 0;
 	pt1 = pt2 = -1;
 	carryOn = 1;
@@ -1049,7 +1049,7 @@ void GenerateFakeDataSet(DataSetPtr data1, double *expected1, double *nObs1,
 		if(data1 && pt1 < data1->nPoints) carryOn = ((randNumber < expected1[pt1]) ? ++data1->nRight[pt1] : ++data1->nWrong[pt1]);
 		while(data2 && trial == boundary2 && ++pt2 < data2->nPoints) boundary2 += nObs2[pt2], data2->nRight[pt2] = data2->nWrong[pt2] = 0.0;
 		if(data2 && pt2 < data2->nPoints) carryOn = ((randNumber < expected2[pt2]) ? ++data2->nRight[pt2] : ++data2->nWrong[pt2]);
-	}	
+	}
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void get_mlmt_info(DataSetPtr *data, ModelPtr *model, boolean *treatABasTS)
@@ -1088,7 +1088,7 @@ int GuessParams(DataSetPtr data, ModelPtr model)
 
 		/* check data are sorted by increasing x, determine minimum step, calculate temporary values for regression */
 		temp_yVals[i] = data->nRight[i] / (temp_nObs[i] = data->nRight[i] + data->nWrong[i]);
-		temp = ((i==0) ? 0.0 : data->x[i] - data->x[i-1]); 
+		temp = ((i==0) ? 0.0 : data->x[i] - data->x[i-1]);
 		if(minXStep == 0.0 || (temp > 0.0 && temp < minXStep)) minXStep = temp;
 		if(temp < 0.0) Bug("data set must be sorted before being passed to GuessParams()");
 	}
@@ -1097,7 +1097,7 @@ int GuessParams(DataSetPtr data, ModelPtr model)
 	medianX = ((data->nPoints % 2) ? data->x[(1 + data->nPoints) / 2 - 1] : 0.5 * (data->x[data->nPoints / 2 - 1] + data->x[data->nPoints / 2]));
 	if(!legal_x(tempModel.shape, minX) || !legal_x(tempModel.shape, maxX))
 		JError("%sreceived illegal x values for use with %s function", gErrorContext, FunctionName(tempModel.shape));
-		
+
 	pNum = LAMBDA;
 	lims = pSearchLims + pNum; param = tempModel.theta + pNum;
 	if(param->free) {
@@ -1134,9 +1134,9 @@ int GuessParams(DataSetPtr data, ModelPtr model)
 	MakeLimitsLegal(&shiftSearchLims, &tempModel.shiftConstraint, gLegal.min, gLegal.max);
 	if(halfwayShift < shiftSearchLims.min) halfwayShift = shiftSearchLims.min;
 	if(halfwayShift > shiftSearchLims.max) halfwayShift = shiftSearchLims.max;
-	
+
 	if(!legal_gradient(tempModel.shape, halfwaySlope))
-		JError("%scannot estimate a legal gradient for the %s function:\napparent %s slope", gErrorContext, FunctionName(tempModel.shape), (halfwaySlope > 0.0) ? "positive" : halfwaySlope < 0.0 ? "negative" : "zero");	
+		JError("%scannot estimate a legal gradient for the %s function:\napparent %s slope", gErrorContext, FunctionName(tempModel.shape), (halfwaySlope > 0.0) ? "positive" : halfwaySlope < 0.0 ? "negative" : "zero");
 	temp = ((halfwaySlope < 0.0) ? -1.0 : 1.0);
 	linSlopeSearchLims.min = temp * kMagicBetaLimitParameter2 / (maxX-minX);
 	linSlopeSearchLims.max = temp * kMagicBetaLimitParameter1 / minXStep;
@@ -1163,25 +1163,25 @@ int GuessParams(DataSetPtr data, ModelPtr model)
 		halfwaySlope *= halfwayShift * log(10.0);
 	}
 	else slopeSearchLims = linSlopeSearchLims;
-	
+
 	MakeLimitsLegal(&slopeSearchLims, &tempModel.slopeConstraint, -INF, INF);
 	if(halfwaySlope < slopeSearchLims.min) halfwaySlope = slopeSearchLims.min;
 	if(halfwaySlope > slopeSearchLims.max) halfwaySlope = slopeSearchLims.max;
-	
+
 	if(!isnan(tempModel.fixedSlope)) {
 		FixParam(tempModel.theta, BETA, tempModel.fixedSlope);
 		slopeSearchLims.min = slopeSearchLims.max = tempModel.fixedSlope;
-		tempModel.convertParams = TRUE;	
+		tempModel.convertParams = TRUE;
 	}
 	if(!isnan(tempModel.fixedShift)) {
 		FixParam(tempModel.theta, ALPHA, tempModel.fixedShift);
 		shiftSearchLims.min = shiftSearchLims.max = tempModel.fixedShift;
-		tempModel.convertParams = TRUE;	
+		tempModel.convertParams = TRUE;
 	}
 	if(tempModel.convertParams) {
 		pSearchLims[ALPHA] = shiftSearchLims;
 		pSearchLims[BETA] = slopeSearchLims;
-	}	
+	}
 	else {
 		pNum = BETA;
 		lims = pSearchLims + pNum; param = tempModel.theta + pNum;
@@ -1202,8 +1202,8 @@ int GuessParams(DataSetPtr data, ModelPtr model)
 			if(lims->min == lims->max) FixParam(tempModel.theta, pNum, lims->min);
 		}
 		else lims->min = lims->max = param->guess;
-	
-	
+
+
 		pNum = ALPHA;
 		lims = pSearchLims + pNum; param = tempModel.theta + pNum;
 		if(param->free) {
@@ -1219,14 +1219,14 @@ int GuessParams(DataSetPtr data, ModelPtr model)
 			if(temp > linSlopeSearchLims.max) temp = linSlopeSearchLims.max;
 			temp = get_alpha(tempModel.shape, shiftSearchLims.max, temp, 0.5);
 			if(temp > lims->max) lims->max = temp;
-	
+
 			get_limits(tempModel.shape, ALPHA);
 			MakeLimitsLegal(lims, &param->constraint, gLegal.min, gLegal.max);
 			if(lims->min == lims->max) FixParam(tempModel.theta, pNum, lims->min);
 		}
 		else lims->min = lims->max = param->guess;
 	}
-		
+
 	for(i = 0; i < kNumberOfParams; i++) {
 		min[i] = pSearchLims[i].min;
 		max[i] = pSearchLims[i].max;
@@ -1234,10 +1234,10 @@ int GuessParams(DataSetPtr data, ModelPtr model)
 
 	set_mlmt_info(data, &tempModel, tempModel.convertParams);
 	MagicMesh(&tempModel, gMeshResolution, gMeshIterations, min, max, mlmt);
-	
+
 	for(i = 0; i < kNumberOfParams; i++) min[i] = tempModel.theta[i].fitted;
 
-	if(isinf(gridScore = mlmt(min))) JError("guess procedure failed to find an approximate parameter set:\npossibly the user-supplied Bayesian priors constrain the fit\ntoo tightly for these data, or the priors may be mutually exclusive");	
+	if(isinf(gridScore = mlmt(min))) JError("guess procedure failed to find an approximate parameter set:\npossibly the user-supplied Bayesian priors constrain the fit\ntoo tightly for these data, or the priors may be mutually exclusive");
 
 	if(tempModel.convertParams) TranslateAB(tempModel.shape, min, ts2ab);
 	for(i = 0; i < kNumberOfParams; i++) {
@@ -1265,7 +1265,7 @@ void Limits(MatrixBundle *bndl, double *conf, unsigned short nConf)
 	double *tempSpace, bcaConf, bc, acc, z;
 	matrix slice;
 	boolean doBCA, doQuantiles;
-	
+
 	if(nConf == 0 || bndl->sim == NULL || bndl->sim->vals == NULL) return;
 	nSamples = m_getsize(bndl->sim, 1);
 	nVars = m_getsize(bndl->sim, 2);
@@ -1274,9 +1274,9 @@ void Limits(MatrixBundle *bndl, double *conf, unsigned short nConf)
 	if(bndl->quant->vals == NULL) m_allocate(bndl->quant);
 	if(bndl->lims->vals == NULL) m_allocate(bndl->lims);
 	doQuantiles = m_first(bndl->quant);
-	doBCA = (m_first(bndl->lims) && m_first(bndl->bc) && m_first(bndl->acc));		
+	doBCA = (m_first(bndl->lims) && m_first(bndl->bc) && m_first(bndl->acc));
 	if(!m_first(bndl->sim) || (!doQuantiles && !doBCA)) return;
-	
+
 	if(doQuantiles && (m_getsize(bndl->quant, 1) != nConf || m_getsize(bndl->quant, 2) != nVars)) Bug("Limits(): output matrix \"quant\" is the wrong shape");
 	if(doBCA && (m_getsize(bndl->lims, 1) != nConf || m_getsize(bndl->lims, 2) != nVars)) Bug("Limits(): output matrix \"lims\" is the wrong shape");
 	if(doBCA && (m_mass(bndl->bc) != nVars || m_mass(bndl->acc) != nVars)) Bug("Limits(): matrices \"bc\" and/or \"acc\" are the wrong size");
@@ -1292,7 +1292,7 @@ void Limits(MatrixBundle *bndl, double *conf, unsigned short nConf)
 		acc = (doBCA ? m_val(bndl->acc) : NAN);
 
 		for(i = 0; i < nConf; i++) {
-		
+
 			z = cg_inv(conf[i]);
 			bcaConf =  cg(bc + (bc + z) / (1.0 - acc * (bc + z)));
 
@@ -1305,7 +1305,7 @@ void Limits(MatrixBundle *bndl, double *conf, unsigned short nConf)
 				m_next(bndl->lims);
 			}
 		}
-	
+
 		if(doBCA) {m_next(bndl->bc); m_next(bndl->acc);}
 	}
 	m_free(slice);
@@ -1315,15 +1315,15 @@ void Limits(MatrixBundle *bndl, double *conf, unsigned short nConf)
 void MagicMesh(ModelPtr model, unsigned short nSteps, unsigned short nIterations,
 				double *min, double *max, double (*function)(double * params))
 {
-	unsigned short nFreeParams, totalSteps, i, bestPoint;
+	unsigned short nFreeParams, totalSteps, i, bestPoint = 0;
 	short loop, iteration;
 	double p[kNumberOfParams];
 	boolean pfree[kNumberOfParams];
 	double absMin[kNumberOfParams];
 	double absMax[kNumberOfParams];
-	double min_err, try_err, first_err, newHalfWidth;
+	double min_err = 0, try_err, first_err = 0, newHalfWidth;
 	double factor;
-	boolean shrink, variation;
+	boolean shrink, variation = 0;
 
 #define PEEK_MESH		0
 
@@ -1337,7 +1337,7 @@ int mexEvalf(char * fmt, ...);
 #define PEEK_MESH_2		(void)0;
 #define PEEK_MESH_3		(void)0;
 #endif
-		
+
 	nFreeParams = 0;
 	totalSteps = 1;
 	for(i = 0; i < kNumberOfParams; i++) {
@@ -1373,12 +1373,12 @@ int mexEvalf(char * fmt, ...);
 			}
 			if(i == 0) {first_err = try_err; variation = FALSE;}
 			else if(!variation) variation = (try_err != first_err);
-			
+
 			PEEK_MESH_3
 		}
 		if(variation) MagicMeshPoint(bestPoint, nSteps, p, pfree, min, max);
 		else for(i = 0; i < kNumberOfParams; i++) p[i] = (min[i] + max[i]) / 2.0;
-		
+
 		shrink = TRUE;
 		for(i = 0; i < kNumberOfParams; i++) {
 			if(!pfree[i]) continue;
@@ -1403,7 +1403,7 @@ int mexEvalf(char * fmt, ...);
 		}
 
 	}
-	
+
 	for(i = 0; i < kNumberOfParams; i++) model->theta[i].fitted = p[i];
 
 }
@@ -1431,7 +1431,7 @@ double MakeLegal(PsychDistribFuncPtr shape, ArgIdentifier wrt, double val)
 void MakeLimitsLegal(SearchLimitsPtr lims, ConstraintPtr con, double absoluteMin, double absoluteMax)
 {
 	double temp, wMin, wMax;
-	
+
 	if(lims->min > lims->max) {
 		temp = lims->min;
 		lims->min = lims->max;
@@ -1442,14 +1442,14 @@ void MakeLimitsLegal(SearchLimitsPtr lims, ConstraintPtr con, double absoluteMin
 		wMax = GetWorkingMax(con);
 		temp = 0.02 * (wMax - wMin);
 		if(!isinf(temp) && !isnan(temp)) {wMin += temp; wMax -= temp;}
-		
+
 		/* if upper and lower limits are the same (parameter fixed),
 		   make sure the fixed value is somewhere in the range allowed by constraints */
 		if(lims->min == lims->max && (lims->min < wMin || lims->min > wMax)) {
 			if(isinf(wMin)) lims->min = lims->max = wMax;
 			else if(isinf(wMax)) lims->min = lims->max = wMin;
 			else lims->min = lims->max = (wMin + wMax) / 2.0;
-		}		
+		}
 		/* make sure the search limits are within the constraint limits */
 		if(lims->min < wMin) lims->min = wMin;
 		if(lims->min > wMax) lims->min = wMax;
@@ -1481,7 +1481,7 @@ double mlmt(double * pIn)
 		predicted = gamma + scale * prob(gMLMT_model->shape, p[ALPHA], p[BETA], gMLMT_data->x[i]);
 		result -= xlogy_j(gMLMT_data->nRight[i], predicted) + xlogy_j(gMLMT_data->nWrong[i], 1.0 - predicted);
 	}
-	
+
 	return result;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -1517,7 +1517,7 @@ void MonteCarlo(DataSetPtr originalData, ModelPtr model, GeneratingInfoPtr gen, 
 	}
 	else {
 		fitCoreFcn = FitCore;
-/*		set up to generate fake data sets	*/	
+/*		set up to generate fake data sets	*/
 		chronIndex = New(double, originalData->nPoints);
 		for(i = 0; i < originalData->nPoints; i++) chronIndex[i] = (double)i;
 		tempPsi = (gen->psi ? CopyVals(NULL, gen->psi, uncollated->nPoints, sizeof(double)) : NULL);
@@ -1579,7 +1579,7 @@ void MonteCarlo(DataSetPtr originalData, ModelPtr model, GeneratingInfoPtr gen, 
 			simGuess[GAMMA] = kMinBoundOffset;
 /*	*** */
 
-/*	convert guess parameters to threshold/slope format if thresholds/slopes are fixed */	
+/*	convert guess parameters to threshold/slope format if thresholds/slopes are fixed */
 	if(model->convertParams) TranslateAB(model->shape, simGuess, ab2ts);
 
 
@@ -1594,7 +1594,7 @@ void MonteCarlo(DataSetPtr originalData, ModelPtr model, GeneratingInfoPtr gen, 
 		else {
 			/* DATA */
 			GenerateFakeDataSet(uncollated, predictedU, nObsU, collated, predictedC, nObsC);
-			
+
 			/* Y_SIM, R_SIM */
 			if(m_setpoint(out->ySim, gen->run - 1, 0)) {
 				for(i = 0; i < uncollated->nPoints; i++)
@@ -1618,13 +1618,13 @@ void MonteCarlo(DataSetPtr originalData, ModelPtr model, GeneratingInfoPtr gen, 
 				m_val(out->params.sim) = p[i];
 				m_step(out->params.sim, 2, 1);
 			}
-			
+
 			/* THRESHOLDS & SLOPES */
 			if((m_setpoint(out->thresholds.sim, gen->run - 1, 0) | m_setpoint(out->slopes.sim, gen->run - 1, 0)) != 0)
 				for(i = 0; i < out->nCuts; i++) ThresholdAndSlope(model->shape, p, out->cuts[i], m_addr(out->thresholds.sim, 2, i), m_addr(out->slopes.sim, 2, i), NONE);
-			
+
 			if(gDoBootstrapT && gen->shape == model->shape) BootstrapT(model, p, uncollated, out, gen->run);
-			
+
 			if(predictedR) /* i.e. if refitting, a new prediction must be made on each run for statistical testing purposes */
 				ExpectedValues(predictedR, uncollated->nPoints, uncollated->x, model->shape, p, "fitted values");
 		}
@@ -1634,18 +1634,18 @@ void MonteCarlo(DataSetPtr originalData, ModelPtr model, GeneratingInfoPtr gen, 
 			if(err) { do m_val(out->stats.sim) = NAN; while(m_step(out->stats.sim, 2, 1)); }
 			else DoStats((predictedR ? predictedR : predictedU), uncollated, chronIndex, m_addr(out->stats.sim, 2, 0), m_addr(out->stats.sim, 2, 1), m_addr(out->stats.sim, 2, 2), rSpace, kSpace);
 		}
-		
+
 		/* LDOT */
 		if(m_setpoint(out->ldot, gen->run - 1, 0)) {
 			if(gen->psi) Bug("MonteCarlo(): should not be calculating LDOT if gen_psi was supplied");
 			for(i = 0; i < kNumberOfParams; i++) {
 				m_val(out->ldot) = (model->theta[i].free ? DiffLoglikelihood(gen->shape, gen->params, (ArgIdentifier)i, collated, model) : 0);
 				m_step(out->ldot, 2, 1);
-			}		
+			}
 //			APPROX_3;
 		}
 	}
-	
+
 	if(gAdaptPtr) CAdaptiveCleanup();
 
 	if(kSpace) Destroy(kSpace);
@@ -1665,12 +1665,12 @@ void MonteCarloGenerators(DataSetPtr data, PsychDistribFuncPtr shape, double *pa
 {
 	unsigned short i;
 	double alpha, beta, gamma, scaleF;
-	
+
 	alpha = params[ALPHA];
 	beta = params[BETA];
 	gamma = params[GAMMA];
 	scaleF = 1.0 - gamma - params[LAMBDA];
-	
+
 	*predicted = New(double, data->nPoints);
 	*nObs = New(double, data->nPoints);
 	for(i = 0; i < data->nPoints; i++) {
@@ -1682,7 +1682,7 @@ void MonteCarloGenerators(DataSetPtr data, PsychDistribFuncPtr shape, double *pa
 double Priors(ModelPtr model, double *pIn, double *pOut, boolean paramsConverted)
 {
 	int i;
-	double result, shift, scale, slope;
+	double result, shift = 0, scale, slope = 0;
 	double localParams[kNumberOfParams], *p;
 
 	p = ((pOut == NULL) ? localParams : pOut);
@@ -1692,7 +1692,7 @@ double Priors(ModelPtr model, double *pIn, double *pOut, boolean paramsConverted
 		slope = p[BETA];
 		TranslateAB(model->shape, p, ts2ab);
 	}
-	
+
 	if(!CheckParams(model->shape, p, NULL)) return 0.0;
 	scale = 1.0 - p[GAMMA] - p[LAMBDA];
 
@@ -1702,7 +1702,7 @@ double Priors(ModelPtr model, double *pIn, double *pOut, boolean paramsConverted
 	/* parameter priors */
 	for(i = 0; i < kNumberOfParams; i++)
 		if((result = prior(result, &model->theta[i].constraint, p[i])) == 0.0) return 0.0;
-	
+
 	/* "tail drift" prior */
 	if((result = prior(result, &model->tailConstraint, prob(model->shape, p[ALPHA], p[BETA], model->xValAtChance))) == 0.0) return 0.0;
 
@@ -1724,7 +1724,7 @@ double Priors(ModelPtr model, double *pIn, double *pOut, boolean paramsConverted
 		}
 		if((result = prior(result, &model->slopeConstraint, slope)) == 0.0) return 0.0;
 	}
-	
+
 	return result;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -1736,7 +1736,7 @@ void PsychSetSimplexSizes(DataSetPtr data, PsychDistribFuncPtr shape, double * g
 	double minX, maxX;
 	unsigned short i;
 	boolean bad;
-	
+
 	CopyVals(p, guess, kNumberOfParams, sizeof(double));
 	if(!useTSUnits) TranslateAB(shape, p, ab2ts);
 	bad = isinf(p[0]) || isnan(p[0]) || !legal_alpha(shape, p[0]) ||
@@ -1751,19 +1751,19 @@ void PsychSetSimplexSizes(DataSetPtr data, PsychDistribFuncPtr shape, double * g
 		p[1] = 3.0 * ((p[1] < 0.0) ? -1.0 : 1.0) / (maxX - minX);
 	}
 	th1 = p[0] - frac * 0.5 / p[1];
-	th2 = p[0] + frac * 0.5 / p[1];	
+	th2 = p[0] + frac * 0.5 / p[1];
 	th1 = MakeLegal(shape, ALPHA, th1);
 	th2 = MakeLegal(shape, ALPHA, th2);
-	
+
 	sl1 = p[1] + frac * (p[1] * slrf - p[1]);
 	sl2 = p[1] + frac * (p[1] / slrf - p[1]);
 	sl1 = MakeLegal(shape, DFDX, sl1);
 	sl2 = MakeLegal(shape, DFDX, sl2);
-	
+
 	bad = (th1 == th2) || isinf(th1) || isnan(th1) || isinf(th2) || isnan(th2)
 	   || (sl1 == sl2) || isinf(sl1) || isnan(sl1) || isinf(sl2) || isnan(sl2);
 	if(bad) JError("failed to obtain a legal estimate of parameter variability to initialize the simplex search\ndata may be too poorly sampled, or have an illegal gradient for the chosen function shape");
-	
+
 	if(!useTSUnits) {
 		th1 = get_alpha(shape, th1, p[1], 0.5);
 		th2 = get_alpha(shape, th2, p[1], 0.5);
@@ -1794,11 +1794,11 @@ double Quantile(double conf, double *orderedVals, long nVals)
 {
 	double index, floorWeight;
 	int floorIndex, ceilIndex;
-	
+
 	while(isnan(orderedVals[nVals-1])) nVals--;
 	index = conf * (double)(nVals + 1) - 1.0;
 	if(index < 0.0 || index > (double)(nVals - 1.0)) return NAN;
-	
+
 	floorIndex = ceilIndex = (int)ceil(index);
 	if(floorIndex) floorIndex--;
 	floorWeight = (double)ceilIndex - index;
@@ -1812,12 +1812,12 @@ void ReportDataSet(DataSetPtr data)
 	for(i=0;i<data->nPoints;i++){
 		switch(gDataFormat) {
 			case unknown_format:
-			case xyn: printf("%3.2lf\t%5.3lf\t%3lg\n", data->x[i], data->nRight[i] / (data->nRight[i] + data->nWrong[i]), data->nRight[i] + data->nWrong[i]); break;
-			case xrw: printf("%3.2lf\t\t%3lg\t%3lg\n", data->x[i], data->nRight[i], data->nWrong[i]); break;
-			case xrn: printf("%3.2lf\t\t%3lg\t%3lg\n", data->x[i], data->nRight[i], data->nRight[i] + data->nWrong[i]); break;
+			case xyn: fprintf(stderr, "%3.2lf\t%5.3lf\t%3lg\n", data->x[i], data->nRight[i] / (data->nRight[i] + data->nWrong[i]), data->nRight[i] + data->nWrong[i]); break;
+			case xrw: fprintf(stderr, "%3.2lf\t\t%3lg\t%3lg\n", data->x[i], data->nRight[i], data->nWrong[i]); break;
+			case xrn: fprintf(stderr, "%3.2lf\t\t%3lg\t%3lg\n", data->x[i], data->nRight[i], data->nRight[i] + data->nWrong[i]); break;
 		}
 	}
-	printf("\n");
+	fprintf(stderr, "\n");
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void ReportModel(ModelPtr model)
@@ -1825,33 +1825,33 @@ void ReportModel(ModelPtr model)
 	unsigned short i;
 	char shiftString[36], slopeString[36], tailLevelString[36], *str;
 	char *gammaName;
-	
+
 	gammaName = (gLambdaEqualsGamma ? model->theta[LAMBDA].name : model->theta[GAMMA].name);
-	
+
 	sprintf(shiftString, "x at F(x)==0.5");
 	sprintf(slopeString, "d%s/d%s at F(x)==0.5", (gCutPsi ? "Psi" : "F"), (gLogSlopes ? "(log10 x)" : "x"));
 	sprintf(tailLevelString, "F(%lg)", model->xValAtChance);
 
-	printf("psi(x) = %s + (1 - %s - %s) * F(x, %s, %s)\nusing %s function for F ", gammaName, gammaName, model->theta[LAMBDA].name, model->theta[ALPHA].name, model->theta[BETA].name, FunctionName(model->shape));
-	if(gLambdaEqualsGamma) printf("\n(note that upper and lower asymptote offsets are forced to be equal)\n");
-	else if(model->nIntervals == 1) printf("and assuming single-interval design\n");
+	fprintf(stderr, "psi(x) = %s + (1 - %s - %s) * F(x, %s, %s)\nusing %s function for F ", gammaName, gammaName, model->theta[LAMBDA].name, model->theta[ALPHA].name, model->theta[BETA].name, FunctionName(model->shape));
+	if(gLambdaEqualsGamma) fprintf(stderr, "\n(note that upper and lower asymptote offsets are forced to be equal)\n");
+	else if(model->nIntervals == 1) fprintf(stderr, "and assuming single-interval design\n");
 	else {
-		printf("and assuming %huAFC design", model->nIntervals);
-		if(model->theta[GAMMA].free) printf("\n(note, however, that %s has been explicitly allowed to vary)\n", gammaName);
+		fprintf(stderr, "and assuming %huAFC design", model->nIntervals);
+		if(model->theta[GAMMA].free) fprintf(stderr, "\n(note, however, that %s has been explicitly allowed to vary)\n", gammaName);
 		else if(fabs(model->theta[GAMMA].guess - (1.0 / (double)model->nIntervals)) > 0.000001)
-			printf("\n(note, however, that %s has been explicitly fixed at %lg)\n", gammaName, model->theta[GAMMA].guess);
-		else printf(" (%s = %lg)\n", gammaName, model->theta[GAMMA].guess);
+			fprintf(stderr, "\n(note, however, that %s has been explicitly fixed at %lg)\n", gammaName, model->theta[GAMMA].guess);
+		else fprintf(stderr, " (%s = %lg)\n", gammaName, model->theta[GAMMA].guess);
 	}
 	for(i = 0; i < kNumberOfParams; i++) {
 		if(i == GAMMA && gLambdaEqualsGamma) continue;
 		str = ((i == ALPHA && model->convertParams) ? shiftString : (i == BETA && model->convertParams) ? slopeString : model->theta[i].name);
 		if(!model->theta[i].free && !(i == 2 && model->nIntervals > 1))
-			printf("%s is fixed at %lg\n", str, model->theta[i].guess);
-		else if(model->theta[i].free && ReportPrior(model->theta[i].name, &model->theta[i].constraint)) printf("\n");
+			fprintf(stderr, "%s is fixed at %lg\n", str, model->theta[i].guess);
+		else if(model->theta[i].free && ReportPrior(model->theta[i].name, &model->theta[i].constraint)) fprintf(stderr, "\n");
 	}
-	if(ReportPrior(tailLevelString, &model->tailConstraint)) printf(" (no signal present)\n");
-	if(ReportPrior(shiftString, &model->shiftConstraint)) printf("\n");
-	if(ReportPrior(slopeString, &model->slopeConstraint)) printf("\n");
+	if(ReportPrior(tailLevelString, &model->tailConstraint)) fprintf(stderr, " (no signal present)\n");
+	if(ReportPrior(shiftString, &model->shiftConstraint)) fprintf(stderr, "\n");
+	if(ReportPrior(slopeString, &model->slopeConstraint)) fprintf(stderr, "\n");
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 int SelfTest(void)
@@ -1862,7 +1862,7 @@ int SelfTest(void)
 	DataSetPtr data;
 	double flatdata[8*3] = {1.0,  4.0,  6.0,  1.6,  3.5,  1.8,  3.0,  2.5, \
 	                       20.0, 40.0, 40.0, 23.0, 52.0, 35.0, 49.0, 40.0, \
-	                       20.0, 00.0, 00.0, 17.0,  8.0, 25.0, 11.0, 20.0}; 	
+	                       20.0, 00.0, 00.0, 17.0,  8.0, 25.0, 11.0, 20.0};
 	char prefString[] = "#shape Weibull\n#n_intervals 2\n#verbose false\n#runs 0\n#write_pa_est 0\n";
 	Batch prefs = {NULL, 0, 0, FALSE};
 	double percentError, targetParams[kNumberOfParams] = {3.06836, 4.00961, 0.5, 3.09818e-07};
@@ -1870,30 +1870,30 @@ int SelfTest(void)
 	int i;
 
 	prefs.buffer = prefString; prefs.length = strlen(prefString);
-	printf("psignifit engine self test (engine version = %s)\n\n(1) ", PSIGNIFIT_VERSION);
+	fprintf(stderr, "psignifit engine self test (engine version = %s)\n\n(1) ", PSIGNIFIT_VERSION);
 	floatOK = (boolean)TestFloatingPointBehaviour();
 	InitPrefs(&prefs, &model, &data, &gen, &out, m_new(flatdata, m2D, 8, 3));
 
-	printf("\n(2) Fitting Weibull function to standard 2AFC data...\n");
+	fprintf(stderr, "\n(2) Fitting Weibull function to standard 2AFC data...\n");
 	FitPsychometricFunction(data, model, NULL, out->verbose);
-	printf("      initial guess : {");
-	for(i = 0; i < kNumberOfParams; i++) printf("%.1s = %lg%s", model->theta[i].name, model->theta[i].guess, (i == kNumberOfParams - 1) ? "}\n" : ", ");
-	printf("  fitted parameters : {");
-	for(i = 0; i < kNumberOfParams; i++) printf("%.1s = %lg%s", model->theta[i].name, model->theta[i].fitted, (i == kNumberOfParams - 1) ? "}\n" : ", ");
-	printf("          should be : {");
-	for(i = 0; i < kNumberOfParams; i++) printf("%.1s = %lg%s", model->theta[i].name, targetParams[i], (i == kNumberOfParams - 1) ? "}\n" : ", ");
-	printf("\n");
+	fprintf(stderr, "      initial guess : {");
+	for(i = 0; i < kNumberOfParams; i++) fprintf(stderr, "%.1s = %lg%s", model->theta[i].name, model->theta[i].guess, (i == kNumberOfParams - 1) ? "}\n" : ", ");
+	fprintf(stderr, "  fitted parameters : {");
+	for(i = 0; i < kNumberOfParams; i++) fprintf(stderr, "%.1s = %lg%s", model->theta[i].name, model->theta[i].fitted, (i == kNumberOfParams - 1) ? "}\n" : ", ");
+	fprintf(stderr, "          should be : {");
+	for(i = 0; i < kNumberOfParams; i++) fprintf(stderr, "%.1s = %lg%s", model->theta[i].name, targetParams[i], (i == kNumberOfParams - 1) ? "}\n" : ", ");
+	fprintf(stderr, "\n");
 	for(i = 0; i < kNumberOfParams; i++) {
 		percentError = 100.0 * fabs(model->theta[i].fitted - targetParams[i]) / targetParams[i];
-		if(percentError > 0.1) accurate = FALSE, printf("Warning: %s is %lg%% out\n", model->theta[i].name, percentError);
+		if(percentError > 0.1) accurate = FALSE, fprintf(stderr, "Warning: %s is %lg%% out\n", model->theta[i].name, percentError);
 	}
 
- 	if(!floatOK) printf("Warning: IEEE standards not fully supported.\nFloating-point results from this compiled version are likely to be\ninaccurate and unpredictable.\n");
+ 	if(!floatOK) fprintf(stderr, "Warning: IEEE standards not fully supported.\nFloating-point results from this compiled version are likely to be\ninaccurate and unpredictable.\n");
 	if(accurate) {
-		if(floatOK) printf("*** success! ***\n");
-		else printf("However, this particular fit was successful.\n");
+		if(floatOK) fprintf(stderr, "*** success! ***\n");
+		else fprintf(stderr, "However, this particular fit was successful.\n");
 	}
-	else if(floatOK) printf("Sorry, the psignifit engine has not been properly debugged for your platform.\nResults may be unreliable.\n");
+	else if(floatOK) fprintf(stderr, "Sorry, the psignifit engine has not been properly debugged for your platform.\nResults may be unreliable.\n");
 
 	m_clear();
 	DisposeDataSet(data);
@@ -1914,8 +1914,8 @@ void set_mlmt_info(DataSetPtr data, ModelPtr model, boolean treatABasTS)
 void ThresholdAndSlope(PsychDistribFuncPtr shape, double * params, double cut, double *thPtr, double *slPtr, ArgIdentifier wrt)
 {
 	ArgIdentifier wrt1, wrt2;
-	double f, t, s, tOut, sOut, dt_du, dt_dv, ds_du, ds_dv;
-	
+	double f, t, s, tOut = 0, sOut = 0, dt_du, dt_dv, ds_du, ds_dv;
+
 	/*
 		N.B. the gCutPsi option was disabled 19/10/99 because of the unnecessary complications it caused here
 		If it is used, all slope values must be multiplied by (1-gamma-lambda), and all threshold and slopes
@@ -1925,7 +1925,7 @@ void ThresholdAndSlope(PsychDistribFuncPtr shape, double * params, double cut, d
 		formulae are required for differentiation: dt/da, dt/db, d2t/da2, d2t/db2, d2t/dadb and similarly for
 		s(f; {a, b}).
 	*/
-	
+
 	f = cut;
 	s = slope(shape, params[ALPHA], params[BETA], f);
 	t = inv_prob(shape, params[ALPHA], params[BETA], f);
@@ -1958,7 +1958,7 @@ void ThresholdAndSlope(PsychDistribFuncPtr shape, double * params, double cut, d
 				dt_dv = (*shape)(f, NAN, params[ALPHA], params[BETA], threshold_derivative, wrt2);
 				ds_du = (*shape)(f, NAN, params[ALPHA], params[BETA], slope_derivative, wrt1);
 				ds_dv = (*shape)(f, NAN, params[ALPHA], params[BETA], slope_derivative, wrt2);
-			
+
 				sOut = log(10.0) * (sOut * t + tOut * s + dt_du * ds_dv + dt_dv * ds_du);
 			}
 		}
@@ -1977,7 +1977,7 @@ int TransformedRegression(unsigned short nPoints, double *x, double *y, double *
 	double scale, f, mTran, cTran, mLin, cLin, shift, slope;
 	boolean valid, gotHi, gotLo;
 	unsigned short min = 0, max = 0;
-	
+
 	scale = 1.0 - gamma - lambda;
 	xT = New(double, nPoints);
 	fT = New(double, nPoints);
@@ -2011,12 +2011,12 @@ int TransformedRegression(unsigned short nPoints, double *x, double *y, double *
 	the gradient by a factor of 5
 */		shift = (0.5 - cLin) / mLin;
 		if(!legal_x(shape, shift)) shift = median(nPoints, x);
-		
+
 		slope = 5.0 * mLin;
 		get_limits(shape, DFDX);
 		if(slope <= gLegal.min) slope = gLegal.min + EPS;
 		if(slope >= gLegal.max) slope = gLegal.max - EPS;
-		
+
 		*alpha = get_alpha(shape, shift, slope, 0.5);
 		*beta = get_beta(shape, shift, slope, 0.5);
 		if(isnan(*alpha) || isinf(*alpha)) *alpha = shift;
@@ -2059,11 +2059,11 @@ void VarianceEstimates(MatrixBundle *bndl, unsigned short rowIndex, matrix pfish
 {
 	matrix lff, v, *t;
 	long oldPos[mMaxDims], nRows, nCols, i, j, repeat;
-	
+
 /*	if deriv is NULL, let's assume it's the identity matrix (params.deriv) */
 	if(deriv) lff = m_normalize(m_mult(mNewMatrix, pcov, deriv), 1);
 	else lff = m_normalize(m_copy(mNewMatrix, pcov), 1);
-	
+
 	nRows = m_getsize(bndl->sim, 1);
 	nCols = m_getsize(bndl->sim, 2);
 
@@ -2083,7 +2083,7 @@ void VarianceEstimates(MatrixBundle *bndl, unsigned short rowIndex, matrix pfish
 			if((*t)->vals == NULL) m_allocate(*t);
 			m_first(*t);
 			m_first(v);
-			
+
 			for(j = 0; j < nCols; j++) {
 				for(i = 0; i < nRows; i++) {
 					m_val(*t) = m_val(v);
@@ -2106,8 +2106,8 @@ void VarianceEstimates(MatrixBundle *bndl, unsigned short rowIndex, matrix pfish
 				that the bootstrap-t be used: its implementation here is undocumented and admittedly
 				a tad bizarre. */
 				m_step(bndl->sim, 2, 1); m_step(*t, 2, 1);
-				m_next(bndl->est); m_next(v);	
-			} 
+				m_next(bndl->est); m_next(v);
+			}
 			m_setpoint(bndl->sim, oldPos);
 		}
 	}

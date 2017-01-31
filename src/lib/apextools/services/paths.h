@@ -17,15 +17,16 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __PATHSSERVICE_H__
-#define __PATHSSERVICE_H__
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_SERVICES_PATHS_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_SERVICES_PATHS_H_
 
-#include <QString>
-#include <QDir>
+#include "../global.h"
+
+#include "servicemanager.h"
+
 #include <QCoreApplication>
-
-#include "services/servicemanager.h"
-#include "global.h"
+#include <QDir>
+#include <QString>
 
 namespace apex
 {
@@ -165,7 +166,7 @@ namespace apex
      * on windows this is the apex executable path, on linux
      * lib/apex/
      */
-    const QString GetBinaryPluginPath() const;
+    const QStringList GetBinaryPluginPaths() const;
 
     /**
      * Get full path of examples directory
@@ -214,10 +215,10 @@ namespace apex
 
 
   private:
-	  /**
+          /**
         * Check whether the given path is a valid apex path
         */
-	bool CheckApexDir(QDir d);
+        bool CheckApexDir(QDir d);
 
     /**
      * Return /usr/share/apex or equivalent
@@ -238,4 +239,4 @@ namespace apex
 
 }
 
-#endif //#ifndef __PATHSSERVICE_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXTOOLS_SERVICES_PATHS_H_

@@ -1,242 +1,204 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.3/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.3/experiment.xsd"
- xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment"
- version="1">
-  
-  <!-- 
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!--
     Regression test for heartrainprocedure.js
   -->
-  
-  <procedure xsi:type="apex:pluginProcedureType">
-    
-    <parameters>
-      <presentations>5</presentations>
-      
-      <skip>0</skip>
-      <order>sequential</order>
-      <script>heartrainprocedure</script>
-      <!--parameter name="stepsize">5</parameter>
+ <procedure xsi:type="apex:pluginProcedure">
+  <parameters>
+   <presentations>5</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+   <script>heartrainprocedure</script>
+   <!--parameter name="stepsize">5</parameter>
       <parameter name="startvalue">200</parameter-->
-    </parameters>
-    
-    <trials>
-      <trial id="trial1">
-        <answer>button1</answer>
-        <screen id="screen1"/>
-        <stimulus id="stimulus1"/>
-      </trial>
-      <trial id="trial2">
-        <answer>button2</answer>
-        <screen id="screen1"/>
-        <stimulus id="stimulus2"/>
-      </trial>
-      <trial id="confirmation_trial">
-        <screen id="confirmation_screen"/>
-      </trial>
-    </trials>
-  </procedure>
-  
-  <corrector xsi:type="apex:isequal"/>
-    <!--type>isequal</type-->
-  
-  
-  <screens>
-    <reinforcement>
-      <progressbar>true</progressbar>
-      <feedback length="300">true</feedback>
-      <showcurrent>false</showcurrent>
-    </reinforcement>
-    <screen id="screen1">
-      <gridLayout height="1" width="2" id="main_layout">
-        
-        <button x="1" y="1" id="button1">
-          <text>1</text>
-        </button>
-        
-        <button x="2" y="1" id="button2">
-          <text>2</text>
-        </button>
-        
-      </gridLayout>
-      <buttongroup id="buttongroup1">
-        <button id="button1"/>
-        <button id="button2"/>
-      </buttongroup>
-      <default_answer_element>buttongroup1</default_answer_element>
-    </screen>
-
-    <screen id="confirmation_screen">
-      <gridLayout height="2" width="2" id="main_layout">
-
-        <label row="1" col="1" id="question_label">
-          <text>The correct answer was:</text>
-        </label>
-
-        <parameterlabel row="1" col="2" id="answer_label">
-          <parameter>correct_answer</parameter>
-        </parameterlabel>
-
-        <button row="2" col="1" id="again_button">
-          <text>Play the correct answer</text>
-        </button>
-
-        <button row="2" col="2" id="next_button">
-          <text>Go to the next trial</text>
-        </button>
-
-      </gridLayout>
-      <buttongroup id="buttongroup1">
-        <button id="again_button"/>
-        <button id="next_button"/>
-      </buttongroup>
-    </screen>
-  </screens> 
-  
-  
-  <datablocks>
-    <uri_prefix>../stimuli</uri_prefix>
-    <datablock id="rawdata1" >
-      <device>wavdevice</device>
-      <uri>wd1.wav</uri>
-    </datablock>
-    <datablock id="rawdata2" >
-      <device>wavdevice</device>
-      <uri>wd2.wav</uri>
-    </datablock>
-    <datablock id="rawdata3" >
-      <device>wavdevice</device>
-      <uri>wd3.wav</uri>
-    </datablock>
-    <datablock id="rawdata4" >
-      <device>wavdevice</device>
-      <uri>wd4.wav</uri>
-    </datablock>
-    <datablock id="rawdata5">
-      <device>wavdevice</device>
-      <uri>wd5.wav</uri>
-    </datablock>
-    <datablock id="rawdata6">
-      <device>wavdevice</device>
-      <uri>wd6.wav</uri>
-    </datablock>
-    <datablock id="dummydatablock">
-      <device>wavdevice</device>
-      <uri>silence:1</uri>
-    </datablock>
-  </datablocks>
-  
-  <devices>
-    <device id="wavdevice" xsi:type="apex:wavDeviceType">
-      <driver>jack</driver>
-      <card>default</card>
-      <channels>2</channels>
-      <gain channel="0">-50</gain>
-      <samplerate>44100</samplerate>
-    </device>
-  </devices>
-  
-  <filters>
-    <filter id="ampli" xsi:type="apex:amplifier">
-      <device>wavdevice</device>
-      <channels>2</channels>
-      <continuous>false</continuous>
-       <basegain>0</basegain>
-      <gain id="gain">0</gain>
-    </filter>
-    
-  </filters>
-  
-  <stimuli>
-    <fixed_parameters/>
-    <stimulus id="stimulus1">
-      
-      <datablocks>
-        <datablock id="rawdata1"/>
-      </datablocks>
-    </stimulus>
-    
-    <stimulus id="stimulus2">
-      <datablocks>
-        <datablock id="rawdata2"/>
-      </datablocks>
-    </stimulus>
-    
-    <stimulus id="stimulus3">
-      <datablocks>
-        <datablock id="rawdata3"/>
-      </datablocks>
-    </stimulus>
-    
-    <stimulus id="stimulus4">
-      <datablocks>
-        <datablock id="rawdata4"/>
-      </datablocks>
-    </stimulus>  
-    
-    <stimulus id="stimulus5">
-      <datablocks>
-        <datablock id="rawdata5"/>
-      </datablocks>
-    </stimulus>
-    
-    <stimulus id="stimulus6">
-      <datablocks>
-        <datablock id="rawdata6"/>
-      </datablocks>
-    </stimulus>
-
-    <stimulus id="dummystimulus">
-      <datablocks>
-        <datablock id="dummydatablock"/>
-      </datablocks>
-    </stimulus>
-    
-  </stimuli>
-  
-  <connections>
-    <connection>
-      <from>
-        <id>_ALL_</id>
-        <channel>0</channel>
-      </from>
-      <to>
-        <id>ampli</id>
-        <channel>0</channel>
-      </to>
-    </connection>
-    <connection>
-      <from>
-        <id>ampli</id>
-        <channel>0</channel>
-      </from>
-      <to>
-        <id>wavdevice</id>
-        <channel>0</channel>
-      </to>
-    </connection>
-    <connection>
-    <from>
-      <id>_ALL_</id>
-      <channel>1</channel>
-    </from>
-    <to>
-      <id>ampli</id>
-      <channel>1</channel>
-    </to>
-    </connection>
-    <connection>
-      <from>
-        <id>ampli</id>
-        <channel>1</channel>
-      </from>
-      <to>
-        <id>wavdevice</id>
-        <channel>1</channel>
-      </to>
-    </connection>
-    
-  </connections>  
- 
-  
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+   <trial id="trial2">
+    <answer>button2</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus2"/>
+   </trial>
+   <trial id="confirmation_trial">
+    <screen id="confirmation_screen"/>
+   </trial>
+  </trials>
+ </procedure>
+ <!--type>isequal</type-->
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">true</feedback>
+   <showcurrent>false</showcurrent>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout id="main_layout" width="2" height="1">
+    <button id="button1" x="1" y="1">
+     <text>1</text>
+    </button>
+    <button id="button2" x="2" y="1">
+     <text>2</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+  <screen id="confirmation_screen">
+   <gridLayout id="main_layout" width="2" height="2">
+    <label id="question_label" row="1" col="1">
+     <text>The correct answer was:</text>
+    </label>
+    <parameterlabel id="answer_label" row="1" col="2">
+     <parameter>correct_answer</parameter>
+    </parameterlabel>
+    <button id="again_button" row="2" col="1">
+     <text>Play the correct answer</text>
+    </button>
+    <button id="next_button" row="2" col="2">
+     <text>Go to the next trial</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="again_button"/>
+    <button id="next_button"/>
+   </buttongroup>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>wavdevice</device>
+   <uri>wd2.wav</uri>
+  </datablock>
+  <datablock id="rawdata3">
+   <device>wavdevice</device>
+   <uri>wd3.wav</uri>
+  </datablock>
+  <datablock id="rawdata4">
+   <device>wavdevice</device>
+   <uri>wd4.wav</uri>
+  </datablock>
+  <datablock id="rawdata5">
+   <device>wavdevice</device>
+   <uri>wd5.wav</uri>
+  </datablock>
+  <datablock id="rawdata6">
+   <device>wavdevice</device>
+   <uri>wd6.wav</uri>
+  </datablock>
+  <datablock id="dummydatablock">
+   <device>wavdevice</device>
+   <uri>silence:1</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain channel="0">-50</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters>
+  <filter id="ampli" xsi:type="apex:amplifier">
+   <device>wavdevice</device>
+   <channels>2</channels>
+   <continuous>false</continuous>
+   <basegain>0</basegain>
+   <gain id="gain">0</gain>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <datablocks>
+    <datablock id="rawdata2"/>
+   </datablocks>
+  </stimulus>
+  <stimulus id="stimulus3">
+   <datablocks>
+    <datablock id="rawdata3"/>
+   </datablocks>
+  </stimulus>
+  <stimulus id="stimulus4">
+   <datablocks>
+    <datablock id="rawdata4"/>
+   </datablocks>
+  </stimulus>
+  <stimulus id="stimulus5">
+   <datablocks>
+    <datablock id="rawdata5"/>
+   </datablocks>
+  </stimulus>
+  <stimulus id="stimulus6">
+   <datablocks>
+    <datablock id="rawdata6"/>
+   </datablocks>
+  </stimulus>
+  <stimulus id="dummystimulus">
+   <datablocks>
+    <datablock id="dummydatablock"/>
+   </datablocks>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>_ALL_</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>ampli</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>ampli</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>_ALL_</id>
+    <channel>1</channel>
+   </from>
+   <to>
+    <id>ampli</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>ampli</id>
+    <channel>1</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+ </connections>
 </apex:apex>

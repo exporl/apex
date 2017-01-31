@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: Try to parse invalid datablock, should return error
+  @description: datablock does not exist in folder stimuli, running the experiment gives an error.
+  @how: uri_prefix is used to find stimuli, invalid.qic does not exist
+    -->
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>100</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout width="3" height="2" id="main_layout">
+    <button x="1" y="1" id="button1">
+     <text>fadein.qic</text>
+    </button>
+    <button x="1" y="2" id="button2">
+     <text>fadechan.qic</text>
+    </button>
+    <button x="2" y="2" id="button3">
+     <text>fadechan-single.qic</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+    <button id="button3"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli/</uri_prefix>
+  <datablock id="rawdata1">
+   <device>l34device</device>
+   <description>sample raw l34 datablock</description>
+   <uri>invalid.qic</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="l34device" xsi:type="apex:L34DeviceType">
+   <device_id>1</device_id>
+   <implant>cic3</implant>
+   <trigger>none</trigger>
+   <defaultmap>
+    <inline>
+     <number_electrodes>3</number_electrodes>
+     <mode>MP1+2</mode>
+     <pulsewidth>25</pulsewidth>
+     <pulsegap>8</pulsegap>
+     <period>138</period>
+     <channel number="1" electrode="1" comfort="255" threshold="1"/>
+     <channel number="2" electrode="2" comfort="255" threshold="1"/>
+     <channel number="3" electrode="3" comfort="255" threshold="1"/>
+     <channel number="4" electrode="4" comfort="255" threshold="1"/>
+     <channel number="5" electrode="5" comfort="255" threshold="1"/>
+     <channel number="6" electrode="6" comfort="255" threshold="1"/>
+     <channel number="7" electrode="7" comfort="255" threshold="1"/>
+     <channel number="8" electrode="8" comfort="255" threshold="1"/>
+     <channel number="9" electrode="9" comfort="255" threshold="1"/>
+     <channel number="10" electrode="10" comfort="255" threshold="1"/>
+     <channel number="11" electrode="11" comfort="255" threshold="1"/>
+     <channel number="12" electrode="12" comfort="255" threshold="1"/>
+     <channel number="13" electrode="13" comfort="255" threshold="1"/>
+     <channel number="14" electrode="14" comfort="255" threshold="1"/>
+     <channel number="15" electrode="15" comfort="255" threshold="1"/>
+     <channel number="16" electrode="16" comfort="255" threshold="1"/>
+     <channel number="17" electrode="17" comfort="255" threshold="1"/>
+     <channel number="18" electrode="18" comfort="255" threshold="1"/>
+     <channel number="19" electrode="19" comfort="255" threshold="1"/>
+     <channel number="20" electrode="20" comfort="255" threshold="1"/>
+     <channel number="21" electrode="21" comfort="255" threshold="1"/>
+     <channel number="22" electrode="22" comfort="255" threshold="1"/>
+    </inline>
+   </defaultmap>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

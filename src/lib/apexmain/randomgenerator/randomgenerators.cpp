@@ -17,15 +17,17 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "randomgenerators.h"
-#include "randomgenerator.h"
-#include "runner/experimentrundelegate.h"
-#include "parameters/parametermanager.h"
-#include "../stimulus/stimulus.h"
-#include "apexcontrol.h"
+#include "apexdata/stimulus/stimulusparameters.h"
 
-//from libdata
-#include "stimulus/stimulusparameters.h"
+#include "parameters/parametermanager.h"
+
+#include "runner/experimentrundelegate.h"
+
+#include "stimulus/stimulus.h"
+
+#include "apexcontrol.h"
+#include "randomgenerator.h"
+#include "randomgenerators.h"
 
 namespace apex
 {

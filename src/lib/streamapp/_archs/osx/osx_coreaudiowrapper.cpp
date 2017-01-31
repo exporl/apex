@@ -16,18 +16,23 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "../../appcore/threads/criticalsection.h"
+#include "../../appcore/threads/thread.h"
+
+#include "../../audioformat.h"
+
+#include "../../containers/matrix.h"
+
+#include "../../utils/dataconversion.h"
+#include "../../utils/stringexception.h"
+#include "../../utils/vectorutils.h"
+
 #include "osx_coreaudiowrapper.h"
-#include "audioformat.h"
-#include "utils/vectorutils.h"
-#include "utils/dataconversion.h"
-#include "utils/stringexception.h"
-#include "appcore/threads/thread.h"
-#include "appcore/threads/criticalsection.h"
-#include "containers/matrix.h"
-#include <iostream>
 
 #include <CoreAudio/AudioHardware.h>
+
+#include <iostream>
 
 using namespace utils;
 using namespace appcore;

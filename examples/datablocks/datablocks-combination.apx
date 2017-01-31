@@ -1,0 +1,278 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+    @what: Combination of datablocks using sequential and simultaneous
+    @description:  Play datablocks similtaneously and sequentially
+    @how: Using the <simultaneous> and <sequential> tags in <stimulus>, datablocks can be organised and reused.
+  -->
+ <!--
+          shows extensive use of multiple datablocks
+    + setting channel to -1 for the third row to make sure it's applied to all copies
+  -->
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>2</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>e</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+   <trial id="trial2">
+    <answer>t</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus2"/>
+   </trial>
+   <trial id="trial3">
+    <answer>d</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus3"/>
+   </trial>
+   <trial id="trial4">
+    <answer>vier</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus4"/>
+   </trial>
+   <trial id="trial5">
+    <answer>vijf</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus5"/>
+   </trial>
+   <trial id="trial6">
+    <answer>zes</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus6"/>
+   </trial>
+   <trial id="trial7">
+    <answer>zeven</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus7"/>
+   </trial>
+   <trial id="trial8">
+    <answer>acht</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus8"/>
+   </trial>
+   <trial id="trial9">
+    <answer>negen</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus9"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>false</progressbar>
+   <feedback>false</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout width="1" x="1" y="2" height="1" id="answer_layout">
+
+    <button x="1" y="1" id="button">
+     <text>OK</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+        <button id="button"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>file:../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>soundcard1</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>soundcard1</device>
+   <uri>wd2.wav</uri>
+  </datablock>
+  <datablock id="noisedata">
+   <device>soundcard1</device>
+   <uri>wivineruis.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="soundcard1">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>blah</description>
+   <datablocks>
+    <sequential>
+     <datablock id="rawdata1"/>
+     <datablock id="rawdata2"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>blah</description>
+   <datablocks>
+    <sequential>
+     <datablock id="rawdata2"/>
+     <datablock id="rawdata1"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus3">
+   <description>blah</description>
+   <datablocks>
+    <sequential>
+     <datablock id="noisedata"/>
+     <datablock id="rawdata1"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus4">
+   <description>blah</description>
+   <datablocks>
+    <sequential>
+     <simultaneous>
+      <datablock id="rawdata1"/>
+      <datablock id="rawdata1"/>
+     </simultaneous>
+     <simultaneous>
+      <datablock id="rawdata2"/>
+      <datablock id="rawdata2"/>
+     </simultaneous>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus5">
+   <description>blah</description>
+   <datablocks>
+    <sequential>
+     <simultaneous>
+      <datablock id="rawdata2"/>
+      <datablock id="rawdata2"/>
+     </simultaneous>
+     <simultaneous>
+      <datablock id="rawdata1"/>
+      <datablock id="rawdata1"/>
+     </simultaneous>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus6">
+   <description>blah</description>
+   <datablocks>
+    <sequential>
+     <simultaneous>
+      <datablock id="noisedata"/>
+      <datablock id="noisedata"/>
+     </simultaneous>
+     <simultaneous>
+      <datablock id="rawdata1"/>
+      <datablock id="rawdata1"/>
+     </simultaneous>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus7">
+   <description>blah</description>
+   <datablocks>
+    <simultaneous>
+     <datablock id="rawdata1"/>
+     <datablock id="rawdata2"/>
+     <sequential>
+      <datablock id="noisedata"/>
+      <datablock id="rawdata1"/>
+     </sequential>
+    </simultaneous>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus8">
+   <description>blah</description>
+   <datablocks>
+    <sequential>
+     <datablock id="rawdata2"/>
+     <datablock id="rawdata1"/>
+     <simultaneous>
+      <datablock id="rawdata2"/>
+      <datablock id="rawdata1"/>
+     </simultaneous>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus9">
+   <description>blah</description>
+   <datablocks>
+    <simultaneous>
+     <datablock id="noisedata"/>
+     <datablock id="rawdata1"/>
+     <sequential>
+      <datablock id="rawdata2"/>
+      <datablock id="rawdata1"/>
+      <simultaneous>
+       <datablock id="rawdata2"/>
+       <datablock id="rawdata1"/>
+      </simultaneous>
+     </sequential>
+    </simultaneous>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>rawdata1</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard1</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>rawdata2</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard1</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>noisedata</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard1</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+ </connections>
+</apex:apex>

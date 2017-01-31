@@ -20,10 +20,11 @@
 #ifndef __STREAMAPPBASE_H_
 #define __STREAMAPPBASE_H_
 
-#include "stream.h"
+#include "../audioformatstream.h"
+#include "../eofcheck.h"
+#include "../stream.h"
+
 #include "callback.h"
-#include "eofcheck.h"
-#include "audioformatstream.h"
 
 /*                   *                          *\
 

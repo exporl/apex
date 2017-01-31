@@ -17,33 +17,31 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "experimentwriter.h"
-#include "screenswriter.h"
-#include "procedureswriter.h"
+#include "apexdata/connection/connectiondata.h"
+
+#include "apexdata/experimentdata.h"
+
+#include "apexdata/filter/filtersdata.h"
+
+#include "apexdata/procedure/proceduredata.h"
+
+#include "apextools/exceptions.h"
+#include "apextools/version.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "calibrationwriter.h"
+#include "connectionswriter.h"
 #include "datablockswriter.h"
 #include "deviceswriter.h"
+#include "experimentwriter.h"
 #include "filterswriter.h"
-#include "stimuliwriter.h"
-#include "correctorwriter.h"
-#include "connectionswriter.h"
-#include "calibrationwriter.h"
-#include "resultparameterswriter.h"
 #include "generalparameterswriter.h"
-
-//from xercesc
-#include "xml/xercesinclude.h"
-
-//from libdata
-#include "experimentdata.h"
-#include "filter/filtersdata.h"
-#include "connection/connectiondata.h"
-
-//from libtools
-#include "xml/apexxmltools.h"
-#include "exceptions.h"
-
-//from apex
-#include "version.h"
+#include "procedureswriter.h"
+#include "resultparameterswriter.h"
+#include "screenswriter.h"
+#include "stimuliwriter.h"
 
 #include <QDebug>
 #include <QDir>
@@ -86,12 +84,8 @@ void ExperimentWriter::write(const ExperimentData& data, const QString& file,
     }
 
     //ProcedureConfig
-    e = ProceduresWriter::addElement(doc, *data.procedureConfig());
+    e = ProceduresWriter::addElement(doc, *data.procedureData());
     throwIfNull(e, "procedures");
-
-    //CorrectorData
-    e = CorrectorWriter::addElement(doc, *data.correctorData());
-    throwIfNull(e, "corrector");
 
     //ScreensData
     e = ScreensWriter::addElement(doc, *data.screensData(), screens);
@@ -140,14 +134,15 @@ void ExperimentWriter::write(const ExperimentData& data, const QString& file,
     e = GeneralParametersWriter::addElement(doc, *data.generalParameters());
     throwIfNull(e, "generalparameters");
 
-    qDebug() << "curr path: " << QDir::currentPath();
+    qCDebug(APEX_RS) << "curr path: " << QDir::currentPath();
+
     if (!XMLutils::WriteElement(doc->getDocumentElement(), file))
     {
         throw ApexStringException(QString("ExperimentWriter: error writing "
                                           "to file %1").arg(file));
     }
 
-    qDebug() << "done writing experiment";
+    qCDebug(APEX_RS) << "done writing experiment";
 }
 
 void ExperimentWriter::throwIfNull(DOMElement* e, const QString& failingWrite)

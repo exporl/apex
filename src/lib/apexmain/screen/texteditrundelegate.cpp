@@ -17,11 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "texteditrundelegate.h"
+#include "apexdata/screen/texteditelement.h"
 
-#include "screen/texteditelement.h"
 #include "gui/guidefines.h"
+
 #include "screen/screenrundelegate.h"
+
+#include "texteditrundelegate.h"
 
 #include <QIntValidator>
 
@@ -45,10 +47,6 @@ TextEditRunDelegate::TextEditRunDelegate(
     setText( e->getText() );
     connect( this, SIGNAL( returnPressed() ),
              this, SLOT( sendAnsweredSignal() ) );
-    //no idea which color does what, so just set the background and default the rest
-/*    QPalette* p = guicore::widgetattributes::gf_pInitPaletteWithBGColor( sc_DefaultPanelColor );
-    setPalette( *p );
-    delete p;*/
 
     QFont font = defaultFont;
     if ( element->getFontSize() != -1 )

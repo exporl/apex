@@ -16,15 +16,19 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __EOFCALLBACK_H__
 #define __EOFCALLBACK_H__
 
+#include "../appcore/events/callbackevent.h"
+
+#include "../appcore/threads/waitableobject.h"
+
 #include "eofcheck.h"
-#include "multicallback.h"
 #include "manualcallbackrunner.h"
-#include "appcore/events/callbackevent.h"
-#include "appcore/threads/waitableobject.h"
+#include "multicallback.h"
+
+#include <QtGlobal>
 
 namespace streamapp
 {
@@ -84,7 +88,7 @@ namespace streamapp
         */
     void mp_RegisterMasterCallback( Callback& a_Callback )
     {
-      assert( m_Callback.mf_nGetNumItems() == 0 ); //allow setting only once
+      Q_ASSERT( m_Callback.mf_nGetNumItems() == 0 ); //allow setting only once
       m_Callback.mp_AddItem( &a_Callback );
       m_Callback.mp_AddItem( mc_pChecker );
       mc_pChecker->mp_InstallCallback( m_Waiter );
@@ -170,7 +174,7 @@ namespace streamapp
         */
     void mp_RegisterMasterCallback( Callback& a_Callback )
     {
-      assert( m_Callback.mf_nGetNumItems() == 0 ); //allow setting only once
+      Q_ASSERT( m_Callback.mf_nGetNumItems() == 0 ); //allow setting only once
       m_Callback.mp_AddItem( &a_Callback );
       m_Callback.mp_AddItem( mc_pChecker );
       mc_pChecker->mp_InstallCallback( m_Poster );

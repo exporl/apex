@@ -1,5 +1,10 @@
-
 <stream>
-<stimulus repeat="500000"> <rate>0</rate> <cpc>4</cpc> <ae>20</ae> <re>0</re> <cl>20</cl> <t>31.6</t></stimulus>
+  <stimulus repeat="500000">
+    <rate>0</rate>
+    <cpc>4</cpc>
+    <ae>20</ae>
+    <re>0</re>
+    <cl>20</cl>
+    <t>31.6</t>
+  </stimulus>
 </stream>
-

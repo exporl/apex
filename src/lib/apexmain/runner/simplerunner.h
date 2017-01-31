@@ -17,31 +17,34 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __SIMPLERUNNER_H__
-#define __SIMPLERUNNER_H__
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RUNNER_SIMPLERUNNER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RUNNER_SIMPLERUNNER_H_
 
 #include "experimentrunner.h"
-//#include "experimentdata.h"
 
 namespace apex
 {
 
-class ApexControl;
+class FlowRunner;
 
 class SimpleRunner : public ExperimentRunner
 {
         Q_OBJECT
     public:
-//        SimpleRunner(ExperimentRunDelegate& p_rd): ExperimentRunner(p_rd) {};
-        void Select(const QString& path);
-        void SelectFromDir(const QString& path);
-        void Run();
-        void Finished();
+        SimpleRunner();
+        void select(const QString& path);
+        void selectFromDir(const QString& path);
+        virtual void makeVisible();
+public slots:
+        void setExpressions(const QMap<QString, QString>& expressions);
     private:
         QString path;
+        FlowRunner* flowRunner;
     signals:
         void errorMessage(const QString& source, const QString& message);
+        void setResultsFilePath(const QString& filePath);
+        void savedFile(const QString& filePath);
 };
 }
 
-#endif //#ifndef __SIMPLERUNNER_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_RUNNER_SIMPLERUNNER_H_

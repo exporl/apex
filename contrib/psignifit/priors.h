@@ -30,9 +30,9 @@ typedef BayesianPrior * BayesianPriorPtr;
 #define GetWorkingMin(c)		(((c) == NULL || (c)->prior == NULL) ? -INF : (*(c)->prior)(getWorkingLimit, (c)->args, -1.0, 0))
 #define GetWorkingMax(c)		(((c) == NULL || (c)->prior == NULL) ?  INF : (*(c)->prior)(getWorkingLimit, (c)->args,  1.0, 0))
 #define ExpectedNumberOfPriorArgs(c)	((unsigned short)(0.5 + (*(c)->prior)(nArgsForPrior, NULL, 0.0, 0)))
-#define VerifyPriorArgs(c)		((*(c)->prior)(verifyPriorArgs, (c)->args, 0.0, 0) != 0.0)
-#define PriorName(c)			((void *)(long)(*(c)->prior)(namePrior, (c)->args, 0.0, 0), gPriorString)
-#define PriorDescription(c)		((void *)(long)(*(c)->prior)(describePrior, (c)->args, 0.0, 0), gPriorString)
+#define VerifyPriorArgs(c)		((*(c)->prior)(verifyPriorArgs, (c)->args, 0.0, 0))
+#define PriorName(c)			((*(c)->prior)(namePrior, (c)->args, 0.0, 0), gPriorString)
+#define PriorDescription(c)		((*(c)->prior)(describePrior, (c)->args, 0.0, 0), gPriorString)
 
 #define kMaxPriorArgs	5
 typedef struct {

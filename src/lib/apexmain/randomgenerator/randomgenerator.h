@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef APEXRANDOMGENERATOR_H
-#define APEXRANDOMGENERATOR_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RANDOMGENERATOR_RANDOMGENERATOR_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RANDOMGENERATOR_RANDOMGENERATOR_H_
 
 
 #include <qstring.h>
@@ -33,7 +33,7 @@ class ApexControl;
 /**
 @author Tom Francart,,,
 */
-class RandomGenerator 
+class RandomGenerator
 {
 public:
     RandomGenerator(data::RandomGeneratorParameters* p_param);
@@ -44,9 +44,9 @@ public:
     virtual const QString& GetLastValue() const { return m_lastValue;};
     virtual void doDeterministicGeneration() = 0;
 
-    QString& GetParameter() const; 
+    QString& GetParameter() const;
 
-    
+
     protected:
     data::RandomGeneratorParameters* m_param;
     QString m_lastValue;

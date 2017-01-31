@@ -1,0 +1,824 @@
+\chapter{Creating experiment files}
+\label{chap:Creating experiment files}
+
+An \apex experiment file is an XML file. Like any XML file, it
+contains a root element (\element{apex}), which contains various
+main elements. The general structure of an \apex experiment file
+could be as follows:
+
+\begin{lstlisting}
+<?xml version='1.0' encoding='UTF-8'?>
+<apex>
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters> ... </parameters>
+    <trials> ... </trials>
+  </procedure>
+
+  <screens> ... </screens>
+  <datablocks> ... </datablocks>
+  <devices> ... </devices>
+  <stimuli> ... </stimuli>
+</apex>
+\end{lstlisting}
+
+The main elements are listed in the next section. Subsequently,
+each main element is discussed briefly.
+
+\section{Main APEX elements}
+
+Here we describe the main elements of the experiment, and the
+order in which they should occur. Some of them are compulsory,
+some are optional, and some contain child elements (nested, see
+section~\ref{sec:BasicXML:elements,tags,attributes}). Only the
+first child element is given. A complete listing of all the
+elements is given in the schema documentation.
+
+
+\begin{itemize}
+\item \element{procedure} see section~\ref{sec:procedures}
+
+\item \element{corrector} see section~\ref{sec:Corrector}
+
+\item \element{screen} see section~\ref{sec:screen}
+
+\item \element{datablocks} see section~\ref{sec:datablocks}
+
+\item \element{devices} see section~\ref{sec:Devices}
+
+\item \element{filters} \emph{optional} see
+section~\ref{sec:Filters}
+
+\item \element{stimuli} see section~\ref{sec:Stimuli}
+
+\item \element{connections} \emph{optional} see
+section~\ref{sec:Connections}
+
+\item \element{randomgenerators} \emph{optional} used to set
+parameters to random values, for example useful to implement level
+roving. An example of level roving is given in
+section~\ref{sec:roving}
+
+\item \element{calibration} \emph{optional} see
+section~\ref{sec:Calibration}
+
+\item \element{results}\emph{optional} see
+section~\ref{sec:Results} and section~\ref{sec:Using XSLT
+transforms}
+
+
+\item \element{interactive}\emph{optional} see
+section~\ref{sec:Interactive}
+
+\item \element{general}\emph{optional} see
+section~\ref{sec:General}
+\end{itemize}
+
+In the next paragraphs these elements will be described in more
+detail and their main child elements will be given.
+
+\subsection{Declaration of Main \element{apex} element}
+
+To associate an experiment file with the correct name space and
+schema, the following attributes are necessary:
+
+
+\begin{lstlisting}
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment">
+...
+</apex:apex>
+\end{lstlisting}
+
+For more information on name spaces and schema declarations, we
+refer to the XML specifications. For \apex it is sufficient to
+copy the text above. Note that the namespace contains a version number, in the example 3.1.1. When APEX opens an experiment file with a lower schema version number than its own version number, it will attempt to upgrade the experiment file to the new version. Any warnings or errors in the conversion process will be shown in the message window. Alternatively, you can manually upgrade the experiment file, by changing the version number, and fixing the validation errors that OxygenXML may show. Alternatively, you can use the experimentupgrader tool in the \apex binaries folder. \todo{explain some more, move elsewhere?}
+
+One modification to the above attributes can, however, be useful.
+If you use an XML editor with schema support (to allow
+autocompletion and showing documentation from the schema), it
+needs to know where the \apex schema (\filename {experiment.xsd})
+is located. This can be indicated by adding an absolute or
+relative path to the apex schema to the
+\attribute{xsi:schemaLocation} attribute. If for example \apex is installed in the
+default location (\filename{C:/Program Files/apex3}), the result
+would be as follows:
+
+\begin{lstlisting}
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" 
+ xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment 
+ file:C:/Program\%20Files/apex3/schemas/experiment.xsd>"
+...
+</apex:apex>
+\end{lstlisting}
+
+Or you could refer to the schema that we provide on our web server. This has the advantage that you don't have to refer to the absolute path on a particular computer, but has the downside that it requires an internet connection:
+
+\begin{lstlisting}
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" 
+ xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment 
+ https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+...
+</apex:apex>
+\end{lstlisting}
+
+
+\index{Main Apex elements}
+
+\subsection{Procedures}
+
+\label{sec:procedures}
+
+The Procedure controls the flow of an experiment. It decides on the
+next screen to be shown and the next stimulus to be presented.
+Generally a procedure will make use of a list of predefined
+trials.
+
+e.g.
+\begin{lstlisting}
+<procedure xsi:type="apex:constantProcedure">
+    <parameters>
+        ...
+    </parameters>
+
+    <trials>
+        <trial id="trial1" >
+            ...
+        </trial>
+        <trial id="trial2" >
+            ...
+        </trial>
+    </trials>
+</procedure>
+\end{lstlisting}
+
+\index{procedure}
+
+The \attribute{xsi:type} attribute determines the type of
+procedure that will be used. There are 5 procedure types
+implemented:
+
+\begin{description} 
+
+
+\item[constantProcedure:] each trial is presented a specified number of times
+
+\item [adaptiveProcedure:] the dependent variable (e.g.: level) of the
+stimulus depends on the response of the subject 
+
+\item [trainingProcedure:] a stimulus is presented AFTER the
+user has indicated the trial by pressing a button on the screen.
+If no corresponding trial is found, an error message is shown.
+This procedure is designed to be used as a replacement for the
+constant procedure to allow subjects to perform training before
+starting the actual experiment
+
+\item [pluginProcedure:] allows the user to implement a custom
+procedure using ECMAScript, see section~\ref{sec:plugins}.
+
+\item [multiProcedure:] contains several child procedures of any of the other 4 types and
+selects between them. This procedure ends when all child
+procedures have ended
+\end{description}
+
+Every \element{procedure} contains the following elements:
+
+\begin{itemize}
+\item \element{parameters} specifies the workings of a procedure,
+e.g., specifies the number of presentations per trial. Please read
+section~\ref{sec:Parameters} 
+
+\item \element{trials} specifies each
+trial that can be presented. A trial consists of a screen to be
+shown, a stimulus to be presented and the correct response. Each
+of these can be defined here.
+\end{itemize}
+
+The procedure determines whether the experiment is completed.
+
+One particular parameter for the procedure is the corrector. It compares the user's response to the correct response and can be used by the procedure to determine the next trial. The type of corrector to be used is defined using the \attribute{xsi:type} attribute. E.g.:
+
+\begin{lstlisting}
+
+<procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>2</presentations>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  ...
+</procedure>
+
+\begin{lstlisting}
+    <corrector xsi:type="apex:isequal"/>
+\end{lstlisting}
+
+Two main Correctors exist:
+\begin{itemize}\item \xml{isequal}: compares whether the text defined in the \element{answer} element in
+\element{trial} and the result from the screen (the subject's response) are exactly the same
+
+\item \xml{alternatives}: this corrector is used together with
+\element{choices > 1} in \element{procedure/parameters}. 
+\end{itemize}
+
+\label{sec:Corrector}
+\todo{too much detail about corrector here? The element is now optional.}
+
+\subsection{Screen}
+\label{sec:screen}
+
+\index{screen}
+
+\begin{description} \item A screen is a GUI (Graphical User Interface) that is to be used by the subject to
+respond to the stimulus that was presented. The layout of the screen can be changed in different ways and a variety of elements can be added to the screen, such as buttons, labels, pictures and movies (take a look in the APEX reference manual for an exhaustive list of all elements that can be added or changed). A brief overview of the possible elements is given below. 
+\end{description}
+
+\begin{lstlisting}
+<screens>
+    <general>
+      ...
+    </general>
+    <reinforcement>
+      ...
+    </reinforcement>
+    <style_apex> ... </style_apex>
+    <style> ... </style>
+    <childmode>  ... </childmode>
+    <defaultFont> ... </defaultFont>
+    <defaultFontsize> ... </defaultFontsize>
+    <screen id="screen1">
+      ...
+    </screen>
+</screens>
+\end{lstlisting}
+
+\begin{itemize}
+\item \element{general} Some general properties of the entire APEX window are set in this section, such as removing the panel on the right hand of the screen or adding a repeat button. The properties are applied for each particular screen defined below. 
+\item \element{reinforcement} indicates whether a progress bar is
+shown and whether feedback is given, and defines what kind of feedback about the procedure and correctness of answers is shown to the user. This is valid for the whole experiment.
+\element{reinforcement} includes: 
+
+\begin{itemize}
+\item \element{progressbar} as the value is \textbf{true} a progress bar will be displayed in the right hand bottom corner of the screen. The bar indicates how many trials have been completed and how many remain. When conducting an experiment in an adaptive way, it shows when a reversal occurs. The progress bar will increase at every reversal while the number of trials varies. The progress bar is not functional for multiprocedure or trainingprocedure.
+\item \element{feedback} shows visual feedback according to the correctness of the last answer. Feedback is shown using an upward or downward pointing thumb in the right hand panel when the value is set to true. No feedback is given as the value is \textbf{false}. 
+\end{itemize}
+
+Other elements can be added to \element{reinforcement} but are optional:
+\begin{itemize}
+\item \element{feedback length} duration of time after response (in msec) that APEX 3 waits before presenting the next trial. During this interval feedback can be displayed. If feedback is false, but a length is present, the specified time will be the time between to trials.
+\item \element{feedback on} When set to \textbf{clicked}, the clicked screenelement is highlighted (i.e. the subject’s answer). The correct screenelement is highlighted (irrespective of the answer of the subject) when the value is set to \textbf{correct}. No highlighting occurs as the value is \textbf{none}. 
+\item \element{feedback picture positive} and \element{feedback picture negative} can be used to set a feedback picture different from the standard thumb up/down. A prefix for the filename has to be specified. 
+\item \element{showcurrent} When set to \textbf{true}, the element corresponding to the currently playing stimulus is highlighted. 
+\end{itemize}
+
+\item \element{style_apex} Style that has to be applied to the whole of Apex.
+
+\item \element{style} Style that has to be applied to all screens.
+
+\item \element{childmode} Defines the elements used in child mode. In \element{childmode}, the experiments are adapted to the interest of children. It mainly involves a different screen panel and enables intro/outro movies. 
+
+\item \element{defaultFont} and \element{defaultFontsize} Name and size of the default font to be used for all elements of every screen. 
+
+\item \element{screen} a screen is defined for each stimulus. Each
+screen has an ID by which it can be referred to elsewhere in the
+experiment file (cf in \element{procedure}/\element{trial} to associate it with a stimulus).
+
+\end{itemize}
+
+
+\subsection{Datablocks}
+\label{sec:datablocks}
+
+\index{datablocks}
+
+A datablock is an abstraction of a basic block of data that can be
+processed by \apex and can be sent to a matching device. In the
+case of a sound card, the datablock would be an audio signal in
+the form of a series of samples that is commonly stored on disk as
+a so-called wave file.
+
+\begin{lstlisting}
+<datablocks>
+    <uri_prefix>...</uri_prefix>
+    <datablock id="datablock_star">
+        <device>soundcard</device>
+        <uri>star.wav</uri>
+    </datablock>
+</datablocks>
+\end{lstlisting}
+
+Basically, in element \element{datablock}, a wave file on disk is
+assigned an ID, such that it can be referred to elsewhere in the
+experiment file.
+
+\begin{itemize}
+\item \element{uri_prefix} indicates the path where APEX will look for the file, relative to the path where the experiment file is stored. A prefix can be specified inline or by
+specifying the ID of a prefix in the \apex config file and setting
+attribute \attribute{source} to \xml{apexconfig}. You can specify
+a complete URI or part of it. See section~\ref{sec:prefixes}
+
+\item \element{datablock} for each wave file a datablock is
+defined, with an ID.
+\end{itemize}
+
+\subsection{Devices}
+\label{sec:Devices}
+
+\index{devices}
+
+A Device is a system connected to the computer that can be
+controlled by \apex. Devices can send signals to a transducer.
+Examples are sound cards and interfaces to \acp{ci}. Device(s)
+can have parameters that can be controlled by \apex.
+
+\begin{lstlisting}
+<devices>
+    <device id="soundcard" xsi:type="apex:wavDeviceType">
+        <channels>2</channels>
+        <gain>0</gain>
+        <samplerate>44100</samplerate>
+    </device>
+</devices>
+\end{lstlisting}
+
+The following device types are currently supported:
+
+\begin{description}
+
+\item[wavDeviceType] for sound cards
+
+\item[L34Type] for an interface to cochlear implants
+\end{description}
+
+\subsection{Filters}
+\label{sec:Filters}
+
+\index{filters}
+
+Filters are used to process data before sending it to a device}. For example, if you want to change the level of your signal, you can use an \emph{amplifier}, which is a specific kind of filter. \\
+However, not every experiment needs filters. If the signals are routed directly to the output device without any processing, the section "\element{filters}" can be dropped.
+
+Currently implemented filters are (\element{filter xsi:type= ... }):
+
+\begin{description}
+\item[amplifier] a type of filter which allows to amplify or attenuate sound data
+
+\begin{lstlisting} 
+<filter xsi:type="apex:amplifier" id="ampli">
+\end{lstlisting}
+
+\item[generator] a special type of filter which generates a defined stimulus, such as a sine (SineGenerator) or white noise
+
+\begin{lstlisting} 
+<filter xsi:type="apex:generator" id="SineGenerator">
+  <type>sinus</type}
+</filter>
+\end{lstlisting}
+
+\item[dataloop]: a type of filter which can loop a given datablock infinitely (continuous = true), and can jump randomly (randomjump = true)
+
+\begin{lstlisting} 
+<filter xsi:type="apex:dataloop" id="noisegen">
+  <continuous>true</continuous}
+  <datablock>noisedata</datablock}
+  <randomjump>true</randomjump}
+</filter>
+\end{lstlisting}
+
+\item[PluginFilter] a type of filter which is an interface for implementing custom
+filters (see Chapter 5 Examples).
+\end{description}
+
+
+\element{filter} contains those elements which specify a filter or
+a generator
+
+\begin{lstlisting}
+<filter id="noisegen" xsi:type="apex:dataloop">
+   <device>soundcard</device>
+   <channels>1</channels>
+   <continuous>false</continuous> 
+   <datablock>noisedata</datablock>
+   <basegain>0</basegain>
+   <gain>0</gain>
+</filter>
+\end{lstlisting}
+
+
+
+\subsection{Stimuli}
+\label{sec:Stimuli}
+
+\index{stimuli} Stimuli are the auditory events presented to the
+subject. They can consist of one or more datablocks that are
+routed to any number of devices, simultaneously or sequentially.
+
+\begin{lstlisting}
+<stimuli>
+  <fixed_parameters>
+  ...
+  </fixed_parameters>
+
+  <stimulus id="stimulus_sentence1">
+  ...
+  </stimulus>
+</stimuli>
+\end{lstlisting}}
+
+
+\begin{itemize}
+\item \element{fixed_parameters} see section~\ref{sec:Parameters}
+
+\item \element{stimulus}
+\end{itemize}
+
+\subsection{Connections}
+\label{sec:Connections}
+
+\index{connections}
+
+Connections are defined to connect Datablocks, Filters and Devices. Any
+Datablock can be connected to any Filter or Device and any Filter can be connected to any other Filter
+or Device.
+\begin{lstlisting}
+  <connections>
+    <connection>
+     ...
+    </connection>
+  </connections>
+
+\end{lstlisting}
+
+\element {connections} defines how the different filters are
+routed to the output device(s)
+
+APEX can visualise the connections by clicking on the "show stimulus connections" item in the menu. An example connection diagram is shown in figure~\ref{fig:connections}.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{connectionswindow.png}
+ \caption{The connections window}
+ \label{fig:connections}
+\end{figure}
+
+\subsection{Calibration}
+\label{sec:Calibration}
+
+\index{calibration}
+In order to present any given stimulus at a known sound pressure level, a calibration gain is applied before the stimulus is played. Calibration is the process of measuring which calibration gain is necessary for a given stimulus to achieve a certain sound pressure level. 
+Calibration parameters are set in the\element{calibration} element of the apx file. Here a \element{stimulus} ID and parameters to be calibrated are defined. Since the stimuli used in most experiments are short, it is often helpful to make a longer version of the stimulus for use during calibration. This stimulus must have it’s own \element{datablock} and \element{stimulus} element definitions. 
+e.g:
+
+\begin{lstlisting}
+
+<datablock id="datablock_tone">
+	<device>wavdevice</device>
+	<uri>tone.wav</uri>
+</datablock>
+
+<datablock id="datablock_tone_long_calibration">
+            <device>wavdevice</device>
+            <uri>tone_long_calibration.wav</uri>
+</datablock>
+
+<stimulus id="stimulus_tone">
+	<datablocks>
+	<sequential>
+		<datablock id="datablock_tone"/>
+	</sequential>
+	</datablocks>
+	<variableParameters></variableParameters>
+	<fixedParameters></fixedParameters>
+</stimulus>
+
+<stimulus id="stimulus_tone_long_calibration">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_tone_long_calibration "/>
+                </sequential>
+            </datablocks>
+            <variableParameters></variableParameters>
+            <fixedParameters></fixedParameters>
+        </stimulus>
+
+<calibration profile="Calibprofile_HIB">
+        <stimuli>
+            <stimulus id="stimulus_calibration_tone"/>
+<stimulus id="stimulus_calibration_noise"/>
+        </stimuli>
+        <parameters>
+            <parameter id="gainid_amp_tone">
+                <targetamplitude>30</targetamplitude>
+                <calibrationamplitude>80</calibrationamplitude>
+                <mute>-150</mute>
+                <min>-100</min>
+                <max>100</max>
+            </parameter>
+            <parameter id="gainid_amp_noise">
+                <targetamplitude>15</targetamplitude>
+                <calibrationamplitude>80</calibrationamplitude>
+                <mute>-150</mute>
+                <min>-100</min>
+                <max>100</max>
+            </parameter>
+        </parameters>
+    </calibration>
+
+\end{lstlisting}
+
+The parameter to be calibrated is usually a gain parameter for an amplifier element. In the example there are two stimuli that need to be calibrated. The stimuli have datablock ID’s \id{stimulus_tone} and \id{stimulus_noise}. Since the stimuli are derived from different datablocks and different WAV files, they must be calibrated separately. For this reason, the datablocks are connected to separate amplifier elements with IDs \id{ampid\_sinusoid\_F250} and \id{ampid\_TENnoise}. In this example, these two amplifier gain parameters are calibrated.
+
+Calibration consists of a GUI for calibrating parameters and saving and applying
+calibration results. Any stimulus defined in the experiment files can be used as a calibration stimulus.
+
+Typically, calibration is the process of measuring which value of
+a digital parameter corresponds to a certain physical magnitude ,
+e.g., determining which internal amplification is necessary for a
+given wave file to achieve a certain sound pressure level.
+
+\apex provides a GUI to ease calibration (figure~\ref{fig:calibration}).
+\apex can only calibrate parameters, i.e., it can set a parameter
+to a certain value such that the resulting physical magnitude is
+the one defined in the experiment file in the
+\element{calibration} element.
+
+Because often the same calibration is useful for a set of
+experiment files, calibrations are stored under so-called
+\emph{calibration profiles}. The calibration profile to be used
+must be specified in the \element{calibration} element. For
+example if multiple experiment files are used for speech in noise
+tests, the calibration profile could be \xml{SpeechInNoise}.
+
+As it is possible to use \apex on the same computer with the same
+experiment files and calibration profile in different contexts (e.g., different types of
+headphones, which have different calibration settings), \apex
+makes use of the concept \emph{hardware setup}. A hardware setup
+associates a label to a certain set of hardware devices. The
+current hardware setup can be selected at runtime, i.e., cannot be
+specified in the experiment file.
+
+If \element{calibration} is defined in the experiment file and the
+calibration profile has not been calibrated before for the current
+hardware setup, the calibration window will be shown at the start
+of the experiment. 
+
+
+If the calibration profile was calibrated before, but you wish to
+recalibrate or change the current hardware setup, select
+\emph{Recalibrate} from the menu, select \emph{Manage profiles}
+and add the desired label for the current hardware configuration,
+eg. ``RME + headphones'', and click \textbf{Add} and \textbf{OK}.
+This configuration will also appear in the \apex window in the
+lower right hand corner. Under \textbf{Details...} the different
+calibration profiles that have been calibrated before will be
+shown (figure~\ref{fig:calibrationprofiles}).
+
+On the left hand side of the main calibration window the
+parameters to be calibrated are shown (as specified in the
+\element{calibration} element in the experiment file). In this
+example the parameter \id{cardgain} is calibrated, i.e. the gain
+of the sound card. First allow the calibration stimulus ample time
+to be able to measure an accurate value with a measuring device or
+use the averaging function of the device. Enter the measured
+amplitude (in \textbf{Measured amplitude}) and click on
+'\textbf{Correct output parameter}'. Repeat until the intended and
+measured values are the same. To save the result, click
+\textbf{apply}, and click on the OK button.  \apex will store this
+profile and retrieve it each time it is used.
+
+
+Important
+\begin{itemize}
+
+\item Remember to check whether the correct \emph{Hardware setup}
+is selected when starting an experiment. \apex will always use the
+hardware setup used in the previous experiment unless otherwise
+specified.
+
+\item \textbf{Apply} and \textbf{OK}. Each calibrated parameter
+needs to be saved by clicking on Apply and after all parameters
+are calibrated clicking on OK at the bottom of the dialog.
+\end{itemize}
+
+It can be of interest to calibrate at a higher level than the
+desired stimulation level, to avoid interference of background
+noise. If a yellow message appears, the signal has clipped.
+
+\textbf{Important:} Calibration values are stored as a value of a parameter for a combination of calibration parameter ID, calibration profile name, and hardware setup. When APEX opens an experiment file with a calibration section, it will search an internal database for a value corresponding to this combination. The database is stored in the Windows registry or in a text file under \filename{\~/.config} in Linux. By default the database is specific for the current user. If you want to share calibration values across users, you need to make a profile global using the \filename{calibrationadmin} tool. \todo{explain more?}
+
+Calibration values can be exported and imported to transport them across computers, or simply store them for future reference. This feature is available in the manage hardware setups screen. \todo{explain more?}
+
+
+\begin{figure}
+ \centering
+ \includegraphics[width=\textwidth]{calibrationwindow.png}
+ \caption{The calibration window}
+ \label{fig:calibration}
+\end{figure}
+
+
+\begin{figure}
+ \centering
+\includegraphics[width=0.8\textwidth]{calibrationwindow2.png}
+ \caption{The calibration window showing \emph{Manage profiles}}
+ \label{fig:calibrationprofiles}
+\end{figure}
+\label{sec:Calibration}
+
+
+ \index{calibration}
+
+
+\subsection{Results}
+\label{sec:Results}
+
+
+\index{results}
+
+After completion of the experiment a file containing results can be saved to disk. The default results file is in XML and it has the extension \textbf{.apr}. It contains all the
+information about the course of the completed experiment(e.g. number of reversals/trials, mean of reversals/trials in case of an adaptive procedure). 
+APEX automatically assigns a default name to the results file. Namely, it append \textbf{-results }to the name of the experiment file (e.g. gapdetection-results.apr). APEX will never overwrite an existing results file, but will append a number to the results file in case of an existing results file (e.g. gapdetection-results-1.apx). The subjects name can be appended automatically to the suggested results file by specifying it in the \textbf{<subject/>} element. This is typically modified at the beginning of an experiment using an interactive entry (see section~\ref{sec:Interactive}).
+
+e.g.:
+
+\begin{lstlisting}
+<results>
+  <subject>John Doe</subject>
+</results>
+\end{lstlisting}
+
+Please read section~\ref{chap:Results} for more information about displaying and analysing results.
+
+\subsection{Interactive}
+\index{Interactive}
+
+\label{sec:Interactive}
+
+Interactive allows the experimenter to modify certain aspects of
+the experiment file right before the experiment is started using a
+GUI.
+
+
+\begin{itemize}
+\item \element{Entry}
+\end{itemize}
+
+\subsection{General}
+General defines some general parameters.
+
+\label{sec:General}
+\begin{itemize}
+\item \element{show_results}
+
+\item \element{saveprocessedresults}
+\end{itemize}
+\index{General}
+
+\section{Parameters}
+\index{parameters}
+
+There are two types of parameters:
+\begin{description}
+
+\item [fixed parameter:] a fixed parameter is a property of a
+stimulus. It cannot be changed by \apex at runtime and is defined
+when the experiment file is created. It can be used by the
+procedure to select a stimulus from a list, it can be shown on the
+screen or it can be used as a piece of information when analyzing
+results
+
+\begin{lstlisting}
+<stimuli>
+    <fixed_parameters>
+      <parameter id="gap"/>
+    </fixed_parameters>
+
+    <stimulus id="stimulus1" >
+      <datablocks>
+        <datablock id="gwith5msinterval" />
+      </datablocks>
+      <fixedParameters>
+            <parameter id="gap">5</parameter>
+      </fixedParameters>
+    </stimulus>
+    ....
+</stimuli>
+\end{lstlisting}
+
+Fixed parameters are often used by adaptive procedures. If a
+certain fixed parameter is selected to be adapted by a procedure,
+the stimulus to be presented will be selected using that fixed
+parameter. The stimuli are selected amongst those listed in the
+current trial. In this example the duration of the gap is varied
+in a gap detection task.
+
+ \item [variable parameter:] a variable parameter is a
+property of an object of which the value can be changed at
+runtime. Variable parameters can be set by various \apex modules.
+Examples of modules that can define variable parameters are
+AdaptiveProcedure, Calibrator and Screen. Variable parameters can
+also be defined for a Stimulus. If a stimulus description contains a
+variable parameter, it will be set just before the stimulus is
+presented. Examples of modules that can have variable parameters
+(to be set by another module) are Filter, Controller and Device.
+\end{description}.
+
+\begin{lstlisting}
+
+ <stimuli>
+  <fixed_parameters/>
+   <stimulus id="stimulus0">
+      <description>Stimulus0</description>
+      <datablocks>
+        <datablock id="datablock0"/>
+      </datablocks>
+      <variableParameters>
+        <parameter id="speaker">3</parameter>
+        </variableParameters>
+        <fixedParameters/>
+    </stimulus>
+</stimuli>
+
+\end{lstlisting}
+
+
+\label{sec:Parameters}
+
+A variable stimulus parameter, is a parameter that will be set
+elsewhere just before the stimulus is sent to the device. Take care that a variable parameter is not set by different modules and/or a stimulus, as the resulting behaviour is undefined. 
+
+e.g. In examples 1 and 2 the gain of an amplifier is made a
+variable parameter by assigning it ID \id{gain}
+
+
+\subsection{Apexconfig}
+\label{apexconfig}
+
+
+The \filename{apexconfig.xml} file is a configuration file that
+applies to all experiments. It is stored in the folder
+\filename{config}, under the main \apex folder. It includes common
+names of sound cards and drivers and prefixes that can be referred
+to from any experiment file.
+
+If the \filename{apexconfig.xml} is not defined for the current system user
+the one in the \apex folder will be used. It is, however, also possible to have
+an \filename{apexconfig.xml} file per user. To add an
+\filename{apexconfig.xml} file for a specific user, log in as the
+user, and copy the apexconfig.xml file to the folder
+\filename{C:/Users/LoginName/Application Data/ExpORL}. If the file
+\filename{apexconfig.xml} is present in the latter folder, it will
+override the \filename{apexconfig.xml} file in the config folder
+under main \apex directory. \apex can automatically make this copy when you click the "edit apexconfig file" option in the help menu.
+
+\index{apexconfig}
+
+\section{Using prefixes}
+
+When specifying a prefix in an experiment file (e.g. in
+\element{datablocks} or \element{screens}), it is possible, but
+not necessary to write out the entire path in the XML file. This
+path can also be defined once in the \filename{apexconfig.xml}
+file located in the directory \filename{config}.
+
+In other words, a prefix can be specified inline (i.e.: as the
+content of the \element{uri_prefix} element) or by specifying the
+ID of a prefix in the \apex config file and setting attribute
+\attribute{source} to \filename {apexconfig}. You can specify a
+complete \element {uri}or part of it.
+
+
+A relative path given in the \element{uri_prefix} element is
+always relative to the path of the experiment file. Since \apex
+knows the location of the experiment file, only the folder
+containing the wave files (and pictures) must be specified. If for
+example the experiment file resides in
+\filename{c:/temp/files/experiment.apx}, the prefix \xml{../..}
+will point to \filename{c:/temp}.
+
+In the experiment file, it is possible to specify the prefix as a relative path, relative to the location of the apex experiment, as follows:
+
+\begin{lstlisting}
+   <uri_prefix>../stimuli</uri_prefix>
+\end{lstlisting}
+
+Alternatively, it is possible to specify it as:
+
+\begin{lstlisting}
+<uri_prefix source="apexconfig">speechmaterials</uri_prefix>
+\end{lstlisting}
+
+The prefix \emph{"speechmaterials"} that you are using in the experiment file is defined in \filename{apexconfig.xml}. Sometimes it is useful to make your own apexconfig file (see section~\ref{sec:apexconfig}). This way, you can create several prefixes that for example refer to a folder containing all your stimuli (several speech materials, noise, modulated stimuli etc.) You can link your prefix with the absolute or relative path of the folder as follows: \\
+
+\begin{lstlisting}
+<prefix id="regression">file:../stimuli</prefix>
+\end{lstlisting}
+
+It is good practice to avoid using absolute paths in experiment files, as this makes your experiments portable to other computers. 
+
+\label{sec:prefixes}
+
+\index{prefixes}
+
+\index{uri prefix}

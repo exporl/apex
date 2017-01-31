@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef STIMULUS_H
-#define STIMULUS_H
 
-#include "apextypedefs.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_STIMULUS_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_STIMULUS_H_
+
+#include "apexdata/factoryelement.h"
+
+#include "apexdata/stimulus/stimulusdata.h"
+
+#include "apextools/apextypedefs.h"
+
 #include "streamapptypedefs.h"
-#include "factoryelement.h"
-
-#include "stimulus/stimulusdata.h"
 
 namespace apex
 {

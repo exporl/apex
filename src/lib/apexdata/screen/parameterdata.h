@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef PARAMETERDATA_H
-#define PARAMETERDATA_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_PARAMETERDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_PARAMETERDATA_H_
 
 #include <QString>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -52,7 +52,7 @@ struct APEXDATA_EXPORT ParameterData
     QString id;
     QString name;
     QString expression;
-    
+
     bool operator==(const ParameterData& other) const
     {
         return  id == other.id &&

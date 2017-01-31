@@ -1,0 +1,317 @@
+\chapter{Scripting APEX}
+\label{chap:scripting}
+
+APEX is designed to allow setting up experiments without programming. However, in some cases it can be convenient to script some tasks, to avoid repetitive typing work and in case special behaviour is desired which it not built into APEX. In the following sections, we will describe how to implement custom procedures using Javascript (section~\ref{sec:pluginprocedure}), and how to automatically generate trials, datablocks and stimuli (section~\ref{sec:pluginxml}).
+
+The programming language used for these scripts is JavaScript, as implemented by Qt. Abundant online documentation of the Javascript language is available \todo{add reference to good tutorial}, and in most cases modifying examples provided with APEX will suffice to achieve the desired results.
+
+Note that these are more advanced APEX features, and while they are convenient, in most cases it is possible to avoid using them.
+
+\section{Plugin procedures}
+\label{sec:pluginprocedure}
+
+As an example of a plugin procedure, we will discuss the adjustment procedure that is included with the APEX examples (examples/procedure/adjustment-pluginprocedure.apx).
+
+\subsection{The experiment file}
+
+In the experiment file, the plugin procedure is specified as follows:
+
+\begin{lstlisting}
+<procedure xsi:type="apex:pluginProcedure">
+        <parameters>
+            <presentations>1</presentations>
+            <order>sequential</order>
+            <script>adjustmentprocedure.js</script>
+            <parameter name="screen">screen</parameter>
+            <parameter name="startvalue">-5</parameter>
+            <parameter name="parameter">gain_ac</parameter>
+            <parameter name="maxvalue">10</parameter>
+        </parameters>
+        <trials>
+            <trial id="trial">
+                <screen id="screen"/>
+                <stimulus id="stimulus"/>
+            </trial>
+        </trials>
+    </procedure>
+\end{lstlisting}
+
+They key here is the use of \xml{xsi:type="apex:pluginProcedure}, and referring to a javascript file in the \xml{script} element. In this case, we refer to \filename{testprocedure.js}. APEX will try to find the in the following folders (order as indicated):
+\begin{enumerate}
+\item the folder where the experiment file resides
+\item the pluginprocedures folder in the main APEX folder
+\end{enumerate}
+
+In this case, APEX will search for adjustmentprocedure.js in the experiment folder (examples/procedure), will not find it there, then look in the apex/pluginprocedures and find it there.
+
+Next to the default procedure parameters (\xml{<presentations>}, \xml{<order>}, etc.), extra parameters can be passed on to the pluginprocedure as indicated in the example above. They will be made available to the Javascript code in a variable \function{params}. In Javascript syntax, the parameters above would be specified as:
+
+\begin{lstlisting}
+params = { "presentations": 1,
+		   "order": "sequential",
+		   "screen": "screen",
+		   "startvalue": -5,
+		   "parameter": "gain_ac",
+		   "maxvalue": 10 };
+\end{lstlisting}
+
+
+
+\subsection{The javascript file}
+
+In the javascript file, a class needs to be implemented, inheriting from ScriptProcedureInterface, as follows:
+
+\begin{lstlisting}
+adjustmentProcedure.prototype = new ScriptProcedureInterface();
+\end{lstlisting}
+
+Function \function{getProcedure()} should be implemented, and return an instance of the desired procedure:
+
+\begin{lstlisting}
+function getProcedure()
+{
+    return new adjustmentProcedure();
+}
+\end{lstlisting}
+
+A constructor can be added to initialise some variables:
+
+\begin{lstlisting}
+function adjustmentProcedure()
+{
+    gain = parseFloat(params["startvalue"]);
+    screen = params["screen"];
+    stim = "stimulus";
+    hasMax = !(params["maxvalue"] === null);
+    this.button='';
+    if (hasMax) {
+        maxValue = parseFloat(params["maxvalue"]);
+    }
+}
+\end{lstlisting}
+
+Here the params variable is used to get access to parameters defined in the experiment file.
+
+The following methods of ScriptProcedureInterface can be reimplemented: processResult, setupNextTrial, firstScreen, resultXml, progress, checkParameters. These methods are documented in detail in section~\ref{sec:scriptprocedureinterface}. They will be called by APEX in the following order:
+\begin{description}
+\item[checkParameters] checks whether all parameter values make sense. If so, return an empty string, otherwise return an error message:
+\begin{lstlisting}
+adjustmentProcedure.prototype.checkParameters = function()
+{
+    if (params['parameter'] === null)
+        return "adjustmentProcedure: parameter not found";
+    if (params['startvalue'] === null)
+        return "adjustmentProcedure: parameter startvalue not found";
+    if (params['screen'] === null)
+        return "adjustmentProcedure: parameter screen not found";
+    return "";
+}
+\end{lstlisting}
+\item[firstScreen] return the first screen to be shown, before the user clicks the start button to start the experiment
+\begin{lstlisting}
+adjustmentProcedure.prototype.firstScreen = function()
+{
+    return screen;
+}
+\end{lstlisting}
+\item[setupNextTrial] returns the next trial to be presented. This is where most of the work happens. This function should return an object of class \function{Trial}. Class Trial is specified in detail in section~\ref{sec:trial}.
+\begin{lstlisting}
+adjustmentProcedure.prototype.setupNextTrial = function ()
+{
+	// some code removed for brevity, cf adjustmentprocedure.js
+    var t = new Trial();
+    t.addScreen(screen, true, 0);
+    var parameters = {};
+    parameters[params["parameter"]] = gain;
+    t.addStimulus(stim, parameters, "", 0);
+    t.setId("trial");
+    return t;
+}
+\end{lstlisting}
+
+\item[processResult] After the user has given a response, and therefore the trial has finished, \function{processResult} is called with argument screenresult. This is where the plugin procedure decides whether the user's response was correct, and stores the response if desired. It should return a class of type ResultHighLight specifying with element should be highlighted on the screen to give feedback. \function{screenresult} is documented in section~\ref{sec:screenresult} and \function{ResultHighlight}  in section~\ref{sec:resulthighlight}. In this case, we store the name of the button that was clicked and return an empty ResultHighlight element, indicating that nothing should be highlighted.
+\begin{lstlisting}
+adjustmentProcedure.prototype.processResult = function(screenresult)
+{
+    this.button = screenresult["buttongroup"];
+    return new ResultHighlight;
+}
+\end{lstlisting}
+
+\item[progress] can be implemented to indicate the value to be shown on the progress bar. It can return a value between 0 and 100.
+\end{description}
+
+
+
+To further aid writing plugin procedures, 2 extra facilities are available: a javascript library with convenient functions and an API to APEX. The javascript library resides in \filename{apex/pluginprocedures/pluginscriptlibrary.js}. The APEX API is described in section~\ref{scriptapi}.
+
+
+
+
+\subsection{ScriptProcedureInterface}
+\label{sec:scriptprocedureinterface}
+
+ProcedureInterface
+
+\todo{Include doxygen documentation}
+
+\subsection{ScriptAPI}
+\label{sec:scriptapi}
+
+\input{fromdoxygen/classapex_1_1_script_procedure_api.tex}
+
+\subsection{Trial}
+\label{sec:trial}
+
+\input{fromdoxygen/classapex_1_1data_1_1_trial.tex}
+
+\subsection{Screenresult}
+\label{sec:screenresult}
+
+\input{fromdoxygen/classapex_1_1_screen_result.tex}
+
+
+\subsection{ResultHighlight}
+\label{sec:resulthighlight}
+
+ResultHighlight (procedureinterface.h)
+
+\input{fromdoxygen/classapex_1_1data_1_1_script_result_highlight.tex}
+
+\subsection{Debugging}
+
+To debug plugin procedures, you can use the debugger. Simply put the command \function{debugger;} in your code, and when this is reached, a graphical debugger will be shown, allowing to inspect data structures etc.
+
+
+\section{Plugin XML}
+\label{sec:pluginxml}
+
+\subsection{Trials, datablocks and stimuli}
+
+\todo{start with simpler example, inline javascript that returns straight XML}
+
+When many trials/datablocks/stimuli need to be specified in the experiment file, or you want to parametrize them, it can be useful to generate the corresponding XML code programmatically rather than typing it by hand. This can be achieved by the use of plugintrials/plugindatablocks/pluginstimuli. We will illustrate this according to the example \filename{examples/xmlplugin/autotrials.apx}. The experiment file looks like this:
+
+\begin{lstlisting}
+  <procedure xsi:type="apex:constantProcedure">
+	...
+    <trials>
+      <plugintrials>
+        <parameter name="path">../stimuli/wd*.wav</parameter>
+        <parameter name="screen">screen1</parameter>
+      </plugintrials>
+    </trials>
+  </procedure>
+  ...
+  <datablocks>
+    <plugindatablocks>
+      <parameter name="path">../stimuli/*.wav</parameter>
+      <parameter name="device">wavdevice</parameter>
+    </plugindatablocks>
+  </datablocks>
+  ...
+  <stimuli>
+    <pluginstimuli>
+      <parameter name="path">../stimuli/*.wav</parameter>
+      <parameter name="prefix">stimulus_</parameter>
+    </pluginstimuli>
+  </stimuli>
+  <general>
+    <scriptlibrary>autostimulus.js</scriptlibrary>
+  </general>
+</apex:apex>
+\end{lstlisting}
+
+At the beginning of the trials/datablocks/stimuli section, the element plugintrials/plugindatablocks/pluginstimuli can be specified, referring to javascript code. There are three options to specify the javascript code:
+\begin{enumerate}
+\item Specify the code directly in the experiment file
+\item Refer to a javavascript file from the plugintrials/plugindatablocks/pluginstimuli element
+\item Specify a scriptlibrary in \xml{general/scriptlibrary} that contains all functions
+\end{enumerate}
+The latter approach was chosen for this example.
+
+In element plugintrials/plugindatablocks/pluginstimuli, parameters can be specified that will be made available to the javascript code. In this case the parameters are \function{path} and \function{prefix}, which specify the path in which to search for wav files, and the prefix that will be prepended to the trial/datablock/stimulus ID.
+
+The content of autostimulus.js is the following:
+
+\begin{lstlisting}
+function getStimuli () {
+    misc.checkParams( Array("path", "prefix"));
+    files = api.files( params["path"] );
+    r="";
+    for(i=0; i<files.length; ++i) {
+        print( files[i] );
+        r=r+xml.stimulus( params["prefix"]+files[i], "datablock_" + files[i]);
+    }
+    return r;
+}
+function getDatablocks() {
+	...
+}
+function getTrials() {
+	...
+}
+\end{lstlisting}
+
+Functions getStimuli, getDatablocks and getTrials will be called by APEX, and should return the XML code for stimuli, datablocks and trials. A javascript library of convenience function is made available (\filename{apex/pluginprocedures/pluginscriptlibrary.js}), and an API exposed by APEX, see section~\ref{sec:xmlpluginapi} for a complete description. In this case the function api.files is used to get a list of wav files in a specified path. For each of these files, a stimulus/datablock/trial is then generated. Note the use of convenience function xml.stimulus etc. to generate the XML code.
+
+\todo{show example output of getStimuli() etc and walk reader through step by step}
+
+\subsection{Pluginscreens}
+
+Similarly to trials, datablocks and stimuli, screens can also be generated using JavaScript code. In this case the \xml{pluginscreens} element is used. See examples/xmlplugin/screenplugin.apx.
+
+\subsection{XML Plugin API}
+\label{sec:xmlpluginapi}
+
+
+\input{fromdoxygen/classapex_1_1_x_m_l_plugin_a_p_i.tex}
+
+
+\subsection{Debugging}
+
+To debug generating XML from JavaScript code, the usual mechanisms are available, such as the use of the \function{debugger;} statement in JavaScript, which will open a graphical debugger. You can also save the experiment file in its expanded form after opening it in APEX, using the "Experiment|Save experiment as..." option in the menu.
+
+
+\section{Screens}
+
+To make screens more interactive, \xml{<htmlelement>} can be used.
+
+\begin{lstlisting}
+<screen id="screen1">
+  <gridLayout width="1" height="2">
+    <html row="1" col="1" id="htmlelement">
+    <page>page.html</page>
+  </html>
+</screen>
+\end{lstlisting}
+
+\filename{page.html} can contain HTML and Javascript, allowing for advanced user interaction.
+
+\todo{Cf. loudness adaptation example}
+
+An API is available.
+
+APEX will call the following functions:
+
+When the screen is enabled:
+
+\begin{lstlisting}
+reset(); enabled();
+\end{lstlisting}
+
+
+When the trial is finished, and the screenresult is needed.
+
+\begin{lstlisting}
+getResult();    // returns string
+\end{lstlisting}
+
+
+When the user has finished answering, \xml{api.answered()} should be called.
+
+
+
+\subsection{HtmlAPI}
+
+\input{fromdoxygen/classapex_1_1_html_a_p_i.tex}

@@ -17,11 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_ERRORLOGGER_H
-#define APEX_ERRORLOGGER_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_STATUS_ERRORLOGGER_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_STATUS_ERRORLOGGER_H_
+
+#include "../global.h"
 
 #include "statusdispatcher.h"
-#include "global.h"
 
 #include <QCoreApplication>
 
@@ -33,10 +34,9 @@ namespace apex
 /// Derive from this class to get some basic error logging
 class APEXTOOLS_EXPORT ErrorLogger
 {
-        Q_DECLARE_TR_FUNCTIONS(ErrorLogger)
+    Q_DECLARE_TR_FUNCTIONS(ErrorLogger)
 
-    public:
-
+public:
         virtual ~ErrorLogger();
 
         /**
@@ -58,8 +58,7 @@ class APEXTOOLS_EXPORT ErrorLogger
          */
         void clearLog();
 
-    protected:
-
+protected:
         ErrorLogger();
 
         /**
@@ -68,9 +67,8 @@ class APEXTOOLS_EXPORT ErrorLogger
          */
         StatusReporter& log() const;
 
-    private:
-
-        mutable std::auto_ptr<StatusDispatcher> errors;
+private:
+        mutable QScopedPointer<StatusDispatcher> errors;
 };
 }
 

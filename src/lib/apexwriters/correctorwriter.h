@@ -17,16 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef CORRECTORWRITER_H
-#define CORRECTORWRITER_H
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_CORRECTORWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_CORRECTORWRITER_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
 
 namespace XERCES_CPP_NAMESPACE
 {
-class DOMDocument;
 class DOMElement;
 }
 
@@ -39,7 +38,6 @@ class CorrectorData;
 
 namespace writer
 {
-using namespace XERCES_CPP_NAMESPACE;
 
 /**
 *@author Job Noorman <jobnoorman@gmail.com>
@@ -50,12 +48,12 @@ class APEXWRITERS_EXPORT CorrectorWriter
         /**
         * Adds a <corrector> element to the document.
         *
-        * @param doc  the document to place the element in
+        * @param elem  the element to place the element in
         * @param data the data to create the element with
         *
         * @return the created element
         */
-        static DOMElement* addElement(DOMDocument* doc, const data::CorrectorData& data);
+        static XERCES_CPP_NAMESPACE::DOMElement* addElement(XERCES_CPP_NAMESPACE::DOMElement* elem, const data::CorrectorData& data);
 
 };
 

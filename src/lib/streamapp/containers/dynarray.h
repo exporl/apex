@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __STRDYNARRAY_H__
 #define __STRDYNARRAY_H__
 
-#include <assert.h>
+#include "../defines.h"
+
+#include <QtGlobal>
+
 #ifndef S_C6X
 #include <cstdlib>      //malloc
 #else
 #include <stdlib.h>
 #endif
 #include <string.h>     //memmove
-#include "defines.h"
 
 namespace streamapp
 {
@@ -129,7 +131,7 @@ namespace streamapp
         */
     INLINE tType mf_GetItem( const unsigned ac_nItem ) const
     {
-      assert( ac_nItem < m_nItems );
+      Q_ASSERT( ac_nItem < m_nItems );
       return mp_Array[ ac_nItem ];
     }
 
@@ -140,7 +142,7 @@ namespace streamapp
         */
     INLINE tType& operator() ( const unsigned ac_nItem )
     {
-      assert( ac_nItem < m_nItems );
+      Q_ASSERT( ac_nItem < m_nItems );
       return mp_Array[ ac_nItem ];
     }
 
@@ -151,7 +153,7 @@ namespace streamapp
         */
     INLINE const tType& operator() ( const unsigned ac_nItem ) const
     {
-      assert( ac_nItem < m_nItems );
+      Q_ASSERT( ac_nItem < m_nItems );
       return mp_Array[ ac_nItem ];
     }
 
@@ -162,7 +164,7 @@ namespace streamapp
         */
     INLINE const tType& mf_GetRItem( const unsigned ac_nItem ) const
     {
-      assert( ac_nItem < m_nItems );
+      Q_ASSERT( ac_nItem < m_nItems );
       return mp_Array[ ac_nItem ];
     }
 
@@ -207,7 +209,7 @@ namespace streamapp
         */
     INLINE virtual void mp_SetItem( const unsigned ac_nItem, tType ac_Item )
     {
-      assert( ac_nItem <= m_nSize );
+      Q_ASSERT( ac_nItem <= m_nSize );
       mp_Array[ ac_nItem ] = ac_Item;
     }
 
@@ -225,15 +227,15 @@ namespace streamapp
         */
     virtual void mp_RemoveItemAt( const unsigned ac_nItemPos )
     {
-      assert( ac_nItemPos < m_nItems );
+      Q_ASSERT( ac_nItemPos < m_nItems );
 
-      memset( &mp_Array[ ac_nItemPos ] , 0 , sizeof( tType* ) );
+      memset( &mp_Array[ ac_nItemPos ] , 0 , sizeof( tType** ) );
       const unsigned nRunTo = m_nItems - 1;
       for( unsigned i = ac_nItemPos ; i < nRunTo ; ++ i )
       {
         const unsigned nSrc = i + 1;
-        memmove( &mp_Array[ i ] , &mp_Array[ nSrc ] , sizeof( tType* ) );
-        memset( &mp_Array[ nSrc ] , 0 , sizeof( tType* ) );
+        memmove( &mp_Array[ i ] , &mp_Array[ nSrc ] , sizeof( tType** ) );
+        memset( &mp_Array[ nSrc ] , 0 , sizeof( tType** ) );
       }
       m_nItems--;
     }

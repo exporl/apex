@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.3/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
 
     <xs:include schemaLocation="prefix.xsd"/>
     <xs:include schemaLocation="xmlgeneratingplugin.xsd"/>
@@ -16,10 +16,10 @@
                     file.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="datablock" type="apex:datablockType"
-                maxOccurs="unbounded" minOccurs="0"> </xs:element>
-            <xs:element name="plugindatablocks" type="apex:pluginDatablocksType"
-                minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="datablock" type="apex:datablockType" maxOccurs="unbounded"
+                minOccurs="0"> </xs:element>
+            <xs:element name="plugindatablocks" type="apex:pluginDatablocksType" minOccurs="0"
+                maxOccurs="unbounded"/>
         </xs:sequence>
 
     </xs:complexType>
@@ -49,13 +49,6 @@
                     reference</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="birth" type="xs:dateTime" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>Time stamp of the last modification of the
-                        data file. If specified, it will be checked and an error
-                        will be shown if it does not match.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
             <xs:element name="checksum" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>MD5 checksum of the datablock. If
@@ -66,8 +59,7 @@
                 <xs:complexType>
                     <xs:simpleContent>
                         <xs:extension base="xs:hexBinary">
-                            <xs:attribute name="check" type="xs:boolean"
-                                use="optional"/>
+                            <xs:attribute name="check" type="xs:boolean" use="optional"/>
                         </xs:extension>
                     </xs:simpleContent>
                 </xs:complexType>
@@ -90,7 +82,7 @@
                     </xs:annotation>
                     <xs:complexType mixed="true">
                         <xs:sequence minOccurs="0">
-                            <xs:any processContents="skip"></xs:any>
+                            <xs:any processContents="skip"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
@@ -102,8 +94,7 @@
                     cases.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="loop" type="xs:positiveInteger" minOccurs="0"
-                maxOccurs="1">
+            <xs:element name="loop" type="xs:positiveInteger" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>Number of times the datablock should be
                         looped</xs:documentation>

@@ -17,15 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef PARAMETERLabelELEMENT_H
-#define PARAMETERLabelELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_PARAMETERLABELELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_PARAMETERLABELELEMENT_H_
 
 #include "parameterscontainerelement.h"
 #include "parameterdata.h"
 
 #include <QCoreApplication>
 
-#include "global.h"
+#include "apextools/global.h"
 
 
 namespace apex
@@ -54,7 +54,7 @@ class APEXDATA_EXPORT ParameterLabelElement
 
         bool setParameter(ParameterData d);
         ParameterData getParameter() const;
-        
+
         bool operator==(const ParameterLabelElement& other) const;
 
     private:

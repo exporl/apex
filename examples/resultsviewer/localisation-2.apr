@@ -1,0 +1,932 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:results experiment_file="file:/C:/Dimitar/localisation/noise250Hz_13sp_rove5.apx" xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+<general>
+    <apex_version>3.1.x</apex_version>
+    <apex_version_git>(7962f3) -   Wed Nov 4 12:52:46 2015 +0100</apex_version_git>
+    <description> APEX 3 localisation experiment</description>
+    <startdate>2015-11-19T15:56:40</startdate>
+    <enddate>2015-11-19T16:00:15</enddate>
+    <duration unit="seconds">215</duration>
+    <jscript>apex:resultsviewer.html</jscript>
+</general>
+<trial id="trial0">
+<procedure type="apex:constantProcedure">
+<answer>button0</answer>
+<correct_answer>button0</correct_answer>
+<stimulus>stimulus0</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="button0"></element>
+    <element id="buttongroup">button0</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1446</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-1.61001</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:56:40</trial_start_time>
+</trial>
+
+<trial id="trial75">
+<procedure type="apex:constantProcedure">
+<answer>button45</answer>
+<correct_answer>button75</correct_answer>
+<stimulus>stimulus75</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button45"></element>
+    <element id="buttongroup">button45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1889</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-1.79758</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:56:45</trial_start_time>
+</trial>
+
+<trial id="trial60">
+<procedure type="apex:constantProcedure">
+<answer>button75</answer>
+<correct_answer>button60</correct_answer>
+<stimulus>stimulus60</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button75"></element>
+    <element id="buttongroup">button75</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1640</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-4.04065</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:56:50</trial_start_time>
+</trial>
+
+<trial id="trial-30">
+<procedure type="apex:constantProcedure">
+<answer>button-45</answer>
+<correct_answer>button-30</correct_answer>
+<stimulus>stimulus-30</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-45"></element>
+    <element id="buttongroup">button-45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3901</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-0.782802</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:56:55</trial_start_time>
+</trial>
+
+<trial id="trial0">
+<procedure type="apex:constantProcedure">
+<answer>button-15</answer>
+<correct_answer>button0</correct_answer>
+<stimulus>stimulus0</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-15"></element>
+    <element id="buttongroup">button-15</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>8790</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-0.247236</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:57:03</trial_start_time>
+</trial>
+
+<trial id="trial75">
+<procedure type="apex:constantProcedure">
+<answer>button75</answer>
+<correct_answer>button75</correct_answer>
+<stimulus>stimulus75</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="button75"></element>
+    <element id="buttongroup">button75</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1730</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-0.19951</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:57:15</trial_start_time>
+</trial>
+
+<trial id="trial75">
+<procedure type="apex:constantProcedure">
+<answer>button60</answer>
+<correct_answer>button75</correct_answer>
+<stimulus>stimulus75</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button60"></element>
+    <element id="buttongroup">button60</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1469</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-4.53639</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:57:20</trial_start_time>
+</trial>
+
+<trial id="trial-15">
+<procedure type="apex:constantProcedure">
+<answer>button-30</answer>
+<correct_answer>button-15</correct_answer>
+<stimulus>stimulus-15</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-30"></element>
+    <element id="buttongroup">button-30</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1133</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-1.2364</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:57:25</trial_start_time>
+</trial>
+
+<trial id="trial-60">
+<procedure type="apex:constantProcedure">
+<answer>button-45</answer>
+<correct_answer>button-60</correct_answer>
+<stimulus>stimulus-60</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-45"></element>
+    <element id="buttongroup">button-45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1919</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-4.84419</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:57:29</trial_start_time>
+</trial>
+
+<trial id="trial-30">
+<procedure type="apex:constantProcedure">
+<answer>button-30</answer>
+<correct_answer>button-30</correct_answer>
+<stimulus>stimulus-30</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="button-30"></element>
+    <element id="buttongroup">button-30</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2190</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-2.56556</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:57:34</trial_start_time>
+</trial>
+
+<trial id="trial-45">
+<procedure type="apex:constantProcedure">
+<answer>button-90</answer>
+<correct_answer>button-45</correct_answer>
+<stimulus>stimulus-45</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-90"></element>
+    <element id="buttongroup">button-90</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1647</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-0.384664</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:57:40</trial_start_time>
+</trial>
+
+<trial id="trial-90">
+<procedure type="apex:constantProcedure">
+<answer>button-75</answer>
+<correct_answer>button-90</correct_answer>
+<stimulus>stimulus-90</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-75"></element>
+    <element id="buttongroup">button-75</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>964</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-3.68291</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:57:45</trial_start_time>
+</trial>
+
+<trial id="trial15">
+<procedure type="apex:constantProcedure">
+<answer>button0</answer>
+<correct_answer>button15</correct_answer>
+<stimulus>stimulus15</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button0"></element>
+    <element id="buttongroup">button0</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1392</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-2.33659</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:57:49</trial_start_time>
+</trial>
+
+<trial id="trial-75">
+<procedure type="apex:constantProcedure">
+<answer>button-45</answer>
+<correct_answer>button-75</correct_answer>
+<stimulus>stimulus-75</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-45"></element>
+    <element id="buttongroup">button-45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>4021</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-4.91037</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:57:54</trial_start_time>
+</trial>
+
+<trial id="trial30">
+<procedure type="apex:constantProcedure">
+<answer>button45</answer>
+<correct_answer>button30</correct_answer>
+<stimulus>stimulus30</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button45"></element>
+    <element id="buttongroup">button45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1569</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-3.6037</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:01</trial_start_time>
+</trial>
+
+<trial id="trial-90">
+<procedure type="apex:constantProcedure">
+<answer>button-75</answer>
+<correct_answer>button-90</correct_answer>
+<stimulus>stimulus-90</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-75"></element>
+    <element id="buttongroup">button-75</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2501</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-4.99365</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:06</trial_start_time>
+</trial>
+
+<trial id="trial45">
+<procedure type="apex:constantProcedure">
+<answer>button60</answer>
+<correct_answer>button45</correct_answer>
+<stimulus>stimulus45</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button60"></element>
+    <element id="buttongroup">button60</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2484</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-4.4584</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:12</trial_start_time>
+</trial>
+
+<trial id="trial45">
+<procedure type="apex:constantProcedure">
+<answer>button75</answer>
+<correct_answer>button45</correct_answer>
+<stimulus>stimulus45</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button75"></element>
+    <element id="buttongroup">button75</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1043</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-2.94447</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:18</trial_start_time>
+</trial>
+
+<trial id="trial-15">
+<procedure type="apex:constantProcedure">
+<answer>button-45</answer>
+<correct_answer>button-15</correct_answer>
+<stimulus>stimulus-15</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-45"></element>
+    <element id="buttongroup">button-45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2223</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-0.155146</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:22</trial_start_time>
+</trial>
+
+<trial id="trial90">
+<procedure type="apex:constantProcedure">
+<answer>button90</answer>
+<correct_answer>button90</correct_answer>
+<stimulus>stimulus90</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="button90"></element>
+    <element id="buttongroup">button90</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2227</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-0.779529</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:28</trial_start_time>
+</trial>
+
+<trial id="trial60">
+<procedure type="apex:constantProcedure">
+<answer>button75</answer>
+<correct_answer>button60</correct_answer>
+<stimulus>stimulus60</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button75"></element>
+    <element id="buttongroup">button75</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2479</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-1.71458</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:34</trial_start_time>
+</trial>
+
+<trial id="trial0">
+<procedure type="apex:constantProcedure">
+<answer>button-30</answer>
+<correct_answer>button0</correct_answer>
+<stimulus>stimulus0</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-30"></element>
+    <element id="buttongroup">button-30</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3248</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-1.18273</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:39</trial_start_time>
+</trial>
+
+<trial id="trial-60">
+<procedure type="apex:constantProcedure">
+<answer>button-45</answer>
+<correct_answer>button-60</correct_answer>
+<stimulus>stimulus-60</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-45"></element>
+    <element id="buttongroup">button-45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1738</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-3.04559</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:46</trial_start_time>
+</trial>
+
+<trial id="trial60">
+<procedure type="apex:constantProcedure">
+<answer>button90</answer>
+<correct_answer>button60</correct_answer>
+<stimulus>stimulus60</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button90"></element>
+    <element id="buttongroup">button90</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2588</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-2.48955</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:51</trial_start_time>
+</trial>
+
+<trial id="trial45">
+<procedure type="apex:constantProcedure">
+<answer>button75</answer>
+<correct_answer>button45</correct_answer>
+<stimulus>stimulus45</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button75"></element>
+    <element id="buttongroup">button75</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2398</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-4.82058</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:58:57</trial_start_time>
+</trial>
+
+<trial id="trial-45">
+<procedure type="apex:constantProcedure">
+<answer>button-45</answer>
+<correct_answer>button-45</correct_answer>
+<stimulus>stimulus-45</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="button-45"></element>
+    <element id="buttongroup">button-45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2309</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-0.687777</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:03</trial_start_time>
+</trial>
+
+<trial id="trial15">
+<procedure type="apex:constantProcedure">
+<answer>button0</answer>
+<correct_answer>button15</correct_answer>
+<stimulus>stimulus15</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button0"></element>
+    <element id="buttongroup">button0</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2751</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-2.6554</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:09</trial_start_time>
+</trial>
+
+<trial id="trial90">
+<procedure type="apex:constantProcedure">
+<answer>button90</answer>
+<correct_answer>button90</correct_answer>
+<stimulus>stimulus90</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="button90"></element>
+    <element id="buttongroup">button90</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1781</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-0.3188</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:15</trial_start_time>
+</trial>
+
+<trial id="trial-45">
+<procedure type="apex:constantProcedure">
+<answer>button-60</answer>
+<correct_answer>button-45</correct_answer>
+<stimulus>stimulus-45</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-60"></element>
+    <element id="buttongroup">button-60</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2077</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-3.69498</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:20</trial_start_time>
+</trial>
+
+<trial id="trial-90">
+<procedure type="apex:constantProcedure">
+<answer>button-90</answer>
+<correct_answer>button-90</correct_answer>
+<stimulus>stimulus-90</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="button-90"></element>
+    <element id="buttongroup">button-90</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1841</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-1.01716</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:25</trial_start_time>
+</trial>
+
+<trial id="trial90">
+<procedure type="apex:constantProcedure">
+<answer>button45</answer>
+<correct_answer>button90</correct_answer>
+<stimulus>stimulus90</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button45"></element>
+    <element id="buttongroup">button45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2833</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-4.86725</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:30</trial_start_time>
+</trial>
+
+<trial id="trial30">
+<procedure type="apex:constantProcedure">
+<answer>button30</answer>
+<correct_answer>button30</correct_answer>
+<stimulus>stimulus30</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="button30"></element>
+    <element id="buttongroup">button30</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2876</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-2.25799</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:36</trial_start_time>
+</trial>
+
+<trial id="trial-75">
+<procedure type="apex:constantProcedure">
+<answer>button-60</answer>
+<correct_answer>button-75</correct_answer>
+<stimulus>stimulus-75</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-60"></element>
+    <element id="buttongroup">button-60</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1818</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-3.46194</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:42</trial_start_time>
+</trial>
+
+<trial id="trial30">
+<procedure type="apex:constantProcedure">
+<answer>button45</answer>
+<correct_answer>button30</correct_answer>
+<stimulus>stimulus30</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button45"></element>
+    <element id="buttongroup">button45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2099</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-3.30509</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:46</trial_start_time>
+</trial>
+
+<trial id="trial-30">
+<procedure type="apex:constantProcedure">
+<answer>button-30</answer>
+<correct_answer>button-30</correct_answer>
+<stimulus>stimulus-30</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="button-30"></element>
+    <element id="buttongroup">button-30</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2609</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-3.10861</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:51</trial_start_time>
+</trial>
+
+<trial id="trial-60">
+<procedure type="apex:constantProcedure">
+<answer>button-45</answer>
+<correct_answer>button-60</correct_answer>
+<stimulus>stimulus-60</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-45"></element>
+    <element id="buttongroup">button-45</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1462</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-4.02549</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T15:59:57</trial_start_time>
+</trial>
+
+<trial id="trial-15">
+<procedure type="apex:constantProcedure">
+<answer>button-60</answer>
+<correct_answer>button-15</correct_answer>
+<stimulus>stimulus-15</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-60"></element>
+    <element id="buttongroup">button-60</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1308</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-2.38396</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T16:00:01</trial_start_time>
+</trial>
+
+<trial id="trial15">
+<procedure type="apex:constantProcedure">
+<answer>button15</answer>
+<correct_answer>button15</correct_answer>
+<stimulus>stimulus15</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="button15"></element>
+    <element id="buttongroup">button15</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2695</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-2.61601</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T16:00:06</trial_start_time>
+</trial>
+
+<trial id="trial-75">
+<procedure type="apex:constantProcedure">
+<answer>button-60</answer>
+<correct_answer>button-75</correct_answer>
+<stimulus>stimulus-75</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="button-60"></element>
+    <element id="buttongroup">button-60</element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1263</responsetime>
+<randomgenerators>
+<randomgenerator id="roving" parameter="rovegain">-4.55848</randomgenerator>
+</randomgenerators>
+<trial_start_time>2015-11-19T16:00:11</trial_start_time>
+</trial>
+
+<calibration>
+<parameter id="gain1">-23.3</parameter>
+<parameter id="gain10">-23.7</parameter>
+<parameter id="gain11">-22.8</parameter>
+<parameter id="gain12">-25.1</parameter>
+<parameter id="gain13">-25.4</parameter>
+<parameter id="gain2">-23.5</parameter>
+<parameter id="gain3">-24.3</parameter>
+<parameter id="gain4">-24.7</parameter>
+<parameter id="gain5">-24.8</parameter>
+<parameter id="gain6">-25.3</parameter>
+<parameter id="gain7">-24.4</parameter>
+<parameter id="gain8">-23.3</parameter>
+<parameter id="gain9">-24.2</parameter>
+</calibration>
+<processed>
+
+ExperimentFile=file:/C:/Dimitar/localisation/noise250Hz_13sp_rove5.apx
+Duration=215 seconds
+Header=trial;stimulus;correctanswer;corrector;useranswer
+START
+trial0;stimulus0;button0;true;button0
+trial75;stimulus75;button75;false;button45
+trial60;stimulus60;button60;false;button75
+trial-30;stimulus-30;button-30;false;button-45
+trial0;stimulus0;button0;false;button-15
+trial75;stimulus75;button75;true;button75
+trial75;stimulus75;button75;false;button60
+trial-15;stimulus-15;button-15;false;button-30
+trial-60;stimulus-60;button-60;false;button-45
+trial-30;stimulus-30;button-30;true;button-30
+trial-45;stimulus-45;button-45;false;button-90
+trial-90;stimulus-90;button-90;false;button-75
+trial15;stimulus15;button15;false;button0
+trial-75;stimulus-75;button-75;false;button-45
+trial30;stimulus30;button30;false;button45
+trial-90;stimulus-90;button-90;false;button-75
+trial45;stimulus45;button45;false;button60
+trial45;stimulus45;button45;false;button75
+trial-15;stimulus-15;button-15;false;button-45
+trial90;stimulus90;button90;true;button90
+trial60;stimulus60;button60;false;button75
+trial0;stimulus0;button0;false;button-30
+trial-60;stimulus-60;button-60;false;button-45
+trial60;stimulus60;button60;false;button90
+trial45;stimulus45;button45;false;button75
+trial-45;stimulus-45;button-45;true;button-45
+trial15;stimulus15;button15;false;button0
+trial90;stimulus90;button90;true;button90
+trial-45;stimulus-45;button-45;false;button-60
+trial-90;stimulus-90;button-90;true;button-90
+trial90;stimulus90;button90;false;button45
+trial30;stimulus30;button30;true;button30
+trial-75;stimulus-75;button-75;false;button-60
+trial30;stimulus30;button30;false;button45
+trial-30;stimulus-30;button-30;true;button-30
+trial-60;stimulus-60;button-60;false;button-45
+trial-15;stimulus-15;button-15;false;button-60
+trial15;stimulus15;button15;true;button15
+trial-75;stimulus-75;button-75;false;button-60
+END
+</processed>
+</apex:results>

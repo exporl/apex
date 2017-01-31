@@ -17,12 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_DATADATABLOCKSDATA_H
-#define APEX_DATADATABLOCKSDATA_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_DATABLOCK_DATABLOCKSDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_DATABLOCK_DATABLOCKSDATA_H_
 
-#include "global.h"
-#include "apextypedefs.h"
-#include "fileprefix.h"
+#include "../fileprefix.h"
+
+#include "apextools/apextypedefs.h"
+#include "apextools/global.h"
 
 namespace apex
 {

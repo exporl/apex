@@ -17,13 +17,11 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "filtersdata.h"
+#include "apextools/apextools.h"
+#include "apextools/exceptions.h"
 
 #include "filterdata.h"
-
-//from libtools
-#include "exceptions.h"
-#include "apextools.h"
+#include "filtersdata.h"
 
 namespace apex
 {

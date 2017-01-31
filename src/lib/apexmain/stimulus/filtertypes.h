@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef FILTERTYPES_H
-#define FILTERTYPES_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_FILTERTYPES_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_FILTERTYPES_H_
 
 #include <QString>
 

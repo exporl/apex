@@ -16,16 +16,24 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "../callback/eofcheckcallbacks.h"
+
+#include "../containers/dynstrlist.h"
+
+#include "../multistream.h"
+
+#include "../soundcard/soundcard.h"
+
+#include "../streamappfactory.h"
+#include "../streamappfactory.h"
+#include "../streamutils.h"
+
+#include "../utils/stringutils.h"
+
 #include "latencytester.h"
-#include "soundcard/soundcard.h"
-#include "streamappfactory.h"
-#include "containers/dynstrlist.h"
-#include "utils/stringutils.h"
-#include "streamutils.h"
-#include "callback/eofcheckcallbacks.h"
-#include "streamappfactory.h"
-#include "multistream.h"
+
+#include <QtGlobal>
 
 using namespace appcore;
 using namespace streamapp;
@@ -82,8 +90,8 @@ void LatencyTester::mp_SetChannels( const tUnsignedVector& ac_PlayChannelNumbers
   const tUnsignedVector::size_type nPlay = ac_PlayChannelNumbers.size();
   const tUnsignedVector::size_type nRec = ac_RecordChannelNumbers.size();
 
-  assert( nRec <= mc_pCard->mf_nGetIChan() );
-  assert( nPlay <= mc_pCard->mf_nGetOChan() );
+  Q_ASSERT( nRec <= mc_pCard->mf_nGetIChan() );
+  Q_ASSERT( nPlay <= mc_pCard->mf_nGetOChan() );
 
     //setup output first
   for( tUnsignedVector::size_type i = 0 ; i < nRec ; ++i )

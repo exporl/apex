@@ -16,21 +16,20 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef APEXUNIFORMRANDOMGENERATOR_H
-#define APEXUNIFORMRANDOMGENERATOR_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RANDOMGENERATOR_UNIFORMRANDOMGENERATOR_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RANDOMGENERATOR_UNIFORMRANDOMGENERATOR_H_
+
+#include "apextools/random.h"
 
 #include "randomgenerator.h"
-
-//from apextools
-#include "random.h"
 
 namespace apex {
 
 /**
 @author Tom Francart,,,
 */
-class UniformRandomGenerator : public RandomGenerator
+class APEX_EXPORT UniformRandomGenerator : public RandomGenerator
 {
     public:
 

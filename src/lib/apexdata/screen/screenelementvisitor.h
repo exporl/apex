@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SCREENELEMENTVISITOR_H
-#define SCREENELEMENTVISITOR_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREENELEMENTVISITOR_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREENELEMENTVISITOR_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -44,6 +44,7 @@ class PictureLabelElement;
 class ScreenElement;
 class TextEditElement;
 class TwoPartLayoutElement;
+class HtmlElement;
 
 /**
  * The ScreenElementVisitor class is a visitor interface for
@@ -101,6 +102,7 @@ class APEXDATA_EXPORT ScreenElementVisitor
         virtual void visitPicture(const PictureElement* e);
         virtual void visitPictureLabel(const PictureLabelElement* e);
         virtual void visitTextEdit(const TextEditElement* e);
+        virtual void visitHtml(const HtmlElement* e);
         virtual void visitTwoPartLayout(const TwoPartLayoutElement* e);
 
         virtual void visitAnswerLabel(AnswerLabelElement* e);
@@ -119,6 +121,7 @@ class APEXDATA_EXPORT ScreenElementVisitor
         virtual void visitPicture(PictureElement* e);
         virtual void visitPictureLabel(PictureLabelElement* e);
         virtual void visitTextEdit(TextEditElement* e);
+        virtual void visitHtml(HtmlElement* e);
         virtual void visitTwoPartLayout(TwoPartLayoutElement* e);
 };
 }

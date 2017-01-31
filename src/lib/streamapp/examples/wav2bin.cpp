@@ -16,12 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "../file/binaryfile.h"
+#include "../file/wavefile.h"
+
+#include "../streamappfactory.h"
+
+#include "../utils/stringexception.h"
+
 #include "wav2bin.h"
-#include "file/wavefile.h"
-#include "file/binaryfile.h"
-#include "streamappfactory.h"
-#include "utils/stringexception.h"
 
 using namespace streamapp;
 

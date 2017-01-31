@@ -17,11 +17,12 @@
 * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
 *****************************************************************************/
 
-#ifndef APEX_STATUSREPORTER_H
-#define APEX_STATUSREPORTER_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_STATUS_STATUSREPORTER_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_STATUS_STATUSREPORTER_H_
+
+#include "../global.h"
 
 #include "statusitem.h"
-#include "global.h"
 
 #include <vector>
 

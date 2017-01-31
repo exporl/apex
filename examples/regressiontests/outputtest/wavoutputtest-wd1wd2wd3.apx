@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment file:///C:/maaike/Apex_110116/schemas/experiment.xsd">
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>1</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>correct</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>false</progressbar>
+   <feedback>false</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout id="answer_layout" width="2" x="1" y="2" height="2">
+    <button id="correct" x="1" y="1">
+     <text>OK</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="correct"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>file:../stimuli</uri_prefix>
+  <datablock id="wd1">
+   <device>soundcard</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="wd2">
+   <device>soundcard</device>
+   <uri>wd2.wav</uri>
+  </datablock>
+  <datablock id="wd3">
+   <device>soundcard</device>
+   <uri>wd3.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <master>soundcard</master>
+  <device id="soundcard" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <sequential>
+     <datablock id="wd1"/>
+     <datablock id="wd2"/>
+     <datablock id="wd3"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections/>
+ <general>
+  <runoutputtest>true</runoutputtest>
+ </general>
+</apex:apex>

@@ -17,8 +17,8 @@
 * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
 *****************************************************************************/
 
-#ifndef APEX_STATUSDISPATCHER_H
-#define APEX_STATUSDISPATCHER_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_STATUS_STATUSDISPATCHER_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_STATUS_STATUSDISPATCHER_H_
 
 #include "statusreporter.h"
 
@@ -35,7 +35,7 @@ struct StatusDispatcherPrivate;
  *
  * @brief This class sends StatusItem's to multiple StatusReporter's.
  *
- * You can add as much StatusReporter's through 
+ * You can add as much StatusReporter's through
  * addReporter(StatusReporter*, bool) and after a reporter has been added, all
  * added items through the api of StatusReporter will also be added to the
  * added reporters.

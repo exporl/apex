@@ -16,11 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "../threads/criticalsection.h"
+#include "../threads/locks.h"
+
 #include "eventrouter.h"
-#include "appcore/threads/locks.h"
-#include "appcore/threads/criticalsection.h"
-#include <assert.h>
+
+#include <QtGlobal>
 
 using namespace appcore;
 
@@ -50,13 +52,13 @@ void EventRouter::mp_DispatchEvent( const int& ac_eEventType, gt_EventData a_pDa
 
 void EventRouter::mp_RegisterEventDispatcher( DefEventDispatcher* a_pListener, const int& ac_eEventType )
 {
-  assert( a_pListener != this );
+  Q_ASSERT( a_pListener != this );
   m_Dispatchers.mp_AddItem( new mt_DispatcherAndType( ac_eEventType, a_pListener ) );
 }
 
 void EventRouter::mp_UnRegisterEventDispatcher( DefEventDispatcher* a_pListener, const int& ac_nEventType )
 {
-  assert( a_pListener != this );
+  Q_ASSERT( a_pListener != this );
   const unsigned nItems = mf_nGetNumDispatchers();
   for( unsigned i = 0 ; i < nItems ; ++i )
   {
@@ -71,7 +73,7 @@ void EventRouter::mp_UnRegisterEventDispatcher( DefEventDispatcher* a_pListener,
 
 void EventRouter::mp_UnRegisterEventDispatcher( DefEventDispatcher* a_pListener )
 {
-  assert( a_pListener != this );
+  Q_ASSERT( a_pListener != this );
   for( unsigned i = 0 ; i < mf_nGetNumDispatchers() ; ++i )
   {
     mt_DispatcherAndType* pCur = m_Dispatchers.mf_GetItem( i );

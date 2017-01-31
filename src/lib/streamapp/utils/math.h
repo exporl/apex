@@ -20,7 +20,8 @@
 #ifndef __STREAMAPPMATH_H__
 #define __STREAMAPPMATH_H__
 
-#include "defines.h"
+#include "../defines.h"
+
 #include <math.h>
 
   /**

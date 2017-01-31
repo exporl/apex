@@ -16,8 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#ifndef _APEX_SRC_LIB_APEXMAIN_GUI_STARTUPDIALOG_H_
-#define _APEX_SRC_LIB_APEXMAIN_GUI_STARTUPDIALOG_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_STARTUPDIALOG_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_STARTUPDIALOG_H_
 
 #include <QDialog>
 

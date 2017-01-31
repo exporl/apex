@@ -17,11 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXAPEXSCREEN_H
-#define APEXAPEXSCREEN_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_APEXSCREEN_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_APEXSCREEN_H_
+
+#include "apexdata/screen/screenresult.h"
 
 #include "apexmodule.h"
-#include "screen/screenresult.h"
 
 namespace apex {
 

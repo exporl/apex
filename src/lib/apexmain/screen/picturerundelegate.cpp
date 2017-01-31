@@ -16,31 +16,32 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "picturerundelegate.h"
 
-#include "picturebuttonwidget.h"
+#include "apextools/apextools.h"
+
 #include "gui/guidefines.h"
-#include "screen/screenrundelegate.h"
 #include "gui/ratiolayout.h"
-#include "fileprefixconvertor.h"
+
+#include "parameters/parametermanager.h"
 
 #include "runner/experimentrundelegate.h"
-#include "parameters/parametermanager.h"
+
+#include "screen/screenrundelegate.h"
+
 #include "services/errorhandler.h"
+
 #include "stimulus/stimulus.h"
 
+#include "fileprefixconvertor.h"
+#include "picturebuttonwidget.h"
+#include "picturerundelegate.h"
 
-//from libtools
-#include "apextools.h"
-
-#include <assert.h>
+#include <QApplication>
 #include <QKeySequence>
 #include <QMouseEvent>
 #include <QShortcut>
 #include <QStyle>
 #include <QStyleOption>
-#include <QApplication>
 
 namespace apex
 {
@@ -83,8 +84,8 @@ PictureRunDelegate::PictureRunDelegate(
                              FilePrefixConvertor::convert(element->prefix())));
     if ( ! m_pPixMap->isNull() )
         m_button->setPixmap( *m_pPixMap );
-    else assert( element->getDefault().isEmpty() );
-    
+    else Q_ASSERT( element->getDefault().isEmpty() );
+
     QStyleOption opt(0);
     opt.palette = QApplication::palette();
 
@@ -95,23 +96,23 @@ PictureRunDelegate::PictureRunDelegate(
         m_pDisabled = new QPixmap(ApexTools::addPrefix(element->getDisabled(),
                                    FilePrefixConvertor::convert(element->prefix())));
         if ( m_pDisabled->isNull() )
-            assert( element->getDisabled().isEmpty() );
+            Q_ASSERT( element->getDisabled().isEmpty() );
     }
 
     m_pHighLight = new QPixmap(ApexTools::addPrefix(element->getHighlight(),
                                FilePrefixConvertor::convert(element->prefix())));
     if ( m_pHighLight->isNull() )
-        assert( element->getHighlight().isEmpty() );
+        Q_ASSERT( element->getHighlight().isEmpty() );
 
     m_pPositive = new QPixmap(ApexTools::addPrefix(element->getPositive(),
                               FilePrefixConvertor::convert(element->prefix())));
     if ( m_pPositive->isNull() )
-        assert( element->getPositive().isEmpty() );
+        Q_ASSERT( element->getPositive().isEmpty() );
 
     m_pNegative = new QPixmap(ApexTools::addPrefix(element->getNegative(),
                               FilePrefixConvertor::convert(element->prefix())));
     if ( m_pNegative->isNull() )
-        assert( element->getNegative().isEmpty() );
+        Q_ASSERT( element->getNegative().isEmpty() );
 
     if ( !element->getShortCut().isEmpty() )
     {
@@ -164,7 +165,7 @@ void PictureRunDelegate::feedBack( const FeedbackMode& mode )
 }
 
 void PictureRunDelegate::setEnabled(const bool e) {
-    //qDebug("PictureRunDelegate::setDisabled");
+    //qCDebug(APEX_RS, "PictureRunDelegate::setDisabled");
     ScreenElementRunDelegate::setEnabled(e);
     if (!e)
         m_button->setPixmap( *m_pDisabled );
@@ -174,7 +175,7 @@ void PictureRunDelegate::setEnabled(const bool e) {
 
 void PictureRunDelegate::mouseReleaseEvent ( QMouseEvent * /*event*/ )
 {
-//    qDebug("release event");
+//    qCDebug(APEX_RS, "release event");
     emit(released());
 
 }
@@ -192,7 +193,7 @@ void PictureRunDelegate::newStimulus( stimulus::Stimulus* stimulus ) {
     } else if (pm->parameterValue(id).isValid()) {
         value=pm->parameterValue(id).toString();
     } else {
-        qDebug() << "Could not find parameter " << id;
+        qCDebug(APEX_RS) << "Could not find parameter " << id;
     }
 
     QPixmap* t = new QPixmap(ApexTools::addPrefix(value,
@@ -216,10 +217,9 @@ void PictureRunDelegate::newStimulus( stimulus::Stimulus* stimulus ) {
         ErrorHandler::Get().addWarning("Picture", QString("Could not open image %1").arg(value));
     }
 
-    qDebug() << "PictureRunDelegate: param " << id << " = " << value;
+    qCDebug(APEX_RS) << "PictureRunDelegate: param " << id << " = " << value;
 
 }
-
 
 }
 }

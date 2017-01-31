@@ -17,13 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef GRIDLAYOUTELEMENT_H
-#define GRIDLAYOUTELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_GRIDLAYOUTELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_GRIDLAYOUTELEMENT_H_
 
 #include "screenlayoutelement.h"
-#include "apextypedefs.h"
+#include "apextools/apextypedefs.h"
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -66,7 +66,7 @@ class APEXDATA_EXPORT GridLayoutElement
         tStretchList getRowStretches() const { return rowStretch; };
 
         void checkChild(const ScreenElement* childel) const;
-        
+
         bool operator==(const GridLayoutElement& other) const;
 };
 }

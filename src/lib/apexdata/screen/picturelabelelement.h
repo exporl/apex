@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef PICTURELABELELEMENT_H
-#define PICTURELABELELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_PICTURELABELELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_PICTURELABELELEMENT_H_
 
 #include "screenelement.h"
 
 #include <QString>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -39,7 +39,7 @@ class APEXDATA_EXPORT PictureLabelElement
 {
         QString picturePath;
         QString pictureDisabledPath;
-        
+
     public:
         PictureLabelElement(const QString& id, ScreenElement* parent);
         ~PictureLabelElement();
@@ -53,7 +53,7 @@ class APEXDATA_EXPORT PictureLabelElement
 
         void setPictureDisabled(const QString& p);
         QString getPictureDisabled() const;
-        
+
         bool operator==(const PictureLabelElement& other) const;
 };
 }

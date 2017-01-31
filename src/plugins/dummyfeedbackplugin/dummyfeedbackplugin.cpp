@@ -16,13 +16,18 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
 
+#include "apexmain/feedback/pluginfeedbackinterface.h"
+
+#include "apextools/global.h"
+
+#include <QDebug>
+#include <QLoggingCategory>
 #include <QObject>
 #include <QStringList>
-#include <QDebug>
 
-#include "feedback/pluginfeedbackinterface.h"
+Q_DECLARE_LOGGING_CATEGORY(APEX_DUMMYFEEDBACKPLUGIN)
+Q_LOGGING_CATEGORY(APEX_DUMMYFEEDBACKPLUGIN, "apex.dummyfeedbackplugin")
 
 class dummyfeedbackpluginCreator :
     public QObject,
@@ -30,6 +35,9 @@ class dummyfeedbackpluginCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFeedbackCreator)
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA (IID "apex.dummyfeedbackplugin")
+#endif
 public:
     virtual QStringList availablePlugins() const;
 
@@ -38,22 +46,25 @@ public:
          const FeedbackPluginParameters& params) const;
 };
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN2 (dummyfeedbackplugin, dummyfeedbackpluginCreator)
+#endif
+
 
 class dummyfeedbackplugin : public QObject, public PluginFeedbackInterface
 {
-	Q_OBJECT
+        Q_OBJECT
 public:
     dummyfeedbackplugin(const FeedbackPluginParameters& params);
-    
+
     void highLight(const QString& element);
-    
+
     //! Indicate that the response was correct (thumbs up)
     void showPositive();
-    
+
     //! Indicate that the response was false (thumbs down)
     void showNegative();
-    
+
     //! Remove all feedback (highlight & positive/negative)
     void clear();
 
@@ -61,7 +72,7 @@ public:
     virtual QString errorString();
 
 private:
-    void showMessage(const QString& message);    
+    void showMessage(const QString& message);
 
 };
 
@@ -82,16 +93,16 @@ PluginFeedbackInterface * dummyfeedbackpluginCreator::createPluginFeedback
 
 void dummyfeedbackplugin::showMessage(const QString& message)
 {
-    qDebug() << "dummyfeedbackplugin: " << message;
+    qCDebug(APEX_DUMMYFEEDBACKPLUGIN) << "dummyfeedbackplugin: " << message;
 }
 
 dummyfeedbackplugin::dummyfeedbackplugin(const FeedbackPluginParameters& params)
 {
     showMessage("constructor");
-    qDebug("Available parameters: ");
+    qCDebug(APEX_DUMMYFEEDBACKPLUGIN, "Available parameters: ");
     QPair<QString,QString> p;
     Q_FOREACH( p, params) {
-        qDebug() << "(" << p.first << "," << p.second << ")";
+        qCDebug(APEX_DUMMYFEEDBACKPLUGIN) << "(" << p.first << "," << p.second << ")";
     }
 }
 

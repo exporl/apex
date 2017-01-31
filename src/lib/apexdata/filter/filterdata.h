@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_DATAFILTERDATA_H
-#define APEX_DATAFILTERDATA_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_FILTER_FILTERDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_FILTER_FILTERDATA_H_
 
-#include "parameters/simpleparameters.h"
+#include "../parameters/simpleparameters.h"
 
 namespace apex
 {

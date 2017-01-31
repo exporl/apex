@@ -17,21 +17,20 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _SERVICEMANAGER_H
-#define _SERVICEMANAGER_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_SERVICES_SERVICEMANAGER_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_SERVICES_SERVICEMANAGER_H_
 
 /** \file
  * Singleton support with ordered destruction,
  * termed Services and ServiceManager.
  */
 
-#include "global.h"
+#include "../global.h"
+
 #include <qglobal.h>
 
-//#include <QApplication>
-
-#include <vector>
 #include <typeinfo>
+#include <vector>
 
 namespace apex {
 
@@ -108,18 +107,18 @@ namespace apex {
 
         static bool initializing = false;
         if (initializing) {
-            qWarning("Service dependency loop of Service %s...", typeid (ServiceClass).name());
+            qCWarning(APEX_RS, "Service dependency loop of Service %s...", typeid (ServiceClass).name());
             return *static_cast<ServiceClass*>(0);
         }
         initializing = true;
         instance = static_cast<ServiceClass*> (
             ServiceManager::Get().Manage (new ServiceClass()));
         if (!instance)
-            qDebug ("... in Service %s", typeid (ServiceClass).name());
+            qCDebug(APEX_RS, "... in Service %s", typeid (ServiceClass).name());
         else
-            qDebug ("Instantiated Service %s", instance->Name());
+            qCDebug(APEX_RS, "Instantiated Service %s", instance->Name());
         return *instance;
     }
 }
 
-#endif /* _SERVICEMANAGER_H */
+#endif /* _EXPORL_SRC_LIB_APEXTOOLS_SERVICES_SERVICEMANAGER_H_*/

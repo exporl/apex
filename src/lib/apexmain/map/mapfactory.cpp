@@ -17,15 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apexdata/map/apexmap.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xmlkeys.h"
+
 #include "mapfactory.h"
-
-#include "xml/xmlkeys.h"
-#include "xml/apexxmltools.h"
-using namespace apex::XMLKeys;
-using namespace apex::ApexXMLTools;
-
-//from libdata
-#include "map/apexmap.h"
 
 #ifdef R126
 #include "../gui/apexmapwizard.h"
@@ -33,6 +30,8 @@ using namespace apex::ApexXMLTools;
 
 #include <iostream>
 
+using namespace apex::XMLKeys;
+using namespace apex::ApexXMLTools;
 using namespace r126;
 
 namespace apex {
@@ -91,7 +90,7 @@ namespace apex {
 
             for (DOMNode* currentNode=p_base->getFirstChild(); currentNode!=0; currentNode=currentNode->getNextSibling()) {
                 Q_ASSERT(currentNode);
-                qDebug("%s", qPrintable(XMLutils::GetTagName( currentNode )));
+                //qCDebug(APEX_RS, "%s", qPrintable(XMLutils::GetTagName( currentNode )));
                 if (currentNode->getNodeType() == DOMNode::ELEMENT_NODE) {
 
                     const QString tag   = XMLutils::GetTagName( currentNode );
@@ -118,8 +117,8 @@ namespace apex {
                         basemap.setThresholdLevel(XMLutils::GetAttribute(currentNode, "threshold").toInt());
                         basemap.setComfortLevel(XMLutils::GetAttribute(currentNode, "comfort").toInt());
 
-                        qDebug("%s", qPrintable("channelnr = " + QString::number(basemap.channelNumber())));
-                        qDebug("%s", qPrintable("electrode = " + QString::number(basemap.stimulationElectrode())));
+                        //qCDebug(APEX_RS, "%s", qPrintable("channelnr = " + QString::number(basemap.channelNumber())));
+                        //qCDebug(APEX_RS, "%s", qPrintable("electrode = " + QString::number(basemap.stimulationElectrode())));
 
                         Q_ASSERT(basemap.isValid());
                         //result->insert(result->begin()+basemap.m_nChannelNr, basemap);
@@ -145,7 +144,7 @@ namespace apex {
             for (int i=0; i<22; ++i) {
                 if (hasElec[i]==false) {
                     log().addWarning("Mapfactory", QString("No map defined for channel %1").arg(i));
-                    qDebug("%s", qPrintable( QString("No map defined for channel %1").arg(i) ));
+                    qCDebug(APEX_RS, "%s", qPrintable( QString("No map defined for channel %1").arg(i) ));
                     ok=false;
                 }
             }
@@ -154,12 +153,12 @@ namespace apex {
                 Q_ASSERT(0);    // TODO
             }
         } else {
-            qDebug("%s", qPrintable("Invalid tag: " + tag ));
+            qCDebug(APEX_RS, "%s", qPrintable("Invalid tag: " + tag ));
             Q_ASSERT(0);
         }
 
 #ifdef DEBUGMAP
-        qDebug(result->ToXML());
+        qCDebug(APEX_RS, "%s", result->ToXML());
 #endif
 
         return result;
@@ -210,7 +209,7 @@ namespace apex {
             if (!result->contains(i + 1))
                 result->insert(i + 1, temp);
             else
-                qWarning("FIXME: this should not happen!!!");
+                qCWarning(APEX_RS, "FIXME: this should not happen!!!");
         }
 
         return result;

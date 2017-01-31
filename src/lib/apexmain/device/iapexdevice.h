@@ -16,19 +16,18 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef __IAPEXDEVICE_H__
-#define __IAPEXDEVICE_H__
 
-#include "device/devicedata.h"
-//using namespace apex::stimulus;
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_DEVICE_IAPEXDEVICE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_DEVICE_IAPEXDEVICE_H_
+
+#include "apexdata/device/devicedata.h"
 
 #include "parameters/parametermanager.h"
 
-#include "apexcontrol.h"        // apply calibration
+#include "apexcontrol.h"
 
-#include <QString>
 #include <QDebug>
+#include <QString>
 
 namespace apex
 {
@@ -159,4 +158,4 @@ class IApexDevice
 }
 }
 
-#endif //#ifndef __IAPEXDEVICE_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_DEVICE_IAPEXDEVICE_H_

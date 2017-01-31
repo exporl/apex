@@ -39,18 +39,18 @@ char gPriorString[128];
 double DiffLogPrior(double arg, double diff_arg, ConstraintPtr W)
 {
 	double W0, W1;
-	
+
 	if(W == NULL || W->prior == NULL) return 0.0;
 	W0 = (*(W->prior))(evaluatePrior, W->args, arg, 0);
 	W1 = (*(W->prior))(evaluatePrior, W->args, arg, 1);
-	
+
 	return W1 * diff_arg / W0;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 double Diff2LogPrior(double arg, double da_du, double da_dv, double d2a_dudv, ConstraintPtr W)
 {
 	double W0, W1, W2;
-	
+
 	if(W == NULL || W->prior == NULL) return 0.0;
 	W0 = (*(W->prior))(evaluatePrior, W->args, arg, 0);
 	W1 = (*(W->prior))(evaluatePrior, W->args, arg, 1);
@@ -63,7 +63,7 @@ double Diff2LogPrior(double arg, double da_du, double da_dv, double d2a_dudv, Co
 int ReportPrior(char *s, ConstraintPtr c)
 {
 	if(c == NULL || c->prior == NULL) return 0;
-	return printf(PriorDescription(c), s);
+	return fprintf(stderr, PriorDescription(c), s);
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void SetPrior(ConstraintPtr constraint, BayesianPriorPtr prior, unsigned short nArgs, double *args)
@@ -71,7 +71,7 @@ void SetPrior(ConstraintPtr constraint, BayesianPriorPtr prior, unsigned short n
 	unsigned short nArgsExpected;
 
 	constraint->prior = prior;
-	if(prior == NULL) return;	
+	if(prior == NULL) return;
 	nArgsExpected = ExpectedNumberOfPriorArgs(constraint);
 	if(nArgs != nArgsExpected) JError("%s prior takes %hu numerical arguments - received %hu", PriorName(constraint), nArgsExpected, nArgs);
 	CopyVals(constraint->args, args, nArgs, sizeof(double));
@@ -89,7 +89,7 @@ double BetaPrior(PriorMode mode, double *args, double val, unsigned short diff)
 {
 	double temp, scale, lo, hi, z, w, b, y;
 	int i;
-	
+
 	switch(mode) {
 		case evaluatePrior:
 			if (val < (lo = args[0]) || val > (hi = args[1])) return 0.0;
@@ -146,14 +146,14 @@ double BetaPrior(PriorMode mode, double *args, double val, unsigned short diff)
 double CosinePrior(PriorMode mode, double *args, double val, unsigned short diff)
 {
 	double temp, lo, hi;
-	
+
 	switch(mode) {
 		case evaluatePrior:
 			if (val < (lo = args[0]) || val > (hi = args[1])) return 0.0;
 			temp = 0.5 * (lo + hi);
 			val -= temp;
 			temp = pi / (hi - temp);
-			val *= temp;	
+			val *= temp;
 			switch(diff) {
 				case 0: return 0.5 + 0.5 * cos(val);
 				case 1: return -0.5 * temp * sin(val);
@@ -183,7 +183,7 @@ double CosinePrior(PriorMode mode, double *args, double val, unsigned short diff
 double FlatPrior(PriorMode mode, double *args, double val, unsigned short diff)
 {
 	double temp;
-	
+
 	switch(mode) {
 		case evaluatePrior:
 			if(diff > 0) return 0.0;
@@ -210,7 +210,7 @@ double FlatPrior(PriorMode mode, double *args, double val, unsigned short diff)
 double GaussianPrior(PriorMode mode, double *args, double val, unsigned short diff)
 {
 	double temp, mu, sigma, y, dydx, d2ydx2;
-	
+
 	switch(mode) {
 		case evaluatePrior:
 			mu = args[0]; sigma = args[1];

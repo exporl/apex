@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "apextools/apextools.h"
+
+#include "apextools/status/statusreporter.h"
+
 #include "stimulidata.h"
-#include "status/statusreporter.h"
-#include "apextools.h"
 
 #include <QMap>
 #include <QStringList>
@@ -58,7 +60,7 @@ bool StimuliData::CheckFixedParameters (StatusReporter* err) {
    /*std::map<QString,QString>::const_iterator i = m_fixedParameters->begin();
     for (; i!=m_fixedParameters->end(); ++i)
     {
-        //qDebug("Checking parameter %s", (*i).first.ascii() );
+        //qCDebug(APEX_RS, "Checking parameter %s", (*i).first.ascii() );
 
         std::map<QString, Stimulus*>::const_iterator j = m_stimuli.begin();
         bool tempresult=true;

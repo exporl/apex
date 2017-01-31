@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef PICTUREELEMENT_H
-#define PICTUREELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_PICTUREELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_PICTUREELEMENT_H_
 
 #include "screenelement.h"
 
 #include <QString>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -68,7 +68,7 @@ class APEXDATA_EXPORT PictureElement
         void setHighlight(const QString& p);
         void setDisabled(const QString& p);
         void setOverrideFeedback(bool o);
-        
+
         bool operator==(const PictureElement& other) const;
 };
 

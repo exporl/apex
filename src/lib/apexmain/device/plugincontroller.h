@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef PLUGINCONTROLLERH
-#define PLUGINCONTROLLERH
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_DEVICE_PLUGINCONTROLLER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_DEVICE_PLUGINCONTROLLER_H_
 
 #include "controldevice.h"
 
@@ -26,38 +26,38 @@
 class PluginControllerInterface;
 
 namespace apex {
-    
-    
+
+
     namespace data {
-        class PluginControllerData;   
+        class PluginControllerData;
     }
-    
+
     namespace device {
 
 
 class PluginController: public ControlDevice {
     public:
-        
+
         PluginController(  data::PluginControllerData* a_pParameters );
-        
+
         virtual bool SetParameter ( const QString& type, const int channel, const QVariant& value ) ;
-        
+
         virtual void Reset();
         virtual void Prepare();
 
-        
+
     private:
         void MakePlugin();
-        
+
     private:
         data::PluginControllerData* m_param;
-        std::auto_ptr<PluginControllerInterface>  m_plugin;
-        
-        
+        QScopedPointer<PluginControllerInterface>  m_plugin;
+
+
     };
-    
-    
-    
+
+
+
 }       // ns apex
 }       // ns device
 

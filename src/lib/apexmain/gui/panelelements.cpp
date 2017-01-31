@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "panelelements.h"
 
 #include <QResizeEvent>
@@ -91,7 +91,7 @@ StatusPicture::StatusPicture( QWidget* parent,
         targetFile=waitingForStartFilename;
     waitingForStartPixmap = new QPixmap(targetFile);
     Q_ASSERT(! waitingForStartPixmap->isNull());
-    
+
     setStatus(STATUS_WAITING_FOR_START);
 }
 
@@ -118,7 +118,7 @@ void StatusPicture::setStatus(const status s )
             setPixmap( *waitingForStartPixmap );
             break;
         default:
-            qDebug("Unknown status");
+            qCDebug(APEX_RS, "Unknown status");
     }
 }
 

@@ -16,13 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __BUFFERDROPCHECK_H__
 #define __BUFFERDROPCHECK_H__
 
-#include "utils/timer.h"
-#include "callback/callback.h"
-#include "appcore/threads/criticalsection.h"
+#include "../appcore/threads/criticalsection.h"
+
+#include "../callback/callback.h"
+
+#include "../utils/timer.h"
+
 using namespace appcore;
 
 namespace streamapp

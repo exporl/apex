@@ -34,18 +34,18 @@ namespace apex
 
 void ConsoleStatusReporter::report(const StatusItem& error)
 {
-/*    std::ostream& stream = error.level() >= StatusItem::Error ? std::cerr :
+/*    std::ostream& stream = error.level() >= StatusItem::ERROR ? std::cerr :
                                                                 std::cout;
 
     switch (error.level())
     {
-        case StatusItem::Error:
+        case StatusItem::ERROR:
             stream << COLOR_ERROR;
             break;
-        case StatusItem::Warning:
+        case StatusItem::WARNING:
             stream << COLOR_WARNING;
             break;
-        case StatusItem::Message:
+        case StatusItem::MESSAGE:
             stream << COLOR_MESSAGE;
             break;
         default:
@@ -53,7 +53,7 @@ void ConsoleStatusReporter::report(const StatusItem& error)
     }*/
 
     QString src = error.source().isEmpty() ? "APEX" : qPrintable(error.source());
-    qDebug("%s:: %s", qPrintable(src), qPrintable(error.message()));
+    qCDebug(APEX_RS, "%s:: %s", qPrintable(src), qPrintable(error.message()));
 
   /*  Q_FOREACH (QString line, msgLines)
     {

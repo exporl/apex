@@ -16,10 +16,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
+#include "apextools/apextools.h"
+
 #include "calibrationdata.h"
 #include "soundlevelmeterdata.h"
-
-#include "apextools.h"
 
 #include <QStringList>
 
@@ -72,7 +72,7 @@ public:
     QString calibrationProfile;
     QStringList availableStimuli;
     QMap<QString, CalibrationParameterData> parameters;
-    std::auto_ptr<SoundLevelMeterData> soundLevelMeterData;
+    QScopedPointer<SoundLevelMeterData> soundLevelMeterData;
 };
 
 // CalibrationParameterData ====================================================
@@ -205,7 +205,7 @@ void CalibrationData::setSoundLevelMeterData(
 }
 
 const SoundLevelMeterData* CalibrationData::soundLevelMeterData() const {
-    return d->soundLevelMeterData.get();
+    return d->soundLevelMeterData.data();
 }
 
 bool CalibrationData::operator==(const CalibrationData& other) const
@@ -213,7 +213,7 @@ bool CalibrationData::operator==(const CalibrationData& other) const
     return  d->calibrationProfile == other.d->calibrationProfile &&
             ApexTools::haveSameContents(d->availableStimuli, other.d->availableStimuli) &&
             d->parameters == other.d->parameters &&
-            (d->soundLevelMeterData.get() == other.d->soundLevelMeterData.get() ||
+            (d->soundLevelMeterData.data() == other.d->soundLevelMeterData.data() ||
             *d->soundLevelMeterData == *other.d->soundLevelMeterData);
 }
 

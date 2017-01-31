@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXRANDOMGENERATORPARAMETERS_H
-#define APEXRANDOMGENERATORPARAMETERS_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_RANDOMGENERATOR_RANDOMGENERATORPARAMETERS_H_
+#define _EXPORL_SRC_LIB_APEXDATA_RANDOMGENERATOR_RANDOMGENERATORPARAMETERS_H_
 
-#include "global.h"
+#include "../parameters/apexparameters.h"
 
-#include "parameters/apexparameters.h"
+#include "apextools/global.h"
 
-#include <qstring.h>
+#include <QString>
 
 namespace apex
 {
@@ -51,7 +51,7 @@ class APEXDATA_EXPORT RandomGeneratorParameters : public data::ApexParameters
 
         enum {TYPE_UNIFORM, TYPE_GAUSSIAN};
         enum {VALUE_INT, VALUE_DOUBLE};
-        
+
         bool operator==(const RandomGeneratorParameters& other) const;
 
     protected:

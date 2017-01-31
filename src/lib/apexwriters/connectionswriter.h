@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef CONNECTIONSWRITER_H
-#define CONNECTIONSWRITER_H
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_CONNECTIONSWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_CONNECTIONSWRITER_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
 
 namespace XERCES_CPP_NAMESPACE
 {
@@ -40,7 +40,6 @@ class ConnectionData;
 
 namespace writer
 {
-using namespace XERCES_CPP_NAMESPACE;
 
 /**
 *@author Job Noorman <jobnoorman@gmail.com>
@@ -56,12 +55,12 @@ class APEXWRITERS_EXPORT ConnectionsWriter
         *
         *@return the created element
          */
-        static DOMElement* addElement(DOMDocument* doc,
+        static XERCES_CPP_NAMESPACE::DOMElement* addElement(XERCES_CPP_NAMESPACE::DOMDocument* doc,
                                       const data::ConnectionsData& data);
 
     private:
 
-        static DOMElement* addConnection(DOMDocument* doc,
+        static XERCES_CPP_NAMESPACE::DOMElement* addConnection(XERCES_CPP_NAMESPACE::DOMDocument* doc,
                                          const data::ConnectionData& data);
 };
 

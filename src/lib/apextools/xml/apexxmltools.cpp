@@ -17,101 +17,46 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apexxmltools.h"
-#include "../apextools.h"
-#include "xmldocumentgetter.h"
+#include "apextools.h"
 #include "version.h"
+
 #include "status/statusreporter.h"
-#include "xml/xalaninclude.h"
+
+#include "apexxmltools.h"
+#include "xmldocumentgetter.h"
+
+#include <QFile>
+#include <QHash>
+#include <QXmlQuery>
 
 #include <iostream>
 #include <sstream>
 
-#include <QXmlQuery>
-#include <QHash>
-#include <QFile>
-
 using namespace xercesc;
-using namespace xalanc;
 #include "xmlkeys.h"
 using namespace apex::XMLKeys;
 
 #include <iostream>
 using namespace std;
 
-#include <assert.h>
-
 namespace apex
 {
 namespace ApexXMLTools
 {
 
-namespace
-{
-
-
-void sf_CheckNode(  DOMNode* p )
-{
-    Q_ASSERT(p);
-    Q_ASSERT(p->getNodeType() == DOMNode::ELEMENT_NODE);
-}
-
-}
-
-QString XMLutils::transformXSLTXalan (const QString &document,
-                                      const QString &script, const QHash<QString,QString> hash)
-{
-   XalanTransformer::initialize();
-
-      XalanTransformer transformer;
-#ifdef USEXALANFORMATNUMBER
-    xalanc::ICUFormatNumberFunctor(transformer.getMemoryManager());
-#endif
-
-	//make target stream with char buf
-    std::ostringstream ostrTarget;
-	XSLTResultTarget targ(ostrTarget);
-
-	if (hash["target"]!="'html'"){
-	xalanc::XalanStdOutputStream xsos (ostrTarget);
-    xalanc::XalanOutputStreamPrintWriter xospw(xsos);
-    xalanc::FormatterToText textFormatter(xospw);
-    targ = XSLTResultTarget(textFormatter);
-	}
-
-	QHashIterator<QString,QString> i(hash);
-	while (i.hasNext()) {
-		i.next();
-		const XalanDOMString key("target");
-		const XalanDOMString expression("'html'");
-		transformer.setStylesheetParam(key,expression);
-	 }
-
-	XSLTInputSource xmlin(QFile::encodeName(document));
-    XSLTInputSource sheet(QFile::encodeName(script));
-    transformer.transform(xmlin,sheet,targ);
-
-    XalanTransformer::terminate();
-	
-	//make sure buffer has an endline and construct QString with it
-    ostrTarget << std::ends;
-	return ostrTarget.str().c_str();	
-		
-}
-
 QString XMLutils::transformXSLTQt (const QString &document, const QString &script, const QHash<QString,QVariant> hash)
 {
-	QString bla("    ");
+    QString bla("    ");
 
-	QXmlQuery query(QXmlQuery::XSLT20);
+    QXmlQuery query(QXmlQuery::XSLT20);
     QHashIterator<QString,QVariant> i(hash);
-	while (i.hasNext()) {
-		i.next();
+    while (i.hasNext()) {
+        i.next();
         query.bindVariable(i.key(), i.value());
-	 }
-	query.setFocus(QUrl(document));
-	query.setQuery(QUrl(script));
-	query.evaluateTo(&bla);
+    }
+    query.setFocus(QUrl(document));
+    query.setQuery(QUrl(script));
+    query.evaluateTo(&bla);
 
     return bla;
 }
@@ -132,7 +77,7 @@ QString XMLutils::GetAttribute(const DOMElement *element,
     const XMLCh * const attributeName = S2X(attribute);
 
     if (!element->hasAttribute(attributeName)) {
-        //qDebug("XMLutils::GetAttribute: Attribute not found: %s", qPrintable (attribute));
+        //qCDebug(APEX_RS, "XMLutils::GetAttribute: Attribute not found: %s", qPrintable (attribute));
         return QString();
     }
 
@@ -217,16 +162,16 @@ DOMElement*  XMLutils::GetElementsByTagName( DOMNode*    pBase , const QString& 
 
 const QString XMLutils::FindAttribute( DOMNode* pLevel_0, const QString& sLevel_1, const QString& sLevel_2, const QString& sID, const QString& sAttribute )
 {
-    sf_CheckNode( pLevel_0 );
+    Q_ASSERT(pLevel_0 && pLevel_0->getNodeType() == DOMNode::ELEMENT_NODE);
     for ( DOMNode* currentNode = pLevel_0 ; currentNode != 0 ; currentNode = currentNode->getNextSibling() )
     {
-        sf_CheckNode( currentNode );
+        Q_ASSERT(currentNode && currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
         QString temp=GetTagName(currentNode);
         if ( GetTagName( currentNode ) == sLevel_1 )
         {
             for ( DOMNode* curNode = currentNode->getFirstChild() ; curNode != 0 ; curNode = curNode->getNextSibling() )
             {
-                sf_CheckNode( curNode );
+                Q_ASSERT(curNode && curNode->getNodeType() == DOMNode::ELEMENT_NODE);
                 if ( GetTagName( curNode ) == sLevel_2 )
                 {
                     if ( GetAttribute( curNode, gc_sID ) == sID )
@@ -250,10 +195,10 @@ const QString XMLutils::FindChild( DOMNode* pLevel_0, const QString& sID )
 XERCES_CPP_NAMESPACE::DOMNode* XMLutils::FindChildNode  (  XERCES_CPP_NAMESPACE::DOMNode* pLevel_0,
         const QString& tag )
 {
-    sf_CheckNode( pLevel_0 );
+    Q_ASSERT(pLevel_0 && pLevel_0->getNodeType() == DOMNode::ELEMENT_NODE);
     for ( DOMNode* currentNode = pLevel_0->getFirstChild() ; currentNode != 0 ; currentNode = currentNode->getNextSibling() )
     {
-        sf_CheckNode( currentNode );
+        Q_ASSERT(currentNode && currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
         if ( GetTagName( currentNode ) == tag )
         {
             return currentNode;
@@ -291,95 +236,63 @@ XERCES_CPP_NAMESPACE::DOMElement* XMLutils::CreateTextElement(
 }
 
 XERCES_CPP_NAMESPACE::DOMElement* XMLutils::ParseXMLDocument
-		( QString filename, bool verbose, QString schema )
+    ( const QString &filename, bool verbose, QString schema )
 {
-	if (!QFile::exists(filename))
-	{
-	    throw (ApexStringException(QString(
-			"XMLutils: file to parse (%1) does not exist")
-				.arg(filename)));
-	}
-	qDebug ( "Parsing document %s", qPrintable ( filename ) );
-	XercesDOMParser* parser = new XercesDOMParser();//FIXME delete?
+    if (!QFile::exists(filename)) {
+        throw ApexStringException(QString("XMLutils: file to parse (%1) does not exist")
+                    .arg(filename));
+    }
+    qCDebug(APEX_RS, "Parsing document %s", qPrintable ( filename ) );
+    XercesDOMParser* parser = new XercesDOMParser();//FIXME delete?
 
-	// ignore whitespace that can be ignored according to the xml specs
-	parser->setIncludeIgnorableWhitespace ( false );
-	parser->setValidationScheme ( XercesDOMParser::Val_Always );
-	parser->setCreateCommentNodes ( false );
-	parser->setValidateAnnotations ( true );
-	parser->setDoNamespaces ( true );
-	parser->setDoSchema ( true );
-	parser->setValidationSchemaFullChecking ( true );
+    // ignore whitespace that can be ignored according to the xml specs
+    parser->setIncludeIgnorableWhitespace ( false );
+    parser->setValidationScheme ( XercesDOMParser::Val_Always );
+    parser->setCreateCommentNodes ( false );
+    parser->setValidateAnnotations ( true );
+    parser->setDoNamespaces ( true );
+    parser->setDoSchema ( true );
+    parser->setValidationSchemaFullChecking ( true );
 
-	if ( !schema.isEmpty() )
-	{
-		if (!QFile::exists(schema))
-		{
-			throw (ApexStringException(QString(
-				"XMLutils: schema file (%1) does not exist")
-					.arg(schema)));
-		}
+    if ( !schema.isEmpty() ) {
+        if (!QFile::exists(schema)) {
+            throw ApexStringException(QString("XMLutils: schema file (%1) does not exist")
+                    .arg(schema));
+        }
 
         ApexTools::ReplaceWhiteSpaceWithNBSP(schema);
-		parser->setExternalSchemaLocation( QString( QString(
-			EXPERIMENT_NAMESPACE ) + " " + schema ).toAscii() );
-	}
+        parser->setExternalSchemaLocation( QFile::encodeName(QString(
+                        EXPERIMENT_NAMESPACE) + " " + schema ) );
+    }
 
-	if ( verbose )
-	{
-		DOMTreeErrorReporter *errReporter = new DOMTreeErrorReporter();//FIXME delete?
-		parser->setErrorHandler ( errReporter );
-	}
+    if (verbose) {
+        DOMTreeErrorReporter *errReporter = new DOMTreeErrorReporter();//FIXME delete?
+        parser->setErrorHandler ( errReporter );
+    }
 
 
     //ApexTools::ReplaceWhiteSpaceWithNBSP(filename);
-	parser->parse ( filename.toAscii() );
-	bool bFailed = parser->getErrorCount() != 0;
+    parser->parse ( QFile::encodeName(filename) );
+    bool bFailed = parser->getErrorCount() != 0;
 
-	if ( bFailed )
-    {
-		qDebug ( "Error parsing file %s", qPrintable ( filename ) );
+    if (bFailed) {
+        qCDebug(APEX_RS, "Error parsing file %s", qPrintable ( filename ) );
         throw ApexStringException(QString("Error parsing file %1").arg(filename));
     }
 
-	DOMNode* node  = parser->getDocument()->getDocumentElement();
+    DOMNode* node  = parser->getDocument()->getDocumentElement();
 
-	qDebug ( "tag name of root element: %s", qPrintable ( XMLutils::GetTagName ( node ) ) );
+    qCDebug(APEX_RS, "tag name of root element: %s", qPrintable ( XMLutils::GetTagName ( node ) ) );
 
-	Q_ASSERT ( node->getNodeType() == DOMNode::ELEMENT_NODE );
+    Q_ASSERT ( node->getNodeType() == DOMNode::ELEMENT_NODE );
 
-//    qDebug("nodetype firstchild: %d", node->getFirstChild()->getNodeType());
-//    qDebug("text content: %s", qPrintable(X2S(node->getFirstChild()->getTextContent())));
-	return ( DOMElement* ) node;
+    //    qCDebug(APEX_RS, "nodetype firstchild: %d", node->getFirstChild()->getNodeType());
+    //    qCDebug(APEX_RS, "text content: %s", qPrintable(X2S(node->getFirstChild()->getTextContent())));
+    return ( DOMElement* ) node;
 }
 
 XERCES_CPP_NAMESPACE::DOMElement* XMLutils::parseString(QString s)
 {
-//     XercesDOMParser* parser = new XercesDOMParser();
-//
-//     parser->setIncludeIgnorableWhitespace ( false );
-//     parser->setValidationScheme ( XercesDOMParser::Val_Never );
-//     parser->setCreateCommentNodes ( false );
-//     parser->setDoNamespaces ( true );
-//
-// //     DOMTreeErrorReporter *errReporter = new DOMTreeErrorReporter();//FIXME delete?
-// //     parser.setErrorHandler ( errReporter );
-//
-//     MemBufInputSource input((const XMLByte*)toParse.toLocal8Bit().constData(),
-//                              toParse.length(), X("fakeId"));
-//     parser->parse(input);
-//
-//     if (parser->getErrorCount() > 0)
-//         qDebug("Error parsing QString");
-//
-//     DOMNode* node  = parser->getDocument()->getDocumentElement();
-//     Q_ASSERT(node->getNodeType() == DOMNode::ELEMENT_NODE);
-//     node = into->importNode(node, true);
-//
-//     //delete parser;
-//
-//     return dynamic_cast<DOMElement*>(node);
-
     XercesDOMParser* parser = new XercesDOMParser();
 
     parser->setIncludeIgnorableWhitespace(false);   // ignore whitespace that can be ignored according to the xml specs
@@ -400,39 +313,33 @@ XERCES_CPP_NAMESPACE::DOMElement* XMLutils::parseString(QString s)
     bool bFailed = parser->getErrorCount() != 0;
 
     if (bFailed)
-        qDebug("parsing string failed");
+        qCDebug(APEX_RS, "parsing string failed");
 
     DOMNode* node  = parser->getDocument()->getDocumentElement();
-
 
     Q_ASSERT( node->getNodeType() == DOMNode::ELEMENT_NODE);
 
     return (DOMElement*) node;
 }
 
-bool XMLutils::WriteElement ( XERCES_CPP_NAMESPACE::DOMElement* e, QString filename )
+bool XMLutils::WriteElement(XERCES_CPP_NAMESPACE::DOMNode* e, const QString &filename)
 {
-	// FIXME: error handling
-    DOMImplementation* impl =
-            DOMImplementationRegistry::getDOMImplementation ( X ( "Core" ) );
-
-
-    LocalFileFormatTarget formatTarget ( filename.toAscii() );
-    DOMWriter* domWriter = impl->createDOMWriter();
-    if ( domWriter->canSetFeature ( X ( "format-pretty-print" ), true ) )
-        domWriter->setFeature ( X ( "format-pretty-print" ), true );
-    domWriter->writeNode ( &formatTarget, *e );
-
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadWrite | QFile::Truncate)) {
+        return false;
+    }
+    file.write(elementToString(e).toUtf8());
     return true;
 }
 
-QString XMLutils::elementToString(XERCES_CPP_NAMESPACE::DOMElement* e)
+QString XMLutils::elementToString(XERCES_CPP_NAMESPACE::DOMNode* e)
 {
-    DOMImplementation* impl =
-            DOMImplementationRegistry::getDOMImplementation ( X ( "Core" ) );
-    DOMWriter* domWriter = impl->createDOMWriter();
-
-    return X2S(domWriter->writeToString(*e));
+    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(X("Core"));
+    DOMLSSerializer* domSerializer = impl->createLSSerializer();
+    domSerializer->getDomConfig()->setParameter(X("format-pretty-print"), true);
+    QString result = X2S(domSerializer->writeToString(e));
+    domSerializer->release();
+    return result;
 }
 
 QString XMLutils::wrapTag(const QString& tag, const QVariant& value)
@@ -441,12 +348,12 @@ QString XMLutils::wrapTag(const QString& tag, const QVariant& value)
 }
 
 // These two functions are a hack, and there should be escaping everywhere TODO
-QString XMLutils::xmlEscapedText (const QString &text)
+QString XMLutils::xmlEscapedText(const QString &text)
 {
     QString result = text;
-    result.replace ("&", "&amp;");
-    result.replace ("<", "&lt;");
-    result.replace (">", "&gt;");
+    result.replace("&", "&amp;");
+    result.replace("<", "&lt;");
+    result.replace(">", "&gt;");
     return result;
 }
 
@@ -457,6 +364,11 @@ QString XMLutils::xmlEscapedAttribute (const QString &text)
     result.prepend ("\"");
     result.append ("\"");
     return result;
+}
+
+bool XMLutils::xmlBool(const QString &value)
+{
+    return (value == "true" || value == "1");
 }
 
 }//end ns apexxmltools
@@ -479,15 +391,12 @@ void DOMTreeErrorReporter::error(const SAXParseException& toCatch)
     const QString col(QString::number(toCatch.getColumnNumber()));
     const QString mess(X2S(toCatch.getMessage()));
 
-    if ( !m_pHandler )
-    {
+    if ( !m_pHandler ) {
         cerr << "Error at file \""  << qPrintable (id)
         << "\", line "            << qPrintable (line)
         << ", column "            << qPrintable (col)
         << "\n   Message: "       << qPrintable (mess) << endl;
-    }
-    else
-    {
+    } else {
         m_pHandler->addError( id, "line: " + line + " : " + mess );
     }
 }

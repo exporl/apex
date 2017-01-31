@@ -15,21 +15,20 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SCREENSDATA_H
-#define SCREENSDATA_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREENSDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREENSDATA_H_
 
-//#include "elementfactory.h"
-#include "apextypedefs.h"
-#include "fileprefix.h"
+#include "../fileprefix.h"
 
-//#include <QFont>
+#include "apextools/apextypedefs.h"
+#include "apextools/global.h"
 
-#include "global.h"
+#include "apextools/status/errorlogger.h"
+
+#include "apextools/xml/xercesinclude.h"
 
 #include <QStringList>
 
-#include "xml/xercesinclude.h"
-#include <status/errorlogger.h>
 namespace XERCES_CPP_NAMESPACE
 {
 class DOMElement;

@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "apexdata/randomgenerator/randomgeneratorparameters.h"
+
+#include "apextools/apextools.h"
+
 #include "uniformrandomgenerator.h"
-#include "apextools.h"
 
-//from libdata
-#include "randomgenerator/randomgeneratorparameters.h"
-
-#include <qmath.h>
+#include <QtMath>
 
 namespace apex
 {
@@ -46,7 +46,7 @@ QString UniformRandomGenerator::GetNextValue()
     {
         //int result = (int) ApexTools::RandomRange((int)m_param->m_dMin, (int)m_param->m_dMax);
         //int result = generator.nextDouble(qCeil(m_param->m_dMin), qFloor(m_param->m_dMax) + 1);
-        int result = (int) generator.nextUInt(qFloor(m_param->m_dMax - m_param->m_dMin)) + m_param->m_dMin;
+        int result = (int) generator.nextUInt(qFloor(m_param->m_dMax - m_param->m_dMin)+1) + m_param->m_dMin;
         sResult = QString::number(result);
     }
     else if (m_param->m_nValueType == data::RandomGeneratorParameters::VALUE_DOUBLE)

@@ -16,13 +16,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#ifndef _APEX_SRC_CALIBRATION_CALIBRATIONDATA_H_
-#define _APEX_SRC_CALIBRATION_CALIBRATIONDATA_H_
+#ifndef _EXPORL_SRC_LIB_APEXDATA_CALIBRATION_CALIBRATIONDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_CALIBRATION_CALIBRATIONDATA_H_
 
 #include <QMap>
 #include <QSharedDataPointer>
 
-#include "global.h"
+#include "apextools/global.h"
 
 class QStringList;
 

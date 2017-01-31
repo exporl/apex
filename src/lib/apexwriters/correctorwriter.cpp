@@ -17,11 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "correctorwriter.h"
-#include "xml/apexxmltools.h"
-#include "corrector/correctordata.h"
+#include "apexdata/corrector/correctordata.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "correctorwriter.h"
 
 using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::ApexXMLTools;
@@ -29,12 +30,12 @@ using namespace apex::ApexXMLTools;
 using apex::writer::CorrectorWriter;
 using apex::data::CorrectorData;
 
-DOMElement* CorrectorWriter::addElement(DOMDocument* doc,
+DOMElement* CorrectorWriter::addElement(DOMElement* elem,
                                         const CorrectorData& data)
 {
-    DOMElement* rootElement = doc->getDocumentElement();
+    DOMDocument* doc = elem->getOwnerDocument();
     DOMElement* corrector = doc->createElement(X("corrector"));
-    rootElement->appendChild(corrector);
+    elem->appendChild(corrector);
 
     QString type;
     switch (data.type())
@@ -42,38 +43,6 @@ DOMElement* CorrectorWriter::addElement(DOMDocument* doc,
         case CorrectorData::EQUAL:
         {
             type = "apex:isequal";
-            break;
-        }
-        case CorrectorData::CVC:
-        {
-            type = "apex:cvc";
-            QString lang = data.language() == CorrectorData::DUTCH ?
-                           "dutch" : "english";
-            corrector->appendChild(XMLutils::CreateTextElement(doc,
-                                   "language", lang));
-            break;
-        }
-        case CorrectorData::ALTERNATIVES:
-        {
-            type = "apex:alternatives";
-
-            if (data.answersDefined())
-            {
-                DOMElement* answers = doc->createElement(X("answers"));
-                corrector->appendChild(answers);
-
-                CorrectorData::AnswerMap answerMap = data.answers();
-                CorrectorData::AnswerMap::const_iterator it;
-
-                for (it = answerMap.begin(); it != answerMap.end(); it++)
-                {
-                    DOMElement* answer = doc->createElement(X("answer"));
-                    answer->setAttribute(X("number"),
-                                         S2X(QString::number(it.key())));
-                    answer->setAttribute(X("value"), S2X(it.value()));
-                    answers->appendChild(answer);
-                }
-            }
             break;
         }
         default:

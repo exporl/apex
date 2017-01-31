@@ -17,19 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef PROCEDURESWRITER_H
-#define PROCEDURESWRITER_H
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_PROCEDURESWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_PROCEDURESWRITER_H_
 
-/**
- *@author Job Noorman
- */
+#include "apextools/global.h"
 
-//#include "device/devicedata.h"
-
-#include "global.h"
-
-#include "xml/xercesinclude.h"
-#include <vector>
+#include "apextools/xml/xercesinclude.h"
 
 #include <QString>
 
@@ -43,16 +36,15 @@ namespace apex
 {
 namespace data
 {
-class ApexProcedureConfig;
-class ApexMultiProcedureConfig;
-class ApexProcedureParameters;
-class ApexAdaptiveProcedureParameters;
-class PluginProcedureParameters;
-class ApexTrial;
+class ProcedureData;
+class MultiProcedureData;
+class AdaptiveProcedureData;
+class ScriptProcedureData;
+class TrialData;
+class CorrectorData;
 }
 namespace writer
 {
-using namespace XERCES_CPP_NAMESPACE;
 
 class APEXWRITERS_EXPORT ProceduresWriter
 {
@@ -66,8 +58,8 @@ class APEXWRITERS_EXPORT ProceduresWriter
         *
         *@return the created element
         */
-        static DOMElement* addElement(DOMDocument* doc,
-                               const data::ApexProcedureConfig& data);
+        static XERCES_CPP_NAMESPACE::DOMElement* addElement(XERCES_CPP_NAMESPACE::DOMDocument* doc,
+                               const data::ProcedureData& data);
 
     private:
 
@@ -77,8 +69,8 @@ class APEXWRITERS_EXPORT ProceduresWriter
         *@param into the element to place the <procedure> in
         *@param data the data to fill this element with
          */
-        static void fillProcedure(DOMElement* into,
-                           const data::ApexProcedureConfig& data);
+        static void fillProcedure(XERCES_CPP_NAMESPACE::DOMElement* into,
+                           const data::ProcedureData& data);
 
         /**
          *Appends a <procedure> element to the given DOMElement.
@@ -89,37 +81,39 @@ class APEXWRITERS_EXPORT ProceduresWriter
          *
          *@return the created element
          */
-        static void fillMultiProcedure(DOMElement* into,
-                                const data::ApexMultiProcedureConfig& data);
+        static void fillMultiProcedure(XERCES_CPP_NAMESPACE::DOMElement* into,
+                                const data::MultiProcedureData& data);
 
         /**
         *Fills a <parameters> element with the given parameters.
         *
-        *@param params  the parameters to fill the element with
+        *@param data  the parameters to fill the element with
         *@param theElement the element to fill
         */
-        static void fillParametersElement(const data::ApexProcedureParameters& params,
-                                   DOMElement* theElement);
+        static void fillParametersElement(const data::ProcedureData& data,
+                                   XERCES_CPP_NAMESPACE::DOMElement* theElement);
+
+        static void fillCorrector(const data::CorrectorData& data, XERCES_CPP_NAMESPACE::DOMElement* corrector);
 
         /**
          * Finishes the given element as an adaptive parameters alement with the
          * given data.
          *
-         * @param params  the parameters to finish the element with
+         * @param data  the parameters to finish the element with
          * @param theElement the element to finish
          */
-static void finishAsAdaptive(const data::ApexAdaptiveProcedureParameters&
-                params, DOMElement* toFinish);
+        static void finishAsAdaptive(const data::AdaptiveProcedureData& data,
+                                     XERCES_CPP_NAMESPACE::DOMElement* toFinish);
 
         /**
          * Finishes the given element as aplugin parameters alement with the
          * given data.
          *
-         * @param params  the parameters to finish the element with
+         * @param data  the parameters to finish the element with
          * @param theElement the element to finish
          */
-        static void finishAsPlugin(const data::PluginProcedureParameters&
-                params, DOMElement* toFinish);
+        static void finishAsPlugin(const data::ScriptProcedureData& data,
+                                   XERCES_CPP_NAMESPACE::DOMElement* toFinish);
 
         /**
          *Fills a <trials> element with the given vector of trials.
@@ -127,8 +121,8 @@ static void finishAsAdaptive(const data::ApexAdaptiveProcedureParameters&
          *@param trials  a vector with all the trials to fill this element with
          *@param theElement the element to fill
          */
-        static void fillTrialsElement(const std::vector<data::ApexTrial*>& trials,
-                               DOMElement* theElement);
+        static void fillTrialsElement(const QList<data::TrialData*>& trials,
+                               XERCES_CPP_NAMESPACE::DOMElement* theElement);
 
         /**
          *Gives a string representation of the procedure type
@@ -155,7 +149,17 @@ static void finishAsAdaptive(const data::ApexAdaptiveProcedureParameters&
         *@return true if the given config is the config of  multiprocedure,
         *  false otherwise
         */
-        static bool isMultiProcedure(const data::ApexProcedureConfig& data);
+        static bool isMultiProcedure(const data::ProcedureData& data);
+
+        /**
+         * Create a stepsize DOM element from the given information
+         * @param doc the document where the stepsize element will be placed in
+         * @param begin information about the stepsize (see procedure.xsd for more information)
+         * @param size information about the stepsize (see procedure.xsd for more information)
+         * @param direction information about the stepsize (see procedure.xsd for more information)
+         * @return The stepsize DOM element with the given information
+         */
+        static XERCES_CPP_NAMESPACE::DOMElement* createStepsizeElement(XERCES_CPP_NAMESPACE::DOMDocument* doc, int begin, float size, QString direction = "");
 };
 }
 }

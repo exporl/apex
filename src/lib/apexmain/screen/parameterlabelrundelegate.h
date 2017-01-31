@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef ParameterLabelRunDelegate_H
-#define ParameterLabelRunDelegate_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_PARAMETERLABELRUNDELEGATE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_PARAMETERLABELRUNDELEGATE_H_
 
 #include "labelrundelegatebase.h"
 #include "parameterscontainerrundelegate.h"
@@ -38,7 +38,7 @@ namespace apex
 
     namespace rundelegates
     {
-        
+
         using data::ParameterLabelElement;
         using data::ScreenElement;
 
@@ -59,7 +59,7 @@ namespace apex
                                  const QFont& font);
 
                 virtual ~ParameterLabelRunDelegate() {};
-                
+
                 const ScreenElement* getScreenElement() const;
 
                 void connectSlots( gui::ScreenRunDelegate* d );
@@ -67,7 +67,7 @@ namespace apex
                 virtual void setEnabled( const bool );
 
             public slots:
-                void newStimulus( stimulus::Stimulus* );
+                void updateParameter(const QString& id, const QVariant& value);
 
         };
     }

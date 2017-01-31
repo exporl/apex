@@ -1,0 +1,110 @@
+{
+   QtGui-Cond
+   Memcheck:Cond
+   ...
+   obj:/*/libQtGui.so.*
+   ...
+}
+
+{
+   QtGui-Leak
+   Memcheck:Leak
+   ...
+   obj:/*/libQtGui.so.*
+   ...
+}
+
+{
+   libkfile
+   Memcheck:Leak
+   ...
+   obj:/*/libkfile.so.*
+   ...
+}
+
+{
+    libfontconfig
+    Memcheck:Leak
+    ...
+    obj:/*/libfontconfig.so.*
+    ...
+}
+
+{
+   QFontDatabase
+   Memcheck:Leak
+   fun:_Znwj
+   fun:_ZN13QFontDatabase4loadEPK12QFontPrivatei
+   ...
+}
+
+{
+   QMapData
+   Memcheck:Leak
+   fun:malloc
+   fun:_Z7qMallocj
+   fun:_ZN8QMapData11node_createEPPNS_4NodeEii
+   ...
+}
+
+{
+   QConfFile
+   Memcheck:Leak
+   fun:_Znwj
+   fun:_ZN9QConfFile8fromNameERK7QStringb
+   ...
+}
+
+{
+   dl-stuff
+   Memcheck:Leak
+   ...
+   fun:_dl_*
+   ...
+}
+
+{
+   Solid
+   Memcheck:Leak
+   ...
+   fun:_ZN5Solid8Backends*
+}
+
+{
+   QHashData
+   Memcheck:Leak
+   fun:malloc
+   fun:_Z7qMallocj
+   fun:_ZN9QHashData12allocateNodeEi
+   ...
+}
+
+{
+   start_thread
+   Memcheck:Leak
+   ...
+   fun:start_thread
+}
+
+{
+   qDBusReplyFill
+   Memcheck:Leak
+   ...
+   fun:_Z14qDBusReplyFillRK12QDBusMessageR10QDBusErrorR8QVariant
+}
+
+{
+   QEventDispatcherGlib*
+   Memcheck:Leak
+   ...
+   fun:_ZN2?QEventDispatcherGlib*
+   ...
+}
+
+{
+   libdbus
+   Memcheck:Leak
+   ...
+   obj:/lib/libdbus-1.so.*
+   ...
+}

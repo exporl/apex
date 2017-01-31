@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: Regression test for training procedure - Output: number according to last input
+  @description: When you click on the button 'play': in the left ear/channel: "een", is presented and in the right ear/channel: "twee", 20dB louder compared to the left ear, is presented.
+  @how: filter: amplifier => basegain (-10) + gain left channel(-10)/right channel(+10)
+  -->
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>100</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout height="2" width="3" id="main_layout">
+    <button id="button1" x="1" y="1">
+     <text>play</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd2.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+ <filters>
+  <filter id="ampli" xsi:type="apex:amplifier">
+   <device>wavdevice</device>
+   <channels>2</channels>
+   <basegain>-10</basegain>
+   <gain channel="0">-10</gain>
+   <gain channel="1">10</gain>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <simultaneous>
+     <datablock id="rawdata1"/>
+     <datablock id="rawdata2"/>
+    </simultaneous>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>rawdata1</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>ampli</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>rawdata2</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>ampli</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>ampli</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>ampli</id>
+    <channel>1</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+ </connections>
+</apex:apex>

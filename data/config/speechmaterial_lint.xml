@@ -1,6 +1,6 @@
 <apex:speechmaterialfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.3/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.3/experiment.xsd"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment">
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.3/experiment.xsd"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
     
     <noises>
         <noise id="LINT_ltass">

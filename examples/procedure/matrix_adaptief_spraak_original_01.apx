@@ -1,0 +1,906 @@
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.2/experiment file:/C:/Documents%20and%20Settings/u0057653/Desktop/Apex_current_110831/schemas/experiment.xsd"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.2/experiment">
+
+    <procedure xsi:type="apex:pluginProcedureType">
+        <parameters>
+            <presentations>1</presentations>
+            <skip>0</skip>
+            <order>random</order>
+            <time_before_first_trial>0</time_before_first_trial>
+            <input_during_stimulus>false</input_during_stimulus>
+            <script>matrix_adaptief_spraak</script>
+            <parameter name="gain"></parameter>
+            <parameter name="startSNR"></parameter>
+            <parameter name="SNR"></parameter>
+        </parameters>
+        <trials>
+            <trial id="trial_18004">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_18004"/>
+            </trial>
+            <trial id="trial_64265">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_64265"/>
+            </trial>
+            <trial id="trial_57383">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_57383"/>
+            </trial>
+            <trial id="trial_76919">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_76919"/>
+            </trial>
+            <trial id="trial_39851">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_39851"/>
+            </trial>
+            <trial id="trial_43590">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_43590"/>
+            </trial>
+            <trial id="trial_95127">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_95127"/>
+            </trial>
+            <trial id="trial_20736">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_20736"/>
+            </trial>
+            <trial id="trial_01672">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_01672"/>
+            </trial>
+            <trial id="trial_82448">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_82448"/>
+            </trial>
+            <trial id="trial_78422">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_78422"/>
+            </trial>
+            <trial id="trial_32364">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_32364"/>
+            </trial>
+            <trial id="trial_97119">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_97119"/>
+            </trial>
+            <trial id="trial_24088">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_24088"/>
+            </trial>
+            <trial id="trial_85236">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_85236"/>
+            </trial>
+            <trial id="trial_60750">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_60750"/>
+            </trial>
+            <trial id="trial_43841">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_43841"/>
+            </trial>
+            <trial id="trial_19903">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_19903"/>
+            </trial>
+            <trial id="trial_01597">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_01597"/>
+            </trial>
+            <trial id="trial_56675">
+                <answer>1</answer>
+                <screen id="experimenter_screen"/>
+                <stimulus id="stimulus_56675"/>
+            </trial>
+
+        </trials>
+    </procedure>
+
+    <corrector xsi:type="apex:isequal"/>
+
+    <screens>
+        <general>
+            <repeatbutton>false</repeatbutton>
+            <showpanel>true</showpanel>
+            <showmenu>true</showmenu>
+        </general>
+        <reinforcement>
+            <progressbar>true</progressbar>
+            <feedback>false</feedback>
+        </reinforcement>
+        <style>
+            QPushButton:checked {background-color: lightgreen}
+        </style>
+        <screen id="experimenter_screen">
+            <gridLayout id="main" width="1" height="7" rowstretch="1,1,3,1,2,3,1">
+                <gridLayout id="list" width="2" height="1" col="1" row="1" columnstretch="1,4">
+                    <label id="list_label" col="1" row="1">
+                        <text>lijst</text>
+                    </label>
+                    <parameterlabel id="list" col="2" row="1">
+                        <parameter>list</parameter>
+                    </parameterlabel>
+                </gridLayout>
+                <gridLayout id="SNR" width="2" height="1" col="1" row="2" columnstretch="1,4">
+                    <label id="SNRlabel" col="1" row="1">
+                        <text>SNR</text>
+                    </label>
+                    <parameterlabel id="SNR" col="2" row="1">
+                        <parameter>SNR</parameter>
+                    </parameterlabel>
+                </gridLayout>
+                <gridLayout id="words" width="5" height="1" col="1" row="4">
+                    <parameterlabel id="name" col="1" row="1">
+                        <bgcolor>yellow</bgcolor>
+                        <parameter>name</parameter>
+                    </parameterlabel>
+                    <parameterlabel id="verb" col="2" row="1">
+                        <bgcolor>yellow</bgcolor>
+                        <parameter>verb</parameter>
+                    </parameterlabel>
+                    <parameterlabel id="number" col="3" row="1">
+                        <bgcolor>yellow</bgcolor>
+                        <parameter>number</parameter>
+                    </parameterlabel>
+                    <parameterlabel id="color" col="4" row="1">
+                        <bgcolor>yellow</bgcolor>
+                        <parameter>color</parameter>
+                    </parameterlabel>
+                    <parameterlabel id="object" col="5" row="1">
+                        <bgcolor>yellow</bgcolor>
+                        <parameter>object</parameter>
+                    </parameterlabel>
+                </gridLayout>
+                <matrix id="matrix" col="1" row="5">
+                    <fontsize>25</fontsize>
+                    <autocontinue>false</autocontinue>
+                    <element row="1" col="1">
+                        <name>1</name>
+                        <text>correct</text>
+                    </element>
+                    <element row="2" col="1">
+                        <name>0</name>
+                        <text>fout</text>
+                    </element>
+                    <element row="1" col="2">
+                        <name>1</name>
+                        <text>correct</text>
+                    </element>
+                    <element row="2" col="2">
+                        <name>0</name>
+                        <text>fout</text>
+                    </element>
+                    <element row="1" col="3">
+                        <name>1</name>
+                        <text>correct</text>
+                    </element>
+                    <element row="2" col="3">
+                        <name>0</name>
+                        <text>fout</text>
+                    </element>
+                    <element row="1" col="4">
+                        <name>1</name>
+                        <text>correct</text>
+                    </element>
+                    <element row="2" col="4">
+                        <name>0</name>
+                        <text>fout</text>
+                    </element>
+                    <element row="1" col="5">
+                        <name>1</name>
+                        <text>correct</text>
+                    </element>
+                    <element row="2" col="5">
+                        <name>0</name>
+                        <text>fout</text>
+                    </element>
+                </matrix>
+                <gridLayout id="next_sentence" row="7" col="1" width="1" height="1">
+                    <button id="next">
+                        <text>Volgende zin</text>
+                    </button>
+                </gridLayout>
+            </gridLayout>
+            <default_answer_element>matrix</default_answer_element>
+        </screen>
+    </screens>
+
+    <datablocks>
+        <uri_prefix>file:../Matrix</uri_prefix>
+        <datablock id="datablock_18004">
+            <device>soundcard</device>
+            <uri>18004.wav</uri>
+        </datablock>
+        <datablock id="datablock_64265">
+            <device>soundcard</device>
+            <uri>64265.wav</uri>
+        </datablock>
+        <datablock id="datablock_57383">
+            <device>soundcard</device>
+            <uri>57383.wav</uri>
+        </datablock>
+        <datablock id="datablock_76919">
+            <device>soundcard</device>
+            <uri>76919.wav</uri>
+        </datablock>
+        <datablock id="datablock_39851">
+            <device>soundcard</device>
+            <uri>39851.wav</uri>
+        </datablock>
+        <datablock id="datablock_43590">
+            <device>soundcard</device>
+            <uri>43590.wav</uri>
+        </datablock>
+        <datablock id="datablock_95127">
+            <device>soundcard</device>
+            <uri>95127.wav</uri>
+        </datablock>
+        <datablock id="datablock_20736">
+            <device>soundcard</device>
+            <uri>20736.wav</uri>
+        </datablock>
+        <datablock id="datablock_01672">
+            <device>soundcard</device>
+            <uri>01672.wav</uri>
+        </datablock>
+        <datablock id="datablock_82448">
+            <device>soundcard</device>
+            <uri>82448.wav</uri>
+        </datablock>
+        <datablock id="datablock_78422">
+            <device>soundcard</device>
+            <uri>78422.wav</uri>
+        </datablock>
+        <datablock id="datablock_32364">
+            <device>soundcard</device>
+            <uri>32364.wav</uri>
+        </datablock>
+        <datablock id="datablock_97119">
+            <device>soundcard</device>
+            <uri>97119.wav</uri>
+        </datablock>
+        <datablock id="datablock_24088">
+            <device>soundcard</device>
+            <uri>24088.wav</uri>
+        </datablock>
+        <datablock id="datablock_85236">
+            <device>soundcard</device>
+            <uri>85236.wav</uri>
+        </datablock>
+        <datablock id="datablock_60750">
+            <device>soundcard</device>
+            <uri>60750.wav</uri>
+        </datablock>
+        <datablock id="datablock_43841">
+            <device>soundcard</device>
+            <uri>43841.wav</uri>
+        </datablock>
+        <datablock id="datablock_19903">
+            <device>soundcard</device>
+            <uri>19903.wav</uri>
+        </datablock>
+        <datablock id="datablock_01597">
+            <device>soundcard</device>
+            <uri>01597.wav</uri>
+        </datablock>
+        <datablock id="datablock_56675">
+            <device>soundcard</device>
+            <uri>56675.wav</uri>
+        </datablock>
+
+        <datablock id="datablock_noise">
+            <device>soundcard</device>
+            <uri>VlMatrixnoise_ltass.wav</uri>
+        </datablock>
+        <datablock id="datablock_silence500">
+            <device>soundcard</device>
+            <uri>silence:500</uri>
+        </datablock>
+        <datablock id="datablock_silence1000">
+            <device>soundcard</device>
+            <uri>silence:1000</uri>
+        </datablock>
+    </datablocks>
+
+    <devices>
+        <master>soundcard</master>
+        <device id="soundcard" xsi:type="apex:wavDeviceType">
+            <driver>asio</driver>
+            <card>default</card>
+            <channels>2</channels>
+            <gain channel="0" id="gain0">0</gain>
+            <gain channel="1" id="gain1">0</gain>
+            <samplerate>44100</samplerate>
+            <padzero>0</padzero>
+        </device>
+    </devices>
+
+    <filters>
+        <filter id="amplifier" xsi:type="apex:amplifier">
+            <device>soundcard</device>
+            <channels>1</channels>
+            <basegain>-5</basegain>
+            <invertgain>false</invertgain>
+            <gain id="gain">0</gain>
+        </filter>
+        <filter id="amplifier_channel0" xsi:type="apex:amplifier">
+            <device>soundcard</device>
+            <channels>1</channels>
+            <basegain id="SNR">0</basegain>
+            <invertgain>false</invertgain>
+            <gain>0</gain>
+        </filter>
+        <filter id="dataloop_channel0" xsi:type="apex:dataloop">
+            <device>soundcard</device>
+            <channels>1</channels>
+            <continuous>false</continuous>
+            <datablock>datablock_noise</datablock>
+            <basegain>-5</basegain>
+            <invertgain>false</invertgain>
+            <gain id="noisegain_channel0">0</gain>
+            <randomjump>true</randomjump>
+            <jump>0</jump>
+        </filter>
+        <filter id="fadein_dataloop_channel0" xsi:type="apex:fader">
+            <device>soundcard</device>
+            <channels>1</channels>
+            <length>50</length>
+            <type>cosine</type>
+            <direction>in</direction>
+        </filter>
+        <filter id="fadeout_dataloop_channel0" xsi:type="apex:fader">
+            <device>soundcard</device>
+            <channels>1</channels>
+            <length>50</length>
+            <type>cosine</type>
+            <direction>out</direction>
+        </filter>
+    </filters>
+
+    <stimuli>
+        <fixed_parameters>
+            <parameter id="list"/>
+            <parameter id="sentence"/>
+            <parameter id="name"/>
+            <parameter id="verb"/>
+            <parameter id="number"/>
+            <parameter id="color"/>
+            <parameter id="object"/>
+        </fixed_parameters>
+        <stimulus id="calibrationstimulus">
+            <datablocks>
+                <datablock id="datablock_silence1000"/>
+            </datablocks>
+            <fixedParameters>
+                <parameter id="list">calibration</parameter>
+                <parameter id="sentence">calibration</parameter>
+                <parameter id="name">calibration</parameter>
+                <parameter id="verb">calibration</parameter>
+                <parameter id="number">calibration</parameter>
+                <parameter id="color">calibration</parameter>
+                <parameter id="object">calibration</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_18004">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_18004"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">18004</parameter>
+                <parameter id="name">Ellen</parameter>
+                <parameter id="verb">ziet</parameter>
+                <parameter id="number">twee</parameter>
+                <parameter id="color">beige</parameter>
+                <parameter id="object">fietsen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_64265">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_64265"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">64265</parameter>
+                <parameter id="name">Lucas</parameter>
+                <parameter id="verb">krijgt</parameter>
+                <parameter id="number">vier</parameter>
+                <parameter id="color">paarse</parameter>
+                <parameter id="object">jassen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_57383">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_57383"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">57383</parameter>
+                <parameter id="name">Johan</parameter>
+                <parameter id="verb">wint</parameter>
+                <parameter id="number">vijf</parameter>
+                <parameter id="color">witte</parameter>
+                <parameter id="object">dozen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_76919">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_76919"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">76919</parameter>
+                <parameter id="name">Sara</parameter>
+                <parameter id="verb">maakt</parameter>
+                <parameter id="number">veel</parameter>
+                <parameter id="color">blauwe</parameter>
+                <parameter id="object">ringen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_39851">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_39851"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">39851</parameter>
+                <parameter id="name">Jacob</parameter>
+                <parameter id="verb">zoekt</parameter>
+                <parameter id="number">twaalf</parameter>
+                <parameter id="color">groene</parameter>
+                <parameter id="object">boten</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_43590">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_43590"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">43590</parameter>
+                <parameter id="name">Jeroen</parameter>
+                <parameter id="verb">koopt</parameter>
+                <parameter id="number">acht</parameter>
+                <parameter id="color">zwarte</parameter>
+                <parameter id="object">bedden</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_95127">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_95127"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">95127</parameter>
+                <parameter id="name">Thomas</parameter>
+                <parameter id="verb">leent</parameter>
+                <parameter id="number">drie</parameter>
+                <parameter id="color">bruine</parameter>
+                <parameter id="object">manden</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_20736">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_20736"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">20736</parameter>
+                <parameter id="name">Emma</parameter>
+                <parameter id="verb">draagt</parameter>
+                <parameter id="number">elf</parameter>
+                <parameter id="color">gele</parameter>
+                <parameter id="object">kousen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_01672">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_01672"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">01672</parameter>
+                <parameter id="name">David</parameter>
+                <parameter id="verb">heeft</parameter>
+                <parameter id="number">tien</parameter>
+                <parameter id="color">rode</parameter>
+                <parameter id="object">doeken</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_82448">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_82448"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">82448</parameter>
+                <parameter id="name">Sofie</parameter>
+                <parameter id="verb">kiest</parameter>
+                <parameter id="number">zes</parameter>
+                <parameter id="color">grijze</parameter>
+                <parameter id="object">pennen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_78422">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_78422"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">78422</parameter>
+                <parameter id="name">Sara</parameter>
+                <parameter id="verb">ziet</parameter>
+                <parameter id="number">zes</parameter>
+                <parameter id="color">bruine</parameter>
+                <parameter id="object">doeken</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_32364">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_32364"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">32364</parameter>
+                <parameter id="name">Jacob</parameter>
+                <parameter id="verb">kiest</parameter>
+                <parameter id="number">vijf</parameter>
+                <parameter id="color">paarse</parameter>
+                <parameter id="object">fietsen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_97119">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_97119"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">97119</parameter>
+                <parameter id="name">Thomas</parameter>
+                <parameter id="verb">wint</parameter>
+                <parameter id="number">drie</parameter>
+                <parameter id="color">blauwe</parameter>
+                <parameter id="object">ringen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_24088">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_24088"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">24088</parameter>
+                <parameter id="name">Emma</parameter>
+                <parameter id="verb">krijgt</parameter>
+                <parameter id="number">twee</parameter>
+                <parameter id="color">witte</parameter>
+                <parameter id="object">pennen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_85236">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_85236"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">85236</parameter>
+                <parameter id="name">Sofie</parameter>
+                <parameter id="verb">leent</parameter>
+                <parameter id="number">vier</parameter>
+                <parameter id="color">gele</parameter>
+                <parameter id="object">kousen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_60750">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_60750"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">60750</parameter>
+                <parameter id="name">Lucas</parameter>
+                <parameter id="verb">draagt</parameter>
+                <parameter id="number">elf</parameter>
+                <parameter id="color">groene</parameter>
+                <parameter id="object">bedden</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_43841">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_43841"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">43841</parameter>
+                <parameter id="name">Jeroen</parameter>
+                <parameter id="verb">koopt</parameter>
+                <parameter id="number">twaalf</parameter>
+                <parameter id="color">grijze</parameter>
+                <parameter id="object">boten</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_19903">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_19903"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">19903</parameter>
+                <parameter id="name">Ellen</parameter>
+                <parameter id="verb">zoekt</parameter>
+                <parameter id="number">veel</parameter>
+                <parameter id="color">beige</parameter>
+                <parameter id="object">dozen</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_01597">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_01597"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">01597</parameter>
+                <parameter id="name">David</parameter>
+                <parameter id="verb">heeft</parameter>
+                <parameter id="number">acht</parameter>
+                <parameter id="color">zwarte</parameter>
+                <parameter id="object">manden</parameter>
+            </fixedParameters>
+        </stimulus>
+        <stimulus id="stimulus_56675">
+            <datablocks>
+                <sequential>
+                    <datablock id="datablock_silence1000"/>
+                    <datablock id="datablock_56675"/>
+                    <datablock id="datablock_silence500"/>
+                </sequential>
+            </datablocks>
+            <variableParameters>
+            </variableParameters>
+            <fixedParameters>
+                <parameter id="list">dubbellijst_1</parameter>
+                <parameter id="sentence">56675</parameter>
+                <parameter id="name">Johan</parameter>
+                <parameter id="verb">maakt</parameter>
+                <parameter id="number">tien</parameter>
+                <parameter id="color">rode</parameter>
+                <parameter id="object">jassen</parameter>
+            </fixedParameters>
+        </stimulus>
+
+    </stimuli>
+
+    <connections>
+        <connection>
+            <from>
+                <id>_ALL_</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>amplifier</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+        <connection>
+            <from>
+                <id>amplifier</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>amplifier_channel0</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+        <connection>
+            <from>
+                <id>amplifier_channel0</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>soundcard</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+        <connection>
+            <from>
+                <id>dataloop_channel0</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>fadein_dataloop_channel0</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+        <connection>
+            <from>
+                <id>fadein_dataloop_channel0</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>fadeout_dataloop_channel0</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+        <connection>
+            <from>
+                <id>fadeout_dataloop_channel0</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>soundcard</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+    </connections>
+
+    <calibration profile="VlMatrix_ltass">
+        <stimuli>
+            <stimulus id="calibrationstimulus"/>
+        </stimuli>
+        <parameters>
+            <parameter id="gain0">
+                <targetamplitude>65</targetamplitude>
+                <calibrationamplitude>80</calibrationamplitude>
+                <mute>-150</mute>
+                <min>-50</min>
+                <max>10</max>
+            </parameter>
+        </parameters>
+    </calibration>
+
+    <results>
+        <javascript>
+            <page>rtresults-psignifit.html</page>
+            <realtime>false</realtime>
+            <showafterexperiment>true</showafterexperiment>
+        </javascript>
+        <subject></subject>
+    </results>
+
+    <interactive>
+        <entry type="string" description="Subject" expression="/apex:apex/results[1]/subject[1]" default=""/>
+        <entry type="int" description="Start SNR (relatief tov ruisniveau van 65 dB SPL)" expression="/apex:apex/procedure[1]/parameters[1]/parameter[2]" default="-4"/>
+    </interactive>
+
+    <general>
+        <allowskip>true</allowskip>
+    </general>
+
+</apex:apex>

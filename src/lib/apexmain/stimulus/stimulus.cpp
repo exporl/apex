@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "stimulus.h"
-#include "stimulus/stimulusparameters.h"
+
+#include "apexdata/stimulus/stimulusparameters.h"
+
 #include "datablock.h"
 #include "playmatrix.h"
+#include "stimulus.h"
 
-//from libdata
-// #include "stimulus/stimulusdata.h"
+#include <QtGlobal>
 
 using namespace apex;
 using namespace apex::stimulus;
@@ -74,7 +74,7 @@ void Stimulus::ConstructDevDBlockMap( const tDeviceMap& ac_Devices, tDataBlockMa
     const PlayMatrix& ac_Mat = *mc_PlayMatrix;
     const unsigned nS = ac_Mat.mf_nGetBufferSize();
     const unsigned nP = ac_Mat.mf_nGetChannelCount();
-//    assert( nS && nP );
+//    Q_ASSERT( nS && nP );
     tQStringVectorMap& dmap = m_DeviceDataBlocks;
 
     for ( tDeviceMapCIt it = ac_Devices.begin() ; it != ac_Devices.end() ; ++it )
@@ -88,7 +88,7 @@ void Stimulus::ConstructDevDBlockMap( const tDeviceMap& ac_Devices, tDataBlockMa
             if ( !sCur.isEmpty() )
             {
                 DataBlock* pCur = a_DataBlocks.value( sCur );
-                assert( pCur );
+                Q_ASSERT( pCur );
                 dmap[ pCur->GetDevice() ].push_back( sCur );
             }
         }

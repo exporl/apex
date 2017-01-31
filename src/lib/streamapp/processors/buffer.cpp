@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "buffer.h"
-#include <assert.h>
+
+#include <QtGlobal>
 
 using namespace streamapp;
 
@@ -32,7 +33,7 @@ BasicBuffer::BasicBuffer( const unsigned ac_nChan, const unsigned ac_nInputSize,
   m_pResult( 0 ),
   m_pCallback( 0 )
 {
-  assert( ac_nBuffers );
+  Q_ASSERT( ac_nBuffers );
 }
 
 BasicBuffer::~BasicBuffer()
@@ -40,8 +41,8 @@ BasicBuffer::~BasicBuffer()
 
 const Stream& BasicBuffer::mf_DoProcessing( const Stream& ac_StrToProc )
 {
-  assert( ac_StrToProc.mf_nGetChannelCount() >= mf_nGetNumInputChannels() );
-  assert( ac_StrToProc.mf_nGetBufferSize() >= mf_nGetBufferSize() );
+  Q_ASSERT( ac_StrToProc.mf_nGetChannelCount() >= mf_nGetNumInputChannels() );
+  Q_ASSERT( ac_StrToProc.mf_nGetBufferSize() >= mf_nGetBufferSize() );
 
     //we don't necessary have to do something
   if( m_pResult )
@@ -68,8 +69,8 @@ const Stream& BasicBuffer::mf_DoProcessing( const Stream& ac_StrToProc )
 
 void BasicBuffer::mp_SetBufferToFill( Stream* ac_Buf )
 {
-  assert( ac_Buf->mf_nGetChannelCount() >= mf_nGetNumInputChannels() );
-  assert( ac_Buf->mf_nGetBufferSize() >= mc_nOutputSize );
+  Q_ASSERT( ac_Buf->mf_nGetChannelCount() >= mf_nGetNumInputChannels() );
+  Q_ASSERT( ac_Buf->mf_nGetBufferSize() >= mc_nOutputSize );
   m_pResult = ac_Buf;
 }
 

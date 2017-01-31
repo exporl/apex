@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "win32_mmemixerimpl.h"
+
+#include "../../utils/dataconversion.h"
+#include "../../utils/stringexception.h"
+
 #include "win32_headers.h"
-#include "utils/stringexception.h"
-#include "utils/dataconversion.h"
+#include "win32_mmemixerimpl.h"
 
 #include <cstdio>
 

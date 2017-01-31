@@ -33,6 +33,7 @@ L34DeviceData::L34DeviceData(): DeviceData(TYPE_L34), apexMap(0)
     setValueByType("device_id", 1);
     setValueByType("implant", "cic3");
     setValueByType("trigger", "none");
+
     setValueByType("powerup_count", 4000);
 }
 

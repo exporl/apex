@@ -69,7 +69,7 @@ unsigned long SilentReader::mf_lSamplesLeft() const
 
 unsigned long SilentReader::mf_lTotalSamples() const
 {
-//    qDebug("SilentReader::mf_lTotalSamples(): %u", mc_lSamples);
+//    qCDebug(APEX_SA, "SilentReader::mf_lTotalSamples(): %u", mc_lSamples);
   return mc_lSamples;
 }
 

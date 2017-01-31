@@ -20,10 +20,13 @@
 #ifndef __MMIXER_H__
 #define __MMIXER_H__
 
-#include "stream.h"
-#include "typedefs.h"
-#include "streamappdefines.h"
-#include "utils/dataconversion.h"
+#include "../stream.h"
+#include "../streamappdefines.h"
+#include "../typedefs.h"
+
+#include "../utils/dataconversion.h"
+
+#include <QtGlobal>
 
 using namespace dataconversion;
 
@@ -165,7 +168,7 @@ namespace streamapp
         */
     void mp_SetNumOuts( const unsigned ac_nChan )
     {
-      assert( ac_nChan <= m_Matrix.mf_nGetChannelCount() );
+      Q_ASSERT( ac_nChan <= m_Matrix.mf_nGetChannelCount() );
       m_nOChan = ac_nChan;
     }
 
@@ -176,7 +179,7 @@ namespace streamapp
         */
     void mp_SetNumIns( const unsigned ac_nChan )
     {
-      assert( ac_nChan <= m_Matrix.mf_nGetChannelCount() );
+      Q_ASSERT( ac_nChan <= m_Matrix.mf_nGetChannelCount() );
       m_nIChan = ac_nChan;
     }
 

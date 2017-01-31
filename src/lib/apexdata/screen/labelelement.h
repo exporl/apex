@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef LABELELEMENT_H
-#define LABELELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_LABELELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_LABELELEMENT_H_
 
 #include "screenelement.h"
 
 #include <QString>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -49,7 +49,7 @@ class APEXDATA_EXPORT LabelElement
 
         void setText(const QString& t);
         QString getText() const;
-        
+
         bool operator==(const LabelElement& other) const;
 };
 

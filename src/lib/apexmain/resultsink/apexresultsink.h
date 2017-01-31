@@ -17,14 +17,16 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXAPEXRESULTSINK_H
-#define APEXAPEXRESULTSINK_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_APEXRESULTSINK_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_APEXRESULTSINK_H_
 
 #include "apexmodule.h"
-#include "procedure/adaptiveprocedure.h"
+
+#include <qtextstream.h>
+
+#include <QDateTime>
 
 #include <vector>
-#include <qtextstream.h>
 
 namespace apex {
 
@@ -49,23 +51,29 @@ public:
         public:         // slot replacements
                 //void NewTrial(const QString& p_name);
                 void SetFilename(const QString& p_filename);
-                const QString& GetFilename() const { return m_filename; };
-                bool IsSaved() const { return m_bSaved; };
+                const QString& GetFilename() const { return m_filename; }
+                bool IsSaved() const { return m_bSaved; }
+
+                /**
+                  * Extra XML will be appended to the results file
+                  */
+                void setExtraXml(const QString &x);
 
                 static const QString c_fileFooter;
                 static const QString resultsExtension;          // .apx
 
-        public slots:
+
+public slots:
                 /*void NewStimulus(const QString& p_name);
                 void Answer(const ScreenResult& p_answer);
                 void NewAnswerCorrect(const bool p_correct);
                 void AnswerTime(const int p_time);*/
                 void Finished(bool askFilename=true);
-                void SaveAs(bool askFilename=true);
+
                 /*void SetCorrectAnswer(const unsigned p_answer);
                 void SetSaturation();
                 void SetTargetParam(const t_adaptParam p_param);*/
-                void CollectResults();
+                void CollectResults(const QString& trial, const QString& extraXml);
 
         signals:
                 void Saved();                   // is emitted after Finished() did it's job
@@ -73,6 +81,7 @@ public:
 
 
         private:
+                void SaveAs(bool askFilename=true);
                 bool Save(const QString& p_filename, const bool p_overwrite );
                 bool MakeFilenameUnique( );
 
@@ -80,13 +89,13 @@ public:
                 void PrintXMLFooter(QTextStream& out);
                 void PrintIntro(QTextStream& out);                      // print general stuff about the experiment
 
-                const QString CollectEndResults( );
-
+                const QString CollectEndResults();
         private:
 //              TrialResult* currentTrial;
                 std::vector<TrialResult*> m_Results;
 
                 QString m_filename;
+                QString m_extraXml;
                 QDateTime m_endTime;
                 bool m_bSaved;
 

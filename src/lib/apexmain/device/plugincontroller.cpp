@@ -16,18 +16,17 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "apexdata/device/plugincontrollerdata.h"
+
+#include "services/mainconfigfileparser.h"
+#include "services/pluginloader.h"
+
 #include "plugincontroller.h"
 #include "plugincontrollerinterface.h"
 
-#include "services/mainconfigfileparser.h"      // paths
-#include "services/pluginloader.h"
-
-//from libdata
-#include "device/plugincontrollerdata.h"
-
-#include <QString>
 #include <QPluginLoader>
+#include <QString>
 
 namespace apex {
 
@@ -35,8 +34,7 @@ namespace device {
 
 PluginController::PluginController( data::PluginControllerData* p_parameters ):
         ControlDevice(p_parameters),
-        m_param(p_parameters),
-        m_plugin(0)
+        m_param(p_parameters)
 {
     MakePlugin();
 
@@ -58,58 +56,23 @@ void apex::device::PluginController::MakePlugin()
             createPluginCreator<PluginControllerCreator>(m_param->plugin());
     m_plugin.reset (creator->createController (m_param->plugin()));
     return;
-
-  /*  
-    QString newname = Paths::findReadableFile (m_param->GetPlugin(),
-                      QStringList() << Paths::Get().GetBinaryPluginPath()
-                              << Paths::Get().GetExecutablePath(),
-#ifdef LINUX
-                      QStringList() << ".so",
-                      QStringList() << "lib"
-#else
-                      QStringList() << ".dll"
-#endif
-                                              );
-
-    if (newname.isEmpty())
-        throw ApexStringException("Cannot find controller plugin: " + m_param->GetPlugin());
-    
-    qDebug("Plugincontroller: looking for %s", qPrintable (newname));
-
-    // load plugin into pluginfilterinterface
-    QPluginLoader loader (newname);
-    loader.load();
-    if (!loader.isLoaded())
-        throw ApexStringException ("Cannot load controller plugin: " +
-                                   loader.errorString());
-
-
-    PluginControllerCreator *creator = qobject_cast<PluginControllerCreator*>
-                                       (loader.instance());
-    if (!creator)
-        throw ApexStringException ("controller plugin has wrong type: " +
-                                   loader.errorString());
-
-    m_plugin.reset (creator->createController (m_param->GetPlugin()));
-    if (! m_plugin.get())
-        throw ApexStringException ("controller could not be created");*/
 }
 
 bool apex::device::PluginController::SetParameter(const QString & type, const int channel, const QVariant & value)
 {
-    Q_ASSERT( m_plugin.get());
+    Q_ASSERT(m_plugin);
     return m_plugin->setParameter(type, channel, value.toString());
 }
 
 void apex::device::PluginController::Reset()
 {
-    Q_ASSERT( m_plugin.get());
+    Q_ASSERT(m_plugin);
     m_plugin->resetParameters();
 }
 
 void apex::device::PluginController::Prepare()
 {
-    Q_ASSERT( m_plugin.get());
+    Q_ASSERT(m_plugin);
     m_plugin->prepare();
 }
 

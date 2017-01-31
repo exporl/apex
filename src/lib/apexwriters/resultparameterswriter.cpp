@@ -17,12 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "resultparameterswriter.h"
-#include "xml/apexxmltools.h"
-#include "apextools.h"
-#include "result/resultparameters.h"
+#include "apexdata/result/resultparameters.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/apextools.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "resultparameterswriter.h"
 
 using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::ApexXMLTools;
@@ -37,45 +39,59 @@ DOMElement* ResultParametersWriter::addElement(DOMDocument* doc,
     DOMElement* rootElement = doc->getDocumentElement();
     DOMElement* result = doc->createElement(X("results"));
     rootElement->appendChild(result);
+    qCDebug(APEX_RS) << "Started writing results";
 
-    //xsltscript
-    QString xsltScript = data.GetXsltScript();
-    if (!xsltScript.isEmpty())
-    {
-        result->appendChild(XMLutils::CreateTextElement(doc, "xsltscript",
-                            xsltScript));
+    //htmlpage
+    //QString htmlPage = data.GetHtml();
+    QString htmlPage = data.resultPage().toString();
+    if (!htmlPage.isEmpty()) {
+        result->appendChild(XMLutils::CreateTextElement(doc, "page",
+                                                        htmlPage));
+    }
+    else {
+        result->appendChild(XMLutils::CreateTextElement(doc, "page",
+                            ""));
     }
 
-    QList<QPair<QString,QString> > xp = data.GetXsltParameters();
+    //resultparameters
+    QMap<QString,QString> xp = data.resultParameters();
     if (!xp.isEmpty()) {
-        DOMElement* xsp =doc->createElement(X("xsltscriptparameters")) ;
+        DOMElement* xsp =doc->createElement(X("resultparameters")) ;
         result->appendChild(xsp) ;
-        for (data::tXsltParameters::const_iterator it=xp.begin();
-                it!=xp.end(); ++it) {
+
+        QMapIterator<QString,QString> it(xp);
+        while (it.hasNext()) {
+            it.next();
+            qCDebug(APEX_RS) << "Resultparameters parsed:" << it.key() << " with value " << it.value();
             DOMElement* parameter = doc->createElement(X("parameter"));
-            parameter->setAttribute( X("name"), S2X(it->first));
-            DOMNode* text = doc->createTextNode(S2X(it->second));
+            parameter->setAttribute( X("name"), S2X(it.key()));
+            DOMNode* text = doc->createTextNode(S2X(it.value()));
             parameter->appendChild(text);
             xsp->appendChild(parameter);
          }
     }
 
-    //showresults
-    if (data.showXsltResultsAfter())
-    {
-        result->appendChild(XMLutils::CreateTextElement(doc, "showresults",
+    //showresultsduring
+    if(data.showRTResults()){
+        result->appendChild(XMLutils::CreateTextElement(doc, "showduringexperiment",
+                             ApexTools::boolToString(true)));
+    }
+
+    //showresultsafter
+    if (data.showResultsAfter()) {
+        result->appendChild(XMLutils::CreateTextElement(doc, "showafterexperiment",
                             ApexTools::boolToString(true)));
     }
 
     //saveprocessedresults
-    if (data.GetSaveResults())
+    if (data.saveResults())
     {
         result->appendChild(XMLutils::CreateTextElement(doc,
                             "saveprocessedresults", ApexTools::boolToString(true)));
     }
 
     //matlabscript
-    QString matlabScript = data.GetMatlabScript();
+    QString matlabScript = data.matlabScript();
     if (!matlabScript.isEmpty())
     {
         result->appendChild(XMLutils::CreateTextElement(doc, "matlabscript",
@@ -83,7 +99,7 @@ DOMElement* ResultParametersWriter::addElement(DOMDocument* doc,
     }
 
     //subject
-    QString subject = data.GetSubject();
+    QString subject = data.subject();
     if (!subject.isEmpty())
     {
         result->appendChild(XMLutils::CreateTextElement(doc, "subject",

@@ -1,14 +1,14 @@
-// MD5.CC - source code for the C++/object oriented translation and 
+// MD5.CC - source code for the C++/object oriented translation and
 //          modification of MD5.
 
-// Translation and modification (c) 1995 by Mordechai T. Abzug 
+// Translation and modification (c) 1995 by Mordechai T. Abzug
 
-// This translation/ modification is provided "as is," without express or 
+// This translation/ modification is provided "as is," without express or
 // implied warranty of any kind.
 
-// The translator/ modifier does not claim (1) that MD5 will do what you think 
-// it does; (2) that this translation/ modification is accurate; or (3) that 
-// this software is "merchantible."  (Language for this disclaimer partially 
+// The translator/ modifier does not claim (1) that MD5 will do what you think
+// it does; (2) that this translation/ modification is accurate; or (3) that
+// this software is "merchantible."  (Language for this disclaimer partially
 // copied from the disclaimer below).
 
 /* based on:
@@ -40,30 +40,17 @@ documentation and/or software.
 
  */
 
-
-
-
-
-
 #include "md5.h"
 
-#include <assert.h>
-#include <string>
+#include <QtGlobal>
+
 #include <iostream>
-
-
-
+#include <string>
 
 // MD5 simple initialization method
-
-MD5::MD5(){
-
-  init();
-
+MD5::MD5() {
+    init();
 }
-
-
-
 
 // MD5 block update operation. Continues an MD5 message-digest
 // operation, processing another message block, and updating the
@@ -98,7 +85,7 @@ void MD5::update (uint1 *input, uint4 input_length) {
     transform (buffer);
 
     // now, transform each 64-byte piece of the input, bypassing the buffer
-    for (input_index = buffer_space; input_index + 63 < input_length; 
+    for (input_index = buffer_space; input_index + 63 < input_length;
          input_index += 64)
       transform (input+input_index);
 
@@ -350,7 +337,7 @@ void MD5::transform (uint1 block[64]){
 
   decode (x, block, 64);
 
-  assert(!finalized);  // not just a user error, since the method is private
+  Q_ASSERT(!finalized);  // not just a user error, since the method is private
 
   /* Round 1 */
   FF (a, b, c, d, x[ 0], S11, 0xd76aa478); /* 1 */
@@ -523,25 +510,25 @@ inline unsigned int MD5::I            (uint4 x, uint4 y, uint4 z){
 // Rotation is separate from addition to prevent recomputation.
 
 
-inline void MD5::FF(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, 
+inline void MD5::FF(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x,
                     uint4  s, uint4 ac){
  a += F(b, c, d) + x + ac;
  a = rotate_left (a, s) +b;
 }
 
-inline void MD5::GG(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, 
+inline void MD5::GG(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x,
                     uint4 s, uint4 ac){
  a += G(b, c, d) + x + ac;
  a = rotate_left (a, s) +b;
 }
 
-inline void MD5::HH(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, 
+inline void MD5::HH(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x,
                     uint4 s, uint4 ac){
  a += H(b, c, d) + x + ac;
  a = rotate_left (a, s) +b;
 }
 
-inline void MD5::II(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, 
+inline void MD5::II(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x,
                              uint4 s, uint4 ac){
  a += I(b, c, d) + x + ac;
  a = rotate_left (a, s) +b;

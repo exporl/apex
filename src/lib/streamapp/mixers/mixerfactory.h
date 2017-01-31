@@ -16,20 +16,21 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __MIXERFACTORY_H__
 #define __MIXERFACTORY_H__
 
-#include "mixer.h"
-#include "factorytypes.h"
-#include "utils/vectorutils.h"
+#include "../factorytypes.h"
 
+#include "../utils/vectorutils.h"
+
+#include "mixer.h"
 #include "rmemixer.h"
 
 #ifdef S_WIN32
-#include "win32_mmemixer.h"
+#include "../_archs/win32/win32_mmemixer.h"
 #elif defined S_LINUX
-//#include "linux_ossmixer.h"
+//#include "../_archs/linux/linux_ossmixer.h"
 #else
 #ERROR !no platform defined!
 #endif
@@ -42,7 +43,7 @@ namespace streamapp
       * MixerFactory
       *   creates an IMixer object based on type and OS.
       ************************************************** */
-  class MixerFactory 
+  class MixerFactory
   {
  private:
       /**

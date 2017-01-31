@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
   /**
     * @file streamutils.h
     * Utility classes used by streamapp classes.
@@ -27,8 +27,11 @@
 #ifndef __STREAMUTILS_H__
 #define __STREAMUTILS_H__
 
-#include "stream.h"
 #include "containers/matrix.h"
+
+#include "stream.h"
+
+#include <QtGlobal>
 
 namespace streamapp
 {
@@ -253,7 +256,7 @@ namespace streamapp
     StreamChannels( const Stream& ac_Input, const unsigned ac_nChannelToGet ) :
       Stream( new StreamType*[ 1 ], 1, ac_Input.mf_nGetBufferSize() )
     {
-      assert( ac_nChannelToGet < ac_Input.mf_nGetChannelCount() );
+      Q_ASSERT( ac_nChannelToGet < ac_Input.mf_nGetChannelCount() );
       Stream::mc_pSamplesArray[ 0 ] = ac_Input.mf_pGetArray()[ ac_nChannelToGet ];
     }
 

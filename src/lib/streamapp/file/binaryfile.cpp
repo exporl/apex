@@ -16,12 +16,17 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "../appcore/deleter.h"
+
+#include "../utils/stringexception.h"
+#include "../utils/stringutils.h"
+#include "../utils/systemutils.h"
+
 #include "binaryfile.h"
-#include "utils/stringutils.h"
-#include "utils/systemutils.h"
-#include "utils/stringexception.h"
-#include "appcore/deleter.h"
+
+#include <QtGlobal>
+
 #include <iostream>
 
 using namespace streamapp;
@@ -89,7 +94,7 @@ void BinaryOutputFile::Write( const Stream& ac_Data )
     return;
 
   const unsigned c_nChan = mf_nChannels();
-  assert( ac_Data.mf_nGetChannelCount() >= c_nChan );
+  Q_ASSERT( ac_Data.mf_nGetChannelCount() >= c_nChan );
 
   const unsigned c_nSize = ac_Data.mf_nGetBufferSize() * sizeof( StreamType );
 

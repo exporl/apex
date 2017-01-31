@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef WAVGENERATORFILTER_H
-#define WAVGENERATORFILTER_H
 
-#include "stimulus/wav/wavfilter.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_FILTER_WAVGENERATOR_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_FILTER_WAVGENERATOR_H_
+
+#include "wavstimulus/wavfilter.h"
 
 
 namespace streamapp
@@ -68,7 +68,7 @@ namespace apex{
           * Implementation of the WavFilter method.
           */
       //virtual bool        SetParameter( const QString& ac_ParamID, const QString& ac_Val );
-	  virtual bool SetParameter( const QString& type, const int channel, const QVariant& value ) ;
+          virtual bool SetParameter( const QString& type, const int channel, const QVariant& value ) ;
 
         /**
           * Implementation of the WavFilter method.
@@ -91,8 +91,8 @@ namespace apex{
       virtual void Prepare();
 
 
-//	  void SetSource(stimulus::DataBlock* s) { m_src=s;};
-//	  stimulus::DataBlock* GetSource() const { Q_CHECK_PTR(m_src); return m_src; };
+//        void SetSource(stimulus::DataBlock* s) { m_src=s;};
+//        stimulus::DataBlock* GetSource() const { Q_CHECK_PTR(m_src); return m_src; };
 
     private:
       StreamGenerator* m_pStrGen;

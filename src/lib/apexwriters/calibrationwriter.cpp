@@ -17,12 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "calibrationwriter.h"
-#include "xml/apexxmltools.h"
-#include "calibration/calibrationdata.h"
-#include "calibration/soundlevelmeterdata.h"
+#include "apexdata/calibration/calibrationdata.h"
+#include "apexdata/calibration/soundlevelmeterdata.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "calibrationwriter.h"
 
 #include <QStringList>
 
@@ -89,13 +90,6 @@ DOMElement* CalibrationWriter::addSoundLevelMeter(DOMDocument* doc,
     Q_ASSERT(!mt.isEmpty());
     slm->appendChild(XMLutils::CreateTextElement(doc, "type", mt));
 
-    //plugin
-    Q_ASSERT(data.hasParameter("plugin"));
-    slm->appendChild(XMLutils::CreateTextElement(doc, "plugin",
-                     data.valueByType("plugin").toString()));
-
-    //transducer
-    appendParameterTo(slm, doc, "transducer", data);
     //percentile
     appendParameterTo(slm, doc, "percentile", data);
     //time

@@ -1,0 +1,21 @@
+
+	  <filter id="speechhrtffilter" xsi:type="apex:pluginfilter">
+            <device>wavdevice</device>
+            <channels>2</channels>
+            <continuous>false</continuous>
+            <plugin>firfilter</plugin>
+            <parameter name="buffered">true</parameter>
+            <parameter id="anglespeech" name="angle">0</parameter>
+			<parameter id="roomspeech" name="room">0</parameter>
+            <parameter name="uri">HRTF_Room${room}_angle${angle}.bin</parameter>
+	  </filter>
+	<filter id="noisehrtffilter" xsi:type="apex:pluginfilter">
+		<device>wavdevice</device>
+		<channels>2</channels>
+		<continuous>true</continuous>
+		<plugin>firfilter</plugin>
+        <parameter name="buffered">true</parameter>
+		<parameter id="anglenoise" name="angle">0</parameter>
+		<parameter id="roomnoise" name="room">0</parameter>
+		<parameter name="uri">HRTF_Room${room}_angle${angle}.bin</parameter>
+	</filter>

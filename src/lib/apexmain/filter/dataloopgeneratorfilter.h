@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "wavgenerator.h"
 
 #include <QString>
@@ -34,16 +34,16 @@ public:
     DataLoopGeneratorFilter( const QString& ac_sID,
                             const QString& ac_sType,
                              data::FilterData* pParams,
-						   unsigned long sr, unsigned bs ) :
+                                                   unsigned long sr, unsigned bs ) :
     WavGenerator(ac_sID, ac_sType, pParams, sr, bs)
     {}
 
 
-    	  void SetSource(stimulus::DataBlock* s) { m_src=s;};
-	  stimulus::DataBlock* GetSource() const { Q_CHECK_PTR(m_src); return m_src; };
+          void SetSource(stimulus::DataBlock* s) { m_src=s;};
+          stimulus::DataBlock* GetSource() const { Q_CHECK_PTR(m_src); return m_src; };
 
     private:
-	  stimulus::DataBlock* m_src;	
+          stimulus::DataBlock* m_src;
 
 };
 

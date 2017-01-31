@@ -17,15 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SLIDERELEMENT_H
-#define SLIDERELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_SLIDERELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_SLIDERELEMENT_H_
 
 #include "screenelement.h"
 
 #include <QString>
 //#include <QtGui>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {

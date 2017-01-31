@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef FILTERSWRITER_H
-#define FILTERSWRITER_H
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_FILTERSWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_FILTERSWRITER_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
 
 namespace XERCES_CPP_NAMESPACE
 {
@@ -40,7 +40,6 @@ class FilterData;
 
 namespace writer
 {
-using namespace XERCES_CPP_NAMESPACE;
 
 /**
 *@author Job Noorman <jobnoorman@gmail.com>
@@ -56,7 +55,7 @@ class APEXWRITERS_EXPORT FiltersWriter
         *
         *@return the created element
          */
-        static DOMElement* addElement(DOMDocument* doc, const data::FiltersData& data);
+        static XERCES_CPP_NAMESPACE::DOMElement* addElement(XERCES_CPP_NAMESPACE::DOMDocument* doc, const data::FiltersData& data);
 
     private:
         /**
@@ -65,7 +64,7 @@ class APEXWRITERS_EXPORT FiltersWriter
         *@param data  the data to fill the element with
         *@param theElement the element to fill
         */
-        static void fillFilterElement(const data::FilterData& data, DOMElement* theElement);
+        static void fillFilterElement(const data::FilterData& data, XERCES_CPP_NAMESPACE::DOMElement* theElement);
 };
 
 }

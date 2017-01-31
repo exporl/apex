@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "parameterscontainerrundelegate.h"
 
-//from libdata
-#include "screen/parameterscontainerelement.h"
+#include "apexdata/screen/parameterscontainerelement.h"
 
-#include "stimulus/stimulusparameters.h"
-#include "stimulus/stimulus.h"
+#include "apexdata/stimulus/stimulusparameters.h"
+
 #include "parameters/parametermanager.h"
+
+#include "stimulus/stimulus.h"
+
+#include "parameterscontainerrundelegate.h"
 
 #include <QRegExp>
 #include <QStringList>
@@ -59,12 +60,12 @@ double ParametersContainerRunDelegate::ParseExpression(
     QString sign = list.at(2);
     double b= list.at(3).toDouble();
 #ifdef PRINTPARAMETERLIST
-    qDebug("expr=" + p_expr);
-    qDebug("list(1)=" + list.at(1));
-    qDebug("list(2)=" + list.at(2));
-    qDebug("list(3)=" + list.at(3));
+    qCDebug(APEX_RS, "expr=" + p_expr);
+    qCDebug(APEX_RS, "list(1)=" + list.at(1));
+    qCDebug(APEX_RS, "list(2)=" + list.at(2));
+    qCDebug(APEX_RS, "list(3)=" + list.at(3));
 
-    qDebug("a=" + QString::number(a) + ", b=" + QString::number(b) + ", sign=" + sign);
+    qCDebug(APEX_RS, "a=" + QString::number(a) + ", b=" + QString::number(b) + ", sign=" + sign);
 #endif
 
     if (sign=="-")
@@ -88,7 +89,7 @@ QVariant ParametersContainerRunDelegate::parameterValue(stimulus::Stimulus* stim
     } else if (fixParam->contains(id)) {
         value=fixParam->value(id).toString();
     } else {
-        qDebug() << "Could not find parameter " << id;
+        qCDebug(APEX_RS) << "Could not find parameter " << id;
     }
 
 

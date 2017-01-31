@@ -17,14 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef DATABLOCK_H
-#define DATABLOCK_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_DATABLOCK_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_DATABLOCK_H_
 
-#include "datablock/datablockdata.h"
+#include "apexdata/datablock/datablockdata.h"
 
-#include "xml/xmlkeys.h"
+#include "apextools/exceptions.h"
 
-#include "exceptions.h"
+#include "apextools/xml/xmlkeys.h"
+
 #include "idevicefactoryelement.h"
 
 #include <QDateTime>
@@ -124,8 +125,6 @@ public:
 
     const QString GetMD5Sum() const;
 
-    const QDateTime GetBirth() const;
-
     /**
      * Set a parameter.
      * Needed since some parameters (eg loop) are not known at the time
@@ -151,4 +150,4 @@ protected:
 
 } // namespace apex
 
-#endif //#ifndef DATABLOCK_H
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_DATABLOCK_H_

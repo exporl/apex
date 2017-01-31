@@ -17,23 +17,20 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXAPEXXMLTOOLS_H
-#define APEXAPEXXMLTOOLS_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_XML_APEXXMLTOOLS_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_XML_APEXXMLTOOLS_H_
 
+#include "../exceptions.h"
 #include "../global.h"
 
 #include "xercesinclude.h"
 
-#include <QString>
-#include <QVariant>
-#include <string>
-#include "../exceptions.h"
-
-
-
 #include <QDateTime>
 #include <QHash>
+#include <QString>
+#include <QVariant>
 
+#include <string>
 
 //give a warning when using the xml classes in places where we should not
 //use it. eg libdata
@@ -66,9 +63,6 @@ namespace apex
 */
 namespace ApexXMLTools
 {
-
-
-
 
 /**
   * QString methods return empty string on error
@@ -160,27 +154,27 @@ class APEXTOOLS_EXPORT XMLutils
             QString tag,
             QDateTime value);
 
-		//parse an xml file to a DOMElement
-		static xercesc::DOMElement* ParseXMLDocument(QString filename,
-				bool verbose=true, QString schema = "");
+                //parse an xml file to a DOMElement
+                static xercesc::DOMElement* ParseXMLDocument(const QString &filename,
+                                bool verbose=true, QString schema = "");
 
         /**
          * Parses a QString into a DOMElement. Will not do any validation.
          */
         static xercesc::DOMElement* parseString(QString toParse);
 
-        static bool WriteElement(xercesc::DOMElement* e, QString filename);
-        static QString elementToString(xercesc::DOMElement* e);
+        static bool WriteElement(xercesc::DOMNode* e, const QString &filename);
+        static QString elementToString(xercesc::DOMNode* e);
         static QString wrapTag(const QString& tag, const QVariant& value);
         static QString xmlEscapedText (const QString &text);
         static QString xmlEscapedAttribute (const QString &text);
-		
-        static QString transformXSLTXalan (const QString &document,
-                                           const QString &script,
-                                           const QHash<QString,QString> hash);
+
         static QString transformXSLTQt (const QString &document,
                                         const QString &script,
                                         const QHash<QString,QVariant> hash);
+
+        // Transforms a QString into a bool ("1" and "true" result in true, everything else is false)
+        static bool xmlBool(const QString& value);
 };
 }//end ns ApexXMLTools
 }//end ns apex
@@ -214,6 +208,9 @@ class APEXTOOLS_EXPORT DOMTreeErrorReporter : public xercesc::ErrorHandler
 };
 
 
+#ifdef Q_CC_MSVC
+#define XMLCH_IS_WCHAR_T 1
+#endif
 
 // This needs to be a macro and no function otherwise the QString is already out of scope
 

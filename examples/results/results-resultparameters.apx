@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!-- @doc
+  @what: Demonstrate the use of resultparameters
+  @description: Resultparameters specified in <results>/<resultparameters> will be passed on to the resultviewer
+  @how: These parameters will be made available in a hash params. Additionaly, the javascript code in <resultscript> will be executed when the resultsviewer is loaded.
+ -->
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>100</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>gain</adapt_parameter>
+      <start_value>0</start_value>
+      <stop_after_type>presentations</stop_after_type>
+      <stop_after>100</stop_after>
+      <larger_is_easier>false</larger_is_easier>
+      <stepsizes>
+        <stepsize begin="0" size="2"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>up</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout width="3" height="1" id="main_layout">
+        <button x="1" y="1" id="up">
+          <text>louder</text>
+        </button>
+        <button x="2" y="1" id="down">
+          <text>quieter</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="up"/>
+        <button id="down"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <uri_prefix>../stimuli</uri_prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <uri>wd1.wav</uri>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain id="gain">0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>4096</buffersize>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections/>
+  <results>
+      <page>apex:resultsviewer.html</page>
+    <resultparameters>
+      <parameter name="reversalsForMean">4</parameter>
+      <parameter name="extra">text</parameter>
+    </resultparameters>
+    <resultscript>
+      test = "This variable is set through results/resultscript.";
+    </resultscript>
+      <showduringexperiment>true</showduringexperiment>
+      <showafterexperiment>true</showafterexperiment>
+  </results>
+
+</apex:apex>

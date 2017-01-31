@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "arclayoutrundelegate.h"
 
-#include "screen/arclayoutelement.h"
+#include "apexdata/screen/arclayoutelement.h"
+
+#include "apextools/gui/arclayout.h"
+
+#include "arclayoutrundelegate.h"
 #include "rundelegatecreatorvisitor.h"
 
-#include "gui/arclayout.h"
-
-#include <QWidget>
 #include <QDebug>
+#include <QWidget>
 
 class QFont;
 

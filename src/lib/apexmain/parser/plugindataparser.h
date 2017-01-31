@@ -17,12 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef PLUGINDATAPARSERH
-#define PLUGINDATAPARSERH
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_PARSER_PLUGINDATAPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_PARSER_PLUGINDATAPARSER_H_
+
+#include "apextools/xml/xercesinclude.h"
 
 #include "parser/simpleparametersparser.h"
 
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
 class DOMElement;

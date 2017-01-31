@@ -16,12 +16,10 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "apexdata/device/wavdevicedata.h"
+
 #include "wavdeviceparser.h"
-
-#include "device/wavdevicedata.h"
-
-
 
 namespace apex
 {
@@ -62,10 +60,10 @@ void WavDeviceParser::AddParameter(data::SimpleParameters* p,
     } else */ if (type=="samplerate") {
         q->setSampleRate(value.toULongLong());
     } else if (type=="buffersize") {
-        qDebug("Setting buffer size to %d", value.toUInt());
+        qCDebug(APEX_RS, "Setting buffer size to %d", value.toUInt());
         q->setBufferSize(value.toUInt());
     } else if (type == "blocksize") {
-        qDebug("Setting internal stream block size to %d", value.toUInt());
+        qCDebug(APEX_RS, "Setting internal stream block size to %d", value.toUInt());
         q->setBlockSize(value.toUInt());
     }
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __RESAMPLINGBUF_H_
 #define __RESAMPLINGBUF_H_
 
@@ -26,7 +26,7 @@
 namespace streamapp
 {
 
-  class IResampler;                 
+  class IResampler;
 
     /**
       * Class to resample and buffer in one go
@@ -39,15 +39,15 @@ namespace streamapp
   public:
     ResamplingBuffer( IResampler& a_Resampler, const unsigned ac_nOutputSize );
     ~ResamplingBuffer();
-    
+
     virtual const Stream& mf_DoProcessing( const Stream& ac_StrToProc );
 
     //getters
- 
+
   private:
     IResampler& m_Resampler;
   };
 
-} 
+}
 
 #endif //__RESAMPLINGBUF_H_

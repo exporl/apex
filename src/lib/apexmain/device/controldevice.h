@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef APEX_DEVICECONTROLDEVICE_H
-#define APEX_DEVICECONTROLDEVICE_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_DEVICE_CONTROLDEVICE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_DEVICE_CONTROLDEVICE_H_
 
 #include "iapexdevice.h"
 
@@ -29,7 +29,7 @@ namespace device {
 /**
 Interfaces for devices that do not output samples but rather control stuff, like mixers or external attenuators
 
-	@author Tom Francart,,, <tom.francart@med.kuleuven.be>
+        @author Tom Francart,,, <tom.francart@med.kuleuven.be>
 */
 class ControlDevice : public IApexDevice
 {
@@ -37,7 +37,7 @@ public:
     ControlDevice( data::DeviceData* a_pParameters );
 
     ~ControlDevice();
-    
+
 };
 
 }

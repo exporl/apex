@@ -21,8 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 *Tab=3***********************************************************************/
 
-
-
 #if defined (DynArray_CURRENT_CODEHEADER)
   #error Recursive inclusion of DynArray code header.
 #endif
@@ -31,17 +29,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if ! defined (DynArray_CODEHEADER_INCLUDED)
 #define  DynArray_CODEHEADER_INCLUDED
 
-
-
-/*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-#include  <cassert>
-
-
+#include <QtGlobal>
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-
 
 template <class T>
 DynArray <T>::DynArray ()
@@ -58,7 +48,7 @@ DynArray <T>::DynArray (long size)
 :  _data_ptr (0)
 ,  _len (0)
 {
-  assert (size >= 0);
+  Q_ASSERT (size >= 0);
   if (size > 0)
   {
     _data_ptr = new DataType [size];
@@ -89,7 +79,7 @@ long  DynArray <T>::size () const
 template <class T>
 void  DynArray <T>::resize (long size)
 {
-  assert (size >= 0);
+  Q_ASSERT (size >= 0);
   if (size > 0)
   {
     DataType *    old_data_ptr = _data_ptr;
@@ -107,8 +97,8 @@ void  DynArray <T>::resize (long size)
 template <class T>
 const typename DynArray <T>::DataType &  DynArray <T>::operator [] (long pos) const
 {
-  assert (pos >= 0);
-  assert (pos < _len);
+  Q_ASSERT (pos >= 0);
+  Q_ASSERT (pos < _len);
 
   return (_data_ptr [pos]);
 }
@@ -118,8 +108,8 @@ const typename DynArray <T>::DataType &  DynArray <T>::operator [] (long pos) co
 template <class T>
 typename DynArray <T>::DataType &  DynArray <T>::operator [] (long pos)
 {
-  assert (pos >= 0);
-  assert (pos < _len);
+  Q_ASSERT (pos >= 0);
+  Q_ASSERT (pos < _len);
 
   return (_data_ptr [pos]);
 }

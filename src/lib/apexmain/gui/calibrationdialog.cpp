@@ -31,6 +31,7 @@ public:
     CalibrationDialogPrivate (CalibrationDialog *pub);
 
     void setTargetAmplitude (const QString &amplitude);
+    void setExperimentAmplitude (const QString &amplitude);
     QString targetAmplitude() const;
     void setMeasuredAmplitude (const QString &amplitude);
     QString measuredAmplitude() const;
@@ -45,6 +46,10 @@ public:
 
     void setDefaultMutedParameters();
     void setMutedParameters (const QStringList &value);
+
+    bool isGlobal() const;
+    void setGlobal(bool value);
+    void setReadOnly();
 
     Ui::CalibrationDialog ui;
     double minimum, maximum;
@@ -86,6 +91,7 @@ private:
     QStringList setups;
     bool playing;
     bool autoCalibrateEnabled;
+    bool global;
 
     QPushButton *advanced;
     QPushButton *start;
@@ -171,10 +177,10 @@ CalibrationDialogPrivate::CalibrationDialogPrivate (CalibrationDialog *pub) :
             this, SLOT (on_loop_stateChanged(int)));
     connect (ui.muted, SIGNAL (itemSelectionChanged()),
             this, SLOT (on_muted_itemSelectionChanged()));
-	disconnect(ui.buttonBox->button(QDialogButtonBox::Cancel), 0, 0, 0); 
-	connect(ui.buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-			pub, SIGNAL(beforeCancel()));
-	
+        disconnect(ui.buttonBox->button(QDialogButtonBox::Cancel), 0, 0, 0);
+        connect(ui.buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+                        pub, SIGNAL(beforeCancel()));
+
 
     ui.advanced->hide();
     ui.clippingStack->setCurrentWidget (ui.noClipping);
@@ -201,13 +207,14 @@ void CalibrationDialogPrivate::updateWidgets()
     ui.stimulus->setEnabled (enabled);
     ui.loop->setEnabled (enabled);
     ui.muted->setEnabled (enabled);
-    ui.targetLabel->setText (tr ("Calibration amplitude (%1)").arg (unit));
-    ui.measuredLabel->setText (tr ("Measured amplitude (%1)").arg (unit));
-	autoCalibrateSingle->setEnabled(enabled && !playing);
+    ui.targetLabel->setText (tr ("Target SPL during calibration (%1)").arg (unit));
+    ui.targetExperimentLabel->setText (tr ("Target SPL during experiment (%1)").arg (unit));
+    ui.measuredLabel->setText (tr ("Measured SPL (%1)").arg (unit));
+        autoCalibrateSingle->setEnabled(enabled && !playing);
     start->setEnabled (enabled && !playing);
     stop->setEnabled (playing);
-	autoCalibrateAll->setEnabled(enabled && !playing);
-	ui.buttonBox->button(QDialogButtonBox::Cancel)->setEnabled(!playing);
+        autoCalibrateAll->setEnabled(enabled && !playing);
+        ui.buttonBox->button(QDialogButtonBox::Cancel)->setEnabled(!playing);
 }
 
 void CalibrationDialogPrivate::on_outputSlider_valueChanged (int value)
@@ -272,7 +279,7 @@ void CalibrationDialogPrivate::on_hardware_currentIndexChanged
         --ignoreHardware;
         emit p->manageHardwareSetups();
     } else {
-        const QString value = ui.hardware->text (index);
+        const QString value = ui.hardware->itemText(index);
         if (oldHardwareSetup != value) {
             emit p->hardwareSetupChanged (value);
             oldHardwareSetup = value;
@@ -333,6 +340,12 @@ void CalibrationDialogPrivate::setTargetAmplitude (const QString &amplitude)
     ui.target->setText (amplitude);
 }
 
+void CalibrationDialogPrivate::setExperimentAmplitude (const QString &amplitude)
+{
+    ui.targetExperimentValueLabel->setText (amplitude);
+}
+
+
 QString CalibrationDialogPrivate::outputParameter() const
 {
     bool ok;
@@ -378,7 +391,7 @@ void CalibrationDialogPrivate::setHardwareSetups (QStringList value)
     const QString current = p->hardwareSetup();
     ui.hardware->clear();
     ui.hardware->addItems (value);
-    ui.hardware->addItem (tr ("<Manage profiles...>"), true);
+    ui.hardware->addItem (tr ("<Manage setups...>"), true);
     p->setHardwareSetup (current);
     --ignoreHardware;
     // The handler will only emit if the old and the new setup are different
@@ -422,7 +435,7 @@ void CalibrationDialogPrivate::setParameterNames (QStringList value)
 void CalibrationDialogPrivate::setDefaultMutedParameters()
 {
     QStringList parameters = p->parameterNames();
-    parameters.remove (p->parameterName());
+    parameters.removeAll(p->parameterName());
     setMutedParameters (parameters);
 }
 
@@ -453,6 +466,21 @@ void CalibrationDialogPrivate::updateSlider()
     }
 }
 
+bool CalibrationDialogPrivate::isGlobal() const {
+    return global;
+}
+
+void CalibrationDialogPrivate::setGlobal(bool value) {
+    global = value;
+}
+
+void CalibrationDialogPrivate::setReadOnly() {
+    ui.measured->setDisabled(true);
+    ui.outputSlider->setDisabled(true);
+    ui.output->setDisabled(true);
+    apply->setDisabled(true);
+}
+
 // CalibrationDialog ===========================================================
 
 CalibrationDialog::CalibrationDialog (QWidget *parent) :
@@ -463,6 +491,10 @@ CalibrationDialog::CalibrationDialog (QWidget *parent) :
 
 CalibrationDialog::~CalibrationDialog()
 {
+}
+
+void CalibrationDialog::setGlobal(bool global) {
+    d->setGlobal(global);
 }
 
 void CalibrationDialog::setHardwareSetups (const QStringList &value)
@@ -580,6 +612,11 @@ void CalibrationDialog::setTargetAmplitude (const QString &amplitude)
     d->setTargetAmplitude (amplitude);
 }
 
+void CalibrationDialog::setExperimentAmplitude (const QString &amplitude)
+{
+    d->setExperimentAmplitude (amplitude);
+}
+
 QString CalibrationDialog::targetAmplitude() const
 {
     return d->targetAmplitude();
@@ -599,6 +636,10 @@ void CalibrationDialog::enable()
 {
     d->enabled = true;
     d->updateWidgets();
+
+    if(d->isGlobal()) {
+        d->setReadOnly();
+    }
 }
 
 
@@ -669,10 +710,10 @@ QStringList CalibrationDialog::mutedParameters() const
 
 void CalibrationDialog::finalize(bool save)
 {
-	if(save)
-		accept();
-	else
-		reject();
+        if(save)
+                accept();
+        else
+                reject();
 }
 
 void CalibrationDialog::setAutoCalibrateEnabled (bool value) {

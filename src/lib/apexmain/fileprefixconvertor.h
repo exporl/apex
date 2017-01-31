@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef FILEPREFIXCONVERTOR
-#define FILEPREFIXCONVERTOR
 
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_FILEPREFIXCONVERTOR_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_FILEPREFIXCONVERTOR_H_
 
-#include "fileprefix.h"
+#include "apexdata/fileprefix.h"
 
 #include <QCoreApplication>
 #include <QUrl>

@@ -1,3 +1,5 @@
+#include "apextools/global.h"
+
 #include "flashwidget.h"
 
 #include <QAxWidget>
@@ -115,7 +117,7 @@ bool FlashWidget::loadMovie(const QString &filename)
 {
     // The ActiveX control does not like relative paths
     QString absPath( QFileInfo(filename).absoluteFilePath() );
-    //qDebug() << "Loading " << absPath;
+    //qCDebug(APEX_RS) << "Loading " << absPath;
     d->axwidget->dynamicCall ("LoadMovie(int,const QString&)",0, absPath);
     d->axwidget->dynamicCall ("StopPlay()");
     d->axwidget->dynamicCall ("ReWind()");
@@ -131,7 +133,7 @@ bool FlashWidget::play()
 {
     d->axwidget->dynamicCall ("Play()");
     d->timer.start();
-	return readyState()==4;
+        return readyState()==4;
 }
 
 void FlashWidget::stop()
@@ -148,7 +150,7 @@ void FlashWidget::gotoFrame(int frame)
 {
     d->axwidget->dynamicCall ("GoToFrame(int)", frame);
 }
-	
+
 bool FlashWidget::isPlaying() const
 {
     return d->axwidget->dynamicCall("IsPlaying()").toBool();
@@ -157,7 +159,7 @@ bool FlashWidget::isPlaying() const
 bool FlashWidget::isFinished() const
 {
     int totalFrames = d->axwidget->property("TotalFrames").toInt();
-    /*qDebug() << "Framenum=" << d->axwidget->property("FrameNum").toInt()
+    /*qCDebug(APEX_RS) << "Framenum=" << d->axwidget->property("FrameNum").toInt()
             << ", TotalFrames=" << totalFrames
             << ", ReadyState=" << readyState()
             << ", IsPlaying=" << isPlaying();*/
@@ -186,7 +188,7 @@ void FlashWidget::setPalette(const QPalette& p)
     QWidget::setPalette(p);
     d->axwidget->setPalette(p);
 
-    qDebug() << p.color(backgroundRole()).name();
+    qCDebug(APEX_RS) << p.color(backgroundRole()).name();
 
     d->axwidget->setProperty(
             "BGColor",

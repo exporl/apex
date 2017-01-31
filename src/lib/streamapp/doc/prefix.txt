@@ -7,7 +7,7 @@ Here are some of the prefixes used and their meaning:
 @verbatim
 m   = member
 a   = argument
-g   = global  
+g   = global
 s   = static/file local
 
 mp  = member function changing member data

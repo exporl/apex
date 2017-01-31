@@ -17,14 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_PARSERDATABLOCKSPARSER_H
-#define APEX_PARSERDATABLOCKSPARSER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_DATABLOCK_DATABLOCKSPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_DATABLOCK_DATABLOCKSPARSER_H_
+
+#include "apexdata/fileprefix.h"
+
+#include "apextools/xml/xercesinclude.h"
 
 #include "parser/apexparser.h"
-#include "fileprefix.h"
 
-
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
     class DOMElement;

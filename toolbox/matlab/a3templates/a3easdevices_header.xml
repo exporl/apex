@@ -1,0 +1,20 @@
+<devices>
+    <master>soundcard</master>
+    <device id="soundcard" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>default</card>
+      <channels>2</channels>
+      <gain id="soundcardgainL" channel="0">0</gain>
+      <gain id="soundcardgainR" channel="1">0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>4096</buffersize>
+      <padzero>4</padzero>
+    </device>
+    <device id="l34"  xsi:type="apex:L34DeviceType">
+      <device_id>1</device_id>
+      <implant>$$implant$$</implant>
+      <trigger>in</trigger>
+      <volume id='l34volume'>$$volume$$</volume>
+
+      <defaultmap>
+        <inline>

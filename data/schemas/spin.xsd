@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.3/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment">
-    
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
+
     <xs:include schemaLocation="prefix.xsd"/>
     <xs:include schemaLocation="screens.xsd"/>
 
@@ -45,10 +45,18 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:element>
-                <xs:element name="experimenter_screen" type="apex:spinScreenType">
+                <xs:element name="experimenter_screen_quiet" type="apex:spinScreenType">
                     <xs:annotation>
                         <xs:documentation>
-                            APEX screen to be shown when the experimenter sits in front of the screen.
+                            APEX screen to be shown when the experimenter sits in front of the screen, for speech in quiet.
+                            Typically this screen contains "correct" and "false" buttons and the speech token that is currently being presented.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="experimenter_screen_noise" type="apex:spinScreenType">
+                    <xs:annotation>
+                        <xs:documentation>
+                            APEX screen to be shown when the experimenter sits in front of the screen, for speech in noise.
                             Typically this screen contains "correct" and "false" buttons and the speech token that is currently being presented.
                         </xs:documentation>
                     </xs:annotation>

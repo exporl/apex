@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+
+    <head>
+        <script  src="apex:jquery.min.js" type="text/javascript"> </script>
+
+        <script src="apex:raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script src="apex:g.raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script src="apex:g.dot.js" type="text/javascript"
+            charset="utf-8"></script>
+
+        <script src="apex:resultsviewer.js" type="text/javascript"> </script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                defaultx=new Array();
+                for (var i=-90; i<=90; i+=15) {
+                    defaultx.push(i);
+                }
+                defaulty=defaultx;
+
+             });
+
+
+            function plot() {
+                plot_rtlocalisation();
+            }
+
+       </script>
+
+        <title>APEX results</title></head>
+       <body >
+        <h2>Localisation results</h2>
+            <div id="confusionmatrixplot"></div>
+            <div id="errormeasures"></div>
+            <br>
+            <div id="confusionmatrixtable"><table></table></div>
+      </body>
+</html>

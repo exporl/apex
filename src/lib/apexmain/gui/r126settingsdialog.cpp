@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifdef R126
 
 #include "r126settingsdialog.h"
@@ -24,9 +24,9 @@
 #include "services/paths.h"
 using namespace r126;
 
-#include <qradiobutton.h>
-#include <qlineedit.h>
-#include <qpixmap.h>
+#include <QRadioButton>
+#include <QLineEdit>
+#include <QPixmap>
 
 namespace apex{
 

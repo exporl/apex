@@ -54,7 +54,7 @@ void AssignOutput(matrix m, BatchPtr batch, char *ident, char *extn, char *write
 	int len;
 	int mexEvalf(char * fmt, ...);
 	boolean addTitle = FALSE;
-	
+
 	if(m == NULL) return;
 	strcpy(m->writeMode, "w");
 	strcpy(m->writeFormat, writeFormat);
@@ -63,7 +63,7 @@ void AssignOutput(matrix m, BatchPtr batch, char *ident, char *extn, char *write
 	sprintf(temp, "WRITE_%s", ident);
 	if(extn != NULL) sprintf(temp + strlen(temp), "%s", extn);
 	for(str = temp; *str; str++) *str = toupper(*str);
-	
+
 	if(IdentifierAppearsInBatch(batch, temp)) {
 		addTitle = FALSE;
 		m->warnIfEmpty = TRUE;
@@ -80,7 +80,7 @@ void AssignOutput(matrix m, BatchPtr batch, char *ident, char *extn, char *write
 		m->output = ReadString(str, len, NULL, NULL);
 	}
 	else if(extn != NULL && strlen(extn) >= 2) {
-	
+
 		/* if an extension is supplied by the calling C routine, that indicates that the array could be output as part of a structure */
 		/* if we have got this far, we know there are no specific instructions regarding this array - therefore look for a command to write the whole structure */
 
@@ -109,7 +109,7 @@ void AssignOutput(matrix m, BatchPtr batch, char *ident, char *extn, char *write
 #else
 			if(strcmp(extn+1, "est") != 0) strcpy(m->writeMode, "a"); /* after _EST, all the others are appended */
 #endif
-		} 
+		}
 	}
 	if(addTitle) {
 		if(m->description) { Destroy(m->description); m->description = NULL;}
@@ -120,7 +120,7 @@ void AssignOutput(matrix m, BatchPtr batch, char *ident, char *extn, char *write
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void CleanUp(DataSetPtr data, ModelPtr model, GeneratingInfoPtr gen, OutputPtr out)
-{	
+{
     DEBUG=0;
     m_clear();
 	DisposeDataSet(data);
@@ -140,14 +140,14 @@ DataSetPtr ConstructDataSet(int nPoints, int rowSkip, double *x, double *y, doub
 {
 	DataSetPtr d;
 	int count, i;
-	struct{boolean r; boolean w; boolean n; boolean y;} flags;
-	struct{double r; double w; double n; double y;} vals;
+	struct{boolean r; boolean w; boolean n; boolean y;} flags = {0, 0, 0, 0};
+	struct{double r; double w; double n; double y;} vals = {0, 0, 0, 0};
 	boolean already, yInt, yGtN;
 	double previous, scale = 1.0;
-	
+
 	if(rowSkip < 1) Bug("ConstructDataSet() called with rowSkip < 1");
-/*	if(x == NULL) JError("error in %s: x values must be supplied", sourceDescription);	
-*/	
+/*	if(x == NULL) JError("error in %s: x values must be supplied", sourceDescription);
+*/
 
 	if(n == NULL && w == NULL) JError("insufficient information in data set: need numbers of points in each block");
 	if(gDataFormat == unknown_format) {
@@ -165,7 +165,7 @@ DataSetPtr ConstructDataSet(int nPoints, int rowSkip, double *x, double *y, doub
 			else {gDataFormat = xrn; r = y; y = NULL;}
 		}
 	}
-	
+
 	for(count = 0, i = 0; count < nPoints; count++, i += rowSkip) {
         if((x && (isnan(x[i]) || isinf(x[i]))) || (y && (isnan(y[i]) || isinf(y[i]))) || (n && (isnan(n[i]) || isinf(n[i]))) || (r && (isnan(r[i]) || isinf(r[i]))) || (w && (isnan(w[i]) || isinf(w[i])))) {
 			JError("error in %s: illegal non-real values", sourceDescription);
@@ -182,7 +182,7 @@ DataSetPtr ConstructDataSet(int nPoints, int rowSkip, double *x, double *y, doub
             return 0;
         }
 	}
-	
+
 	d = New(DataSet, 1);
 	AllocateDataSet(d, nPoints);
 
@@ -190,7 +190,7 @@ DataSetPtr ConstructDataSet(int nPoints, int rowSkip, double *x, double *y, doub
 
 	for(count = 0, i = 0; count < nPoints; count++, i += rowSkip) {
 		d->x[count] = (x ? x[i] : NAN);
-		
+
 		if((flags.r = (r != NULL)) == TRUE) vals.r = floor(0.5 + r[i]);
 		if((flags.w = (w != NULL)) == TRUE) vals.w = floor(0.5 + w[i]);
 		if((flags.n = (n != NULL)) == TRUE) vals.n = floor(0.5 + n[i]);
@@ -215,9 +215,9 @@ void InitMatrixBundle(MatrixBundle *bndl, GeneratingInfoPtr gen, OutputPtr out,
 					  long nCols, boolean valid, boolean doLimits, boolean bcaPossible,
 					  char *identStem, BatchPtr batch)
 {
-	/* reverse order */	
+	/* reverse order */
 	if(doLimits) {
-		
+
 		if(gDoBootstrapT) {
 			bndl->t2 = m_new(mNoData, m2D, ((valid && gen->nRuns > 0 && bcaPossible) ? gen->nRuns : 0), nCols);
 			AssignOutput(bndl->t2, batch, identStem, "_t2", out->numericFormat);
@@ -225,7 +225,7 @@ void InitMatrixBundle(MatrixBundle *bndl, GeneratingInfoPtr gen, OutputPtr out,
 			bndl->t1 = m_new(mNoData, m2D, ((valid && gen->nRuns > 0 && bcaPossible) ? gen->nRuns : 0), nCols);
 			AssignOutput(bndl->t1, batch, identStem, "_t1", out->numericFormat);
 		}
-		else bndl->t2 = bndl->t1 = NULL;		
+		else bndl->t2 = bndl->t1 = NULL;
 
 		bndl->quant = m_new(mNoData, m2D, ((valid && gen->nRuns > 0) ? out->nConf : 0), nCols);
 		AssignOutput(bndl->quant, batch, identStem, "_quant", out->numericFormat);
@@ -246,7 +246,7 @@ void InitMatrixBundle(MatrixBundle *bndl, GeneratingInfoPtr gen, OutputPtr out,
 		AssignOutput(bndl->deriv, batch, identStem, "_deriv", out->numericFormat);
 	}
 	else bndl->quant = bndl->lims = bndl->acc = bndl->bc = bndl->lff = bndl->deriv = NULL;
-	
+
 	bndl->cpe = m_new(mNoData, m2D, ((valid && gen->nRuns > 0) ? 1 : 0), nCols);
 	AssignOutput(bndl->cpe, batch, identStem, "_cpe", out->numericFormat);
 
@@ -261,19 +261,19 @@ void InitMatrixBundle(MatrixBundle *bndl, GeneratingInfoPtr gen, OutputPtr out,
 void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 							   DataSetPtr * handleForData,
 							   GeneratingInfoPtr * handleForGeneratingInfo,
-							   OutputPtr * handleForOutput, 
+							   OutputPtr * handleForOutput,
 							   matrix externalData)
 {
 #define kBufferLength	30
 	int chosenOpt, thisOpt, fieldLen;
-	char identBuffer[kBufferLength], nameBuffer[kBufferLength], tempBuffer[kBufferLength], *s, *fieldStart;
+	char identBuffer[kBufferLength], nameBuffer[kBufferLength], tempBuffer[kBufferLength], *s, *fieldStart = NULL;
 	unsigned int i, pNum, xLength = 0, yLength = 0, nLength = 0, rLength = 0, wLength = 0, dLength = 0, nPoints;
-	double *x, *y, *n, *r, *w, *d;
+	double *x = NULL, *y = NULL, *n = NULL, *r = NULL, *w = NULL, *d = NULL;
 	double temp[kNumberOfParams + 2], *fixedValPtr;
 	ModelPtr model;
 	GeneratingInfoPtr gen;
 	OutputPtr out;
-	boolean started, finished, *specified, needData, bcaPossible, gotX;
+	boolean started, finished, *specified = NULL, needData, bcaPossible, gotX;
 	boolean writeCommandsSpecified = FALSE;
 	ConstraintPtr constraintPtr;
 	double *col1, *col2, *col3;
@@ -281,20 +281,20 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 	char *adaptiveMethod = NULL;
 	double *adaptiveParams = NULL, *adaptiveLimits = NULL;
 	unsigned int adaptiveParamCount = 0;
-		
+
 	model = *handleForModel = New(Model, 1);
 	gen = *handleForGeneratingInfo = New(GeneratingInfo, 1);
 	out = *handleForOutput = New(Output, 1);
 	needData = (externalData == NULL);
-	
-	InitParam(model, ALPHA, "alpha"); 
+
+	InitParam(model, ALPHA, "alpha");
 	InitParam(model, BETA, "beta");
 	InitParam(model, GAMMA, "gamma");
 	InitParam(model, LAMBDA, "lambda");
-	
+
 #define kDefaultSubjectiveGammaMax		0.05
 #define kDefaultLambdaMax				0.05
-	
+
 #define option(str, defaultAssign)											\
 			thisOpt++;														\
 			if(finished && !specified[thisOpt]) (defaultAssign);			\
@@ -307,7 +307,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
                 // Get next #string from file
 		if(started && (prefs == 0 || (fieldStart = NextIdentifier(prefs, &fieldLen, identBuffer, kBufferLength, lastOccurrence)) == NULL))
 			finished = TRUE;
-		
+
 		option("SHAPE", model->shape = JLogistic) {
 			ReadString(fieldStart, fieldLen, tempBuffer, (i = kBufferLength, &i));
 			model->shape = MatchShape(tempBuffer, identBuffer);
@@ -333,10 +333,10 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 			gen->nPoints = i;
 		}
 		if(finished && gen->psi != NULL && specified[thisOpt-1]) JError("conflicting options: generating distribution has been specified both as a parameter set and as a set of expected values");
-		
+
 		option("N_INTERVALS", model->nIntervals = 2)
-			model->nIntervals = CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 1.0, INF, TRUE, TRUE, TRUE);
-		
+			model->nIntervals = (unsigned short)CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 1.0, INF, TRUE, TRUE, TRUE);
+
 		option("MAX_TAIL_DRIFT", model->tailConstraint.prior = NULL) {
 			temp[0] = 0.0; temp[1] = ReadScalar(fieldStart, fieldLen, identBuffer);
 			if(temp[1] <= 0.0) JError("%s cannot be <= 0.0: set to NaN or a value >= 1.0 to disable the prior", identBuffer);
@@ -345,10 +345,10 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 		}
 		option("X_AT_CHANCE", model->xValAtChance = 0.0)
 			model->xValAtChance = CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, -INF, INF, FALSE, FALSE, TRUE);
-		
+
 /*		start of priors / fixing section (take a deep breath) */
 		for(pNum = 0; pNum < kNumberOfParams+2; pNum++) {
-			
+
 			switch(pNum) {
 				case kNumberOfParams + 1:
 					strcpy(nameBuffer, "SLOPE");
@@ -369,12 +369,12 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 			for(s = nameBuffer; *s; s++) *s = toupper(*s);
 
 			sprintf(tempBuffer, "%s_LIMITS", nameBuffer);
-			option(tempBuffer, 0) {
+			option(tempBuffer, (void)0) {
 				ReadDoubles(fieldStart, fieldLen, constraintPtr->args, &i, 2, 2, identBuffer);
 				SetPrior(constraintPtr, FlatPrior, i, constraintPtr->args);
 			}
 			sprintf(tempBuffer, "%s_PRIOR", nameBuffer);
-			option(tempBuffer, 0) {
+			option(tempBuffer, (void)0) {
 /*				%s_LIMITS and %s_PRIOR must stay together in the list because of the occurrence of [thisOpt-1] below	*/
 				if(specified[thisOpt-1]) JError("%s: cannot use _PRIOR and _LIMITS simultaneously on the same parameter", identBuffer);
 				for(i = 0; fieldLen > 0 && i < kBufferLength-1; i++, fieldStart++, fieldLen--) {
@@ -382,7 +382,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 					if(isspace(*fieldStart)) {do {fieldStart++; fieldLen--;} while(fieldLen > 0 && isspace(*fieldStart)); break;}
 					if(isdigit(*fieldStart) || *fieldStart == '.') break;
 					tempBuffer[i] = *fieldStart;
-				}			
+				}
 				tempBuffer[i] = 0;
 				if(i == 0) JError("%s: no functional form supplied", identBuffer);
 				ReadDoubles(fieldStart, fieldLen, constraintPtr->args, &i, 0, kMaxPriorArgs, identBuffer);
@@ -415,12 +415,12 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 /*				%s_PRIOR and FIX_%s must stay together in this list because of the occurrences of [thisOpt+1] below	*/
 				else if(pNum == LAMBDA && !specified[thisOpt+1]) {
 					temp[0] = 0.0; temp[1] = kDefaultLambdaMax;
-					SetPrior(constraintPtr, FlatPrior, 2, temp); 
+					SetPrior(constraintPtr, FlatPrior, 2, temp);
 				}
 				else constraintPtr->prior = NULL;
 			}
 			sprintf(tempBuffer, "FIX_%s", nameBuffer);
-			option(tempBuffer, 0)
+			option(tempBuffer, (void)0)
 				if(!isnan(*fixedValPtr = CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, -INF, INF, FALSE, TRUE, FALSE)) && pNum < kNumberOfParams)
 					FixParam(model->theta, pNum, *fixedValPtr);
 			if(finished && !specified[thisOpt]) {
@@ -434,7 +434,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 				if(!model->theta[ALPHA].free || !model->theta[BETA].free) JError("cannot use FIX_SHIFT or FIX_SLOPE in conjunction with FIX_ALPHA or FIX_BETA");
 				if(model->theta[ALPHA].constraint.prior != NULL || model->theta[BETA].constraint.prior != NULL) JError("cannot use FIX_SHIFT or FIX_SLOPE in conjunction with ALPHA_PRIOR or BETA_PRIOR");
 				if(!isnan(model->fixedShift)) FixParam(model->theta, ALPHA, model->fixedShift);
-				if(!isnan(model->fixedSlope)) FixParam(model->theta, BETA, model->fixedSlope);			
+				if(!isnan(model->fixedSlope)) FixParam(model->theta, BETA, model->fixedSlope);
 				model->convertParams = TRUE;
 			}
 			else model->convertParams = FALSE;
@@ -443,24 +443,24 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 
 		option("EST_GAMMA", gEstimateGamma = ((model->nIntervals == 1) ? 0.01 : 1.0 / model->nIntervals))
 			gEstimateGamma = CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 0.0, 1.0, FALSE, TRUE, TRUE);
-			
+
 		option("EST_LAMBDA", gEstimateLambda = 0.01)
 			gEstimateLambda = CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 0.0, 1.0, FALSE, TRUE, TRUE);
-		
-		option("MESH_RESOLUTION", gMeshResolution = 11)
-			gMeshResolution = CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 5.0, INF, TRUE, TRUE, TRUE);
-		
-		option("MESH_ITERATIONS", gMeshIterations = 10)
-			gMeshIterations = CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 3.0, INF, TRUE, TRUE, TRUE);
-		
-		option("RUNS", gen->nRuns = 0)
-			gen->nRuns = CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 0.0, INF, TRUE, TRUE, TRUE);
 
-		option("RANDOM_SEED", gen->randomSeed = labs(time(NULL))) {
+		option("MESH_RESOLUTION", gMeshResolution = 11)
+			gMeshResolution = (unsigned short)CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 5.0, INF, TRUE, TRUE, TRUE);
+
+		option("MESH_ITERATIONS", gMeshIterations = 10)
+			gMeshIterations = (unsigned short)CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 3.0, INF, TRUE, TRUE, TRUE);
+
+		option("RUNS", gen->nRuns = 0)
+			gen->nRuns = (unsigned long)CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 0.0, INF, TRUE, TRUE, TRUE);
+
+		option("RANDOM_SEED", gen->randomSeed = labs((long)time(NULL))) {
 			gen->randomSeed = temp[0] = CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 0.0, INF, TRUE, TRUE, TRUE);
 			if((double)gen->randomSeed != temp[0]) JError("the user-supplied random seed overflowed the internal integer representation for random numbers");
 		}
-		
+
 		option("VERBOSE", out->verbose = TRUE)
 			out->verbose = ReadBoolean(fieldStart, fieldLen, identBuffer);
 
@@ -489,7 +489,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 			if(gAdaptPtr) {
 				if(gen->psi != NULL) JError("GEN_VALUES option cannot be used with adaptive procedures");
 				if(gen->gotParams) needData = FALSE;
-				if(specified[thisOpt - 3] && out->doStats == TRUE) JWarning("COMPUTE_STATS has been overridden because adaptive procedures are being used"); 
+				if(specified[thisOpt - 3] && out->doStats == TRUE) JWarning("COMPUTE_STATS has been overridden because adaptive procedures are being used");
 				out->doStats = FALSE;
 			}
 		}
@@ -500,7 +500,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 		option("SENS_COVERAGE", out->sensCoverage = 0.5) /* 0.683) */
 			if((out->sensCoverage = CheckValue(ReadScalar(fieldStart, fieldLen, identBuffer), identBuffer, 0.0, 100.0, FALSE, TRUE, TRUE)) > 1.0)
 				out->sensCoverage /= 100.0;
-		
+
 		option("SLOPE_OPT", gLogSlopes = FALSE) {
 			ReadString(fieldStart, fieldLen, tempBuffer, (i = kBufferLength, &i));
 			switch(MatchString(identBuffer, tempBuffer, FALSE, TRUE, TRUE, 2,
@@ -522,7 +522,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 				default: JError("Unknown %s \"%s\"", identBuffer, tempBuffer);
 			}
 		}
-*/		
+*/
 		option("CUTS", (out->cuts = NULL, out->nCuts = 1)) {
 			out->cuts = ReadDoubles(fieldStart, fieldLen, NULL, &out->nCuts, 0, 0, identBuffer);
 			if(out->nCuts == 1 && isnan(out->cuts[0])) {Destroy(out->cuts); out->cuts = NULL; out->nCuts = 0;};
@@ -549,7 +549,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 			out->conf = New(double, (out->nConf = 4));
 			out->conf[0] = 0.023; out->conf[1] = 0.159; out->conf[2] = 0.841; out->conf[3] = 0.977;
 		}
-		
+
 		option("REFIT", out->refit = (gen->nRuns > 0 && out->doParams && gen->psi == NULL && !gen->gotParams && gen->shape == model->shape))
 			out->refit = ReadBoolean(fieldStart, fieldLen, identBuffer);
 		if(finished && out->refit) {
@@ -575,10 +575,10 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 				default: JError("Unknown format \"%s\"", tempBuffer);
 			}
 		}
-		
+
 		option("DO_BOOTSTRAP_T", gDoBootstrapT = FALSE)
 			gDoBootstrapT = ReadBoolean(fieldStart, fieldLen, identBuffer);
-		
+
 		option("WRITE_FORMAT", strcpy(out->numericFormat, "%lg")) {
 			ReadString(fieldStart, fieldLen, out->numericFormat, (i = mNumericFormatLength + 1, &i));
 			if(i > mNumericFormatLength) JError("%s cannot be more than %d characters", identBuffer, mNumericFormatLength);
@@ -589,13 +589,13 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 			else if(strcmp(s, "ADAPTIVE_OUTPUT") == 0) chosenOpt = -4;
 			else if(strcmp(s, "ADAPTIVE_TARGET") == 0) chosenOpt = -4;
 			else if(strcmp(s, "DATA") == 0) chosenOpt = -4;
-			else if(strcmp(s, "IN_REGION") == 0) chosenOpt = -4;			
-			else if(strcmp(s, "SENS_PARAMS") == 0) chosenOpt = -4;			
+			else if(strcmp(s, "IN_REGION") == 0) chosenOpt = -4;
+			else if(strcmp(s, "SENS_PARAMS") == 0) chosenOpt = -4;
 			else if(strcmp(s, "LDOT") == 0) chosenOpt = -4;
 			else if(strcmp(s, "FISHER") == 0) chosenOpt = -4;
 			else if(strcmp(s, "Y_SIM") == 0) chosenOpt = -4;
 			else if(strcmp(s, "R_SIM") == 0) chosenOpt = -4;
-			else if(strcmp(s, "COV") == 0) chosenOpt = -4;			
+			else if(strcmp(s, "COV") == 0) chosenOpt = -4;
 			else if(strncmp(s, "ST", 2) == 0) s += 2, chosenOpt = -3;	/* -3: possibly recognized - check rest of string for one of a limited selection of the endings below */
 			else if(strncmp(s, "PA", 2) == 0) s += 2, chosenOpt = -2;	/* -2: possibly recognized - check rest of string for one of the endings below */
 			else if(strncmp(s, "TH", 2) == 0) s += 2, chosenOpt = -2;
@@ -626,9 +626,9 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 		}
 		else if(!finished && chosenOpt == -1) JError("Unrecognized option \"%s\"", identBuffer);
 	}
-	
+
 	Destroy(specified);
-	
+
 	*handleForData = NULL;
 
 	if(externalData && m_mass(externalData) > 0) {
@@ -663,7 +663,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 		}
 		Destroy(d);
 	}
-	
+
 	nPoints = (xLength ? xLength : yLength ? yLength : nLength ? nLength : rLength ? rLength : wLength ? wLength : 0);
 	if(nPoints > 0) {
 		if(*handleForData != NULL) JWarning("data given by #DATA_... fields of preference string will be ignored");
@@ -673,7 +673,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 			|| (rLength > 0 && rLength != nPoints) || (wLength > 0 && wLength != nPoints))
 				JError("lengths of DATA fields are mismatched");
 
-			
+
 			*handleForData = ConstructDataSet(nPoints, 1, x, y, n, r, w, "DATA fields of preference string");
 		}
 		if(xLength) Destroy(x);
@@ -682,7 +682,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 		if(rLength) Destroy(r);
 		if(wLength) Destroy(w);
 	}
-	
+
 	if(*handleForData == NULL) {
         if(needData) {
             JError("no data supplied!");
@@ -697,7 +697,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 	gotX = (*handleForData != NULL && (*handleForData)->x != NULL && (*handleForData)->nPoints > 0 && !isnan((*handleForData)->x[0]));
 	bcaPossible = (gen->shape == model->shape && gen->psi == NULL && gotX);
 
-	/* assign matrix outputs in reverse order */	
+	/* assign matrix outputs in reverse order */
 
 	AssignOutput((out->randomSeed = m_new(mNewData, m1D, 1)), prefs, "RANDOM_SEED", NULL, "%.20lg");
 	m_val(out->randomSeed) = gen->randomSeed;
@@ -709,7 +709,7 @@ void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 		while(isspace(*s) || *s == ',') s++;
 		memmove(out->dataExport->output, s, strlen(s) + 1);
 	}
-	
+
 	AssignOutput((gAdaptiveOutput = m_new(mNoData, m2D, gen->nRuns, 0)), prefs, "ADAPTIVE_OUTPUT", NULL, out->numericFormat);
 	AssignOutput((gAdaptiveTarget = m_new(mNoData, m2D, 1, 2)), prefs, "ADAPTIVE_TARGET", NULL, out->numericFormat);
 	AssignOutput((out->inRegion = m_new(mNoData, m2D, ((out->doParams && bcaPossible) ? gen->nRuns : 0), 1)), prefs, "IN_REGION", NULL, "%lg");
@@ -789,7 +789,7 @@ PsychDistribFuncPtr MatchShape(char *buf, char *desc)
 		{JCumulativeGaussian, JGumbel, JLogistic, JWeibull, JLinear}; /* if adding or removing, remember to alter kNumberOfShapes */
 	unsigned short i, totalLength = 0;
 	char *errMsg, tryMatch[32], *tempBuf, *s, joiner[] = "\n\t";
-	
+
 	tempBuf = CopyVals(NULL, buf, strlen(buf)+1, sizeof(char));
 	for(s = tempBuf; *s; s++) *s = toupper(*s);
 	for(i = 0; i < kNumberOfShapes; i++) {
@@ -806,7 +806,7 @@ PsychDistribFuncPtr MatchShape(char *buf, char *desc)
 		JError("%s", errMsg);
 		Destroy(errMsg);
 	}
-	return matched;	
+	return matched;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */

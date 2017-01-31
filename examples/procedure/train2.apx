@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8'?>
+ <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!-- @doc
+  @what: Show the presentation of a stimulus with a random number out of the possible choices according to last input
+  @description: 3 buttons: 1-2  3-4  5-6 => when you click on 5-6, you hear either 5 or 6
+  @how: trainingProcedure - multiple trials => button5 is the answer of the trial corresponding with stimulus5 & stimulus6
+  -->
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>20</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+   <trial id="trial2">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus2"/>
+   </trial>
+   <trial id="trial3">
+    <answer>button3</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus3"/>
+   </trial>
+   <trial id="trial4">
+    <answer>button3</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus4"/>
+   </trial>
+   <trial id="trial5">
+    <answer>button5</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus5"/>
+   </trial>
+   <trial id="trial6">
+    <answer>button5</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus6"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout width="3" height="2" id="main_layout">
+    <button x="1" y="1" id="button1">
+     <text>1-2</text>
+    </button>
+    <button x="3" y="1" id="button3">
+     <text>3-4</text>
+    </button>
+    <button x="2" y="2" id="button5">
+     <text>5-6</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button3"/>
+    <button id="button5"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd2.wav</uri>
+  </datablock>
+  <datablock id="rawdata3">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd3.wav</uri>
+  </datablock>
+  <datablock id="rawdata4">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd4.wav</uri>
+  </datablock>
+  <datablock id="rawdata5">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd5.wav</uri>
+  </datablock>
+  <datablock id="rawdata6">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd6.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata2"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus3">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata3"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus4">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata4"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus5">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata5"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus6">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata6"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef NUCLEUSR126MAP_H
-#define NUCLEUSR126MAP_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_R126NUCLEUSMAPRECORD_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_MAP_R126NUCLEUSMAPRECORD_H_
 
 #include <qstring.h>
 
@@ -27,7 +27,7 @@ namespace r126{
     static const unsigned sc_nChannels = 22;
 
     //!R126 Map Record
-  class R126NucleusMAPRecord  
+  class R126NucleusMAPRecord
   {
   public:
     QString m_sGUID;
@@ -38,7 +38,7 @@ namespace r126{
     QString m_sStimulationMode;
 
         int GetStimulationMode() const;
-    
+
     bool    m_baChannelEnabled[ sc_nChannels ];
     int     m_naElectrodes[ sc_nChannels ];
     int     m_naCLevels[ sc_nChannels ];
@@ -64,4 +64,4 @@ namespace r126{
 
 }
 
-#endif //#ifndef NUCLEUSR126MAP_H
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_R126NUCLEUSMAPRECORD_H_

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __AUDIOFORMAT_H_
 #define __AUDIOFORMAT_H_
 
@@ -68,9 +68,9 @@ namespace streamapp
       MSBint24,
       MSBint32,
       MSBfloat32,
-      MSBfloat64 
+      MSBfloat64
     }; //FIXME need to check endianess too!!
-#endif  
+#endif
 
       /**
         * Get the number of channels of the format.
@@ -256,7 +256,7 @@ namespace streamapp
     }
 
       /**
-        * 
+        *
         */
     virtual bool mf_bIsLooping() const
     {

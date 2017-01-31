@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "screen/screenrundelegate.h"
+
+#include "apexdata/screen/spinboxelement.h"
+
+#include "apextools/apextools.h"
+
 #include "gui/guidefines.h"
 
-#include "screen/spinboxelement.h"
+#include "screen/screenrundelegate.h"
 #include "screen/spinboxrundelegate.h"
-
-#include "apextools.h"
 
 #include <QShortcut>
 
@@ -103,7 +104,7 @@ apex::rundelegates::SpinBoxRunDelegate::SpinBoxRunDelegate(
         QShortcut* sc = new QShortcut(  e->getShortCut("down"), this );
         connect(sc, SIGNAL(activated()), this, SLOT(stepDown()));
     }
-        
+
 
     QFont font = defaultFont;
     if ( element->getFontSize() != -1 )

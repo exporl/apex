@@ -44,12 +44,256 @@
 
 /*	STRINGS	*/
 
+/* The strtod implementation is:
+ *
+ * Copyright (c) 1988-1993 The Regents of the University of California.
+ * Copyright (c) 1994 Sun Microsystems, Inc.
+ *
+ * Permission to use, copy, modify, and distribute this
+ * software and its documentation for any purpose and without
+ * fee is hereby granted, provided that the above copyright
+ * notice appear in all copies.  The University of California
+ * makes no representations about the suitability of this
+ * software for any purpose.  It is provided "as is" without
+ * express or implied warranty.
+ *
+ */
+
+static int maxExponent = 511;	/* Largest possible base 10 exponent.  Any
+				 * exponent larger than this will already
+				 * produce underflow or overflow, so there's
+				 * no need to worry about additional digits.
+				 */
+static double powersOf10[] = {	/* Table giving binary powers of 10.  Entry */
+    10.,			/* is 10^2^i.  Used to convert decimal */
+    100.,			/* exponents into floating-point numbers. */
+    1.0e4,
+    1.0e8,
+    1.0e16,
+    1.0e32,
+    1.0e64,
+    1.0e128,
+    1.0e256
+};
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * strtod --
+ *
+ *	This procedure converts a floating-point number from an ASCII
+ *	decimal representation to internal double-precision format.
+ *
+ * Results:
+ *	The return value is the double-precision floating-point
+ *	representation of the characters in string.  If endPtr isn't
+ *	NULL, then *endPtr is filled in with the address of the
+ *	next character after the last one that was part of the
+ *	floating-point number.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+double
+clocale_strtod(string, endPtr)
+    const char *string;		/* A decimal ASCII floating-point number,
+				 * optionally preceded by white space.
+				 * Must have form "-I.FE-X", where I is the
+				 * integer part of the mantissa, F is the
+				 * fractional part of the mantissa, and X
+				 * is the exponent.  Either of the signs
+				 * may be "+", "-", or omitted.  Either I
+				 * or F may be omitted, or both.  The decimal
+				 * point isn't necessary unless F is present.
+				 * The "E" may actually be an "e".  E and X
+				 * may both be omitted (but not just one).
+				 */
+    char **endPtr;		/* If non-NULL, store terminating character's
+				 * address here. */
+{
+    int sign, expSign = 0;
+    double fraction, dblExp, *d;
+    register const char *p;
+    register int c;
+    int exp = 0;		/* Exponent read from "EX" field. */
+    int fracExp = 0;		/* Exponent that derives from the fractional
+				 * part.  Under normal circumstatnces, it is
+				 * the negative of the number of digits in F.
+				 * However, if I is very long, the last digits
+				 * of I get dropped (otherwise a long I with a
+				 * large negative exponent could cause an
+				 * unnecessary overflow on I alone).  In this
+				 * case, fracExp is incremented one for each
+				 * dropped digit. */
+    int mantSize;		/* Number of digits in mantissa. */
+    int decPt;			/* Number of mantissa digits BEFORE decimal
+				 * point. */
+    const char *pExp;		/* Temporarily holds location of exponent
+				 * in string. */
+
+    /*
+     * Strip off leading blanks and check for a sign.
+     */
+
+    p = string;
+    while (isspace(*p)) {
+	p += 1;
+    }
+    if (*p == '-') {
+	sign = 1;
+	p += 1;
+    } else {
+	if (*p == '+') {
+	    p += 1;
+	}
+	sign = 0;
+    }
+
+    /*
+     * Count the number of digits in the mantissa (including the decimal
+     * point), and also locate the decimal point.
+     */
+
+    decPt = -1;
+    for (mantSize = 0; ; mantSize += 1)
+    {
+	c = *p;
+	if (!isdigit(c)) {
+	    if ((c != '.') || (decPt >= 0)) {
+		break;
+	    }
+	    decPt = mantSize;
+	}
+	p += 1;
+    }
+
+    /*
+     * Now suck up the digits in the mantissa.  Use two integers to
+     * collect 9 digits each (this is faster than using floating-point).
+     * If the mantissa has more than 18 digits, ignore the extras, since
+     * they can't affect the value anyway.
+     */
+
+    pExp  = p;
+    p -= mantSize;
+    if (decPt < 0) {
+	decPt = mantSize;
+    } else {
+	mantSize -= 1;			/* One of the digits was the point. */
+    }
+    if (mantSize > 18) {
+	fracExp = decPt - 18;
+	mantSize = 18;
+    } else {
+	fracExp = decPt - mantSize;
+    }
+    if (mantSize == 0) {
+	fraction = 0.0;
+	p = string;
+	goto done;
+    } else {
+	int frac1, frac2;
+	frac1 = 0;
+	for ( ; mantSize > 9; mantSize -= 1)
+	{
+	    c = *p;
+	    p += 1;
+	    if (c == '.') {
+		c = *p;
+		p += 1;
+	    }
+	    frac1 = 10*frac1 + (c - '0');
+	}
+	frac2 = 0;
+	for (; mantSize > 0; mantSize -= 1)
+	{
+	    c = *p;
+	    p += 1;
+	    if (c == '.') {
+		c = *p;
+		p += 1;
+	    }
+	    frac2 = 10*frac2 + (c - '0');
+	}
+	fraction = (1.0e9 * frac1) + frac2;
+    }
+
+    /*
+     * Skim off the exponent.
+     */
+
+    p = pExp;
+    if ((*p == 'E') || (*p == 'e')) {
+	p += 1;
+	if (*p == '-') {
+	    expSign = 1;
+	    p += 1;
+	} else {
+	    if (*p == '+') {
+		p += 1;
+	    }
+	    expSign = 0;
+	}
+	while (isdigit(*p)) {
+	    exp = exp * 10 + (*p - '0');
+	    p += 1;
+	}
+    }
+    if (expSign) {
+	exp = fracExp - exp;
+    } else {
+	exp = fracExp + exp;
+    }
+
+    /*
+     * Generate a floating-point number that represents the exponent.
+     * Do this by processing the exponent one bit at a time to combine
+     * many powers of 2 of 10. Then combine the exponent with the
+     * fraction.
+     */
+
+    if (exp < 0) {
+	expSign = 1;
+	exp = -exp;
+    } else {
+	expSign = 0;
+    }
+    if (exp > maxExponent) {
+	exp = maxExponent;
+	errno = ERANGE;
+    }
+    dblExp = 1.0;
+    for (d = powersOf10; exp != 0; exp >>= 1, d += 1) {
+	if (exp & 01) {
+	    dblExp *= *d;
+	}
+    }
+    if (expSign) {
+	fraction /= dblExp;
+    } else {
+	fraction *= dblExp;
+    }
+
+done:
+    if (endPtr != NULL) {
+	*endPtr = (char *) p;
+    }
+
+    if (sign) {
+	return -fraction;
+    }
+    return fraction;
+}
+
 double improved_strtod(char * start, char ** end)
 {
 	double x = NAN, x2;
 	char temp[5], *endLocal, c;
 	int i;
-	
+
 	errno = 0;
 	while(isspace(*start)) start++;
 	strncpy(temp, start, 4);
@@ -60,7 +304,7 @@ double improved_strtod(char * start, char ** end)
 	else if(strncmp(temp, "NAN", 3)==0) {x = NAN; endLocal = start + 3;}
 	else if(strncmp(temp, "-EPS", 4)==0) {x = -EPS; endLocal = start + 4;}
 	else if(strncmp(temp, "-INF", 4)==0) {x = -INF; endLocal = start + 4;}
-	else x = strtod(start, &endLocal);
+	else x = clocale_strtod(start, &endLocal);
 
 	c = *endLocal;
 	if(c == ',' || c == ';') endLocal++;
@@ -90,9 +334,9 @@ int MatchString (	char * variableDescription, char * stringToMatch,
 	va_list ap;
 	size_t totalLen = 0;
 	char nullString[1] = "", *possibilities, **match;
-	
+
 	match = New(char *, nPossibilities);
-	
+
 	if(stringToMatch==NULL) stringToMatch = nullString;
 	va_start(ap, nPossibilities);
 	for(i = 0; i < nPossibilities; i++) {
@@ -139,7 +383,7 @@ int Bug(char *fmt, ...)
 	*temp = 0;
 	if(fmt!=NULL && strlen(fmt)>0)
 		{va_start(ap, fmt); vsprintf(temp, fmt, ap); va_end(ap);}
-	
+
 	return _JError(temp, TRUE);
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -156,20 +400,20 @@ int JError(char * fmt, ...)
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 int _JError(char * errorString, boolean internal)
-{	
+{
 	void (*proc)(void);
 	char unspecifiedString[] = "<<unspecified error>>";
 
 	if(errorString == NULL || strlen(errorString) == 0) errorString = unspecifiedString;
-	
+
 	if(internal) {
-		printf("\n");
-		printf("**************************************************************\n");
-		printf("The following error is an internal bug in program.\n");
-		printf("Please report it to %s giving details of\n", kAUTHOR_CONTACT);
-		printf("the error message and the input conditions that gave rise to it.\n");
-		if(gBugRef) printf("Quote the number %d when reporting this error.\n", gBugRef);
-		printf("**************************************************************\n");
+		fprintf(stderr, "\n");
+		fprintf(stderr, "**************************************************************\n");
+		fprintf(stderr, "The following error is an internal bug in program.\n");
+		fprintf(stderr, "Please report it to %s giving details of\n", kAUTHOR_CONTACT);
+		fprintf(stderr, "the error message and the input conditions that gave rise to it.\n");
+        if(gBugRef) fprintf(stderr, "Quote the number %ld when reporting this error.\n", gBugRef);
+		fprintf(stderr, "**************************************************************\n");
 	}
 
 	if(JERROR_TRAP_PROC != NULL) {
@@ -192,7 +436,7 @@ int _JError(char * errorString, boolean internal)
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void JWarning(char * fmt, ...)
-{	
+{
 	va_list ap;
 	char temp[255];
 
@@ -204,7 +448,7 @@ void JWarning(char * fmt, ...)
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void _JWarning(char * warnString)
-{		
+{
 	char unspecifiedString[] = "<<unspecified warning>>";
 
 	if(warnString == NULL || strlen(warnString) == 0) warnString = unspecifiedString;
@@ -217,15 +461,15 @@ void _JWarning(char * warnString)
 		else fprintf(stderr, "\n");
 		fprintf(stderr, "\nWARNING: %s\n\n", warnString);
 	}
-#endif	
+#endif
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void RemoveErrorTrap(void (*proc)(void)) {if(proc == JERROR_TRAP_PROC) JERROR_TRAP_PROC = NULL;}
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void SetErrorTrap(void (*ErrProc)(void))
-{	
+{
 	if(ErrProc != NULL && JERROR_TRAP_PROC != NULL)
-		Bug("SetErrorTrap(): trap already set.\nMust be deliberately wiped with SetErrorTrap(NULL) before being replaced.");	
+		Bug("SetErrorTrap(): trap already set.\nMust be deliberately wiped with SetErrorTrap(NULL) before being replaced.");
 	JERROR_TRAP_PROC = ErrProc;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -249,11 +493,11 @@ void *CopyVals(void *dest, void *src, size_t nElements, size_t elementSize)
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void Destroy(void * p)
 {
-	int i;
+    unsigned int i;
 	if(!gBlocksInited || p==NULL) return;
 	for(i = 0; i < gMaxBlocks; i++) if(gBlock[i] == p) break;
 	if(i == gMaxBlocks) {JError("attempt to free unlisted block 0x%08x", (unsigned long)p); return;}
-	
+
 	gBlock[i] = NULL;
 
 	free(p);
@@ -261,7 +505,7 @@ void Destroy(void * p)
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void DestroyAllBlocks(void)
 {
-	int i;
+    unsigned int i;
 
 	if(!gBlocksInited) return;
 	for(i = 0; i < gMaxBlocks; i++) {
@@ -278,8 +522,8 @@ void DestroyAllBlocks(void)
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void ProtectBlock(void * p)
 {
-	int i;
-	
+    unsigned int i;
+
 	for(i = 0; i < gMaxBlocks; i++)
 		if(gBlock[i] == p) break;
 	if(i == gMaxBlocks || !gBlocksInited || p == NULL)
@@ -287,27 +531,27 @@ void ProtectBlock(void * p)
 	gBlock[i] = NULL;
 #ifdef MATLAB_MEX_FILE
 	mexMakeMemoryPersistent(p);
-#endif	
+#endif
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 boolean ReportBlocks(void)
 {
-	int i, j;
+    unsigned int i, j;
 	boolean result = FALSE;
 	if(!gBlocksInited) return FALSE;
 	for(i = 0; i < gMaxBlocks; i++) {
 		if(gBlock[i]!=NULL) result = TRUE;
-		if(gBlock[i]!=NULL) printf("Memory leak @ 0x%08X:  %6u x %u bytes\n", gBlock[i], gNumberOfElements[i], gElementSize[i]);
-		if(gBlock[i]!=NULL && gElementSize[i] == 8) {for(j = 0; j < gNumberOfElements[i] && j < 10; j++) printf("%lg, ", ((double *)(gBlock[i]))[j]); printf("%c%c%s\n", 8, 8, ((j < gNumberOfElements[i])?"...":""));}
-		if(gBlock[i]!=NULL && gElementSize[i] == 1) {for(j = 0; j < gNumberOfElements[i]; j++) printf("%c", ((char *)(gBlock[i]))[j]); printf("\n");}
+        if(gBlock[i]!=NULL) fprintf(stderr, "Memory leak @ 0x%p:  %6u x %zu bytes\n", gBlock[i], gNumberOfElements[i], gElementSize[i]);
+		if(gBlock[i]!=NULL && gElementSize[i] == 8) {for(j = 0; j < gNumberOfElements[i] && j < 10; j++) fprintf(stderr, "%lg, ", ((double *)(gBlock[i]))[j]); fprintf(stderr, "%c%c%s\n", 8, 8, ((j < gNumberOfElements[i])?"...":""));}
+		if(gBlock[i]!=NULL && gElementSize[i] == 1) {for(j = 0; j < gNumberOfElements[i]; j++) fprintf(stderr, "%c", ((char *)(gBlock[i]))[j]); fprintf(stderr, "\n");}
 	}
 	return result;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 void * ResizeBlock(void * p, unsigned int newNumberOfElements)
 {
-	int i;
-	
+    unsigned int i;
+
 	for(i = 0; i < gMaxBlocks; i++)
 		if(gBlock[i] == p) break;
 	if(i == gMaxBlocks || !gBlocksInited || p == NULL)
@@ -315,10 +559,10 @@ void * ResizeBlock(void * p, unsigned int newNumberOfElements)
 
 	if((p = realloc(p, newNumberOfElements * gElementSize[i])) == NULL)
 		JError("Failed to resize memory block from %u to %u elements (element size %u)", gNumberOfElements[i], newNumberOfElements, gElementSize[i]);
-	
+
 	gBlock[i] = p;
 	gNumberOfElements[i] = newNumberOfElements;
-	
+
 	return p;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -326,7 +570,7 @@ void * _New(unsigned int n, size_t size)
 {
 	void * p;
 
-	int i;
+    unsigned int i;
 	if(!gBlocksInited) {
 		gBlock = (void **)calloc(gMaxBlocks, sizeof(void *));
 		gNumberOfElements = (unsigned int *)calloc(gMaxBlocks, sizeof(unsigned int));
@@ -337,7 +581,7 @@ void * _New(unsigned int n, size_t size)
 	for(i = 0; i < gMaxBlocks; i++)
 		if(gBlock[i] == NULL) break;
 	if(i == gMaxBlocks) JError("run out of table space to allocate new pointers");
-	
+
 	if((p = calloc(n, size)) == NULL)
 		JError("Memory error: failed to allocate block of %u x %u bytes", n, size);
 
@@ -377,7 +621,7 @@ void ReportSimplex(short nParams, double *p, double score);
 void ReportSimplex(short nParams, double *p, double score)
 {
 	static matrix m = NULL;
-	
+
 	if(p == NULL && m != NULL) {
 		JWarning("simplex path is being recorded - see simplex_report");
 		m_setsize(m, m2D, m_getpos(m, 1), m_getsize(m, 2));
@@ -394,7 +638,7 @@ void ReportSimplex(short nParams, double *p, double score)
 	if(!m_step(m, 1, 1)) Bug("simplex report matrix ran out of room");
 }
 #else
-#define ReportSimplex(a,b,c) 0
+#define ReportSimplex(a,b,c) ((void)0)
 #endif
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 double MovePoint(unsigned short p, double factor)
@@ -405,7 +649,12 @@ double MovePoint(unsigned short p, double factor)
 	temp2 = (temp1 = (1.0 - factor) / (double)(NPOINTS-1)) - factor;
 	for(i = 0; i < NPARAMS; i++) newpos[i] = (FREE[i] ? TOTALS[i] * temp1 - POINTS[p][i] * temp2 : POINTS[p][i]);
 	if((newscore = (*FUNCTION)(newpos)) < SCORES[p]) {
-		for(i = 0; i < NPARAMS; i++) if(FREE[i]) TOTALS[i] -= (temp1 = POINTS[p][i]) - (POINTS[p][i] = newpos[i]);
+		for(i = 0; i < NPARAMS; i++) {
+		    if(FREE[i]) {
+		    	TOTALS[i] -= POINTS[p][i] - newpos[i];
+		    	POINTS[p][i] = newpos[i];
+		    }
+		}
 		SCORES[p] = newscore;
 	}
 
@@ -422,7 +671,7 @@ short SimplexSearch(unsigned short nParams, double * params, boolean *pfree, dou
 	NPARAMS = nParams;
 	FREE = pfree;
 	ITERATIONS = 0;
-	
+
 	if(NPARAMS < 1 || NPARAMS > kMaxDimensions)
 		{Bug("SimplexSearch() cannot deal with %hu dimensions: must be from 1 to %hu.", NPARAMS, kMaxDimensions); return -1;}
 	for(NPOINTS = 1, i = 0; i < NPARAMS; i++) if(FREE[i]) NPOINTS++;
@@ -471,7 +720,10 @@ short SimplexSearch(unsigned short nParams, double * params, boolean *pfree, dou
 			for(p = 0; p < NPOINTS; p++) {
 				if(p == lowest) continue;
 				for(i = 0; i < NPARAMS; i++)
-					if(FREE[i]) TOTALS[i] -= POINTS[p][i] - (POINTS[p][i] = 0.5 * (POINTS[p][i] + POINTS[lowest][i]));
+					if(FREE[i]) {
+					    TOTALS[i] -= POINTS[p][i] - (0.5 * (POINTS[p][i] + POINTS[lowest][i]));
+					    POINTS[p][i] = 0.5 * (POINTS[p][i] + POINTS[lowest][i]);
+					}
 				SCORES[p] = (*FUNCTION)(POINTS[p]);
 				ITERATIONS++;
 			}
@@ -494,11 +746,11 @@ double cg_inv(double x) {return sqrt(2.0) * erf_inv(2.0 * x - 1.0);}
 boolean detect_inf(double x)
 {
 	double y;
-	
+
 	if(x == 0.0) return FALSE;
 	if(isnan(x)) return FALSE;
 	y = x / 1000.0;
-	
+
 	return (y == x);
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -514,7 +766,7 @@ double erf_pf(double x)
 {
 	double y, coeffs[6] = {1.061405429e+00, -1.453152026e+00, 1.421413741e+00, -2.844967366e-01, 2.548295918e-01, 0.0};
 
-	if(x == 0.0) return 0.0;	
+	if(x == 0.0) return 0.0;
 	y = exp(-x * x) * polynomial(1.0 / (1.0 + 3.275911166e-01 * fabs(x)), coeffs, 5);
 	return ((x < 0.0) ? y - 1.0 : 1.0 - y);
 }
@@ -526,13 +778,13 @@ double erf_inv(double y)
 	double dc1[5] = {0.012229801, -0.329097515, 1.44271046, -2.11837773, 1.0};
 	double nc2[4] = {1.64134531, 3.4295678, -1.62490649, -1.97084045};
 	double dc2[3] = {1.6370678, 3.5438892, 1.0};
-	
+
 	if(y == 0.0) return 0.0;
 	ya = fabs(y);
 	ys = ((y < 0.0) ? -1.0 : (y > 0.0) ? 1.0 : 0.0);
 	if(ya == 1.0) return ys * INF;
 	if(ya > 1.0) return NAN;
-	
+
 	if(ya <= 0.7) {
 		z = y * y;
 		x = y * polynomial(z, nc1, 3) / polynomial(z, dc1, 4);
@@ -568,11 +820,11 @@ double xlogy_j(double x, double y)
 double CheckValue(double x, char *description, double min, double max,
 					boolean rejectNonInteger, boolean rejectInf, boolean rejectNaN)
 {
-	if(rejectInf && isinf(x)) JError("%s must be finite", description);	
-	if(rejectNaN && isnan(x)) JError("%s cannot be NaN", description);	
-	if(rejectNonInteger && x != floor(x)) JError("%s must be a whole number", description);	
-	if(x < min) JError("%s cannot be less than %lg", description, min);	
-	if(x > max) JError("%s cannot be greater than %lg", description, max);	
+	if(rejectInf && isinf(x)) JError("%s must be finite", description);
+	if(rejectNaN && isnan(x)) JError("%s cannot be NaN", description);
+	if(rejectNonInteger && x != floor(x)) JError("%s must be a whole number", description);
+	if(x < min) JError("%s cannot be less than %lg", description, min);
+	if(x > max) JError("%s cannot be greater than %lg", description, max);
 	return x;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -656,13 +908,13 @@ void WeightedLinearRegression(int nPoints, double * x, double * y, double * weig
 	}
 	xWeightedMean /= totalWeight;
 	yWeightedMean /= totalWeight;
-	
+
 	mTop = mBottom = 0.0;
 	for(i = 0; i < nPoints; i++) {
 		w = (weights == NULL) ? 1.0 : weights[i];
 		xR = x[i] - xWeightedMean;
 		mTop += xR * y[i] * w;
-		mBottom += xR * xR * w;		
+		mBottom += xR * xR * w;
 	}
 	if(m!=NULL) *m = mTop/mBottom;
 	if(c!=NULL) *c = yWeightedMean - mTop/mBottom * xWeightedMean;
@@ -679,9 +931,9 @@ boolean db(char * message)
 #ifdef MATLAB_MEX_FILE
 	mexEvalf("input('%s... ', 's');", ((message != NULL && strlen(message) > 0) ? message : "press return"));
 #else
-	double a;
-	printf("%s... ", ((message != NULL && strlen(message) > 0) ? message : "press return"));
-	scanf("%lg", &a);
+	// double a;
+	fprintf(stderr, "%s... ", ((message != NULL && strlen(message) > 0) ? message : "press return"));
+	// scanf("%lg", &a);
 #endif
 	return TRUE;
 }
@@ -691,29 +943,29 @@ int TestFloatingPointBehaviour(void)
 	double ONE = 1.0, ZERO = 0.0;
 	double thisTest;
 	boolean allTests = TRUE;
-	
-	printf("Testing IEEE floating point behaviour of your compiled program.\n\n");
-	printf("If the program crashes with the message \"floating exception\" at any\n");
-	printf("point, it has failed the test. Also, if any further tests are reported\n");
-	printf("\"FAILED\" then your program may behave unreliably with regard to some\n");
-	printf("floating-point calculations. In either case you should re-compile using\n");
-	printf("the -ieee switch (if available), or using a floating-point library that\n");
-	printf("supports IEEE standard behaviour of INF and NaN\n\n");
 
-	printf("Attempting 1.0/0.0: ");
-	printf("%lg\n", ONE / ZERO);
-	printf("Attempting 0.0/0.0: ");
-	printf("%lg\n", ZERO / ZERO);
-	printf("\nGood, no crashes.\n");
+	fprintf(stderr, "Testing IEEE floating point behaviour of your compiled program.\n\n");
+	fprintf(stderr, "If the program crashes with the message \"floating exception\" at any\n");
+	fprintf(stderr, "point, it has failed the test. Also, if any further tests are reported\n");
+	fprintf(stderr, "\"FAILED\" then your program may behave unreliably with regard to some\n");
+	fprintf(stderr, "floating-point calculations. In either case you should re-compile using\n");
+	fprintf(stderr, "the -ieee switch (if available), or using a floating-point library that\n");
+	fprintf(stderr, "supports IEEE standard behaviour of INF and NaN\n\n");
+
+	fprintf(stderr, "Attempting 1.0/0.0: ");
+	fprintf(stderr, "%lg\n", ONE / ZERO);
+	fprintf(stderr, "Attempting 0.0/0.0: ");
+	fprintf(stderr, "%lg\n", ZERO / ZERO);
+	fprintf(stderr, "\nGood, no crashes.\n");
 
 #define tryTest(a, expected)	{	\
-/*									printf("Attempting %s: ", #a); \
+/*									fprintf(stderr, "Attempting %s: ", #a); \
 */									thisTest = (a); \
 									allTests &= (thisTest == expected); \
-									if(thisTest != expected) printf("TEST FAILED: your program thinks that %s is %s\n", #a, thisTest ? "TRUE" : "FALSE"); \
-/*									printf("%s%s\n", thisTest ? "TRUE" : "FALSE", (thisTest == expected) ? "" : "*** FAILED"); \
+									if(thisTest != expected) fprintf(stderr, "TEST FAILED: your program thinks that %s is %s\n", #a, thisTest ? "TRUE" : "FALSE"); \
+/*									fprintf(stderr, "%s%s\n", thisTest ? "TRUE" : "FALSE", (thisTest == expected) ? "" : "*** FAILED"); \
 */								}
-	InitMathConstants();	
+	InitMathConstants();
 	tryTest(isinf(ONE / ZERO), TRUE);
 	tryTest(isinf(INF), TRUE);
 	tryTest(isinf(-INF), TRUE);
@@ -739,30 +991,30 @@ int TestFloatingPointBehaviour(void)
 	tryTest(NAN <= ZERO, FALSE);
 	tryTest(NAN >= ZERO, FALSE);
 
-	if(allTests) printf("All further floating-point tests were successful.\n");
+	if(allTests) fprintf(stderr, "All further floating-point tests were successful.\n");
 	return allTests;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 int _ReportChar(char *name, int a)
 {
-	if(a == EOF) return printf("%s = EOF\n", name);
-	else if(a < 32 || a > 126) return printf("%s = %%%02X\n", name, a);
-	else return printf("%s = '%c'\n", name, a);
+	if(a == EOF) return fprintf(stderr, "%s = EOF\n", name);
+	else if(a < 32 || a > 126) return fprintf(stderr, "%s = %%%02X\n", name, a);
+	else return fprintf(stderr, "%s = '%c'\n", name, a);
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 int _ReportCString(char *name, char *a)
 {
-	if(a==NULL) return printf("%s = NULL\n", name);
-	else return printf("%s = \"%s\"\n", name, a);
+	if(a==NULL) return fprintf(stderr, "%s = NULL\n", name);
+	else return fprintf(stderr, "%s = \"%s\"\n", name, a);
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 int _ReportListOfDoubles(char *name, double *a, int n)
 {
 	int i, c = 0;
-	if(a==NULL) return printf("%s = NULL\n", name);
-	c += printf("%s = {", name);
-	for(i = 0; i < n; i++) c += printf("%lg%s", a[i], (i == n - 1) ? "" : ", ");
-	printf("}\n");
+	if(a==NULL) return fprintf(stderr, "%s = NULL\n", name);
+	c += fprintf(stderr, "%s = {", name);
+	for(i = 0; i < n; i++) c += fprintf(stderr, "%lg%s", a[i], (i == n - 1) ? "" : ", ");
+	fprintf(stderr, "}\n");
 	return c;
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
@@ -803,12 +1055,12 @@ double UniformRandomDouble(void)
 	long temp;
 	int ind;
 	double result;
-	
+
 	temp = S1 / 53668;
-	S1 = (S1 - 53668 * temp) * 40014 - temp * 12211; 
+	S1 = (S1 - 53668 * temp) * 40014 - temp * 12211;
 	S1 += ((S1 < 0) ? 2147483563 : 0);
 	temp = S2 / 52774;
-	S2 = (S2 - 52774 * temp) * 40692 - temp * 3791; 
+	S2 = (S2 - 52774 * temp) * 40692 - temp * 3791;
 	S2 += ((S2 < 0) ? 2147483399 : 0);
 
 	S3 = BDTABLE[ind = S3 / (2147483562 / BDTABLE_LENGTH + 1)] - S2;
@@ -855,7 +1107,7 @@ void SortDoubles(unsigned short numberOfLists, unsigned short lengthOfLists, dou
 	double ** otherLists = NULL;
 	double temp;
 	int i, src, dest;
-	
+
 #define swapem(a, b)	(temp = (a), (a) = (b), (b) = temp)
 
 	if(numberOfLists < 1 || lengthOfLists < 2 || first == NULL) return;
@@ -919,11 +1171,11 @@ void FlushPrintBuffer(boolean eraseNewLineAfterwards)
 {
 	int i;
 #ifdef MATLAB_MEX_FILE
-	i = printf("\n"); mexEvalString("disp('')");
+	i = fprintf(stderr, "\n"); mexEvalString("disp('')");
 #else
-	i = printf("\n");
+	i = fprintf(stderr, "\n");
 #endif
-	if(eraseNewLineAfterwards) while(i--) printf("%c", 8);
+	if(eraseNewLineAfterwards) while(i--) fprintf(stderr, "%c", 8);
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */

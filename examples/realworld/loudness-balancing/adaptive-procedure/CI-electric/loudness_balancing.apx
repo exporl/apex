@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: Loudness balancing using an adaptive procedure between two stimulation CI electrodes (within one CI)
+  @description: Two signals are presented consecutively in the same CI, at two different stimulation electrodes. One electrode is the reference electrode and has a fixed current level, the comparison electrode has changing levels. The participant has to judge which signal is louder. An adaptive procedure is used to determine the balanced level.
+  @how: Use of adaptiveProcedure, plugindatablocks, balancing.js needed
+    -->
+ <procedure xsi:type="apex:adaptiveProcedure">
+  <parameters>
+   <presentations>1</presentations>
+   <order>random</order>
+   <corrector xsi:type="apex:isequal"/>
+   <nUp>1</nUp>
+   <nDown>1</nDown>
+   <adapt_parameter>current_level</adapt_parameter>
+   <start_value>0</start_value>
+   <stop_after_type>reversals</stop_after_type>
+   <stop_after>10</stop_after>
+   <min_value>1</min_value>
+   <max_value>255</max_value>
+   <larger_is_easier>true</larger_is_easier>
+   <stepsizes>
+    <change_after>reversals</change_after>
+    <stepsize size="6" begin="0"/>
+    <stepsize size="3" begin="4"/>
+   </stepsizes>
+  </parameters>
+  <trials>
+   <plugintrials>
+    <parameter name="CL_from">1</parameter>
+    <parameter name="CL_to">2</parameter>
+    <parameter name="CL_step">1</parameter>
+   </plugintrials>
+  </trials>
+ </procedure>
+ <screens>
+  <general>
+   <repeatbutton>true</repeatbutton>
+  </general>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="500">false</feedback>
+   <showcurrent>false</showcurrent>
+  </reinforcement>
+  <screen id="screen">
+   <gridLayout height="2" width="1">
+    <label id="instruction" col="1" row="1">
+     <text>Which signal is LOUDER, the 1st or the 2nd?</text>
+    </label>
+    <gridLayout height="1" width="2" col="1" row="2">
+     <button id="button1" col="1" row="1">
+      <shortcut>1</shortcut>
+      <text>1st</text>
+     </button>
+     <button id="button2" col="2" row="1">
+      <shortcut>2</shortcut>
+      <text>2nd</text>
+     </button>
+    </gridLayout>
+   </gridLayout>
+   <buttongroup id="buttongroup">
+    <button id="button1"/>
+    <button id="button2"/>
+   </buttongroup>
+   <default_answer_element>buttongroup</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <!-- Reference: 900pps on electrode X -->
+  <datablock id="datablock_ref">
+   <device>l34device</device>
+   <data>
+    <nic:sequence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nic="http://www.cochlear.com/nic" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+     <stimulus repeat="450">
+      <parameters>
+       <ae>12</ae>
+       <re>-1</re>
+       <cl>100</cl>
+       <t>111</t>
+       <pw>25.0</pw>
+       <pg>8.0</pg>
+      </parameters>
+     </stimulus>
+    </nic:sequence>
+   </data>
+  </datablock>
+  <!-- Silence between 2 intervals (powerup) -->
+  <datablock id="datablock_silence">
+   <device>l34device</device>
+   <data>
+    <nic:sequence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nic="http://www.cochlear.com/nic" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+     <stimulus repeat="225">
+      <parameters>
+       <ae>0</ae>
+       <re>0</re>
+       <cl>0</cl>
+       <t>111</t>
+       <pw>25.0</pw>
+       <pg>8.0</pg>
+      </parameters>
+     </stimulus>
+    </nic:sequence>
+   </data>
+  </datablock>
+  <plugindatablocks>
+   <parameter name="CL_from">1</parameter>
+   <parameter name="CL_to">2</parameter>
+   <parameter name="CL_step">1</parameter>
+   <parameter name="electrode">15</parameter>
+  </plugindatablocks>
+ </datablocks>
+ <devices>
+  <device id="l34device" xsi:type="apex:L34DeviceType">
+   <device_id>1</device_id>
+   <implant>cic4</implant>
+   <trigger>none</trigger>
+   <volume>100</volume>
+   <defaultmap>
+    <inline>
+     <number_electrodes>22</number_electrodes>
+     <mode>MP1+2</mode>
+     <pulsewidth>75</pulsewidth>
+     <pulsegap>8</pulsegap>
+     <period>1000</period>
+     <channel number="1" threshold="0" electrode="22" comfort="0"/>
+     <channel number="2" threshold="0" electrode="21" comfort="0"/>
+     <channel number="3" threshold="0" electrode="20" comfort="0"/>
+     <channel number="4" threshold="0" electrode="19" comfort="0"/>
+     <channel number="5" threshold="0" electrode="18" comfort="0"/>
+     <channel number="6" threshold="0" electrode="17" comfort="0"/>
+     <channel number="7" threshold="0" electrode="16" comfort="0"/>
+     <channel number="8" threshold="0" electrode="15" comfort="0"/>
+     <channel number="9" threshold="0" electrode="14" comfort="0"/>
+     <channel number="10" threshold="0" electrode="13" comfort="0"/>
+     <channel number="11" threshold="0" electrode="12" comfort="0"/>
+     <channel number="12" threshold="0" electrode="11" comfort="0"/>
+     <channel number="13" threshold="0" electrode="10" comfort="0"/>
+     <channel number="14" threshold="0" electrode="9" comfort="0"/>
+     <channel number="15" threshold="0" electrode="8" comfort="0"/>
+     <channel number="16" threshold="0" electrode="7" comfort="0"/>
+     <channel number="17" threshold="0" electrode="6" comfort="0"/>
+     <channel number="18" threshold="0" electrode="5" comfort="0"/>
+     <channel number="19" threshold="0" electrode="4" comfort="0"/>
+     <channel number="20" threshold="0" electrode="3" comfort="0"/>
+     <channel number="21" threshold="0" electrode="2" comfort="0"/>
+     <channel number="22" threshold="0" electrode="1" comfort="0"/>
+    </inline>
+   </defaultmap>
+  </device>
+ </devices>
+ <stimuli>
+  <fixed_parameters>
+   <parameter id="current_level"/>
+  </fixed_parameters>
+  <pluginstimuli>
+   <parameter name="CL_from">1</parameter>
+   <parameter name="CL_to">2</parameter>
+   <parameter name="CL_step">1</parameter>
+  </pluginstimuli>
+ </stimuli>
+ <results>
+  <page>apex:resultviewer.html</page>
+  <resultparameters>
+   <parameter name="showextra">buttongroup</parameter>
+  </resultparameters>
+  <showduringexperiment>false</showduringexperiment>
+  <showafterexperiment>false</showafterexperiment>
+  <saveprocessedresults>true</saveprocessedresults>
+  <subject>dummy</subject>
+ </results>
+ <interactive>
+  <entry expression="/apex:apex/results[1]/subject[1]" description="Subject" default="Kees" type="string"/>
+  <entry expression="/apex:apex/procedure[1]/parameters[1]/start_value" description="Start level (CU)" default="60" type="int"/>
+  <entry expression="//parameter[@name='CL_from']" description="Min level (CU)" default="50" type="int"/>
+  <entry expression="//parameter[@name='CL_to']" description="Max level (CU)" default="70" type="int"/>
+  <entry expression="/apex:apex/datablocks/datablock[@id='datablock_ref']/data[1]/*[namespace-uri()='http://www.cochlear.com/nic' and local-name()='sequence'][1]/stimulus[1]/parameters[1]/cl[1]" description="Reference level (CU)" default="60" type="int"/>
+  <entry expression="/apex:apex/datablocks/datablock[@id='datablock_ref']/data[1]/*[namespace-uri()='http://www.cochlear.com/nic' and local-name()='sequence'][1]/stimulus[1]/parameters[1]/ae[1]" description="Reference electrode" default="1" type="int"/>
+  <entry expression="/apex:apex/datablocks[1]/plugindatablocks[1]/parameter[@name='electrode']" description="Comparison electrode" default="2" type="int"/>
+ </interactive>
+ <general>
+  <exitafter>true</exitafter>
+  <autosave>true</autosave>
+  <scriptlibrary>balancing.js</scriptlibrary>
+ </general>
+</apex:apex>

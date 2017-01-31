@@ -17,17 +17,19 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "screen/screenrundelegate.h"
+#include "apexdata/screen/matrixelement.h"
+
+#include "apextools/apextools.h"
+
 #include "gui/guidefines.h"
 
-#include "screen/matrixelement.h"
+#include "screen/screenrundelegate.h"
 
 #include "matrixrundelegate.h"
-#include "apextools.h"
 
+#include <QButtonGroup>
 #include <QFont>
 #include <QFontMetrics>
-#include <QButtonGroup>
 #include <QPushButton>
 
 namespace apex
@@ -80,8 +82,8 @@ void MatrixRunDelegate::sendAnsweredSignal(int button)
 {
     Q_UNUSED(button);
 
-    //qDebug("MatrixRunDelegate::sendAnsweredSignal");
-    //qDebug("Number of buttongroups: %d", m_groups.size());
+    //qCDebug(APEX_RS, "MatrixRunDelegate::sendAnsweredSignal");
+    //qCDebug(APEX_RS, "Number of buttongroups: %d", m_groups.size());
 
     if (element->autoContinue() == false)
         return;
@@ -89,7 +91,7 @@ void MatrixRunDelegate::sendAnsweredSignal(int button)
     // check whether each buttongroup has an answer
     bool ok = true;
     for (unsigned i = 0, size = m_groups.size(); i < size; ++i) {
-        //qDebug("buttongroup %d: checkedid=%d",
+        //qCDebug(APEX_RS, "buttongroup %d: checkedid=%d",
                //i, m_groups[i]->checkedId());
         if (m_groups[i]->checkedId() == -1) {
             ok = false;
@@ -100,7 +102,7 @@ void MatrixRunDelegate::sendAnsweredSignal(int button)
     if (!ok)
         return;
 
-    qDebug("MatrixRunDelegate: Emitting answered");
+    qCDebug(APEX_RS, "MatrixRunDelegate: Emitting answered");
     Q_EMIT answered(this);
 }
 
@@ -131,7 +133,7 @@ void MatrixRunDelegate::makeMatrix()
     // create one qbuttongroup per column
     m_groups.resize(buttons.size());
 
-    qDebug("Matrix size: (%d,%d)", buttons.size(), buttons[0].size());
+    qCDebug(APEX_RS, "Matrix size: (%d,%d)", buttons.size(), buttons[0].size());
 
     for (unsigned col = 0, size = buttons.size(); col < size; ++col) {
         QButtonGroup *bg = new QButtonGroup;

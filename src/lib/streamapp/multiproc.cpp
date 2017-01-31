@@ -16,9 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "multiproc.h"
+
 #include "audiosamplebuffer.h"
+#include "multiproc.h"
+
+#include <QtGlobal>
 
 using namespace streamapp;
 
@@ -35,10 +37,10 @@ SequentialProcessor::~SequentialProcessor()
 
 void SequentialProcessor::mp_AddItem( IStreamProcessor* const ac_pItem )
 {
-  assert( ac_pItem );
+  Q_ASSERT( ac_pItem );
   if( mf_nGetNumItems() != 0 )
   {
-    assert( mf_GetItem( mf_nGetNumItems() - 1 )->mf_nGetNumOutputChannels() >= ac_pItem->mf_nGetNumInputChannels() ); //exception? voiD?
+    Q_ASSERT( mf_GetItem( mf_nGetNumItems() - 1 )->mf_nGetNumOutputChannels() >= ac_pItem->mf_nGetNumInputChannels() ); //exception? voiD?
   }
   DynProcList::mp_AddItem( ac_pItem );
 }

@@ -16,24 +16,23 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "gui/guidefines.h"
-//#include "gui/mainwindowconfig.h"
 
-//from libdata
-#include "experimentdata.h"
+#include "apexdata/experimentdata.h"
+
+#include "apexdata/screen/screen.h"
+#include "apexdata/screen/screenelement.h"
+#include "apexdata/screen/screenresult.h"
+#include "apexdata/screen/spinboxelement.h"
+
+#include "gui/guidefines.h"
 
 #include "screen/rundelegatecreatorvisitor.h"
-#include "screen/screen.h"
-#include "screen/screenelement.h"
-#include "screen/spinboxelement.h"
 #include "screen/spinboxrundelegate.h"
-#include "screen/screenresult.h"
 
 #include "services/errorhandler.h"
 
-#include "screenrundelegate.h"
 #include "apexcontrol.h"
+#include "screenrundelegate.h"
 
 namespace apex
 {
@@ -99,7 +98,7 @@ ScreenRunDelegate::ScreenRunDelegate( ExperimentRunDelegate* p_exprd,
 {
     Q_UNUSED (parent);
 
-//    qDebug("Screen %s: widget=%p", qPrintable(s->getID()), widget.get());
+//    qCDebug(APEX_RS, "Screen %s: widget=%p", qPrintable(s->getID()), widget.get());
 
   if ( defaultFont.isEmpty() )
     defaultFont = sc_sDefaultFont;
@@ -109,7 +108,7 @@ ScreenRunDelegate::ScreenRunDelegate( ExperimentRunDelegate* p_exprd,
   font.setPointSize( defaultFontSize );
 
   rundelegates::RunDelegateCreatorVisitor delcreator( p_exprd,
-          widget.get(), elementToRunningMap, font );
+          widget.data(), elementToRunningMap, font );
 
   rootElement = delcreator.createRunDelegate( screen->getRootElement() );
   for( ElementToRunningMap::const_iterator it = elementToRunningMap.begin();
@@ -118,14 +117,14 @@ ScreenRunDelegate::ScreenRunDelegate( ExperimentRunDelegate* p_exprd,
     ScreenElementRunDelegate* p = it.value();
     p->connectSlots( this );
 
-    //qDebug("elementToRunningMap: %p -> %p", it->first, it->second);
+    //qCDebug(APEX_RS, "elementToRunningMap: %p -> %p", it->first, it->second);
   }
 
   // create spinboxlist:
   for ( ElementToRunningMap::const_iterator it=elementToRunningMap.begin(); it!=elementToRunningMap.end(); ++it) {
     if ( it.key()->elementType()==ScreenElement::SpinBox) {
         spinBoxList.push_back(dynamic_cast<SpinBoxRunDelegate*>(  it.value()));
-        qDebug("Adding %s to spinBoxList", qPrintable (it.key()->getID()));
+        qCDebug(APEX_RS, "Adding %s to spinBoxList", qPrintable (it.key()->getID()));
     }
   }
 
@@ -207,12 +206,12 @@ void ScreenRunDelegate::addInterestingTexts( ScreenResult& result )
        it != elementToRunningMap.end(); ++it )
   {
     ScreenElementRunDelegate* el = it.value();
-//      qDebug(el->getID() + " hastext: " + QString::number( el->hasText()) + " hasinterestingtext " + QString::number( el->hasInterestingText()));
+//      qCDebug(APEX_RS, el->getID() + " hastext: " + QString::number( el->hasText()) + " hasinterestingtext " + QString::number( el->hasInterestingText()));
     if( el->hasText() && el->hasInterestingText() ) {
-      result.map()[ el->getID() ] = el->getText();
+      result[ el->getID() ] = el->getText();
      }
      /* else {
-                qDebug("not interesting");
+                qCDebug(APEX_RS, "not interesting");
      }*/
   }
 }
@@ -237,7 +236,7 @@ const Screen* ScreenRunDelegate::getScreen() const
 
 QWidget* ScreenRunDelegate::getWidget()
 {
-    return widget.get();
+    return widget.data();
 }
 
 void ScreenRunDelegate::setAnswer(const QString& answer)

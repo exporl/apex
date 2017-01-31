@@ -16,13 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __MEMORYSTREAM_H__
 #define __MEMORYSTREAM_H__
 
-#include "stream.h"
-#include "audioformatconvertor.h"
 #include "appcore/threads/criticalsection.h"
+
+#include "audioformatconvertor.h"
+#include "stream.h"
+
+#include <QtGlobal>
 
 namespace streamapp
 {
@@ -50,7 +53,7 @@ namespace streamapp
     { return mc_nBufferSize; }
 
       //!implement PositionableInputStream
-    unsigned long mf_lSamplesLeft() const; 
+    unsigned long mf_lSamplesLeft() const;
     unsigned long mf_lTotalSamples() const;
     unsigned long mf_lCurrentPosition() const;
     void mp_SeekPosition( const unsigned long ac_nPosition );
@@ -83,7 +86,7 @@ namespace streamapp
 
     static tType* mf_pGet()
     {
-      assert( ms_Ptr );
+      Q_ASSERT( ms_Ptr );
       return ms_Ptr;
     }
 

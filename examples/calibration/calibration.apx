@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+    @what: Simple calibration use
+    @description: The experiment shows how to calibrate using the calibration screen. You can calibrate the left and right channel seperately.
+    @how: Use the calibration element with a calibration profile and an id for each channel (left and right)
+  -->
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout height="2" width="3" id="main_layout">
+    <button x="1" y="1" id="button1">
+     <text>1</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="noiseL">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wivineruis.wav</uri>
+  </datablock>
+  <datablock id="noiseR">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wivineruis.wav</uri>
+  </datablock>
+  <datablock id="silence">
+   <device>wavdevice</device>
+   <uri>silence:500</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain id="wavgain">0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+ <filters>
+  <filter xsi:type="apex:amplifier" id="amp">
+   <device>wavdevice</device>
+   <channels>2</channels>
+   <gain channel="0" id="left">6.0</gain>
+   <gain channel="1" id="right">6.0</gain>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="calibrationstimulus">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <simultaneous>
+     <datablock id="noiseL"/>
+     <datablock id="noiseR"/>
+    </simultaneous>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>rawdata1</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>amp</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>noiseL</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>amp</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>noiseR</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>amp</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>amp</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>amp</id>
+    <channel>1</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+ </connections>
+ <calibration profile="someprofile2">
+  <stimuli>
+   <stimulus id="calibrationstimulus"/>
+   <stimulus id="stimulus1"/>
+  </stimuli>
+  <parameters>
+   <parameter id="left">
+    <targetamplitude>65</targetamplitude>
+    <calibrationamplitude>80</calibrationamplitude>
+    <mute>-150.0</mute>
+    <max>50</max>
+   </parameter>
+   <parameter id="right">
+    <targetamplitude>65</targetamplitude>
+    <calibrationamplitude>80</calibrationamplitude>
+    <mute>-150.0</mute>
+   </parameter>
+  </parameters>
+ </calibration>
+</apex:apex>

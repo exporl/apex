@@ -17,38 +17,33 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "devicesparser.h"
-#include "xml/apexxmltools.h"
-#include "xml/xmlkeys.h"
+#include "apexdata/device/devicedata.h"
+#include "apexdata/device/devicesdata.h"
+#include "apexdata/device/dummydevicedata.h"
+#include "apexdata/device/l34devicedata.h"
+#include "apexdata/device/plugincontrollerdata.h"
+#include "apexdata/device/wavdevicedata.h"
 
-//from libdata
-#include "device/devicedata.h"
-#include "device/devicesdata.h"
-#include "device/l34devicedata.h"
-#include "device/clariondevicedata.h"
-#include "device/wavdevicedata.h"
-#include "device/dummydevicedata.h"
-#include "device/mixer/mixerparameters.h"
-#include "device/plugincontrollerdata.h"
-#include "parameters/parametermanagerdata.h"
+#include "apexdata/mixerdevice/mixerparameters.h"
 
-using namespace apex::XMLKeys;
+#include "apexdata/parameters/parametermanagerdata.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
 
-using namespace XERCES_CPP_NAMESPACE;
-
-#include "device/wavdeviceparser.h"
-#include "device/clariondeviceparser.h"
 #include "device/l34deviceparser.h"
+#include "device/wavdeviceparser.h"
 
 #include "parser/plugindataparser.h"
 
+#include "devicesparser.h"
 
 #include <QObject>
+#include <QScopedPointer>
 
-#include <memory>
-
+using namespace apex::XMLKeys;
+using namespace XERCES_CPP_NAMESPACE;
 
 namespace apex {
 
@@ -76,29 +71,25 @@ tAllDevices DevicesParser::Parse( XERCES_CPP_NAMESPACE::DOMElement* p_base, data
 #ifndef WRITERTEST
         Q_ASSERT( currentNode->getNodeType() == DOMNode::ELEMENT_NODE );
 #else
-	if( currentNode->getNodeType() != DOMNode::ELEMENT_NODE ) {
-		qDebug("skipping non-text node");
-		continue;
-	}
+        if( currentNode->getNodeType() != DOMNode::ELEMENT_NODE ) {
+                qCDebug(APEX_RS, "skipping non-text node");
+                continue;
+        }
 #endif
         // Does not use dynamic_cast, no rtti for xercesc
-	DOMElement * const currentElement = static_cast<DOMElement*> (currentNode);
+        DOMElement * const currentElement = static_cast<DOMElement*> (currentNode);
 
         const QString tag = ApexXMLTools::XMLutils::GetTagName( currentNode );
 
         if ( tag == "device" ) {
-	    std::auto_ptr<data::DeviceData> tempData (ParseDevice (currentElement, pm));
+            QScopedPointer<data::DeviceData> tempData (ParseDevice (currentElement, pm));
 
             QString id=tempData->id();
 
             if ( tempData->isControlDevice() )
-                controlMap[id]=tempData.release();
+                controlMap[id]=tempData.take();
             else
-                devMap[id]=tempData.release();
-
-            //data::DeviceData* bla = tempData.release();
-
-            //devMap.insert( data::tDeviceDataPair(id, bla) );
+                devMap[id]=tempData.take();
         } else if ( tag == "master" ) {
             devMap.setMasterDevice(
                     ApexXMLTools::XMLutils::GetFirstChildText(
@@ -133,7 +124,7 @@ data::DeviceData* DevicesParser::ParseDevice( DOMElement* p_base, data::Paramete
     if ( id.isEmpty() )
         throw ApexStringException( tr( "No device id found" ) );
 
-    std::auto_ptr<data::DeviceData> result;
+    QScopedPointer<data::DeviceData> result;
 
     if ( sModule==sc_sWavDevice ) {
         WavDeviceParser parser;
@@ -155,13 +146,6 @@ data::DeviceData* DevicesParser::ParseDevice( DOMElement* p_base, data::Paramete
         data::L34DeviceData* d = new data::L34DeviceData();
         parser.Parse( p_base, d);
         result.reset( d );
-    } else if ( sModule==sc_sClarionDevice ) {
-        ClarionDeviceParser parser;
-        parser.SetParameterManagerData(pm);
-        data::ClarionDeviceData* d = new data::ClarionDeviceData();
-        parser.Parse( p_base, d);
-        result.reset( d );
-
     }
 #ifdef SETMIXER
         else if ( sModule==sc_sSoundcardMixer ) {
@@ -190,7 +174,7 @@ data::DeviceData* DevicesParser::ParseDevice( DOMElement* p_base, data::Paramete
 
         result->setId( id );
 
-        return result.release();
+        return result.take();
     }
 }
 

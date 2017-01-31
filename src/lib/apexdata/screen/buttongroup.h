@@ -17,14 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef BUTTONGROUP_H
-#define BUTTONGROUP_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_BUTTONGROUP_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_BUTTONGROUP_H_
+
+#include "../factoryelement.h"
+
+#include "apextools/global.h"
 
 #include <QList>
 #include <QString>
-#include "factoryelement.h"
-
-#include "global.h"
 
 namespace apex
 {
@@ -52,7 +53,7 @@ class APEXDATA_EXPORT ButtonGroup : /*public std::list<QString>,*/ public Factor
         {
             const_iterator(const QList<QString>::const_iterator& it);
             const_iterator() {}
-            
+
             const_iterator& operator=(const QList<QString>::const_iterator& it);
             const_iterator& operator++(); //prefix++
             const_iterator  operator++(int); //postfix++
@@ -81,13 +82,13 @@ class APEXDATA_EXPORT ButtonGroup : /*public std::list<QString>,*/ public Factor
          * @param ac_sID
          */
         bool IsElement(const QString& ac_sID) const;
-        
+
         bool operator==(const ButtonGroup& other) const;
         bool operator!=(const ButtonGroup& other) const;
     private:
 
         QList<QString> buttonIds;
-        
+
         const QString id;
 };
 

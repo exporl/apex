@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef R126DBASE_H
-#define R126DBASE_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_R126DATABASE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_MAP_R126DATABASE_H_
 
 #include "r126dbasesetting.h"
 #include <vector>
@@ -34,12 +34,12 @@ namespace r126{
     //!keeps it's own records
   class R126DataBase
   {
-  public: 
+  public:
     R126DataBase();
     ~R126DataBase();
 
       //!connection
-    void       mf_SetDataBaseSettings( const eR126VersionNumber ac_eVersion, 
+    void       mf_SetDataBaseSettings( const eR126VersionNumber ac_eVersion,
                                        const QString& ac_sServer );
     const R126DataBaseSettings* mf_pGetDataBaseSettings() const;
     const bool mf_bTestConnection() const;
@@ -50,10 +50,10 @@ namespace r126{
       //!only fills in: date, rates, maxima, strategy, mode,.. not the channels
       //!usefull for displaying data
     std::vector<R126NucleusMAPRecord*>& mf_FillNucleusMapsInfo( const QString& ac_sPatientGUID );
-      
+
       //!returns full database record which has to be deleted by client
     R126NucleusMAPRecord* mf_pGetNucleusMap( const QString& ac_sMapGUID );
-    
+
   private:
     static bool                         sm_bPatientsRecorded;
     std::vector<R126PatientRecord*>     m_aPatients;
@@ -63,4 +63,4 @@ namespace r126{
 
 }
 
-#endif //#ifndef R126DBASESETTING_H
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_R126DATABASE_H_

@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef __CONNECTIONRUNDELEGATECREATOR_H__
-#define __CONNECTIONRUNDELEGATECREATOR_H__
 
-#include "apextypedefs.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_CONNECTION_CONNECTIONRUNDELEGATECREATOR_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_CONNECTION_CONNECTIONRUNDELEGATECREATOR_H_
+
+#include "apextools/apextypedefs.h"
+
+#include "apextools/status/errorlogger.h"
+
 #include "connection/connection.h"
-#include <defines.h>
 
-//from libtools
-#include "status/errorlogger.h"
+#include "streamapp/defines.h"
 
 namespace apex
 {
@@ -40,6 +41,7 @@ namespace apex
         ************************************************************* */
     class ConnectionRunDelegateCreator : public ErrorLogger
     {
+        Q_DECLARE_TR_FUNCTIONS( ConnectionRunDelegateCreator );
     public:
         /**
           * Constructor.

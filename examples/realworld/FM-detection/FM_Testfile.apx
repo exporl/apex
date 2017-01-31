@@ -1,0 +1,559 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment file:///C:/maaike/Apex_110116/schemas/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <!--  @doc
+   @what: FM detection training
+   @description: 3AFC,2-down 1-up procedure, with feedback, childmode,  FM depth is adaptively changed depending on correct/wrong answers. Participants need to pick one out of three eggs for which a different stimulus was heard.
+   @how: adaptiveProcedure, different modulation depths are implemented in different wav-files, childmode
+  -->
+ <procedure xsi:type="apex:adaptiveProcedure">
+  <parameters>
+   <presentations>1</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <intervals count="3" select="1,2,3">
+    <interval element="button1" number="1"/>
+    <interval element="button2" number="2"/>
+    <interval element="button3" number="3"/>
+   </intervals>
+   <!--<pause_between_stimuli>350</pause_between_stimuli>-->
+   <nUp>1</nUp>
+   <nDown>2</nDown>
+   <adapt_parameter>freqlabel</adapt_parameter>
+   <start_value>6</start_value>
+   <stop_after_type>reversals</stop_after_type>
+   <stop_after>8</stop_after>
+   <larger_is_easier>false</larger_is_easier>
+   <repeat_first_until_correct>false</repeat_first_until_correct>
+   <stepsizes>
+    <change_after>reversals</change_after>
+    <stepsize begin="0" size="4"/>
+    <stepsize begin="2" size="2"/>
+    <stepsize begin="4" size="1"/>
+   </stepsizes>
+  </parameters>
+  <trials>
+   <trial id="trial_1">
+    <screen id="screen1"/>
+    <stimulus id="SINE_1000Hz_2HzFM_100depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_083depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_069depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_058depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_048depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_040depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_033depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_028depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_023depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_019depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_016depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_013depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_011depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_010depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_009depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_008depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_007depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_006depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_005depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_004depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_003depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_002depth"/>
+    <stimulus id="SINE_1000Hz_2HzFM_001depth"/>
+    <standard id="standard_1000Hz"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <uri_prefix>C:\Users\G\Desktop\Dyslexieonderzoek Cohorte B 2013\Movies\dragon\</uri_prefix>
+  <general>
+   <showpanel>true</showpanel>
+  </general>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="3600">true</feedback>
+   <feedback_on>clicked</feedback_on>
+   <showcurrent>true</showcurrent>
+  </reinforcement>
+  <childmode>
+   <panel>reinforcement.swf</panel>
+  </childmode>
+  <screen id="screen1">
+   <gridLayout height="3" x="1" y="1" width="3" id="answer_layout">
+    <flash x="1" y="2" id="button1">
+     <shortcut>LeftArrow</shortcut>
+     <uri>stillegg.swf</uri>
+     <feedback>
+      <highlight>shakeegg.swf</highlight>
+      <positive>goodegg.swf</positive>
+      <negative>goodegg.swf</negative>
+     </feedback>
+    </flash>
+    <flash x="3" y="2" id="button3">
+     <shortcut>RightArrow</shortcut>
+     <uri>stillegg.swf</uri>
+     <feedback>
+      <highlight>shakeegg.swf</highlight>
+      <positive>goodegg.swf</positive>
+      <negative>goodegg.swf</negative>
+     </feedback>
+    </flash>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+    <button id="button3"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>C:\Users\G\Desktop\Dyslexieonderzoek Cohorte B 2013\4 FM</uri_prefix>
+  <datablock id="datablock_1000Hz_calibratie">
+   <device>wavdevice</device>
+   <uri>FMREF_SINE_1000Hz_calibratie.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz">
+   <device>wavdevice</device>
+   <uri>FMREF_SINE_1000Hz.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_100depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_100depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_083depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_083depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_069depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_069depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_058depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_058depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_048depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_048depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_040depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_040depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_033depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_033depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_028depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_028depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_023depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_023depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_019depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_019depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_016depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_016depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_013depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_013depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_011depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_011depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_010depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_010depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_009depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_009depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_008depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_008depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_007depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_007depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_006depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_006depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_005depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_005depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_004depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_004depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_003depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_003depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_002depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_002depth.wav</uri>
+  </datablock>
+  <datablock id="datablock_1000Hz_2HzFM_001depth">
+   <device>wavdevice</device>
+   <uri>SINE_1000Hz_2HzFM_001depth.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain channel="0" id="cardgain0">0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>4096</buffersize>
+   <padzero>1</padzero>
+  </device>
+ </devices>
+ <filters>
+  <filter xsi:type="apex:amplifier" id="chan0">
+   <device>wavdevice</device>
+   <channels>1</channels>
+   <basegain>0</basegain>
+   <gain id="calibchan0">0</gain>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters>
+   <parameter id="freqlabel"/>
+  </fixed_parameters>
+  <stimulus id="SINE_1000Hz_2HzFM_100depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_100depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">1</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_083depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_083depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">2</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_069depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_069depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">3</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_058depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_058depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">4</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_048depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_048depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">5</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_040depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_040depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">6</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_033depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_033depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">7</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_028depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_028depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">8</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_023depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_023depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">9</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_019depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_019depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">10</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_016depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_016depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">11</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_013depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_013depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">12</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_011depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_011depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">13</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_010depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_010depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">14</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_009depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_009depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">15</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_008depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_008depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">16</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_007depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_007depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">17</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_006depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_006depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">18</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_005depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_005depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">19</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_004depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_004depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">20</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_003depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_003depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">21</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_002depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_002depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">22</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="SINE_1000Hz_2HzFM_001depth">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_2HzFM_001depth"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">23</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="standard_1000Hz">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">0</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="calibrationstimulus">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_1000Hz_calibratie"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="freqlabel">calibration</parameter>
+   </fixedParameters>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>_ALL_</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>chan0</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>chan0</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+ </connections>
+ <calibration profile="calib_FMdiscr_1000Hz">
+  <stimuli>
+   <stimulus id="calibrationstimulus"/>
+  </stimuli>
+  <parameters>
+   <parameter id="calibchan0">
+    <targetamplitude>70</targetamplitude>
+    <mute>-150</mute>
+   </parameter>
+  </parameters>
+ </calibration>
+ <results>
+  <page>apex:resultviewer.html</page>
+  <resultparameters>
+   <parameter name="reversals for mean">4</parameter>
+  </resultparameters>
+  <showduringexperiment>false</showduringexperiment>
+  <showafterexperiment>true</showafterexperiment>
+  <saveprocessedresults>true</saveprocessedresults>
+ </results>
+ <interactive>
+  <entry description="aanbiedingsniveau (dB SPL)" default="70" expression="/apex:apex/calibration[1]/parameters[1]/parameter[1]/targetamplitude[1]" type="int"/>
+ </interactive>
+ <general>
+  <exitafter>true</exitafter>
+  <waitforstart>true</waitforstart>
+  <allowskip>true</allowskip>
+ </general>
+</apex:apex>

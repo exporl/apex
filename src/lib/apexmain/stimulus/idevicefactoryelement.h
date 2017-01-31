@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef IEVICEFACTORYELEMENT
-#define IEVICEFACTORYELEMENT
 
-#include "factoryelement.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_IDEVICEFACTORYELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_IDEVICEFACTORYELEMENT_H_
+
+#include "apexdata/factoryelement.h"
 
 namespace apex{
 
@@ -33,8 +33,8 @@ namespace apex{
       virtual ~IDeviceFactoryElement()
       {}
     };
-  
+
 
 } //end ns apex
-#endif //#ifndef ABSTRACIDeviceFactory
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_IDEVICEFACTORYELEMENT_H_
 

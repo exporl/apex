@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __MYSINGLETON_H_
 #define __MYSINGLETON_H_
 
-#include "defines.h"
+#include "../defines.h"
+
 #include "threads/locks.h"
-#include <assert.h>
+
+#include <QtGlobal>
 
 namespace appcore
 {
@@ -37,7 +39,7 @@ namespace appcore
       *   it will be deleted automatically when the program exits.
       *   This singleton is threadsafe and protected against double deletion.
       *   In other words, it's safe to call delete sf_pInsance() if
-      *   the derived class' destructor would be public, although it is 
+      *   the derived class' destructor would be public, although it is
       *   preferred to use sf_DeleteInstance().
       *
       *   Usage:
@@ -83,7 +85,7 @@ namespace appcore
           }
           else
           {
-            assert( 0 && "two ore more threads tried to create the Singleton's insatnce at the same time!" );
+            Q_ASSERT( 0 && "two ore more threads tried to create the Singleton's insatnce at the same time!" );
           }
         }
       }
@@ -190,7 +192,7 @@ namespace appcore
     void SetDoomed( Singleton<tUnique>* a_pDoomed )
     {
       if( m_pDoomed )
-        assert( 0 && "this destroyer object already has a resource assigned to it" );
+        Q_ASSERT( 0 && "this destroyer object already has a resource assigned to it" );
       m_pDoomed = a_pDoomed;
     }
 

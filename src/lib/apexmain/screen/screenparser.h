@@ -17,25 +17,24 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SCREENPARSER_H
-#define SCREENPARSER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_SCREENPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_SCREENPARSER_H_
 
-#include "global.h"
+#include "apexdata/fileprefix.h"
 
-#include "apextypedefs.h"
-#include "apextools.h"
-#include "fileprefix.h"
-#include "fileprefixconvertor.h"
+#include "apexmain/fileprefixconvertor.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/apextools.h"
+#include "apextools/apextypedefs.h"
+#include "apextools/global.h"
 
-#include <QString>
-#include <QFont>
+#include "apextools/status/errorlogger.h"
 
-//from libtools
-#include "status/errorlogger.h"
+#include "apextools/xml/xercesinclude.h"
 
 #include <QCoreApplication>
+#include <QFont>
+#include <QString>
 
 class QWidget;
 class QObject;

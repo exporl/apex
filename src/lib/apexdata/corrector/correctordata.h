@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef CORRECTORDATA_H
-#define CORRECTORDATA_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_CORRECTOR_CORRECTORDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_CORRECTOR_CORRECTORDATA_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
 #include <QMap>
 
@@ -38,9 +38,7 @@ class APEXDATA_EXPORT CorrectorData
 
         enum Type
         {
-            EQUAL,
-            ALTERNATIVES,
-            CVC
+            EQUAL
         };
 
         enum Language
@@ -49,8 +47,6 @@ class APEXDATA_EXPORT CorrectorData
             ENGLISH
         };
 
-        //[job] should this be inside CorrectorData?
-        typedef QMap<int, QString> AnswerMap;
 
         CorrectorData();
         CorrectorData(const CorrectorData& other);
@@ -60,14 +56,10 @@ class APEXDATA_EXPORT CorrectorData
         Type type() const;
         bool answersDefined() const;
         Language language() const;
-        const AnswerMap& answers() const;
-        //AnswerMap& answers();
 
         //setters
         void setType(const Type type);
-        void setAnswersDefined(const bool answersDefined);
         void setLanguage(const Language language);
-        void addAnswer(int number, const QString& value);
 
         CorrectorData& operator=(const CorrectorData& other);
         bool operator==(const CorrectorData& other);

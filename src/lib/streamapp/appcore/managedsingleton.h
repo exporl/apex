@@ -16,13 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __MYMANAGEDSINGLETON_H_
 #define __MYMANAGEDSINGLETON_H_
 
 #include "singleton.h"
-#include <vector>
+
+#include <QtGlobal>
+
 #include <algorithm>
+#include <vector>
 
 //#define SINGLETONDEBUGGING
 #ifdef SINGLETONDEBUGGING
@@ -120,7 +123,7 @@ namespace appcore
         */
     void mp_Register( ManagedSingletonBase* const ac_pToReg )
     {
-      assert( ac_pToReg );
+      Q_ASSERT( ac_pToReg );
   #ifdef SINGLETONDEBUGGING
       DBG( "SingletonManager: registered " + ac_pToReg->mf_sName() )
   #endif
@@ -153,7 +156,7 @@ namespace appcore
     void mp_Unregister( const ManagedSingletonBase* ac_pToUnReg, const bool ac_bAlsoDelete = true )
     {
       static bool bInside = false;
-      assert( ac_pToUnReg );
+      Q_ASSERT( ac_pToUnReg );
       if( !bInside )
       {
         typedef std::vector<const ManagedSingletonBase*>::reverse_iterator  reverse_iterator;
@@ -167,7 +170,7 @@ namespace appcore
         }
         else
         {
-          assert( 0 && "cannot unregister item if not registered first!!" );
+          Q_ASSERT( 0 && "cannot unregister item if not registered first!!" );
         }
       }
     }
@@ -199,7 +202,7 @@ namespace appcore
         }
         catch(...)
         {
-          assert( 0 );
+          Q_ASSERT( 0 );
         }
       }
   #ifdef SINGLETONDEBUGGING
@@ -250,7 +253,7 @@ namespace appcore
           }
           else
           {
-            assert( 0 && "two ore more threads tried to create the ManagedSingleton's insatnce at the same time!" );
+            Q_ASSERT( 0 && "two ore more threads tried to create the ManagedSingleton's insatnce at the same time!" );
           }
         }
       }

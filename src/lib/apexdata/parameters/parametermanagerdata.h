@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef PARAMTERMANAGERDATAH
-#define PARAMTERMANAGERDATAH
+#ifndef _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_PARAMETERMANAGERDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_PARAMETERMANAGERDATA_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
 #include <QMap>
 

@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SCRIPTEXPANDERH
-#define SCRIPTEXPANDERH
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_PARSER_SCRIPTEXPANDER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_PARSER_SCRIPTEXPANDER_H_
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
 
 #include <QString>
 #include <QCoreApplication>

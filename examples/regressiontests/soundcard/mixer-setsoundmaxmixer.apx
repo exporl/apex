@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: Demonstrate the use of the card mixer with a SoundMax card
+  @description: The mixer sets all output gains on the software mixer to 0dB to avoid quatization noise and set all input gains to -infinite dB to avoid picking up unwanted signals. (Warning: Not all soundward are supported -> all soundcards that support the windows mixer and the RME mixer are supported)
+  @how: Devices: add setcardmixer function (e.g. <setcardmixer>true</setcardmixer>)
+ -->
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>correct</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>false</progressbar>
+   <feedback>false</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout id="answer_layout" height="2" width="2" x="1" y="2">
+    <button id="correct" x="1" y="1">
+     <text>OK</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="correct"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>file:../stimuli</uri_prefix>
+  <datablock id="wd1">
+   <device>soundcard</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <master>soundcard</master>
+  <device id="soundcard" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>SoundMax</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <setcardmixer>true</setcardmixer>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="wd1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>wd1</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+ </connections>
+</apex:apex>

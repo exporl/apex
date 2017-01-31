@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "statuswindow.h"
 #include "statusitem.h"
 #include "statusreporter.h"
@@ -164,7 +164,7 @@ QVariant StatusWindow::Model::data( const QModelIndex& index, int role ) const
     int row = index.row();
     if ( row < 0 )
         return QVariant();
-    
+
     if ( row >= rowCount() )
         return QVariant();
 
@@ -176,7 +176,7 @@ QVariant StatusWindow::Model::data( const QModelIndex& index, int role ) const
             default: return QVariant();
         }
     }
-    
+
     if ( role == Qt::TextColorRole ) {
         return errors[row].color;
     }
@@ -188,7 +188,7 @@ QVariant StatusWindow::Model::data( const QModelIndex& index, int role ) const
     if (role == Qt::TextAlignmentRole) {
         return Qt::AlignTop;
     }
-    
+
     return QVariant();
 };
 
@@ -289,14 +289,14 @@ void StatusWindow::closeEvent(QCloseEvent* e)
 
 void StatusWindow::copyAllToClipboard() {
     QString buffer;
-    
+
     for (int i=0; i<m_Model->getNumErrors(); ++i) {
         buffer += m_Model->getError(i).toString() + "\n";
     }
 
-    //qDebug("Copy: ");
-    //qDebug(qPrintable(buffer));
-    
+    //qCDebug(APEX_RS, "Copy: ");
+    //qCDebug(APEX_RS, qPrintable(buffer));
+
     QApplication::clipboard()->setText(buffer);
 }
 

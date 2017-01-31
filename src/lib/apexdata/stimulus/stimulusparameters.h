@@ -1,8 +1,8 @@
-#ifndef STIMULUSPARAMETERS_H
-#define STIMULUSPARAMETERS_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_STIMULUS_STIMULUSPARAMETERS_H_
+#define _EXPORL_SRC_LIB_APEXDATA_STIMULUS_STIMULUSPARAMETERS_H_
 
 
-#include "global.h"
+#include "apextools/global.h"
 #include <QMap>
 #include <QString>
 #include <QVariant>

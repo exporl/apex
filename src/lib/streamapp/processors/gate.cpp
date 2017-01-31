@@ -62,14 +62,14 @@ double Gate::mf_dGetCurGain()
 
 void Gate::mp_SetGateOn( const double ac_dSample )
 {
-    qDebug("Gate: starting gate on at %g samples", ac_dSample);
+    qCDebug(APEX_SA, "Gate: starting gate on at %g samples", ac_dSample);
     mv_dGateOn = ac_dSample;
     mv_dGateOff = ac_dSample + mv_dGateLength;
 }
 
 void Gate::mp_SetGateOff( const double ac_dSample )
 {
-    qDebug("Gate: starting gate off at %g samples", ac_dSample);
+    qCDebug(APEX_SA, "Gate: starting gate off at %g samples", ac_dSample);
     mv_dGateOff = ac_dSample;
     mv_dGateLength = ac_dSample - mv_dGateOn;
 }

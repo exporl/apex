@@ -17,10 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __PLUGINRUNNER_H__
-#define __PLUGINRUNNER_H__
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RUNNER_PLUGINRUNNER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RUNNER_PLUGINRUNNER_H_
 
 #include "experimentrunner.h"
+
+#include <QMap>
 
 class PluginRunnerInterface;
 class PluginRunnerCreator;
@@ -41,10 +43,8 @@ public:
         * If name is not specified, a dialog will be shown with all available
         * plugins. Otherwise only the plugin matching name will be loaded
         */
-    void Select(const QString& name);
-    void SelectFromDir(const QString& path);
-    void Run();
-    void Finished();
+    void select(const QString& name);
+    void selectFromDir(const QString& path);
 
 private:
     QString path;

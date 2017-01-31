@@ -16,12 +16,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#ifndef _APEX_SRC_CALIBRATION_CALIBRATIONPARSER_H_
-#define _APEX_SRC_CALIBRATION_CALIBRATIONPARSER_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_CALIBRATION_CALIBRATIONPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_CALIBRATION_CALIBRATIONPARSER_H_
+
+#include "apextools/xml/xercesinclude.h"
 
 #include "parser/apexparser.h"
 
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
 

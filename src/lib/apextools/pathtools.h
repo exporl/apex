@@ -1,5 +1,5 @@
-#ifndef PATHTOOLS_H
-#define PATHTOOLS_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_PATHTOOLS_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_PATHTOOLS_H_
 
 #include "global.h"
 
@@ -43,7 +43,7 @@ class APEXTOOLS_EXPORT PathTools
         static const QString cConfigDir;
         static const QString cSchemaDir;
         static const QString cApexDir;
-        
+
 };
 
 

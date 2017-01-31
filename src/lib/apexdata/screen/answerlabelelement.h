@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef ANSWERLABELELEMENT_H
-#define ANSWERLABELELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_ANSWERLABELELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_ANSWERLABELELEMENT_H_
 
 #include "screenelement.h"
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {

@@ -1,0 +1,18 @@
+                    <parameter>sentence</parameter>
+                </parameterlist>
+
+				<gridLayout height="1" width="2" id="answer_layout" x="1" y="2">
+				    <button x="1" y="1" id="correct">
+					<text>Correct</text>
+				    </button>
+				    <button x="2" y="1" id="wrong">
+					<text>Wrong</text>
+				    </button>
+				</gridLayout>
+			</gridLayout>
+			<buttongroup id="buttongroup">
+			    <button id="correct"/>
+			    <button id="wrong"/>
+			</buttongroup>
+			<default_answer_element>buttongroup</default_answer_element>
+		</screen>

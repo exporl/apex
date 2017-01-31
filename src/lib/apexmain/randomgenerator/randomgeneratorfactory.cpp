@@ -16,45 +16,42 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "randomgeneratorfactory.h"
+
+#include "apexdata/randomgenerator/randomgeneratorparameters.h"
+
+#include "apextools/global.h"
+
+#include "gaussianrandomgenerator.h"
 #include "randomgenerator.h"
+#include "randomgeneratorfactory.h"
 #include "randomgenerators.h"
 #include "uniformrandomgenerator.h"
-#include "gaussianrandomgenerator.h"
-
-//from libdata
-#include "randomgenerator/randomgeneratorparameters.h"
 
 namespace apex {
 
 RandomGenerators* RandomGeneratorFactory::GetRandomGenerators(ExperimentRunDelegate& p_rd, QMap<QString,data::RandomGeneratorParameters*> p_param) {
-        RandomGenerators* rgs = new RandomGenerators(p_rd);
+    RandomGenerators* rgs = new RandomGenerators(p_rd);
 
-        for( QMap<QString,data::RandomGeneratorParameters*>::const_iterator it=p_param.begin(); it!= p_param.end(); ++it) {
-
-                RandomGenerator* rg;
-
-                qDebug("Creating random generator with id=%s", qPrintable (it.key()));
+    for (QMap<QString,data::RandomGeneratorParameters*>::const_iterator it=p_param.begin();
+            it!= p_param.end(); ++it) {
+        RandomGenerator* rg = NULL;
+        qCDebug(APEX_RS, "Creating random generator with id=%s", qPrintable (it.key()));
 
         switch (it.value()->m_nType) {
-            case data::RandomGeneratorParameters::TYPE_UNIFORM:
-                rg = new UniformRandomGenerator(it.value());
-                        break;
-            case data::RandomGeneratorParameters::TYPE_GAUSSIAN:
-                rg = new GaussianRandomGenerator(it.value());
-                        break;
-                default:
-                        Q_ASSERT(0 && "Invalid random generator type");
-
+        case data::RandomGeneratorParameters::TYPE_UNIFORM:
+            rg = new UniformRandomGenerator(it.value());
+            break;
+        case data::RandomGeneratorParameters::TYPE_GAUSSIAN:
+            rg = new GaussianRandomGenerator(it.value());
+            break;
+        default:
+            qCCritical(APEX_RS, "Invalid random generator type");
+            continue;
         }
 
-                rgs->AddGenerator(it.key(), rg);
-
-        }
-
-        return rgs;
+        rgs->AddGenerator(it.key(), rg);
+    }
+    return rgs;
 }
-
 
 }

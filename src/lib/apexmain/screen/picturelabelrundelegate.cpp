@@ -16,21 +16,19 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "apexdata/screen/picturelabelelement.h"
+
+#include "apextools/apextools.h"
+
 #include "gui/guidefines.h"
 
-#include "screen/picturelabelelement.h"
 #include "fileprefixconvertor.h"
 #include "picturelabelrundelegate.h"
-
-#include <assert.h>
 
 #include <QPixmap>
 
 #include <iostream>
-
-//from libtools
-#include "apextools.h"
 
 namespace apex
 {
@@ -47,17 +45,15 @@ PictureLabelRunDelegate::PictureLabelRunDelegate(
         pixmapDisabled( 0 )
 {
     setAlignment (Qt::AlignCenter);
-//  guicore::widgetattributes::gf_ApplyDefaultAlignment( this );
-//  guicore::widgetattributes::gf_SetBackGroundColor( this, gui::sc_DefaultBGColor );
 
   pixmap = new QPixmap(ApexTools::addPrefix(element->getPicture(),
                        FilePrefixConvertor::convert(element->prefix())));
   if ( pixmap->isNull() )
-      assert( element->getPicture().isEmpty() );
+      Q_ASSERT( element->getPicture().isEmpty() );
   else
       QLabel::setPixmap( *pixmap );
 
-  
+
   if (!element->getPictureDisabled().isEmpty()) {
       pixmapDisabled =
               new QPixmap(ApexTools::addPrefix(element->getPictureDisabled(),

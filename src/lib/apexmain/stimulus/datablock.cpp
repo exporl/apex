@@ -20,7 +20,7 @@
 #include "datablock.h"
 #include "md5/md5.h"
 
-#include <qstring.h>
+#include <QString>
 #include <QFileInfo>
 
 namespace apex
@@ -37,7 +37,7 @@ DataBlock::DataBlock(const apex::data::DatablockData& data, const QUrl& filename
 
 const QString DataBlock::GetMD5Sum() const
 {
-    std::ifstream file(GetUrl().path().toLatin1());
+    std::ifstream file(QFile::encodeName(GetUrl().path()));
     if (!file)
         throw ApexStringException("Can't open file for MD5 sum");
     MD5 context(file);
@@ -48,18 +48,9 @@ const QString DataBlock::GetMD5Sum() const
     return ret;
 }
 
-const QDateTime DataBlock::GetBirth() const
-{
-    QFileInfo info (GetUrl().path().toLatin1());
-    if (!info.exists())
-        throw ApexStringException("Cannot check timestamp of file");
-    return info.lastModified();
-}
-
-
 DataBlock* DataBlock::GetCopy(QString id)
 {
-    //qDebug("Copying datablock");
+    //qCDebug(APEX_RS, "Copying datablock");
     return new DataBlock(*this, id);
 }
 

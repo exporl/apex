@@ -16,15 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "gui/arclayout.h"
-//#include "services/errorhandler.h"
 
-#include "screen/screenelement.h"
+#include "apexdata/screen/screenelement.h"
+
+#include "apextools/gui/arclayout.h"
 
 #include "screenelementrundelegate.h"
-
-#include <assert.h>
 
 #include <QGridLayout>
 #include <QWidget>
@@ -83,7 +80,7 @@ const QPointF ScreenElementRunDelegate::getClickPosition ( ) const
     return lastClickPosition;
 }
 
-ScreenElementRunDelegate::FeedbackMode ScreenElementRunDelegate::getFeedbackMode() const
+ScreenElementRunDelegate::FeedbackMode ScreenElementRunDelegate::getFeedBackMode() const
 {
     return feedBackMode;
 }
@@ -96,7 +93,7 @@ void ScreenElementRunDelegate::clearText()
 
 ScreenElementRunDelegate::~ScreenElementRunDelegate()
 {
-    //qDebug("~ %s", qPrintable(element->getID()));
+    //qCDebug(APEX_RS, "~ %s", qPrintable(element->getID()));
 }
 
 void ScreenElementRunDelegate::feedBack(const FeedbackMode& mode)
@@ -120,7 +117,7 @@ void ScreenElementRunDelegate::addToGridLayout(QGridLayout* gl)
     QLayout* layout = getLayout();
     if (layout)
     {
-//        qDebug("Adding layout to grid layout at %d,%d", getScreenElement()->getY(),
+//        qCDebug(APEX_RS, "Adding layout to grid layout at %d,%d", getScreenElement()->getY(),
 //               getScreenElement()->getX());
 
         gl->addLayout(layout, getScreenElement()->getY(),
@@ -132,7 +129,7 @@ void ScreenElementRunDelegate::addToGridLayout(QGridLayout* gl)
     {
         // a non-layout element..
 
-//        qDebug("Adding element %s to grid layout at %d,%d", qPrintable(element->getID()), getScreenElement()->getY(),
+//        qCDebug(APEX_RS, "Adding element %s to grid layout at %d,%d", qPrintable(element->getID()), getScreenElement()->getY(),
 //               getScreenElement()->getX());
 
         gl->addWidget(getWidget(), getScreenElement()->getY(),
@@ -170,7 +167,7 @@ void ScreenElementRunDelegate::addToArcLayout(ArcLayout* al)
 
 
 void ScreenElementRunDelegate::setBgColor(QWidget* target, const QString& color) {
-//    qDebug("ScreenElementRunDelegate::setBgColor: %s", qPrintable(color));
+//    qCDebug(APEX_RS, "ScreenElementRunDelegate::setBgColor: %s", qPrintable(color));
     if (color.isEmpty())
         return;
     else {
@@ -182,7 +179,7 @@ void ScreenElementRunDelegate::setBgColor(QWidget* target, const QString& color)
                                .arg(getID()).arg(color));
         }*/
     }
-        
+
 
     QPalette pal(target->palette());
     pal.setColor( target->backgroundRole(), color );
@@ -190,7 +187,7 @@ void ScreenElementRunDelegate::setBgColor(QWidget* target, const QString& color)
 }
 
 void ScreenElementRunDelegate::setFgColor(QWidget* target, const QString& color) {
-    //qDebug("ScreenElementRunDelegate::setFgColor: %s", qPrintable(color));
+    //qCDebug(APEX_RS, "ScreenElementRunDelegate::setFgColor: %s", qPrintable(color));
     if (color.isEmpty())
         return;
 

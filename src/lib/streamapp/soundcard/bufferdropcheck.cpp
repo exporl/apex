@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "../appcore/threads/locks.h"
+
 #include "bufferdropcheck.h"
-#include "appcore/threads/locks.h"
+
 #include <iostream>
 
 #ifdef S_WIN32
-  #include "win32_timers.h"
+#include "../_archs/win32/win32_timers.h"
 #elif defined S_POSIX
-  //FIXME add v3 timers
-  #include <QTime>
+//FIXME add v3 timers
+#include <QTime>
 #else
   #ERROR !no platform defined!
 #endif

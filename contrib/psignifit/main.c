@@ -63,7 +63,7 @@ MATLAB_GATEWAY(mexFunction)
 	TabulaRasa();
 	m_init();
 
-	if(nargin < 1 || nargin > 2) JError("Number of input arguments should be 1 or 2");  
+	if(nargin < 1 || nargin > 2) JError("Number of input arguments should be 1 or 2");
 	if(nargout > 5) nargout = 5;	
 
 	mexInitOutputList(nargout, &argsOut, _argout);
@@ -72,7 +72,7 @@ MATLAB_GATEWAY(mexFunction)
 		doSelfTest = (strcmp(prefsBuffer, "-t") == 0);
 		Destroy(prefsBuffer);
 		if(doSelfTest) {SelfTest(); return;}
-	} 
+	}
 		
 	if(LegalArg1(argin(1))) dataMatrix = argin(1);
 	if(LegalArg2(argin(1))) prefsMatrix = argin(1);

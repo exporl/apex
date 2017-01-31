@@ -18,31 +18,21 @@
  *****************************************************************************/
 
 #include "services/application.h"
-#include <QApplication>
-//#include "gui/guidefines.h"
 
-#ifdef APEXDEBUG
-#include "debugapplication.h"
-#endif
+#include <QApplication>
 
 using namespace apex;
 
 Application::Application()
    {
     if (!qApp) {
-         application.reset(new
-#ifdef APEXDEBUG
-         DebugApplication
-#else
-         QApplication
-#endif
-            (ServiceManager::Get().GetCommandLineCount(),
-             ServiceManager::Get().GetCommandLineValues()));
-
+        application.reset(new QApplication
+                (ServiceManager::Get().GetCommandLineCount(),
+                 ServiceManager::Get().GetCommandLineValues()));
     }
-    qApp->setApplicationName ("APEX");
-    qApp->setOrganizationName ("ExpORL");
-    qApp->setOrganizationDomain ("exporl.med.kuleuven.be");
+    qApp->setApplicationName (apex::applicationName);
+    qApp->setOrganizationName (apex::organizationName);
+    qApp->setOrganizationDomain (apex::organizationDomain);
 }
 
 QApplication* Application::GetApplication()

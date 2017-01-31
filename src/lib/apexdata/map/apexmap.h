@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXMAP_H
-#define APEXMAP_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_MAP_APEXMAP_H_
+#define _EXPORL_SRC_LIB_APEXDATA_MAP_APEXMAP_H_
 
 
 #include "channelmap.h"
-#include "global.h"
+#include "apextools/global.h"
 
 #include <QCoreApplication> //tr
 #include <QMap>

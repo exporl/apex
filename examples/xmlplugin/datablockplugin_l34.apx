@@ -1,159 +1,139 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.3/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.3/experiment.xsd"
- xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment"
- version="1">
-  
-  <!-- 
-Demonstrate generating XML code for L34 directly from plugin datablocks
-  -->
-  
-  <procedure xsi:type="apex:constantProcedureType">
-    
-    <parameters>
-      <presentations>1</presentations>
-      <skip>0</skip>
-      <order>sequential</order>
-    </parameters>
-    
-    <trials>
-      <trial id="trial1">
-        <answer>button1</answer>
-        <screen id="screen"/>
-        <stimulus id="stimulus1"/>
-      </trial>
-      
-      <plugintrials>
-        <script source="file">datablockgenerator_l34</script>
-        <parameter name="CL_from">100</parameter>
-        <parameter name="CL_to">130</parameter>
-        <parameter name="CL_step">10</parameter>
-      </plugintrials>
-      
-    </trials>
-  </procedure>
-  
-  <corrector xsi:type="apex:isequal"/>
-    <!--type>isequal</type-->
-  
-  
-  <screens>
-    <reinforcement>
-      <progressbar>true</progressbar>
-      <feedback length="300">true</feedback>
-      <showcurrent>false</showcurrent>
-    </reinforcement>
-    
-<screen id="screen">
-  <gridLayout width="1" height="1">
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: Demonstrate generating XML code for L34 directly from plugindatablocks and pluginstimuli
+  @description: The datablocks are automatically generated in this experiment using javascript
+  @how: using plugindatablocks, pluginstimuli, setting the pluginparameters and referring to the wanted javascript in <datablocks> and <stimuli> (here datablockgenerator_l34.js)
+ -->
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>1</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+   <plugintrials>
+    <script source="file">datablockgenerator_l34</script>
+    <parameter name="CL_from">100</parameter>
+    <parameter name="CL_to">130</parameter>
+    <parameter name="CL_step">10</parameter>
+   </plugintrials>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">true</feedback>
+   <showcurrent>false</showcurrent>
+  </reinforcement>
+  <screen id="screen">
+   <gridLayout height="1" width="1">
     <button id="button">
-      <text>button</text>
+     <text>button</text>
     </button>
-    
-  </gridLayout>
-  <buttongroup id="buttongroup">
+   </gridLayout>
+   <buttongroup id="buttongroup">
     <button id="button"/>
-  </buttongroup>
-  <default_answer_element>buttongroup</default_answer_element>
-</screen>
-  </screens> 
-  
-  
-  <datablocks>
-    <uri_prefix>../stimuli</uri_prefix>
-    <datablock id="datablock1">
-      <device>l34device</device>
-      <data>
-        <nic:sequence xmlns:nic='http://www.cochlear.com/nic' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.cochlear.com/nic nic-stimuli.xsd' >
-          <stimulus>
-            <parameters>
-                <ae>12</ae><re>-1</re><cl>129</cl><t>10000.0</t><pw>25.0</pw><pg>8.0</pg>
-            </parameters>
-          </stimulus>
-          <stimulus>
-            <parameters>
-                <ae>12</ae><re>-1</re><cl>140</cl><t>10000.0</t><pw>25.0</pw><pg>8.0</pg>
-             </parameters>
-          </stimulus>
-          </nic:sequence>
-      </data>
-    </datablock>
-    
-    <plugindatablocks>
-      <script source="file">datablockgenerator_l34</script>
-      <parameter name="CL_from">100</parameter>
-      <parameter name="CL_to">130</parameter>
-      <parameter name="CL_step">10</parameter>
-      <parameter name="electrode">5</parameter>
-    </plugindatablocks>
-    
-        
-  </datablocks>
-  
-  <devices>
-    
-    <device id="l34device"  xsi:type="apex:L34DeviceType">
-      <device_id>0</device_id>
-      <implant>cic4</implant>
-      <trigger>none</trigger>
-      
-      <defaultmap>
-        <inline>
-          <number_electrodes>3</number_electrodes>
-          <mode>MP1+2</mode>
-          <pulsewidth>25</pulsewidth>
-          <pulsegap>8</pulsegap>
-          <period>138</period>
-          <channel number="1" electrode="1" threshold="158" comfort="194"/>
-          <channel number="2" electrode="2" threshold="157" comfort="195"/>
-          <channel number="3" electrode="3" threshold="156" comfort="195"/>
-          <channel number="4" electrode="4" threshold="155" comfort="196"/>
-          <channel number="5" electrode="5" threshold="155" comfort="196"/>
-          <channel number="6" electrode="6" threshold="154" comfort="197"/>
-          <channel number="7" electrode="7" threshold="154" comfort="197"/>
-          <channel number="8" electrode="8" threshold="158" comfort="196"/>
-          <channel number="9" electrode="9" threshold="163" comfort="196"/>
-          <channel number="10" electrode="10" threshold="164" comfort="196"/>
-          <channel number="11" electrode="11" threshold="165" comfort="197"/>
-          <channel number="12" electrode="12" threshold="166" comfort="197"/>
-          <channel number="13" electrode="13" threshold="168" comfort="197"/>
-          <channel number="14" electrode="14" threshold="170" comfort="197"/>
-          <channel number="15" electrode="15" threshold="172" comfort="196"/>
-          <channel number="16" electrode="16" threshold="174" comfort="194"/>
-          <channel number="17" electrode="17" threshold="174" comfort="193"/>
-          <channel number="18" electrode="18" threshold="174" comfort="192"/>
-          <channel number="19" electrode="19" threshold="170" comfort="192"/>
-          <channel number="20" electrode="20" threshold="165" comfort="191"/>
-          <channel number="21" electrode="21" threshold="1" comfort="1"/>
-          <channel number="22" electrode="22" threshold="2" comfort="2"/>
-        </inline>
-      </defaultmap>
-    </device>
-  </devices>
-  
-  <filters/>
-  
-  <stimuli>
-    <fixed_parameters/>
-      
-    <stimulus id="stimulus1">
-      <datablocks>
-        <datablock id="datablock1"/>
-      </datablocks>
-      <variableParameters/>
-    </stimulus>
-    
-    <pluginstimuli>
-      <script source="file">datablockgenerator_l34</script>
-      <parameter name="CL_from">100</parameter>
-      <parameter name="CL_to">130</parameter>
-      <parameter name="CL_step">10</parameter>
-    </pluginstimuli>
-    
-    
-  </stimuli>
-  
-  <connections/>  
- 
-  
+   </buttongroup>
+   <default_answer_element>buttongroup</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="datablock1">
+   <device>l34device</device>
+   <data>
+    <nic:sequence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd" xmlns:nic="http://www.cochlear.com/nic">
+     <stimulus>
+      <parameters>
+       <ae>12</ae>
+       <re>-1</re>
+       <cl>129</cl>
+       <t>10000.0</t>
+       <pw>25.0</pw>
+       <pg>8.0</pg>
+      </parameters>
+     </stimulus>
+     <stimulus>
+      <parameters>
+       <ae>12</ae>
+       <re>-1</re>
+       <cl>140</cl>
+       <t>10000.0</t>
+       <pw>25.0</pw>
+       <pg>8.0</pg>
+      </parameters>
+     </stimulus>
+    </nic:sequence>
+   </data>
+  </datablock>
+  <plugindatablocks>
+   <script source="file">datablockgenerator_l34</script>
+   <parameter name="CL_from">100</parameter>
+   <parameter name="CL_to">130</parameter>
+   <parameter name="CL_step">10</parameter>
+   <parameter name="electrode">5</parameter>
+  </plugindatablocks>
+ </datablocks>
+ <devices>
+  <device id="l34device" xsi:type="apex:L34DeviceType">
+   <device_id>0</device_id>
+   <implant>cic4</implant>
+   <trigger>none</trigger>
+   <defaultmap>
+    <inline>
+     <number_electrodes>3</number_electrodes>
+     <mode>MP1+2</mode>
+     <pulsewidth>25</pulsewidth>
+     <pulsegap>8</pulsegap>
+     <period>138</period>
+     <channel comfort="194" electrode="1" number="1" threshold="158"/>
+     <channel comfort="195" electrode="2" number="2" threshold="157"/>
+     <channel comfort="195" electrode="3" number="3" threshold="156"/>
+     <channel comfort="196" electrode="4" number="4" threshold="155"/>
+     <channel comfort="196" electrode="5" number="5" threshold="155"/>
+     <channel comfort="197" electrode="6" number="6" threshold="154"/>
+     <channel comfort="197" electrode="7" number="7" threshold="154"/>
+     <channel comfort="196" electrode="8" number="8" threshold="158"/>
+     <channel comfort="196" electrode="9" number="9" threshold="163"/>
+     <channel comfort="196" electrode="10" number="10" threshold="164"/>
+     <channel comfort="197" electrode="11" number="11" threshold="165"/>
+     <channel comfort="197" electrode="12" number="12" threshold="166"/>
+     <channel comfort="197" electrode="13" number="13" threshold="168"/>
+     <channel comfort="197" electrode="14" number="14" threshold="170"/>
+     <channel comfort="196" electrode="15" number="15" threshold="172"/>
+     <channel comfort="194" electrode="16" number="16" threshold="174"/>
+     <channel comfort="193" electrode="17" number="17" threshold="174"/>
+     <channel comfort="192" electrode="18" number="18" threshold="174"/>
+     <channel comfort="192" electrode="19" number="19" threshold="170"/>
+     <channel comfort="191" electrode="20" number="20" threshold="165"/>
+     <channel comfort="1" electrode="21" number="21" threshold="1"/>
+     <channel comfort="2" electrode="22" number="22" threshold="2"/>
+    </inline>
+   </defaultmap>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <datablocks>
+    <datablock id="datablock1"/>
+   </datablocks>
+   <variableParameters/>
+  </stimulus>
+  <pluginstimuli>
+   <script source="file">datablockgenerator_l34</script>
+   <parameter name="CL_from">100</parameter>
+   <parameter name="CL_to">130</parameter>
+   <parameter name="CL_step">10</parameter>
+  </pluginstimuli>
+ </stimuli>
+ <connections/>
 </apex:apex>

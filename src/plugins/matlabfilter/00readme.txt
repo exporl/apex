@@ -10,9 +10,8 @@ Implement 2 m-files:
     - a prepare function (setting the path, etc)
     - a process function, accepting and returning a data buffer
 
-    
+
 Specify their name as parameter
     - preparefunction
     - processfunction
-    
-    
+

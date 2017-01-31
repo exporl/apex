@@ -1,9 +1,12 @@
-#include "outputrecorder.h"
+#include "apexdata/connection/connectiondata.h"
 
-#include <experimentdata.h>
-#include <filter/pluginfilterdata.h>
-#include <device/devicesdata.h>
-#include <connection/connectiondata.h>
+#include "apexdata/device/devicesdata.h"
+
+#include "apexdata/experimentdata.h"
+
+#include "apexdata/filter/pluginfilterdata.h"
+
+#include "outputrecorder.h"
 
 #include <QDebug>
 #include <QFileInfo>
@@ -12,7 +15,7 @@ using namespace apex;
 
 bool OutputRecorder::setupRecording(data::ExperimentData* data)
 {
-    qDebug("Enabling output recording");
+    qCDebug(APEX_RS, "Enabling output recording");
     //get the output device (there should be exactly one)
     const data::DevicesData* devices = data->devicesData();
 

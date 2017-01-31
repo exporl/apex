@@ -1,9 +1,3 @@
-BASEDIR = ../../..
-CLEBS += filterplugin buildplugin apextools
+CLEBS *= apextools asciicast buildplugin
 
-include ($$BASEDIR/clebs.pri)
-
-TARGET = scramblespectrumfilter
-
-SOURCES +=                                              \
-        scramblespectrumfilter.cpp					\
+!isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)

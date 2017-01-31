@@ -193,7 +193,7 @@ void InitParam(ModelPtr model, short paramNumber, char * paramName);
 void InitPrefs(BatchPtr prefs, ModelPtr * handleForModel,
 							   DataSetPtr * handleForData,
 							   GeneratingInfoPtr * handleForGeneratingInfo,
-							   OutputPtr * handleForOutput, 
+							   OutputPtr * handleForOutput,
 							   matrix externalData);
 void Limits(MatrixBundle *bndl, double *conf, unsigned short nConf);
 BatchPtr LoadPrefs(char *fileName, char *localString, size_t localLength, boolean disposeable);

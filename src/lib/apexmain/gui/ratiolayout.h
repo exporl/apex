@@ -60,7 +60,7 @@ public Q_SLOTS:
     double ratio() const;
 
 private:
-    std::auto_ptr<RatioLayoutPrivate> d;
+    QScopedPointer<RatioLayoutPrivate> d;
 };
 
 

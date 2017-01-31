@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef PARAMETERLISTRUNDELEGATE_H
-#define PARAMETERLISTRUNDELEGATE_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_PARAMETERLISTRUNDELEGATE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_PARAMETERLISTRUNDELEGATE_H_
 
 #include "parameterscontainerrundelegate.h"
 
@@ -60,9 +60,11 @@ namespace apex
       const ScreenElement* getScreenElement() const;
 
       QWidget* getWidget();
-      void connectSlots( gui::ScreenRunDelegate* d );
+      //void connectSlots( gui::ScreenRunDelegate* d );
     public slots:
-      void newStimulus( stimulus::Stimulus* stimulus );
+      //void newStimulus( stimulus::Stimulus* stimulus );
+      void updateParameter(const QString& id, const QVariant& value);
+
     private:
       class Model;
       const ParameterListElement* element;

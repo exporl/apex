@@ -17,11 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _APEX_SRC_SERVICES_APPLICATION_H_
-#define _APEX_SRC_SERVICES_APPLICATION_H_
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_SERVICES_APPLICATION_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_SERVICES_APPLICATION_H_
 
-#include "services/servicemanager.h"
-#include "global.h"
+#include "../global.h"
+
+#include "servicemanager.h"
 
 #include <memory>
 
@@ -43,7 +44,7 @@ public:
     QApplication *GetApplication();
 
 private:
-    std::auto_ptr<QApplication> application;
+    QScopedPointer<QApplication> application;
 };
 
 } // namespace apex

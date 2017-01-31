@@ -16,16 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "parameterlistelement.h"
 
+#include "apextools/apextools.h"
+
+#include "parameterlistelement.h"
 #include "screenelementvisitor.h"
 
-#include <assert.h>
 #include <QRegExp>
 #include <QStringList>
-
-#include "apextools.h"
 
 namespace apex
 {
@@ -46,9 +44,9 @@ bool ParameterListElement::addParameter(
     const QString& id, const QString& name,
     const QString& expression )
 {
-    assert( !id.isEmpty() );
+    Q_ASSERT( !id.isEmpty() );
 #ifdef PRINTPARAMETERLIST
-    qDebug("ParameterlistElement::AddParameter id=" + id);
+    qCDebug(APEX_RS, "ParameterlistElement::AddParameter id=" + id);
 #endif
     parameterList.push_back( ParameterData( id, name, expression ) );
     return CheckExpression( expression );
@@ -126,10 +124,10 @@ bool apex::data::ParameterListElement::
 {
     if (!ApexTools::haveSameContents(parameterList, other.parameterList))
     {
-        qDebug("parameterlists are not equal");
+        qCDebug(APEX_RS, "parameterlists are not equal");
         return false;
     }
-    
+
     return  ScreenElement::operator==(other);
 }
 

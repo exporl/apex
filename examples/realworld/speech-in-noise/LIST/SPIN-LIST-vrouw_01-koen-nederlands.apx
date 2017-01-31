@@ -1,0 +1,542 @@
+
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!--  @doc
+   @what: LIST 01 sentences
+   @description: Noise (male competitive talker) fixed to 55 dB, speech (female) is adapted to 2 dB SNR step size, first sentence is repeated until recognized, final SRT is determined by last 6 trials
+   @how: adaptiveProcedure, stimuli can be found on the J-drive of ExpORL
+  -->
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <uniquestandard>0</uniquestandard>
+      <corrector xsi:type="apex:isequal"/>
+      <time_before_first_trial>0</time_before_first_trial>
+      <input_during_stimulus>0</input_during_stimulus>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>gain</adapt_parameter>
+      <start_value>-5.0003</start_value>
+      <stop_after_type>presentations</stop_after_type>
+      <stop_after>1</stop_after>
+      <larger_is_easier>true</larger_is_easier>
+      <repeat_first_until_correct>true</repeat_first_until_correct>
+      <stepsizes>
+        <change_after>trials</change_after>
+        <stepsize begin="0" size="2"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial_LIST_vrouw_wdz475">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_vrouw_wdz475"/>
+      </trial>
+      <trial id="trial_LIST_vrouw_wdz9">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_vrouw_wdz9"/>
+      </trial>
+      <trial id="trial_LIST_vrouw_wdz4">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_vrouw_wdz4"/>
+      </trial>
+      <trial id="trial_LIST_vrouw_wdz51">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_vrouw_wdz51"/>
+      </trial>
+      <trial id="trial_LIST_vrouw_wdz26">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_vrouw_wdz26"/>
+      </trial>
+      <trial id="trial_LIST_vrouw_wdz75">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_vrouw_wdz75"/>
+      </trial>
+      <trial id="trial_LIST_vrouw_wdz6">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_vrouw_wdz6"/>
+      </trial>
+      <trial id="trial_LIST_vrouw_wdz20">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_vrouw_wdz20"/>
+      </trial>
+      <trial id="trial_LIST_vrouw_wdz168">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_vrouw_wdz168"/>
+      </trial>
+      <trial id="trial_LIST_vrouw_wdz240">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_LIST_vrouw_wdz240"/>
+      </trial>
+    </trials>
+  </procedure>
+
+  <screens>
+    <general>
+      <repeatbutton>true</repeatbutton>
+      <showpanel>true</showpanel>
+      <showmenu>true</showmenu>
+    </general>
+    <reinforcement>
+      <progressbar>1</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+    <screen id="experimenter_screen">
+
+      <gridLayout height="2" id="main_layout" rowstretch="1,2" width="1">
+        <gridLayout col="1" columnstretch="1,4" height="4" id="parameter_layout" row="1" rowstretch="1,1,2,2" width="2">
+          <label col="1" id="snrlabel" row="1">
+            <text>snr</text>
+      </label>
+          <parameterlabel col="2" id="snr" row="1">
+            <parameter>gain</parameter>
+      </parameterlabel>
+          <label col="1" id="sentence" row="2">
+            <text>zin</text>
+      </label>
+          <parameterlabel col="2" id="sentence" row="2">
+            <parameter>sentence</parameter>
+      </parameterlabel>
+    </gridLayout>
+        <gridLayout col="1" height="1" id="answer_layout" row="2" width="2">
+          <button id="correct" x="1" y="1">
+            <text>Correct</text>
+      </button>
+          <button id="wrong" x="2" y="1">
+            <text>Wrong</text>
+      </button>
+    </gridLayout>
+  </gridLayout>
+
+      <buttongroup id="buttongroup">
+        <button id="correct"/>
+        <button id="wrong"/>
+  </buttongroup>
+
+      <default_answer_element>buttongroup</default_answer_element>
+
+</screen>  </screens>
+
+  <datablocks>
+    <uri_prefix source="apexconfig">speechmaterials</uri_prefix>
+    <datablock id="datablock_LIST_vrouw_wdz168">
+      <device>soundcard</device>
+      <uri>dutch/list/lijst1/wdz168.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_vrouw_wdz20">
+      <device>soundcard</device>
+      <uri>dutch/list/lijst1/wdz20.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_vrouw_wdz240">
+      <device>soundcard</device>
+      <uri>dutch/list/lijst1/wdz240.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_vrouw_wdz26">
+      <device>soundcard</device>
+      <uri>dutch/list/lijst1/wdz26.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_vrouw_wdz4">
+      <device>soundcard</device>
+      <uri>dutch/list/lijst1/wdz4.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_vrouw_wdz475">
+      <device>soundcard</device>
+      <uri>dutch/list/lijst1/wdz475.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_vrouw_wdz51">
+      <device>soundcard</device>
+      <uri>dutch/list/lijst1/wdz51.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_vrouw_wdz6">
+      <device>soundcard</device>
+      <uri>dutch/list/lijst1/wdz6.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_vrouw_wdz75">
+      <device>soundcard</device>
+      <uri>dutch/list/lijst1/wdz75.wav</uri>
+    </datablock>
+    <datablock id="datablock_LIST_vrouw_wdz9">
+      <device>soundcard</device>
+      <uri>dutch/list/lijst1/wdz9.wav</uri>
+    </datablock>
+    <datablock id="datablock_noise">
+      <device>soundcard</device>
+      <uri>noise/fluctuating%20noise%20paper%20(IJA)/nederlands-normaal.wav</uri>
+    </datablock>
+    <datablock id="datablock_silence">
+      <device>soundcard</device>
+      <uri>silence:1000</uri>
+    </datablock>
+  </datablocks>
+
+  <devices>
+    <master>soundcard</master>
+    <device id="soundcard" xsi:type="apex:wavDeviceType">
+      <driver>asio</driver>
+      <card>default</card>
+      <channels>4</channels>
+      <gain channel="0" id="gain0">0</gain>
+      <gain channel="1" id="gain1">0</gain>
+      <gain channel="2" id="gain2">0</gain>
+      <gain channel="3" id="gain3">0</gain>
+      <samplerate>44100</samplerate>
+      <blocksize>8192</blocksize>
+      <padzero>1</padzero>
+    </device>
+  </devices>
+
+  <filters>
+    <filter id="amplifier" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>-5</basegain>
+      <invertgain>false</invertgain>
+      <gain id="gain">0</gain>
+    </filter>
+    <filter id="amplifier_channel0" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <invertgain>false</invertgain>
+      <gain>0</gain>
+    </filter>
+    <filter id="dataloop_channel1" xsi:type="apex:dataloop">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <datablock>datablock_noise</datablock>
+      <basegain>-5</basegain>
+      <invertgain>false</invertgain>
+      <gain id="noisegain_channel1">0</gain>
+      <randomjump>true</randomjump>
+      <jump>0</jump>
+    </filter>
+    <filter id="dataloop_channel3" xsi:type="apex:dataloop">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <datablock>datablock_noise</datablock>
+      <basegain>-5</basegain>
+      <invertgain>false</invertgain>
+      <gain id="noisegain_channel3">0</gain>
+      <randomjump>true</randomjump>
+      <jump>0</jump>
+    </filter>
+    <filter id="fadein_dataloop_channel1" xsi:type="apex:fader">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <length>50</length>
+      <type>cosine</type>
+      <direction>in</direction>
+    </filter>
+    <filter id="fadein_dataloop_channel3" xsi:type="apex:fader">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <length>50</length>
+      <type>cosine</type>
+      <direction>in</direction>
+    </filter>
+    <filter id="fadeout_dataloop_channel1" xsi:type="apex:fader">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <length>50</length>
+      <type>cosine</type>
+      <direction>out</direction>
+    </filter>
+    <filter id="fadeout_dataloop_channel3" xsi:type="apex:fader">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <length>50</length>
+      <type>cosine</type>
+      <direction>out</direction>
+    </filter>
+  </filters>
+
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="sentence"/>
+    </fixed_parameters>
+    <stimulus id="calibrationstimulus">
+      <datablocks>
+        <datablock id="datablock_silence"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">calibration</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="noisestimulus">
+      <datablocks>
+        <datablock id="datablock_noise"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">calibration</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_vrouw_wdz168">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_vrouw_wdz168"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">De &lt;b&gt;secretaresse&lt;/b&gt; &lt;u&gt;neemt&lt;/u&gt; de &lt;b&gt;telefoon&lt;/b&gt; &lt;u&gt;aan&lt;/u&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_vrouw_wdz20">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_vrouw_wdz20"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">Deze &lt;b&gt;bakker&lt;/b&gt; is &lt;b&gt;ook&lt;/b&gt; op &lt;b&gt;zondag&lt;/b&gt; &lt;b&gt;open&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_vrouw_wdz240">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_vrouw_wdz240"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">De &lt;b&gt;politie&lt;/b&gt; &lt;b&gt;bevestigde&lt;/b&gt; de &lt;b&gt;aanhouding&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_vrouw_wdz26">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_vrouw_wdz26"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">De &lt;b&gt;operatie&lt;/b&gt; &lt;b&gt;duurde&lt;/b&gt; &lt;b&gt;4&lt;/b&gt; &lt;b&gt;uur&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_vrouw_wdz4">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_vrouw_wdz4"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">De &lt;b&gt;leerling&lt;/b&gt; &lt;b&gt;kwam&lt;/b&gt; &lt;b&gt;te&lt;/b&gt; &lt;b&gt;laat&lt;/b&gt; op &lt;b&gt;school&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_vrouw_wdz475">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_vrouw_wdz475"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">Zijn &lt;b&gt;stem&lt;/b&gt; is &lt;b&gt;schor&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_vrouw_wdz51">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_vrouw_wdz51"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">Hij &lt;b&gt;kreeg&lt;/b&gt; een &lt;b&gt;wagen&lt;/b&gt; van de &lt;b&gt;zaak&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_vrouw_wdz6">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_vrouw_wdz6"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">&lt;b&gt;Gisteren&lt;/b&gt; hebben wij een &lt;b&gt;film&lt;/b&gt; &lt;b&gt;gezien&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_vrouw_wdz75">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_vrouw_wdz75"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">Wij &lt;b&gt;wonen&lt;/b&gt; in een &lt;b&gt;rustige&lt;/b&gt; &lt;b&gt;buurt&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_LIST_vrouw_wdz9">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_LIST_vrouw_wdz9"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">&lt;b&gt;Morgen&lt;/b&gt; &lt;b&gt;gaan&lt;/b&gt; we naar de &lt;b&gt;stad&lt;/b&gt;</parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier_channel0</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier_channel0</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>dataloop_channel1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>fadein_dataloop_channel1</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>fadein_dataloop_channel1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>fadeout_dataloop_channel1</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>fadeout_dataloop_channel1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>dataloop_channel3</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>fadein_dataloop_channel3</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>fadein_dataloop_channel3</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>fadeout_dataloop_channel3</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>fadeout_dataloop_channel3</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>3</channel>
+      </to>
+    </connection>
+  </connections>
+
+  <calibration profile="spin-koen-nederlands">
+    <stimuli>
+      <stimulus id="calibrationstimulus"/>
+      <stimulus id="noisestimulus"/>
+    </stimuli>
+    <parameters>
+      <parameter id="gain0">
+        <targetamplitude>55.0003</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>10</max>
+      </parameter>
+      <parameter id="gain1">
+        <targetamplitude>51.99</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>10</max>
+      </parameter>
+      <parameter id="gain3">
+        <targetamplitude>51.99</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>10</max>
+      </parameter>
+    </parameters>
+  </calibration>
+
+  <results>
+    <page>apex:resultviewer.html</page>
+    <resultparameters>
+      <parameter name="reversals for mean">6</parameter>
+    </resultparameters>
+    <showafterexperiment>true</showafterexperiment>
+  </results>
+
+  <general>
+    <allowskip>true</allowskip>
+  </general>
+
+</apex:apex>

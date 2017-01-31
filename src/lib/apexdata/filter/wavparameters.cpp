@@ -105,7 +105,7 @@ WavGeneratorParameters::~WavGeneratorParameters()
 
 bool WavGeneratorParameters::isContinuous() const
 {
-    qDebug() << QString("iscontinuous: ") << valueByType(QString("continuous")).toString();
+    qCDebug(APEX_RS) << QString("iscontinuous: ") << valueByType(QString("continuous")).toString();
     return valueByType(QString("continuous")).toString() == "true";
 }
 

@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __CONNECTION_H_
-#define __CONNECTION_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_CONNECTION_CONNECTION_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_CONNECTION_CONNECTION_H_
 
-#include "connection/connectiondata.h"
+#include "apexdata/connection/connectiondata.h"
 
 #include <QMap>
 #include <QString>
@@ -104,4 +104,4 @@ namespace apex
     }
 }
 
-#endif //#ifndef __CONNECTION_H_
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_CONNECTION_CONNECTION_H_

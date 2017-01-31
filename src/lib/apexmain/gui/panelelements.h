@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef __PANELELEMENTS_H__
-#define __PANELELEMENTS_H__
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_PANELELEMENTS_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_PANELELEMENTS_H_
+
+#include "apextools/services/paths.h"
+
+#include "screen/screenelementrundelegate.h"
 
 #include "guidefines.h"
-#include "screen/screenelementrundelegate.h"
-#include "services/paths.h"
 
 #include <QLabel>
 #include <QListWidget>
@@ -102,7 +104,7 @@ namespace apex
       {
         setSizePolicy ( QSizePolicy::Preferred, QSizePolicy::Minimum );
         setSelectionMode( QAbstractItemView::NoSelection );
-        
+
         QFont f( QListWidget::font() );
         f.setFamily( sc_sDefaultFont );
         f.setBold( false );
@@ -194,4 +196,4 @@ namespace apex
   }
 }
 
-#endif //#ifndef __PANELELEMENTS_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_PANELELEMENTS_H_

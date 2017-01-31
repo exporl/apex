@@ -16,14 +16,18 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "connections.h"
-#include "appcore/threads/locks.h"
+
 #include "appcore/threads/criticalsection.h"
-#include "utils/stringutils.h"
-#include "audiosamplebuffer.h"
+#include "appcore/threads/locks.h"
+
 #include "containers/ownedarray.h"
-#include <assert.h>
+
+#include "utils/stringutils.h"
+
+#include "audiosamplebuffer.h"
+#include "connections.h"
+
+#include <QtGlobal>
 
 using namespace appcore;
 using namespace streamapp;
@@ -81,7 +85,7 @@ void ConnectItem::mp_AddInput( StreamCallback* const ac_pItem, const unsigned ac
 
 void ConnectItem::mp_AddInput( StreamCallback* const ac_pItem, const unsigned ac_nItemOutChannel, const unsigned ac_nThisInChannel )
 {
-  assert( ac_nItemOutChannel < ac_pItem->mf_nGetNumChannels() );
+  Q_ASSERT( ac_nItemOutChannel < ac_pItem->mf_nGetNumChannels() );
   m_Inputs.mp_Set( ac_nThisInChannel, ac_pItem );
   m_InputChans.mp_Set( ac_nThisInChannel, ac_nItemOutChannel );
   m_FreeChan.mp_Set( ac_nThisInChannel, false );
@@ -309,7 +313,7 @@ void ConnectionManager::mp_Connect( const std::string& ac_sFromID, const std::st
   StreamCallback* pFrom = mf_pGetAny( ac_sFromID );
 
 #ifdef STRICT
-  assert( pTo && pFrom );
+  Q_ASSERT( pTo && pFrom );
 #else
   if( !pTo || !pFrom )
     return;
@@ -325,7 +329,7 @@ void ConnectionManager::mp_Connect( const std::string& ac_sFromID, const std::st
   StreamCallback* pFrom = mf_pGetAny( ac_sFromID );
 
 #ifdef STRICT
-  assert( pTo && pFrom );
+  Q_ASSERT( pTo && pFrom );
 #else
   if( !pTo || !pFrom )
     return;
@@ -340,7 +344,7 @@ void ConnectionManager::mp_RemoveConnection( const std::string& ac_sFromID, cons
 {
   ConnectItem*      pTo = mf_pGetConnectable( ac_sToID );
   StreamCallback* pFrom = mf_pGetAny( ac_sFromID );
-  assert( pTo && pFrom );
+  Q_ASSERT( pTo && pFrom );
 
   const Lock L( *mc_pLock );
   pTo->mp_RemoveInput( pFrom );
@@ -350,7 +354,7 @@ void ConnectionManager::mp_RemoveConnection( const std::string& ac_sFromID, cons
 {
   ConnectItem*      pTo = mf_pGetConnectable( ac_sToID );
   StreamCallback* pFrom = mf_pGetAny( ac_sFromID );
-  assert( pTo && pFrom );
+  Q_ASSERT( pTo && pFrom );
 
   const Lock L( *mc_pLock );
   pTo->mp_RemoveInput( pFrom, ac_nFromChannel, ac_nToChannel );

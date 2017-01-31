@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "devicesdata.h"
 
-//from libtools
-#include "exceptions.h"
-#include "apextools.h"
+#include "apextools/apextools.h"
+#include "apextools/exceptions.h"
+
+#include "devicesdata.h"
 
 namespace apex
 {

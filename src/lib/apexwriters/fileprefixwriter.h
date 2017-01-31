@@ -17,11 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef FILEPREFIXWRITERH
-#define FILEPREFIXWRITERH
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_FILEPREFIXWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_FILEPREFIXWRITER_H_
 
-#include "global.h"
-#include "xml/xercesinclude.h"
+#include "apextools/global.h"
+
+#include "apextools/xml/xercesinclude.h"
+
 namespace XERCES_CPP_NAMESPACE
 {
 class DOMDocument;

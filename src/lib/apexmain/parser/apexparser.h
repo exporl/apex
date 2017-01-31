@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef APEX_PARSERPARSER_H
-#define APEX_PARSERPARSER_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_PARSER_APEXPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_PARSER_APEXPARSER_H_
+
+#include "apextools/status/errorlogger.h"
+
+#include "apextools/xml/apexxmltools.h"
 
 #include <QObject>
-
-//from libtools
-#include "xml/apexxmltools.h"
-#include "status/errorlogger.h"
 
 namespace apex {
 

@@ -16,13 +16,17 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "mixers/rmemixer.h"
-#include "win32_headers.h"
-#include "appcore/singleton.h"
-#include "utils/dataconversion.h"
-#include "utils/stringexception.h"
+
+#include "../../appcore/singleton.h"
+
+#include "../../mixers/rmemixer.h"
+
+#include "../../utils/dataconversion.h"
+#include "../../utils/stringexception.h"
+
 #include "defines.h"
+#include "win32_headers.h"
+
 #include <winioctl.h>
 
 using namespace streamapp;

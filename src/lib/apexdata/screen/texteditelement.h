@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef TEXTEDITELEMENT_H
-#define TEXTEDITELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_TEXTEDITELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_TEXTEDITELEMENT_H_
 
 #include "screenelement.h"
 
 #include <QString>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -52,7 +52,7 @@ class APEXDATA_EXPORT TextEditElement
         const QString getText() const;
         void setInputMask(const QString& t);
         const QString getInputMask() const;
-        
+
         bool operator==(const TextEditElement& other) const;
 };
 }

@@ -31,13 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if ! defined (Array_CODEHEADER_INCLUDED)
 #define  Array_CODEHEADER_INCLUDED
 
-
-
-/*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-#include  <cassert>
-
-
+#include <QtGlobal>
 
 /*\\\ PUBLIC \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -54,8 +48,8 @@ Array <T, LEN>::Array ()
 template <class T, long LEN>
 const typename Array <T, LEN>::DataType &  Array <T, LEN>::operator [] (long pos) const
 {
-  assert (pos >= 0);
-  assert (pos < LEN);
+  Q_ASSERT (pos >= 0);
+  Q_ASSERT (pos < LEN);
 
   return (_data_arr [pos]);
 }
@@ -65,8 +59,8 @@ const typename Array <T, LEN>::DataType &  Array <T, LEN>::operator [] (long pos
 template <class T, long LEN>
 typename Array <T, LEN>::DataType &  Array <T, LEN>::operator [] (long pos)
 {
-  assert (pos >= 0);
-  assert (pos < LEN);
+  Q_ASSERT (pos >= 0);
+  Q_ASSERT (pos < LEN);
 
   return (_data_arr [pos]);
 }

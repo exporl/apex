@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __EXPERIMENTRUNNER_H__
-#define __EXPERIMENTRUNNER_H__
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RUNNER_EXPERIMENTRUNNER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RUNNER_EXPERIMENTRUNNER_H_
 
-#include "apexmodule.h"
+#include <QMap>
+#include <QObject>
 #include <QStringList>
 
 // FIXME: make ApexModule
-
 namespace apex
 {
 class ExperimentParser;
@@ -33,38 +33,34 @@ namespace data
 class ExperimentData;
 }
 
-class ExperimentRunner: public QObject /*: public ApexModule */
+class ExperimentRunner: public QObject
 {
         Q_OBJECT
     public:
-        //    ExperimentRunner(ExperimentRunDelegate& p_rd): ApexModule(p_rd) {};
-
-
-
+        virtual void makeVisible() {}
+        virtual void makeInvisible() {}
     public slots:
         /**
          * Bring the Runner in a usable state. The provided path is the
          * project file/experiment/whatever to open. If called again, it will
          * reset the instance to a virgin internal state.
          */
-        virtual void Select(const QString& name) = 0;
+        virtual void select(const QString& name) = 0;
         /**
          * Bring the Runner in a usable state. The provided path is a suggestion
          * for the runner to use. If called again, it will reset the instance to
          * a virgin internal state.
          */
-        virtual void SelectFromDir(const QString& path) = 0;
-
-        virtual void Run() = 0;
-        virtual void Finished() = 0;
+        virtual void selectFromDir(const QString& path) = 0;
 
     signals:
-        void Selected(data::ExperimentData* data);
-        
+        void selected(data::ExperimentData* data);
+        void opened(const QString& fileName);
+
     protected:
-        
-        virtual data::ExperimentData* parseExperiment(QString fileName);
+        QMap<QString, QString> expressions;
+        virtual data::ExperimentData* parseExperiment(const QString& fileName);
 };
 }
 
-#endif //#ifndef __EXPERIMENTRUNNER_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_RUNNER_EXPERIMENTRUNNER_H_

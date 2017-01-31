@@ -1,0 +1,19 @@
+Source: apex
+Section: science
+Priority: extra
+Maintainer: Michael Hofmann <mh21@piware.de>
+Build-Depends: cdbs, debhelper, chrpath, libqt5-dev, libjack-dev,
+ portaudio19-dev, libxerces-c-dev, libxalan111-dev
+Standards-Version: 3.7.2
+Homepage: http://www.kuleuven.be/exporl/apex
+
+Package: apex
+Section: science
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Aids in the execution of psychophysical experiments
+ Aids in the execution of psychophysical experiments by providing an easy to
+ use interface and framework to execute experiments like:
+ - Loudness balancing
+ - Speech perception test
+ - Pitch matching

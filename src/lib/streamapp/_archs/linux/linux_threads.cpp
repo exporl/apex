@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "linux_headers.h"
-#include <dlfcn.h>
 
-#include "appcore/threads/thread.h"
-#include "appcore/threads/waitableobject.h"
-#include "appcore/threads/criticalsection.h"
+#include "../../appcore/threads/criticalsection.h"
+#include "../../appcore/threads/thread.h"
+#include "../../appcore/threads/waitableobject.h"
+#include "../../../apextools/global.h"
+
+#include "linux_headers.h"
+
+#include <dlfcn.h>
 
 using namespace appcore;
 
@@ -88,7 +90,6 @@ WaitableObject::mt_eWaitResult WaitableObject::mf_eWaitForSignal( const int ac_n
 {
   EventStruct* const es = (EventStruct*) m_hHandle;
 
-  bool ok = true;
   pthread_mutex_lock (&es->mutex);
 
   if (!es->triggered)
@@ -125,7 +126,6 @@ WaitableObject::mt_eWaitResult WaitableObject::mf_eWaitForSignal( const int ac_n
           timeout = 0;
       }
     }
-    ok = es->triggered;
   }
 
   es->triggered = false;
@@ -178,8 +178,15 @@ void* f_CreateThread( void* a_pUserData )
 
 void  f_KillThread( void* a_hHandle )
 {
-  if( a_hHandle != 0 )
-    pthread_cancel( (pthread_t) a_hHandle );
+    if( a_hHandle != 0 ) {
+        // TODO ANDROID pthread_cancel not supported on android
+#ifdef Q_OS_ANDROID
+        qCCritical(APEX_RS, "Attempt to kill thread, android doesn't support pthread_cancel");
+        return;
+#else
+        pthread_cancel( (pthread_t) a_hHandle );
+#endif
+    }
 }
 
 void  f_SetThreadPriority( void* /*a_hHandle*/, const int /*ac_nPriority*/ )

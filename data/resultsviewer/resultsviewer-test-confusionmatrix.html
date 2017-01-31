@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+
+    <head>
+        <script  src="external/jquery.min.js" type="text/javascript"> </script>
+
+        <script src="external/raphael-min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="external/g.raphael-min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="external/g.dot-min.js" type="text/javascript"
+            charset="utf-8"></script>
+
+        <script src="resultsviewer.js" type="text/javascript"> </script>
+
+
+        <script type="text/javascript">
+
+            $(document).ready(function(){
+                defaultx=[-100 -200];
+
+                newAnswer(
+                    "<trial id=\"trial4\">\n<procedure >\n<stimulus>stimulus4</stimulus>\n</procedure>\n<screenresult>\n\t<element id=\"buttongroup1\">button2</element>\n</screenresult>\n<corrector>\n<result>false</result>\n<answer>button-20</answer>\n<correctanswer>button4</correctanswer>\n</corrector>\n<output>\n<device id=\"wavdevice\">\n  <buffer underruns=\"0\"/>\n</device>\n</output>\n<responsetime>311</responsetime>\n<randomgenerators>\n\n</randomgenerators>\n</trial>\n\n"
+                    );
+
+                newAnswer("<trial id=\"trial1\">\n<procedure >\n<stimulus>stimulus-1</stimulus>\n</procedure>\n<screenresult>\n\t<element id=\"buttongroup1\">button1</element>\n</screenresult>\n<corrector>\n<result>true</result>\n<answer>button-1</answer>\n<correctanswer>button1</correctanswer>\n</corrector>\n<output>\n<device id=\"wavdevice\">\n  <buffer underruns=\"0\"/>\n</device>\n</output>\n<responsetime>360</responsetime>\n<randomgenerators>\n\n</randomgenerators>\n</trial>\n\n");
+                plot();
+                newAnswer("<trial id=\"trial2\">\n<procedure >\n<stimulus>stimulus-20</stimulus>\n</procedure>\n<screenresult>\n\t<element id=\"buttongroup1\">button1</element>\n</screenresult>\n<corrector>\n<result>false</result>\n<answer>button1</answer>\n<correctanswer>button2</correctanswer>\n</corrector>\n<output>\n<device id=\"wavdevice\">\n  <buffer underruns=\"0\"/>\n</device>\n</output>\n<responsetime>277</responsetime>\n<randomgenerators>\n\n</randomgenerators>\n</trial>\n\n");
+                plot();
+                newAnswer("<trial id=\"trial3\">\n<procedure >\n<stimulus>stimulus3</stimulus>\n</procedure>\n<screenresult>\n\t<element id=\"buttongroup1\">button2</element>\n</screenresult>\n<corrector>\n<result>false</result>\n<answer>button2</answer>\n<correctanswer>button3</correctanswer>\n</corrector>\n<output>\n<device id=\"wavdevice\">\n  <buffer underruns=\"0\"/>\n</device>\n</output>\n<responsetime>485</responsetime>\n<randomgenerators>\n\n</randomgenerators>\n</trial>\n\n");
+                newAnswer("<trial id=\"trial4\">\n<procedure >\n<stimulus>stimulus4</stimulus>\n</procedure>\n<screenresult>\n\t<element id=\"buttongroup1\">button2</element>\n</screenresult>\n<corrector>\n<result>false</result>\n<answer>button2</answer>\n<correctanswer>button4</correctanswer>\n</corrector>\n<output>\n<device id=\"wavdevice\">\n  <buffer underruns=\"0\"/>\n</device>\n</output>\n<responsetime>694</responsetime>\n<randomgenerators>\n\n</randomgenerators>\n</trial>\n\n");
+                newAnswer("<trial id=\"trial5\">\n<procedure >\n<stimulus>stimulus5</stimulus>\n</procedure>\n<screenresult>\n\t<element id=\"buttongroup1\">button3</element>\n</screenresult>\n<corrector>\n<result>false</result>\n<answer>button3</answer>\n<correctanswer>button5</correctanswer>\n</corrector>\n<output>\n<device id=\"wavdevice\">\n  <buffer underruns=\"0\"/>\n</device>\n</output>\n<responsetime>342</responsetime>\n<randomgenerators>\n\n</randomgenerators>\n</trial>\n\n");
+
+                plot();
+           });
+
+            function plot() {
+                plot_rtconfusionmatrix();
+            }
+
+
+
+       </script>
+
+       <title>APEX results</title>
+   </head>
+
+   <body >
+            <div id="confusionmatrixplot"></div>
+            <div id="errormeasures"></div>
+            <div id="confusionmatrixtable"></div>
+   </body>
+</html>

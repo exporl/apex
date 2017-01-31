@@ -1,0 +1,1 @@
+copy tools\commit-msg-hook .git\hooks\commit-msg

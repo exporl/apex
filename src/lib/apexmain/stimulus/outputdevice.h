@@ -17,17 +17,17 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef DEVICE_H
-#define DEVICE_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_OUTPUTDEVICE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_OUTPUTDEVICE_H_
+
+#include "apexdata/device/devicedata.h"
 
 #include "device/iapexdevice.h"
-#include "idevicefactoryelement.h"
-#include "device/devicedata.h"
 
+#include "idevicefactoryelement.h"
 #include "streamapptypedefs.h"
 
 //FIXME: [job refactory] move implementations to cpp
-
 namespace apex{
   namespace stimulus{
 
@@ -216,4 +216,4 @@ namespace apex{
   } //end ns stimulus
 } //end ns apex
 
-#endif //#ifndef DEVICE_H
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_OUTPUTDEVICE_H_

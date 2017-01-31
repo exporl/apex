@@ -16,10 +16,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#ifndef _APEX_SRC_CONNECTION_CONNECTIONDIALOG_H_
-#define _APEX_SRC_CONNECTION_CONNECTIONDIALOG_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_CONNECTIONDIALOG_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_CONNECTIONDIALOG_H_
 
-#include "apextypedefs.h"
+#include "apextools/apextypedefs.h"
 
 #include <QDialog>
 
@@ -40,7 +40,7 @@ public:
     ~ConnectionDialog();
 
 private:
-    const std::auto_ptr<ConnectionDialogPrivate> d;
+    QScopedPointer<ConnectionDialogPrivate> d;
 };
 
 } // namespace apex

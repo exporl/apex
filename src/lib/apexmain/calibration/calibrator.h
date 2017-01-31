@@ -16,13 +16,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#ifndef _APEX_SRC_CALIBRATION_CALIBRATOR_H_
-#define _APEX_SRC_CALIBRATION_CALIBRATOR_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_CALIBRATION_CALIBRATOR_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_CALIBRATION_CALIBRATOR_H_
 
-#include "apexmodule.h"
+#include "../apexmodule.h"
 
-//from libtools
-#include "global.h"
+#include "apextools/global.h"
 
 #include <memory>
 
@@ -51,7 +50,7 @@ public:
     /* Tries to load the calibration data from the calibration database. If not
      * found or recalibration is forced, shows the calibration dialog. */
     bool calibrate (bool forceRecalibration = false);
-	
+
     /* Send values of calibrated parameters for current profile to the
      * parameter manager. Must only be used after a call to calibrate() that
      * returned successfully. */
@@ -61,8 +60,9 @@ public:
     virtual QString GetResultXML() const;
 
 private:
-    const std::auto_ptr<CalibratorPrivate> d;
-	bool calibrateManually(bool forceRecalibration = false);
+    bool calibrateManually(bool forceRecalibration = false);
+
+    const QScopedPointer<CalibratorPrivate> d;
 };
 
 } // namespace apex

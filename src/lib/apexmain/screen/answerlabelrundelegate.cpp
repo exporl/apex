@@ -16,18 +16,19 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "answerlabelrundelegate.h"
 
-#include "screen/answerlabelelement.h"
+#include "apexdata/screen/answerlabelelement.h"
+
 #include "screen/screenrundelegate.h"
+
+#include "answerlabelrundelegate.h"
 
 namespace apex
 {
 namespace rundelegates
 {
 
-    
+
 AnswerLabelRunDelegate::AnswerLabelRunDelegate(
     ExperimentRunDelegate* p_exprd,
     QWidget* parent, const AnswerLabelElement* e, const QFont& defaultFont )
@@ -38,7 +39,7 @@ AnswerLabelRunDelegate::AnswerLabelRunDelegate(
 void AnswerLabelRunDelegate::newAnswer(
     const QString& answer )
 {
-//    qDebug("AnswerLabelRunDelegate::newAnswer: %s", qPrintable(answer));
+//    qCDebug(APEX_RS, "AnswerLabelRunDelegate::newAnswer: %s", qPrintable(answer));
     LabelRunDelegateBase::setText( answer );
 }
 

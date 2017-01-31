@@ -1,6 +1,5 @@
 #include "psignifitwrapper.h"
 
-
 #include "universalprefix.h"
 
 #include <stdlib.h>
@@ -17,6 +16,8 @@
 #include <CRTDBG.h>
 #endif
 
+Q_DECLARE_LOGGING_CATEGORY(APEX_SIGNIFIT)
+Q_LOGGING_CATEGORY(APEX_SIGNIFIT, "apex.signifit")
 
 namespace apex {
 
@@ -84,7 +85,7 @@ namespace apex {
 
     PsignifitResult* PsignifitWrapper::psignifitS(const QString& d)
     {
-        qDebug() << QString("PsignifitWrapper::psignifit: ") << d;
+        qCDebug(APEX_SIGNIFIT) << QString("PsignifitWrapper::psignifit: ") << d;
 
 
         ModelPtr model = NULL;

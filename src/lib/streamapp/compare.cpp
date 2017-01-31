@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "compare.h"
+
 #include "containers/matrix.h"
+
 #include "file/wavefile.h"
+
+#include "compare.h"
 
 using namespace streamapp;
 

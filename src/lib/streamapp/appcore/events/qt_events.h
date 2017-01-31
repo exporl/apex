@@ -16,16 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __QTEVENTS_H_
 #define __QTEVENTS_H_
 
-#include "appcore/events/events.h"
-#if QT_VERSION < 0x040000
-#include <qapplication.h>
-#else
+#include "events.h"
+
 #include <QApplication>
-#endif
 
 namespace appcore
 {

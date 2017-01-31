@@ -16,8 +16,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
+#include "apextools/exceptions.h"
+
 #include "calibrationdatabase.h"
-#include "exceptions.h"
 
 #include <QCoreApplication>
 #include <QSet>
@@ -83,7 +84,28 @@ public:
     {
         return QString (value).replace ('/', '_');
     }
+
+    static QSettings* getQSettings(bool global = false)
+    {
+        QSettings* newSettings = new QSettings();
+        if(global) {
+            newSettings = new QSettings(QSettings::SystemScope, QSettings().organizationName(), QSettings().applicationName());
+        }
+
+        settings.reset(newSettings);
+        return newSettings;
+    }
+
+    static bool isGlobal(const QString& setup)
+    {
+        QSettings settings(QSettings::SystemScope, QSettings().organizationName(), QSettings().applicationName());
+        QStringList globalSetups = settings.value(hardwareSetups()).toStringList();
+        return globalSetups.contains(setup);
+    }
+private:
+    static QScopedPointer<QSettings> settings;
 };
+QScopedPointer<QSettings> CalibrationDatabasePrivate::settings;
 
 class CalibrationSetupHandler : public QXmlDefaultHandler
 {
@@ -149,36 +171,40 @@ CalibrationDatabase::~CalibrationDatabase()
 
 QStringList CalibrationDatabase::hardwareSetups() const
 {
-    return QSettings().value
-        (CalibrationDatabasePrivate::hardwareSetups()).toStringList();
+    QStringList local = QSettings().value(CalibrationDatabasePrivate::hardwareSetups()).toStringList();
+    QStringList global = QSettings(QSettings::SystemScope, QSettings().organizationName(), QSettings().applicationName()).value(CalibrationDatabasePrivate::hardwareSetups()).toStringList();
+    QStringList both(local);
+    both.append(global);
+
+    return both;
 }
 
 QStringList CalibrationDatabase::calibrationProfiles
     (const QString &setup) const
 {
-    QSettings settings;
-    settings.beginGroup (CalibrationDatabasePrivate::data (setup));
-    return settings.childGroups();
+    QSettings* settings = CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup));
+    settings->beginGroup (CalibrationDatabasePrivate::data (setup));
+    return settings->childGroups();
 }
 
 QStringList CalibrationDatabase::parameterNames (const QString &setup,
         const QString &profile) const
 {
-    QSettings settings;
-    settings.beginGroup (CalibrationDatabasePrivate::data (setup, profile));
-    return settings.childGroups();
+    QSettings* settings = CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup));
+    settings->beginGroup (CalibrationDatabasePrivate::data (setup, profile));
+    return settings->childGroups();
 }
 
 unsigned CalibrationDatabase::calibrationCount (const QString &setup) const
 {
     unsigned result = 0;
-    QSettings settings;
+    QSettings* settings = CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup));
 
-    settings.beginGroup (CalibrationDatabasePrivate::data (setup));
-    Q_FOREACH (const QString &profile, settings.childGroups()) {
-        settings.beginGroup (profile);
-        result += settings.childGroups().count();
-        settings.endGroup();
+    settings->beginGroup (CalibrationDatabasePrivate::data (setup));
+    Q_FOREACH (const QString &profile, settings->childGroups()) {
+        settings->beginGroup (profile);
+        result += settings->childGroups().count();
+        settings->endGroup();
     }
     return result;
 }
@@ -224,25 +250,30 @@ void CalibrationDatabase::removeHardwareSetup (const QString &setup)
 bool CalibrationDatabase::isCalibrated (const QString &setup,
         const QString &profile, const QString &name) const
 {
-    QSettings settings;
-    return settings.contains (CalibrationDatabasePrivate::parameter
+    QSettings* settings = CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup));
+
+    return settings->contains (CalibrationDatabasePrivate::parameter
             (setup, profile, name)) &&
-        settings.contains (CalibrationDatabasePrivate::target
+        settings->contains (CalibrationDatabasePrivate::target
             (setup, profile, name));
+}
+
+bool CalibrationDatabase::isGlobal(const QString &setup) const {
+    return CalibrationDatabasePrivate::isGlobal(setup);
 }
 
 double CalibrationDatabase::targetAmplitude (const QString &setup,
         const QString &profile, const QString &name) const
 {
-    return QSettings().value (CalibrationDatabasePrivate::target
-            (setup, profile, name)).toDouble();
+    return CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup))->value(
+                CalibrationDatabasePrivate::target(setup, profile, name)).toDouble();
 }
 
 double CalibrationDatabase::outputParameter (const QString &setup,
         const QString &profile, const QString &name) const
 {
-    return QSettings().value (CalibrationDatabasePrivate::parameter
-            (setup, profile, name)).toDouble();
+    return CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup))->value(
+                CalibrationDatabasePrivate::parameter(setup, profile, name)).toDouble();
 }
 
 void CalibrationDatabase::calibrate (const QString &setup,

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 /**
   *      -- v3tov2 plugin --
   * Do not modify this file by hand,
@@ -38,21 +38,15 @@
 #ifndef __STR__MAIN_H__
 #define __STR__MAIN_H__
 
-  //get the main configuration
-#include "streamapp_conf.h"
+#include "../streamapp_conf.h"
+#include "../streamapp_namespace.h"
+#include "../streamapp_specs.h"
 
-  //get the platform definitions
-#include "core/platformsetup.h"
+#include "misc/staticassert.h"
 
-  //complete setup by enabling/disabling specs
-#include "streamapp_specs.h"
+#include "platformsetup.h"
+#include "types.h"
 
-  //get namespace names
-#include "streamapp_namespace.h"
-
-  //make v2 compatible
-#include "core/misc/staticassert.h"
-#include "core/types.h"
 #define s_track_mem_leaks( x )
 #define s_no_throw throw()
 

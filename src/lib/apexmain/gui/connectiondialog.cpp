@@ -16,6 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
+#include "apextools/exceptions.h"
+
 #include "connection/connection.h"
 
 #include "parameters/parametermanager.h"
@@ -25,17 +27,18 @@
 #include "services/filedialog.h"
 
 #include "connectiondialog.h"
-#include "exceptions.h"
 #include "ui_connectiondialog.h"
 
-#include <cmath>
-
+#include <QStandardPaths>
 #include <QGraphicsSvgItem>
 #include <QMessageBox>
 #include <QProcess>
 #include <QPushButton>
 #include <QSettings>
 #include <QSvgRenderer>
+#include <QWheelEvent>
+
+#include <cmath>
 
 namespace apex
 {
@@ -50,9 +53,6 @@ public:
 
 public Q_SLOTS:
     void fit();
-    void zoomIn();
-    void zoomOut();
-    void scale (double scaleFactor);
     void save();
 
 public:
@@ -65,19 +65,56 @@ public:
     QSvgRenderer *renderer;
 };
 
+class WheelZoomer : public QObject
+{
+    Q_OBJECT
+public:
+    WheelZoomer(QObject *parent);
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+};
+
+
 // ConnectionDialogPrivate =====================================================
 
 ConnectionDialogPrivate::ConnectionDialogPrivate (QDialog *pub) :
     pub (pub),
     dpiFix (false)
 {
-    dotPath = "dot";
+
 #ifdef Q_OS_WIN
-    QSettings settings ("HKEY_LOCAL_MACHINE\\Software\\ATT\\Graphviz",
-            QSettings::NativeFormat);
-    if (settings.contains ("InstallPath"))
-        dotPath = QDir (settings.value ("InstallPath").toString())
-            .absoluteFilePath ("bin/dot.exe");
+    // Looks for dot.exe in the standard program files locations
+    dotPath = QStandardPaths::findExecutable(QLatin1String("dot"));
+
+    if(!dotPath.contains(QLatin1String("Graphviz"))){
+        // Apparently this registry key is no longer in use with more recent versions of graphviz
+        // QStandardPaths offers an easier solution that won't break with newer versions
+        if (!QFile::exists(dotPath)){
+            QSettings settings ("HKEY_LOCAL_MACHINE\\SOFTWARE\\ATT\\Graphviz", QSettings::NativeFormat);
+            if (settings.contains ("InstallPath")){
+                dotPath = QDir (settings.value ("InstallPath").toString()).absoluteFilePath ("/bin/dot.exe");
+            }
+        }
+        if (!QFile::exists(dotPath)){
+            QSettings settings ("HKEY_LOCAL_MACHINE\\SOFTWARE\\AT&T Research Labs\\Graphviz", QSettings::NativeFormat);
+            if (settings.contains ("InstallPath")){
+                dotPath = QDir (settings.value ("InstallPath").toString()).absoluteFilePath ("/bin/dot.exe");
+            }
+        }
+        if (!QFile::exists(dotPath)){
+            QSettings settings ("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\AT&T Research Labs\\Graphviz 2.28", QSettings::NativeFormat);
+            if (settings.contains ("InstallPath")){
+                dotPath = QDir (settings.value ("InstallPath").toString()).absoluteFilePath ("/bin/dot.exe");
+            }
+        }
+    }
+
+    if (!QFile::exists(dotPath))
+    {
+        // dot.exe is shipped with APEX
+        dotPath = QCoreApplication::applicationDirPath() + "/dot/dot.exe";
+    }
 
     if (!QFile::exists(dotPath)) {
         int result = QMessageBox::critical(0, tr("Could not start dot"),
@@ -85,7 +122,8 @@ ConnectionDialogPrivate::ConnectionDialogPrivate (QDialog *pub) :
                                      "APEX could not find graphiviz on you system. "
                                      "If it is not installed, you can download it from http://www.graphviz.org "
                                      "restart APEX and try again.\n"
-                                      "Alternatively, use the open button to select the path to dot manually."),
+                                     "Alternatively, use the open button to select the path to dot manually.\n"
+                                     "Or, you can place \"dot/dot.exe\" directly in your Apex folder. "),
                                       QMessageBox::Ok | QMessageBox::Open,
                                       QMessageBox::Ok);
         if (result== QMessageBox::Open) {
@@ -94,6 +132,8 @@ ConnectionDialogPrivate::ConnectionDialogPrivate (QDialog *pub) :
         }
 
     }
+#else
+    dotPath = "dot";
 #endif
 }
 
@@ -121,21 +161,6 @@ void ConnectionDialogPrivate::fit()
             Qt::KeepAspectRatio);
 }
 
-void ConnectionDialogPrivate::zoomIn()
-{
-    scale (sqrt (2.0));
-}
-
-void ConnectionDialogPrivate::zoomOut()
-{
-    scale (1 / sqrt (2.0));
-}
-
-void ConnectionDialogPrivate::scale (double scaleFactor)
-{
-    ui.graphicsView->scale (scaleFactor, scaleFactor);
-}
-
 void ConnectionDialogPrivate::save()
 {
     const QString filePath = FileDialog::Get().mf_sGetAnyFile("*.svg",
@@ -150,6 +175,33 @@ void ConnectionDialogPrivate::save()
     }
 }
 
+
+// WheelZoomer =================================================================
+
+WheelZoomer::WheelZoomer(QObject *parent) :
+    QObject(parent)
+{
+}
+
+bool WheelZoomer::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::Wheel) {
+        QGraphicsView *graph = static_cast<QGraphicsView *>(static_cast<QWidget *>(obj)->parentWidget());
+        QWheelEvent *wheelEvent = static_cast<QWheelEvent *>(event);
+
+        bool zoomIn = wheelEvent->angleDelta().y()>0;
+        if (zoomIn) {
+            graph->scale(sqrt(2.0),sqrt(2.0));
+        } else {
+            graph->scale(1/sqrt(2.0),1/sqrt(2.0));
+        }
+        return true;
+    } else {
+        // standard event processing
+        return QObject::eventFilter(obj, event);
+    }
+}
+
 // ConnectionDialog ============================================================
 
 ConnectionDialog::ConnectionDialog (QWidget *parent) :
@@ -159,19 +211,18 @@ ConnectionDialog::ConnectionDialog (QWidget *parent) :
     d->ui.setupUi (this);
 
     QPushButton *save = new QPushButton (tr ("Save..."), this);
-    connect (save, SIGNAL (clicked()), d.get(), SLOT (save()));
+    connect (save, SIGNAL (clicked()), d.data(), SLOT (save()));
     d->ui.buttonBox->addButton (save, QDialogButtonBox::ActionRole);
-    QPushButton *zoomIn = new QPushButton (tr ("Zoom in"), this);
-    connect (zoomIn, SIGNAL (clicked()), d.get(), SLOT (zoomIn()));
-    d->ui.buttonBox->addButton (zoomIn, QDialogButtonBox::ActionRole);
-    QPushButton *zoomOut = new QPushButton (tr ("Zoom out"), this);
-    connect (zoomOut, SIGNAL (clicked()), d.get(), SLOT (zoomOut()));
-    d->ui.buttonBox->addButton (zoomOut, QDialogButtonBox::ActionRole);
+    QPushButton *fitView = new QPushButton (tr ("Scale to fit view"), this);
+    connect (fitView, SIGNAL (clicked()), d.data(), SLOT (fit()));
+    d->ui.buttonBox->addButton (fitView, QDialogButtonBox::ActionRole);
 
     QByteArray version = d->runDot (QStringList() << "-V", QByteArray(), true);
     if (version.contains ("version 2.12"))
         d->dpiFix = true;
 
+    WheelZoomer *wheelZoomer = new WheelZoomer(d->ui.graphicsView);
+    d->ui.graphicsView->viewport()->installEventFilter(wheelZoomer);
     d->renderer = new QSvgRenderer (this);
     QGraphicsScene *scene = new QGraphicsScene (this);
     d->ui.graphicsView->setScene (scene);
@@ -225,7 +276,7 @@ void ConnectionDialog::setDelegate (const ExperimentRunDelegate &delegate)
 
         data::ParameterValueMap map = manager->parametersForOwner (j.key());
         QStringList parameters;
-		
+
         QMapIterator<data::Parameter, QVariant> i (map);
         while (i.hasNext()) {
             i.next();
@@ -264,7 +315,7 @@ void ConnectionDialog::setDelegate (const ExperimentRunDelegate &delegate)
     // QtSvg convertToPixels() thinks 1pt=1.25px,1in=72pt->1in=90px, which
     // doesn't work too well with graphviz 2.12
     if (d->dpiFix) {
-        qDebug ("Fixing dpi");
+        qCDebug(APEX_RS, "Fixing dpi");
         parameters.append ("-Gdpi=90");
     }
 
@@ -275,7 +326,7 @@ void ConnectionDialog::setDelegate (const ExperimentRunDelegate &delegate)
     d->svgItem->setSharedRenderer (d->renderer);
     // We have do delay the fit somewhat, otherwise the QScrollArea's viewport
     // is not yet updated
-    QMetaObject::invokeMethod (d.get(), "fit", Qt::QueuedConnection);
+    QMetaObject::invokeMethod (d.data(), "fit", Qt::QueuedConnection);
 }
 
 ConnectionDialog::~ConnectionDialog()

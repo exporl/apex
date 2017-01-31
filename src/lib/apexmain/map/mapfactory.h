@@ -17,16 +17,16 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXMAPFACTORY_H
-#define APEXMAPFACTORY_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_MAPFACTORY_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_MAP_MAPFACTORY_H_
 
-//#include "elementfactory.h"
+#include "apextools/status/errorlogger.h"
+
+#include "apextools/xml/xercesinclude.h"
 
 #include "r126nucleusmaprecord.h"
-using namespace r126;
 
-#include "xml/xercesinclude.h"
-#include <status/errorlogger.h>
+using namespace r126;
 using namespace xercesc;
 
 namespace apex

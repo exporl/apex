@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "sliderelement.h"
 
 #include "screenelementvisitor.h"
@@ -32,14 +32,14 @@ namespace data
 SliderElement::SliderElement( const QString& id, ScreenElement* parent )
     : ScreenElement( id, parent ),
      hasDefault(true),
-	 orient(Qt::Vertical),
-	 value(0),
-	 minimum(-20),
-	 maximum(20),
-	 tickPos(/*QSlider::TicksBothSides*/3), //FIXME
-	 stepSize(1),
-	 pageSize(5),
-	 tickInt(0)
+         orient(Qt::Vertical),
+         value(0),
+         minimum(-20),
+         maximum(20),
+         tickPos(/*QSlider::TicksBothSides*/3), //FIXME
+         stepSize(1),
+         pageSize(5),
+         tickInt(0)
 {
 }
 

@@ -20,8 +20,8 @@
  * Calibration setup management dialog declaration.
  */
 
-#ifndef _APEX_SRC_GUI_CALIBRATIONSETUPSDIALOG_H_
-#define _APEX_SRC_GUI_CALIBRATIONSETUPSDIALOG_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_CALIBRATIONSETUPSDIALOG_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_CALIBRATIONSETUPSDIALOG_H_
 
 #include <QDialog>
 
@@ -52,7 +52,7 @@ public:
     ~CalibrationSetupsDialog();
 
 protected:
-    const std::auto_ptr<CalibrationSetupsDialogPrivate> d;
+    const QScopedPointer<CalibrationSetupsDialogPrivate> d;
 };
 
 } // namespace apex

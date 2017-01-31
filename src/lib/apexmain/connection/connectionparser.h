@@ -17,13 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __CONNECTIONPARSER_H__
-#define __CONNECTIONPARSER_H__
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_CONNECTION_CONNECTIONPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_CONNECTION_CONNECTIONPARSER_H_
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
 
 #include "parser/apexparser.h"
-
 
 namespace apex {
     namespace data {

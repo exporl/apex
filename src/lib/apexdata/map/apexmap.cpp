@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apexmap.h"
-#include "exceptions.h"
-#include "apextools.h"
+#include "apextools/apextools.h"
+#include "apextools/exceptions.h"
 
+#include "apexmap.h"
 
 namespace apex
 {
@@ -118,7 +118,7 @@ bool ApexMap::isComplete() const
 
     for (const_iterator it = begin(); it != end(); ++it) {
         if (okarray[it.key()] && it.key()!=0)
-            qDebug("Error: duplicate map entry: %i", it.key());
+            qCDebug(APEX_RS, "Error: duplicate map entry: %i", it.key());
         okarray[it.key()] = true;
     }
 

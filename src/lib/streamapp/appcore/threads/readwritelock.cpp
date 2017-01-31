@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "locks.h"
 #include "readwritelock.h"
 #include "thread.h"
-#include "locks.h"
-#include <assert.h>
+
+#include <QtGlobal>
+
 //#include "utils/tracer.h"
 //#include "utils/stringutils.h"
-
 //using namespace utils;
 using namespace appcore;
 
@@ -40,8 +41,8 @@ ReadWriteLock::ReadWriteLock() :
 
 ReadWriteLock::~ReadWriteLock()
 {
-  assert( m_ReaderIDs.mf_nGetNumItems() == 0 );
-  assert( m_nWriters == 0 );
+  Q_ASSERT( m_ReaderIDs.mf_nGetNumItems() == 0 );
+  Q_ASSERT( m_nWriters == 0 );
 }
 
 void ReadWriteLock::mf_EnterRead() const
@@ -151,7 +152,7 @@ void ReadWriteLock::mf_LeaveWrite() const
 {
   const Lock L( mc_Lock );
 
-  assert( m_nWriters > 0 && m_nWriterID == IThread::mf_nGetCurrentThreadID() );
+  Q_ASSERT( m_nWriters > 0 && m_nWriterID == IThread::mf_nGetCurrentThreadID() );
 
   if( --m_nWriters == 0 )
   {

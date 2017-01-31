@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifdef R126
 
 #include "apexmapwizard.h"
@@ -29,8 +29,8 @@
 #include "map/r126nucleusmaprecord.h"
 
 #include <vector>
-#include <qlistbox.h>
-#include <qlabel.h>
+#include <QListBox>
+#include <QLabel>
 
 namespace apex{
 

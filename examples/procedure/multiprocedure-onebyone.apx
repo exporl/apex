@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+    @what: Multiprocedure-order! - 3constantprocedures with the SAME procedure, parameters and trials (different stimuli)
+    @description: 2 procedures => constantprocedure1: 2presentations/1trial => 2x - 2buttons: name of procedure & number: click on number (=1) if you have heard the stimulus (corresponding with the number)
+                               => constantprocedure2: 2presentations/1trial => 2x - 2buttons: name of procedure & number: click on number (=2) if you have heard the stimulus (corresponding with the number)
+                               => constantprocedure3: 2presentations/1trial => 2x - 2buttons: name of procedure & number: click on number (=5) if you have heard the stimulus (corresponding with the number)
+    @how: procedure => multiProcedure: order: ONEBYONE - constantProcedure
+  -->
+ <procedure id="themultiprocedure" xsi:type="apex:multiProcedure">
+  <parameters>
+   <order>onebyone</order> <!-- order of multiProcedure (only start the next procedure if the previous one is done)-->
+  </parameters>
+  <procedure id="procedure1" xsi:type="apex:constantProcedure">
+   <parameters>
+    <presentations>2</presentations>
+    <skip>0</skip>
+    <order>sequential</order>
+   </parameters>
+   <trials>
+    <trial id="trial1">
+     <answer>button1</answer>
+     <screen id="screen1"/>
+     <stimulus id="stimulus1"/>
+    </trial>
+   </trials>
+  </procedure>
+  <procedure id="procedure2" xsi:type="apex:constantProcedure">
+   <parameters>
+    <presentations>2</presentations>
+    <skip>0</skip>
+    <order>sequential</order>
+   </parameters>
+   <trials>
+    <trial id="trial4">
+     <answer>button4</answer>
+     <screen id="screen2"/>
+     <stimulus id="stimulus2"/>
+    </trial>
+   </trials>
+  </procedure>
+  <procedure id="procedure3" xsi:type="apex:constantProcedure">
+   <parameters>
+    <presentations>2</presentations>
+    <skip>0</skip>
+    <order>sequential</order>
+   </parameters>
+   <trials>
+    <trial id="trial5">
+     <answer>button5</answer>
+     <screen id="screen3"/>
+     <stimulus id="stimulus5"/>
+    </trial>
+   </trials>
+  </procedure>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout width="3" height="1" id="main_layout1">
+    <label x="1" y="1" id="label1">
+     <text>Procedure 1</text>
+    </label>
+    <button x="2" y="1" id="button1">
+     <text>1</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+  <screen id="screen2">
+   <gridLayout width="4" height="1" id="main_layout2">
+    <label x="1" y="1" id="label2">
+     <text>Procedure 2</text>
+    </label>
+    <button x="2" y="1" id="button2">
+     <text>2</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup2">
+    <button id="button2"/>
+   </buttongroup>
+   <default_answer_element>buttongroup2</default_answer_element>
+  </screen>
+  <screen id="screen3">
+   <gridLayout width="4" height="1" id="main_layout3">
+    <label x="1" y="1" id="label3">
+     <text>Procedure 3</text>
+    </label>
+    <button x="2" y="1" id="button5">
+     <text>5</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup3">
+    <button id="button5"/>
+   </buttongroup>
+   <default_answer_element>buttongroup3</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <uri>wd1.wav</uri>
+   <channels>2</channels>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>wavdevice</device>
+   <uri>wd2.wav</uri>
+   <channels>2</channels>
+  </datablock>
+  <datablock id="rawdata5">
+   <device>wavdevice</device>
+   <uri>wd5.wav</uri>
+   <channels>2</channels>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata2"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus5">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata5"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

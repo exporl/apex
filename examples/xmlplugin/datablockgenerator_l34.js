@@ -3,9 +3,9 @@ function getDatablocks() {
     misc.checkParams( Array("CL_from", "CL_to", "CL_step", "electrode"));
     files = api.files( params["path"]);
     path=api.stripPath(params["path"]);
-    
+
     step = parseInt( params["CL_step"] );
-    
+
     r="";
     cl=parseInt(params["CL_from"]);
     while (cl < parseInt(params["CL_to"]) ) {
@@ -18,42 +18,42 @@ function getDatablocks() {
           "</nic:sequence>";
 
         db = "<datablock id='datablock_" + cl + "'>" +
-        "<device>l34device</device>" + 
+        "<device>l34device</device>" +
         "<data>" + data + "</data>" +
         "</datablock>";
 
-        r=r+db; 
-        
+        r=r+db;
+
         cl += step;
-        print( cl );
+        console.log(cl);
     }
-    
-    print(r);
-    
+
+    console.log(r);
+
     return r;
 
 }
 
 function getStimuli () {
     misc.checkParams( Array("CL_from", "CL_to", "CL_step"));
-    
+
     step = parseInt( params["CL_step"] );
-        
+
     r="";
     cl=parseInt(params["CL_from"]);
     while (cl < parseInt(params["CL_to"]) ) {
         r=r+xml.stimulus("stimulus_" + cl, "datablock_" + cl);
         cl += step;
     }
-    
+
     return r;
 }
 
 function getTrials () {
     misc.checkParams( Array("CL_from", "CL_to", "CL_step"));
-    
+
     step = parseInt( params["CL_step"] );
-        
+
     r="";
     cl=parseInt(params["CL_from"]);
     while (cl < parseInt(params["CL_to"]) ) {
@@ -61,11 +61,11 @@ function getTrials () {
             xml.tag("answer", "first"),
             xml.tag("screen", {"id" : "screen"}),
             xml.tag("stimulus", {id: "stimulus_"+cl}));
-            
+
          cl += step;
     }
-    
-    print(r);
-    
+
+    console.log(r);
+
     return r;
 }

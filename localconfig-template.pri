@@ -15,7 +15,7 @@
 
 # Uncomment to disable certain modules although all dependencies are available
 # Do not disable flash or pa5 here!
-#CLEBS_DISABLED = syllib original tester hrtf sink screeneditor perl clarion
+#CLEBS_DISABLED *= syllib original tester hrtf sink screeneditor perl
 
 # Uncomment for support of the programmable attenuator
 #CONFIG += PA5
@@ -45,13 +45,13 @@
 #win32:XALANCINCLUDEDIR = $${XALANCROOT}/src
 
 #win32:XERCESCROOT = $$BASEDIR/../api/xerces
-#win32:XERCESCLIB = xerces-c_2
+#win32:XERCESCLIB = xerces-c_3
 #win32:XERCESCLIB_RELEASE = $${XERCESCLIB}
 #win32:XERCESCLIB_DEBUG = $${XERCESCLIB}d
-#win32:XERCESCLIBDIR = $${XERCESCROOT}/build/win32/vc7.1
+#win32:XERCESCLIBDIR = $${XERCESCROOT}/build/win32/vc10
 #win32:XERCESCLIBDIR_RELEASE = $${XERCESCLIBDIR}/release
 #win32:XERCESCLIBDIR_DEBUG = $${XERCESCLIBDIR}/debug
-#win32:XERCESCDLL = xerces-c_2_7
+#win32:XERCESCDLL = xerces-c_3_1
 #win32:XERCESCDLL_RELEASE = $${XERCESCDLL}.dll
 #win32:XERCESCDLL_DEBUG = $${XERCESCDLL}d.dll
 #win32:XERCESCDLLDIR = $${XERCESCLIBDIR}
@@ -95,41 +95,53 @@
 #win32:SNDFILEROOT = $$BASEDIR/../api/sndfile
 #win32:IOWKITROOT= $$BASEDIR/../api/iowkit
 
+#win32:PROTOBUFROOT = $$BASEDIR/../api/protobuf
+#win32:PROTOBUFLIB = libprotobuf-lite
+#win32:PROTOBUFLIB_RELEASE = $${PROTOBUFLIB}
+#win32:PROTOBUFLIB_DEBUG = $${PROTOBUFLIB}
+#win32:PROTOBUFLIB_VERSION = -8
+#win32:PROTOBUFLIBDIR = $${PROTOBUFROOT}
+#win32:PROTOBUFLIBDIR_RELEASE = $${PROTOBUFLIBDIR}/release
+#win32:PROTOBUFLIBDIR_DEBUG = $${PROTOBUFLIBDIR}/debug
+#win32:PROTOBUFINCLUDEDIR = $${PROTOBUFROOT}/include
+#win32:PROTOBUFPROTOC = $${PROTOBUFROOT}/protoc.exe
+#win32:PROTOBUFPYTHONDIR = $${PROTOBUFROOT}/python-lib
+
+#win32:NIC3ROOT = $$BASEDIR/../api/nic3
+#win32:NIC3BINARIESDIR = $$NIC3ROOT/binaries
+#win32:NIC3PYTHONDIR = $$NIC3ROOT/python
+
+#win32:DOTROOT = $$BASEDIR/../api/dot
+#win32:DOTBINDIR = $${DOTROOT}/bin
+#win32:DOTBINEXECUTABLE = $${DOTBIN}/dot.exe
+
+#win32:LIBLOROOT = $$BASEDIR/../api/liblo
+#win32:LIBLOLIB = liblo
+#win32:LIBLOLIB_RELEASE = $${LIBLOLIB}
+#win32:LIBLOLIB_DEBUG = $${LIBLOLIB}_d
+#win32:LIBLOLIBDIR = $${LIBLOROOT}/lib
+#win32:LIBLOLIBDIR_RELEASE = $${LIBLOLIBDIR}/ReleaseDLL
+#win32:LIBLOLIBDIR_DEBUG = $${LIBLOLIBDIR}/DebugDLL
+#win32:LIBLOINCLUDEDIR = $${LIBLOROOT}
+
 # Installation paths for Unix
-#unix:PREFIXDIR = /usr/local
+#unix:PREFIX = $$BASEDIR/bin/installed
 #unix:CONFDIR = /etc
-#unix:DATADIR = $$PREFIXDIR/share/apex
-#unix:APPDIR = $$PREFIXDIR/share/applications
-#unix:ICONDIR = $$PREFIXDIR/share/icons/hicolor
-#unix:BINDIR = $$PREFIXDIR/bin
-#unix:LIBDIR = $$PREFIXDIR/lib
-#unix:PLUGINDIR = $$PREFIXDIR/lib/apex
+#unix:DATADIR = $$PREFIX/share/apex
+#unix:APPDIR = $$PREFIX/share/applications
+#unix:ICONDIR = $$PREFIX/share/icons/hicolor
+#unix:BINDIR = $$PREFIX/bin
+#unix:LIBDIR = $$PREFIX/lib
+#unix:PLUGINDIR = $$PREFIX/lib/apex
 
 # Installation paths for Windows
-#win32:PREFIXDIR = $${DESTDIR}_installed
-#win32:CONFDIR = $$PREFIXDIR/config
-#win32:DATADIR = $$PREFIXDIR
-#win32:ICONDIR = $$PREFIXDIR/icons
-#win32:BINDIR = $$PREFIXDIR/bin
-#win32:LIBDIR = $$PREFIXDIR/bin
-#win32:PLUGINDIR = $$PREFIXDIR/plugins
+#win32:PREFIX = $${DESTDIR}_installed
+#win32:CONFDIR = $$PREFIX/config
+#win32:DATADIR = $$PREFIX
+#win32:ICONDIR = $$PREFIX/icons
+#win32:BINDIR = $$PREFIX/bin
+#win32:LIBDIR = $$PREFIX/bin
+#win32:PLUGINDIR = $$PREFIX/plugins
 
 # Streamapp
-#CONFIG += OPTIMIZE    #for release versions, use a extra optimizations
-#CONFIG += ARM         #appends an extra "ARM" to the builddir and lib + auto-dsiables qt etc
 #CONFIG += MAC         #use OsX config
-
-#CONFIG += FFTREAL     #use processors/spectrum.h with FFTReal
-#CONFIG += NOSOUNDCARD #do not use files in soundcard/
-#CONFIG += NOPORTAUDIO #do not use Portaudio
-#CONFIG += NOASIO      #do not use Asio (only win32 and mac)
-#CONFIG += NOJACK      #do not use Jack audio stuff (unix/mac)
-#CONFIG += NOMIXER     #do not use files in mixers/
-#CONFIG += NORME       #do not use Rme mixer files in mixers/
-#CONFIG += NSP         #use Intel Nsp libraries (only win32)
-#CONFIG += NOUSEQT     #do not use Qt (enables qt_ files)
-#CONFIG += USEQTGUI    #do not use files in guicore/ except Qwt
-#CONFIG += USEQWT      #use Qwt files
-#CONFIG += NETWORK     #use files in network/
-#CONFIG += UICORE      #use files in uicore/
-#CONFIG += CONTROLLER  #use files in controller/

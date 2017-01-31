@@ -1,0 +1,9 @@
+		<filter xsi:type="apex:generator" id="noisegen">
+			<device>wavdevice</device>
+			<channels>1</channels>
+			<type>noise</type>
+			<!--basegain>-10</basegain-->
+			<gain id="noisegain">0</gain>
+			<frequency>0</frequency>
+			<phase>0</phase>
+		</filter>

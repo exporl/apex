@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef GRIDLAYOUTRUNDELEGATE_H
-#define GRIDLAYOUTRUNDELEGATE_H
 
-#include "screen/screenelement.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_GRIDLAYOUTRUNDELEGATE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_GRIDLAYOUTRUNDELEGATE_H_
 
-#include "screenelementrundelegate.h"
+#include "apexdata/screen/screenelement.h"
+
 #include "rundelegatedefines.h"
+#include "screenelementrundelegate.h"
 
 #include <QGridLayout>
 
@@ -49,8 +49,8 @@ namespace apex
      * ScreenElementRunDelegate representing a GridLayoutElement.
      */
     class GridLayoutRunDelegate:
-		public QGridLayout,
-		public ScreenElementRunDelegate
+                public QGridLayout,
+                public ScreenElementRunDelegate
     {
       const GridLayoutElement* element;
     public:
@@ -62,7 +62,7 @@ namespace apex
         const QFont& font );
 
     /*~GridLayoutRunDelegate() {
-        qDebug("nop");
+        qCDebug(APEX_RS, "nop");
     }*/
 
       const ScreenElement* getScreenElement() const;

@@ -1,0 +1,227 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: Demonstrate the misapplication of <card>
+  @description: <card> specifies the name of the sound card. If you use the wrong cardname, you will get an error when you try to open your experiment in apex.
+  @how: wrong card name used in <card> -> 'fout' should be default or an other name defined in apexconfig.xml
+ -->
+
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>correct</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+   <trial id="trial2">
+    <answer>wrong</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus2"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>false</progressbar>
+   <feedback>false</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout id="answer_layout" height="2" width="2" x="1" y="2">
+    <button id="correct" x="1" y="1">
+     <text>Correct</text>
+    </button>
+    <button id="wrong" x="2" y="1">
+     <text>Wrong</text>
+    </button>
+    <textEdit id="dieeditdie" x="1" y="2">
+     <fontsize>26</fontsize>
+     <inputmask>numbers</inputmask>
+    </textEdit>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="correct"/>
+    <button id="wrong"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>file:../stimuli</uri_prefix>
+  <datablock id="wd1">
+   <device>soundcard</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="wd2">
+   <device>soundcard</device>
+   <uri>wd2.wav</uri>
+  </datablock>
+  <datablock id="noisedata">
+   <device>soundcard</device>
+   <uri>wivineruis.wav</uri>
+  </datablock>
+  <datablock id="silence">
+   <device>soundcard</device>
+   <uri>silence:1000</uri>
+   <channels>1</channels>
+  </datablock>
+ </datablocks>
+ <devices>
+  <master>soundcard</master>
+  <device id="soundcard" xsi:type="apex:wavDeviceType">
+   <driver>asio</driver>
+   <card>fout</card>
+   <channels>3</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters>
+  <filter id="noisegen" xsi:type="apex:dataloop">
+   <device>soundcard</device>
+   <channels>1</channels>
+   <continuous>true</continuous>
+   <datablock>noisedata</datablock>
+   <basegain>-16</basegain>
+   <gain id="noisegain">0</gain>
+   <randomjump>true</randomjump>
+  </filter>
+  <!--filter id="noisegen" xsi:type="apex:generator">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <type>singlepulse</type>
+      <basegain>0</basegain>
+      <gain>0</gain>
+      <frequency>0</frequency>
+      <phase>0</phase>
+    </filter-->
+  <filter id="amp" xsi:type="apex:amplifier">
+   <device>soundcard</device>
+   <channels>2</channels>
+   <gain id="left" channel="0">6.0</gain>
+   <gain id="right" channel="1">6.0</gain>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <sequential>
+     <simultaneous>
+      <datablock id="silence"/>
+      <datablock id="wd1"/>
+     </simultaneous>
+     <datablock id="wd2"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>Blaaaablaabaa</description>
+   <datablocks>
+    <sequential>
+     <datablock id="silence"/>
+     <datablock id="wd1"/>
+    </sequential>
+   </datablocks>
+   <!--datablocks>
+        <sequential>
+          <datablock id="wd2" />
+          <datablock id="wd1" />
+        </sequential>
+      </datablocks-->
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>wd1</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>wd1</id>
+    <channel>1</channel>
+   </from>
+   <to>
+    <id>soundcard</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>wd2</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>amp</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>wd2</id>
+    <channel>1</channel>
+   </from>
+   <to>
+    <id>amp</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>amp</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>amp</id>
+    <channel>1</channel>
+   </from>
+   <to>
+    <id>soundcard</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>silence</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>noisegen</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+ </connections>
+</apex:apex>

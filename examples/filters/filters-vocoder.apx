@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!-- @doc
+  @what: Demonstration of vocoder plugin.
+  @description: Play a sentence either vocoded or unvocoded
+  @how: A vocoder-plugin filter has been added in the connections.
+  -->
+  <procedure xsi:type="apex:trainingProcedure">
+   <parameters>
+    <presentations>10000</presentations>
+    <skip>0</skip>
+    <order>sequential</order>
+    <corrector xsi:type="apex:isequal"/>
+  </parameters>
+    <trials>
+      <trial id="trial_sentence">
+        <answer>button_sentence</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_sentence"/>
+      </trial>
+      <trial id="trial_vocoded_sentence">
+        <answer>button_vocoded_sentence</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_vocoded_sentence"/>
+      </trial>
+ </trials>
+</procedure>
+
+<screens>
+  <general>
+    <repeatbutton>false</repeatbutton>
+    <showpanel>true</showpanel>
+    <showmenu>true</showmenu>
+  </general>
+  <reinforcement>
+    <progressbar>true</progressbar>
+    <feedback length="0">false</feedback>
+  </reinforcement>
+  <screen id="experimenter_screen">
+    <gridLayout id="buttons" width="1" height="2">
+        <button id="button_sentence" col="1" row="1">
+          <text>Play sentence</text>
+        </button>
+      
+        <button id="button_vocoded_sentence" col="1" row="2">
+          <text>Play vocoded sentence</text>
+        </button>
+      
+    </gridLayout>
+   <buttongroup id="buttongroup">
+    <button id="button_sentence"/>
+    <button id="button_vocoded_sentence"/>
+   </buttongroup>
+  <default_answer_element>buttongroup</default_answer_element>
+</screen>
+</screens>
+
+  <datablocks>
+    <datablock id="datablock_sentence">
+      <device>wavdevice</device>
+      <uri>vocoder_files/sentence.wav</uri>
+    </datablock>
+    <datablock id="datablock_vocoded_sentence">
+      <device>wavdevice</device>
+      <uri>vocoder_files/sentence.wav</uri>
+    </datablock>
+</datablocks>
+
+<devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+    <driver>portaudio</driver>
+    <card>interactive</card>
+    <channels>1</channels>
+    <gain id="cardgain1" channel="0">0</gain>
+    <samplerate>44100</samplerate>
+  </device>
+</devices>
+
+<filters>
+  <filter id="vocoder" xsi:type="apex:pluginfilter">
+    <device>wavdevice</device>
+    <channels>1</channels>
+    <continuous>false</continuous>
+    <plugin>vocoder</plugin>
+    <parameter name="disabled">false</parameter>
+    <parameter name="filterbank">vocoder_files/filterbank.bin</parameter>
+    <parameter name="lowpass">vocoder_files/lowpass.bin</parameter>
+    <parameter name="carriers">vocoder_files/carriers.wav</parameter>
+  </filter>
+</filters>
+
+  <stimuli>
+    <stimulus id="stimulus_sentence">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_sentence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters></variableParameters>
+      <fixedParameters></fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_vocoded_sentence">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_vocoded_sentence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters></variableParameters>
+      <fixedParameters></fixedParameters>
+    </stimulus>
+
+</stimuli>
+
+  <connections>
+    <connection>
+      <from>
+        <id>datablock_sentence</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock_vocoded_sentence</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>vocoder</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>vocoder</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+</connections>
+
+</apex:apex>

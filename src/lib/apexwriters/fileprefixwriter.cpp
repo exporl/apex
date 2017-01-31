@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apexdata/fileprefix.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
 #include "fileprefixwriter.h"
-#include "fileprefix.h"
 
-#include "xml/apexxmltools.h"
 using namespace apex::ApexXMLTools;
-
-
-#include "xml/xercesinclude.h"
 using namespace XERCES_CPP_NAMESPACE;
 
 

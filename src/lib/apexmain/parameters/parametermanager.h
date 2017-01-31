@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef _APEX_SRC_PARAMETERS_PARAMETERMANAGER_H_
-#define _APEX_SRC_PARAMETERS_PARAMETERMANAGER_H_
 
-//from libdata
-#include "parameters/parameter.h"
-#include "parameters/parametermanagerdata.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_PARAMETERS_PARAMETERMANAGER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_PARAMETERS_PARAMETERMANAGER_H_
+
+#include "apexdata/parameters/parameter.h"
+#include "apexdata/parameters/parametermanagerdata.h"
 
 /**
  * A parameter has or can have:
@@ -36,8 +35,10 @@
 namespace apex
 {
 
-class ParameterManager
+class ParameterManager : public QObject
 {
+        Q_OBJECT
+
     public:
 
         ParameterManager(const data::ParameterManagerData& d);
@@ -88,7 +89,19 @@ class ParameterManager
          */
         void forceReset();
 
+        /**
+         * @brief Explicitly set all parameters that have ever been set to their default value.
+         * This is different from reset in that reset will remove a parameter from the list of parameters,
+         * while this function will keep in in the list and set it to the default value.
+         * @param force if true, ignore the "cannot reset" flag
+         */
+        void setAllToDefaultValue(bool force);
+
         void showContents() const;
+
+    Q_SIGNALS:
+
+        void parameterChanged(QString id, QVariant value);
 
     private:
 

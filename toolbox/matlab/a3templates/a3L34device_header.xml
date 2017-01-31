@@ -1,0 +1,10 @@
+<devices>
+
+    <device id="l34"  xsi:type="apex:L34DeviceType">
+      <device_id>1</device_id>
+      <implant>cic3</implant>
+      <trigger>none</trigger>
+      <volume id='l34volume'>100</volume>
+
+      <defaultmap>
+        <inline>

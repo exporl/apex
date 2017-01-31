@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef STIMULIPARSERH
-#define STIMULIPARSERH
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_STIMULIPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_STIMULIPARSER_H_
 
 #include "parser/apexparser.h"
 

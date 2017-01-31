@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: example of a matrix layout for buttons
+  @description: Screen shows buttons in a 2x2 matrix. After listening to the stimulus, you have to select one button in each column before clicking OK.
+  @how: <matrix>
+  -->
+
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>3</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial_1">
+    <answer>button_1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus_1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">false</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout width="1" height="3">
+    <label row="1" col="1" id="label">
+     <text>Matrix:</text>
+    </label>
+    <matrix row="2" col="1" id="matrix">
+     <autocontinue>true</autocontinue>
+     <element row="1" col="1">
+      <name>row1 col1</name>
+     </element>
+     <element row="2" col="1">
+      <name>row2 col1</name>
+     </element>
+     <element row="1" col="2">
+      <name>row1 col2</name>
+     </element>
+     <element row="2" col="2">
+      <name>row2 col2</name>
+     </element>
+    </matrix>
+    <button row="3" col="1" id="button">
+     <text>OK</text>
+    </button>
+   </gridLayout>
+   <default_answer_element>matrix</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <uri>wd1-mono.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>1</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus_1">
+   <datablocks>
+    <simultaneous>
+     <datablock id="rawdata1"/>
+    </simultaneous>
+   </datablocks>
+  </stimulus>
+ </stimuli>
+ <connections/>
+ <results>
+  <page>apex:resultviewer.html</page>
+  <resultparameters/>
+  <showduringexperiment>false</showduringexperiment>
+  <showafterexperiment>false</showafterexperiment>
+  <saveprocessedresults>true</saveprocessedresults>
+ </results>
+</apex:apex>

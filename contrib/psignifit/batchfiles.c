@@ -39,20 +39,20 @@ BatchPtr BatchString(char * stringData, size_t length, boolean disposeable)
 {
 	BatchPtr b;
 	size_t i;
-	
+
 	b = New(Batch, 1);
 	b->buffer = stringData;
 	b->length = length;
 	b->position = 0;
 	b->disposeable = disposeable;
-	
+
         // [Tom] Check if buffer is empty
 	for(i = 0; i < b->length; i++) if(!isspace(b->buffer[i])) break;
 	if(i == b->length) {
 		DisposeBatch(b);
 		return NULL;
 	}
-	
+
 	return b;
 }
 /*//////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -70,10 +70,10 @@ BatchPtr ConcatenateBatchStrings(BatchPtr first, BatchPtr second, boolean dispos
 	if(first && first->buffer) memcpy(b->buffer, first->buffer, (b->position = first->length));
 	if(second && second->buffer) memcpy(b->buffer + b->position, second->buffer, second->length);
 	b->position = 0;
-	
+
 	if(first && disposeFirst) DisposeBatch(first);
 	if(second && disposeSecond) DisposeBatch(second);
-	
+
 	return b;
 }
 /*//////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -90,11 +90,11 @@ int FindIdentifierInBatch(BatchPtr b, int p, char * identifier)
 	boolean newLine;
 	int matched, len;
 	char c;
-	
+
 	if(b == NULL || b->buffer == NULL) return EOF;
-	
+
         if((unsigned)p >= b->length){JError("FindIdentifierInBatch(): start-point exceeds end of file"); return EOF;}
-	
+
 	matched = -1;
 	len = strlen(identifier);
 	newLine = TRUE;
@@ -108,23 +108,23 @@ int FindIdentifierInBatch(BatchPtr b, int p, char * identifier)
 		if(NewLine(c)) newLine = TRUE;
 	}
 	if(matched<len) return EOF;
-	
+
 	return p;
 }
 /*//////////////////////////////////////////////////////////////////////////////////////////////////*/
 char * FindVariableInBatch(BatchPtr b, char *identifier, int *length, BatchFindMode mode)
 {
 	int target, next;
-	
+
 	if((target = FindIdentifierInBatch(b, 0, identifier)) == EOF)
 		{DisposeBatch(b); JError("could not find #%s in batch file", identifier); return NULL;}
-	
+
         if(mode == uniqueOccurrence && target < (int) b->length && FindIdentifierInBatch(b, target, identifier) != EOF)
 		{DisposeBatch(b); JError("multiple occurences of #%s in batch file", identifier); return NULL;}
-	
+
 	if(mode == lastOccurrence)
 		while((next = FindIdentifierInBatch(b, target, identifier)) != EOF) target = next;
-			
+
 	return GetVariableSpace(b, &target, length);
 }
 /*//////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -133,7 +133,7 @@ char * GetVariableSpace(BatchPtr b, int *position, int *length)
 	int p;
 	char c;
 	boolean newLine;
-		
+
 	*length = 0;
 	if(*position == EOF) return NULL;
 	newLine = FALSE;
@@ -178,7 +178,7 @@ BatchPtr LoadBatchFromFile(char * name, boolean generateErrorIfNotFound)
 	bufSize = bufIncrement;
 	b->buffer = New(char, (bufSize = bufIncrement));
 
-	
+
 	if((stream = fopen(name, "r"))==NULL) {
 		if(strcmp(name, "stdin") == 0 || strcmp(name, "-") == 0) stream = stdin;
 		else {
@@ -188,7 +188,7 @@ BatchPtr LoadBatchFromFile(char * name, boolean generateErrorIfNotFound)
 		}
 	}
 	b->length = 0;
-		
+
 	while((c=fgetc(stream))!=EOF) {
 		if(b->length >= bufSize) {
 			if((bufSize += bufIncrement) > maxBufSize) {
@@ -214,7 +214,7 @@ BatchPtr LoadBatchFromFile(char * name, boolean generateErrorIfNotFound)
 	}
 
 	if(stream != stdin) fclose(stream);
-	
+
 	return b;
 }
 /*//////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -223,7 +223,7 @@ char * NextIdentifier(BatchPtr b, int *lengthPtr, char *buf, int bufSize, BatchF
 	int p, i;
 	boolean legal;
 	char * returnVal;
-	
+
 	if(b == NULL || b->buffer == NULL) return NULL;
 	if(buf == NULL || bufSize < 2) {JError("NextIdentifier(): buffer cannot be NULL, and buffer size must be at least 2"); return NULL;}
 //	if(b->position < 0) b->position = 0;
@@ -241,19 +241,19 @@ char * NextIdentifier(BatchPtr b, int *lengthPtr, char *buf, int bufSize, BatchF
 		(b->position)++;
 	}
 	if(b->position >= b->length - 1) {
-		buf[0] = 0; 
+		buf[0] = 0;
 		return NULL;
 	}
-	
+
 	i = 0;
 	b->position++;
 	while(b->position < b->length && !isspace(b->buffer[b->position]) && i < bufSize - 1) {
 		buf[i++] = toupper(b->buffer[b->position++]);
-	} 
+	}
 	buf[i] = 0;
 
 	returnVal = GetVariableSpace(b, (p = b->position, &p), lengthPtr);
-	
+
         if((mode == firstOccurrence && FindIdentifierInBatch(b, 0, buf) != (int) b->position) ||
 	   (mode == lastOccurrence && FindIdentifierInBatch(b, b->position, buf) != EOF))
 		returnVal = NextIdentifier(b, lengthPtr, buf, bufSize, mode);
@@ -271,11 +271,11 @@ boolean ReadBoolean(char *p, int inputLength, char *description)
 {
 	int i;
 	char s[6];
-	
+
 	if(p == NULL) return FALSE;
 	for(i = 0; i < inputLength && i < 5; i++) s[i] = toupper(p[i]);
 	s[i] = 0;
-	
+
 	if(strcmp(s, "TRUE")==0 || strcmp(s, "1")==0) return TRUE;
 	if(strcmp(s, "FALSE")==0 || strcmp(s, "0")==0) return FALSE;
 
@@ -286,24 +286,23 @@ boolean ReadBoolean(char *p, int inputLength, char *description)
 double * ReadDoubles(char *p, int inputLength, double * outBuffer,
 			unsigned int * nVals, unsigned int minNVals, unsigned int maxNVals, char *description)
 {
-    double x, firstVal = 0.0;
 	char *start, *end;
 	unsigned int localNVals;
-	
+
 	if(p == NULL) return NULL;
-	
+
 	if(p[0] == '[' || p[0] == '(' || p[0] == '{') p++, inputLength--;
 	if(p[inputLength-1] == ']' || p[inputLength-1] == ')' || p[inputLength-1] == '}') inputLength--;
-	
+
 	start = p;
 	end = start + inputLength - 1;
 	if(nVals == NULL) nVals = &localNVals;
 	*nVals = 0;
-	
+
 	errno = 0;
 	while(start <= end) {
-	 	x = improved_strtod(start, &start);
-		if(++(*nVals) == 1) firstVal = x;
+	 	improved_strtod(start, &start);
+		++(*nVals);
 		if(errno) break;
 	}
 	if(errno && start <= end)
@@ -334,7 +333,7 @@ double ReadScalar(char *p, int inputLength, char *description)
 {
 	unsigned int nVals;
 	double val;
-	
+
 	ReadDoubles(p, inputLength, &val, &nVals, 1, 1, description);
 
 	return val;
@@ -360,7 +359,7 @@ char * ReadString(char *p, int inputLength, char * buf, unsigned int * siz)
         if(inputLength > (int) outBufSize - 1) inputLength = outBufSize - 1;
 	memcpy(buf, p, inputLength);
 	buf[inputLength] = 0;
-	
+
 	return buf;
 }
 /*//////////////////////////////////////////////////////////////////////////////////////////////////*/

@@ -16,19 +16,21 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "screen/screenrundelegate.h"
+
+#include "apexdata/screen/buttonelement.h"
+
+#include "apextools/apextools.h"
+
 #include "gui/guidefines.h"
 
-#include "screen/buttonelement.h"
+#include "screen/screenrundelegate.h"
 
 #include "buttonrundelegate.h"
-#include "apextools.h"
 
 #include <QFont>
 #include <QFontMetrics>
-#include <QVariant>
 #include <QStyleFactory>
+#include <QVariant>
 
 namespace apex
 {
@@ -91,17 +93,17 @@ apex::rundelegates::ButtonRunDelegate::ButtonRunDelegate(
     setObjectName(element->getID());
     //setStyleSheet(element->getStyle());
     setCommonProperties(this);
-    //    qDebug("Creating button with parent %p", parent);
+    //    qCDebug(APEX_RS, "Creating button with parent %p", parent);
 
     #ifdef Q_WS_WIN
     // make sure we can change the button color (is not possible when using xp or vista engine)
-    setStyle(QStyleFactory::create("windows"));         
+    setStyle(QStyleFactory::create("windows"));
     #endif
 
     QPushButton::setText( e->text() );
     if ( !element->getShortCut().isEmpty() ) {
         QPushButton::setShortcut( e->getShortCut() );
-        /*qDebug("Setting shortcut of element %s to %s",
+        /*qCDebug(APEX_RS, "Setting shortcut of element %s to %s",
                qPrintable(e->getID()), qPrintable(e->getShortCut().toString()));*/
     }
 
@@ -140,7 +142,7 @@ void apex::rundelegates::ButtonRunDelegate::feedBack
     QColor newBGColor_enabled, newBGColor_disabled;
     QPalette dp;        // default palette
 
-    
+
     if ( mode == ScreenElementRunDelegate::NoFeedback )    {
         //setDown(false);
         setProperty("role", "none");
@@ -185,7 +187,7 @@ void apex::rundelegates::ButtonRunDelegate::feedBack
     if (newBGColor_enabled.isValid())
         palette.setColor(QPalette::Active, QPalette::Button,
                          newBGColor_enabled);
-    
+
     if (newFGColor_disabled.isValid())
         palette.setColor(QPalette::Disabled, QPalette::ButtonText,
                          newFGColor_disabled);

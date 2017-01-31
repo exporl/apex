@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+
+ <!-- @doc
+  @what: shows how to implement a vertical slider on the screen
+  @description: Slider is shown on the screen. Sliding the bar doens't change anything to the presented stimuli.
+  @how: <slider>
+  -->
+
+ <procedure xsi:type="apex:constantProcedure" id="LoudnessRanking">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial">
+    <answer>slider_1</answer>
+    <screen id="screen_1"/>
+    <stimulus id="stimulus_1"/>
+   </trial>
+  </trials>
+ </procedure>
+
+ <screens>
+  <screen id="screen_1">
+   <hLayout width="2">
+    <slider x="1" id="slider_1">
+     <orientation>vertical</orientation>
+     <min>0</min>
+     <max>50</max>
+     <value>25</value>
+     <tickinterval>10</tickinterval>
+     <stepsize>1</stepsize>
+     <pagesize>5</pagesize>
+    </slider>
+    <hLayout width="2" x="2">
+     <vLayout height="5" x="1">
+      <label id="label_1" y="1">
+       <text>Heel Luid</text>
+      </label>
+      <label id="label_2" y="2">
+       <text>Luid</text>
+      </label>
+      <label id="label_3" y="3">
+       <text>Normaal</text>
+      </label>
+      <label id="label_4" y="4">
+       <text>Stil</text>
+      </label>
+      <label id="label_5" y="5">
+       <text>Bijna onhoorbaar</text>
+      </label>
+     </vLayout>
+     <vLayout height="5" x="2">
+      <button id="button_1" y="5">
+       <text>Volgende</text>
+      </button>
+     </vLayout>
+    </hLayout>
+   </hLayout>
+   <default_answer_element>button_1</default_answer_element>
+  </screen>
+ </screens>
+
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <!-- Clarinet -->
+  <datablock id="rawdata_1">
+   <device>wavdevice</device>
+   <uri>sentence.wav</uri>
+  </datablock>
+ </datablocks>
+
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>1</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+
+ <filters/>
+
+ <stimuli>
+  <fixed_parameters/>
+  <!-- Clarinet -->
+  <stimulus id="stimulus_1">
+   <datablocks>
+    <datablock id="rawdata_1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+
+ <connections/>
+
+</apex:apex>

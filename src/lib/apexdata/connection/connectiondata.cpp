@@ -17,9 +17,9 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "connectiondata.h"
+#include "apextools/apextools.h"
 
-#include "apextools.h"
+#include "connectiondata.h"
 
 namespace apex
 {

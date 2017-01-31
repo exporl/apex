@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!-- @doc
+  @what: Shows how to start continuous filters etc before the first trial is presented
+ @description: The noise is playing continuously over trials (dataloop)  - the noise starts 5s before the first trial (presenting: wd1.wav: 'een') begins
+  @how: procedure: time_before_first_trial: in seconds - filters: dataloop - continuous: true
+-->
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>3</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+   <time_before_first_trial>5</time_before_first_trial>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout width="2" height="1">
+    <button id="button1" x="2" y="1">
+     <text>dataloop - 1</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>file:../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>soundcard1</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="noisedata">
+   <device>soundcard1</device>
+   <uri>wivineruis.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="soundcard1" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters>
+  <filter id="noisegen" xsi:type="apex:dataloop">
+   <device>soundcard1</device>
+   <channels>1</channels>
+   <continuous>true</continuous>
+   <datablock>noisedata</datablock>
+   <basegain>0</basegain>
+   <gain>0</gain>
+   <randomjump>false</randomjump>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <sequential>
+     <datablock id="rawdata1"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>noisegen</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard1</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>_ALL_</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard1</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+ </connections>
+</apex:apex>

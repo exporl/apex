@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef ARCLAYOUTRUNDELEGATE_H
-#define ARCLAYOUTRUNDELEGATE_H
 
-#include "gui/arclayout.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_ARCLAYOUTRUNDELEGATE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_ARCLAYOUTRUNDELEGATE_H_
 
-#include "screen/screenelement.h"
+#include "apexdata/screen/screenelement.h"
 
-#include "screenelementrundelegate.h"
+#include "apextools/gui/arclayout.h"
+
 #include "rundelegatedefines.h"
+#include "screenelementrundelegate.h"
 
 #include <QLayout>
 

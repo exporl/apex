@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: Change volume of CI stimuli (send simple XML file to L34 device)
+  @description: Change the volume of the CI stimuli to 10,50,70 or 100 current units
+  @how: Add variable parameter id=l34volume, see device: volume 100 is default
+    -->
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>100</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button10</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus10"/>
+   </trial>
+   <trial id="trial2">
+    <answer>button50</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus50"/>
+   </trial>
+   <trial id="trial3">
+    <answer>button70</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus70"/>
+   </trial>
+   <trial id="trial4">
+    <answer>button100</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulusdefault"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout id="main_layout" height="2" width="3">
+    <button id="button10" x="1" y="1">
+     <text>Volume 10</text>
+    </button>
+    <button id="button50" x="1" y="2">
+     <text>Volume 50</text>
+    </button>
+    <button id="button70" x="2" y="1">
+     <text>Volume 70</text>
+    </button>
+    <button id="button100" x="2" y="2">
+     <text>Default volume (100)</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button10"/>
+    <button id="button50"/>
+    <button id="button70"/>
+    <button id="button100"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli/</uri_prefix>
+  <datablock id="fadechan">
+   <device>l34device</device>
+   <description>[0-255] on every channel, per channel</description>
+   <uri>fadechan-single.qic</uri>
+  </datablock>
+  <datablock id="d10pulses">
+   <device>l34device</device>
+   <uri>10pulses+powerup-ch1.qic</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="l34device" xsi:type="apex:L34DeviceType">
+   <device_id>1</device_id>
+   <implant>cic3</implant>
+   <trigger>none</trigger>
+   <volume id="l34volume">100</volume>
+   <defaultmap>
+    <inline>
+     <number_electrodes>3</number_electrodes>
+     <mode>MP1+2</mode>
+     <pulsewidth>25</pulsewidth>
+     <pulsegap>8</pulsegap>
+     <period>200</period>
+     <channel threshold="1" number="1" comfort="255" electrode="1"/>
+     <channel threshold="1" number="2" comfort="255" electrode="2"/>
+     <channel threshold="1" number="3" comfort="255" electrode="3"/>
+     <channel threshold="1" number="4" comfort="255" electrode="4"/>
+     <channel threshold="1" number="5" comfort="255" electrode="5"/>
+     <channel threshold="1" number="6" comfort="255" electrode="6"/>
+     <channel threshold="1" number="7" comfort="255" electrode="7"/>
+     <channel threshold="1" number="8" comfort="255" electrode="8"/>
+     <channel threshold="1" number="9" comfort="255" electrode="9"/>
+     <channel threshold="1" number="10" comfort="255" electrode="10"/>
+     <channel threshold="1" number="11" comfort="255" electrode="11"/>
+     <channel threshold="1" number="12" comfort="255" electrode="12"/>
+     <channel threshold="1" number="13" comfort="255" electrode="13"/>
+     <channel threshold="1" number="14" comfort="255" electrode="14"/>
+     <channel threshold="1" number="15" comfort="255" electrode="15"/>
+     <channel threshold="1" number="16" comfort="255" electrode="16"/>
+     <channel threshold="1" number="17" comfort="255" electrode="17"/>
+     <channel threshold="1" number="18" comfort="255" electrode="18"/>
+     <channel threshold="1" number="19" comfort="255" electrode="19"/>
+     <channel threshold="1" number="20" comfort="255" electrode="20"/>
+     <channel threshold="1" number="21" comfort="255" electrode="21"/>
+     <channel threshold="1" number="22" comfort="255" electrode="22"/>
+    </inline>
+   </defaultmap>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus10">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="d10pulses"/>
+   </datablocks>
+   <variableParameters>
+    <parameter id="l34volume">10</parameter>
+   </variableParameters>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus50">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="d10pulses"/>
+   </datablocks>
+   <variableParameters>
+    <parameter id="l34volume">50</parameter>
+   </variableParameters>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus70">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="d10pulses"/>
+   </datablocks>
+   <variableParameters>
+    <parameter id="l34volume">70</parameter>
+   </variableParameters>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulusdefault">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="d10pulses"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

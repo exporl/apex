@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef APEXAPEXMODULE_H
-#define APEXAPEXMODULE_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_APEXMODULE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_APEXMODULE_H_
 
 #include <QObject>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex {
 

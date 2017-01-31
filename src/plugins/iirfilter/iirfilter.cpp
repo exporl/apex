@@ -17,11 +17,11 @@
  ******************************************************************************/
 
 // FIXME: this is a FIR filter!
+// FIXME: Does not compile, code not finished??
 
 
-#include "signalprocessing/iirfilter.h"
-
-#include "pluginfilterinterface.h"
+#include "apextools/signalprocessing/iirfilter.h"
+#include "apexmain/filter/pluginfilterinterface.h"
 
 #include <QMap>
 #include <QStringList>
@@ -34,6 +34,9 @@ class IirFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA(IID "apex.iirfilter")
+#endif
 public:
     virtual QStringList availablePlugins() const;
 
@@ -41,7 +44,9 @@ public:
             unsigned channels, unsigned blockSize, unsigned fs) const;
 };
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN2 (iirfilter, IirFilterCreator)
+#endif
 
 class IirFilterPlugin:
     public QObject,
@@ -68,15 +73,18 @@ private:
 
     bool disabled;
     QMap<QString, QString> parameters;
+    QString filePath;
+    unsigned limit;
 };
 
 
-// IirFilterPlugin ==================================================================
+// IirFilterPlugin =============================================================
 
 IirFilterPlugin::IirFilterPlugin (unsigned channels, unsigned blockSize) :
     channels (channels),
     blockSize (blockSize),
-    disabled (false)
+    disabled (false),
+    limit (0)
 {
     resetParameters();
 }
@@ -95,18 +103,18 @@ void IirFilterPlugin::resetParameters()
 
 bool IirFilterPlugin::isValidParameter (const QString &type, int channel) const
 {
-    if (type == "uri" && channel == -1)
+    if (type == QLatin1String("uri") && channel == -1)
         return true;
-    if (type == "limit" && channel == -1)
+    if (type == QLatin1String("limit") && channel == -1)
         return true;
-    if (type == "disabled" && channel == -1)
+    if (type == QLatin1String("disabled") && channel == -1)
         return true;
 
     // All other parameters go to the parameters array
     if (channel == -1)
         return true;
 
-    setErrorMessage (QString ("Unknown parameter %2 or invalid channel %1")
+    setErrorMessage (QString (tr("Unknown parameter %2 or invalid channel %1"))
             .arg (channel).arg (type));
     return false;
 }
@@ -114,17 +122,17 @@ bool IirFilterPlugin::isValidParameter (const QString &type, int channel) const
 bool IirFilterPlugin::setParameter (const QString &type, int channel,
         const QString &value)
 {
-    if (type == "uri" && channel == -1) {
+    if (type == QLatin1String("uri") && channel == -1) {
         filePath = QUrl (value).path();
         return true;
     }
-    if (type == "limit" && channel == -1) {
+    if (type == QLatin1String("limit") && channel == -1) {
         limit = value.toUInt();
         return true;
     }
-    if (type == "disabled" && channel == -1) {
-        disabled = value == "true" || value == "1" ||
-                   value == "yes"  || value == "disabled";
+    if (type == QLatin1String("disabled") && channel == -1) {
+        disabled = value == QLatin1String("true") || value == QLatin1String("1") ||
+                   value == QLatin1String("yes")  || value == QLatin1String("disabled");
         return true;
     }
 
@@ -133,7 +141,7 @@ bool IirFilterPlugin::setParameter (const QString &type, int channel,
         return true;
     }
 
-    setErrorMessage (QString ("Unknown parameter %2 or invalid channel %1")
+    setErrorMessage (QString (tr("Unknown parameter %2 or invalid channel %1"))
             .arg (channel).arg (type));
     return false;
 }
@@ -146,7 +154,7 @@ bool IirFilterPlugin::prepare (unsigned numberOfFrames)
         QMapIterator<QString, QString> i (parameters);
         while (i.hasNext()) {
             i.next();
-            filePath.replace ("${" + i.key() + "}", i.value());
+            filePath.replace (QLatin1String("${") + i.key() + QLatin1String("}"), i.value());
         }
         filters.clear();
         Q_FOREACH (const QVector<double> &taps,
@@ -154,21 +162,21 @@ bool IirFilterPlugin::prepare (unsigned numberOfFrames)
             FirFilter filter (taps, true);
             filters.append (filter);
             if (blockSize % filter.length() != 0) {
-                setErrorMessage (QString ("Blocksize %1 is not multiple of FIR"
-                    " filter length %2").arg (blockSize).arg (filter.length()));
+                setErrorMessage (QString (tr("Blocksize %1 is not multiple of FIR"
+                    " filter length %2")).arg (blockSize).arg (filter.length()));
                 return false;
             }
         }
 
     } catch (std::exception &e) {
-        setErrorMessage (QString ("Unable to instantiate FIR filters: %1")
+        setErrorMessage (QString (tr("Unable to instantiate FIR filters: %1"))
                 .arg (e.what()));
         return false;
     }
 
     if (unsigned (filters.size()) != channels) {
-        setErrorMessage (QString ("Number of channels differ: plugin has %1 "
-            "channels, FIR filter %2").arg (channels).arg (filters.size()));
+        setErrorMessage (QString (tr("Number of channels differ: plugin has %1 "
+            "channels, FIR filter %2")).arg (channels).arg (filters.size()));
         return false;
     }
 
@@ -186,11 +194,11 @@ void IirFilterPlugin::process (double * const *data)
         filters[channel].process (data[channel], blockSize);
 }
 
-// IirFilterCreator ===========================================================
+// IirFilterCreator ============================================================
 
 QStringList IirFilterCreator::availablePlugins() const
 {
-    return QStringList() << "iir";
+    return QStringList() << QLatin1String("iir");
 }
 
 PluginFilterInterface *IirFilterCreator::createFilter

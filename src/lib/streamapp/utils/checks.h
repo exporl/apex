@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __CHECKS_H_
 #define __CHECKS_H_
 
-#include "utils/stringexception.h"
+#include "stringexception.h"
 
 namespace utils
 {

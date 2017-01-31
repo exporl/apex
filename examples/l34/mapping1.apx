@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: Use default map with current units between 1 and 255
+  @description:
+  @how: See defaultmap
+    -->
+
+ <!--
+  Regression test for mapping using inline map
+  input = fadein on all channels
+    -->
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>1</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+   <trial id="trial2">
+    <answer>button2</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus2"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout id="main_layout" height="2" width="3">
+    <button id="button1" x="1" y="1">
+     <text>fadein</text>
+    </button>
+    <button id="button2" x="1" y="1">
+     <text>fadechan</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli/</uri_prefix>
+  <datablock id="rawdata1">
+   <device>l34device</device>
+   <description>sample raw l34 datablock</description>
+   <uri>fadein.qic</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>l34device</device>
+   <description>sample raw l34 datablock</description>
+   <uri>fadechan.qic</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="l34device" xsi:type="apex:L34DeviceType">
+   <device_id>0</device_id>
+   <implant>cic3</implant>
+   <trigger>in</trigger>
+   <defaultmap>
+    <inline>
+     <number_electrodes>3</number_electrodes>
+     <mode>MP1+2</mode>
+     <pulsewidth>25</pulsewidth>
+     <pulsegap>8</pulsegap>
+     <period>139</period>
+     <channel comfort="255" number="1" electrode="1" threshold="1"/>
+     <channel comfort="255" number="2" electrode="2" threshold="1"/>
+     <channel comfort="255" number="3" electrode="3" threshold="1"/>
+     <channel comfort="255" number="4" electrode="4" threshold="1"/>
+     <channel comfort="255" number="5" electrode="5" threshold="1"/>
+     <channel comfort="255" number="6" electrode="6" threshold="1"/>
+     <channel comfort="255" number="7" electrode="7" threshold="1"/>
+     <channel comfort="255" number="8" electrode="8" threshold="1"/>
+     <channel comfort="255" number="9" electrode="9" threshold="1"/>
+     <channel comfort="255" number="10" electrode="10" threshold="1"/>
+     <channel comfort="255" number="11" electrode="11" threshold="1"/>
+     <channel comfort="255" number="12" electrode="12" threshold="1"/>
+     <channel comfort="255" number="13" electrode="13" threshold="1"/>
+     <channel comfort="255" number="14" electrode="14" threshold="1"/>
+     <channel comfort="255" number="15" electrode="15" threshold="1"/>
+     <channel comfort="255" number="16" electrode="16" threshold="1"/>
+     <channel comfort="255" number="17" electrode="17" threshold="1"/>
+     <channel comfort="255" number="18" electrode="18" threshold="1"/>
+     <channel comfort="255" number="19" electrode="19" threshold="1"/>
+     <channel comfort="255" number="20" electrode="20" threshold="1"/>
+     <channel comfort="255" number="21" electrode="21" threshold="1"/>
+     <channel comfort="255" number="22" electrode="22" threshold="1"/>
+    </inline>
+   </defaultmap>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata2"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

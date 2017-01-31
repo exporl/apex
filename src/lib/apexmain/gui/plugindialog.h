@@ -20,15 +20,12 @@
  * Plugin dialog declaration.
  */
 
-#ifndef _RBA_SRC_LIB_GUI_PLUGINDIALOG_H_
-#define _RBA_SRC_LIB_GUI_PLUGINDIALOG_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_PLUGINDIALOG_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_PLUGINDIALOG_H_
 
-//#include "plumbing/global.h"
-//#include <boost/scoped_ptr.hpp>
+#include "common/global.h"
 
 #include <QDialog>
-
-#include <memory>
 
 namespace apex
 {
@@ -44,7 +41,10 @@ public:
     ~PluginDialog();
 
 private:
-    const std::auto_ptr<PluginDialogPrivate> d;
+    DECLARE_PRIVATE(PluginDialog)
+
+protected:
+    DECLARE_PRIVATE_DATA(PluginDialog)
 };
 
 } // namespace apex

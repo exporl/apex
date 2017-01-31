@@ -17,17 +17,21 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apexmainwndbase.h"
+#include "apextools/global.h"
+
 #include "gui/guidefines.h"
-#include <qvariant.h>
-#include <qlayout.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
-#include <qaction.h>
-#include <qmenubar.h>
-#include <qtoolbar.h>
-#include <qimage.h>
-#include <qpixmap.h>
+
+#include "apexmainwndbase.h"
+
+#include <QAction>
+#include <QImage>
+#include <QLayout>
+#include <QMenuBar>
+#include <QPixmap>
+#include <QToolBar>
+#include <QToolTip>
+#include <QVariant>
+#include <QWhatsThis>
 
 /*
  *  Constructs a ApexMainWndBase as a child of 'parent', with the
@@ -39,11 +43,12 @@ ApexMainWndBase::ApexMainWndBase( QWidget* parent, const char* name )
 {
     statusBar();
     setObjectName (name ? name : "ApexMainWndBase");
-    setAcceptDrops( FALSE );
+    setAcceptDrops( false );
 
     // actions
     fileOpenAction = new QAction ("fileOpenAction", this);
     startPluginRunnerAction = new QAction("startPluginRunnerAction", this);
+    selectSoundcardAction = new QAction("selectSouncardAction", this);
     fileSaveAsAction = new QAction ("fileSaveAsAction", this);
     fileExitAction = new QAction ("fileExitAction", this);
     helpContentsAction = new QAction ("helpContentsAction", this);
@@ -74,6 +79,7 @@ ApexMainWndBase::ApexMainWndBase( QWidget* parent, const char* name )
     MenuBar->addMenu (fileMenu);
     fileMenu->addAction (fileOpenAction);
     fileMenu->addAction (startPluginRunnerAction);
+    fileMenu->addAction (selectSoundcardAction);
     fileMenu->addAction (fileSaveAsAction);
     fileMenu->addSeparator();
     fileMenu->addAction (fileExitAction);
@@ -117,6 +123,7 @@ ApexMainWndBase::ApexMainWndBase( QWidget* parent, const char* name )
 
         // add actions to main window, so they also work without menu shown
     addActions(experimentMenu->actions());
+    addActions(fileMenu->actions());
 
     languageChange();
     resize (QSize (806, 574).expandedTo (minimumSizeHint()));
@@ -126,6 +133,8 @@ ApexMainWndBase::ApexMainWndBase( QWidget* parent, const char* name )
             this, SIGNAL (fileOpen()));
     connect (startPluginRunnerAction, SIGNAL (triggered()),
              this, SIGNAL (startPluginRunner()));
+    connect (selectSoundcardAction, SIGNAL(triggered()),
+            this, SIGNAL(selectSoundcard()));
     connect (fileSaveAsAction, SIGNAL (triggered()),
             this, SIGNAL (fileSaveAs()));
     connect (fileExitAction, SIGNAL (triggered()),
@@ -141,7 +150,7 @@ ApexMainWndBase::ApexMainWndBase( QWidget* parent, const char* name )
     connect (experimentShowStimulusAction, SIGNAL(triggered()),
              this, SIGNAL (showStimulus()));
     connect (stimulusRepeatAction, SIGNAL(triggered()),
-             this, SIGNAL (repeatStimulus()));
+             this, SIGNAL (repeatTrial()));
     connect (experimentAutoAnswerAction, SIGNAL (toggled(bool)),
             this, SIGNAL (autoAnswerClicked(bool)));
     connect (experimentSkipAction, SIGNAL (triggered()),
@@ -186,6 +195,7 @@ void ApexMainWndBase::languageChange()
     fileOpenAction->setShortcut (tr ("Ctrl+O"));
 
     startPluginRunnerAction->setText(tr("Load &runner"));
+    selectSoundcardAction->setText(tr("Select default &soundcard"));
 
     fileSaveAsAction->setText (tr ("Save Results &As..."));
 
@@ -211,7 +221,7 @@ void ApexMainWndBase::languageChange()
 
     experimentShowStimulusAction->setText (tr ("Show Stimulus Connections"));
 
-    stimulusRepeatAction->setText(tr("Repeat last stimulus"));
+    stimulusRepeatAction->setText(tr("Repeat last trial"));
     stimulusRepeatAction->setEnabled(false);
     stimulusRepeatAction->setShortcut( Qt::Key_F9 );
 
@@ -231,11 +241,11 @@ void ApexMainWndBase::languageChange()
 
 void ApexMainWndBase::helpContents()
 {
-    qWarning ("ApexMainWndBase::helpContents(): Not implemented yet");
+    qCWarning(APEX_RS, "ApexMainWndBase::helpContents(): Not implemented yet");
 }
 
 void ApexMainWndBase::helpAbout()
 {
-    qWarning ("ApexMainWndBase::helpAbout(): Not implemented yet");
+    qCWarning(APEX_RS, "ApexMainWndBase::helpAbout(): Not implemented yet");
 }
 

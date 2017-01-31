@@ -1,35 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.3/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.3/experiment.xsd"
- xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment"
- version="1">
-  
-  <!-- 
-    Regression test for CST (cfr Apex 2)
-    1. Sequential
-    
-    Output sequence:
-    audible 1 2 3 4 5 6
-    
-    Expected input:
-    buttons   1 2 3 4 5 6 
-    
-    Expected answer:
-    all correct
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!-- @doc
+  @what: Pluginprocedure => script: testprocedure
+  @description: When you click on a button with a certain number, the next time you have to click on the number you just have heard - parameter: stepsize & startvalue
+  @how: pluginProcedure with a certain script
   -->
-  
-  <procedure xsi:type="apex:pluginProcedureType">
-    
+  <procedure xsi:type="apex:pluginProcedure">
     <parameters>
       <presentations>5</presentations>
-      
       <skip>0</skip>
       <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
       <script>testprocedure</script>
       <parameter name="stepsize">5</parameter>
       <parameter name="startvalue">200</parameter>
     </parameters>
-    
     <trials>
       <trial id="trial1">
         <answer>button1</answer>
@@ -61,15 +46,8 @@
         <screen id="screen1"/>
         <stimulus id="stimulus6"/>
       </trial>
-      
-      
     </trials>
   </procedure>
-  
-  <corrector xsi:type="apex:isequal"/>
-    <!--type>isequal</type-->
-  
-  
   <screens>
     <reinforcement>
       <progressbar>true</progressbar>
@@ -77,32 +55,25 @@
       <showcurrent>false</showcurrent>
     </reinforcement>
     <screen id="screen1">
-      <gridLayout height="2" width="3" id="main_layout">
-        
+      <gridLayout width="3" height="2" id="main_layout">
         <button x="1" y="1" id="button1">
           <text>1</text>
         </button>
-        
         <button x="2" y="1" id="button2">
           <text>2</text>
         </button>
-        
         <button x="3" y="1" id="button3">
           <text>3</text>
         </button>
-        
         <button x="1" y="2" id="button4">
           <text>4</text>
         </button>
-        
         <button x="2" y="2" id="button5">
           <text>5</text>
         </button>
-        
         <button x="3" y="2" id="button6">
           <text>6</text>
         </button>
-        
       </gridLayout>
       <buttongroup id="buttongroup1">
         <button id="button1"/>
@@ -114,24 +85,22 @@
       </buttongroup>
       <default_answer_element>buttongroup1</default_answer_element>
     </screen>
-  </screens> 
-  
-  
+  </screens>
   <datablocks>
     <uri_prefix>../stimuli</uri_prefix>
-    <datablock id="rawdata1" >
+    <datablock id="rawdata1">
       <device>wavdevice</device>
       <uri>wd1.wav</uri>
     </datablock>
-    <datablock id="rawdata2" >
+    <datablock id="rawdata2">
       <device>wavdevice</device>
       <uri>wd2.wav</uri>
     </datablock>
-    <datablock id="rawdata3" >
+    <datablock id="rawdata3">
       <device>wavdevice</device>
       <uri>wd3.wav</uri>
     </datablock>
-    <datablock id="rawdata4" >
+    <datablock id="rawdata4">
       <device>wavdevice</device>
       <uri>wd4.wav</uri>
     </datablock>
@@ -144,29 +113,25 @@
       <uri>wd6.wav</uri>
     </datablock>
   </datablocks>
-  
   <devices>
     <device id="wavdevice" xsi:type="apex:wavDeviceType">
       <driver>portaudio</driver>
-      <card>default</card>
+      <card>interactive</card>
       <channels>2</channels>
       <gain channel="0">-50</gain>
       <samplerate>44100</samplerate>
       <buffersize>512</buffersize>
     </device>
   </devices>
-  
   <filters>
     <filter id="ampli" xsi:type="apex:amplifier">
       <device>wavdevice</device>
       <channels>2</channels>
       <continuous>false</continuous>
-       <basegain>0</basegain>
+      <basegain>0</basegain>
       <gain id="gain">0</gain>
     </filter>
-    
   </filters>
-  
   <stimuli>
     <fixed_parameters/>
     <stimulus id="stimulus1">
@@ -177,7 +142,6 @@
       <variableParameters/>
       <fixedParameters/>
     </stimulus>
-    
     <stimulus id="stimulus2">
       <description>Eenvoudige teststimulus</description>
       <datablocks>
@@ -186,7 +150,6 @@
       <variableParameters/>
       <fixedParameters/>
     </stimulus>
-    
     <stimulus id="stimulus3">
       <description>Eenvoudige teststimulus</description>
       <datablocks>
@@ -195,7 +158,6 @@
       <variableParameters/>
       <fixedParameters/>
     </stimulus>
-    
     <stimulus id="stimulus4">
       <description>Eenvoudige teststimulus</description>
       <datablocks>
@@ -203,8 +165,7 @@
       </datablocks>
       <variableParameters/>
       <fixedParameters/>
-    </stimulus>  
-    
+    </stimulus>
     <stimulus id="stimulus5">
       <description>Eenvoudige teststimulus</description>
       <datablocks>
@@ -213,7 +174,6 @@
       <variableParameters/>
       <fixedParameters/>
     </stimulus>
-    
     <stimulus id="stimulus6">
       <description>Eenvoudige teststimulus</description>
       <datablocks>
@@ -222,9 +182,7 @@
       <variableParameters/>
       <fixedParameters/>
     </stimulus>
-    
   </stimuli>
-  
   <connections>
     <connection>
       <from>
@@ -247,14 +205,14 @@
       </to>
     </connection>
     <connection>
-    <from>
-      <id>_ALL_</id>
-      <channel>1</channel>
-    </from>
-    <to>
-      <id>ampli</id>
-      <channel>1</channel>
-    </to>
+      <from>
+        <id>_ALL_</id>
+        <channel>1</channel>
+      </from>
+      <to>
+        <id>ampli</id>
+        <channel>1</channel>
+      </to>
     </connection>
     <connection>
       <from>
@@ -266,8 +224,5 @@
         <channel>1</channel>
       </to>
     </connection>
-    
-  </connections>  
- 
-  
+  </connections>
 </apex:apex>

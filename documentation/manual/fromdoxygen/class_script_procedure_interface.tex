@@ -1,0 +1,60 @@
+\hypertarget{class_script_procedure_interface}{
+\label{class_script_procedure_interface}\index{Script\-Procedure\-Interface@{Script\-Procedure\-Interface}}
+}
+
+
+{\ttfamily \#include $<$scriptprocedureinterface.\-h$>$}
+
+
+
+Inherits Q\-Object, and Q\-Scriptable.
+
+
+
+Inherited by \hyperlink{class_script_procedure_wrapper}{Script\-Procedure\-Wrapper}.
+
+\subsubsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item
+\hypertarget{class_script_procedure_interface_a4ca453f099ab55982c037abeadd49355}{virtual \hyperlink{classapex_1_1data_1_1_trial}{apex\-::data\-::\-Trial} {\bfseries setup\-Next\-Trial} ()}\label{class_script_procedure_interface_a4ca453f099ab55982c037abeadd49355}
+
+\item
+\hypertarget{class_script_procedure_interface_a3a44eaccef2c1d99b476a3e1ad2b23eb}{virtual Q\-String \hyperlink{class_script_procedure_interface_a3a44eaccef2c1d99b476a3e1ad2b23eb}{first\-Screen} ()}\label{class_script_procedure_interface_a3a44eaccef2c1d99b476a3e1ad2b23eb}
+
+\begin{DoxyCompactList}\small\item\em Prepare everything so the first trial can be started when Start\-Output is called. \end{DoxyCompactList}\item
+\hypertarget{class_script_procedure_interface_ab78ee486c1c3ab76610f70832593e922}{virtual const Q\-String {\bfseries result\-Xml} () const }\label{class_script_procedure_interface_ab78ee486c1c3ab76610f70832593e922}
+
+\item
+\hypertarget{class_script_procedure_interface_aac674a916bcea3d40e2e6b7ef7ea5189}{virtual const Q\-String {\bfseries progress} () const }\label{class_script_procedure_interface_aac674a916bcea3d40e2e6b7ef7ea5189}
+
+\item
+\hypertarget{class_script_procedure_interface_a0da333a37d2aba7dbcb3902dc9ed89ed}{virtual \hyperlink{classapex_1_1_result_highlight}{apex\-::\-Result\-Highlight} {\bfseries process\-Result} (const \hyperlink{classapex_1_1_screen_result}{apex\-::\-Screen\-Result} $\ast$) const }\label{class_script_procedure_interface_a0da333a37d2aba7dbcb3902dc9ed89ed}
+
+\item
+virtual Q\-String \hyperlink{class_script_procedure_interface_ac6a06da223647faf20b8b2e8ef6360ed}{check\-Parameters} () const
+\end{DoxyCompactItemize}
+\subsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item
+\hypertarget{class_script_procedure_interface_accce91e309490e6f847fd79f4b1a57ed}{{\bfseries Script\-Procedure\-Interface} (Q\-Object $\ast$parent=0)}\label{class_script_procedure_interface_accce91e309490e6f847fd79f4b1a57ed}
+
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Interface for Qt\-Script plugin (script) procedure Provides methods that alert the user that they have to be implemented in the Qt\-Script if they are not A Qt\-Script \char`\"{}object\char`\"{} is to be created that inherits from this interface
+
+\subsubsection{Member Function Documentation}
+\hypertarget{class_script_procedure_interface_ac6a06da223647faf20b8b2e8ef6360ed}{\index{Script\-Procedure\-Interface@{Script\-Procedure\-Interface}!check\-Parameters@{check\-Parameters}}
+\index{check\-Parameters@{check\-Parameters}!ScriptProcedureInterface@{Script\-Procedure\-Interface}}
+\paragraph[{check\-Parameters}]{\setlength{\rightskip}{0pt plus 5cm}virtual Q\-String Script\-Procedure\-Interface\-::check\-Parameters (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}, {\ttfamily [slot]}}}\label{class_script_procedure_interface_ac6a06da223647faf20b8b2e8ef6360ed}
+Is called before the procedure starts, can be used to check whether all required parameters are present and valid Return empty Q\-String if O\-K, otherwise error message
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item
+src/plugins/apexprocedures/scriptprocedureinterface.\-h\item
+src/plugins/apexprocedures/scriptprocedureinterface.\-cpp\end{DoxyCompactItemize}

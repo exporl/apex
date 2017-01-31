@@ -18,9 +18,10 @@
 
 #include "apextools/apextools.h"
 
+#include "apextools/services/paths.h"
+
 #include "runner/pluginrunnerinterface.h"
 
-#include "services/paths.h"
 #include "services/pluginloader.h"
 
 #include "startupdialog.h"

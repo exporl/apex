@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment file:///C:/maaike/Apex_110116/schemas/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <!-- @doc
+  @what: Loudness growth with categories
+  @description: Participants have to judge the loudness of the stimuli presented in the left ear by clicking on the screen on the graphical rating scale. Apex remembers the position of the mouse click as a number between 0 and 1. Stimuli are presented in a pseudorandom order.
+  @how: constantProcedure, picture of the scale needed, rtresults-loudness-scaling_click.html, loudness_scaling.js, and rtloudness_scaling_click.js needed, dynamic range values and stepsizes can be interactively changed, the level_max_diff is used for the pseudorandom order.
+  -->
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>1</presentations>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <plugintrials/>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>false</progressbar>
+   <feedback length="600">false</feedback>
+  </reinforcement>
+  <screen id="screen">
+   <gridLayout height="1" width="1">
+    <picture id="vas">
+     <uri>vasluidheid.png</uri>
+    </picture>
+   </gridLayout>
+   <default_answer_element>vas</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <datablock id="datablock_500Hz">
+   <device>wavdevice</device>
+   <uri>SAM500Hz1s.wav</uri>
+  </datablock>
+  <datablock id="datablock_calibratie_500Hz">
+   <device>wavdevice</device>
+   <uri>SAM500Hz5min.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain channel="0" id="Lgain">0</gain>
+   <gain channel="1" id="Rgain">0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters>
+  <filter id="amplifier" xsi:type="apex:amplifier">
+   <device>wavdevice</device>
+   <channels>1</channels>
+   <basegain>-65</basegain>
+   <gain id="gain">65</gain>
+  </filter>
+ </filters>
+ <stimuli>
+  <stimulus id="stimulus_calibratie_500Hz">
+   <datablocks>
+    <sequential>
+     <datablock id="datablock_calibratie_500Hz"/>
+    </sequential>
+   </datablocks>
+   <variableParameters>
+    <parameter id="gain">65</parameter>
+   </variableParameters>
+  </stimulus>
+  <pluginstimuli/>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>_ALL_</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>amplifier</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>amplifier</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+ </connections>
+ <calibration profile="CalibrationSAM500">
+  <stimuli>
+   <stimulus id="stimulus_calibratie_500Hz"/>
+  </stimuli>
+  <parameters>
+   <parameter id="Lgain">
+    <targetamplitude>65</targetamplitude>
+    <calibrationamplitude>80</calibrationamplitude>
+    <mute>-150.0</mute>
+    <max>100</max>
+   </parameter>
+  </parameters>
+ </calibration>
+ <results>
+  <page>rtresults-loudness-scaling_click.html</page>
+  <resultparameters/>
+  <showafterexperiment>false</showafterexperiment>
+  <saveprocessedresults>true</saveprocessedresults>
+  <subject/>
+ </results>
+ <interactive>
+  <entry description="Naam" default="" expression="/apex:apex/results[1]/subject[1]" type="string"/>
+  <entry description="Level_min" default="30" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[1]" type="double"/>
+  <entry description="Level_max" default="90" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[2]" type="double"/>
+  <entry description="Level_start = level_min + DR/2" default="60" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[3]" type="double"/>
+  <entry description="Level_step = DR/10" default="6" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[6]" type="double"/>
+  <entry description="Level_max_diff = DR/2" default="30" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[4]" type="double"/>
+ </interactive>
+ <general>
+  <exitafter>false</exitafter>
+  <scriptlibrary>loudness_scaling.js</scriptlibrary>
+  <scriptparameters>
+   <parameter name="level_min">20</parameter>
+   <parameter name="level_max">85</parameter>
+   <parameter name="level_start">60</parameter>
+   <parameter name="level_max_diff">30</parameter>
+   <parameter name="repetitions">3</parameter>
+   <parameter name="level_step">5</parameter>
+   <parameter name="datablocks">["datablock_500Hz"]</parameter>
+  </scriptparameters>
+ </general>
+</apex:apex>

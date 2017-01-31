@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef __FACTORYELEMENT_H__
-#define __FACTORYELEMENT_H__
 
-#include "global.h"
+#ifndef _EXPORL_SRC_LIB_APEXDATA_FACTORYELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_FACTORYELEMENT_H_
+
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -37,4 +37,4 @@ namespace apex
     };
 }
 
-#endif //#ifndef __FACTORYELEMENT_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXDATA_FACTORYELEMENT_H_

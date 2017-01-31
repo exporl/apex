@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_DATADEVICEDATA_H
-#define APEX_DATADEVICEDATA_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_DEVICE_DEVICEDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_DEVICE_DEVICEDATA_H_
 
-#include "parameters/simpleparameters.h"
+#include "../parameters/simpleparameters.h"
 
 namespace apex
 {
@@ -33,7 +33,6 @@ enum DeviceType
     TYPE_NONE = -1,
     TYPE_WAVDEVICE,
     TYPE_L34,
-    TYPE_CLARION,
     TYPE_MIXER,
     TYPE_PA5,
     TYPE_DUMMY,
@@ -62,6 +61,8 @@ class APEXDATA_EXPORT DeviceData: public SimpleParameters
         virtual void setNumberOfChannels(unsigned n);
 
         bool operator==(const DeviceData& other) const;
+        void setSilent(bool newSilent = true);
+        bool isSilent() const;
 
     protected:
 
@@ -72,6 +73,7 @@ class APEXDATA_EXPORT DeviceData: public SimpleParameters
     private:
 
         DeviceType devType;
+        bool silent;
 };
 
 }// ns data

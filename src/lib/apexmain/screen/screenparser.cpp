@@ -17,51 +17,54 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "screenparser.h"
+#include "apexdata/parameters/parameter.h"
+#include "apexdata/parameters/parametermanagerdata.h"
 
-#include <QUrl>
-#include <QFile>
-#include <QKeySequence>
-#include <QFileInfo>
-#include "xml/apexxmltools.h"
-#include "xml/xmlkeys.h"
-//#include <appcore/qt_utils.h>
+#include "apexdata/screen/answerlabelelement.h"
+#include "apexdata/screen/arclayoutelement.h"
+#include "apexdata/screen/buttonelement.h"
+#include "apexdata/screen/buttongroup.h"
+#include "apexdata/screen/flashplayerelement.h"
+#include "apexdata/screen/flashplayerelement.h"
+#include "apexdata/screen/gridlayoutelement.h"
+#include "apexdata/screen/htmlelement.h"
+#include "apexdata/screen/labelelement.h"
+#include "apexdata/screen/matrixelement.h"
+#include "apexdata/screen/parameterlabelelement.h"
+#include "apexdata/screen/parameterlistelement.h"
+#include "apexdata/screen/pictureelement.h"
+#include "apexdata/screen/picturelabelelement.h"
+#include "apexdata/screen/screen.h"
+#include "apexdata/screen/screenelement.h"
+#include "apexdata/screen/screenlayoutelement.h"
+#include "apexdata/screen/screensdata.h"
+#include "apexdata/screen/sliderelement.h"
+#include "apexdata/screen/spinboxelement.h"
+#include "apexdata/screen/texteditelement.h"
 
-#include "xml/xercesinclude.h"
-using namespace XERCES_CPP_NAMESPACE;
+#include "apextools/apextools.h"
+#include "apextools/exceptions.h"
+
+#include "apextools/gui/arclayout.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
+
+#include "gui/guidefines.h"
 
 #include "apexcontrol.h"
-#include "screen/answerlabelelement.h"
-#include "screen/arclayoutelement.h"
-#include "screen/buttonelement.h"
-#include "screen/matrixelement.h"
-#include "screen/spinboxelement.h"
-#include "screen/buttongroup.h"
-#include "screen/flashplayerelement.h"
-#include "screen/gridlayoutelement.h"
-#include "screen/labelelement.h"
-#include "screen/parameterlistelement.h"
-#include "screen/parameterlabelelement.h"
-#include "screen/pictureelement.h"
-#include "screen/picturelabelelement.h"
-#include "screen/screen.h"
-#include "screen/screenelement.h"
-#include "screen/screenlayoutelement.h"
-#include "screen/texteditelement.h"
-#include "screen/flashplayerelement.h"
-#include "screen/sliderelement.h"
-#include "exceptions.h"
-#include "gui/guidefines.h"
-//#include "gui/mainwindow.h"
-#include "screen/screensdata.h"
+#include "screenparser.h"
 
-#include "parameters/parametermanagerdata.h"
-#include "parameters/parameter.h"
+#include <QFile>
+#include <QFileInfo>
+#include <QImage>
+#include <QKeySequence>
+#include <QUrl>
 
-//from libtools
-#include "apextools.h"
-#include "gui/arclayout.h"
+#include <QtGlobal>
 
+using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::XMLKeys;
 using namespace apex::ApexXMLTools;
 using apex::data::ParameterData;
@@ -79,6 +82,7 @@ using apex::data::PictureLabelElement;
 using apex::data::Screen;
 using apex::data::TextEditElement;
 using apex::data::SliderElement;
+using apex::data::HtmlElement;
 using apex::data::ScreensData;
 
 namespace
@@ -101,7 +105,7 @@ QKeySequence f_CreateKeySequence( XERCES_CPP_NAMESPACE::DOMElement* a_pElement )
         bHex = apex::ApexTools::bQStringToBoolean( sHex );
 
     //get modifier
-    Qt::Modifier eMod;
+    Qt::Modifier eMod = Qt::Modifier(0);
     if ( !sMod.isEmpty() )
     {
         if ( sMod == "Alt" )
@@ -439,7 +443,7 @@ ScreenLayoutElement* ScreenParser::createLayout(
     DOMNode* it = element;
 
     //it should be a layout?
-    assert( sf_bIsLayout( tag ) );
+    Q_ASSERT( sf_bIsLayout( tag ) );
 
     //get common stuff
     QString width  = XMLutils::GetAttribute( it, gc_sWidth );
@@ -491,7 +495,7 @@ ScreenLayoutElement* ScreenParser::createLayout(
         if (!sRowstretch.isEmpty())
         {
             rowstretch = parseStretchList(sRowstretch);
-//            qDebug("SRowstretch=%s, rowstretch.size=%d", qPrintable(sRowstretch), rowstretch.size());
+//            qCDebug(APEX_RS, "SRowstretch=%s, rowstretch.size=%d", qPrintable(sRowstretch), rowstretch.size());
             if ( rowstretch.size() != (int) nH )
                 throw ApexStringException(tr("The number of row stretch factors for layout %1 is not equal to its height").arg(id));
         }
@@ -643,8 +647,8 @@ ScreenElement* ScreenParser::createNonLayoutElement(
         nY = 1;
 
 
-    assert( !sf_bIsLayout( tag ) );
-    assert( parent );
+    Q_ASSERT( !sf_bIsLayout( tag ) );
+    Q_ASSERT( parent );
 
     if ( tag == gc_sButton )
     {
@@ -662,7 +666,7 @@ ScreenElement* ScreenParser::createNonLayoutElement(
         data::SpinBoxElement* temp = new data::SpinBoxElement( id, parent );
         temp->setPrefix(m_sPath);
 
-        qDebug("Creating spinbox %s", qPrintable (id));
+        qCDebug(APEX_RS, "Creating spinbox %s", qPrintable (id));
 
         DOMElement* te = XMLutils::GetElementsByTagName( element, gc_sValue );
         if ( te )
@@ -820,7 +824,7 @@ ScreenElement* ScreenParser::createNonLayoutElement(
                 try
                 {
                     QKeySequence seq = f_CreateKeySequence( (DOMElement*) currentNode );
-                    temp->setShortCut( seq );
+                    temp->setShortCut( seq.toString() );
                 }
                 catch ( ApexStringException& e )
                 {
@@ -870,7 +874,7 @@ ScreenElement* ScreenParser::createNonLayoutElement(
             temp->setPicture( filename );
         }
         else
-            assert( 0 );
+            Q_ASSERT( 0 );
 
         te = XMLutils::GetElementsByTagName( element, "uriDisabled" );
         if ( te )
@@ -898,7 +902,7 @@ ScreenElement* ScreenParser::createNonLayoutElement(
     else if ( tag == gc_sFlash )
     {
 #ifndef FLASH
-        throw ApexStringException("this apex version does not support flash");
+        //throw ApexStringException("this apex version does not support flash");
 #endif
 
         FlashPlayerElement* temp = new FlashPlayerElement( id, parent );
@@ -925,7 +929,7 @@ ScreenElement* ScreenParser::createNonLayoutElement(
                 }
                 else
                 {
-                    qDebug("File %s found", qPrintable(p));
+                    qCDebug(APEX_RS, "File %s found", qPrintable(p));
                 }
                 temp->setDefault(filename);
             }
@@ -951,7 +955,7 @@ ScreenElement* ScreenParser::createNonLayoutElement(
                 try
                 {
                     QKeySequence seq = f_CreateKeySequence( (DOMElement*) currentNode );
-                    temp->setShortCut( seq );
+                    temp->setShortCut( seq.toString() );
                 }
                 catch ( ApexStringException& e )
                 {
@@ -1078,6 +1082,21 @@ ScreenElement* ScreenParser::createNonLayoutElement(
         }
         ret=temp;
     }
+    else if (tag == gc_sHtml)
+    {
+        HtmlElement* temp = new HtmlElement(id,parent);
+        temp->setPrefix(m_sPath);
+
+        DOMElement* te = XMLutils::GetElementsByTagName( element, "page" );
+        if ( !te )
+            qFatal("Parameter page not found");
+
+        QString value = XMLutils::GetFirstChildText(te);
+
+        temp->setPage(value);
+
+        ret = temp;
+    }
     else
         return 0;
 
@@ -1120,13 +1139,13 @@ ScreenElement* ScreenParser::createNonLayoutElement(
                 QString action( XMLutils::GetAttribute( currentNode, "action" ) );
                 if (action.isEmpty())
                     action=QLatin1String("click");
-                ret->setShortCut( seq, action );
+                ret->setShortCut( seq.toString(), action );
             }
             catch ( ApexStringException& e )
             {
                 log().addError( "ScreenParser::createNonLayoutElement", e.what() );
             }
-            
+
         }
     }
 

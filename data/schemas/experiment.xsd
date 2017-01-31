@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.0.3/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
     
     <xs:include schemaLocation="datablocks.xsd"/>
     <xs:include schemaLocation="procedure.xsd"/>
@@ -11,7 +11,7 @@
     <xs:include schemaLocation="stimuli.xsd"/>
     
     <xs:annotation>
-        <xs:documentation xml:lang="en-US"> Apex experiment file schema. Describes an entire Apex 3
+        <xs:documentation xml:lang="en-US"> Apex experiment file schema. Describes an entire APEX 3
             experiment. An experiment consists of a series of trials. </xs:documentation>
     </xs:annotation>
     <xs:element name="apex">
@@ -28,13 +28,6 @@
                         <xs:documentation>Describes the procedure to be used. The procedure controls
                             the sequence of trials that will be presented. Real procedures are
                             derived from apex:procedureType.</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="corrector" type="apex:correctorType" minOccurs="0">
-                    <xs:annotation>
-                        <xs:documentation>Describes the corrector to be used. The corrector compares
-                            the user input and the correct answer for a certain trail. Real
-                            correctors are derived from apex:correctorType</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                 <xs:element name="screens" type="apex:screensType">
@@ -202,93 +195,12 @@
         <xs:attribute name="id" type="xs:IDREF" use="required"/>
     </xs:complexType>
     
-    
-    
-    
-    
-    
-    
-    
     <xs:simpleType name="nonEmptyString">
         <xs:restriction base="xs:token">
             <xs:minLength value="1"/>
         </xs:restriction>
     </xs:simpleType>
     
-    <xs:complexType name="correctorType" abstract="true">
-        <xs:annotation>
-            <xs:documentation>Base type for all correctors</xs:documentation>
-        </xs:annotation>
-        <xs:sequence> </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="isequal">
-        <xs:annotation>
-            <xs:documentation>Corrector that checks whether the inputs are exactly equal. Useful for
-                checking buttongroups or exact string matching.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="apex:correctorType"/>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="cvc">
-        <xs:annotation>
-            <xs:documentation>Corrector that correct simple consonant-vowel-consonant
-            words</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="apex:correctorType">
-                <xs:sequence>
-                    <xs:element name="language">
-                        <xs:simpleType>
-                            <xs:restriction base="xs:Name">
-                                <xs:enumeration value="Dutch"/>
-                                <xs:enumeration value="English"/>
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="alternatives">
-        <xs:annotation>
-            <xs:documentation>Corrector to be used in conjunction with a procedure/choices>1 tag,
-                for doing multiple alternatives forced choice experiments.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="apex:correctorType">
-                <xs:sequence>
-                    <xs:element name="answers" minOccurs="0">
-                        <xs:annotation>
-                            <xs:documentation>All possible answers are specified here. A screen
-                                element is associated with a time slot.</xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name="answer" maxOccurs="unbounded">
-                                    <xs:complexType>
-                                        <xs:attribute name="number" type="xs:positiveInteger">
-                                            <xs:annotation>
-                                                <xs:documentation>Time slot of the
-                                                stimulus</xs:documentation>
-                                            </xs:annotation>
-                                        </xs:attribute>
-                                        <xs:attribute name="value" type="xs:Name">
-                                            <xs:annotation>
-                                                <xs:documentation>Name of the screen element
-                                                  corresponding to the time
-                                                slot</xs:documentation>
-                                            </xs:annotation>
-                                        </xs:attribute>
-                                    </xs:complexType>
-                                </xs:element>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
     <xs:complexType name="randomgenerator" abstract="true">
         <xs:annotation>
             <xs:documentation>Base class for all randomgenerators</xs:documentation>
@@ -679,18 +591,17 @@
     
     <xs:complexType name="resultsType">
         <xs:sequence>
-            <xs:element name="xsltscript" type="xs:anyURI" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>xslt script to be used to transform the output
-                        xml file in a more human readable format. Apex looks for
-                        xslt scripts in the path defined in the main config file. It
-                        defaults to apex/scripts/xslt</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="xsltscriptparameters" minOccurs="0">
+            <xs:element name="page" type="xs:anyURI" minOccurs="1" default="apexresults.html">
                 <xs:annotation>
                     <xs:documentation>
-                        Parameters to be passed to the xslt script. Each parameter will be set in the results file.
+                        URL of the HTML page to be shown in the results window. The page should have the appropriate javascript methods embedded.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="resultparameters" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Parameters to be passed to the results page. Each parameter will be set in hash params. 
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -707,54 +618,36 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="showresults" type="xs:boolean" minOccurs="0">
+            <xs:element name="resultscript" type="xs:string" minOccurs="0" default="">
                 <xs:annotation>
-                    <xs:documentation>Show the experiment results after
-                        transformation with the script defined in the results
-                        section in a dialog box. A dialog box will ask for
-                        confirmation before showing the results. This option will
-                        only work if an xslt script is defined and the results are
-                        successfully saved to disk. </xs:documentation>
+                    <xs:documentation>
+                        Javascript, which will be executed after loading the results page, in the context of the results page.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="javascript" minOccurs="0">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="page" type="xs:anyURI" minOccurs="1">
-                            <xs:annotation>
-                                <xs:documentation>
-                                  URL of the HTML page to be shown in the results window. The page should have the appropriate javascript methods embedded.
-                                </xs:documentation>
-                            </xs:annotation>
-                        </xs:element>
-                        <xs:element name="realtime" type="xs:boolean" minOccurs="0" default="true">
-                            <xs:annotation>
-                                <xs:documentation>
-                                   If realtime is true, an extra window will be created which will show
-                                    the results of the current experiment while the experiment is being executed.
-                                    Javascript embedded in the page will be executed upon each new trial.
-                                </xs:documentation>
-                            </xs:annotation>
-                        </xs:element>
-                        <xs:element name="showafterexperiment" type="xs:boolean" minOccurs="0" default="false">
-                            <xs:annotation>
-                                <xs:documentation>
-                                    If showafterexperiment is true, when the experiment is finished a dialog box will appear 
-                                    querying whether results should be shown. If the answer is affirmative, a new window will
-                                    be opened and the results will be shown after javascript processing.
-                                </xs:documentation>
-                            </xs:annotation>
-                        </xs:element>
-                    </xs:sequence>
-                </xs:complexType>
-                </xs:element>
+            <xs:element name="showduringexperiment" type="xs:boolean" minOccurs="0" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        If true, an extra window will be created which will show
+                        the results of the current experiment while the experiment is being executed.
+                        Javascript embedded in the page will be executed upon each new trial.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="showafterexperiment" type="xs:boolean" minOccurs="0" default="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        If showafterexperiment is true, when the experiment is finished a dialog box will appear 
+                        querying whether results should be shown. If the answer is affirmative, a new window will
+                        be opened and the results will be shown after javascript processing.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
            
             <xs:element name="saveprocessedresults" type="xs:boolean" minOccurs="0">
                 <xs:annotation>
-                    <xs:documentation>Save the experiment results after
-                        transformation at the end of the results xml file. This
-                        option will only work if an xslt script is defined and the
-                        results are successfully saved to disk.</xs:documentation>
+                    <xs:documentation>Save a summary of the results in an easily readable format at the end of the results xml file. This
+                        option will only work if the results are successfully saved to disk and your javascript code supports this transformation.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="matlabscript" type="xs:string" minOccurs="0">

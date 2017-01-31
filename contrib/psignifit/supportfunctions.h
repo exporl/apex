@@ -77,11 +77,11 @@ void WeightedLinearRegression(int nPoints, double * x, double * y, double * weig
 /*	DEBUGGING & PORTABILITY	*/
 extern boolean DEBUG;
 boolean db(char * message);
-#define report(a)		printf("%s = %lg\n", #a, (double)(a))
-#define reportb(a) 		printf("%s = %s\n", #a, ((a)?"TRUE":"FALSE"))
+#define report(a)		fprintf(stderr, "%s = %lg\n", #a, (double)(a))
+#define reportb(a) 		fprintf(stderr, "%s = %s\n", #a, ((a)?"TRUE":"FALSE"))
 #define reportc(a)		_ReportChar(#a, (a))
 #define reportl(a, n)	_ReportListOfDoubles(#a, (a), n)
-#define reportp(a)  	printf("%s = 0x%X\n", #a, (int)(a))
+#define reportp(a)  	fprintf(stderr, "%s = 0x%X\n", #a, (int)(a))
 #define reports(a)		_ReportCString(#a, (a))
 int TestFloatingPointBehaviour(void);
 int _ReportChar(char *name, int a);

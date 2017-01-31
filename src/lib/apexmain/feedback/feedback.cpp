@@ -1,7 +1,9 @@
+#include "apexdata/screen/screensdata.h"
+
+#include "services/pluginloader.h"
+
 #include "feedback.h"
 #include "pluginfeedbackinterface.h"
-#include "services/pluginloader.h"
-#include "screen/screensdata.h"
 
 #include <QDebug>
 
@@ -22,7 +24,7 @@ Feedback::Feedback(const apex::data::ScreensData* data):
     const QList<data::FeedbackPluginPair>& l( data->feedbackPlugins());
 
     Q_FOREACH(data::FeedbackPluginPair p, l) {
-        qDebug()<< "Loading feedback plugin " << p.first;
+        qCDebug(APEX_RS)<< "Loading feedback plugin " << p.first;
         loadPlugin(p.first, p.second);
     }
 };
@@ -82,6 +84,6 @@ void Feedback::clear()
     }
 }
 
-    
+
 
 };              // ns apex

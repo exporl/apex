@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "screen/screenelement.h"
-#include "screen/screenelementrundelegate.h"
 
-#include "centralwidget.h"
+#include "apexdata/screen/screenelement.h"
+
 #include "gui/guidefines.h"
 
-#include <utils/dataconversion.h>
+#include "screen/screenelementrundelegate.h"
 
-#include <assert.h>
+#include "streamapp/utils/dataconversion.h"
+
+#include "centralwidget.h"
 
 #include <QLabel>
 #include <QLayout>
@@ -116,7 +116,7 @@ void ApexCentralWidget::mp_SetScreen( QLayout* a_pScreen )
 
 void ApexCentralWidget::setScreenWidget(QWidget* w)
 {
-//    qDebug("ApexCentralWidget::setScreenWidget(%p)", w);
+//    qCDebug(APEX_RS, "ApexCentralWidget::setScreenWidget(%p)", w);
     w->setParent(this);
     m_pMainLayout->addWidget(w,0,0);
 }
@@ -140,41 +140,6 @@ void ApexCentralWidget::mp_LayoutNow()
 
 void ApexCentralWidget::paintEvent( QPaintEvent* /*e*/ )
 {
-    //draw feedback if needed
-    if ( m_bFeedBackDirty && m_pFeedBack )
-    {
-        QPainter painting( this );
-        QPen pen;
-        assert( m_pFeedBack->getWidget() );
-        const QRect& rex( m_pFeedBack->getWidget()->geometry() );
-        const ScreenElementRunDelegate::FeedbackMode& eMode =
-            m_pFeedBack->getFeedbackMode();
-
-        if ( eMode == ScreenElementRunDelegate::NoFeedback )
-        {
-            pen.setColor( m_ScreenBG );
-            m_bFeedBackDirty = false;
-        }
-        else if ( eMode == ScreenElementRunDelegate::HighlightFeedback )
-        {
-            pen.setColor( m_High );
-            m_bFeedBackDirty = true;
-        }
-        else if ( eMode == ScreenElementRunDelegate::NegativeFeedback )
-        {
-            pen.setColor( m_Bad );
-            m_bFeedBackDirty = true;
-        }
-        else if ( eMode == ScreenElementRunDelegate::PositiveFeedback )
-        {
-            pen.setColor( m_Good );
-            m_bFeedBackDirty = true;
-        }
-
-        pen.setWidth( 2 );
-        painting.setPen( pen );
-        painting.drawRect( rex.x() - 5, rex.y() - 5, rex.width() + 10, rex.height() + 10 );
-    }
 }
 
 void ApexCentralWidget::setBackgroundColor( const QColor& ac_Color )

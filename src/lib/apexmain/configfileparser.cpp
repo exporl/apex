@@ -17,20 +17,22 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "configfileparser.h"
-#include "xml/apexxmltools.h"
-using namespace apex::ApexXMLTools;
-#include "xml/xercesinclude.h"
-using namespace xercesc;
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
 
 #include "services/errorhandler.h"
 
-#include <QFileInfo>
-#include <QRegExp>
-#include <QVector>
-#include <QStringList>
+#include "configfileparser.h"
+
 #include <QDebug>
 #include <QDomDocument>
+#include <QFileInfo>
+#include <QRegExp>
+#include <QStringList>
+#include <QVector>
+
+using namespace apex::ApexXMLTools;
+using namespace xercesc;
 
 namespace apex
 {
@@ -53,11 +55,15 @@ bool ConfigFileParser::CFParse()
         // Check whether we need to upgrade the document
         QDomDocument doc("mydocument");
         QFile file(m_sConfigFilename);
+        QString errMsg;
+        int errLine, errColumn;
+
         if (!file.open(QIODevice::ReadOnly))
             throw ApexStringException(
                     tr("Cannot open file %1").arg(m_sConfigFilename));
-        if (!doc.setContent(&file)) {
+        if (!doc.setContent(&file, &errMsg, &errLine, &errColumn)) {
             file.close();
+            qCDebug(APEX_RS) <<"Parsing problem: "<<errMsg<<errLine<<errColumn;
             throw ApexStringException("Could not parse file");
         }
         file.close();
@@ -83,11 +89,12 @@ bool ConfigFileParser::CFParse()
                     .arg(m_sConfigFilename));
         }
 
-        if (!upgradePerformed)
+        if (!upgradePerformed){
             // read and validate xml document
             m_document = xmlDocumentGetter.GetXMLDocument(m_sConfigFilename,
                                                       m_sConfigFileSchema,
                                                       m_sConfigFileNamespace);
+        }
         else {
             ErrorHandler::Get().addWarning(
                     tr("XML parser"),
@@ -95,7 +102,7 @@ bool ConfigFileParser::CFParse()
 
             // Write modified DOM tree to memory buffer and parse/validate with xerces
             QByteArray newXml( doc.toByteArray() );
-            //qDebug() << newXml;
+            //qCDebug(APEX_RS) << newXml;
 
             MemBufInputSource source(reinterpret_cast<const XMLByte*>(newXml.data()), newXml.length(),
                                       "membufid",
@@ -121,7 +128,7 @@ bool ConfigFileParser::CFParse()
 
 bool ConfigFileParser::upgradeFrom(QDomDocument&, const QVector<int>& v)
 {
-    qDebug("Not upgrading from version %d.%d.%d", v[0], v[1], v[2]);
+    qCDebug(APEX_RS, "Not upgrading from version %d.%d.%d", v[0], v[1], v[2]);
     return false;
 }
 

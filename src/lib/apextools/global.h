@@ -16,10 +16,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#ifndef _APEX_SRC_LIB_GLOBAL_H_
-#define _APEX_SRC_LIB_GLOBAL_H_
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_GLOBAL_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_GLOBAL_H_
+
+#include <QLoggingCategory>
+#include <QString>
 
 #include <QtGlobal>
+
+namespace apex {
+    const QString applicationName(QLatin1String("APEX"));
+    const QString organizationName(QLatin1String("ExpORL"));
+    const QString organizationDomain(QLatin1String("exporl.med.kuleuven.be"));
+}
 
 #define GCC_VERSION (__GNUC__ * 100                                         \
                    + __GNUC_MINOR__ * 10                                    \
@@ -75,46 +84,23 @@
 #define APEXTOOLS_EXPORT APEX_IMPORT_DECL
 #endif
 
+#ifdef APEXSPIN_MAKEDLL
+#define APEXSPIN_EXPORT APEX_EXPORT_DECL
+#else
+#define APEXSPIN_EXPORT APEX_IMPORT_DECL
+#endif
+
 #ifdef PSIGNIFIT_MAKEDLL
 #define PSIGNIFIT_EXPORT APEX_EXPORT_DECL
 #else
 #define PSIGNIFIT_EXPORT APEX_IMPORT_DECL
 #endif
 
-
-#define DECLARE_PRIVATE(Class)                                              \
-        inline Class##Private* dataFunc()                                   \
-        {                                                                   \
-            return reinterpret_cast<Class##Private *> (dataPtr.get());      \
-        }                                                                   \
-        inline const Class##Private* dataFunc() const                       \
-        {                                                                   \
-            return reinterpret_cast<const Class##Private *> (dataPtr.get());\
-        }                                                                   \
-        friend class Class##Private;
-
-#define DECLARE_PUBLIC(Class)                                               \
-        inline Class* pubFunc()                                             \
-        {                                                                   \
-            return reinterpret_cast<Class *> (pubPtr);                      \
-        }                                                                   \
-        inline const Class* pubFunc() const                                 \
-        {                                                                   \
-            return reinterpret_cast<const Class *> (pubPtr);                \
-        }                                                                   \
-        friend class Class;
-
-#define DECLARE_PRIVATE_DATA(Class)                                         \
-        const boost::scoped_ptr<Class##Private> dataPtr;
-
-#define DECLARE_PRIVATE_DATA_SHARED(Class)                                  \
-        boost::shared_ptr<Class##Private> dataPtr;
-
-#define DECLARE_PUBLIC_DATA(Class)                                          \
-        Class * pubPtr;
-
-#define D(Class) Class##Private * const d = dataFunc()
-#define P(Class) Class * const p = pubFunc()
+#ifdef CALIBRATIONADMIN_MAKEDLL
+#define CALIBRATIONADMIN_EXPORT APEX_EXPORT_DECL
+#else
+#define CALIBRATIONADMIN_EXPORT APEX_IMPORT_DECL
+#endif
 
 /**
  * @def FULL_TEMPLATE_EXPORT_INSTANTIATION
@@ -179,6 +165,25 @@
 #else
     #define DUMMY_QHASH_FUNCTION(C)
     #define DUMMY_COMPARISON_OPERATOR(C)
+#endif
+
+// Q_DECLARE_LOGGING_CATEGORY
+extern APEXTOOLS_EXPORT const QLoggingCategory &APEX_RS();
+
+// TODO: workaround for missing defines on Qt 5.2, remove after switch to 16.04 LTS
+#if QT_VERSION < 0x050300
+#undef qCDebug
+#define qCDebug(category, ...) \
+    for (bool qt_category_enabled = category().isDebugEnabled(); qt_category_enabled; qt_category_enabled = false) \
+        QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO, category().categoryName()).debug(__VA_ARGS__)
+#undef qCWarning
+#define qCWarning(category, ...) \
+    for (bool qt_category_enabled = category().isWarningEnabled(); qt_category_enabled; qt_category_enabled = false) \
+        QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO, category().categoryName()).warning(__VA_ARGS__)
+#undef qCCritical
+#define qCCritical(category, ...) \
+    for (bool qt_category_enabled = category().isCriticalEnabled(); qt_category_enabled; qt_category_enabled = false) \
+        QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO, category().categoryName()).critical(__VA_ARGS__)
 #endif
 
 #endif

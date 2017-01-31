@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "r126nucleusmaprecord.h"
-#include "exceptions.h"
 
-//from libdata
-#include "stimulus/nucleus/nicstream/stimulation_mode.h"
+#include "apexdata/stimulus/nucleus/nicstream/stimulation_mode.h"
+
+#include "apextools/exceptions.h"
+
+#include "r126nucleusmaprecord.h"
 
 namespace r126 {
 

@@ -20,17 +20,20 @@
 #ifndef __IApexDeviceFactory_H__
 #define __IApexDeviceFactory_H__
 
+#include "apexdata/datablock/datablockdata.h"
+
+#include "apexdata/device/devicedata.h"
+
+#include "apexdata/parameters/apexparameters.h"
+
+#include "apextools/status/errorlogger.h"
+
+#include "apextools/xml/xercesinclude.h"
+
 #include "idevicefactoryelement.h"
-#include "parameters/apexparameters.h"
-//#include "parameters/apexmapparameters.h"
-#include "datablock/datablockdata.h"
-#include "device/devicedata.h"
 
-//from libtools
-#include "status/errorlogger.h"
+#include "streamapp/appcore/destroyer.h"
 
-#include <appcore/destroyer.h>
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
   class DOMElement;

@@ -17,10 +17,11 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_DATA_WAVPARAMETERS_H
-#define APEX_DATA_WAVPARAMETERS_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_FILTER_WAVPARAMETERS_H_
+#define _EXPORL_SRC_LIB_APEXDATA_FILTER_WAVPARAMETERS_H_
 
-#include "device/devicedata.h"
+#include "../device/devicedata.h"
+
 #include "filterdata.h"
 
 namespace apex

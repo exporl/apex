@@ -17,19 +17,20 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef PARSERDEVICESPARSER_H
-#define PARSERDEVICESPARSER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_DEVICE_DEVICESPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_DEVICE_DEVICESPARSER_H_
 
-#include "apextypedefs.h"
+#include "apexdata/device/devicedata.h"
+#include "apexdata/device/devicesdata.h"
+
+#include "apextools/apextypedefs.h"
+
+#include "apextools/xml/xercesinclude.h"
+
 #include "parser/apexparser.h"
-
-//from libdata
-#include "device/devicedata.h"     // we use a map of devicedata
-#include "device/devicesdata.h"     // we use a map of devicedata
 
 #include <QObject>
 
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
     class DOMElement;
@@ -51,10 +52,10 @@ namespace apex{
         };
 
 /**
-	@author Tom Francart,,, <tom.francart@med.kuleuven.be>
+        @author Tom Francart,,, <tom.francart@med.kuleuven.be>
 */
     class APEX_EXPORT DevicesParser: public Parser {
-        //Q_OBJECT        // use tr
+        Q_DECLARE_TR_FUNCTIONS ( DevicesParser );
 public:
     DevicesParser();
 

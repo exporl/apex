@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef APEXApexMessageWindow_H
-#define APEXApexMessageWindow_H
+
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_STATUS_STATUSWINDOW_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_STATUS_STATUSWINDOW_H_
 
 #include <status/statusitem.h>
 

@@ -17,19 +17,21 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_PARSERWAVDEVICEPARSER_H
-#define APEX_PARSERWAVDEVICEPARSER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_DEVICE_WAVDEVICEPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_DEVICE_WAVDEVICEPARSER_H_
+
+#include "apexdata/device/wavdevicedata.h"
+
+#include "apextools/xml/xercesinclude.h"
 
 #include "parser/apexparser.h"
 #include "parser/simpleparametersparser.h"
 
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
 class DOMElement;
 };
 
-#include "device/wavdevicedata.h"
 
 namespace apex
 {

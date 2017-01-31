@@ -17,19 +17,19 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apexdata/parameters/parametermanagerdata.h"
+#include "apexdata/parameters/simpleparameters.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
+
 #include "simpleparametersparser.h"
-#include "parameters/simpleparameters.h"
-#include "parameters/parametermanagerdata.h"
-
-#include "xml/apexxmltools.h"
-#include "xml/xmlkeys.h"
-using namespace apex::ApexXMLTools;
-
-#include "xml/xercesinclude.h"
-using namespace XERCES_CPP_NAMESPACE;
 
 #include <QDebug>
 
+using namespace apex::ApexXMLTools;
+using namespace XERCES_CPP_NAMESPACE;
 
 namespace apex
 {
@@ -77,7 +77,6 @@ void SimpleParametersParser::Parse(XERCES_CPP_NAMESPACE::DOMElement* base,
             channel=sChannel.toInt();
 
 
-        //qDebug("Adding parameter %s with value %s to %s", qPrintable(type), qPrintable(value.toString()), qPrintable(id));
         AddParameter(p, (DOMElement*) currentNode, owner, type, id, value, channel);
 
     }

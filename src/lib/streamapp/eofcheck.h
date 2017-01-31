@@ -16,13 +16,17 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __EOFCHECK_H__
 #define __EOFCHECK_H__
 
-#include "stream.h"
 #include "callback/callback.h"
+
 #include "containers/dynarray.h"
+
+#include "stream.h"
+
+#include <QtGlobal>
 
 namespace streamapp
 {
@@ -131,7 +135,7 @@ namespace streamapp
         */
     void mp_AddInputToCheck( InputStream& /*ac_Input*/ )
     {
-      assert( 0 && "virtual function not implemented" );
+      Q_ASSERT( 0 && "virtual function not implemented" );
     }
 
       /**

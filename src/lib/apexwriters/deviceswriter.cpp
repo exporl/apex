@@ -17,20 +17,20 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-/**
- *@author Job Noorman
- */
+#include "apexdata/device/devicedata.h"
+#include "apexdata/device/devicesdata.h"
+#include "apexdata/device/l34devicedata.h"
+#include "apexdata/device/wavdevicedata.h"
+
+#include "apexdata/map/apexmap.h"
+#include "apexdata/map/channelmap.h"
+
+#include "apexdata/parameters/parameter.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
 
 #include "deviceswriter.h"
-#include "xml/apexxmltools.h"
-#include "device/devicesdata.h"
-#include "device/devicedata.h"
-#include "device/wavdevicedata.h"
-#include "device/l34devicedata.h"
-#include "parameters/parameter.h"
-#include "map/apexmap.h"
-#include "map/channelmap.h"
-#include "xml/xercesinclude.h"
 
 #include <QDebug>
 
@@ -57,7 +57,7 @@ DOMElement* DevicesWriter::addElement(DOMDocument* doc, const DevicesData& data)
     //if there is a <master> tag
     if (!master.isEmpty())
     {
-        qDebug("WRITER: master device: %s", qPrintable(master));
+        qCDebug(APEX_RS, "WRITER: master device: %s", qPrintable(master));
         devices->appendChild(XMLutils::CreateTextElement(doc, "master", master));
     }
 
@@ -91,7 +91,7 @@ DOMElement* DevicesWriter::addElement(DOMDocument* doc, const DevicesData& data)
                 break;
 
             default:
-                qCritical("WRITER: unknown device type: %u", devData->deviceType());
+                qCCritical(APEX_RS, "WRITER: unknown device type: %u", devData->deviceType());
 
                 break;
         }

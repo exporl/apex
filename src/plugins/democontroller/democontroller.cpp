@@ -16,9 +16,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "plugincontrollerinterface.h"
+#include "apexmain/device/plugincontrollerinterface.h"
+
+#include "apextools/global.h"
+
+#include <QLoggingCategory>
 #include <QStringList>
 
+Q_DECLARE_LOGGING_CATEGORY(APEX_DEMOCONTROLLER)
+Q_LOGGING_CATEGORY(APEX_DEMOCONTROLLER, "apex.democontroller")
 
 class DemoControllerCreator :
     public QObject,
@@ -26,6 +32,9 @@ class DemoControllerCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginControllerCreator)
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA (IID "apex.democontroller")
+#endif
 public:
     virtual QStringList availablePlugins() const;
 
@@ -33,7 +42,9 @@ public:
             (const QString &name ) const;
 };
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN2 (democontroller, DemoControllerCreator)
+#endif
 
 class DemoController:
     public QObject,
@@ -63,13 +74,13 @@ private:
 DemoController::DemoController ():
         myParam(-1)
 {
-    qDebug("Initializing democontroller");
+    qCDebug(APEX_DEMOCONTROLLER, "Initializing democontroller");
 }
 
 
 DemoController::~DemoController()
 {
-   qDebug("Deleting democontroller");
+   qCDebug(APEX_DEMOCONTROLLER, "Deleting democontroller");
 }
 
 void DemoController::resetParameters()
@@ -81,7 +92,7 @@ bool DemoController::isValidParameter (const QString &type, int channel) const
 {
     if (type == "demoparameter" && channel == -1)
         return true;
-    
+
     return false;
 }
 
@@ -90,7 +101,7 @@ bool DemoController::setParameter (const QString &type, int channel,
 {
     if (type == "demoparameter" && channel == -1) {
         myParam=value.toInt();
-        qDebug("DemoController: setting parameter to value %i", myParam);
+        qCDebug(APEX_DEMOCONTROLLER, "DemoController: setting parameter to value %i", myParam);
         return true;
     }
 
@@ -99,7 +110,7 @@ bool DemoController::setParameter (const QString &type, int channel,
 
 bool DemoController::prepare ()
 {
-    qDebug("DemoController: the fancy stuf happens here...");
+    qCDebug(APEX_DEMOCONTROLLER, "DemoController: the fancy stuf happens here...");
     return true;
 }
 

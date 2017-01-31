@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/experiment ../../data/schemas/experiment.xsd"
+ xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment" version="1">
+ <!-- @doc
+  @what: 1up-1down Kaernbach procedure: Frequency of ups-downs is the same - Up stepsize is 1, down stepsize is 7 - Experiment stops after 6 reversals
+  @description: When you click on the button 'correct or wrong', you hear a stimulus 'wd1.wav (een/one)' in both ears. When you click again, the gain of the stimulus decreases/increases according to the button (correct/false)
+               The frequency of decrease/increase is the same - 1click 'false' = up - 1click 'correct' = down
+  @how: adaptiveProcedure - stop_after_type: reversals - nUp/nDown - adapt_parameter (gain: gain of stimulus) -
+ -->
+ <procedure xsi:type="apex:adaptiveProcedure">
+  <parameters>
+   <presentations>20</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+   <nUp>1</nUp>
+   <nDown>1</nDown>
+   <adapt_parameter>gain</adapt_parameter>
+   <start_value>-10</start_value>
+   <stop_after_type>reversals</stop_after_type>
+   <stop_after>6</stop_after>
+   <min_value>-40</min_value>
+   <max_value>+20</max_value>
+   <larger_is_easier>true</larger_is_easier>
+   <stepsizes>
+    <stepsize size="1" begin="0" direction="up"/>
+    <stepsize size="2" begin="2"/>
+    <stepsize size="7" begin="0" direction="down"/>
+   </stepsizes>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>correct</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="0">false</feedback>
+   <showcurrent>false</showcurrent>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout id="main_layout" width="2" height="1">
+    <button id="correct" row="1" col="1">
+     <text>correct</text>
+    </button>
+    <button id="false" row="1" col="2">
+     <text>false</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="correct"/>
+    <button id="false"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="db_click">
+   <device>wavdevice</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>default</card>
+   <channels>2</channels>
+   <gain id="gain">0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <stimuli>
+  <stimulus id="stimulus1">
+   <datablocks>
+    <datablock id="db_click"/>
+   </datablocks>
+  </stimulus>
+ </stimuli>
+</apex:apex>

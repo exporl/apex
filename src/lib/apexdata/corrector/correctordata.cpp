@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "correctordata.h"
 
 #include <QString>
@@ -32,8 +32,6 @@ struct CorrectorDataPrivate
 {
     CorrectorData::Type      type;
     CorrectorData::Language  language;
-    CorrectorData::AnswerMap answers;
-    bool                     answersDefined;
 };
 
 }//ns data
@@ -70,16 +68,6 @@ CorrectorData::Type CorrectorData::type() const
     return d->type;
 }
 
-bool CorrectorData::answersDefined() const
-{
-    return d->answersDefined;
-}
-
-void CorrectorData::setAnswersDefined(const bool answersDefined)
-{
-    d->answersDefined = answersDefined;
-}
-
 CorrectorData::Language CorrectorData::language() const
 {
     return d->language;
@@ -87,24 +75,9 @@ CorrectorData::Language CorrectorData::language() const
 
 void CorrectorData::setLanguage(const CorrectorData::Language language)
 {
-    qDebug() << "setting lang to" << language;
+    qCDebug(APEX_RS) << "setting lang to" << language;
     d->language = language;
 }
-
-void apex::data::CorrectorData::addAnswer(int number, const QString& value)
-{
-    d->answers[number] = value;
-}
-
-const CorrectorData::AnswerMap& CorrectorData::answers() const
-{
-    return d->answers;
-}
-
-// CorrectorData::AnswerMap& CorrectorData::answers()
-// {
-//     return d->answers;
-// }
 
 
 CorrectorData& CorrectorData::operator=(const CorrectorData& other)
@@ -117,12 +90,9 @@ CorrectorData& CorrectorData::operator=(const CorrectorData& other)
 
 bool CorrectorData::operator==(const CorrectorData& other)
 {
-    qDebug() << d->type << other.d->type;
-    qDebug() << d->language << other.d->language;
-    qDebug() << d->answersDefined << other.d->answersDefined;
-    qDebug() << d->answers << other.d->answers;
+    qCDebug(APEX_RS) << d->type << other.d->type;
+    qCDebug(APEX_RS) << d->language << other.d->language;
     return  d->type == other.d->type &&
-            d->language == other.d->language &&
-            d->answersDefined == other.d->answersDefined &&
-            d->answers == other.d->answers;
+            d->language == other.d->language;
+
 }

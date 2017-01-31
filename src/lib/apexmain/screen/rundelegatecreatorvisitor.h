@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef RUNDELEGATECREATORVISITOR_H
-#define RUNDELEGATECREATORVISITOR_H
 
-#include "screen/screenelementvisitor.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_RUNDELEGATECREATORVISITOR_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_RUNDELEGATECREATORVISITOR_H_
+
+#include "apexdata/screen/screenelementvisitor.h"
+
 #include "rundelegatedefines.h"
 
 #include <QFont>
@@ -47,6 +48,7 @@ using data::SpinBoxElement;
 using data::SliderElement;
 using data::CheckBoxElement;
 using data::MatrixElement;
+using data::HtmlElement;
 
 /**
  * The RunDelegateCreatorVisitor class is a class that is used to
@@ -91,7 +93,10 @@ private:
     void visitPicture(const PictureElement* e);
     void visitPictureLabel(const PictureLabelElement* e);
     void visitTextEdit(const TextEditElement* e);
-
+    // TODO ANDROID htmlrundelegate uses webkitwidgets
+#ifndef Q_OS_ANDROID
+    void visitHtml(const HtmlElement* e);
+#endif
     ExperimentRunDelegate* m_rd;
 };
 }

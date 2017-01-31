@@ -24,7 +24,7 @@
 
 #include "apextools.h"
 
-#include <qglobal.h>
+#include <QtGlobal>
 
 #include <QDir>
 #include <QApplication>
@@ -34,11 +34,10 @@ using namespace apex;
 
 const QString Paths::cApexConfig( "apexconfig.xml" );
 const QString Paths::cApexConfigSchema( "apexconfig.xsd" );
-const QString Paths::cMruIni( "apexmru.ini" );
-const QString Paths::cMainIcon( "logo_labexporl.png" );
-const QString Paths::cPluginDir("plugins");
-const QString Paths::cDataDir("data");
-const QString Paths::cScriptsDir("scripts");
+const QString Paths::cMainIcon( "apex_icon.png" );
+const QString Paths::cPluginDir("pluginprocedures");
+const QString Paths::cDataDir("bitmaps");
+const QString Paths::cScriptsDir("resultsviewer");
 const QString Paths::cXsltScriptsDir("xslt");
 const QString Paths::cExamplesDir("examples");
 const QString Paths::cDocDir("doc");
@@ -62,17 +61,17 @@ Paths::Paths()
 
     m_sBase = ApexTools::MakeDirEnd (d.path());
 
-//    qDebug("Base path: %s", qPrintable(m_sBase));
+//    qCDebug(APEX_RS, "Base path: %s", qPrintable(m_sBase));
 }
 
 bool Paths::CheckApexDir(QDir d) {
-//    qDebug("Checking path %s", qPrintable (d.path()));
+//    qCDebug(APEX_RS, "Checking path %s", qPrintable (d.path()));
 
     if (d.cd("data"))
         return true;
 
 
-#ifdef LINUX
+#ifdef Q_OS_UNIX
     if (d.cd("share/apex/"))
         return true;
 #endif
@@ -101,7 +100,7 @@ QString Paths::findReadableFile (const QString &baseName,
                     QStringList (prefixes) << QString()) {
                 fileInfo.setFile (QDir (directory
                             ), prefix + baseName + extension);
-                qDebug("Trying %s",
+                qCDebug(APEX_RS, "Trying %s",
                        qPrintable(directory+"/"+prefix + baseName + extension));
                 if (fileInfo.exists() && fileInfo.isFile() &&
                         fileInfo.isReadable())
@@ -138,7 +137,7 @@ const QString apex::Paths::GetExperimentSchemaPath() const
 
     /*QString result( GetSharePath() + "/" +  cSchemaDir + "/" + cExperimentSchema );
     if (! QFile::exists(result)) {
-        qDebug("Experiment schema not found: %s", qPrintable(result));
+        qCDebug(APEX_RS, "Experiment schema not found: %s", qPrintable(result));
         throw ApexStringException(QString(tr("Experiment schema not found: %1")).arg(result));
     }
     return result;*/
@@ -155,19 +154,16 @@ const QString apex::Paths::GetNonBinaryPluginPath() const
     return result;
 }
 
-const QString apex::Paths::GetBinaryPluginPath() const
+const QStringList apex::Paths::GetBinaryPluginPaths() const
 {
+    QStringList result;
 #ifdef WIN32
-    return GetNonBinaryPluginPath();
+    result << GetNonBinaryPluginPath();
 #else
-    QString result( GetBasePath() + "/share/" + PathTools::cApexDir );
-    if ( QFile::exists(result)) {
-        return result;
-    }
+    result << GetBasePath() + "/share/" + PathTools::cApexDir;
 #endif
-
-    return GetExecutablePath();
-
+    result << GetExecutablePath();
+    return result;
 }
 
 
@@ -191,10 +187,6 @@ const QString apex::Paths::GetApexConfigSchemaPath() const
 const QString apex::Paths::GetUserConfigFilePath()
 {
     return PathTools::GetUserConfigFilePath();
-}
-
-const QString apex::Paths::GetMruIniPath() const {
-    return GetUserConfigFilePath() + "/" + cMruIni;
 }
 
 const QString apex::Paths::GetDataPath() const

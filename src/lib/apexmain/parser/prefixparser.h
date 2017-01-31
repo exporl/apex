@@ -17,15 +17,17 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_PARSERPREFIXPARSER_H
-#define APEX_PARSERPREFIXPARSER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_PARSER_PREFIXPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_PARSER_PREFIXPARSER_H_
+
+#include "apexdata/fileprefix.h"
+
+#include "apextools/xml/xercesinclude.h"
 
 #include "parser/apexparser.h"
-#include "fileprefix.h"
 
-#include <QCoreApplication> //tr
+#include <QCoreApplication>
 
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
     class DOMElement;
@@ -40,7 +42,7 @@ namespace apex {
 namespace parser {
 
 /**
-	@author Tom Francart,,, <tom.francart@med.kuleuven.be>
+        @author Tom Francart,,, <tom.francart@med.kuleuven.be>
 */
 class PrefixParser : public Parser
 {

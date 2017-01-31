@@ -16,18 +16,18 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __CRITICALSECTION_H__
 #define __CRITICALSECTION_H__
 
-#include "defines.h"
+#include "../../defines.h"
 
 #if defined S_WIN32
 //nothing to include here
 #elif defined S_C6X
 #include "c6x_headers.h"
 #elif defined S_POSIX
-#include "linux_headers.h"
+#include "../../_archs/linux/linux_headers.h"
 #elif defined S_PSP
 #include "psp_headers.h"
 #else

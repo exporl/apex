@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef RUNDELEGATEDEFINES_H
-#define RUNDELEGATEDEFINES_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_RUNDELEGATEDEFINES_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_RUNDELEGATEDEFINES_H_
 
 #include <map>
 #include <list>
@@ -37,12 +37,12 @@ namespace apex
     using data::ScreenElement;
     class ScreenElementRunDelegate;
     class SpinBoxRunDelegate;
-	class CheckBoxRunDelegate;
+        class CheckBoxRunDelegate;
 
     typedef QMap<const ScreenElement*, ScreenElementRunDelegate*> ElementToRunningMap;
-      
+
     typedef std::list<const SpinBoxRunDelegate*> spinBoxListT;
-	typedef std::list<const CheckBoxRunDelegate*> checkBoxListT;
+        typedef std::list<const CheckBoxRunDelegate*> checkBoxListT;
 
   }
 }

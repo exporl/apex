@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __CPUTICKER_H__
 #define __CPUTICKER_H__
 
@@ -34,11 +34,11 @@ public:
   void Measure();
 
     //accessors to the actual measurement value
-  double GetTickCountAsSeconds() const;  
+  double GetTickCountAsSeconds() const;
   inline qint64 GetTickCount() const { return m_TickCount; };
 
     //static methods
-  static bool GetCPUFrequency(double& frequency, double& target_ave_dev, 
+  static bool GetCPUFrequency(double& frequency, double& target_ave_dev,
                               unsigned long interval = 1000,
                               unsigned int max_loops = 20);
 

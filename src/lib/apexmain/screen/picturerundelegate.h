@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef PICTURERUNDELEGATE_H
-#define PICTURERUNDELEGATE_H
 
-#include "screen/pictureelement.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_PICTURERUNDELEGATE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_PICTURERUNDELEGATE_H_
 
-#include "screenelementrundelegate.h"
+#include "apexdata/screen/pictureelement.h"
+
 #include "parameterscontainerrundelegate.h"
+#include "screenelementrundelegate.h"
 
 #include <QLabel>
 #include <QPushButton>

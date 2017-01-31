@@ -17,13 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apextools/exceptions.h"
+
 #include "arclayoutelement.h"
-
-#include "screenelementvisitor.h"
-#include "screen.h"
 #include "emptyelement.h"
-
-#include "exceptions.h"
+#include "screen.h"
+#include "screenelementvisitor.h"
 
 namespace apex
 {

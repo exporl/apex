@@ -17,12 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
 #include "randomgeneratorparameters.h"
-#include "xml/apexxmltools.h"
+
 using namespace apex::ApexXMLTools;
 using namespace apex::data;
-
-#include "xml/xercesinclude.h"
 using namespace xercesc;
 
 namespace apex {

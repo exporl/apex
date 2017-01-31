@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:results experiment_file="/home/tom/matlab/apex/apex3/speech.xml" xmlns:apex="http://www.kuleuven.be/exporl/Lab/Apex">
+<trial id="VIRTUAL_TRIAL" type="virtual">
+<!-- This is not a real trial, but a virtual trial based on the previous-->
+
+</trial>
+</apex:results>

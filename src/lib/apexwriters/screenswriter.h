@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SCREENSWRITER_H
-#define SCREENSWRITER_H
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_SCREENSWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_SCREENSWRITER_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
 
 #include <QStringList>
 
@@ -45,7 +45,6 @@ class ScreensData;
 
 namespace writer
 {
-using namespace XERCES_CPP_NAMESPACE;
 
 /**
  * @author Job Noorman <jobnoorman@gmail.com>
@@ -64,22 +63,22 @@ class APEXWRITERS_EXPORT ScreensWriter
          * @note    No validations is done on the given strings so you better
          *          be sure they are valid!
          */
-        static DOMElement *addElement(DOMDocument *doc,
+        static XERCES_CPP_NAMESPACE::DOMElement *addElement(XERCES_CPP_NAMESPACE::DOMDocument *doc,
                                       const data::ScreensData &data,
                                       const QStringList& screens = QStringList());
-        static DOMElement *addScreen(DOMDocument *doc, const data::Screen &data);
+        static XERCES_CPP_NAMESPACE::DOMElement *addScreen(XERCES_CPP_NAMESPACE::DOMDocument *doc, const data::Screen &data);
 
     private:
 
-        static DOMElement *screenElementToXml(DOMDocument *doc,
+        static XERCES_CPP_NAMESPACE::DOMElement *screenElementToXml(XERCES_CPP_NAMESPACE::DOMDocument *doc,
                                        const data::ScreenElement &e);
-        static DOMElement *buttonGroupToXml(DOMDocument *doc,
+        static XERCES_CPP_NAMESPACE::DOMElement *buttonGroupToXml(XERCES_CPP_NAMESPACE::DOMDocument *doc,
                                      const data::ButtonGroup &g);
-        static DOMElement *addReinforcement(DOMDocument *doc,
+        static XERCES_CPP_NAMESPACE::DOMElement *addReinforcement(XERCES_CPP_NAMESPACE::DOMDocument *doc,
                                      const data::ScreensData &data);
-        static DOMElement* addGeneral(DOMDocument *doc,
+        static XERCES_CPP_NAMESPACE::DOMElement* addGeneral(XERCES_CPP_NAMESPACE::DOMDocument *doc,
                               const data::ScreensData &data);
-        static DOMElement* addChildmode(DOMDocument *doc,
+        static XERCES_CPP_NAMESPACE::DOMElement* addChildmode(XERCES_CPP_NAMESPACE::DOMDocument *doc,
                                const data::ScreensData &data);
 };
 

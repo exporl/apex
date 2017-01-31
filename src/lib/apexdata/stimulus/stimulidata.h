@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef STIMULIDATAH
-#define STIMULIDATAH
+#ifndef _EXPORL_SRC_LIB_APEXDATA_STIMULUS_STIMULIDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_STIMULUS_STIMULIDATA_H_
 
 #include "stimulusdata.h"
 
-#include "global.h"
+#include "apextools/global.h"
 
 #include <QMap>
 #include <QStringList>
@@ -48,7 +48,7 @@ class APEXDATA_EXPORT StimuliData:
         bool CheckFixedParameters(StatusReporter* err);
 
         const FixedParameterList& GetFixedParameters() const;
-        
+
         bool operator==(const StimuliData& other) const;
 
     private:

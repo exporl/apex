@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 /**********************************************************************
  *
  *   Copyright: Cochlear Ltd
@@ -30,12 +30,12 @@
  *
  *********************************************************************/
 
-#ifndef StimulationModeType_h
+#ifndef ___H_
 
 /* Used for automatic documentation purposes only. */
 #ifndef DOXYGEN_IGNORE
 
-#define StimulationModeType_h 1
+#define ___H_ 1
 
 #endif
 

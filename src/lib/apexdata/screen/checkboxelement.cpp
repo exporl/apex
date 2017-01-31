@@ -51,7 +51,7 @@ QString CheckBoxElement::getText() const
 
 Qt::CheckState CheckBoxElement::getChecked() const
 {
-	return isChecked;
+        return isChecked;
 }
 
 void CheckBoxElement::visit(ScreenElementVisitor* v)

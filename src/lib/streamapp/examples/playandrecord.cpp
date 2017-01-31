@@ -16,16 +16,24 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "../appcore/threads/thread.h"
+
+#include "../callback/manualcallbackrunner.h"
+
+#include "../file/wavefile.h"
+
+#include "../processors/processor.h"
+
+#include "../soundcard/soundcard.h"
+
+#include "../streamappfactory.h"
+
+#include "../utils/stringexception.h"
+
 #include "playandrecord.h"
-#include "streamappfactory.h"
-#include "file/wavefile.h"
-#include "soundcard/soundcard.h"
-#include "streamappfactory.h"
-#include "processors/processor.h"
-#include "appcore/threads/thread.h"
-#include "utils/stringexception.h"
-#include "callback/manualcallbackrunner.h"
+
+#include <QtGlobal>
 
 using namespace utils;
 using namespace appcore;
@@ -54,7 +62,7 @@ void StreamAppBase::mp_SetSoundCard( const gt_eDeviceType ac_eType, const std::s
 
 void StreamAppBase::mp_OpenSoundCard( const unsigned ac_nInputChannels, const unsigned ac_nOutputChannels, const unsigned long ac_lSampleRate )
 {
-  assert( m_pCard );
+  Q_ASSERT( m_pCard );
   if( m_pCard->mf_bIsOpen() )
     m_pCard->mp_bCloseDriver();
   if( !m_pCard->mp_bOpenDriver( ac_nInputChannels, ac_nOutputChannels, ac_lSampleRate, mc_nBufferSize ) )
@@ -63,13 +71,13 @@ void StreamAppBase::mp_OpenSoundCard( const unsigned ac_nInputChannels, const un
 
 void StreamAppBase::mp_UseSoundCardAsInput()
 {
-  assert( m_pCard );
+  Q_ASSERT( m_pCard );
   mc_pChannel->mp_AddInputStream( StreamAppFactory::sf_pInstance()->mf_pSoundCardIn( *m_pCard ) );
 }
 
 void StreamAppBase::mp_UseSoundCardAsOutput()
 {
-  assert( m_pCard && m_pCard->mf_bIsOpen() );
+  Q_ASSERT( m_pCard && m_pCard->mf_bIsOpen() );
   mc_pChannel->mp_AddOutputStream( StreamAppFactory::sf_pInstance()->mf_pSoundCardOut( *m_pCard ) );
 }
 

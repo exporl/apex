@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef SCREENELEMENTRUNDELEGATE_H
-#define SCREENELEMENTRUNDELEGATE_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_SCREENELEMENTRUNDELEGATE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_SCREENELEMENTRUNDELEGATE_H_
 
 #include <QCoreApplication>
+#include <QPointF>
 
 class QWidget;
 class QString;
@@ -96,7 +97,7 @@ namespace apex
        * implementation.
        */
       virtual void feedBack( const FeedbackMode& mode );
-      FeedbackMode getFeedbackMode() const;
+      FeedbackMode getFeedBackMode() const;
       virtual ~ScreenElementRunDelegate();
 
       /**
@@ -203,7 +204,7 @@ namespace apex
 
         private:
             bool isValidColor(const QString& color);
-            
+
             const data::ScreenElement* const  element;
 
     };

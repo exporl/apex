@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXPARAMETERDIALOGRESULTS_H
-#define APEXPARAMETERDIALOGRESULTS_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_INTERACTIVE_PARAMETERDIALOGRESULTS_H_
+#define _EXPORL_SRC_LIB_APEXDATA_INTERACTIVE_PARAMETERDIALOGRESULTS_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
 #include <QList>
 

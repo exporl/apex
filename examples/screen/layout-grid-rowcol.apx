@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+
+
+ <!-- @doc
+  @what: shows the use of the row and col attributes instead of x and y
+  @description: first screen you see is made with col & row, second screen with x & y
+  @how: <gridLayout> replacing "x" & "y" by "row" & "col". col = column in the grid, is the same as x. row = row in the grid, is the same as y
+  -->
+
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial0">
+    <answer>toplabel</answer>
+    <screen id="screen0"/>
+    <stimulus id="stimulus2"/>
+   </trial>
+   <trial id="trial1">
+    <answer>button2</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+  </trials>
+ </procedure>
+
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">true</feedback>
+  </reinforcement>
+  <screen id="screen0">
+   <gridLayout width="3" height="3" id="testgrid">
+    <button row="2" col="1" id="toplabel">
+     <text>Do the task!</text>
+    </button>
+   </gridLayout>
+   <default_answer_element>button90</default_answer_element>
+  </screen>
+  <screen id="screen1">
+   <gridLayout width="3" height="3" id="testgrid">
+    <label x="1" id="toplabel" y="1">
+     <text>Do the task!</text>
+    </label>
+    <button x="1" id="button2" y="2">
+     <text>1</text>
+    </button>
+    <button x="1" id="button3" y="3">
+     <text>2</text>
+    </button>
+    <button x="2" id="button4" y="1">
+     <text>3</text>
+    </button>
+    <button x="2" id="button5" y="2">
+     <text>4</text>
+    </button>
+    <button x="2" id="button6" y="3">
+     <text>5</text>
+    </button>
+    <button x="3" id="button7" y="1">
+     <text>6</text>
+    </button>
+    <button x="3" id="button8" y="2">
+     <text>7</text>
+    </button>
+   </gridLayout>
+      <buttongroup id="buttongroup90">
+    <button id="toplabel"/>
+    <button id="button2"/>
+    <button id="button3"/>
+    <button id="button4"/>
+    <button id="button5"/>
+    <button id="button6"/>
+    <button id="button7"/>
+    <button id="button8"/>
+   </buttongroup>
+   <default_answer_element>buttongroup90</default_answer_element>
+  </screen>
+ </screens>
+
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>wavdevice</device>
+   <uri>wd2.wav</uri>
+  </datablock>
+ </datablocks>
+
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+
+ <filters>
+ </filters>
+
+ <stimuli>
+  <fixed_parameters>
+   <parameter id="fixed"/>
+  </fixed_parameters>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="fixed">1</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata2"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="fixed">2</parameter>
+   </fixedParameters>
+  </stimulus>
+ </stimuli>
+
+ <connections>
+ </connections>
+
+</apex:apex>

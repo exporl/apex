@@ -17,13 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __FACTORY_H__
-#define __FACTORY_H__
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_FACTORY_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_FACTORY_H_
 
-#include "status/statusreporter.h"
-#include "appcore/raiifactory.h"
-#include "factoryelement.h"
-#include <appcore/singleton.h>
+#include "apextools/status/statusreporter.h"
+
+#include "streamapp/appcore/raiifactory.h"
+#include "streamapp/appcore/singleton.h"
+
+#include "apexdata/factoryelement.h"
 
 #include <memory>
 
@@ -101,9 +103,9 @@ namespace apex
     virtual void mp_ClearErrors()
     { m_Error->clear(); }
 
-    mutable std::auto_ptr<StatusReporter> m_Error;
+    mutable QScopedPointer<StatusReporter> m_Error;
   };
 
 }
 
-#endif //#ifndef __FACTORY_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_FACTORY_H_

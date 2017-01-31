@@ -31,7 +31,7 @@ namespace data
 
 void ParameterManagerData::registerParameter(const QString& id, const Parameter& pn)
 {
-    //qDebug() << "registering parameter" << id;
+    //qCDebug(APEX_RS) << "registering parameter" << id;
     if (!id.isEmpty())
         idMap[id] = pn;
 }
@@ -48,13 +48,13 @@ void ParameterManagerData::showContents() const
 {
 
 
-            qDebug() << "Registered parameters:";
-            qDebug() << "======================";
+            qCDebug(APEX_RS) << "Registered parameters:";
+            qCDebug(APEX_RS) << "======================";
 
             IdParameterMap::const_iterator it;
             for (it = idMap.begin(); it != idMap.end(); ++it)
             {
-                qDebug().nospace() << "id=" << it.key() << ", name="
+                qCDebug(APEX_RS).nospace() << "id=" << it.key() << ", name="
                                    << it.value().toString();
             }
 }

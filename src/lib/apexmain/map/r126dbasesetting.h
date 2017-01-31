@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef R126DBASESETTING_H
-#define R126DBASESETTING_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_R126DBASESETTING_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_MAP_R126DBASESETTING_H_
 
 #include <qstring.h>
 
 namespace r126{
 
     //! supported R126 Database version mubers
-  enum eR126VersionNumber 
+  enum eR126VersionNumber
   {
     UNKNOWNR126VERSION  = 0,
     R126VERSION_1_3     = 1,
@@ -56,7 +56,7 @@ namespace r126{
     {
       return m_eVersion;
     }
-    
+
     const QString& mf_sGetServerName() const
     {
       return m_sServer;
@@ -77,20 +77,20 @@ namespace r126{
         case R126VERSION_1_3:
           //User = sa; No pass
           m_sConnectionString = "Provider=SQLOLEDB.1;Persist Security Info = False;"
-            "User ID = sa;Initial Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data Source=";  
+            "User ID = sa;Initial Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data Source=";
           m_sConnectionString += m_sServer;
           break;
         case R126VERSION_2_0:
           //User = sa; No pass
           m_sConnectionString = "Provider=SQLOLEDB.1;Persist Security Info = False;"
-            "User ID = NucleusR126;Password=wallaby;Initial Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data Source=";        
+            "User ID = NucleusR126;Password=wallaby;Initial Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data Source=";
           m_sConnectionString += m_sServer;
           break;
 
         case R126VERSION_2_1:
           //User = NucleusR126; Pass = wallaby
           m_sConnectionString = "Provider=SQLOLEDB.1;Persist Security Info = False;"
-            "User ID = NucleusR126;Password=wallaby;Initial Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data Source=";        
+            "User ID = NucleusR126;Password=wallaby;Initial Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data Source=";
           m_sConnectionString += m_sServer;
           m_sConnectionString += "\\COCHLEAR";
           break;
@@ -103,4 +103,4 @@ namespace r126{
 
 }
 
-#endif //#ifndef R126DBASESETTING_H
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_R126DBASESETTING_H_

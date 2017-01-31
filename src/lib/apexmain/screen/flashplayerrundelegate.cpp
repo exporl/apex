@@ -17,18 +17,20 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "flashplayerrundelegate.h"
-#include "screen/screenrundelegate.h"
-#include "screen/flashplayerelement.h"
-#include "apexcontrol.h"
-#include "apexcontrolthread.h"
-#include "exceptions.h"
-#include "apextools.h"
-#include "fileprefixconvertor.h"
-#include "runner/experimentrundelegate.h"
-#include "gui/flashwidget.h"
+#include "../gui/flashwidget.h"
+#include "../gui/guidefines.h"
 
-#include "gui/guidefines.h"
+#include "../runner/experimentrundelegate.h"
+
+#include "apexdata/screen/flashplayerelement.h"
+
+#include "apextools/apextools.h"
+#include "apextools/exceptions.h"
+
+#include "apexcontrol.h"
+#include "fileprefixconvertor.h"
+#include "flashplayerrundelegate.h"
+#include "screenrundelegate.h"
 
 using namespace apex::rundelegates;
 using namespace apex;
@@ -93,7 +95,7 @@ void FlashPlayerRunDelegate::setMovie( const QString& path, const bool startNow 
             FilePrefixConvertor::convert(element->prefix())));
     absPath = QFileInfo(absPath).absoluteFilePath();
 
-    //qDebug("Flash movie absolute path: %s", qPrintable(absPath));
+    //qCDebug(APEX_RS, "Flash movie absolute path: %s", qPrintable(absPath));
 
     if( !fw->loadMovie( absPath ) )
         throw( ApexStringException(
@@ -164,10 +166,11 @@ QWidget* FlashPlayerRunDelegate::getWidget()
     return fw;
 }
 
+//FIXME!!!
 void FlashPlayerRunDelegate::movieFinished()
 {
-    apex::ApexControl& ctrl( apex::ApexControl::Get() );
-    const int c_nEvtID = ctrl.mf_nGetScreenElementFinishedEvent();
-    ctrl.mf_pGetControlThread()->mp_StartWaitOnTimer(0,c_nEvtID );
-    disconnect(fw, SIGNAL(finished()), this, SLOT(movieFinished()));
+    //apex::ApexControl& ctrl( apex::ApexControl::Get() );
+    //const int c_nEvtID = ctrl.mf_nGetScreenElementFinishedEvent();
+    //ctrl.mf_pGetControlThread()->mp_StartWaitOnTimer(0,c_nEvtID );
+    //disconnect(fw, SIGNAL(finished()), this, SLOT(movieFinished()));
 }

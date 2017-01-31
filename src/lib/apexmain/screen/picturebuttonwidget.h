@@ -16,26 +16,27 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef PICTUREBUTTONWIDGETH
-#define PICTUREBUTTONWIDGETH
 
-#include <QPushButton>
-#include <QPaintEvent>
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_PICTUREBUTTONWIDGET_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_PICTUREBUTTONWIDGET_H_
+
+#include "apextools/global.h"
+
 #include <QMouseEvent>
-#include <QPointF>
+#include <QPaintEvent>
 #include <QPixmap>
+#include <QPointF>
+#include <QPushButton>
 
-
-class PictureButtonWidget: public QPushButton {
+class APEX_EXPORT PictureButtonWidget: public QPushButton {
     Q_OBJECT
 
     public:
         PictureButtonWidget(QWidget* parent=0);
-	void paintEvent(QPaintEvent*);
+        void paintEvent(QPaintEvent*);
         virtual void mousePressEvent( QMouseEvent* ev );
-	void setPixmap(QPixmap p);
-	void setBorderSize(int s);
+        void setPixmap(QPixmap p);
+        void setBorderSize(int s);
 
     signals:
         // QPointF are the relative coordinates of the point where the user clicked

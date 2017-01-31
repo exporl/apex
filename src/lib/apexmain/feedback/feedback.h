@@ -1,5 +1,5 @@
-#ifndef _FEEDBACK_DEFINED_
-#define _FEEDBACK_DEFINED_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_FEEDBACK_FEEDBACK_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_FEEDBACK_FEEDBACK_H_
 
 #include <QString>
 #include "feedback/pluginfeedbackinterface.h"
@@ -10,19 +10,19 @@ class FeedbackPrivate;
 namespace data {
 class ScreensData;
 }
-    
+
 class Feedback
 {
 public:
     Feedback(const data::ScreensData* data);
     ~Feedback();
-    
+
     void loadPlugin(const QString& name,
                     const FeedbackPluginParameters& params);
 
     //! initialize all plugins
     void initialize();
-    
+
     void highLight(const QString& element);
 
     //! Indicate that the response was correct (thumbs up)
@@ -34,7 +34,7 @@ public:
     //! Remove all feedback (highlight & positive/negative)
     void clear();
 
-    
+
 
 private:
     FeedbackPrivate* d;

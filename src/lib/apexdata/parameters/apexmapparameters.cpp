@@ -17,12 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apexmapparameters.h"
-#include "xml/xmlkeys.h"
-#include "xml/apexxmltools.h"
-#include <cassert>
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
 
-#include "xml/xercesinclude.h"
+#include "apexmapparameters.h"
+
+#include <QtGlobal>
+
 using namespace xercesc;
 
 using namespace apex;
@@ -67,7 +69,7 @@ void ApexMapParameters::erase(tParamMapIt it)
 
 bool ApexMapParameters::isEmpty() const
 {
-	return parameters.isEmpty();
+        return parameters.isEmpty();
 }
 
 ApexMapParameters::ApexMapParameters( DOMElement* a_pParamElement )
@@ -86,8 +88,8 @@ bool ApexMapParameters::Parse( DOMElement* p_paramElement )
     return false;
 
   for (DOMNode* currentNode=p_paramElement->getFirstChild(); currentNode!=0; currentNode=currentNode->getNextSibling()) {
-    assert(currentNode);
-    assert(currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
+    Q_ASSERT(currentNode);
+    Q_ASSERT(currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
 
     DOMElement* el = (DOMElement*) currentNode;
 
@@ -98,20 +100,20 @@ bool ApexMapParameters::Parse( DOMElement* p_paramElement )
 
   if (type.isEmpty() && id.isEmpty()) {
     // don't add parameter to map, it cannot be referenced anyway
-      qDebug("Cannot add parameter to map");
+      qCDebug(APEX_RS, "Cannot add parameter to map");
       continue;
   }
 
       //[ stijn ] if there are 2 parameters with the same type
       //the first one will be overwritten
       //this cannot be allowed
-/*  qDebug("type=" + type);
-  assert( find( type ) == end() && "sorry, no duplicate types in parameters!" );*/
+/*  qCDebug(APEX_RS, "type=" + type);
+  Q_ASSERT( find( type ) == end() && "sorry, no duplicate types in parameters!" );*/
   // [Tom] deleted
 
     if( type.isEmpty() )
     {
-      assert( !id.isEmpty() );
+      Q_ASSERT( !id.isEmpty() );
       SetParameter( id, value );
     }
     else

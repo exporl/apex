@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+ <apex:results xmlns:apex="http://med.kuleuven.be/exporl/apex/result" experiment_file="file:/home/ubuntu/HuidigApex/apex/examples/results/subject_test.xml">
+  <general>
+   <apex_version>3.1.x</apex_version>
+   <apex_version_git/>
+   <description>
+  Experiment to demonstrate the use of the saveprocessedresults tag
+</description>
+   <startdate>2015-04-21T15:50:56</startdate>
+   <enddate>2015-04-21T15:51:00</enddate>
+   <duration unit="seconds">4</duration>
+   <jscript>../../data/scripts/rtresults.html</jscript>
+   <subject>d</subject>
+   <interactive>
+    <entry new_value="d" expression="/apex:apex/results/subject" succeeded="true"/>
+   </interactive>
+  </general>
+  <trial id="trial1">
+   <procedure type="apex:constantProcedure">
+    <answer>button1</answer>
+    <correct_answer>button1</correct_answer>
+    <stimulus>stimulus1</stimulus>
+    <correct>true</correct>
+   </procedure>
+   <screenresult>
+    <element id="button1"/>
+    <element id="buttongroup1">button1</element>
+   </screenresult>
+   <output>
+    <device id="wavdevice">
+     <buffer underruns="0"/>
+    </device>
+   </output>
+   <responsetime unit="ms">743</responsetime>
+   <randomgenerators/>
+   <trial_start_time>2015-04-21T15:50:56</trial_start_time>
+  </trial>
+  <trial id="trial2">
+   <procedure type="apex:constantProcedure">
+    <answer>button2</answer>
+    <correct_answer>button2</correct_answer>
+    <stimulus>stimulus2</stimulus>
+    <correct>true</correct>
+   </procedure>
+   <screenresult>
+    <element id="button2"/>
+    <element id="buttongroup1">button2</element>
+   </screenresult>
+   <output>
+    <device id="wavdevice">
+     <buffer underruns="0"/>
+    </device>
+   </output>
+   <responsetime unit="ms">1977</responsetime>
+   <randomgenerators/>
+   <trial_start_time>2015-04-21T15:50:58</trial_start_time>
+  </trial>
+  <processed></processed>
+</apex:results>

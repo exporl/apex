@@ -17,16 +17,16 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef STIMULUSDATAH
-#define STIMULUSDATAH
+#ifndef _EXPORL_SRC_LIB_APEXDATA_STIMULUS_STIMULUSDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_STIMULUS_STIMULUSDATA_H_
 
-#include "stimulus/stimulusparameters.h"  
+#include "stimulusparameters.h"
 
-#include "global.h"
+#include "apextools/global.h"
 
-#include <QString>
 #include <QList>
 #include <QObject>
+#include <QString>
 
 namespace XERCES_CPP_NAMESPACE
 {
@@ -56,7 +56,7 @@ struct APEXDATA_EXPORT StimulusDatablocksContainer : public QList<StimulusDatabl
 
     QString toString() const;
     QStringList toStringList() const;
-    
+
     bool operator==(const StimulusDatablocksContainer& other) const;
 };
 

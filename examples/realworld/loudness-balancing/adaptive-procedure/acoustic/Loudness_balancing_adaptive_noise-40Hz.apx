@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment file:///C:/maaike/Apex_110116/schemas/experiment.xsd">
+ <!-- @doc
+  @what: Loudness balancing using an adaptive procedure with acoustic stimuli
+  @description: The gain of the left ear is always the same. The gain of the right ear is adaptively changed according to user input. The participant needs to judge if the left or the right ear is louder or where the sound is located in the head. Two staircases are mixed in order to prevent participants to notice patterns. One staircase starts at an intensity that should be lower than the balanced value, and one staircase that should be higher.
+  @how: Two adaptiveProcedures in a multiProcedure for the two staircases, left and right stimuli are seperately calibrated, start values can be interactively changed, rtmultiprocedureparameter.js needed
+  -->
+ <procedure xsi:type="apex:multiProcedure">
+  <parameters>
+   <order>sequential</order>
+  </parameters>
+  <procedure xsi:type="apex:adaptiveProcedure" id="first">
+   <parameters>
+    <presentations>15</presentations>
+    <order>sequential</order>
+    <nUp>2</nUp>
+    <nDown>1</nDown>
+    <adapt_parameter>gainR</adapt_parameter>
+    <start_value>10</start_value>
+    <stop_after_type>trials</stop_after_type>
+    <stop_after>15</stop_after>
+    <min_value>10</min_value>
+    <max_value>95</max_value>
+    <larger_is_easier>true</larger_is_easier>
+    <stepsizes>
+     <change_after>reversals</change_after>
+     <stepsize size="6" begin="0"/>
+     <stepsize size="3" begin="2"/>
+     <stepsize size="2" begin="4"/>
+    </stepsizes>
+   </parameters>
+   <trials>
+    <trial id="trial1">
+     <answer>button2</answer>
+     <screen id="screen"/>
+     <stimulus id="stimulus"/>
+    </trial>
+   </trials>
+  </procedure>
+  <procedure xsi:type="apex:adaptiveProcedure" id="second">
+   <parameters>
+    <presentations>15</presentations>
+    <order>sequential</order>
+    <nUp>1</nUp>
+    <nDown>2</nDown>
+    <adapt_parameter>gainR</adapt_parameter>
+    <start_value>-10</start_value>
+    <stop_after_type>trials</stop_after_type>
+    <stop_after>15</stop_after>
+    <min_value>-30</min_value>
+    <max_value>95</max_value>
+    <larger_is_easier>true</larger_is_easier>
+    <stepsizes>
+     <change_after>reversals</change_after>
+     <stepsize size="6" begin="0"/>
+     <stepsize size="3" begin="2"/>
+     <stepsize size="2" begin="4"/>
+    </stepsizes>
+   </parameters>
+   <trials>
+    <trial id="trial2">
+     <answer>button2</answer>
+     <screen id="screen"/>
+     <stimulus id="stimulus"/>
+    </trial>
+   </trials>
+  </procedure>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback>false</feedback>
+   <showcurrent>false</showcurrent>
+  </reinforcement>
+  <screen id="screen">
+   <gridLayout height="2" width="1">
+    <label id="uitleg">
+     <text>Aan welke kant is het geluid het luidst?</text>
+    </label>
+    <gridLayout row="2" height="1" width="2">
+     <button id="button1" col="1">
+      <shortcut>LeftArrow</shortcut>
+      <text>links</text>
+     </button>
+     <button id="button2" col="2">
+      <shortcut>RightArrow</shortcut>
+      <text>rechts</text>
+     </button>
+    </gridLayout>
+   </gridLayout>
+   <buttongroup id="buttongroup">
+    <button id="button1"/>
+    <button id="button2"/>
+   </buttongroup>
+   <default_answer_element>buttongroup</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <datablock id="datablockL">
+   <device>wavdevice</device>
+   <uri>Noiseband1000Hz_40Hz_1s.wav</uri>
+  </datablock>
+  <datablock id="datablockR">
+   <device>wavdevice</device>
+   <uri>Noiseband1000Hz_40Hz_1s.wav</uri>
+  </datablock>
+  <datablock id="silence">
+   <device>wavdevice</device>
+   <uri>silence:10</uri>
+  </datablock>
+  <datablock id="datablock_calibL">
+   <device>wavdevice</device>
+   <uri>Noiseband1000Hz_40Hz_5min.wav</uri>
+  </datablock>
+  <datablock id="datablock_calibR">
+   <device>wavdevice</device>
+   <uri>Noiseband1000Hz_40Hz_5min.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain channel="0" id="Lgain">0</gain>
+   <gain channel="1" id="Rgain">0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters>
+  <filter xsi:type="apex:amplifier" id="amplifierL">
+   <device>wavdevice</device>
+   <channels>1</channels>
+   <basegain>-60</basegain>
+   <gain id="gainL">60</gain>
+  </filter>
+  <filter xsi:type="apex:amplifier" id="amplifierR">
+   <device>wavdevice</device>
+   <channels>1</channels>
+   <basegain>-60</basegain>
+   <gain id="gainR">60</gain>
+  </filter>
+ </filters>
+ <stimuli>
+  <stimulus id="stimulus">
+   <datablocks>
+    <sequential>
+     <simultaneous>
+      <datablock id="datablockL"/>
+      <datablock id="datablockR"/>
+     </simultaneous>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="calibrating_RUIS1000_40Hz">
+   <datablocks>
+    <simultaneous>
+     <datablock id="datablock_calibL"/>
+     <datablock id="datablock_calibR"/>
+    </simultaneous>
+   </datablocks>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>datablock_calibL</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>datablock_calibR</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>datablockL</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>amplifierL</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>datablockR</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>amplifierR</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>silence</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>amplifierL</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>amplifierR</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>1</channel>
+   </to>
+  </connection>
+ </connections>
+ <calibration profile="Balance_NH_corr_RUIS1000_40Hz">
+  <stimuli>
+   <stimulus id="calibrating_RUIS1000_40Hz"/>
+  </stimuli>
+  <parameters>
+   <parameter id="Lgain">
+    <targetamplitude>60</targetamplitude>
+    <calibrationamplitude>80</calibrationamplitude>
+    <mute>-150.0</mute>
+    <max>100</max>
+   </parameter>
+   <parameter id="Rgain">
+    <targetamplitude>60</targetamplitude>
+    <calibrationamplitude>80</calibrationamplitude>
+    <mute>-150.0</mute>
+    <max>100</max>
+   </parameter>
+  </parameters>
+ </calibration>
+ <results>
+  <page>rtresults.html</page>
+  <resultparameters/>
+  <showafterexperiment>true</showafterexperiment>
+  <subject>Default</subject>
+ </results>
+ <interactive>
+  <entry expression="/apex:apex/results[1]/subject[1]" type="string" default="" description="Subject"/>
+  <entry expression="/apex:apex/filters[1]/filter/gain[@id='gainL']" type="int" default="60" description="Reference level (dBA)"/>
+  <entry expression="/apex:apex/procedure[1]/procedure[1]/parameters[1]/start_value[1]" type="int" default="70" description="Start value upper staircase (dBA)"/>
+  <entry expression="/apex:apex/procedure[1]/procedure[2]/parameters[1]/start_value[1]" type="int" default="50" description="Start value lower staircase (dBA)"/>
+ </interactive>
+ <general>
+  <exitafter>false</exitafter>
+  <autosave>true</autosave>
+ </general>
+</apex:apex>

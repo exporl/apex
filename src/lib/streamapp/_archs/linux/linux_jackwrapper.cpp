@@ -508,7 +508,7 @@ JackWrapper::JackWrapper( const std::string& ac_sDrvName ) :
   mv_bOpen( 0 )
 {
   //FIXME multiple cards!!
-  m_pData->m_pClient = jack_client_new( "apex" );
+  m_pData->m_pClient = jack_client_open( "apex", JackNullOption, NULL );
   if( !m_pData->m_pClient )
   {
     delete m_pData;
@@ -549,7 +549,7 @@ tStringVector JackWrapper::sf_saGetDriverNames( std::string& a_sError )
   jack_set_error_function( sf_JackErrorCB );
   tStringVector ret;
 
-  jack_client_t* pClient = jack_client_new( "getspecs" );
+  jack_client_t* pClient = jack_client_open( "getspecs", JackNullOption, NULL );
   if( !pClient )
   {
     a_sError = sc_psJackServerErr;

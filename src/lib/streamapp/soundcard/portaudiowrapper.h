@@ -16,12 +16,17 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef PAWRAPPER_H
 #define PAWRAPPER_H
 
-#include "soundcard/soundcard.h"
-#include "typedefs.h"
+#include "../typedefs.h"
+
+#include "soundcard.h"
+#include <QString>
+
+
+Q_DECLARE_LOGGING_CATEGORY(soundcard)
 
 typedef void  PaStream;
 typedef int   PaDeviceIndex;
@@ -65,7 +70,7 @@ namespace streamapp
         * Constructor.
         * @param ac_sDriverName the drivername to use
         */
-    PortAudioWrapper( const std::string& ac_sDriverName = sc_sDefault.toStdString() );
+    PortAudioWrapper( const QString& cardName = sc_sDefault );
 
       /**
         * Destructor.
@@ -77,7 +82,8 @@ namespace streamapp
         * @param a_sError receives possible error
         * @return vector of names
         */
-    static tStringVector sf_saGetDriverNames( std::string& a_sError );
+    static tStringVector sf_saGetDriverNames(QString &a_sError );
+    static tStringVector sf_saGetDriverNames(std::string &a_sError );
 
       /**
         * Implementation of the ISoundCard method.

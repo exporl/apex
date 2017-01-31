@@ -1,10 +1,3 @@
-BASEDIR = ../../..
-CLEBS *= controllerplugin buildplugin
-TARGET = democontroller
+CLEBS *= asciicast buildplugin
 
-include ($$BASEDIR/clebs.pri)
-
-
-SOURCES *=						\
-	democontroller.cpp				\
-
+!isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)

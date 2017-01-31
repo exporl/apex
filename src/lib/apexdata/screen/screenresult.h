@@ -16,19 +16,20 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef APEXAPEXSCREENRESULT_H
-#define APEXAPEXSCREENRESULT_H
 
-#include "global.h"
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREENRESULT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREENRESULT_H_
+
+#include "apextools/global.h"
 
 #include <QMap>
 #include <QString>
+#include <QDebug>
 #include <QObject>
 #include <QPointF>
 
 namespace apex {
-    
+
     typedef std::map<QString,QString> stimulusParamsT;
 
 /**
@@ -38,10 +39,7 @@ Map containing the answers of a certain presentation on screen
 */
 class APEXDATA_EXPORT ScreenResult
 {
-
 public:
-    typedef QMap<QString,QString>::const_iterator const_iterator;
-
     ScreenResult();
     virtual ~ScreenResult();
 
@@ -55,22 +53,33 @@ public:
     void setLastClickPosition(const QPointF& point);
     const QPointF& lastClickPosition() const;
 
-    const QMap<QString,QString>& map() const;
-    QMap<QString,QString>& map();
-
-    QString &	operator[] ( const QString & key );
-    const QString operator[] ( const QString & key ) const;
-
-    const_iterator find ( const QString & key ) const;
-    const_iterator end () const;
-    const_iterator begin () const;
-        
     private:
         stimulusParamsT stimulusparams;     //! used to keep parameters set on the screen of the last trial (eg using a spinbox)
         QPointF mLastClickPosition;
-        QMap<QString,QString> m_map;
 
+        typedef QString KeyType;
+        typedef QString ValueType;
+        typedef QMap<KeyType, ValueType> Parent;
+        Parent map;
+
+        friend QDebug operator<< (QDebug dbg, const ScreenResult& screenResult);
+    public:
+        typedef Parent::const_iterator const_iterator;
+
+        Parent::const_iterator begin() const;
+        Parent::const_iterator end() const;
+        const ValueType value (const KeyType& key, const ValueType& defaultValue = QString()) const;
+        ValueType& operator[](const KeyType& key);
+        const ValueType operator[](const KeyType& key) const;
+        bool contains(const KeyType& key) const ;
+        const Parent get() const;
 };
+
+inline
+QDebug operator<< (QDebug out, const apex::ScreenResult& screenResult) {
+    return (out << screenResult.map);
+}
+
 
 }
 

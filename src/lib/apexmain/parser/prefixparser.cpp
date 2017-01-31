@@ -17,12 +17,11 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apextools/xml/xercesinclude.h"
+
 #include "prefixparser.h"
 
-#include "xml/xercesinclude.h"
 using namespace XERCES_CPP_NAMESPACE;
-
-
 
 namespace apex {
 

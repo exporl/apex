@@ -14,7 +14,7 @@ namespace apex {
     const QString PathTools::cApexDir("apex");
 
 
-    const QString apex::PathTools::GetUserConfigFilePath() 
+    const QString apex::PathTools::GetUserConfigFilePath()
     {
 #ifdef WIN32
         QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders",
@@ -34,17 +34,17 @@ namespace apex {
 
 
     const QString apex::PathTools::GetConfigFilePath(const QString& basepath,
-                                            const QString& filename) 
+                                            const QString& filename)
     {
     // try to find the file for this user
         QString result( GetUserConfigFilePath() + "/" + filename);
-        qDebug("Looking for %s in %s", qPrintable(filename),
+        qCDebug(APEX_RS, "Looking for %s in %s", qPrintable(filename),
                qPrintable(result));
         if (QFile::exists(result)) {
-            qDebug("Found");
+            qCDebug(APEX_RS, "Found");
             return result;
         }
-    
+
 #ifdef WIN32
         result = basepath + "/" + cConfigDir + "/" + filename;
         if (QFile::exists(result))
@@ -57,7 +57,7 @@ namespace apex {
     // inside installed tree?
         QDir t( basepath );
         do {
-            qDebug("Trying %s", qPrintable(t.path()));
+            qCDebug(APEX_RS, "Trying %s", qPrintable(t.path()));
             if (t.cd("etc")) {
                 result = t.path() + "/" + filename;
                 if (QFile::exists(result))
@@ -72,8 +72,8 @@ namespace apex {
         if ( QFile::exists(result))
             return result;
 
-        qDebug("BasePath: %s", qPrintable(basepath));
-    
+        qCDebug(APEX_RS, "BasePath: %s", qPrintable(basepath));
+
         throw ApexStringException(QString(tr("%1 not found: %2"))
                 .arg(filename)
                 . arg(result));
@@ -91,7 +91,7 @@ namespace apex {
 return result;
     }
 
-    const QString apex::PathTools::GetSharePath(const QString& basepath) 
+    const QString apex::PathTools::GetSharePath(const QString& basepath)
     {
 #ifdef WIN32
         QString result( basepath );
@@ -104,17 +104,17 @@ return result;
         }
 #endif
 
-    
+
     // within build hierarchy
         QDir t ( GetExecutablePath() );
         t.cdUp();
         t.cdUp();
         if (t.cd("data")) {
-//        qDebug("Returning build path: %s", qPrintable(t.path()));
+//        qCDebug(APEX_RS, "Returning build path: %s", qPrintable(t.path()));
             return t.path();
         }
 
-        qDebug("Apex share directory not found: %s", qPrintable(result));
+        qCDebug(APEX_RS, "Apex share directory not found: %s", qPrintable(result));
         throw ApexStringException(QString(tr("Apex share directory not found: %1.\nDid you install Apex properly?\nCheck whether the schemas subdirectory is present.")).arg(result));
 
     }
@@ -123,6 +123,6 @@ return result;
     {
         return QDir(qApp->applicationDirPath()).path();
     }
-    
+
 
 } // ns apex

@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+
+ <!-- @doc
+  @what: example of screen layout with pictures
+  @description: Screen shows 4 pictures, after hearing a stimulus you should click one
+  @how: <picture>
+  -->
+
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>100</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>picture_1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+   <trial id="trial2">
+    <answer>picture_2</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus2"/>
+   </trial>
+   <trial id="trial3">
+    <answer>picture_3</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus3"/>
+   </trial>
+   <trial id="trial4">
+    <answer>picture_4</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus4"/>
+   </trial>
+  </trials>
+ </procedure>
+
+ <screens>
+  <uri_prefix>../pictures</uri_prefix>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">true</feedback>
+   <feedback_on>clicked</feedback_on>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout width="2" height="2">
+    <picture x="1" id="picture_1" y="1">
+     <uri>1.png</uri>
+    </picture>
+    <picture x="2" id="picture_2" y="1">
+     <uri>2.png</uri>
+    </picture>
+    <picture x="1" id="picture_3" y="2">
+     <uri>3.png</uri>
+    </picture>
+    <picture x="2" id="picture_4" y="2">
+     <uri>4-big.png</uri>
+    </picture>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="picture_1"/>
+    <button id="picture_2"/>
+    <button id="picture_3"/>
+    <button id="picture_4"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd2.wav</uri>
+  </datablock>
+  <datablock id="rawdata3">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd3.wav</uri>
+  </datablock>
+  <datablock id="rawdata4">
+   <device>wavdevice</device>
+   <description>sample raw datablock</description>
+   <uri>wd4.wav</uri>
+  </datablock>
+ </datablocks>
+
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+
+ <filters/>
+
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata2"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus3">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata3"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus4">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata4"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+
+ <connections>
+  <connection>
+   <from>
+    <id>_ALL_</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+ </connections>
+
+</apex:apex>

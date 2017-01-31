@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
   /**
     * @file processor.h
     * Contains some processors used in streamapp.
@@ -26,11 +26,15 @@
 #ifndef __PROCESSOR_H__
 #define __PROCESSOR_H__
 
-#include "stream.h"
-#include "audiosamplebuffer.h"
-#include "utils/checks.h"
-#include "utils/dataconversion.h"
-#include "appcore/threads/locks.h"
+#include "../appcore/threads/locks.h"
+
+#include "../audiosamplebuffer.h"
+#include "../stream.h"
+
+#include "../utils/checks.h"
+#include "../utils/dataconversion.h"
+
+#include <QtGlobal>
 
 namespace streamapp
 {
@@ -123,8 +127,8 @@ namespace streamapp
       const unsigned nChan = m_Result.mf_nGetChannelCount();
       const unsigned nSize = m_Result.mf_nGetBufferSize();
       ++mv_dCount;
-      assert( ac_Source.mf_nGetChannelCount() >= nChan );
-      assert( ac_Source.mf_nGetBufferSize() >= nSize );
+      Q_ASSERT( ac_Source.mf_nGetChannelCount() >= nChan );
+      Q_ASSERT( ac_Source.mf_nGetBufferSize() >= nSize );
 
       if( mv_bReset )
       {
@@ -198,18 +202,18 @@ namespace streamapp
 
     const Stream& mf_DoProcessing( const Stream& ac_Input )
     {
-      assert( m_pOutput && m_pProcessor );
+      Q_ASSERT( m_pOutput && m_pProcessor );
       const appcore::Lock L( mc_ProcLock );
       m_pProcessor->mf_DoProcessing( ac_Input );
       return m_pOutput->Read();
     }
 
     unsigned mf_nGetBufferSize() const
-    { assert( m_pOutput ); return m_pOutput->mf_nGetBufferSize(); }
+    { Q_ASSERT( m_pOutput ); return m_pOutput->mf_nGetBufferSize(); }
     unsigned mf_nGetNumInputChannels() const
-    { assert( m_pProcessor ); return m_pProcessor->mf_nGetNumInputChannels(); }
+    { Q_ASSERT( m_pProcessor ); return m_pProcessor->mf_nGetNumInputChannels(); }
     unsigned mf_nGetNumOutputChannels() const
-    { assert( m_pOutput ); return m_pOutput->mf_nGetNumChannels(); }
+    { Q_ASSERT( m_pOutput ); return m_pOutput->mf_nGetNumChannels(); }
 
     void mp_ReplaceOutput( InputStream* const ac_pStream )
     {
@@ -280,18 +284,18 @@ namespace streamapp
 
     const Stream& mf_DoProcessing( const Stream& ac_Input )
     {
-      assert( m_pRead && m_pWrite );
+      Q_ASSERT( m_pRead && m_pWrite );
       const appcore::Lock L( mc_Lock );
       m_pWrite->Write( ac_Input );
       return m_pRead->Read();
     }
 
     unsigned mf_nGetBufferSize() const
-    { assert( m_pRead ); return m_pRead->mf_nGetBufferSize(); }
+    { Q_ASSERT( m_pRead ); return m_pRead->mf_nGetBufferSize(); }
     unsigned mf_nGetNumInputChannels() const
-    { assert( m_pWrite ); return m_pWrite->mf_nGetNumChannels(); }
+    { Q_ASSERT( m_pWrite ); return m_pWrite->mf_nGetNumChannels(); }
     unsigned mf_nGetNumOutputChannels() const
-    { assert( m_pRead ); return m_pRead->mf_nGetNumChannels(); }
+    { Q_ASSERT( m_pRead ); return m_pRead->mf_nGetNumChannels(); }
 
     void mp_ReplaceReader( InputStream* const ac_pStream )
     {
@@ -394,7 +398,7 @@ namespace streamapp
         StreamProcessor( ac_nChannels, ac_nBufferSize ),
       m_Result( ac_nChannels / 2, ac_nBufferSize )
     {
-      assert( ac_nChannels % 2 == 0 ); //only even!
+      Q_ASSERT( ac_nChannels % 2 == 0 ); //only even!
     }
     ~Subtractor()
     {}

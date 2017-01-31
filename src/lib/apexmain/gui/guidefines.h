@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef __SCREENDEFINES_H__
-#define __SCREENDEFINES_H__
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_GUIDEFINES_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_GUIDEFINES_H_
 
 #if QT_VERSION < 0x040000
 #include <qcolor.h>
@@ -32,7 +32,8 @@ namespace apex
 {
   namespace gui
   {
-    const QColor      sc_DefaultBGColor( 32, 27, 122 );
+    //const QColor      sc_DefaultBGColor( 32, 27, 122 );
+    const QColor      sc_DefaultBGColor( 0x13, 0xa8, 0x9e );
     const QColor      sc_DefaultPanelColor( 212, 208, 200 );
     const QString     sc_sDefaultFont( "Tahoma"/*"Helvetica"*/ );
     const QString     sc_sDefaultElementFont( "Helvetica" );
@@ -42,4 +43,4 @@ namespace apex
   }
 }
 
-#endif //#ifndef __SCREENDEFINES_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_GUIDEFINES_H_

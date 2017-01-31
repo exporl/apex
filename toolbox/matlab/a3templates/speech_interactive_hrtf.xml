@@ -1,0 +1,4 @@
+<entry type="string" description="Room speech HRTF" expression="/apex:apex/filters/filter/parameter[@id='roomspeech']" default="dead"/>
+<entry type="string" description="Room noise HRTF" expression="/apex:apex/filters/filter/parameter[@id='roomnoise']" default="dead"/>
+<entry type="int" description="Angle speech" expression="/apex:apex/filters/filter/parameter[@id='anglespeech']" default="0"/>
+<entry type="int" description="Angle noise" expression="/apex:apex/filters/filter/parameter[@id='anglenoise']" default="90"/>

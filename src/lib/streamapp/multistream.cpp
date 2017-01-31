@@ -16,11 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __STR_MULTISTREAM_CPP__
 #define __STR_MULTISTREAM_CPP__
 
 #include "multistream.h"
+
+#include <QtGlobal>
 
 using namespace streamapp;
 
@@ -104,7 +106,7 @@ void MultiPosInputStream< tOwned >::mp_AddItem( PositionableInputStream* const a
 {
   this->mp_AddItem( ac_pItem );
   if( this->mf_nGetNumItems() )
-    assert( ac_pItem->mf_lSamplesLeft() == this->mf_GetItem( 0 )->mf_lSamplesLeft() );
+    Q_ASSERT( ac_pItem->mf_lSamplesLeft() == this->mf_GetItem( 0 )->mf_lSamplesLeft() );
 }
 
 template< bool tOwned >

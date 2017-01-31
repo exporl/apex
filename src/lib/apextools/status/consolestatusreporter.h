@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef _CONSOLEERROR_H
-#define _CONSOLEERROR_H
+
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_STATUS_CONSOLESTATUSREPORTER_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_STATUS_CONSOLESTATUSREPORTER_H_
 
 #include <iostream>
 #include <QDebug>

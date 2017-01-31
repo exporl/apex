@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXAPEXDATABLOCKPARAMETERS_H
-#define APEXAPEXDATABLOCKPARAMETERS_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_DATABLOCK_DATABLOCKDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_DATABLOCK_DATABLOCKDATA_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
 class QDateTime;
 class QUrl;
@@ -54,7 +54,6 @@ class APEXDATA_EXPORT DatablockData
         const QString& directData() const;
         bool doChecksum() const;
         const QString& checksum() const;
-        const QDateTime& birth() const;
         unsigned nbChannels() const;
         unsigned nbLoops() const;
         double gain() const;
@@ -68,7 +67,6 @@ class APEXDATA_EXPORT DatablockData
         void setDirectData(const QString& data);
         void setDoChecksum(bool doChecksum);
         void setChecksum(const QString& checksum);
-        void setBirth(const QDateTime& birth);
         void setNbChannels(unsigned nb);
         void setNbLoops(unsigned nb);
         void setGain(double gain);

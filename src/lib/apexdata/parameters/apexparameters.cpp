@@ -17,24 +17,23 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-//#include "procedureparameters.h"
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
+
 #include "apexparameters.h"
-#include "xml/xmlkeys.h"
-#include "xml/apexxmltools.h"
+
+#include <QMap>
+#include <QString>
+
+#ifdef CLEBS_DEBUG
+#include <iostream>
+#endif
+
 using namespace apex::XMLKeys;
 using namespace apex::ApexXMLTools;
 using namespace apex::data;
-
-#include "xml/xercesinclude.h"
-
 using namespace xercesc;
-
-#include <QString>
-#include <QMap>
-
-#ifdef APEXDEBUG
-#include <iostream>
-#endif
 
 //namespace apex {
 
@@ -106,7 +105,7 @@ bool ApexParameters::Parse(DOMElement* p_paramElement) {
                 m_paramElement=p_paramElement;
 
         if (m_paramElement==0) {
-                qDebug("ApexParameters::Parse: m_paramElement == NULL");
+                qCDebug(APEX_RS, "ApexParameters::Parse: m_paramElement == NULL");
                 return true;
         }
 

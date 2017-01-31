@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 /**
   *      -- v3tov2 plugin --
   * Do not modify this file by hand,
@@ -31,8 +31,11 @@
 #ifndef __STR_LOOPLOGIC_H__
 #define __STR_LOOPLOGIC_H__
 
-#include "core/mpl/if.h"
-#include "core/typetraits/checks.h"
+#include "../../../defines.h"
+
+#include "../mpl/if.h"
+
+#include "../typetraits/checks.h"
 
 S_NAMESPACE_BEGIN
 

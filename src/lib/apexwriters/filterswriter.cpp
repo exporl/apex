@@ -17,13 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "filterswriter.h"
-#include "xml/apexxmltools.h"
-#include "filter/filtersdata.h"
-#include "filter/filterdata.h"
-#include "parameters/parameter.h"
+#include "apexdata/filter/filterdata.h"
+#include "apexdata/filter/filtersdata.h"
 
-#include "xml/xercesinclude.h"
+#include "apexdata/parameters/parameter.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "filterswriter.h"
 
 using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::ApexXMLTools;

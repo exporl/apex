@@ -16,28 +16,32 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "fileprefixconvertor.h"
+
+#include "apexdata/fileprefix.h"
+
+#include "apextools/apextools.h"
+
 #include "parser/prefixparser.h"
-#include "services/mainconfigfileparser.h"
+
 #include "services/errorhandler.h"
-#include "fileprefix.h"
-#include "apextools.h"
+#include "services/mainconfigfileparser.h"
+
+#include "fileprefixconvertor.h"
 
 using apex::data::FilePrefix;
 
 QString apex::FilePrefixConvertor::convert(data::FilePrefix p)
 {
     QString prefix;
-    
+
     if (p.value().isEmpty())
         return QString();
-    
+
     if (p.type()==FilePrefix::PREFIX_INLINE) {
         prefix = p.value().trimmed();
     } else if (p.type()==FilePrefix::PREFIX_MAINCONFIG) {
-        const QString result (MainConfigFileParser::Get().
-                GetPrefix (p.value()));
+        const QString result (MainConfigFileParser::Get().data().
+                prefix (p.value()));
         if (result.isEmpty())
             ErrorHandler::Get().addItem( StatusItem(StatusItem::Warning, "PrefixParser",
                               QString(tr("Prefix with ID %1 not found in main config file, trying with empty prefix")).arg(p.value())));
@@ -58,7 +62,8 @@ QUrl apex::FilePrefixConvertor::addPrefix(data::FilePrefix p,
         QString modprefix = FilePrefixConvertor::convert( p );
         if (!modprefix.isEmpty() && !modprefix.endsWith('/'))
             modprefix += '/';
-        return( QUrl(modprefix + file) );
+
+        return( QUrl(modprefix + file.path()) );
     }
     else
         return ( file );

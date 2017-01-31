@@ -20,8 +20,9 @@
 #ifndef dataconversionS_H
 #define dataconversionS_H
 
-#include "defines.h"
-#include "typedefs.h"
+#include "../defines.h"
+#include "../typedefs.h"
+
 #include <math.h>
 
   /**

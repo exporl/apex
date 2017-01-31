@@ -54,7 +54,7 @@ void ServiceManager::RemoveServices()
     // This should assure the reverse order of destruction
     while (services.begin() != services.end()) {
         // Creates problems with testbench output
-        //qDebug ("Removing Service %s", services.back()->Name());
+        //qCDebug(APEX_RS, "Removing Service %s", services.back()->Name());
         delete services.back();
         services.pop_back();
     }
@@ -80,7 +80,7 @@ ServiceBase* ServiceManager::Manage (ServiceBase* singleton)
 
 ServiceManager& ServiceManager::Get()
 {
-    static std::auto_ptr<ServiceManager> instance (new ServiceManager());
+    static QScopedPointer<ServiceManager> instance(new ServiceManager());
     return *instance;
 }
 

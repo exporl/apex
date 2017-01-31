@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "win32_ctimer1.h"
 
 CTIMER::CTIMER()
 {
-  prev = 0; 
+  prev = 0;
   CTIMER::TicksPerMS=0;
   QueryPerformanceCounter((LARGE_INTEGER*)&(CTIMER::LASTCALL));
 }

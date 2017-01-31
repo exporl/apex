@@ -7,7 +7,7 @@ return     "<screen id=\"" + params["id1"] +"\">" +
          "<text>plugin screen</text>" +
         "</button>" +
       "</gridLayout>" +
-      "<buttongroup id=\"buttongroup1\"> <button id=\"button1\"/> </buttongroup>" + 
+      "<buttongroup id=\"buttongroup1\"> <button id=\"button1\"/> </buttongroup>" +
      "<default_answer_element>buttongroup1</default_answer_element>" +
     "</screen>" +
     "<screen id=\"" + params["id2"] +"\">" +
@@ -16,7 +16,7 @@ return     "<screen id=\"" + params["id1"] +"\">" +
          "<text>plugin screen</text>" +
         "</button>" +
       "</gridLayout>" +
-      "<buttongroup id=\"buttongroup1\"> <button id=\"button1\"/> </buttongroup>" + 
+      "<buttongroup id=\"buttongroup1\"> <button id=\"button1\"/> </buttongroup>" +
      "<default_answer_element>buttongroup1</default_answer_element>" +
     "</screen>"+
 "<screen id=\"nog\">" +
@@ -25,7 +25,7 @@ return     "<screen id=\"" + params["id1"] +"\">" +
          "<text>plugin screen</text>" +
         "</button>" +
       "</gridLayout>" +
-      "<buttongroup id=\"buttongroup1\"> <button id=\"button1\"/> </buttongroup>" + 
+      "<buttongroup id=\"buttongroup1\"> <button id=\"button1\"/> </buttongroup>" +
      "<default_answer_element>buttongroup1</default_answer_element>" +
     "</screen>";
 }

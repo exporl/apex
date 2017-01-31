@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef TIMERSSS_H
 #define TIMERSSS_H
 
@@ -31,38 +31,38 @@
 
 namespace utils
 {
-	class Timer4: public ITimer {			// simple timer utilizing the windows functions
-	public:
-		Timer4() {
-			QueryPerformanceFrequency(&frequency);
-			Reset();
-		};
+        class Timer4: public ITimer {                   // simple timer utilizing the windows functions
+        public:
+                Timer4() {
+                        QueryPerformanceFrequency(&frequency);
+                        Reset();
+                };
 
  /**
       * Set the time to zero and start counting.
-      */ 
-		virtual void Reset() {
-			QueryPerformanceCounter(&last_count);
-		}
+      */
+                virtual void Reset() {
+                        QueryPerformanceCounter(&last_count);
+                }
 
     /**
       * Get the elapsed tim.
       * @return the time (preferably nanoseconds)
-      */ 
-		virtual double Elapsed() {
-			LARGE_INTEGER new_count;
-			QueryPerformanceCounter(&new_count);
-			
-			double result = double (new_count.QuadPart - last_count.QuadPart) / frequency.QuadPart;
-			last_count = new_count;
-			return result;
-		};    
+      */
+                virtual double Elapsed() {
+                        LARGE_INTEGER new_count;
+                        QueryPerformanceCounter(&new_count);
 
-		
-	private:
-		LARGE_INTEGER frequency;			// ticks per second
-		LARGE_INTEGER last_count;
-	};
+                        double result = double (new_count.QuadPart - last_count.QuadPart) / frequency.QuadPart;
+                        last_count = new_count;
+                        return result;
+                };
+
+
+        private:
+                LARGE_INTEGER frequency;                        // ticks per second
+                LARGE_INTEGER last_count;
+        };
 
 
   class Timer3 : public ITimer, public CTIMER
@@ -80,8 +80,8 @@ namespace utils
 
     double Elapsed()
     {
-      return double( sinceprev()/1000 );		// convert to seconds
-    } 
+      return double( sinceprev()/1000 );                // convert to seconds
+    }
   };
 
   class Timer2 : public ITimer, public CCPUTicker
@@ -91,7 +91,7 @@ namespace utils
         m_iElapsed( 0 )
         {
 #ifdef DEBUG
-      std::cout<<"Calibrating timer..."<<std::endl;      
+      std::cout<<"Calibrating timer..."<<std::endl;
 #endif
       CCPUTicker::GetCPUFrequency( CCPUTicker::m_freq, CCPUTicker::m_deviation, 250, 4 );
           //CCPUTicker::GetCPUFrequency( CCPUTicker::m_freq, CCPUTicker::m_deviation, 1000, 4 );
@@ -110,7 +110,7 @@ namespace utils
         double Elapsed()
         {
           __int64 temp = CCPUTicker::m_TickCount;
-          CCPUTicker::Measure(); 
+          CCPUTicker::Measure();
           m_iElapsed = CCPUTicker::m_TickCount - temp;
           return (double) m_iElapsed / m_freq;
         }
@@ -157,7 +157,7 @@ namespace utils
 
     static void sf_PrintInfo( const std::string& ac_s1, const std::string& ac_s2 )
     {
-      std::cout << "****************************" 
+      std::cout << "****************************"
                 <<  ac_s1.data()
                 <<  " : "
                 <<  ac_s2.data()

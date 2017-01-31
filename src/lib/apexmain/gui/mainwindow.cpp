@@ -17,47 +17,45 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apexdata/experimentdata.h"
+
+#include "apexdata/screen/buttongroup.h"
+#include "apexdata/screen/screen.h"
+#include "apexdata/screen/screenelement.h"
+#include "apexdata/screen/screenresult.h"
+#include "apexdata/screen/screensdata.h"
+
+#include "apextools/apextools.h"
+#include "apextools/exceptions.h"
+
+#include "apextools/services/application.h"
+
+#include "apextools/status/consolestatusreporter.h"
+#include "apextools/status/screenstatusreporter.h"
+
+#include "feedback/feedback.h"
+
+#include "gui/guidefines.h"
+
 #include "runner/experimentrundelegate.h"
 
-#include "screen/buttongroup.h"
-#include "screen/screen.h"
-#include "screen/screensdata.h"
-#include "screen/screenelement.h"
 #include "screen/screenelementrundelegate.h"
-#include "screen/screenresult.h"
-
-#include "services/application.h"
-#include "services/paths.h"
-
 #include "screen/screenrundelegate.h"
+
+#include "services/errorhandler.h"
+
 #include "apexcontrol.h"
-#include "apextools.h"
 #include "centralwidget.h"
-#include "exceptions.h"
-#include "gui/guidefines.h"
 #include "mainwindow.h"
-//#include "mainwindowconfig.h"
 #include "mru.h"
 #include "panel.h"
 
-#include <appcore/qt_utils.h>
-
-#include "status/screenstatusreporter.h"
-#include "status/consolestatusreporter.h"
-
+#include <QApplication>
 #include <QCloseEvent>
 #include <QMenu>
 #include <QMenuBar>
-#include <QStatusBar>
 #include <QMessageBox>
-
-//from libdata
-#include "experimentdata.h"
-
-//#ifndef WIN32
-#include <QApplication>
-//#endif
-#include <feedback/feedback.h>
+#include <QStatusBar>
 
 using namespace apex;
 using namespace apex::gui;
@@ -77,6 +75,7 @@ ApexMainWindow::ApexMainWindow( QWidget* /*a_pParent*/ ) :
         m_pMRU( 0 ),
         m_pPanel( 0 ),
         m_pCentral( 0 ),
+        paused(false),
         m_sSavefileName(),
         runningScreen(),
         m_pCurFeedback()
@@ -98,7 +97,7 @@ ApexMainWindow::ApexMainWindow( QWidget* /*a_pParent*/ ) :
     screenStatus.reset( new ScreenStatusReporter() );
     showScreenStatusAction->setChecked(true);
     showMessageWindowAction->setChecked(true);
-    showConsoleStatusAction->setChecked(true);
+    showConsoleStatusAction->setChecked(false);
     updateStatusReporting();
     connect(this, SIGNAL(statusReportingChanged()),
             this, SLOT(updateStatusReporting()));
@@ -109,6 +108,7 @@ ApexMainWindow::ApexMainWindow( QWidget* /*a_pParent*/ ) :
 
 void ApexMainWindow::setExperimentRunDelegate(ExperimentRunDelegate* p_rd) {
     m_rd=p_rd;
+    connect(m_rd, SIGNAL(showMessage(QString)), this, SLOT(AddStatusMessage(QString)));
 }
 
 ApexMainWindow::~ApexMainWindow()
@@ -141,9 +141,10 @@ void ApexMainWindow::ApplyConfig(const data::ScreensData* c)
         if ( config.m_eMode == data::gc_eNormal || !config.hasPanelMovie() )
         {
             Panel* p = new Panel( centralWidget(), c );
-            if ( !p->mp_bSetConfig( config ) )
+            if ( !p->mp_bSetConfig( config ) )//FIXME memory leak!!!
                 throw ApexStringException( "ApexMainWindow::ApplyConfig: couldn't create the panel." );
-            m_pPanel.reset( p );
+            m_pPanel.reset(p);
+            m_pPanel->mp_SetProgressSteps(100);
             m_pCentral->mp_SetPanel( p );
             connect( p->getSignalSlotProxy(), SIGNAL( ms_Start() ), SIGNAL( startClicked() ) );
             connect( p->getSignalSlotProxy(), SIGNAL( ms_Stop() ), SIGNAL( stopClicked() )  );
@@ -225,6 +226,24 @@ void ApexMainWindow::SetScreen( gui::ScreenRunDelegate* ac_Screen )
     runningScreen->showWidgets();
 }
 
+gui::ScreenRunDelegate* ApexMainWindow::setScreen(const QString& id)
+{
+    gui::ScreenRunDelegate* s = m_rd->GetScreen(id);
+    SetScreen(s);
+    return s;
+}
+
+ScreenRunDelegate* ApexMainWindow::currentScreen() const
+{
+    return runningScreen;
+}
+
+void ApexMainWindow::setAnswer(const QString& answer)
+{
+    if (runningScreen != 0)
+        runningScreen->setAnswer(answer);
+}
+
 void ApexMainWindow::EnableScreen( const bool ac_bEnable /*= true*/ )
 {
     if ( runningScreen )
@@ -248,13 +267,13 @@ void ApexMainWindow::EnableScreen( const bool ac_bEnable /*= true*/ )
                 ++i;
 
             QString elem=(*i);
-            qDebug ("Automatically selecting %s", qPrintable (elem));
+            qCDebug(APEX_RS, "Automatically selecting %s", qPrintable (elem));
 
 
             static ScreenResult result;
-            result.map().clear();
+            result.clear();
 
-            result.map()[ runningScreen->getScreen()->getButtonGroup()->getID() ] = elem;
+            result[ runningScreen->getScreen()->getButtonGroup()->getID() ] = elem;
 
             runningScreen->addInterestingTexts( result );
 
@@ -273,6 +292,11 @@ void ApexMainWindow::doDeterministicAutoAnswer()
     randomGenerator.setSeed(0);
 }
 
+bool ApexMainWindow::screenEnabled() const
+{
+    return runningScreen->widgetsEnabled();
+}
+
 void ApexMainWindow::ReclaimFocus()
 {
     //if ( ApexControl::Get().GetCurrentExperiment().GetMainWindowConfig().m_eMode == gc_eChild )
@@ -280,39 +304,27 @@ void ApexMainWindow::ReclaimFocus()
         MenuBar->setFocus();
 }
 
-/******************************************** FEEDBACK ***************************************************************************/
+/******************************************** FEEDBACK ************************/
 
-void ApexMainWindow::FeedBack( const ScreenElementRunDelegate::FeedbackMode& ac_eMode, const QString& ac_sID )
+void ApexMainWindow::feedback(ScreenElementRunDelegate::FeedbackMode mode,
+                              const QString& elementId)
 {
     //the element
-    if ( runningScreen )
+    if (runningScreen != 0)
     {
-
-        if ( ac_eMode != ScreenElementRunDelegate::HighlightFeedback ||
-            m_rd->GetData().screensData()->hasShowCurrentEnabled() ) {
-
-            runningScreen->feedback( ac_eMode, ac_sID );
-            if (runningScreen->getFeedBackElement())
-                m_rd->modFeedback()->
-                highLight(runningScreen->getFeedBackElement()->getID() );
-        }
+        runningScreen->feedback(mode, elementId);
+        //m_rd->modFeedback()->highLight(elementId);//TODO is this used?
         m_pCurFeedback = runningScreen->getFeedBackElement();
-        m_pCentral->mp_SetFeedBackElement( m_pCurFeedback );
     }
 
     //the panel
-    if ( m_pPanel && ac_eMode != ScreenElementRunDelegate::HighlightFeedback )
-        m_pPanel->feedBack( ac_eMode );
-
-    //make sure to repaint before feedback period is over
-    m_pCentral->repaint();
-
-    QApplication::flush();
+    if (m_pPanel != 0 && mode != ScreenElementRunDelegate::HighlightFeedback )
+        m_pPanel->feedBack(mode);
 }
 
 void ApexMainWindow::HighLight( const QString& ac_sID )
 {
-    FeedBack( ScreenElementRunDelegate::HighlightFeedback, ac_sID );
+    feedback( ScreenElementRunDelegate::HighlightFeedback, ac_sID );
 }
 
 void ApexMainWindow::EndFeedBack()
@@ -342,24 +354,44 @@ void ApexMainWindow::AnswerFromElement( ScreenElementRunDelegate* ac_Element )
     if ( runningScreen->getScreen()->getButtonGroup() )
     {
         if ( runningScreen->getScreen()->getButtonGroup()->IsElement( ac_Element->getID() ) )
-            result.map()[ runningScreen->getScreen()->getButtonGroup()->getID() ] = ac_Element->getID();
+            result[ runningScreen->getScreen()->getButtonGroup()->getID() ] = ac_Element->getID();
+    }
+
+    if (runningScreen->getScreen()->elementById(ac_Element->getID())->elementType() == ScreenElement::Picture
+            || runningScreen->getScreen()->elementById(ac_Element->getID())->elementType() == ScreenElement::Button) {
+        result[ac_Element->getID()] = QString();
     }
 
     runningScreen->addInterestingTexts( result );
     runningScreen->addScreenParameters( result );
+    result.setLastClickPosition(ac_Element->getClickPosition());
 
-    result.setLastClickPosition( ac_Element->getClickPosition() );
-
+    qCDebug(APEX_RS) << "***Answered" << result;
     emit Answered( &result );
 }
 
 /******************************************** STATE ***************************************************************************/
 
+//TODO remove
 void ApexMainWindow::Paused()
 {
     const data::ScreensData* config = m_rd->GetData().screensData();
     if ( m_pPanel && config->m_eMode == gc_eNormal )
         ( (Panel*) m_pPanel.data() )->mp_Paused();
+}
+
+void ApexMainWindow::setPaused(bool paused)
+{
+    if (paused != this->paused)
+    {
+        this->paused = paused;
+        static_cast<Panel*>(m_pPanel.data())->setPaused(paused);
+    }
+}
+
+bool ApexMainWindow::isPaused() const
+{
+    return paused;
 }
 
 void ApexMainWindow::Initted()
@@ -406,6 +438,7 @@ void ApexMainWindow::ExperimentLoaded()
 void ApexMainWindow::Finished()
 {
     Initted();
+    Clear();
     EnableScreen( false );
     m_sSavefileName = "";
     setWindowState(windowState() &~ Qt::WindowFullScreen);
@@ -420,6 +453,7 @@ void ApexMainWindow::ClearScreen()
         runningScreen->hideWidgets();
     }
     runningScreen = 0;
+    m_pCurFeedback = 0;
 }
 
 void ApexMainWindow::Clear()
@@ -427,7 +461,7 @@ void ApexMainWindow::Clear()
     m_pCentral->mp_ClearContent();
     if ( m_pPanel )
         m_pPanel->mp_Show( false );
-    // ClearScreen(); FIXME Michael Hofmann: Rename method to sth. useful,
+    ClearScreen(); //FIXME Michael Hofmann: Rename method to sth. useful,
     // clearscreen seems to not work because old experiment is not valid anymore
     runningScreen = 0; // Workaround
 }
@@ -441,34 +475,18 @@ MRU* ApexMainWindow::GetMru()
 
 const QString& ApexMainWindow::GetOpenDir() const
 {
-//    qDebug("ApexMainWindow::GetOpenDir");
-    return m_pMRU->mf_sGetOpenDir();
+//    qCDebug(APEX_RS, "ApexMainWindow::GetOpenDir");
+    return m_pMRU->openDir();
 }
 
-void ApexMainWindow::MruLoad( const QString& ac_sIniFile )
+void ApexMainWindow::MruLoad()
 {
-    m_pMRU->mp_LoadFromFile( ac_sIniFile );
-}
-
-void ApexMainWindow::MruSave( const QString& ac_sIniFile )
-{
-    m_pMRU->mp_SaveToFile( ac_sIniFile );
-}
-
-void ApexMainWindow::MruFile( const QString& ac_sFile )
-{
-    m_pMRU->mp_AddItem( ac_sFile );
-    SetOpenDir( f_sDirectoryFromFile( ac_sFile ) );
-}
-
-void ApexMainWindow::MruClear()
-{
-    m_pMRU->mp_RemoveAllItems();
+    m_pMRU->loadFromFile();
 }
 
 void ApexMainWindow::SetOpenDir( const QString& ac_sDir )
 {
-    m_pMRU->mp_SetOpenDir( ac_sDir );
+    m_pMRU->setOpenDir( ac_sDir );
 }
 
 /******************************************** ENABLERS ***************************************************************************/
@@ -481,12 +499,22 @@ void ApexMainWindow::EnableStart( const bool ac_bEnable )
     experimentStartAction->setEnabled( ac_bEnable );
 }
 
+bool ApexMainWindow::startEnabled() const
+{
+    return experimentStartAction->isEnabled();
+}
+
 void ApexMainWindow::EnableStop ( const bool ac_bEnable )
 {
     if ( m_pPanel )
         m_pPanel->mp_EnableStop( ac_bEnable );
 
     experimentStopAction->setEnabled( ac_bEnable );
+}
+
+bool ApexMainWindow::stopEnabled() const
+{
+    return experimentStopAction->isEnabled();
 }
 
 void ApexMainWindow::EnableRepeat ( const bool ac_bEnable )
@@ -506,12 +534,32 @@ void ApexMainWindow::EnableAutoAnswer( const bool ac_bEnable /* = true  */ )
     experimentAutoAnswerAction->setEnabled (ac_bEnable);
 }
 
+void ApexMainWindow::EnableSelectSoundcard(const bool ac_bEnable)
+{
+    selectSoundcardAction->setEnabled(ac_bEnable);
+}
+
 void ApexMainWindow::EnablePause( const bool ac_bEnable )
 {
     if ( m_pPanel )
         m_pPanel->mp_EnablePause( ac_bEnable );
 
     experimentPauseAction->setEnabled( ac_bEnable );
+}
+
+bool ApexMainWindow::pauseEnabled() const
+{
+    return experimentPauseAction->isEnabled();
+}
+
+bool ApexMainWindow::skipEnabled() const
+{
+    return experimentSkipAction->isEnabled();
+}
+
+bool ApexMainWindow::repeatEnabled() const
+{
+    return stimulusRepeatAction->isEnabled();
 }
 
 void ApexMainWindow::EnableSave( const bool ac_bEnable )
@@ -522,7 +570,7 @@ void ApexMainWindow::EnableSave( const bool ac_bEnable )
 void ApexMainWindow::EnableOpen( const bool ac_bEnable )
 {
     fileOpenAction->setEnabled (ac_bEnable);
-    m_pMRU->mf_Enable( ac_bEnable );
+    m_pMRU->enable( ac_bEnable );
 }
 
 void ApexMainWindow::EnableExperiment( const bool ac_bEnable )
@@ -537,16 +585,22 @@ void ApexMainWindow::EnableCalibration( const bool ac_bEnable )
 
 /******************************************** MISC SLOTS ***************************************************************************/
 
-void ApexMainWindow::SetNumTrials( const unsigned ac_nTrials )
-{
-    if ( m_pPanel )
-        m_pPanel->mp_SetProgressSteps( ac_nTrials );
-}
+// void ApexMainWindow::SetNumTrials( const unsigned ac_nTrials )
+// {
+//     if ( m_pPanel )
+//         m_pPanel->mp_SetProgressSteps( ac_nTrials );
+// }
+//
+// void ApexMainWindow::SetProgress( const unsigned ac_nTrials )
+// {
+//     if ( m_pPanel )
+//         m_pPanel->mp_SetProgress( ac_nTrials );
+// }
 
-void ApexMainWindow::SetProgress( const unsigned ac_nTrials )
+void ApexMainWindow::setProgress(double percentage)
 {
-    if ( m_pPanel )
-        m_pPanel->mp_SetProgress( ac_nTrials );
+    if (m_pPanel != 0)
+        m_pPanel->mp_SetProgress(percentage);
 }
 
 void ApexMainWindow::AddStatusMessage( const QString& ac_sMessage )
@@ -556,41 +610,14 @@ void ApexMainWindow::AddStatusMessage( const QString& ac_sMessage )
         m_pPanel->mp_SetText( ac_sMessage );
 }
 
-QString ApexMainWindow::fetchVersion() const {
-    QFile commitFile(Paths::Get().GetDocPath() + QLatin1String("commit.txt"));
-    QString version;
-    if (commitFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QString diffstat = QString::fromLocal8Bit(commitFile.readAll());
-        QStringList lines = diffstat.split(QLatin1Char('\n'));
-        QString firstLine = lines.value(0);
-        QString hash = firstLine.section(QLatin1Char(' '), 1, 1).left(6);
-        QString dateLine = lines.filter(QRegExp(QLatin1String("^Date: .*"))).value(0);
-        QString date = dateLine.section(QLatin1Char(' '), 1);
-        version = QString::fromLatin1("(%1) - %2").arg(hash, date);
-    }
-
-    return version;
-}
-
-QString ApexMainWindow::fetchDiffstat() const {
-    QFile commitFile(Paths::Get().GetDocPath() + QLatin1String("commit.txt"));
-    QString diffstat;
-    if (commitFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        diffstat = QString::fromLocal8Bit(commitFile.readAll());
-    }
-
-    return diffstat;
-}
-
-
 void ApexMainWindow::helpAbout()
 {
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("APEX 3"));
-    msgBox.setText(tr("Apex v3.0 %1\n"
-                "All copyrights Exp. ORL, KULeuven\n"
-                "Contact tom.francart@med.kuleuven.be for more information").arg(fetchVersion()));
-    msgBox.setDetailedText(fetchDiffstat());
+    msgBox.setText(tr("APEX v3.1 %1\n"
+                "All copyrights ExpORL, KULeuven\n"
+                "Contact tom.francart@med.kuleuven.be for more information").arg(ApexTools::fetchVersion()));
+    msgBox.setDetailedText(ApexTools::fetchDiffstat());
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.exec();

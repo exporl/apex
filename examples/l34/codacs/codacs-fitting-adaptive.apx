@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.0/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.0/experiment.xsd">
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>random</order>
+      <defaultstandard>electricstim90</defaultstandard>
+      <intervals count="3">
+        <interval number="1" element="button1"/>
+        <interval number="2" element="button2"/>
+        <interval number="3" element="button3"/>
+      </intervals>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>level</adapt_parameter>
+      <start_value>-70</start_value>
+      <stop_after_type>reversals</stop_after_type>
+      <stop_after>8</stop_after>
+      <min_value>-90</min_value>
+      <max_value>0</max_value>
+      <larger_is_easier>true</larger_is_easier>
+      <stepsizes>
+        <change_after>reversals</change_after>
+        <stepsize begin="1" size="10"/>
+        <stepsize begin="3" size="5"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <plugintrials>
+        <script source="inline"/>
+      </plugintrials>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback>false</feedback>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <screen id="screen">
+      <gridLayout width="1" height="2">
+        <label id="uitleg">
+          <text>Tijdens welke aanbieding hoort u het geluid?</text>
+        </label>
+        <gridLayout width="3" row="2" height="1">
+          <button col="1" id="button1">
+            <shortcut>1</shortcut>
+            <text>1</text>
+          </button>
+          <button col="2" id="button2">
+            <shortcut>2</shortcut>
+            <text>2</text>
+          </button>
+          <button col="3" id="button3">
+            <shortcut>3</shortcut>
+            <text>3</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <plugindatablocks>
+      <script source="inline"/>
+      <parameter name="stimulationFrequency">40</parameter>
+      <parameter name="clickWidth">200</parameter>
+      <parameter name="duration">1.0</parameter>
+      <parameter name="alternatingPolarity">true</parameter>
+    </plugindatablocks>
+  </datablocks>
+  <devices>
+    <device id="l34" xsi:type="apex:L34DeviceType">
+      <device_id>1</device_id>
+      <implant>cic4</implant>
+      <trigger>none</trigger>
+      <volume>0</volume>
+      <!-- dummy map, is not used -->
+      <defaultmap>
+        <inline>
+          <number_electrodes>1</number_electrodes>
+          <mode>MP1+2</mode>
+          <pulsewidth>25</pulsewidth>
+          <pulsegap>8</pulsegap>
+          <period>1000</period>
+          <channel threshold="0" number="1" electrode="1" comfort="0"/>
+          <channel threshold="0" number="2" electrode="2" comfort="0"/>
+          <channel threshold="0" number="3" electrode="3" comfort="0"/>
+          <channel threshold="0" number="4" electrode="4" comfort="0"/>
+          <channel threshold="0" number="5" electrode="5" comfort="0"/>
+          <channel threshold="0" number="6" electrode="6" comfort="0"/>
+          <channel threshold="0" number="7" electrode="7" comfort="0"/>
+          <channel threshold="0" number="8" electrode="8" comfort="0"/>
+          <channel threshold="0" number="9" electrode="9" comfort="0"/>
+          <channel threshold="0" number="10" electrode="10" comfort="0"/>
+          <channel threshold="0" number="11" electrode="11" comfort="0"/>
+          <channel threshold="0" number="12" electrode="12" comfort="0"/>
+          <channel threshold="0" number="13" electrode="13" comfort="0"/>
+          <channel threshold="0" number="14" electrode="14" comfort="0"/>
+          <channel threshold="0" number="15" electrode="15" comfort="0"/>
+          <channel threshold="0" number="16" electrode="16" comfort="0"/>
+          <channel threshold="0" number="17" electrode="17" comfort="0"/>
+          <channel threshold="0" number="18" electrode="18" comfort="0"/>
+          <channel threshold="0" number="19" electrode="19" comfort="0"/>
+          <channel threshold="0" number="20" electrode="20" comfort="0"/>
+          <channel threshold="0" number="21" electrode="21" comfort="0"/>
+          <channel threshold="0" number="22" electrode="22" comfort="0"/>
+        </inline>
+      </defaultmap>
+    </device>
+  </devices>
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="level"/>
+    </fixed_parameters>
+    <pluginstimuli>
+      <script source="inline"/>
+    </pluginstimuli>
+  </stimuli>
+  <connections/>
+  <results>
+    <xsltscript>apexresult.xsl</xsltscript>
+    <xsltscriptparameters>
+      <parameter name="reversals for mean">4</parameter>
+    </xsltscriptparameters>
+    <showresults>true</showresults>
+  </results>
+  <interactive>
+    <entry default="" description="Subject" type="string"/>
+    <entry default="-70" description="Starting Level (dB)" expression="/apex:apex/procedure/parameters/start_value" type="int"/>
+    <entry default="40" description="Stimulation Frequency (Hz)" expression="/apex:apex/datablocks/plugindatablocks/parameter[@name=&quot;stimulationFrequency&quot;]" type="int"/>
+    <entry default="200" description="Click Width (us)" expression="/apex:apex/datablocks/plugindatablocks/parameter[@name=&quot;clickWidth&quot;]" type="int"/>
+    <entry default="1.0" description="Duration (s)" expression="/apex:apex/datablocks/plugindatablocks/parameter[@name=&quot;duration&quot;]" type="string"/>
+    <entry default="true" description="Alternating Polarity" expression="/apex:apex/datablocks/plugindatablocks/parameter[@name=&quot;alternatingPolarity&quot;]" type="bool"/>
+    <entry default="1" description="Device ID" expression="/apex:apex/devices/device[@id=&quot;l34&quot;]/device_id" type="int"/>
+  </interactive>
+  <general>
+    <exitafter>false</exitafter>
+    <autosave>true</autosave>
+    <scriptlibrary>codacs-fitting-adaptive-lib</scriptlibrary>
+  </general>
+</apex:apex>

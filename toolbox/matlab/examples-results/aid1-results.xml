@@ -1,0 +1,306 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:results experiment_file="file:/home/tom/data/apex-deviceparameters/apex/tests/regression/procedure/aid1.xml" xmlns:apex="http://www.kuleuven.be/exporl/Lab/Apex">
+<general>
+	<startdate>Thu Oct 4 16:51:53 2007</startdate>
+	<enddate>Thu Oct 4 16:52:08 2007</enddate>
+	<duration unit="seconds">14</duration>
+	<xsltscript></xsltscript>
+	<interactive>
+	</interactive>
+</general>
+<trial id="trial1">
+<procedure type="adaptiveProcedure" >
+<stimulus>stimulus3</stimulus>
+	<parameter>3</parameter>
+	<stepsize>2</stepsize>
+	<reversals>0</reversals>
+	<saturation>false</saturation>
+	<presentations>0</presentations>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button_wrong</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<currentanswer>button_wrong</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>406</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial1">
+<procedure type="adaptiveProcedure" >
+<stimulus>stimulus5</stimulus>
+	<parameter>5</parameter>
+	<stepsize>2</stepsize>
+	<reversals>0</reversals>
+	<saturation>false</saturation>
+	<presentations>1</presentations>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button_correct</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<currentanswer>button_correct</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>336</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial1">
+<procedure type="adaptiveProcedure" >
+<stimulus>stimulus4</stimulus>
+	<reversal/>
+	<parameter>4</parameter>
+	<stepsize>1</stepsize>
+	<reversals>1</reversals>
+	<saturation>false</saturation>
+	<presentations>2</presentations>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button_correct</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<currentanswer>button_correct</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>379</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial1">
+<procedure type="adaptiveProcedure" >
+<stimulus>stimulus3</stimulus>
+	<parameter>3</parameter>
+	<stepsize>1</stepsize>
+	<reversals>1</reversals>
+	<saturation>false</saturation>
+	<presentations>3</presentations>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button_wrong</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<currentanswer>button_wrong</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>408</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial1">
+<procedure type="adaptiveProcedure" >
+<stimulus>stimulus4</stimulus>
+	<reversal/>
+	<parameter>4</parameter>
+	<stepsize>1</stepsize>
+	<reversals>2</reversals>
+	<saturation>false</saturation>
+	<presentations>4</presentations>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button_wrong</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<currentanswer>button_wrong</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>321</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial1">
+<procedure type="adaptiveProcedure" >
+<stimulus>stimulus5</stimulus>
+	<parameter>5</parameter>
+	<stepsize>1</stepsize>
+	<reversals>2</reversals>
+	<saturation>false</saturation>
+	<presentations>5</presentations>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button_correct</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<currentanswer>button_correct</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>547</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial1">
+<procedure type="adaptiveProcedure" >
+<stimulus>stimulus4</stimulus>
+	<reversal/>
+	<parameter>4</parameter>
+	<stepsize>1</stepsize>
+	<reversals>3</reversals>
+	<saturation>false</saturation>
+	<presentations>6</presentations>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button_wrong</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<currentanswer>button_wrong</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>206</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial1">
+<procedure type="adaptiveProcedure" >
+<stimulus>stimulus5</stimulus>
+	<reversal/>
+	<parameter>5</parameter>
+	<stepsize>1</stepsize>
+	<reversals>4</reversals>
+	<saturation>false</saturation>
+	<presentations>7</presentations>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button_wrong</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<currentanswer>button_wrong</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>386</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial1">
+<procedure type="adaptiveProcedure" >
+<stimulus>stimulus5</stimulus>
+	<parameter>5</parameter>
+	<stepsize>1</stepsize>
+	<reversals>4</reversals>
+	<saturation>true</saturation>
+	<presentations>8</presentations>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button_correct</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<currentanswer>button_correct</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>232</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="VIRTUAL_TRIAL" type="virtual">
+<!-- This is not a real trial, but a virtual trial based on the previous-->
+<procedure type="adaptiveProcedure" >
+<stimulus>stimulus5</stimulus>
+	<reversal/>
+	<parameter>4</parameter>
+	<stepsize>1</stepsize>
+	<reversals>5</reversals>
+	<saturation>false</saturation>
+	<presentations>9</presentations>
+</procedure>
+</trial>
+
+<processed>
+Results from file:/home/tom/data/apex-deviceparameters/apex/tests/regression/procedure/aid1.xml
+
+[Stimulus/respons pairs]
+stimulus3	stimulus5	stimulus4	stimulus3	stimulus4	stimulus5	stimulus4	stimulus5	stimulus5
+false	 true	 true	 false	 false	 true	 false	 false	 true
+
+[Reversals]
+5	 3	 5	 4	 5
+Mean of last 3 reversals = 4.333333333333333
+
+[Sequence data]
+3	 5	 4	 3	 4	 5	 4	 5	 5	 4
+
+[Label value]
+
+</processed>
+</apex:results>

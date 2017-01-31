@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef BUTTONELEMENT_H
-#define BUTTONELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_BUTTONELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_BUTTONELEMENT_H_
 
 #include "screenelement.h"
 
 #include <QString>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -48,7 +48,7 @@ class APEXDATA_EXPORT ButtonElement
 
         void setText(const QString& t);
         virtual QString text() const;
-        
+
         bool operator==(const ButtonElement& other) const;
 };
 

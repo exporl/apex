@@ -1,0 +1,2240 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet  href="https://gilbert.med.kuleuven.be/apex/xslt/apexresult.xsl" type="text/xsl"?>
+<apex:results experiment_file="file:/C:/Users/Guestorl/Documents/Arturo/measurements/apex/misty.xml" xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+<general>
+    <apex_version>3.1.x</apex_version>
+    <apex_version_git>(28cf2d) -   Mon Oct 6 17:39:47 2014 +0200</apex_version_git>
+    <startdate>2015-07-16T09:21:25</startdate>
+    <enddate>2015-07-16T09:28:04</enddate>
+    <duration unit="seconds">399</duration>
+    <xsltscript>apexresult.xsl</xsltscript>
+    <jscript>apex:resultsviewer.html</jscript>
+    <subject>e08s05_amp12_snr-3</subject>
+    <interactive>
+        <entry expression="/apex:apex/results/subject" new_value="e08s05_amp12_snr-3" succeeded="true" />
+        <entry expression="/apex:apex/datablocks[1]/uri_prefix[1]" new_value="file:./audio/amp12" succeeded="true" />
+        <entry expression="/apex:apex/filters/filter[@id='noisegen']/gain" new_value="-3" succeeded="true" />
+    </interactive>
+</general>
+<trial id="tr_12">
+<procedure type="apex:constantProcedure">
+<answer>b_t</answer>
+<correct_answer>b_z</correct_answer>
+<stimulus>st_aza</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_t"></element>
+    <element id="buttongroup">b_t</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>917</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:21:25</trial_start_time>
+</trial>
+
+<trial id="tr_1">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_b</correct_answer>
+<stimulus>st_aba</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>620</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:21:28</trial_start_time>
+</trial>
+
+<trial id="tr_7">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_p</correct_answer>
+<stimulus>st_apa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>602</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:21:32</trial_start_time>
+</trial>
+
+<trial id="tr_4">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_f</correct_answer>
+<stimulus>st_afa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>804</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:21:36</trial_start_time>
+</trial>
+
+<trial id="tr_12">
+<procedure type="apex:constantProcedure">
+<answer>b_s</answer>
+<correct_answer>b_z</correct_answer>
+<stimulus>st_aza</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_s"></element>
+    <element id="buttongroup">b_s</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>841</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:21:40</trial_start_time>
+</trial>
+
+<trial id="tr_5">
+<procedure type="apex:constantProcedure">
+<answer>b_m</answer>
+<correct_answer>b_m</correct_answer>
+<stimulus>st_ama</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_m"></element>
+    <element id="buttongroup">b_m</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>688</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:21:44</trial_start_time>
+</trial>
+
+<trial id="tr_11">
+<procedure type="apex:constantProcedure">
+<answer>b_w</answer>
+<correct_answer>b_w</correct_answer>
+<stimulus>st_awa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_w"></element>
+    <element id="buttongroup">b_w</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>463</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:21:48</trial_start_time>
+</trial>
+
+<trial id="tr_5">
+<procedure type="apex:constantProcedure">
+<answer>b_m</answer>
+<correct_answer>b_m</correct_answer>
+<stimulus>st_ama</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_m"></element>
+    <element id="buttongroup">b_m</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1268</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:21:52</trial_start_time>
+</trial>
+
+<trial id="tr_6">
+<procedure type="apex:constantProcedure">
+<answer>b_n</answer>
+<correct_answer>b_n</correct_answer>
+<stimulus>st_ana</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_n"></element>
+    <element id="buttongroup">b_n</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>732</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:21:57</trial_start_time>
+</trial>
+
+<trial id="tr_1">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_b</correct_answer>
+<stimulus>st_aba</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2959</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:00</trial_start_time>
+</trial>
+
+<trial id="tr_2">
+<procedure type="apex:constantProcedure">
+<answer>b_ch</answer>
+<correct_answer>b_ch</correct_answer>
+<stimulus>st_acha</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_ch"></element>
+    <element id="buttongroup">b_ch</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>494</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:07</trial_start_time>
+</trial>
+
+<trial id="tr_4">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_f</correct_answer>
+<stimulus>st_afa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>592</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:10</trial_start_time>
+</trial>
+
+<trial id="tr_10">
+<procedure type="apex:constantProcedure">
+<answer>b_v</answer>
+<correct_answer>b_v</correct_answer>
+<stimulus>st_ava</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_v"></element>
+    <element id="buttongroup">b_v</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2404</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:14</trial_start_time>
+</trial>
+
+<trial id="tr_8">
+<procedure type="apex:constantProcedure">
+<answer>b_t</answer>
+<correct_answer>b_s</correct_answer>
+<stimulus>st_asa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_t"></element>
+    <element id="buttongroup">b_t</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>648</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:20</trial_start_time>
+</trial>
+
+<trial id="tr_3">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_d</correct_answer>
+<stimulus>st_ada</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>507</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:24</trial_start_time>
+</trial>
+
+<trial id="tr_11">
+<procedure type="apex:constantProcedure">
+<answer>b_w</answer>
+<correct_answer>b_w</correct_answer>
+<stimulus>st_awa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_w"></element>
+    <element id="buttongroup">b_w</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>447</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:27</trial_start_time>
+</trial>
+
+<trial id="tr_8">
+<procedure type="apex:constantProcedure">
+<answer>b_t</answer>
+<correct_answer>b_s</correct_answer>
+<stimulus>st_asa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_t"></element>
+    <element id="buttongroup">b_t</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>842</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:31</trial_start_time>
+</trial>
+
+<trial id="tr_3">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_d</correct_answer>
+<stimulus>st_ada</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>368</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:35</trial_start_time>
+</trial>
+
+<trial id="tr_10">
+<procedure type="apex:constantProcedure">
+<answer>b_m</answer>
+<correct_answer>b_v</correct_answer>
+<stimulus>st_ava</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_m"></element>
+    <element id="buttongroup">b_m</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>383</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:39</trial_start_time>
+</trial>
+
+<trial id="tr_5">
+<procedure type="apex:constantProcedure">
+<answer>b_m</answer>
+<correct_answer>b_m</correct_answer>
+<stimulus>st_ama</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_m"></element>
+    <element id="buttongroup">b_m</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>453</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:42</trial_start_time>
+</trial>
+
+<trial id="tr_12">
+<procedure type="apex:constantProcedure">
+<answer>b_s</answer>
+<correct_answer>b_z</correct_answer>
+<stimulus>st_aza</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_s"></element>
+    <element id="buttongroup">b_s</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>648</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:46</trial_start_time>
+</trial>
+
+<trial id="tr_10">
+<procedure type="apex:constantProcedure">
+<answer>b_v</answer>
+<correct_answer>b_v</correct_answer>
+<stimulus>st_ava</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_v"></element>
+    <element id="buttongroup">b_v</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1059</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:50</trial_start_time>
+</trial>
+
+<trial id="tr_2">
+<procedure type="apex:constantProcedure">
+<answer>b_ch</answer>
+<correct_answer>b_ch</correct_answer>
+<stimulus>st_acha</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_ch"></element>
+    <element id="buttongroup">b_ch</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>198</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:54</trial_start_time>
+</trial>
+
+<trial id="tr_2">
+<procedure type="apex:constantProcedure">
+<answer>b_ch</answer>
+<correct_answer>b_ch</correct_answer>
+<stimulus>st_acha</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_ch"></element>
+    <element id="buttongroup">b_ch</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>389</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:22:58</trial_start_time>
+</trial>
+
+<trial id="tr_6">
+<procedure type="apex:constantProcedure">
+<answer>b_m</answer>
+<correct_answer>b_n</correct_answer>
+<stimulus>st_ana</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_m"></element>
+    <element id="buttongroup">b_m</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1181</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:02</trial_start_time>
+</trial>
+
+<trial id="tr_12">
+<procedure type="apex:constantProcedure">
+<answer>b_z</answer>
+<correct_answer>b_z</correct_answer>
+<stimulus>st_aza</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_z"></element>
+    <element id="buttongroup">b_z</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1048</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:06</trial_start_time>
+</trial>
+
+<trial id="tr_3">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_d</correct_answer>
+<stimulus>st_ada</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>754</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:10</trial_start_time>
+</trial>
+
+<trial id="tr_4">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_f</correct_answer>
+<stimulus>st_afa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>663</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:14</trial_start_time>
+</trial>
+
+<trial id="tr_8">
+<procedure type="apex:constantProcedure">
+<answer>b_t</answer>
+<correct_answer>b_s</correct_answer>
+<stimulus>st_asa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_t"></element>
+    <element id="buttongroup">b_t</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1623</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:18</trial_start_time>
+</trial>
+
+<trial id="tr_7">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_p</correct_answer>
+<stimulus>st_apa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>877</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:23</trial_start_time>
+</trial>
+
+<trial id="tr_11">
+<procedure type="apex:constantProcedure">
+<answer>b_w</answer>
+<correct_answer>b_w</correct_answer>
+<stimulus>st_awa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_w"></element>
+    <element id="buttongroup">b_w</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>406</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:27</trial_start_time>
+</trial>
+
+<trial id="tr_4">
+<procedure type="apex:constantProcedure">
+<answer>b_b</answer>
+<correct_answer>b_f</correct_answer>
+<stimulus>st_afa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_b"></element>
+    <element id="buttongroup">b_b</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1506</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:31</trial_start_time>
+</trial>
+
+<trial id="tr_6">
+<procedure type="apex:constantProcedure">
+<answer>b_m</answer>
+<correct_answer>b_n</correct_answer>
+<stimulus>st_ana</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_m"></element>
+    <element id="buttongroup">b_m</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>653</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:36</trial_start_time>
+</trial>
+
+<trial id="tr_10">
+<procedure type="apex:constantProcedure">
+<answer>b_w</answer>
+<correct_answer>b_v</correct_answer>
+<stimulus>st_ava</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_w"></element>
+    <element id="buttongroup">b_w</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>5015</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:40</trial_start_time>
+</trial>
+
+<trial id="tr_9">
+<procedure type="apex:constantProcedure">
+<answer>b_t</answer>
+<correct_answer>b_t</correct_answer>
+<stimulus>st_ata</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_t"></element>
+    <element id="buttongroup">b_t</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>575</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:48</trial_start_time>
+</trial>
+
+<trial id="tr_11">
+<procedure type="apex:constantProcedure">
+<answer>b_w</answer>
+<correct_answer>b_w</correct_answer>
+<stimulus>st_awa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_w"></element>
+    <element id="buttongroup">b_w</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>867</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:52</trial_start_time>
+</trial>
+
+<trial id="tr_9">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_t</correct_answer>
+<stimulus>st_ata</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>693</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:23:56</trial_start_time>
+</trial>
+
+<trial id="tr_3">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_d</correct_answer>
+<stimulus>st_ada</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>566</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:00</trial_start_time>
+</trial>
+
+<trial id="tr_2">
+<procedure type="apex:constantProcedure">
+<answer>b_ch</answer>
+<correct_answer>b_ch</correct_answer>
+<stimulus>st_acha</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_ch"></element>
+    <element id="buttongroup">b_ch</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>402</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:04</trial_start_time>
+</trial>
+
+<trial id="tr_10">
+<procedure type="apex:constantProcedure">
+<answer>b_v</answer>
+<correct_answer>b_v</correct_answer>
+<stimulus>st_ava</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_v"></element>
+    <element id="buttongroup">b_v</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3258</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:08</trial_start_time>
+</trial>
+
+<trial id="tr_9">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_t</correct_answer>
+<stimulus>st_ata</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>710</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:14</trial_start_time>
+</trial>
+
+<trial id="tr_10">
+<procedure type="apex:constantProcedure">
+<answer>b_f</answer>
+<correct_answer>b_v</correct_answer>
+<stimulus>st_ava</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_f"></element>
+    <element id="buttongroup">b_f</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>4858</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:18</trial_start_time>
+</trial>
+
+<trial id="tr_9">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_t</correct_answer>
+<stimulus>st_ata</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>465</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:26</trial_start_time>
+</trial>
+
+<trial id="tr_7">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_p</correct_answer>
+<stimulus>st_apa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>514</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:30</trial_start_time>
+</trial>
+
+<trial id="tr_4">
+<procedure type="apex:constantProcedure">
+<answer>b_s</answer>
+<correct_answer>b_f</correct_answer>
+<stimulus>st_afa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_s"></element>
+    <element id="buttongroup">b_s</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1296</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:34</trial_start_time>
+</trial>
+
+<trial id="tr_10">
+<procedure type="apex:constantProcedure">
+<answer>b_b</answer>
+<correct_answer>b_v</correct_answer>
+<stimulus>st_ava</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_b"></element>
+    <element id="buttongroup">b_b</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1753</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:38</trial_start_time>
+</trial>
+
+<trial id="tr_9">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_t</correct_answer>
+<stimulus>st_ata</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>732</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:43</trial_start_time>
+</trial>
+
+<trial id="tr_10">
+<procedure type="apex:constantProcedure">
+<answer>b_n</answer>
+<correct_answer>b_v</correct_answer>
+<stimulus>st_ava</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_n"></element>
+    <element id="buttongroup">b_n</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>967</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:47</trial_start_time>
+</trial>
+
+<trial id="tr_3">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_d</correct_answer>
+<stimulus>st_ada</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>785</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:51</trial_start_time>
+</trial>
+
+<trial id="tr_9">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_t</correct_answer>
+<stimulus>st_ata</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>311</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:56</trial_start_time>
+</trial>
+
+<trial id="tr_3">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_d</correct_answer>
+<stimulus>st_ada</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>405</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:24:59</trial_start_time>
+</trial>
+
+<trial id="tr_7">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_p</correct_answer>
+<stimulus>st_apa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>454</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:03</trial_start_time>
+</trial>
+
+<trial id="tr_12">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_z</correct_answer>
+<stimulus>st_aza</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1846</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:07</trial_start_time>
+</trial>
+
+<trial id="tr_8">
+<procedure type="apex:constantProcedure">
+<answer>b_s</answer>
+<correct_answer>b_s</correct_answer>
+<stimulus>st_asa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_s"></element>
+    <element id="buttongroup">b_s</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>475</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:12</trial_start_time>
+</trial>
+
+<trial id="tr_1">
+<procedure type="apex:constantProcedure">
+<answer>b_w</answer>
+<correct_answer>b_b</correct_answer>
+<stimulus>st_aba</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_w"></element>
+    <element id="buttongroup">b_w</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>606</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:15</trial_start_time>
+</trial>
+
+<trial id="tr_1">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_b</correct_answer>
+<stimulus>st_aba</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>439</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:19</trial_start_time>
+</trial>
+
+<trial id="tr_8">
+<procedure type="apex:constantProcedure">
+<answer>b_s</answer>
+<correct_answer>b_s</correct_answer>
+<stimulus>st_asa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_s"></element>
+    <element id="buttongroup">b_s</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>600</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:23</trial_start_time>
+</trial>
+
+<trial id="tr_7">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_p</correct_answer>
+<stimulus>st_apa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>428</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:27</trial_start_time>
+</trial>
+
+<trial id="tr_2">
+<procedure type="apex:constantProcedure">
+<answer>b_ch</answer>
+<correct_answer>b_ch</correct_answer>
+<stimulus>st_acha</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_ch"></element>
+    <element id="buttongroup">b_ch</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>527</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:30</trial_start_time>
+</trial>
+
+<trial id="tr_12">
+<procedure type="apex:constantProcedure">
+<answer>b_s</answer>
+<correct_answer>b_z</correct_answer>
+<stimulus>st_aza</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_s"></element>
+    <element id="buttongroup">b_s</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>717</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:34</trial_start_time>
+</trial>
+
+<trial id="tr_8">
+<procedure type="apex:constantProcedure">
+<answer>b_z</answer>
+<correct_answer>b_s</correct_answer>
+<stimulus>st_asa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_z"></element>
+    <element id="buttongroup">b_z</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1627</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:38</trial_start_time>
+</trial>
+
+<trial id="tr_1">
+<procedure type="apex:constantProcedure">
+<answer>b_b</answer>
+<correct_answer>b_b</correct_answer>
+<stimulus>st_aba</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_b"></element>
+    <element id="buttongroup">b_b</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>956</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:43</trial_start_time>
+</trial>
+
+<trial id="tr_1">
+<procedure type="apex:constantProcedure">
+<answer>b_v</answer>
+<correct_answer>b_b</correct_answer>
+<stimulus>st_aba</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_v"></element>
+    <element id="buttongroup">b_v</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>902</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:47</trial_start_time>
+</trial>
+
+<trial id="tr_6">
+<procedure type="apex:constantProcedure">
+<answer>b_n</answer>
+<correct_answer>b_n</correct_answer>
+<stimulus>st_ana</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_n"></element>
+    <element id="buttongroup">b_n</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>389</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:51</trial_start_time>
+</trial>
+
+<trial id="tr_4">
+<procedure type="apex:constantProcedure">
+<answer>b_f</answer>
+<correct_answer>b_f</correct_answer>
+<stimulus>st_afa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_f"></element>
+    <element id="buttongroup">b_f</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>826</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:55</trial_start_time>
+</trial>
+
+<trial id="tr_5">
+<procedure type="apex:constantProcedure">
+<answer>b_n</answer>
+<correct_answer>b_m</correct_answer>
+<stimulus>st_ama</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_n"></element>
+    <element id="buttongroup">b_n</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>356</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:25:59</trial_start_time>
+</trial>
+
+<trial id="tr_7">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_p</correct_answer>
+<stimulus>st_apa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1522</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:03</trial_start_time>
+</trial>
+
+<trial id="tr_5">
+<procedure type="apex:constantProcedure">
+<answer>b_n</answer>
+<correct_answer>b_m</correct_answer>
+<stimulus>st_ama</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_n"></element>
+    <element id="buttongroup">b_n</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>908</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:07</trial_start_time>
+</trial>
+
+<trial id="tr_2">
+<procedure type="apex:constantProcedure">
+<answer>b_ch</answer>
+<correct_answer>b_ch</correct_answer>
+<stimulus>st_acha</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_ch"></element>
+    <element id="buttongroup">b_ch</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>508</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:12</trial_start_time>
+</trial>
+
+<trial id="tr_5">
+<procedure type="apex:constantProcedure">
+<answer>b_m</answer>
+<correct_answer>b_m</correct_answer>
+<stimulus>st_ama</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_m"></element>
+    <element id="buttongroup">b_m</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>639</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:15</trial_start_time>
+</trial>
+
+<trial id="tr_2">
+<procedure type="apex:constantProcedure">
+<answer>b_ch</answer>
+<correct_answer>b_ch</correct_answer>
+<stimulus>st_acha</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_ch"></element>
+    <element id="buttongroup">b_ch</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>935</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:19</trial_start_time>
+</trial>
+
+<trial id="tr_8">
+<procedure type="apex:constantProcedure">
+<answer>b_t</answer>
+<correct_answer>b_s</correct_answer>
+<stimulus>st_asa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_t"></element>
+    <element id="buttongroup">b_t</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2009</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:23</trial_start_time>
+</trial>
+
+<trial id="tr_1">
+<procedure type="apex:constantProcedure">
+<answer>b_b</answer>
+<correct_answer>b_b</correct_answer>
+<stimulus>st_aba</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_b"></element>
+    <element id="buttongroup">b_b</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>633</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:29</trial_start_time>
+</trial>
+
+<trial id="tr_7">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_p</correct_answer>
+<stimulus>st_apa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>523</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:32</trial_start_time>
+</trial>
+
+<trial id="tr_4">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_f</correct_answer>
+<stimulus>st_afa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>698</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:36</trial_start_time>
+</trial>
+
+<trial id="tr_7">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_p</correct_answer>
+<stimulus>st_apa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>310</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:40</trial_start_time>
+</trial>
+
+<trial id="tr_4">
+<procedure type="apex:constantProcedure">
+<answer>b_b</answer>
+<correct_answer>b_f</correct_answer>
+<stimulus>st_afa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_b"></element>
+    <element id="buttongroup">b_b</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>996</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:44</trial_start_time>
+</trial>
+
+<trial id="tr_12">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_z</correct_answer>
+<stimulus>st_aza</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>678</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:48</trial_start_time>
+</trial>
+
+<trial id="tr_1">
+<procedure type="apex:constantProcedure">
+<answer>b_p</answer>
+<correct_answer>b_b</correct_answer>
+<stimulus>st_aba</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_p"></element>
+    <element id="buttongroup">b_p</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>771</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:52</trial_start_time>
+</trial>
+
+<trial id="tr_8">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_s</correct_answer>
+<stimulus>st_asa</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>767</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:26:56</trial_start_time>
+</trial>
+
+<trial id="tr_9">
+<procedure type="apex:constantProcedure">
+<answer>b_t</answer>
+<correct_answer>b_t</correct_answer>
+<stimulus>st_ata</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_t"></element>
+    <element id="buttongroup">b_t</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>796</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:00</trial_start_time>
+</trial>
+
+<trial id="tr_6">
+<procedure type="apex:constantProcedure">
+<answer>b_m</answer>
+<correct_answer>b_n</correct_answer>
+<stimulus>st_ana</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_m"></element>
+    <element id="buttongroup">b_m</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1647</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:04</trial_start_time>
+</trial>
+
+<trial id="tr_6">
+<procedure type="apex:constantProcedure">
+<answer>b_n</answer>
+<correct_answer>b_n</correct_answer>
+<stimulus>st_ana</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_n"></element>
+    <element id="buttongroup">b_n</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>488</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:09</trial_start_time>
+</trial>
+
+<trial id="tr_11">
+<procedure type="apex:constantProcedure">
+<answer>b_w</answer>
+<correct_answer>b_w</correct_answer>
+<stimulus>st_awa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_w"></element>
+    <element id="buttongroup">b_w</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>371</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:12</trial_start_time>
+</trial>
+
+<trial id="tr_6">
+<procedure type="apex:constantProcedure">
+<answer>b_n</answer>
+<correct_answer>b_n</correct_answer>
+<stimulus>st_ana</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_n"></element>
+    <element id="buttongroup">b_n</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>900</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:16</trial_start_time>
+</trial>
+
+<trial id="tr_2">
+<procedure type="apex:constantProcedure">
+<answer>b_ch</answer>
+<correct_answer>b_ch</correct_answer>
+<stimulus>st_acha</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_ch"></element>
+    <element id="buttongroup">b_ch</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1444</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:21</trial_start_time>
+</trial>
+
+<trial id="tr_5">
+<procedure type="apex:constantProcedure">
+<answer>b_m</answer>
+<correct_answer>b_m</correct_answer>
+<stimulus>st_ama</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_m"></element>
+    <element id="buttongroup">b_m</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>757</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:25</trial_start_time>
+</trial>
+
+<trial id="tr_3">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_d</correct_answer>
+<stimulus>st_ada</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>526</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:29</trial_start_time>
+</trial>
+
+<trial id="tr_6">
+<procedure type="apex:constantProcedure">
+<answer>b_n</answer>
+<correct_answer>b_n</correct_answer>
+<stimulus>st_ana</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_n"></element>
+    <element id="buttongroup">b_n</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>504</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:33</trial_start_time>
+</trial>
+
+<trial id="tr_5">
+<procedure type="apex:constantProcedure">
+<answer>b_m</answer>
+<correct_answer>b_m</correct_answer>
+<stimulus>st_ama</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_m"></element>
+    <element id="buttongroup">b_m</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>472</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:36</trial_start_time>
+</trial>
+
+<trial id="tr_12">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_z</correct_answer>
+<stimulus>st_aza</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>554</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:40</trial_start_time>
+</trial>
+
+<trial id="tr_11">
+<procedure type="apex:constantProcedure">
+<answer>b_w</answer>
+<correct_answer>b_w</correct_answer>
+<stimulus>st_awa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_w"></element>
+    <element id="buttongroup">b_w</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>383</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:44</trial_start_time>
+</trial>
+
+<trial id="tr_11">
+<procedure type="apex:constantProcedure">
+<answer>b_w</answer>
+<correct_answer>b_w</correct_answer>
+<stimulus>st_awa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_w"></element>
+    <element id="buttongroup">b_w</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>419</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:48</trial_start_time>
+</trial>
+
+<trial id="tr_11">
+<procedure type="apex:constantProcedure">
+<answer>b_w</answer>
+<correct_answer>b_w</correct_answer>
+<stimulus>st_awa</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_w"></element>
+    <element id="buttongroup">b_w</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>498</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:52</trial_start_time>
+</trial>
+
+<trial id="tr_3">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_d</correct_answer>
+<stimulus>st_ada</stimulus>
+<correct>true</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>649</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:27:56</trial_start_time>
+</trial>
+
+<trial id="tr_9">
+<procedure type="apex:constantProcedure">
+<answer>b_d</answer>
+<correct_answer>b_t</correct_answer>
+<stimulus>st_ata</stimulus>
+<correct>false</correct>
+</procedure><screenresult>
+    <element id="b_d"></element>
+    <element id="buttongroup">b_d</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1165</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2015-07-16T09:28:00</trial_start_time>
+</trial>
+
+<calibration>
+<parameter id="gainleft">-33.4</parameter>
+</calibration>
+<processed>
+
+
+ExperimentFile=file:/C:/Users/Guestorl/Documents/Arturo/measurements/apex/misty.xml
+Duration=399 seconds
+Header=trial;stimulus;correctanswer;corrector;useranswer
+START
+tr_12;st_aza;;false;b_t
+tr_1;st_aba;;false;b_d
+tr_7;st_apa;;true;b_p
+tr_4;st_afa;;false;b_d
+tr_12;st_aza;;false;b_s
+tr_5;st_ama;;true;b_m
+tr_11;st_awa;;true;b_w
+tr_5;st_ama;;true;b_m
+tr_6;st_ana;;true;b_n
+tr_1;st_aba;;false;b_p
+tr_2;st_acha;;true;b_ch
+tr_4;st_afa;;false;b_p
+tr_10;st_ava;;true;b_v
+tr_8;st_asa;;false;b_t
+tr_3;st_ada;;true;b_d
+tr_11;st_awa;;true;b_w
+tr_8;st_asa;;false;b_t
+tr_3;st_ada;;true;b_d
+tr_10;st_ava;;false;b_m
+tr_5;st_ama;;true;b_m
+tr_12;st_aza;;false;b_s
+tr_10;st_ava;;true;b_v
+tr_2;st_acha;;true;b_ch
+tr_2;st_acha;;true;b_ch
+tr_6;st_ana;;false;b_m
+tr_12;st_aza;;true;b_z
+tr_3;st_ada;;true;b_d
+tr_4;st_afa;;false;b_p
+tr_8;st_asa;;false;b_t
+tr_7;st_apa;;true;b_p
+tr_11;st_awa;;true;b_w
+tr_4;st_afa;;false;b_b
+tr_6;st_ana;;false;b_m
+tr_10;st_ava;;false;b_w
+tr_9;st_ata;;true;b_t
+tr_11;st_awa;;true;b_w
+tr_9;st_ata;;false;b_d
+tr_3;st_ada;;true;b_d
+tr_2;st_acha;;true;b_ch
+tr_10;st_ava;;true;b_v
+tr_9;st_ata;;false;b_d
+tr_10;st_ava;;false;b_f
+tr_9;st_ata;;false;b_d
+tr_7;st_apa;;true;b_p
+tr_4;st_afa;;false;b_s
+tr_10;st_ava;;false;b_b
+tr_9;st_ata;;false;b_d
+tr_10;st_ava;;false;b_n
+tr_3;st_ada;;true;b_d
+tr_9;st_ata;;false;b_d
+tr_3;st_ada;;true;b_d
+tr_7;st_apa;;true;b_p
+tr_12;st_aza;;false;b_p
+tr_8;st_asa;;true;b_s
+tr_1;st_aba;;false;b_w
+tr_1;st_aba;;false;b_d
+tr_8;st_asa;;true;b_s
+tr_7;st_apa;;true;b_p
+tr_2;st_acha;;true;b_ch
+tr_12;st_aza;;false;b_s
+tr_8;st_asa;;false;b_z
+tr_1;st_aba;;true;b_b
+tr_1;st_aba;;false;b_v
+tr_6;st_ana;;true;b_n
+tr_4;st_afa;;true;b_f
+tr_5;st_ama;;false;b_n
+tr_7;st_apa;;true;b_p
+tr_5;st_ama;;false;b_n
+tr_2;st_acha;;true;b_ch
+tr_5;st_ama;;true;b_m
+tr_2;st_acha;;true;b_ch
+tr_8;st_asa;;false;b_t
+tr_1;st_aba;;true;b_b
+tr_7;st_apa;;true;b_p
+tr_4;st_afa;;false;b_p
+tr_7;st_apa;;true;b_p
+tr_4;st_afa;;false;b_b
+tr_12;st_aza;;false;b_d
+tr_1;st_aba;;false;b_p
+tr_8;st_asa;;false;b_d
+tr_9;st_ata;;true;b_t
+tr_6;st_ana;;false;b_m
+tr_6;st_ana;;true;b_n
+tr_11;st_awa;;true;b_w
+tr_6;st_ana;;true;b_n
+tr_2;st_acha;;true;b_ch
+tr_5;st_ama;;true;b_m
+tr_3;st_ada;;true;b_d
+tr_6;st_ana;;true;b_n
+tr_5;st_ama;;true;b_m
+tr_12;st_aza;;false;b_d
+tr_11;st_awa;;true;b_w
+tr_11;st_awa;;true;b_w
+tr_11;st_awa;;true;b_w
+tr_3;st_ada;;true;b_d
+tr_9;st_ata;;false;b_d
+END
+
+</processed>
+</apex:results>

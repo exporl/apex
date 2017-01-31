@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+
+    <head>
+        <script  src="apex:jquery.min.js" type="text/javascript"> </script>
+
+        <script language="javascript" type="text/javascript"
+            src="apex:jquery.jqplot.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="apex:jquery.jqplot.min.css" />
+        <script type="text/javascript" src="apex:jqplot.canvasTextRenderer.min.js"></script>
+        <script type="text/javascript" src="apex:jqplot.canvasAxisLabelRenderer.min.js"></script>
+
+        <script src="apex:resultsviewer.js" type="text/javascript"> </script>
+
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+
+                    });
+
+            function plot() {
+		          plot_rtprocedureparameter();
+            }
+
+       </script>
+
+       <title>APEX results</title>
+   </head>
+
+   <body >
+
+   <div id="procedureparameterplot" style="width:600px;height:300px;"></div>
+   <br>
+   <div id="procedureparametervalues"></div>
+   <div id="procedureparameterlastvalue"></div>
+   <div id="procedureparameterreversals"></div>
+   <div id="procedureparametermeanrevs"></div>
+   <div id="procedureparametermeantrials"></div>
+   <div id="procedureparametertable"></div>
+
+   </body>
+</html>

@@ -17,16 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "screensdata.h"
+#include "apextools/apextools.h"
+#include "apextools/exceptions.h"
 
-//#include "gui/guidefines.h"
 #include "screen/screen.h"
-#include "assert.h"
 
-#include "apextools.h"
-#include "exceptions.h"
-
-//#include "appcore/raiifactory.h"
+#include "screensdata.h"
 
 namespace apex
 {
@@ -63,7 +59,7 @@ ScreensData::~ScreensData()
 const Screen& ScreensData::GetScreen (const QString& id) const
 {
     ScreenMap::const_iterator i = screens.find( id );
-    assert( i != screens.end() );
+    Q_ASSERT( i != screens.end() );
     return *i->second;
 }
 
@@ -218,7 +214,7 @@ QString ScreensData::feedbackOnString() const
         case HIGHLIGHT_ANSWER:
             return "clicked";
     }
-    
+
     Q_ASSERT(false);
     return QString();
 }
@@ -301,7 +297,7 @@ bool ScreensData::hasStatusPictureEnabled() const
 QString ScreensData::statusAnsweringPicture() const
 {
     return QString();     // FIXME: add to experiment file
-}   
+}
 
 QString ScreensData::statusListeningPicture() const
 {
@@ -457,7 +453,7 @@ bool ScreensData::operator==(const ScreensData& other)
 {
     if (!ApexTools::areEqualPointerMaps(screens, other.screens))
     {
-        qDebug("screenmaps are not equal");
+        qCDebug(APEX_RS, "screenmaps are not equal");
         return false;
     }
 

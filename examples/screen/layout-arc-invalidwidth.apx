@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+
+ <!-- @doc
+  @what: Shows problems with arc layout for buttons
+  @description: Error when loading the experiment: something went wrong with the placing of the buttons.
+  @how: <arcLayout> The number of x-values can't exceed the width of the arc. In this case, the width has to be changed to 9 (instead of 2)
+  -->
+
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>5</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial0">
+    <answer>button-45</answer>
+    <screen id="screen1"/>
+    <stimulus id="standard1"/>
+   </trial>
+  </trials>
+ </procedure>
+
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">true</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <arcLayout width="2" type="upper">
+    <button id="button-90" x="1" y="1">
+     <text>-90</text>
+    </button>
+    <button id="button-45" x="2" y="1">
+     <text>-45</text>
+    </button>
+    <button id="button-30" x="3" y="1">
+     <text>-30</text>
+    </button>
+    <button id="button-15" x="4" y="1">
+     <text>-15</text>
+    </button>
+    <button id="button0" x="5" y="1">
+     <text>0</text>
+    </button>
+    <button id="button15" x="6" y="1">
+     <text>15</text>
+    </button>
+    <button id="button30" x="7" y="1">
+     <text>30</text>
+    </button>
+    <button id="button45" x="8" y="1">
+     <text>45</text>
+    </button>
+    <button id="button90" x="9" y="1">
+     <text>90</text>
+    </button>
+   </arcLayout>
+      <buttongroup id="buttongroup90">
+    <button id="button-90"/>
+    <button id="button-45"/>
+    <button id="button-30"/>
+    <button id="button-15"/>
+    <button id="button0"/>
+    <button id="button15"/>
+    <button id="button30"/>
+    <button id="button45"/>
+    <button id="button90"/>
+   </buttongroup>
+   <default_answer_element>buttongroup90</default_answer_element>
+  </screen>
+ </screens>
+
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="noisedata">
+   <device>wavdevice</device>
+   <uri>ruisje.wav</uri>
+  </datablock>
+ </datablocks>
+
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+
+ <filters>
+ </filters>
+
+ <stimuli>
+  <stimulus id="standard1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="noisedata"/>
+   </datablocks>
+   <variableParameters/>
+  </stimulus>
+ </stimuli>
+
+ <connections>
+ </connections>
+
+</apex:apex>

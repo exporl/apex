@@ -16,11 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef RESAMPLER_H
 #define RESAMPLER_H
 
 #include "streamappdefines.h"
+
+#include <QtGlobal>
 
 namespace streamapp
 {
@@ -57,7 +59,7 @@ namespace streamapp
       mc_nDownFactor( ac_nDownFactor ),
       mc_nFilterTaps( ac_nFilterTaps )
     {
-      assert( ( ac_nBufferSize % ac_nDownFactor ) == 0 );
+      Q_ASSERT( ( ac_nBufferSize % ac_nDownFactor ) == 0 );
     }
 
   public:

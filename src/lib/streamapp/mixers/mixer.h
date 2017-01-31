@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __ISTRMIXER_H__
 #define __ISTRMIXER_H__
 
-#include "streamappdefines.h"
+#include "../streamappdefines.h"
+
 #include <string>
-#include <assert.h>
 
 namespace streamapp
 {

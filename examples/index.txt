@@ -1,0 +1,316 @@
+calibration
+        calibration/calibration.apx              Simple calibration use
+        calibration/calibration-automatic-bk2250.apx             example of automatic calibration with B&K SLM 2250 plugin
+        calibration/calibration-automatic-dummyslm.apx           example of automatic calibration with dummy SLM plugin
+        calibration/calibration-automatic-localisation.apx               Automatic calibration using interface to sound level meter
+        calibration/calibration-connections.apx
+childmode
+        childmode/childmode-car-full.apx                 Shows use of child mode: intro and outro movies, child panel
+        childmode/childmode-extramovies.apx              Demonstration of extra movies (snail movie)
+        childmode/childmode-full.apx             Shows use of child mode: intro and outro movies, child panel, progressbar, shortcuts.
+        childmode/childmode-full-L34.apx                 Shows use of child mode: intro and outro movies, child panel, progressbar for L34
+        childmode/childmode-justmovies.apx               Shows use of child mode: without intro and outro movies, but with the normal panel
+        childmode/childmode-movies+intro.apx             Shows use of flash movies, but without the actual childmode (no childpanel)
+        childmode/childmode-nofeedback.apx               Shows use of child mode without special feedback movies
+        childmode/childmode-noprogress.apx               Shows use of child mode: intro and outro movies, but without the actual childmode (no childpanel)
+        childmode/childmode-onlyscreen-normalpanel.apx           Shows use of child mode: intro and outro movies, but with the normal panel
+        childmode/childmode-poll.apx              Shows use of child mode: instead of waiting a specific time, 0 is specified as length for intro, outro and feedback, which makes apex wait for the movies to finish.
+        childmode/childmode-shortcuts.apx                Shows use of child mode with shortcut keys
+        childmode/childmode-skipintrooutro.apx           Shows use of child mode: intro and outro movies, but without the child panel; also has button shortcuts to skip the intro or outro movie
+        childmode/childmode-skipintrooutro-disabled.apx          Skip intro or outro movie by hitting 's' on the keyboard is disabled.
+        childmode/childmode-snake-full.apx               Shows use of child mode: intro and outro movies, child panel, progressbar
+        childmode/childmode-waitforstart.apx             Shows use of child mode, with no shortcut keys and waiting for start before every trial
+connections
+        connections/connections-all-mixed-monostereo.apx                 The use of ALL connections
+        connections/connections-byname.apx               Try to autoconnect a stereo wavfile to a mono wavdevice by name
+        connections/connections-byregexp.apx             Try to autoconnect a stereo wavfile to a mono wavdevice using mode=regexp
+        connections/connections-bywildcard.apx           Try to autoconnect a stereo wavfile to a mono wavdevice using mode=wildcard
+        connections/connections-negativechannel.apx              Test the use of channel -1
+controller
+        controller/controller-pa5.apx            TDT programmable attenuator (PA5) controller
+        controller/controller-plugincontroller.apx               Plugincontroller
+datablocks
+        datablocks/copydatablock.apx             Use the same datablock multiple times in a stimulus
+        datablocks/datablock-loop.apx            Use the same datablock multiple times in a stimulus
+        datablocks/datablock-nodevice.apx                demonstration of constantProcedure
+        datablocks/datablock-nodevice-invalid.apx                Demonstrate the use of empty <device> in <datablock>
+        datablocks/datablocknotfound.apx                 datablock that does not exists
+        datablocks/datablock-unconnected.apx             Datablock channel unconnected to soundcard channel
+        datablocks/playmatrix.apx
+        datablocks/playmatrix-invalidrow.apx
+        datablocks/silencedatablock.apx          Combination of silence and signal for 1 stimulus presentation
+        datablocks/simultaneous.apx
+        datablocks/wavnotfound.apx               Error message because wavfile does not exists
+dummydevice
+        dummydevice/dummy-anyparameter.apx               Add a dummy device.
+        dummydevice/dummydevice.apx              Add a dummy device (e.g. to test other features without having to connect to a real soundcard)
+filters
+        filters/amplifier-defaultparameters.apx          Show amplifier default parameters
+        filters/amplifier-setgain.apx            Adapting device parameters: gain of device varies according to user input
+        filters/complexprocessing.apx            More complex processing, can be used for testing skips - 2 noise stimuli (sinus & wivineruis.wav) with different gains (filters)
+        filters/dataloop-2simultaneous.apx               Shows use of dataloop generator : uses the same datablock twice (for 2 different dataloops)
+        filters/dataloop.apx             Shows use of dataloop generator - wivineruis.wav should play !not! continuously over trials (see filters - noisegen - apex:dataloop)
+        filters/dataloop-continuous.apx          Shows use of dataloop generator - wivineruis.wav should play continuously over trials (see filters - noisegen - apex:dataloop)
+        filters/dataloop-jump.apx                Shows use of jump parameter of dataloop generator
+        filters/filters-onlyfilter.apx                  Shows synchronisation for L34 using a soundcard pulse
+        filters/filters-singlepulsepolarity.apx                 Shows synchronisation for L34 using a soundcard pulse with a negative polarity (filter - pulsegen)
+        filters/gain-invalidchannel.apx          Basegain of noise: -30 - Adapting device parameters - gain of device varies according to user input
+        filters/noisegen-setgain.apx             Basegain of noise: 0 - Aapting device parameters - gain of device varies according to user input
+        filters/pluginfilter-matlabfilter.apx            Example using the matlabfilter plugin.
+        filters/pluginfilter-pluginfilter.apx
+        filters/pluginfilter-scamblespectrumfilter.apx
+        filters/pluginfilter-scamblespectrumfilter_calibration.apx
+        filters/randomjump.apx
+        filters/sinegenerator.apx                Test of setting frequency parameter of sine generator - frequency of sinus varies according to user input
+        filters/sinegen-setfrequency.apx                 Regression test for adapting device parameters - gain of device varies according to user input
+        filters/sinegen-setgain.apx              Regression test for adapting device parameters - gain of device varies according to user input
+        filters/singlepulse-defaultparameters.apx                       Shows synchronisation  using a soundcard pulse
+        filters/wavamplifier.apx                 Regression test for training procedure - Output: number according to last input
+        filters/wavamplifier-badchannel.apx                     filters/wavfadeincos.apx                 Regression test for fader (begin/end of stimulus is not abrupt)
+        filters/wavfadeinlin.apx                 Regression test for fader (begin/end of stimulus is not abrupt)
+        filters/wavfadeoutcos.apx                Regression test for fader (begin/end of stimulus is not abrupt)
+        filters/wavfadeoutlin.apx                Regression test for fader (begin/end of stimulus is not abrupt)
+general
+        general/general-autosave.apx             Automatically save results to apr-file after experiment
+        general/general-exitafter.apx            Exit experiment when finished
+        general/general-prefix-absolutepath.apx          Get the datablock prefix from the absolute path
+        general/general-prefix-frommainconfig.apx                  Get the datablock prefix from the main configfile
+        general/general-prefix-invalid.apx               Get the datablock prefix from the main configfile
+        general/general-scriptparameters.apx             Demonstrate the use of general/scriptparameters
+        general/general-showresults.apx          Show results after experiment
+        general/general-xmlerror.apx             Error in XML file
+interactive
+        interactive/invalid-entry.apx            Change small parameter right before the start of the experiment
+        interactive/setgain.apx          GUI to change some settings right before the experiment
+        interactive/subject.apx          GUI to change some settings right before the experiment
+l34
+        l34/addinvalidfilter.apx                 Try to add wav filter to L34Device
+        l34/bilateral.apx                Test of synchronized bilateral CI setup
+        l34/bilateral-singlepulse.apx            Test of synchronized bilateral CI setup with pulse stimuli
+        l34/invaliddatablock.apx                 Try to parse invalid datablock, should return error
+        l34/L34DummySync.apx                    Shows synchronisation for L34 using a soundcard pulse
+        l34/L34Sync.apx                 Shows synchronisation for L34 using a soundcard pulse
+        l34/loudness_balancing.apx               Loudness balancing between two stimulation CI electrodes
+        l34/mapping1.apx                 Use default map with current units between 1 and 255
+        l34/mapping2.apx                 Use real map to check mapping
+        l34/r126wizard.apx               R126 is the clinical fitting software
+        l34/setvolume.apx                Change volume of CI stimuli (send simple XML file to L34 device)
+        l34/simpleAseq.apx
+        l34/simpleQIC.apx                power-up test?
+        l34/simpleQIC-dummy.apx
+        l34/simpleQIC-SP12.apx
+        l34/triggertest.apx
+        l34/wordsQIC.apx
+manual
+        manual/closedsetword.apx                 Closed-set identification of words in noise with figures
+        manual/gapdetection.apx          Gap detection
+        manual/gapdetectionchild.apx             gap detection for children
+        manual/opensetidentification.apx                 Open set identification task
+        manual/sentenceinnoise.apx               Sentences in noise task
+        manual/trainingprocedure.apx             Training for constant procedure
+outputtest
+        outputtest/wavoutputtest-dataloop.apx                   outputtest/wavoutputtest-wd1.apx                        outputtest/wavoutputtest-wd1wd2.apx                     outputtest/wavoutputtest-wd1wd2wd3.apx          parameters
+        parameters/connectionparameter.apx               Change the channel of a connection
+        parameters/connectionparameterfilter.apx                 Change the channel of a connection + stimulus has gain
+        parameters/devicechannelparameter.apx            Change parameter (gain) of device channel
+        parameters/deviceparameter.apx           Change parameter (gain) of device channel
+        parameters/filterchannelparameter2.apx            Change parameter (gain) of device channel
+        parameters/filterchannelparameter.apx            Change parameter (gain) of device channel
+        parameters/filterparameter.apx           Change parameter (gain) of device channel
+        parameters/restoreparameter.apx
+        parameters/spinboxparameter.apx          Adjust noise manually while presenting speech and noise
+        parameters/wavfadeinout.apx
+procedure
+        procedure/adaptive-1up-1down.apx                 1up-1down Adaptive procedure: Frequency of ups-downs is the same - Experiment stops after 6 reversals
+        procedure/adaptive-1up-2down.apx                 1up-2down Adaptive procedure: Frequency of ups-downs is NOT the same - Experiment stops after 6 reversals
+        procedure/adaptive-2up-1down.apx                 2up-1down Adaptive procedure: Frequency of ups-downs is NOT the same - Experiment stops after 6 reversals
+        procedure/adaptive_stopafter_presentations.apx           Stop after a specified number of presentations (3) - should in this case stop after 6 trials (presentation: every trial is presented once => 2 trials => 2x3 = 6)
+        procedure/adaptive_stopafter_presentations_invalid.apx           Error message because #presentations is not equal to #stop_after
+        procedure/adaptive_stopafter_reversals.apx               Stop after a specified number of reversals (6) - changes between correct-false
+        procedure/adaptive_stopafter_trials.apx          Stop after a specified number of trials (10)
+        procedure/adjustment-pluginprocedure.apx                 Adjustment of stimuli with a pluginprocedure
+        procedure/adp1.apx               Regression test for ADP - Experiment stops after 4 reversals
+        procedure/adp2.apx               Regression test for ADP - Experiment stops after 10 reversals
+        procedure/afc-choices.apx                Regression test - 4 Intervals - 4 Choices, select interval 2-3
+        procedure/afc-uniquestandard.apx                 Regression test for Intervals, Standard(reference signal), Uniquestandard(true/false = If uniquestandard is true and multiple standards are defined per trial, Apex will try to present another standard in each interval of the trial)
+        procedure/aid1.apx               Regression test - Different stimuli can occur during one trial (according to the difficulty of the experiment ('snr') (- no connections or gain!)
+        procedure/aid-selectrandom.apx           Regression test - Different stimuli can occur during one trial (according to the difficulty of the experiment ('snr')
+        procedure/choices-randomstimulus-randomstandard.apx              Regression test - Show use of intervals and random selection of stimuli/standard(reference) - 4 presentations (2 trials => 8x)
+        procedure/continuous-waitbeforefirst.apx                 Shows how to start continuous filters etc before the first trial is presented
+        procedure/cst-multistimulus.apx          multiple stimuli per trial - one should be chosen randomly - 2 presentations (2trials => 2x2 = 4)
+        procedure/extrasimple.apx                Click on the corresponding button - Stop after 2 presentations (2trials => 2x2 = 4)
+        procedure/fixedparameternotfound.apx             Errormessage - fixed parameter with id="test" not defined
+        procedure/heartrainprocedure.apx                 Regression test for heartrainprocedure.js
+        procedure/heartrainprocedure_short.apx                  procedure/idn1.apx               Matching of stimuli and buttons - Different trials (+ answers) - 1 presentations (6 trials)
+        procedure/idn1-mono.apx          Matching of stimulus and button - 5 presentations (1 trial)
+        procedure/idn1-skip.apx          skip = 2: Number of trials that will be presented before the actual presentations start.
+        procedure/idn1-waitforstart.apx          Demonstrate use of wait for start
+        procedure/idn2.apx               Matching of stimuli and buttons - Different trials (+ answers) - 1 presentations (6 trials)
+        procedure/idn2-skip.apx          skip = 3: Number of trials that will be presented before the actual presentations start.
+        procedure/input-during-stimulus.apx              Input during stimulus is allowed
+        procedure/multiparameters-fixed.apx              Adaptation of multiple parameters (order(fixed) & gain(adapt))
+        procedure/multiparameters-invalid.apx            Error message - parameter you want to be adapted is a fixed parameter (2nd adapt_parameter: order: is a fixed parameter)
+        procedure/multiparameters-variable.apx           Adaptation of multiple parameters: GainL & GainR
+        procedure/multiprocedure-aid.apx                 Multiprocedure - 2 adaptiveprocedures with each their own parameters, procedure and trials
+        procedure/multiprocedure.apx             Multiprocedure - 2 constantprocedures with each their own parameters, procedure and trials
+        procedure/multiprocedure-choices.apx             Multiprocedure - 2 constantprocedures with each their own parameters, procedure and trials - 2 different choices of intervals
+        procedure/multiprocedure-choices-corrector.apx           Multiprocedure - 2 constantprocedures with each their own parameters, procedure and trials, #presentations
+        procedure/multiprocedure-constant-train.apx              Multiprocedure - 2procedures (1constant - 1training) with each their own parameters, procedure and trials
+        procedure/multiprocedure-idn.apx                 Multiprocedure - 2constantprocedures with each their own parameters, procedure and trials
+        procedure/multiprocedure-mixed.apx               Multiprocedure - 2constantprocedures with the SAME procedure, parameters and trials
+        procedure/multiprocedure-onebyone.apx            Multiprocedure-order! - 3constantprocedures with the SAME procedure, parameters and trials (different stimuli)
+        procedure/multiprocedure-random.apx              Multiprocedure-order! - 3constantprocedures with the SAME procedure, parameters and trials (different stimuli)
+        procedure/multiprocedure-train-train.apx                 Multiprocedure-order - 2trainingProcedures with DIFFERENT procedure, parameters and trials (different stimuli)
+        procedure/multiscreen idn1.apx           Multiscreen - 1 procedure with for the first trials: screen 1 and the last trials: screen 2 => Same outcome as sequential Multiprocedure
+        procedure/multistandard-unique.apx               Multiple standards - Unique standard
+        procedure/noanswer.apx           Show warning if no answer is defined for a stimulus
+        procedure/nostandardfound.apx            Show warning if no answer is defined for a stimulus
+        procedure/open set - constant.apx                Open set experiment - Constant stimuli
+        procedure/pause_between_stimuli.apx               a pause of 500ms should be introduced between the stimulus and the standards
+        procedure/pluginprocedure.apx            Pluginprocedure => script: testprocedure
+        procedure/randomchannel.apx              Randomgenerator test
+        procedure/repeatuntillcorrect-endaftertrials.apx                 The first selected trial (of the first presentation) shoud be repeatedly presented (stop after 5 presentations, several trials)
+        procedure/repeatuntillcorrect-multitrial.apx             The first selected trial (of the first presentation) shoud be repeatedly presented (stop after 5 reversals, multiple trials)
+        procedure/repeatuntillcorrect-singletrial.apx            The first selected trial shoud be repeatedly presented: DOESN'T WORK! => single trial + adapt_parameter
+        procedure/selectrandom.apx               Test of random stimulus output when more than one stimulus defined in the experiment
+        procedure/simple.apx             Randomgenerator test
+        procedure/soundquality.apx               Interval - select element ok, number 2
+        procedure/time-between-trials.apx                Demonstrates the use of feedback to enforce a pauze between trials
+        procedure/train1.apx             Trainingprocedure: demonstrate the presentation of a stimulus with a number according to last input
+        procedure/train2.apx             Show the presentation of a stimulus with a random number out of the possible choices according to last input
+        procedure/trial-nostimulus.apx           Make a trial whithout a stimulus
+        procedure/uniform-double.apx             Random generator test - gain of stimulus is randomly chosen
+        procedure/uniform-int.apx                Random generator test - gain of stimulus is randomly chosen
+randomgenerator
+        randomgenerator/multi-interval.apx               Randomgenerator: random gain of each datablock of a multi-interval stimulus
+        randomgenerator/randomchannel.apx                Randomgenerator: random channel for stimulus
+        randomgenerator/uniform-double.apx               Randomgenerator: random gain of stimulus presented in 1 channel, possibility to use non-integer values (double type)
+        randomgenerator/uniform-int.apx          Randomgenerator: random gain of stimulus presented in 1 channel, only possible to use integer values
+        randomgenerator/uniform-int-invalid.apx          Randomgenerator should have integer values, similar to uniform-int.apx
+        randomgenerator/uniform-smallint.apx             Randomgenerator: random gain of stimulus presented in 1 channel, only possible to use integer values, only small range is used
+results
+        results/resultparameters.apx             Demonstrate the use of result parameters
+        results/results-adaptive-saveprocessedresults.apx                Demonstrate the use of result parameters
+        results/results-confusionmatrix.apx              Demonstrate the use of a confusionmatrix
+        results/results-procedureparameter-after.apx             Demonstrate the use of result parameters
+        results/results-procedureparameter-during.apx            Demonstrate the use of real-time results
+        results/results-psignifit.apx            Demonstrate the use of 'psignifit' results
+        results/results-resultparameters.apx                    results/results-upgradeoldschema.apx             Demonstrate the use of result parameters
+        results/saveprocessedresults.apx                 Demonstrate the use of the saveprocessedresults tag
+        results/subject.apx              Demonstrate how you can add the subjects name to the results file
+screen
+        screen/button-shortcuts.apx              shows how to use shortcuts to answer
+        screen/currentfeedback.apx               highlighting of the played stimulus
+        screen/feedback-answer.apx               feedback with picture and highlighting  of the CLICKED element
+        screen/feedback-both.apx                 highlighted stimulus + feedback with picture and highlighting
+        screen/feedback-ledfeedback.apx
+        screen/feedback-ledfeedback-localization.apx
+        screen/feedback-ledfeedback-showcurrent.apx
+        screen/feedback-multistimboth.apx                highlighted stimulus + feedback with picture and highlighting for multiple stimuli
+        screen/feedback-multistimnormal.apx              feedback with picture and highlighting for multiple stimuli
+        screen/feedback-multistimshowcurrent.apx                 highlighted stimulus for multiple stimuli
+        screen/feedback-nohighlight.apx          feedback without highlighting
+        screen/feedback-normal.apx               feedback with picture and highlighting
+        screen/feedback-onlywait.apx             no visual feedback
+        screen/feedback-plugin.apx               Feedback using a plugin
+        screen/feedback-showcurrent.apx          highlighted stimulus
+        screen/fgcolor.apx               shows how to change the font color of a button/label
+        screen/flash-disabled.apx                Shows full use of flash movies, but without the actual childmode. Shows how to disable a button.
+        screen/flash-flashfeedback.apx           Shows full use of flash movies, but without the actual childmode
+        screen/flash-normalfeedback.apx          Pictures instead of buttons
+        screen/fullscreen.apx            shows how to conduct an experiment in full screen modus
+        screen/general-itiscreen-annoyingtext.apx                shows how to use an intertrial screen
+        screen/general-itiscreen-picture.apx             shows how to use an intertrial picture
+        screen/layout-arc.apx            example of different arc layouts for buttons
+        screen/layout-arc-invalidwidth.apx               Shows problems with arc layout for buttons
+        screen/layout-arcs.apx           example of different arc layouts for buttons
+        screen/layout-arc-single.apx             example of simple archwise organisation of buttons
+        screen/layout-grid.apx           example of gridlayout
+        screen/layout-grid-nested.apx            example of nested gridlayout
+        screen/layout-grid-rowcol.apx            shows the use of the row and col attributes instead of x and y
+        screen/layout-grid-rowcol-invalid.apx            shows wrong usage of the row and col attributes
+        screen/layout-grid-stretchfactors.apx            shows how to change the size of the buttons
+        screen/layout-grid-stretchfactors-invalid.apx            Shows problems with changing the size of the buttons
+        screen/layout-hlayout.apx                shows horizontal layout
+        screen/layout-mixed.apx          example of mixed layouts
+        screen/nomenu.apx                shows how to hide the menu bar
+        screen/panel-feedbackpictures.apx                shows how to implement a feedback picture, other than the traditional thumb
+        screen/panel-feedbackpictures-filenotfound.apx           shows error message for feedback picture
+        screen/panel-nopanel.apx                 shows how to hide the panel
+        screen/panel-showrepeatbutton.apx                shows the use of a repeatbutton
+        screen/panel-showstatuspicture.apx               shows the use of a statuspicture
+        screen/panel-showstopandrepeatbutton.apx                 shows how to use a stopbutton & repeatbutton
+        screen/panel-showstopbutton.apx          shows how to use the stopbutton
+        screen/prefix-apexconfig.apx             shows how to use an 'apexconfig' as a prefix for a filename
+        screen/prefix-inline.apx                 shows how to use an 'inline' as a prefix for a filename
+        screen/screenelements-all.apx            example of a multitude of screenelements
+        screen/screenelements-allbutflash.apx            assembly of different kinds of screenelements
+        screen/screenelements-answerlabel.apx            shows the use of an answerlabel
+        screen/screenelements-button-disabled.apx                shows how to disable a button
+        screen/screenelements-checkbox.apx               shows how to use a checkbox
+        screen/screenelements-html.apx           how to use a html page
+        screen/screenelements-label.apx          shows how to add text to a label
+        screen/screenelements-label-bgcolor.apx          shows how to change background and font color of a label/button
+        screen/screenelements-label-html.apx             shows how to use a bold font by using html code
+        screen/screenelements-label-resize.apx           shows how to resize the text on a label
+        screen/screenelements-matrix.apx                 example of a matrix layout for buttons
+        screen/screenelements-parameterlabel.apx                 shows how to implement a parameterlabel on the screen
+        screen/screenelements-parameterlist.apx          shows how to implement a parameterlist on the screen
+        screen/screenelements-picture-changepicture.apx          example of a picture-button
+        screen/screenelements-picture-notfound.apx               shows error message for picture
+        screen/screenelements-pictures.apx               shows how to implement different pictures in the screen
+        screen/screenelements-pictures-disabled.apx              shows how to disable a picture-button
+        screen/screenelements-pictures-feedback.apx
+        screen/screenelements-pictures-invalid.apx               shows error message for picture
+        screen/screenelements-pictures-resize2.apx               example of screen layout with pictures
+        screen/screenelements-pictures-resize.apx                example of screen layout with pictures
+        screen/screenelements-samename.apx               Check whether everything is OK when two screenelements in different screens have the same name
+        screen/screenelements-slider.apx                 shows how to implement a vertical slider on the screen
+        screen/screenelements-slider-horizontal.apx              shows how to implement a horizontal slider on the screen
+        screen/screenelements-spinbox.apx                example of a spinbox
+        screen/screenelements-spinbox-parameter.apx              example of a spinbox with adjustable parameter
+        screen/screenplugin-emptyresult.apx              shows example of error message
+        screen/stylesheet-elements.apx           example of a different screenstyle
+        screen/textinput-font.apx                example of font input
+        screen/textinput-inputmasks.apx          example of various restricted inputs
+        screen/textinput-setfocus.apx            example of restricted input
+screenplugin
+        screenplugin/screenplugin-emptyresult.apx               soundcard
+        soundcard/asio-invalidbuffersize.apx             Invalid buffersize for asio soundcard
+        soundcard/asio-invalidcard.apx           Demonstrate the misapplication of <card>
+        soundcard/asio-invalidnumberofchannels.apx               Demonstrate the misapplication of <channels>
+        soundcard/asio-invalidsamplerate.apx             Demonstrate the misapplication of <samplerate>
+        soundcard/asio-multiplecard.apx          Demonstrate the usage of multiple soundcards
+        soundcard/basicwav-asio.apx              Demonstrate the usage of different drivers and their parameters
+        soundcard/basicwav-coreaudio.apx                 Demonstrate the usage of different drivers and their parameters
+        soundcard/basicwav-jack.apx              Demonstrate the usage of different drivers and their parameters
+        soundcard/basicwav-portaudio.apx                 Demonstrate the usage of different drivers and their parameters
+        soundcard/bufferunderrun.apx
+        soundcard/bufferunderrun-plugin.apx
+        soundcard/cardname-inline.apx
+        soundcard/clipping.apx           Demonstrate what happens when the output clips
+        soundcard/defaultsettings.apx            Demonstrate default wavdevice settings
+        soundcard/gain-invalidchannel.apx                Demonstrate the misapplication of adjusting gain to the wrong channel
+        soundcard/mixer-setdefaultmmemixer.apx           Demonstrate the use of the card mixer with a default soundcard
+        soundcard/mixer-setrmemixer.apx          Demonstrate the use of the card mixer with an RME soundcard
+        soundcard/mixer-setsoundmaxmixer.apx             Demonstrate the use of the card mixer with a SoundMax card
+        soundcard/mono-2channel.apx              Demonstrate what happens when you use wavdevice with one channel not connected
+        soundcard/portaudio-6channels.apx                Demonstrate the usage of multiple channels
+        soundcard/portaudio-bigbuffersize.apx
+        soundcard/portaudio-cardnotfound.apx             Demonstrate the misapplication of <card>
+        soundcard/portaudio-invalidbuffersize.apx
+        soundcard/portaudio-invalidcard.apx              Demonstrate the misapplication of <card>
+        soundcard/portaudio-invalidnumberofchannels.apx          Demonstrate the misapplication of <channels>
+        soundcard/portaudio-invalidsamplerate.apx                Demonstrate the misapplication of <samplerate>
+        soundcard/wav-padzero.apx                Demonstrate the use of padzero
+xmlplugin
+        xmlplugin/autostimulus.apx               Demonstrate datablocks and stimuli generated by javascript
+        xmlplugin/autotrials.apx                 Demonstrate trials, datablocks and stimuli generated by javascript
+        xmlplugin/datablockplugin.apx            Demonstrate a datablock generated by javascript
+        xmlplugin/datablockplugin_l34.apx                Demonstrate generating XML code for L34 directly from plugindatablocks and pluginstimuli
+        xmlplugin/screenplugin.apx               Demonstrate a screen generated by javascript
+        xmlplugin/screenplugin-inlibrary.apx             Demonstrate the misapplication of a screen generated by javascript
+        xmlplugin/screenplugin-invalidscript.apx                 Demonstrate the misapplication of a screen generated by  javascript
+        xmlplugin/screenplugin-invalidxml.apx            Demonstrate the misapplication of a screen generated by javascript
+        xmlplugin/screenplugin-multiscreen.apx           Demonstrate a screen generated by javascript
+        xmlplugin/stimulusplugin.apx             Demonstrate stimuli generated by javascript

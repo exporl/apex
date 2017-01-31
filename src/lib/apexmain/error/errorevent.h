@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef __APEX_ERROREVENT_H__
-#define __APEX_ERROREVENT_H__
 
-#include "status/statusitem.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_ERROR_ERROREVENT_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_ERROR_ERROREVENT_H_
+
+#include "apextools/status/statusitem.h"
+
 #include <QEvent>
 
 namespace apex
@@ -49,4 +50,4 @@ namespace apex
 
 }
 
-#endif //#ifndef __APEX_ERROREVENT_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_ERROR_ERROREVENT_H_

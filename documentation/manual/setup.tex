@@ -1,0 +1,72 @@
+\chapter{Setting up Apex}
+
+\section{Basic setup}
+
+\apex is installed by double clicking on
+\filename{apex3\_setup.exe} \footnote{If desired, the \apex
+directory can also be copied to another directory or computer, the
+installation is optional}. After installation, there is a main
+\apex directory (default: \filename{c:/program files/apex3}) under
+which the following subdirectories exist and contain the necessary
+files:
+
+\begin{description}
+\item[bin] Binary files: the main \apex executable (\filename{apex.exe}),
+the Qt dll's and some Qt plugins
+
+\item[schemas] The experiment
+file schema (\filename{experiment.xsd}) and the apexconfig (\filename{apexconfig.xsd}) schema. You can point your XML editor to the former schema when editing experiment files
+(section~\ref{sec:Schema's}).
+
+\item[config] The apexconfig.xml
+file, contains general \apex configurations that are applied to all experiments.
+
+\item[plugins] contains different plugins (cf.
+section~\ref{sec:plugins}).
+
+\item[amt] contains the \ac{amt}, for automatic generation or
+analysis of experiment files (cf. section~\ref{sec:Matlab}).
+
+\item[examples] contains example experiments for nearly every feature of \apex
+\end{description}
+
+The other folders will be discussed later.
+
+
+\apex makes use of an experiment file. An experiment file contains
+all the necessary information to run an experiment, such the layout of the screen, the workings of the procedure, references stimulus files, pictures, the way in which the stimuli are routed to a device etc. Several tools exist to create experiment files
+easily and analyze results, e.g. an XML editor (next section) or the \ac{amt}.
+
+\section{XML editor: to create or edit experiment files}
+
+While any text editor, such as wordpad, textpad and many others,
+can be used to create or edit experiment files, the use of an
+editor specifically suited for editing XML files has many
+advantages, such as syntax highlighting, automatic completion and
+validation.
+
+We use OxygenXML and will therefore give hints on how to use it in
+this manual. You are, of course, free to use any other editor.
+
+A free demo version of OxygenXML is available from \url{http://oxygenxml.com}. If you would decide to buy the full version, you will get a 10\% discount if you enter the following coupon code during the ordering process:
+\begin{quote}
+    \textbf{oXygen-Kuleuven}
+\end{quote}
+\label{sec:XML editor}
+
+\section{Overview of the \apex user manual}
+
+Chapter 3 discusses the basic concepts of \apex. Chapter 4
+describes the structure of experiment files. Chapter 5 discusses 4
+example experiments in detail. These experiments are also stored
+in the folder \filename{examples/manual}. Chapter 6 deals with how
+\apex results files can be analyzed. Chapter 7 shows how to
+implement some common features of psychophysical and perceptual
+experiments. Finally, four appendices are included, to describe
+the use of the L34 device (section~\ref{sec:L34}).
+ the Matlab toolbox (section~\ref{sec:Matlab}),
+the use of plugins (section~\ref{sec:plugins}), and customizing
+appearance (section~\ref{sec:Customizing appearance}).
+
+An exhaustive list of all elements that can occur in an \apex
+experiment file are given in a (separate) \apex Reference Manual.

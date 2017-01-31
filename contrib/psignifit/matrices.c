@@ -54,7 +54,7 @@ double *m_addr(matrix m, short dimension, long pos)
 matrix m_allocate(matrix m)
 {
 	long i, space;
-	
+
 	if(m == NULL) return NULL;
 	if(m->vals && m->disposeable) Destroy(m->vals);
 	for(space = 0, i = 0; i < mMaxDims; i++)
@@ -68,9 +68,9 @@ matrix m_anew(double *vals, short nDims, long *steps, long *extents)
 {
 	matrix m;
 	long i;
-	
+
 	if(nDims < 1 || nDims > mMaxDims) Bug("dimension argument to m_new() must be from 1 to %d", mMaxDims);
-	
+
 	m = New(matrix_s, 1);
 	m->nDims = nDims;
 	m->output = NULL;
@@ -82,7 +82,7 @@ matrix m_anew(double *vals, short nDims, long *steps, long *extents)
 	strcpy(m->writeMode, "w");
 	strcpy(m->writeFormat, "%lg");
 	for(i = 0; i < mMaxDims; i++) m->positions[i] = 0;
-	
+
 	m_asetsize(m, nDims, extents);
 	m_asetsteps(m, steps);
 	if(vals == mNewData) m_allocate(m);
@@ -100,7 +100,7 @@ boolean m_asetpoint(matrix m, long *pos)
 {
 	long i;
 	boolean returnVal = TRUE;
-	
+
 	if(m == NULL) return FALSE;
 	for(i = 0; i < mMaxDims; i++)
 		returnVal &= m_setpos(m, i+1, ((i < m->nDims) ? pos[i] : 0));
@@ -112,7 +112,7 @@ boolean m_asetpoint(matrix m, long *pos)
 matrix m_asetsize(matrix m, short nDims, long *extents)
 {
 	long i;
-	
+
 	if(nDims < 1 || nDims > mMaxDims) Bug("dimension argument to m_asetsize() must be from 1 to %d", mMaxDims);
 	if(m == NULL) return NULL;
 	m->nDims = nDims;
@@ -123,7 +123,7 @@ matrix m_asetsize(matrix m, short nDims, long *extents)
 matrix m_asetsteps(matrix m, long *steps)
 {
 	long i, nEls;
-	
+
 	if(m == NULL) return NULL;
 	for(nEls = 1, i = 0; i < mMaxDims; i++) {
 		m->steps[i] = ((i >= m->nDims) ? 0 : steps ? steps[i] : nEls);
@@ -136,14 +136,14 @@ matrix m_aslice(matrix m, short nDims, long *extents)
 {
 	matrix slice;
 	long i, siz, steps[mMaxDims];
-	
+
 	if(nDims < 1 || nDims > mMaxDims) Bug("dimension argument to m_aslice() must be from 1 to %d", mMaxDims);
-	
+
 	for(i = 0; i < nDims; i++) {
 		siz = extents[i];
 		if(siz > m->extents[i] - m->positions[i]) Bug("m_aslice(): requested slice overlaps boundaries of parent matrix");
 		steps[i] = m->steps[i];
-	}	
+	}
 	slice = m_anew(m->vals + m->index, nDims, steps, extents);
 	strcpy(slice->writeFormat, m->writeFormat);
 	slice->nDims = m_countdims(slice);
@@ -158,7 +158,7 @@ double m_cofactor(matrix m, unsigned short row,  unsigned short col)
 	long old_pos[mMaxDims];
 	matrix sub;
 	double result;
-	
+
 	if(m == NULL) Bug("m_cofactor() called with NULL matrix");
 	if(m->nDims > 2) Bug("m_cofactor(): matrix must be two-dimensional");
 	if((siz = m->extents[0]) != m->extents[1]) Bug("m_cofactor(): matrix must be square");
@@ -184,7 +184,7 @@ double m_cofactor(matrix m, unsigned short row,  unsigned short col)
 matrix m_copy(matrix dest, matrix src)
 {
 	long i, nEls, old_src_pos[mMaxDims], old_dest_pos[mMaxDims];
-	
+
 	if(src == NULL) return NULL;
 	if(dest == mNewMatrix) {
 		dest = m_anew(((src->vals == NULL) ? mNoData : mNewData), src->nDims, NULL, src->extents);
@@ -199,7 +199,7 @@ matrix m_copy(matrix dest, matrix src)
 	for(nEls = 1, i = 0; i < mMaxDims; i++) {
 		dest->steps[i] = nEls;
 		nEls *= dest->extents[i];
-	}	
+	}
 	if(m_first(src) && m_first(dest)) {
 		do {
 			m_val(dest) = m_val(src);
@@ -224,7 +224,7 @@ double m_determinant(matrix m)
 	unsigned short siz, j;
 	long old_pos[mMaxDims];
 	double result, sign;
-	
+
 	if(m == NULL) Bug("m_determinant() called with NULL matrix");
 	if(m->nDims > 2) Bug("m_determinant(): matrix must be two-dimensional");
 	if((siz = m->extents[0]) != m->extents[1]) Bug("m_determinant(): matrix must be square");
@@ -243,7 +243,7 @@ double m_determinant(matrix m)
 /* //////////////////////////////////////////////////////////////////////////////////////////////// */
 matrix m_diag(matrix m, matrix square)
 {
-	long size;
+	long size = 0;
 	if(square == NULL) Bug("m_diag(): received NULL input");
 	if(square->nDims > 2 || (size = m_getsize(square, 1)) != m_getsize(square, 2)) Bug("m_diag(): input must be a square 2-dimensional matrix");
 	if(m == mNewMatrix) m = m_new(mNewData, m1D, size);
@@ -253,7 +253,7 @@ matrix m_diag(matrix m, matrix square)
 	}
 	if(m_first(square) && m_first(m))
 		do m_val(m) = m_val(square); while(m_next(m) && m_step(square, 1, 1) && m_step(square, 2, 1));
-	
+
 	return m;
 }
 /* //////////////////////////////////////////////////////////////////////////////////////////////// */
@@ -289,7 +289,7 @@ void m_free(matrix m)
 	int dims[mMaxDims];
 	long i, nEls;
 	char temp[8], *s;
-	
+
 	if(m == NULL) return;
 	if(m->output) {
 		strncpy(temp, m->output, 7); for(s = temp; *s; s++) *s = tolower(*s);
@@ -341,9 +341,9 @@ void m_free(matrix m)
 		strncpy(temp, m->output, 7); for(s = temp; *s; s++) *s = tolower(*s);
 		if(strlen(temp) == 0 || strcmp(temp, "null") == 0 || strcmp(temp, "false") == 0 || strcmp(temp, "0") == 0) {Destroy(m->output); m->output = NULL;}
 		if(strcmp(temp, "stderr") == 0) file = stderr;
-                if(strcmp(temp, "stdout") == 0 || strcmp(temp, "-") == 0) file = stdout;
+                if(strcmp(temp, "stdout") == 0 || strcmp(temp, "-") == 0) file = stderr;
 	}
-	
+
 	if(m->output) {
 /*		if(file == NULL && m->vals == NULL && *m->writeMode == 'w')
 			JWarning("%s was not (over)written because the requested data were not available", m->output);
@@ -357,7 +357,7 @@ void m_free(matrix m)
 			fprintf(file, "\n");
 			if(file != stderr && file != stdout) fclose(file);
 		}
-		
+
 	}
 #endif /* MATLAB_MEX_FILE */
 	if(DEBUG)DEBUG=1;
@@ -407,10 +407,10 @@ matrix m_hessian(matrix m, matrix dirs, matrix square)
 {
 	unsigned short i, j, nPartials, nResults;
 	matrix temp;
-	
+
 	if(dirs == NULL || square == NULL) Bug("m_hessian(): received NULL input");
 	if(dirs->nDims > 2 || square->nDims > 2) Bug("m_hessian(): inputs must be two-dimensional");
-	
+
 	nPartials = m_getsize(dirs, 1);
 	nResults = m_getsize(dirs, 2);
 	if(nPartials != m_getsize(square, 1)) Bug("m_hessian(): dimensions mismatch");
@@ -423,7 +423,7 @@ matrix m_hessian(matrix m, matrix dirs, matrix square)
 		if(m->vals == NULL) m_allocate(m);
 	}
 	if(!m_first(m)) return m;
-	
+
 	temp = m_mult(mNewMatrix, square, dirs);
 	m_first(temp);
 	m_first(dirs);
@@ -468,9 +468,9 @@ void m_init(void){M_LAST = NULL;}
 /* //////////////////////////////////////////////////////////////////////////////////////////////// */
 matrix m_inverse(matrix dest, matrix src)
 {
-	long i, j, siz, old_src_pos[mMaxDims], old_dest_pos[mMaxDims];
+	long i, j, siz = 0, old_src_pos[mMaxDims], old_dest_pos[mMaxDims];
 	double sign, det;
-	
+
 	if(src == NULL) Bug("m_inverse(): called with NULL matrix");
 	if(src->nDims > 2 || (siz = m_getsize(src, 1)) != m_getsize(src, 2))
 		Bug("m_inverse(): input must be a square 2D matrix");
@@ -497,7 +497,7 @@ matrix m_inverse(matrix dest, matrix src)
 		}
 	}
 	if(m_first(dest)) do m_val(dest) /= det; while(m_next(dest));
-	m_asetpoint(dest, old_dest_pos);	
+	m_asetpoint(dest, old_dest_pos);
 	m_asetpoint(src, old_src_pos);
 	return dest;
 }
@@ -521,7 +521,7 @@ matrix m_mult(matrix result, matrix m1, matrix m2)
 {
 	long i, j, k, nEls, rows, cols, inner, m1Step, m2Step;
 	double *m1Ptr, *m2Ptr, *resultPtr;
-	
+
 	if(m1 == NULL || m2 == NULL) Bug("m_mult() received one or more NULL matrices");
 	if(m1->vals == NULL || m2->vals == NULL) Bug("m_mult() received one or more unallocated matrices");
 	if(m_countdims(m1) > 2 || m_countdims(m2) > 2) Bug("m_mult() cannot multiply matrices of more than 2 dimensions");
@@ -557,7 +557,7 @@ matrix m_mult(matrix result, matrix m1, matrix m2)
 		}
 		m2Ptr += m2->steps[1];
 	}
-	
+
 	return result;
 }
 /* //////////////////////////////////////////////////////////////////////////////////////////////// */
@@ -566,23 +566,23 @@ matrix m_new(double *vals, short nDims, ...)
 	va_list ap;
 	long i, extents[mMaxDims], steps[mMaxDims];
 	boolean customPacking = FALSE;
-	
-	va_start(ap, nDims);	
+
+	va_start(ap, nDims);
 	for(i = 0; i < mMaxDims; i++) {
 		if(customPacking) steps[i] = ((i < nDims) ? va_arg(ap, long) : 1);
 		extents[i] = ((i < nDims) ? va_arg(ap, long) : 1);
 		if(i == 0 && !customPacking && extents[i] == mCustomPacking)
-			{customPacking = TRUE; i--; continue;}		
+			{customPacking = TRUE; i--; continue;}
 	}
-	va_end(ap);	
-	
+	va_end(ap);
+
 	return m_anew(vals, nDims, (customPacking ? steps : NULL), extents);
 }
 /* //////////////////////////////////////////////////////////////////////////////////////////////// */
 boolean m_next(matrix m)
 {
 	long i;
-	
+
 	if(m == NULL) return FALSE;
 	for(i = 1; i <= m->nDims; i++)
 		if(m_step(m, i, 1)) return (m->vals != NULL);
@@ -593,8 +593,8 @@ matrix m_normalize(matrix m, unsigned short dim)
 {
 	unsigned short i, siz;
 	double len;
-	boolean more;
-	
+	boolean more = 0;
+
 	if(dim < 1 || dim > mMaxDims) Bug("m_normalize(): dimension must be from 1 to %d", mMaxDims);
 	if(!m_first(m)) return m;
 	m_swapdims(m, dim, 1);
@@ -617,7 +617,7 @@ int m_report(FILE *file, matrix m, char *colDelimStr, char *rowDelimStr)
 {
 	int nc = 0;
 	boolean started;
-	
+
 	if(m->description && strlen(m->description) > 0) nc += fprintf(file, "#%s\n", m->description);
 	if(m_mass(m) == 0 || !m_setpos(m, 1, 0) || !m_setpos(m, 2, 0)) return nc;
 	do {
@@ -635,17 +635,17 @@ int m_report(FILE *file, matrix m, char *colDelimStr, char *rowDelimStr)
 matrix m_setoutput(matrix m, char *output, char *writeMode, char *description)
 {
 	if(m == NULL) return NULL;
-	
+
 	if(m->output) Destroy(m->output);
 	if(output == NULL || strlen(output) == 0) m->output = NULL;
 	else strcpy((m->output = New(char, strlen(output)+1)), output);
-	
+
 	if(writeMode != NULL) strncpy(m->writeMode, writeMode, 3);
-	
+
 	if(m->description) Destroy(m->description);
 	if(description == NULL || strlen(description) == 0) m->description = NULL;
 	else strcpy((m->description = New(char, strlen(description)+1)), description);
-	
+
 	return m;
 }
 /* //////////////////////////////////////////////////////////////////////////////////////////////// */
@@ -653,7 +653,7 @@ boolean m_setpoint(matrix m, ...)
 {
 	va_list ap;
 	long i, pos[mMaxDims];
-	
+
 	if(m == NULL) return FALSE;
 	va_start(ap, m);
 	for(i = 0; i < mMaxDims; i++) pos[i] = ((i < m->nDims) ? va_arg(ap, long) : 0);
@@ -665,7 +665,7 @@ boolean m_setpos(matrix m, short dimension, long pos)
 {
 	boolean inRange;
 	long siz;
-	
+
 	if(dimension < 1 || dimension-- > mMaxDims) Bug("dimension argument to m_setpos() must be from 1 to %d", mMaxDims);
 	if(m == NULL) return FALSE;
 	siz = m->extents[dimension];
@@ -683,7 +683,7 @@ matrix m_setsize(matrix m, short nDims, ...)
 {
 	va_list ap;
 	long i, dims[mMaxDims];
-	
+
 	if(m == NULL) return NULL;
 	va_start(ap, nDims);
 	for(i = 0; i < mMaxDims; i++) dims[i] = ((i < nDims) ? va_arg(ap, long) : 1);
@@ -695,7 +695,7 @@ matrix m_setsteps(matrix m, ...)
 {
 	va_list ap;
 	long i, steps[mMaxDims];
-	
+
 	if(m == NULL) return NULL;
 	va_start(ap, m);
 	for(i = 0; i < mMaxDims; i++) steps[i] = ((i < m->nDims) ? va_arg(ap, long) : 0);
@@ -707,7 +707,7 @@ matrix m_slice(matrix m, short nDims, ...)
 {
 	va_list ap;
 	long i, extents[mMaxDims];
-	
+
 	va_start(ap, nDims);
 	for(i = 0; i < mMaxDims; i++) extents[i] = ((i < nDims) ? va_arg(ap, long) : 1);
 	va_end(ap);
@@ -717,7 +717,7 @@ matrix m_slice(matrix m, short nDims, ...)
 double *m_sortvals(double *vals, matrix m)
 {
 	long i = 0, nVals, old_pos[mMaxDims];
-	
+
 	if(m == NULL || m->vals == NULL) return NULL;
 	if((nVals = m_mass(m)) == 0) return NULL;
 	if(vals == NULL) vals = New(double, nVals);
@@ -734,7 +734,7 @@ boolean m_step(matrix m, short dimension, long distance)
 	boolean returnVal;
 
 	if(dimension < 1 || dimension-- > mMaxDims) Bug("dimension argument to m_step() must be from 1 to %d", mMaxDims);
-	
+
 	if(m == NULL) return FALSE;
 	siz = m->extents[dimension];
 	pos = m->positions[dimension] + distance;
@@ -762,7 +762,7 @@ matrix m_swapdims(matrix m, short dim1, short dim2)
 	temp = m->positions[dim1];
 	m->positions[dim1] = m->positions[dim2];
 	m->positions[dim2] = temp;
-	
+
 	m->nDims = m_countdims(m);
 	return m;
 }
@@ -774,7 +774,7 @@ matrix mxArray2matrix(mxArray * mx, char *desc)
 	short nDims, i;
 	long extents[mMaxDims];
 	const int *d;
-	
+
 	if((nDims = mxGetNumberOfDimensions(mx)) > mMaxDims) JError("%s has too many dimensions", desc);
 	if(mxIsSparse(mx) || !mxIsDouble(mx)) JError("%s must be a full double matrix", desc);
 	d = mxGetDimensions(mx);

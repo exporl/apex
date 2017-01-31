@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __STR_BUFFEREDREADER_H__
 #define __STR_BUFFEREDREADER_H__
 
@@ -41,7 +41,7 @@ namespace streamapp
 
     /**
       * BufferedReader
-      * 
+      *
       * v3TODO: use Fifo or at least FifoLogic
       **************************************** */
   class BufferedReader : public PositionableAudioFormatReader

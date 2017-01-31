@@ -46,7 +46,7 @@ QString FileDialog::mf_sGetExistingFile( const QString& ac_sPath, const QStringL
 {
 #ifndef WIN32
     QFileDialog::setDirectory( ac_sPath );
-    QFileDialog::setFilters( ac_sFilter );
+    QFileDialog::setNameFilters( ac_sFilter );
     QFileDialog::setFileMode( QFileDialog::ExistingFile );
     if (QFileDialog::exec() == QFileDialog::Accepted ) {
         QStringList files = QFileDialog::selectedFiles();
@@ -87,9 +87,9 @@ QString FileDialog::mf_sGetAnyFile( const QString& ac_sPath, const QString& ac_s
     }
     return QString();
 #else
-/*        qDebug("Current path = %s",
+/*        qCDebug(APEX_RS, "Current path = %s",
                 qPrintable(QDir::current().path()));
-        qDebug("Requested path = %s",
+        qCDebug(APEX_RS, "Requested path = %s",
                 qPrintable(ac_sPath));*/
 
     return QFileDialog::getSaveFileName (ApexControl::Get().GetMainWnd(), QString(), ac_sPath, ac_sFilter );

@@ -43,7 +43,6 @@ struct DatablockDataPrivate
     QString    directData;
     bool       doChecksum;
     QString    checksum;
-    QDateTime  birth;
     QString    description;
     QString    device;
     unsigned   nbChannels;
@@ -67,7 +66,6 @@ bool DatablockDataPrivate::operator==(const DatablockDataPrivate& other) const
         nbChannels == other.nbChannels &&
         device == other.device &&
         description == other.description &&
-        birth == other.birth &&
         checksum == other.checksum &&
         doChecksum == other.doChecksum &&
         prefix == other.prefix &&
@@ -138,13 +136,6 @@ const QString& DatablockData::checksum() const
     return d->checksum;
 }
 
-
-const QDateTime& DatablockData::birth() const
-{
-    return d->birth;
-}
-
-
 unsigned int DatablockData::nbChannels() const
 {
     return d->nbChannels;
@@ -207,12 +198,6 @@ void DatablockData::setChecksum(const QString& checksum)
 {
     d->checksum = checksum;
 }
-
-void DatablockData::setBirth(const QDateTime& birth)
-{
-    d->birth = birth;
-}
-
 
 void DatablockData::setNbChannels(unsigned int nb)
 {

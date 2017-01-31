@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __VECTORUTILS_H__
 #define __VECTORUTILS_H__
 
@@ -51,7 +51,7 @@ namespace utils
   {
     const typename std::vector<tType>::size_type c_nItems = ac_VectorToAddFrom.size();
     for( typename std::vector<tType>::size_type i = 0 ; i < c_nItems ; ++ i )
-      ac_VectorToAddTo.push_back( ac_VectorToAddFrom.at( i ) ); 
+      ac_VectorToAddTo.push_back( ac_VectorToAddFrom.at( i ) );
   }
 
 }

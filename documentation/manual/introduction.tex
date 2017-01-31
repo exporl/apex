@@ -1,0 +1,187 @@
+\chapter{Introduction}
+
+In order to be able to perform auditory psychophysical and speech
+perception experiments a versatile research platform has been
+developed at ExpORL, Dept. Neurosciences, KULeuven (Laneau et al.,
+2005; Francart et al., 2008). \apex
+\footnote{Application for Psychophysical EXperiments}, allows
+most auditory behavioral experiments to be performed without any
+programming, both for acoustic stimulation, direct electric
+stimulation via a CI or any combination of devices.
+
+This manual describes \apex. The idea behind \apex is that one
+should be able to set up an experiment without any programming
+knowledge. It is a generic platform with abstract interfaces to
+the computer monitor, computer input devices such as keyboard,
+mouse, and touch screen, and output devices such as sound cards or
+interfaces to cochlear implants. The user should be able to use
+any of the interfaces without programming any device specific
+details.
+
+Experiments are defined in the {XML}
+format\footnote{The complete XML specification can be found at
+\url{http://www.w3.org/TR/xml11/}}, allowing for a structured
+experiment definition in a generic format. A Matlab and R toolbox is
+distributed together with \apex to ease the automatic generation
+of experiment files and analysis of results files.
+
+\section{Registration}
+
+After registration \apex can be downloaded from
+\url{http://www.kuleuven.be/exporl/apex} and can be used free of
+charge. The hardware requirements are limited to a personal
+computer running the Linux or Windows operating system and the
+necessary stimulation devices.
+
+\section {Citing}
+
+For proper citation see License Agreement at
+\url{http://www.kuleuven.be/exporl/apex}. Any publication that
+deals with \apex should cite: Francart, T., van Wieringen, A.,
+Wouters, J. APEX3: a Multi-purpose test platform for auditory
+psychophysical experiments. Journal of Neuroscience Methods, vol. 172, no. 2, pp. 283–93, 2008.
+
+When using the animated child mode, you should also refer to:
+Laneau, J., Boets, B., Moonen, M., van Wieringen, A. and Wouters,
+J., "A flexible auditory research platform using acoustic or
+electric stimuli for adults and young children", Journal of
+Neuroscience Methods, 142, pp. 131-136, 2005.
+
+\section {Main features of \apex}
+\begin{itemize}
+\item No programming is required to set up an experiment. 
+\item
+Multiple platforms are supported, including MS Windows and Linux.
+\item Multiple output devices are supported, including sound
+cards, an interface to cochlear implants from Cochlear and an
+interface to cochlear implants from Advanced  Bionics. The
+supported devices can be used in any combination, a CI (or hearing
+aid) in both ears (bilateral electrical stimulation) or
+simultaneous stimulation via a CI in one ear and acoustical
+stimulation in the other (bimodal stimulation). 
+\item Several
+psychophysical procedures are readily available and custom
+procedures can easily be added (plug-in procedure). 
+\item As much
+information as possible is stored per trial in the result file.
+This includes the subject's response, but also response times,
+calibration values and much more. 
+\item Visual feedback
+can be given after each trial. 
+\item There is a special animated
+interface for testing (young) children. 
+\item There is a Matlab
+toolbox for experiment file creation and advanced result file
+analysis. 
+\item Custom signal processing filters can be added.
+(plug-in filter) 
+\item Custom interfaces to external controllers
+can be added. (plug-in controller) 
+\item There is a {GUI}
+(Graphical User Interface) to calibrate parameters.
+\end{itemize}
+
+\section{Getting help - documentation}
+
+There are 4 forms of documentation available for \apex:
+
+\begin{description}
+\item[The paper] The \apex paper gives a concise high level overview. It is advisable to read it first. Note that since it was published some implementation details have changed, so please refer to the other documentation for up to date details.
+\item[The manual] You are currently reading the manual. It does not cover every feature of APEX in detail, but endeavours to describe the most often used features in more detail than the paper.
+\item[The schema documentation] The APEX schema defines the structure of an experiment file (see section~\ref{sec:Schema's}). It systematically contains documentation for each element, and exhaustively determines which elements can occur. It is the most up to date and most complete source of documentation, but requires some insight in the general function of APEX, which is provided by the paper and manual. The schema documentation can be consulted in 3 different ways: (1) using the HTML format schema documentation that comes with APEX, in folder \filename{documentation} \todo{check}, (2) when editing an experiment file with the oXygen editor, it will show the documentation for the current element in a different pane and suggest elements when you start typing, or (3) opening the schema \filename{experiment.xsd} directly in the oXygen editor.
+\item[The examples] APEX is shipped with a large number of examples, illustrating most of the features. They are stored in folder \filename{examples} in the main APEX folder, and are documented in chapter~\ref{chap:examples}. The best way to start a new experiment, is probably to take one of the examples and modify it until it suits your needs.
+\end{description}
+
+
+\section{Style conventions of the manual}
+In this manual different style conventions are used:
+\begin{itemize}
+\item \xml{<xml/>} example fragment of XML
+
+\item Information specific to the use of the program OxygenXML is
+formatted as follows: \oxygen{OxygenXML is an XML editor}
+
+\item a different font is used \filename{to indicate file names}
+\end{itemize}
+
+\section{Basic setup}
+
+\apex is installed by either running the installer (\filename{apex.msi}), or by simply copying the APEX folder to your computer. After installation, there is a main
+\apex directory (default: \filename{c:/program files/apex3}) under
+which the following subdirectories exist and contain the necessary
+files:
+
+\begin{description}
+\item[bin] Binary files: the main \apex executable
+(\filename{apex.exe}), the Qt dll's and some Qt plugins
+
+\item[schemas] The experiment file schema
+(\filename{experiment.xsd}) and the apexconfig
+(\filename{apexconfig.xsd}) schema. You can point your XML editor
+to the former schema when editing experiment files
+(section~\ref{sec:Schema's}).
+
+\item[config] The \filename{apexconfig.xml} file contains general
+\apex settings that are applied to all experiments.
+
+\item[plugins] contains different plugins (cf.
+appendix~\ref{sec:plugins}). \todo{check}
+
+\item[amt] contains the \ac{amt}, for automatic generation or
+analysis of experiment files (cf. appendix~\ref{app:Matlab}). \todo{check folder name}
+
+\item[examples] contains example experiments for nearly every
+feature of \apex
+\end{description}
+
+
+\apex makes use of an experiment file. An experiment file contains
+all the necessary information to run an experiment, such as the
+layout of the screen, the workings of the procedure, references to
+stimulus files and pictures, the way in which the stimuli are
+routed to a device etc. Several tools exist to create experiment
+files easily and analyze results, e.g. an XML editor (next
+section) or the \ac{amt}.
+
+\section{XML editor: to create or edit experiment files}
+
+While any text editor, such as wordpad, notepad and many others,
+can be used to create or edit experiment files, the use of an
+editor specifically suited for editing XML files has many
+advantages, such as syntax highlighting, automatic completion and
+validation.
+
+At ExpORL we use the OxygenXML editor and will therefore give
+hints on how to use the syntax in this manual. You are, of course,
+free to use any other editor.
+
+A free demo version of OxygenXML is available from
+\url{http://oxygenxml.com}. If you would decide to buy the full
+version, you will get a 10\% discount if you enter the following
+coupon code during the ordering process:
+\begin{quote}
+    \textbf{oXygen-Kuleuven}
+\end{quote}
+\label{sec:XML editor}
+
+A free version is available for people working in the field of
+life sciences.
+
+\section{Overview of the \apex user manual}
+
+Chapter~\ref{chap:Basic concepts} discusses the basic concepts of
+\apex. Chapter~\ref{chap:Creating experiment files} describes the
+structure of experiment files. Chapter~\ref{chap:plugins} describes how to extend \apex using plugins. Chapter~\ref{chap:Examples}
+discusses 4 example experiments in detail. These experiments are
+also stored in the folder \filename{examples/manual}.
+Chapter~\ref{chap:Examplestrategies} shows how to implement some
+common features of psychophysical and perceptual experiments.
+Chapter~\ref{chap:Results} deals with how \apex result files can
+be analyzed. Finally, four appendices are included, to describe
+the use of the L34 device (appendix~\ref{sec:L34}), the Matlab
+toolbox (appendix~\ref{app:Matlab}), the use of plugins
+(appendix~\ref{sec:plugins}), and customizing appearance
+(appendix~\ref{sec:Customizing appearance}).
+
+An exhaustive list of all elements that can occur in an \apex
+experiment file are given in a the schema documentation.

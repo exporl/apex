@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef STIMULUSOUTPUT_H
-#define STIMULUSOUTPUT_H
 
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_STIMULUSOUTPUT_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_STIMULUSOUTPUT_H_
+
+#include "apextools/apextypedefs.h"
+
+#include "apexmodule.h"
 #include "outputdevice.h"
 #include "stimulus.h"
-#include "apexmodule.h"
-#include "apextypedefs.h"
-#include <qstring.h>
+
+#include <QString>
 
 namespace appcore
 {
@@ -183,14 +185,9 @@ public:
     void SetMaster(const QString& ac_sID);
 
     /**
-      * Handle StimulusParameters (= all parameters for the next trial).
-      * Will also direct parameters to Controllers.
-      * RestoreParameters() is first called for all devices/filters.
-      * @param ac_Paramaters the parameters
+      * See SendParametersToClients().
       */
-    void HandleParams(const data::StimulusParameters& ac_Paramaters);
-
-
+    void HandleParams();
 
     void RestoreParams();
 
@@ -219,6 +216,8 @@ public:
      * Ask all clients (devices, controllers, filters) to do prepare
          */
     void PrepareClients();
+
+    void setSilenceBeforeNextStimulus(double seconds);
 
 
 

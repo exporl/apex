@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "gridlayoutrundelegate.h"
 
-#include "screen/gridlayoutelement.h"
+#include "apexdata/screen/gridlayoutelement.h"
+
+#include "gridlayoutrundelegate.h"
 #include "rundelegatecreatorvisitor.h"
 
 namespace apex
@@ -54,7 +54,7 @@ GridLayoutRunDelegate::GridLayoutRunDelegate(
     setMargin(5);
     setObjectName(element->getID());
 
-//    qDebug("Creating gridlayout with parent %p", parent);
+//    qCDebug(APEX_RS, "Creating gridlayout with parent %p", parent);
 
     for ( int i = 0; i < element->getNumberOfChildren(); ++i )
     {

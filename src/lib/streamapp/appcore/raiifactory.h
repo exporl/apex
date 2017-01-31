@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __RAII_FACTORY_IMP_H_
 #define __RAII_FACTORY_IMP_H_
 
+#include <QtGlobal>
+
+#include <algorithm>
 #include <vector>
-#include <algorithm> //find
-#include <assert.h>
 
 namespace appcore
 {
@@ -60,7 +61,7 @@ namespace appcore
           */
       T* keep( T* p )
       {
-        assert( p );
+        Q_ASSERT( p );
         container.push_back( p );
         expand();
         return p;
@@ -73,7 +74,7 @@ namespace appcore
           */
       void dispose( const T* p )
       {
-        assert( p );
+        Q_ASSERT( p );
         typedef std::vector<const void*>::reverse_iterator  reverse_iterator;
         reverse_iterator rpos = std::find( container.rbegin(), container.rend(), p );
         if( rpos != container.rend() )
@@ -83,7 +84,7 @@ namespace appcore
         }
         else
         {
-           assert( 0 && "unknown pointer: object not created by this factory" );
+           Q_ASSERT( 0 && "unknown pointer: object not created by this factory" );
         }
       }
 
@@ -116,7 +117,7 @@ namespace appcore
           */
       T* operator[] ( size_t n )
       {
-        assert( n < size() );
+        Q_ASSERT( n < size() );
         return const_cast<T*> ( static_cast<const T*> ( container[ n ] ) );
       }
 
@@ -127,7 +128,7 @@ namespace appcore
         */
       const T* operator[] ( size_t n ) const
       {
-        assert( n < size() );
+        Q_ASSERT( n < size() );
         return static_cast<const T*> ( container[ n ] );
       }
 
@@ -166,7 +167,7 @@ namespace appcore
         }
         catch(...)
         {
-           assert( 0 );
+           Q_ASSERT( 0 );
         }
       }
 

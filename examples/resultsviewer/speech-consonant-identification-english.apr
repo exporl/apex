@@ -1,0 +1,1186 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet  href="https://gilbert.med.kuleuven.be/apex/xslt/apexresult.xsl" type="text/xsl"?>
+<apex:results experiment_file="file:/C:/score/stimuli/pimm/20120330/speech_vcv_SCORE_stage46/speech_vcv.apx" xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+<parameters>
+<parameter name="level">60</parameter>
+<parameter name="speechmaterial">VCV</parameter>
+<parameter name="set">1</parameter>
+<parameter name="list">1</parameter>
+<parameter name="processing">SCORE</parameter>
+<parameter name="modality">el</parameter>
+<parameter name="showextra">score</parameter>
+</parameters>
+<general>
+    <startdate>Tue 3. Apr 10:00:17 2012</startdate>
+    <enddate>Tue 3. Apr 10:05:14 2012</enddate>
+    <duration unit="seconds">297</duration>
+    <xsltscript>apexresult.xsl</xsltscript>
+    <jscript>apex:resultsviewer.html</jscript>
+    <subject>name</subject>
+</general>
+<trial id="trial_aSa">
+<procedure >
+<stimulus>stim_aSa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aSa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aSa</answer>
+<correctanswer>aSa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1578</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aVa">
+<procedure >
+<stimulus>stim_aVa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aVa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aVa</answer>
+<correctanswer>aVa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1516</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aJa">
+<procedure >
+<stimulus>stim_aJa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aJa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aJa</answer>
+<correctanswer>aJa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1265</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aMa">
+<procedure >
+<stimulus>stim_aMa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aMa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aMa</answer>
+<correctanswer>aMa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1125</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aFa">
+<procedure >
+<stimulus>stim_aFa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aPa</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>aPa</answer>
+<correctanswer>aFa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1141</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aBa">
+<procedure >
+<stimulus>stim_aBa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aBa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aBa</answer>
+<correctanswer>aBa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>718</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aDa">
+<procedure >
+<stimulus>stim_aDa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aDa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aDa</answer>
+<correctanswer>aDa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>984</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aPa">
+<procedure >
+<stimulus>stim_aPa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aPa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aPa</answer>
+<correctanswer>aPa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>750</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aVa">
+<procedure >
+<stimulus>stim_aVa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aVa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aVa</answer>
+<correctanswer>aVa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>750</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aVa">
+<procedure >
+<stimulus>stim_aVa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aVa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aVa</answer>
+<correctanswer>aVa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1406</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aSha">
+<procedure >
+<stimulus>stim_aSha</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aSha</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aSha</answer>
+<correctanswer>aSha</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1313</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aZa">
+<procedure >
+<stimulus>stim_aZa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aZa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aZa</answer>
+<correctanswer>aZa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1406</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aCha">
+<procedure >
+<stimulus>stim_aCha</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aCha</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aCha</answer>
+<correctanswer>aCha</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>4812</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aKa">
+<procedure >
+<stimulus>stim_aKa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aKa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aKa</answer>
+<correctanswer>aKa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1312</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aSa">
+<procedure >
+<stimulus>stim_aSa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aSa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aSa</answer>
+<correctanswer>aSa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>2438</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aDa">
+<procedure >
+<stimulus>stim_aDa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aDa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aDa</answer>
+<correctanswer>aDa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1656</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aJa">
+<procedure >
+<stimulus>stim_aJa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aJa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aJa</answer>
+<correctanswer>aJa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1187</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aBa">
+<procedure >
+<stimulus>stim_aBa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aBa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aBa</answer>
+<correctanswer>aBa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1421</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aJa">
+<procedure >
+<stimulus>stim_aJa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aJa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aJa</answer>
+<correctanswer>aJa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1735</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aNa">
+<procedure >
+<stimulus>stim_aNa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aNa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aNa</answer>
+<correctanswer>aNa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1359</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aTa">
+<procedure >
+<stimulus>stim_aTa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aTa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aTa</answer>
+<correctanswer>aTa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1578</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aTha">
+<procedure >
+<stimulus>stim_aTha</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aTha</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aTha</answer>
+<correctanswer>aTha</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1094</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aGa">
+<procedure >
+<stimulus>stim_aGa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aGa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aGa</answer>
+<correctanswer>aGa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>2172</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aTa">
+<procedure >
+<stimulus>stim_aTa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aTa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aTa</answer>
+<correctanswer>aTa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1125</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aFa">
+<procedure >
+<stimulus>stim_aFa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aPa</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>aPa</answer>
+<correctanswer>aFa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1515</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aNa">
+<procedure >
+<stimulus>stim_aNa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aNa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aNa</answer>
+<correctanswer>aNa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>454</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aKa">
+<procedure >
+<stimulus>stim_aKa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aKa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aKa</answer>
+<correctanswer>aKa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1359</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aCha">
+<procedure >
+<stimulus>stim_aCha</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aCha</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aCha</answer>
+<correctanswer>aCha</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1219</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aZa">
+<procedure >
+<stimulus>stim_aZa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aZa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aZa</answer>
+<correctanswer>aZa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1312</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aPa">
+<procedure >
+<stimulus>stim_aPa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aPa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aPa</answer>
+<correctanswer>aPa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1359</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aBa">
+<procedure >
+<stimulus>stim_aBa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aBa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aBa</answer>
+<correctanswer>aBa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1437</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aMa">
+<procedure >
+<stimulus>stim_aMa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aMa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aMa</answer>
+<correctanswer>aMa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1891</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aCha">
+<procedure >
+<stimulus>stim_aCha</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aCha</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aCha</answer>
+<correctanswer>aCha</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1266</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aGa">
+<procedure >
+<stimulus>stim_aGa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aGa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aGa</answer>
+<correctanswer>aGa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1296</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aTha">
+<procedure >
+<stimulus>stim_aTha</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aFa</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>aFa</answer>
+<correctanswer>aTha</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1078</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aPa">
+<procedure >
+<stimulus>stim_aPa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aPa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aPa</answer>
+<correctanswer>aPa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1250</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aSa">
+<procedure >
+<stimulus>stim_aSa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aSa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aSa</answer>
+<correctanswer>aSa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1032</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aGa">
+<procedure >
+<stimulus>stim_aGa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aGa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aGa</answer>
+<correctanswer>aGa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1172</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aTa">
+<procedure >
+<stimulus>stim_aTa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aTa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aTa</answer>
+<correctanswer>aTa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1343</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aFa">
+<procedure >
+<stimulus>stim_aFa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aFa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aFa</answer>
+<correctanswer>aFa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>3312</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aSha">
+<procedure >
+<stimulus>stim_aSha</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aSha</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aSha</answer>
+<correctanswer>aSha</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1703</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aDa">
+<procedure >
+<stimulus>stim_aDa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aDa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aDa</answer>
+<correctanswer>aDa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1250</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aMa">
+<procedure >
+<stimulus>stim_aMa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aMa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aMa</answer>
+<correctanswer>aMa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1031</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aZa">
+<procedure >
+<stimulus>stim_aZa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aZa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aZa</answer>
+<correctanswer>aZa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1234</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aNa">
+<procedure >
+<stimulus>stim_aNa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aNa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aNa</answer>
+<correctanswer>aNa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1750</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aSha">
+<procedure >
+<stimulus>stim_aSha</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aSha</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aSha</answer>
+<correctanswer>aSha</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>2359</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aTha">
+<procedure >
+<stimulus>stim_aTha</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aFa</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>aFa</answer>
+<correctanswer>aTha</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1453</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_aKa">
+<procedure >
+<stimulus>stim_aKa</stimulus>
+</procedure>
+<screenresult>
+    <element id="buttongroup">aKa</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<answer>aKa</answer>
+<correctanswer>aKa</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>0</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<calibration>
+<parameter id="soundcardgainL">-4.3</parameter>
+</calibration>
+<processed>
+
+
+ExperimentFile=file:/C:/score/stimuli/pimm/20120330/speech_vcv_SCORE_stage46/speech_vcv.apx
+Duration=297 seconds
+Header=trial;stimulus;correctanswer;corrector;useranswer;score
+START
+trial_aSa;stim_aSa;aSa;true;aSa;
+trial_aVa;stim_aVa;aVa;true;aVa;
+trial_aJa;stim_aJa;aJa;true;aJa;
+trial_aMa;stim_aMa;aMa;true;aMa;
+trial_aFa;stim_aFa;aFa;false;aPa;
+trial_aBa;stim_aBa;aBa;true;aBa;
+trial_aDa;stim_aDa;aDa;true;aDa;
+trial_aPa;stim_aPa;aPa;true;aPa;
+trial_aVa;stim_aVa;aVa;true;aVa;
+trial_aVa;stim_aVa;aVa;true;aVa;
+trial_aSha;stim_aSha;aSha;true;aSha;
+trial_aZa;stim_aZa;aZa;true;aZa;
+trial_aCha;stim_aCha;aCha;true;aCha;
+trial_aKa;stim_aKa;aKa;true;aKa;
+trial_aSa;stim_aSa;aSa;true;aSa;
+trial_aDa;stim_aDa;aDa;true;aDa;
+trial_aJa;stim_aJa;aJa;true;aJa;
+trial_aBa;stim_aBa;aBa;true;aBa;
+trial_aJa;stim_aJa;aJa;true;aJa;
+trial_aNa;stim_aNa;aNa;true;aNa;
+trial_aTa;stim_aTa;aTa;true;aTa;
+trial_aTha;stim_aTha;aTha;true;aTha;
+trial_aGa;stim_aGa;aGa;true;aGa;
+trial_aTa;stim_aTa;aTa;true;aTa;
+trial_aFa;stim_aFa;aFa;false;aPa;
+trial_aNa;stim_aNa;aNa;true;aNa;
+trial_aKa;stim_aKa;aKa;true;aKa;
+trial_aCha;stim_aCha;aCha;true;aCha;
+trial_aZa;stim_aZa;aZa;true;aZa;
+trial_aPa;stim_aPa;aPa;true;aPa;
+trial_aBa;stim_aBa;aBa;true;aBa;
+trial_aMa;stim_aMa;aMa;true;aMa;
+trial_aCha;stim_aCha;aCha;true;aCha;
+trial_aGa;stim_aGa;aGa;true;aGa;
+trial_aTha;stim_aTha;aTha;false;aFa;
+trial_aPa;stim_aPa;aPa;true;aPa;
+trial_aSa;stim_aSa;aSa;true;aSa;
+trial_aGa;stim_aGa;aGa;true;aGa;
+trial_aTa;stim_aTa;aTa;true;aTa;
+trial_aFa;stim_aFa;aFa;true;aFa;
+trial_aSha;stim_aSha;aSha;true;aSha;
+trial_aDa;stim_aDa;aDa;true;aDa;
+trial_aMa;stim_aMa;aMa;true;aMa;
+trial_aZa;stim_aZa;aZa;true;aZa;
+trial_aNa;stim_aNa;aNa;true;aNa;
+trial_aSha;stim_aSha;aSha;true;aSha;
+trial_aTha;stim_aTha;aTha;false;aFa;
+trial_aKa;stim_aKa;aKa;true;aKa;
+END
+
+</processed>
+</apex:results>

@@ -17,15 +17,18 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "wavgenerator.h"
-#include "stimulus/wav/streamgenerator.h"
+#include "apexdata/filter/filterdata.h"
+#include "apexdata/filter/wavparameters.h"
+
+#include "apextools/apextypedefs.h"
 
 #include "stimulus/filtertypes.h"
-#include "apextypedefs.h"
 
-//from libdata
-#include "filter/filterdata.h"
-#include "filter/wavparameters.h"
+#include "wavstimulus/streamgenerator.h"
+
+#include "wavgenerator.h"
+
+#include <QtGlobal>
 
 using namespace apex::stimulus;
 
@@ -40,7 +43,7 @@ apex::stimulus::WavGenerator::WavGenerator(const QString& ac_sID,
   m_pStrGen( StreamGeneratorFactory::CreateGenerator( ac_sType, pParams, sr, bs, deterministic ) )
 //  m_src(0)
 {
-  assert( m_pStrGen );
+  Q_ASSERT( m_pStrGen );
   //pParams->insert( std::pair<QString, QString>( "generator", "generator" ) );   //tell clients we have no inputs
 
 }
@@ -75,11 +78,11 @@ bool WavGenerator::SetParameter( const QString& type, const int channel, const Q
 
 //#define PRINTWAVFILTER
 #ifdef PRINTWAVFILTER
-    qDebug( "new gain value: %f", dGain);
+    qCDebug(APEX_RS, "new gain value: %f", dGain);
 #endif
 
     if (channel!=-1)
-        qDebug("Warning: channel parameter not implemented in generator");
+        qCDebug(APEX_RS, "Warning: channel parameter not implemented in generator");
 
 
       m_pStrGen->mp_SetSignalAmp( dGain );
@@ -90,7 +93,7 @@ bool WavGenerator::SetParameter( const QString& type, const int channel, const Q
   {
     const double dFreq = value.toDouble();
 #ifdef PRINTWAVFILTER
-    qDebug( "new frequency: %f", dFreq);
+    qCDebug(APEX_RS, "new frequency: %f", dFreq);
 #endif
 
     m_pStrGen->mp_SetFrequency( dFreq );
@@ -101,7 +104,7 @@ bool WavGenerator::SetParameter( const QString& type, const int channel, const Q
 
 StreamGenerator* WavGenerator::GetStreamGen() const
 {
-  assert( m_pStrGen );
+  Q_ASSERT( m_pStrGen );
   return m_pStrGen;
 }
 

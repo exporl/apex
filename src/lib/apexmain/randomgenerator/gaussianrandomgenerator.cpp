@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "gaussianrandomgenerator.h"
 
 namespace apex {
@@ -42,7 +42,7 @@ QString GaussianRandomGenerator::GetNextValue() {
                 double result = (double) ApexTools::RandomRange(m_param->m_dMin, m_param->m_dMax);
                 return QString::number(result);
         } else {
-                qDebug("Error: not implemented");
+                qCDebug(APEX_RS, "Error: not implemented");
         }*/
 
   return QString();
@@ -51,7 +51,7 @@ QString GaussianRandomGenerator::GetNextValue() {
 
 void GaussianRandomGenerator::doDeterministicGeneration()
 {
-    
+
 }
 
 }

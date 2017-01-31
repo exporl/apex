@@ -20,8 +20,8 @@
  * Calibration widget declaration.
  */
 
-#ifndef _APEX_SRC_GUI_CALIBRATIONDIALOG_H_
-#define _APEX_SRC_GUI_CALIBRATIONDIALOG_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_CALIBRATIONDIALOG_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_CALIBRATIONDIALOG_H_
 
 #include <QDialog>
 
@@ -289,6 +289,13 @@ public Q_SLOTS:
      */
     void setTargetAmplitude (const QString &amplitude);
 
+    /** Sets the final desired amplitude during the experiment. Is only used
+     * for visualisation
+     *
+     * @param amplitude experiment amplitude
+     */
+    void setExperimentAmplitude (const QString &amplitude);
+
     /** Returns the target amplitude. For invalid double values, an empty
      * string is returned.
      *
@@ -355,12 +362,14 @@ public Q_SLOTS:
      */
     void setClipping (bool value);
 
-	/**
-	 * Close the window by calling the accept/reject slot
-	 *
-	 * @param save save the measured results
-	 */
-	void finalize(bool save);
+        /**
+         * Close the window by calling the accept/reject slot
+         *
+         * @param save save the measured results
+         */
+        void finalize(bool save);
+
+    void setGlobal(bool global);
 
 Q_SIGNALS:
     /** Emitted when the user (or program) changes the hardware setup. The
@@ -463,12 +472,12 @@ Q_SIGNALS:
      */
     void autoCalibrateSingle(const QString& parameter);
 
-	/** Emitted when the user presses cancel
-	 */
-	void beforeCancel();
+        /** Emitted when the user presses cancel
+         */
+        void beforeCancel();
 
 private:
-    std::auto_ptr<CalibrationDialogPrivate> d;
+    QScopedPointer<CalibrationDialogPrivate> d;
 
     friend class CalibrationDialogPrivate;
 };

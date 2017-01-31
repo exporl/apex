@@ -20,8 +20,9 @@
 #ifndef __STR_FADER_H__
 #define __STR_FADER_H__
 
+#include "../utils/math.h"
+
 #include "processor.h"
-#include "utils/math.h"
 
 #include <QDebug>
 
@@ -171,7 +172,7 @@ namespace streamapp
     static double smf_dCosineFadeOut( const double& ac_dCurSample, const double& ac_dFadeLength )
     {
         if (ac_dCurSample>ac_dFadeLength) {
-            qDebug("*");
+            qCDebug(APEX_SA, "*");
             return 0;
         }
       return 0.5 * ( 1.0 - cos( math::gc_dPi * ( ac_dCurSample - ac_dFadeLength ) / ac_dFadeLength ) );

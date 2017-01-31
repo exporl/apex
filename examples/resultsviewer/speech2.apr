@@ -1,0 +1,525 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet  href="https://gilbert.med.kuleuven.be/apex/xslt/apexresult.xsl" type="text/xsl"?>
+<apex:results experiment_file="file:/C:/experiments/u0095372-experiments/Emilie/Testconditie_VU zinnen_lijst 7.apx" xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+<parameters>
+<parameter name="reversals for mean">6</parameter>
+<parameter name="snr">-5</parameter>
+</parameters>
+<general>
+    <apex_version>3.1.x</apex_version>
+    <apex_version_git>(993781) -   Thu Jul 17 08:10:57 2014 +0200</apex_version_git>
+    <startdate>2014-12-08T11:33:57</startdate>
+    <enddate>2014-12-08T11:37:44</enddate>
+    <duration unit="seconds">227</duration>
+    <xsltscript>apexresult.xsl</xsltscript>
+    <jscript>apex:resultsviewer.html</jscript>
+</general>
+<trial id="trial_VU_vrouw_79">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_79</stimulus>
+<correct>false</correct>
+    <parameter>-5</parameter>
+    <stepsize>2</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>0</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>6227</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:33:57</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_79">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_79</stimulus>
+<correct>false</correct>
+    <parameter>-3</parameter>
+    <stepsize>2</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>0</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3164</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:34:08</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_79">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_79</stimulus>
+<correct>false</correct>
+    <parameter>-1</parameter>
+    <stepsize>2</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>0</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>4454</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:34:17</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_79">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_79</stimulus>
+<correct>false</correct>
+    <parameter>1</parameter>
+    <stepsize>2</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>0</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3143</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:34:26</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_79">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_79</stimulus>
+<correct>false</correct>
+    <parameter>3</parameter>
+    <stepsize>2</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>0</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>4430</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:34:35</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_79">
+<procedure type="apex:adaptiveProcedure">
+<answer>correct</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_79</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>5</parameter>
+    <stepsize>2</stepsize>
+    <reversals>1</reversals>
+    <saturation>false</saturation>
+    <presentations>0</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">correct</element>
+    <element id="correct"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>4060</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:34:45</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_80">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_80</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>3</parameter>
+    <stepsize>2</stepsize>
+    <reversals>2</reversals>
+    <saturation>false</saturation>
+    <presentations>1</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>10552</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:34:54</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_81">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_81</stimulus>
+<correct>false</correct>
+    <parameter>5</parameter>
+    <stepsize>2</stepsize>
+    <reversals>2</reversals>
+    <saturation>false</saturation>
+    <presentations>2</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3919</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:35:10</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_82">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_82</stimulus>
+<correct>false</correct>
+    <parameter>7</parameter>
+    <stepsize>2</stepsize>
+    <reversals>2</reversals>
+    <saturation>false</saturation>
+    <presentations>3</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>9676</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:35:19</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_83">
+<procedure type="apex:adaptiveProcedure">
+<answer>correct</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_83</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>9</parameter>
+    <stepsize>2</stepsize>
+    <reversals>3</reversals>
+    <saturation>false</saturation>
+    <presentations>4</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">correct</element>
+    <element id="correct"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3490</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:35:34</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_84">
+<procedure type="apex:adaptiveProcedure">
+<answer>correct</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_84</stimulus>
+<correct>true</correct>
+    <parameter>7</parameter>
+    <stepsize>2</stepsize>
+    <reversals>3</reversals>
+    <saturation>false</saturation>
+    <presentations>5</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">correct</element>
+    <element id="correct"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3741</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:35:42</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_85">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_85</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>5</parameter>
+    <stepsize>2</stepsize>
+    <reversals>4</reversals>
+    <saturation>false</saturation>
+    <presentations>6</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>8069</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:35:51</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_86">
+<procedure type="apex:adaptiveProcedure">
+<answer>correct</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_86</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>7</parameter>
+    <stepsize>2</stepsize>
+    <reversals>5</reversals>
+    <saturation>false</saturation>
+    <presentations>7</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">correct</element>
+    <element id="correct"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>4987</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:36:04</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_87">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_87</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>5</parameter>
+    <stepsize>2</stepsize>
+    <reversals>6</reversals>
+    <saturation>false</saturation>
+    <presentations>8</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>17358</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:36:15</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_88">
+<procedure type="apex:adaptiveProcedure">
+<answer>correct</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_88</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>7</parameter>
+    <stepsize>2</stepsize>
+    <reversals>7</reversals>
+    <saturation>false</saturation>
+    <presentations>9</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">correct</element>
+    <element id="correct"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>4479</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:36:38</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_89">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_89</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>5</parameter>
+    <stepsize>2</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>10</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>7150</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:36:48</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_90">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_90</stimulus>
+<correct>false</correct>
+    <parameter>7</parameter>
+    <stepsize>2</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>11</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>14016</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:37:00</trial_start_time>
+</trial>
+
+<trial id="trial_VU_vrouw_91">
+<procedure type="apex:adaptiveProcedure">
+<answer>wrong</answer>
+<correct_answer>correct</correct_answer>
+<stimulus>stimulus_VU_vrouw_91</stimulus>
+<correct>false</correct>
+    <parameter>9</parameter>
+    <stepsize>2</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>12</presentations>
+</procedure><screenresult>
+    <element id="buttongroup">wrong</element>
+    <element id="wrong"></element>
+</screenresult>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>19078</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-08T11:37:19</trial_start_time>
+</trial>
+
+<trial id="VIRTUAL_TRIAL" type="virtual">
+<!-- This is not a real trial, but a virtual trial based on the previous one -->
+<procedure type="apex:adaptiveProcedure">
+<stimulus>stimulus_VU_vrouw_91</stimulus>
+    <parameter>11</parameter>
+    <stepsize>2</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>13</presentations>
+</procedure>
+</trial><calibration>
+<parameter id="gain0">-4.5</parameter>
+<parameter id="gain1">-25</parameter>
+</calibration>
+</apex:results>

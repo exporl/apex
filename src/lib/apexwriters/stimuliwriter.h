@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef STIMULIWRITER_H
-#define STIMULIWRITER_H
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_STIMULIWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_STIMULIWRITER_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
 
 class QStringList;
 
@@ -44,7 +44,6 @@ struct StimulusDatablocksContainer;
 
 namespace writer
 {
-using namespace XERCES_CPP_NAMESPACE;
 
 /**
  * @author Job Noorman <jobnoorman@gmail.com>
@@ -53,15 +52,15 @@ class APEXWRITERS_EXPORT StimuliWriter
 {
     public:
 
-        static DOMElement *addElement(DOMDocument *doc, const data::StimuliData &data);
+        static XERCES_CPP_NAMESPACE::DOMElement *addElement(XERCES_CPP_NAMESPACE::DOMDocument *doc, const data::StimuliData &data);
 
     private:
 
-        static DOMElement *addFixedParameters(DOMDocument *doc, const QStringList& params);
-        static DOMElement *addStimulus(DOMDocument *doc, const data::StimulusData& data);
-        static DOMElement *addDatablocks(DOMDocument *doc,
+        static XERCES_CPP_NAMESPACE::DOMElement *addFixedParameters(XERCES_CPP_NAMESPACE::DOMDocument *doc, const QStringList& params);
+        static XERCES_CPP_NAMESPACE::DOMElement *addStimulus(XERCES_CPP_NAMESPACE::DOMDocument *doc, const data::StimulusData& data);
+        static XERCES_CPP_NAMESPACE::DOMElement *addDatablocks(XERCES_CPP_NAMESPACE::DOMDocument *doc,
                                   const data::StimulusDatablocksContainer& data);
-        static DOMElement *addParameters(DOMDocument *doc,
+        static XERCES_CPP_NAMESPACE::DOMElement *addParameters(XERCES_CPP_NAMESPACE::DOMDocument *doc,
                                   const data::StimulusParameters& params,
                                   const QString& name);
 };

@@ -16,16 +16,20 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "controllers.h"
-#include "apexcontrol.h"
-#include "services/errorhandler.h"
-#include "iapexdevice.h"
-#include "stimulus/stimulusparameters.h"
+
+#include "apexdata/stimulus/stimulusparameters.h"
+
 #include "device/controldevice.h"
-#include <iostream>
 
 #include "runner/experimentrundelegate.h"
+
+#include "services/errorhandler.h"
+
+#include "apexcontrol.h"
+#include "controllers.h"
+#include "iapexdevice.h"
+
+#include <iostream>
 
 using namespace apex;
 using namespace apex::device;

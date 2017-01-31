@@ -21,10 +21,11 @@
 // From Apex 2
 //////////////////////////////////////////////////////////////////////
 
-#include "channelmap.h"
-#include "stimulus/nucleus/nicstream/stimulation_mode.h"
-#include "exceptions.h"
+#include "apextools/exceptions.h"
 
+#include "stimulus/nucleus/nicstream/stimulation_mode.h"
+
+#include "channelmap.h"
 
 namespace apex
 {
@@ -178,7 +179,7 @@ int ChannelMap::modeToStimulationModeType(QString sMode) {
                 return(RMP1_2);
         } else {
                 //Unkown type (error)
-                qDebug("%s", qPrintable("Invalid mode " + sMode));
+                qCDebug(APEX_RS, "%s", qPrintable("Invalid mode " + sMode));
                 throw ApexStringException("Invalid mode " + sMode);
 //              return(-1);
         }

@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __MIXERELEMENT_H__
 #define __MIXERELEMENT_H__
 
-#include "streamappdefines.h"
-#include "containers/ownedarray.h"
-#include "utils/stringexception.h"
+#include "../containers/ownedarray.h"
+
+#include "../streamappdefines.h"
+
+#include "../utils/stringexception.h"
 
 namespace streamapp
 {

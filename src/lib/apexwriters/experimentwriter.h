@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXWRITER_H
-#define APEXWRITER_H
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_EXPERIMENTWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_EXPERIMENTWRITER_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
 
 #include <QStringList>
 

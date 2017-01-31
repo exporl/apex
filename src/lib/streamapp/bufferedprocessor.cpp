@@ -16,12 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "bufferedprocessor.h"
-#include "utils/tracer.h"
-#include "core/containers/circularlogic.h"
+
+#include "_fromv3/core/containers/circularlogic.h"
+
 #include "callback/callback.h"
 
+#include "utils/tracer.h"
+
+#include "bufferedprocessor.h"
+#include "defines.h"
 
 namespace streamapp
 {
@@ -34,7 +37,7 @@ namespace streamapp
   public:
       /**
         * Constructor.
-        * @param a_pParent 
+        * @param a_pParent
         */
     BufferReader( BufferedProcessing* a_pParent ) :
       m_Read( a_pParent->mc_nChannels, a_pParent->mc_nOutputBufferSize ),
@@ -97,7 +100,7 @@ namespace streamapp
   public:
       /**
         * Constructor.
-        * @param a_pParent 
+        * @param a_pParent
         */
     BufferWriter( BufferedProcessing* a_pParent ) :
       mc_pParent( a_pParent )

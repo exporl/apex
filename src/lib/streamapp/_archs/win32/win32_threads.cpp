@@ -16,40 +16,41 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "appcore/threads/criticalsection.h"
 #include "appcore/threads/thread.h"
 #include "appcore/threads/waitableobject.h"
-#include "appcore/threads/criticalsection.h"
+
 #include "win32_headers.h"
-#include <assert.h>
+
 #include <process.h>
 
 using namespace appcore;
 
-CriticalSection::CriticalSection() 
+CriticalSection::CriticalSection()
 {
     //check MS haven't changed this structure
-  assert( sizeof (CRITICAL_SECTION) <= sizeof( m_hMutex ) );
+  Q_ASSERT( sizeof (CRITICAL_SECTION) <= sizeof( m_hMutex ) );
 
   InitializeCriticalSection( (CRITICAL_SECTION*) m_hMutex );
 }
 
-CriticalSection::~CriticalSection() 
+CriticalSection::~CriticalSection()
 {
   DeleteCriticalSection( (CRITICAL_SECTION*) m_hMutex );
 }
 
-void CriticalSection::mf_Enter() const 
+void CriticalSection::mf_Enter() const
 {
   EnterCriticalSection( (CRITICAL_SECTION*) m_hMutex );
 }
 
-bool CriticalSection::mf_bTryEnter() const 
+bool CriticalSection::mf_bTryEnter() const
 {
   return TryEnterCriticalSection( (CRITICAL_SECTION*) m_hMutex) != FALSE;
 }
 
-void CriticalSection::mf_Leave() const 
+void CriticalSection::mf_Leave() const
 {
   LeaveCriticalSection( (CRITICAL_SECTION*) m_hMutex );
 }
@@ -61,12 +62,12 @@ WaitableObject::WaitableObject() :
 {
 }
 
-WaitableObject::~WaitableObject() 
+WaitableObject::~WaitableObject()
 {
   CloseHandle( m_hHandle );
 }
 
-WaitableObject::mt_eWaitResult WaitableObject::mf_eWaitForSignal( const int ac_nTimeOut ) const 
+WaitableObject::mt_eWaitResult WaitableObject::mf_eWaitForSignal( const int ac_nTimeOut ) const
 {
   const DWORD dwRes = WaitForSingleObject( m_hHandle, ac_nTimeOut );
   if( dwRes == WAIT_OBJECT_0 )
@@ -77,12 +78,12 @@ WaitableObject::mt_eWaitResult WaitableObject::mf_eWaitForSignal( const int ac_n
     return wait_timeout;
 }
 
-void WaitableObject::mp_SignalObject() const 
+void WaitableObject::mp_SignalObject() const
 {
   SetEvent( m_hHandle );
 }
 
-void WaitableObject::mp_ResetObject() const 
+void WaitableObject::mp_ResetObject() const
 {
   ResetEvent( m_hHandle );
 }
@@ -165,7 +166,7 @@ void f_SetThreadCurrentName( const std::string /*ac_sName*/ )
 {
 }
 
-void IThread::sf_Sleep( const int ac_nMilliSeconds ) 
+void IThread::sf_Sleep( const int ac_nMilliSeconds )
 {
   if( ac_nMilliSeconds >= 10 )
   {
@@ -173,7 +174,7 @@ void IThread::sf_Sleep( const int ac_nMilliSeconds )
   }
   else
   {
-    assert( IThread::sm_hAccurateSleep );
+    Q_ASSERT( IThread::sm_hAccurateSleep );
 
       //unlike Sleep() this is guaranteed to return to the current thread after
       //the time expires, so we'll use this for short waits, which are more likely

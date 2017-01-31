@@ -17,23 +17,23 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "experimentrunner.h"
-#include "experimentparser.h"
+#include "apexdata/experimentdata.h"
+
 #include "services/mainconfigfileparser.h"
 #include "services/pluginloader.h"
 
-//from libdata
-#include "experimentdata.h"
+#include "experimentparser.h"
+#include "experimentrunner.h"
 
-#include <QMessageBox>
 #include <QDebug>
+#include <QMessageBox>
 
 using namespace apex;
 using namespace apex::data;
 
-ExperimentData* ExperimentRunner::parseExperiment(QString fileName)
+ExperimentData* ExperimentRunner::parseExperiment(const QString& fileName)
 {
-    qDebug("Parsing Experiment");
+    qCDebug(APEX_RS, "Parsing Experiment");
 
     data::ExperimentData* data;
     StatusReporter& error = ErrorHandler::Get();
@@ -70,7 +70,7 @@ ExperimentData* ExperimentRunner::parseExperiment(QString fileName)
                               experimentFile + " " +
                               newfilename;
             system(cmdline.toAscii());
-            qDebug("%s", qPrintable(cmdline));
+            qCDebug(APEX_RS, "%s", qPrintable(cmdline));
             if (! QFile::exists(newfilename))
             {
                 error.addWarning("newExperiment", "Couldn't convert apex 2 file, trying to interpret it as apex 3 file");
@@ -106,11 +106,10 @@ EndConvert:
     error.addMessage("ApexControl" , "Parsing " + sConfigFileName);
     try
     {
-        ExperimentParser parser(fileName);
+        ExperimentParser parser(fileName, expressions);
         parser.LogErrorsToApex (&error);
         data = parser.parse(true);
 //         experiment.reset(new data::ExperimentData(*parser));
-        PluginLoader::Get().scanPath(dConfigFileDir.path());
         //experimentRunDelegate.reset(new ExperimentRunDelegate(*experiment, m_Wnd->centralWidget()));
         //m_Wnd->setExperimentRunDelegate(experimentRunDelegate.get());
         //error.AddItem(experimentRunDelegate->GetError());

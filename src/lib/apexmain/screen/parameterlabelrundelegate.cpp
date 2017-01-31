@@ -16,19 +16,23 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "parameterlabelrundelegate.h"
 
-#include "screen/parameterlabelelement.h"
-#include "screen/screenrundelegate.h"
+#include "apexdata/screen/parameterlabelelement.h"
+
+#include "apexdata/stimulus/stimulusparameters.h"
+
+#include "parameters/parametermanager.h"
 
 #include "runner/experimentrundelegate.h"
-#include "parameters/parametermanager.h"
-#include "stimulus/stimulusparameters.h"
+
+#include "screen/screenrundelegate.h"
+
 #include "stimulus/stimulus.h"
 
-#include <QVariant>
+#include "parameterlabelrundelegate.h"
+
 #include <QDebug>
+#include <QVariant>
 
 namespace apex
 {
@@ -41,7 +45,11 @@ ParameterLabelRunDelegate::ParameterLabelRunDelegate(
     QWidget* parent, const ParameterLabelElement* e, const QFont& defaultFont ) :
         LabelRunDelegateBase( p_exprd, parent, e, defaultFont ), element( e )
 {
-    //qDebug() << "creating param label";
+    ParameterManager* mgr = p_exprd->GetParameterManager();
+    setText(mgr->parameterValue(element->getParameter().id).toString());
+
+    connect(mgr, SIGNAL(parameterChanged(QString, QVariant)),
+            this, SLOT(updateParameter(QString, QVariant)));
 }
 
 
@@ -52,39 +60,22 @@ const ScreenElement* ParameterLabelRunDelegate::getScreenElement() const
 }
 
 
-void ParameterLabelRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
+void ParameterLabelRunDelegate::connectSlots(gui::ScreenRunDelegate*)
 {
-    connect( d, SIGNAL( newStimulus( stimulus::Stimulus* ) ),
-             this, SLOT( newStimulus( stimulus::Stimulus* ) ) );
 }
 
-
-void ParameterLabelRunDelegate::newStimulus( stimulus::Stimulus* stimulus ) {
-
-
-    QVariant value;
-    QString id( element->getParameter().id );
-    QString expression (  element->getParameter().expression );
-
-    value = parameterValue(stimulus,  m_rd->GetParameterManager(), id);
-
-    if (! expression.isEmpty()) {
-        double newvalue=ParseExpression(expression,
-                                        value.toDouble());
-        value=QString::number(newvalue);
+void ParameterLabelRunDelegate::updateParameter(const QString& id,
+                                                const QVariant& value)
+{
+    if (id == element->getParameter().id) {
+        setText(value.toString());
     }
-
-    setText(value.toString());
-
-    //qDebug("Setting parameter %s of element %s to %s",, id value.toString())
-
 }
 
 void ParameterLabelRunDelegate::setEnabled( const bool e)
 {
     QLabel::setEnabled( e );
 }
-
 
 
 

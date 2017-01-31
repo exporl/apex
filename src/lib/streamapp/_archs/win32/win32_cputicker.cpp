@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 // TITLE:
 // High-Resolution Counter Class.
 //
@@ -43,10 +43,10 @@
 //              6. Addition of a function which will convert from CPU ticks to seconds
 //              7. Improved adherence to the MFC coding style and standards
 // 14/1/99 v1.2 PJ Naughter
-//              1. Fixed a bug discovered by David Green-Seed where he was experiencing 
-//                 access violations when the code was compiled with optimizations turned 
-//                 on a Pentium II. The problem was that (on a PII) the RDTSC instruction 
-//                 touches more registers than expected. This has now been fixed by saved 
+//              1. Fixed a bug discovered by David Green-Seed where he was experiencing
+//                 access violations when the code was compiled with optimizations turned
+//                 on a Pentium II. The problem was that (on a PII) the RDTSC instruction
+//                 touches more registers than expected. This has now been fixed by saved
 //                 and restoring the EAX and EBX registers around the call to RDTSC.
 //              2. General code tidy up of const functions, parameters etc.
 // 03/12/99 v1.2 PJ Naughter 1. Fixed a problem in when compiling in VC 6 in release mode.
@@ -75,7 +75,7 @@ bool CCPUTicker::m_bFrequencyCalculated = false;
 #ifdef _MSC_VER
 #pragma warning ( disable : 4702 )
 #pragma optimize("",off)
-#endif     
+#endif
 
 bool CCPUTicker::CheckHasRDTSC()
 {
@@ -101,20 +101,20 @@ bool CCPUTicker::CheckHasRDTSC()
     }
     // Check to see if the instruction ticks accesses something that changes.
     volatile ULARGE_INTEGER ts1,ts2;
-#ifdef _MSC_VER    
+#ifdef _MSC_VER
     __asm
     {
       xor eax,eax
-      _emit 0x0f          
+      _emit 0x0f
       _emit 0xa2
-      _emit 0x0f          
+      _emit 0x0f
       _emit 0x31
       mov ts1.HighPart,edx
       mov ts1.LowPart,eax
       xor eax,eax
-      _emit 0x0f          
+      _emit 0x0f
       _emit 0xa2
-      _emit 0x0f          
+      _emit 0x0f
       _emit 0x31
       mov ts2.HighPart,edx
       mov ts2.LowPart,eax
@@ -139,7 +139,7 @@ bool CCPUTicker::CheckHasRDTSC()
     }
     else if (ts2.HighPart>ts1.HighPart)
     {
-      
+
       return true;
     }
     else
@@ -265,7 +265,7 @@ void CCPUTicker::Measure()
 // "interval" (which is in units of ms, default value=1000ms).
 
 #pragma optimize("",off)
-bool CCPUTicker::GetCPUFrequency(double& frequency, double& target_ave_dev, 
+bool CCPUTicker::GetCPUFrequency(double& frequency, double& target_ave_dev,
                                  unsigned long interval, unsigned int max_loops)
 {
   register LARGE_INTEGER goal,period,current;

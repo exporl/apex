@@ -1,0 +1,443 @@
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!--  @doc
+   @what: NVA word list nr. 30 level 65 dB
+   @description: Speech in quiet, each word presented once in a fixed order
+   @how: constantProcedure, all words are wav-files and can be found on the j-drive of ExpORL
+  -->
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <uniquestandard>0</uniquestandard>
+      <corrector xsi:type="apex:isequal"/>
+      <time_before_first_trial>0</time_before_first_trial>
+      <input_during_stimulus>0</input_during_stimulus>
+    </parameters>
+    <trials>
+      <trial id="trial_NVA_boot">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_boot"/>
+      </trial>
+      <trial id="trial_NVA_meeuw">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_meeuw"/>
+      </trial>
+      <trial id="trial_NVA_kiem">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_kiem"/>
+      </trial>
+      <trial id="trial_NVA_val">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_val"/>
+      </trial>
+      <trial id="trial_NVA_zaag">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_zaag"/>
+      </trial>
+      <trial id="trial_NVA_hen">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_hen"/>
+      </trial>
+      <trial id="trial_NVA_gooi">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_gooi"/>
+      </trial>
+      <trial id="trial_NVA_buis">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_buis"/>
+      </trial>
+      <trial id="trial_NVA_tijd">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_tijd"/>
+      </trial>
+      <trial id="trial_NVA_lof">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_lof"/>
+      </trial>
+      <trial id="trial_NVA_dik">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_dik"/>
+      </trial>
+      <trial id="trial_NVA_soep">
+        <answer>correct</answer>
+        <screen id="experimenter_screen"/>
+        <stimulus id="stimulus_NVA_soep"/>
+      </trial>
+    </trials>
+  </procedure>
+
+  <screens>
+    <general>
+      <repeatbutton>true</repeatbutton>
+      <showpanel>true</showpanel>
+      <showmenu>true</showmenu>
+    </general>
+    <reinforcement>
+      <progressbar>1</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+    <screen id="experimenter_screen">
+
+      <gridLayout height="2" id="main_layout" rowstretch="1,2" width="1">
+        <gridLayout col="1" columnstretch="1,4" height="4" id="parameter_layout" row="1" rowstretch="1,1,2,2" width="2">
+          <label col="1" id="snrlabel" row="1">
+            <text>snr</text>
+      </label>
+          <parameterlabel col="2" id="snr" row="1">
+            <parameter>gain</parameter>
+      </parameterlabel>
+          <label col="1" id="sentence" row="2">
+            <text>zin</text>
+      </label>
+          <parameterlabel col="2" id="sentence" row="2">
+            <parameter>sentence</parameter>
+      </parameterlabel>
+    </gridLayout>
+        <gridLayout col="1" height="1" id="answer_layout" row="2" width="2">
+          <button id="correct" x="1" y="1">
+            <text>Correct</text>
+      </button>
+          <button id="wrong" x="2" y="1">
+            <text>Wrong</text>
+      </button>
+    </gridLayout>
+  </gridLayout>
+
+      <buttongroup id="buttongroup">
+        <button id="correct"/>
+        <button id="wrong"/>
+  </buttongroup>
+
+      <default_answer_element>buttongroup</default_answer_element>
+
+</screen>  </screens>
+
+  <datablocks>
+    <uri_prefix source="apexconfig">speechmaterials</uri_prefix>
+    <datablock id="datablock_NVA_boot">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/boot.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_buis">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/buis.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_dik">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/dik.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_gooi">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/gooi.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_hen">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/hen.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_kiem">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/kiem.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_lof">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/lof.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_meeuw">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/meeuw.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_soep">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/soep.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_tijd">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/tijd.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_val">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/val.wav</uri>
+    </datablock>
+    <datablock id="datablock_NVA_zaag">
+      <device>soundcard</device>
+      <uri>dutch/nva/15/zaag.wav</uri>
+    </datablock>
+    <datablock id="datablock_noise">
+      <device>soundcard</device>
+      <uri>dutch/nva/nvanoise.wav</uri>
+    </datablock>
+    <datablock id="datablock_silence">
+      <device>soundcard</device>
+      <uri>silence:1000</uri>
+    </datablock>
+  </datablocks>
+
+  <devices>
+    <master>soundcard</master>
+    <device id="soundcard" xsi:type="apex:wavDeviceType">
+      <driver>asio</driver>
+      <card>default</card>
+      <channels>4</channels>
+      <gain channel="0" id="gain0">0</gain>
+      <gain channel="1" id="gain1">0</gain>
+      <gain channel="2" id="gain2">0</gain>
+      <gain channel="3" id="gain3">0</gain>
+      <samplerate>44100</samplerate>
+      <blocksize>8192</blocksize>
+      <padzero>1</padzero>
+    </device>
+  </devices>
+
+  <filters>
+    <filter id="amplifier" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>-4.0314</basegain>
+      <invertgain>false</invertgain>
+      <gain id="gain">0</gain>
+    </filter>
+    <filter id="amplifier_channel0" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>65</basegain>
+      <invertgain>false</invertgain>
+      <gain>0</gain>
+    </filter>
+  </filters>
+
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="sentence"/>
+    </fixed_parameters>
+    <stimulus id="calibrationstimulus">
+      <datablocks>
+        <datablock id="datablock_silence"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">calibration</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="noisestimulus">
+      <datablocks>
+        <datablock id="datablock_noise"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">calibration</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_boot">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_boot"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">boot</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_buis">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_buis"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">buis</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_dik">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_dik"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">dik</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_gooi">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_gooi"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">gooi</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_hen">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_hen"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">hen</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_kiem">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_kiem"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">kiem</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_lof">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_lof"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">lof</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_meeuw">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_meeuw"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">meeuw</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_soep">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_soep"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">soep</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_tijd">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_tijd"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">tijd</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_val">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_val"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">val</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus_NVA_zaag">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_silence"/>
+          <datablock id="datablock_NVA_zaag"/>
+          <datablock id="datablock_silence"/>
+        </sequential>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">zaag</parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier_channel0</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier_channel0</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+
+  <calibration profile="spin-NVA_ltass">
+    <stimuli>
+      <stimulus id="calibrationstimulus"/>
+      <stimulus id="noisestimulus"/>
+    </stimuli>
+    <parameters>
+      <parameter id="gain0">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>10</max>
+      </parameter>
+    </parameters>
+  </calibration>
+
+  <results>
+    <page>apex:resultviewer.html</page>
+  </results>
+
+  <general>
+    <allowskip>true</allowskip>
+  </general>
+
+</apex:apex>

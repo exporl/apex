@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef __APEXFILEDIALOG_H__
-#define __APEXFILEDIALOG_H__
 
-#include "services/servicemanager.h"
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SERVICES_FILEDIALOG_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SERVICES_FILEDIALOG_H_
+
+#include "apextools/services/servicemanager.h"
 
 #include <QFileDialog>
 
@@ -55,19 +55,19 @@ namespace apex
         * Destructor.
         */
     ~FileDialog();
-    
+
       /**
         * @see Service
         */
     const char* Name()
     { return "Filedialog"; }
-    
+
       /**
         * Get an existing file.
         * @return the file, or an empty string if canceled
         */
     QString mf_sGetExistingFile( const QString& ac_sPath, const QStringList& ac_sFilters );
-    
+
     QString mf_sGetExistingFile( const QString& ac_sPath, const QString& ac_sFilter );
 
       /**
@@ -79,4 +79,4 @@ namespace apex
 
 }
 
-#endif //#ifndef __APEXFILEDIALOG_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_SERVICES_FILEDIALOG_H_

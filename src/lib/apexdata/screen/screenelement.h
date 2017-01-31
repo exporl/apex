@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SCREENELEMENT_H
-#define SCREENELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREENELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREENELEMENT_H_
 
-#include "apextypedefs.h"
+#include "apextools/apextypedefs.h"
 #include "../fileprefix.h"
 
 #include <vector>
@@ -28,7 +28,7 @@
 #include <QHash>
 #include <QtCore>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -67,7 +67,7 @@ class ScreenElementVisitor;
 class APEXDATA_EXPORT ScreenElement
 {
     Q_DECLARE_TR_FUNCTIONS(ScreenElement);
-    
+
         ScreenElement* parent;
         QString id;
         int x;
@@ -97,7 +97,7 @@ class APEXDATA_EXPORT ScreenElement
             AnswerLabel, ArcLayout, Button, SpinBox, Slider, CheckBox, Empty,
             FlashPlayer, GridLayout, Label, ParameterList,
             Picture, PictureLabel, TextEdit, TwoPartLayout, ParameterLabel,
-            Matrix
+            Matrix, Html
         }
         ElementTypeT;
 
@@ -148,7 +148,7 @@ class APEXDATA_EXPORT ScreenElement
         void setY(int ny) { y = ny; }
         void setFontSize(int fs) { fontSize = fs; }
         void setShortCut(const QString& key,
-                         const QString action=QLatin1String("click")); 
+                         const QString action=QLatin1String("click"));
 
         void setFGColor(const QString& p) { fgcolor = p; };
         const QString& getFGColor() const { return fgcolor;};

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 /**
   *      -- v3tov2 plugin --
   * Do not modify this file by hand,
@@ -31,7 +31,7 @@
 #ifndef __STR_REMOVEPOINTER_H__
 #define __STR_REMOVEPOINTER_H__
 
-#include "core/_main.h"
+#include "../_main.h"
 
 S_NAMESPACE_BEGIN
 

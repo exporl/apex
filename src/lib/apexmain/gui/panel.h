@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __PANEL_H__
-#define __PANEL_H__
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_PANEL_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_PANEL_H_
 
 #include "screen/screenelementrundelegate.h"
 
@@ -88,7 +88,7 @@ namespace apex
         ******************* */
     class IPanel
     {
-        const std::auto_ptr<PanelQProxy> objectProxy;
+        const QScopedPointer<PanelQProxy> objectProxy;
     protected:
         /**
           * Constructor.
@@ -161,7 +161,7 @@ namespace apex
         *   the default panel on the right hand side of the screen.
         *   Has start/stop/pause/status/feedback/emergency/progress.
         *   Derives form ScreenElement, but with constraints: the signal ms_Answered is not
-        *   used and neither is the FeedbackMode HighlightFeedback.
+        *   used and neither is the FeedBackMode mc_eHighLight.
         ************************************************************************************ */
     class Panel : public QWidget, public IPanel
     {
@@ -199,6 +199,8 @@ namespace apex
           * Toggle the pause button's text between Pause/Continue
           */
       void mp_Paused();
+
+      void setPaused(bool paused);
 
         /**
           * Show/Hide the entire panel.
@@ -278,7 +280,7 @@ namespace apex
         *   the childmode panel.
         *   Has a flash movie
         *   Derives form ScreenElement, but with constraints: the signal ms_Answered is not
-        *   used and neither is the FeedbackMode HighlightFeedback.
+        *   used and neither is the FeedBackMode HighlightFeedback.
         ************************************************************************************ */
     class ChildModePanel : public QWidget, public IPanel
     {
@@ -356,4 +358,4 @@ namespace apex
   }
 }
 
-#endif //#ifndef __PANEL_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_PANEL_H_

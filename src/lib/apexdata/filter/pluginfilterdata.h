@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_DATA_PLUGINFILTERDATA_H
-#define APEX_DATA_PLUGINFILTERDATA_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_FILTER_PLUGINFILTERDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_FILTER_PLUGINFILTERDATA_H_
 
 #include "filterdata.h"
 

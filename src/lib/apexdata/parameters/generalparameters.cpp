@@ -17,10 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apextools/apextools.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
 #include "generalparameters.h"
-#include "apextools.h"
-#include "xml/xercesinclude.h"
-#include "xml/apexxmltools.h"
+
 using namespace apex::ApexXMLTools;
 
 using namespace xercesc;

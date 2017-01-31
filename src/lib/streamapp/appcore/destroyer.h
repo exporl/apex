@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __DESTROYER_H_
 #define __DESTROYER_H_
 
-#include <assert.h>
+#include <QtGlobal>
 
 namespace appcore
 {
@@ -58,7 +58,7 @@ namespace appcore
     void SetDoomed( tType* a_pDoomed )
     {
       if( m_pDoomed )
-        assert( 0 && "this destroyer object already has a resource assigned to it" );
+        Q_ASSERT( 0 && "this destroyer object already has a resource assigned to it" );
       m_pDoomed = a_pDoomed;
     }
 

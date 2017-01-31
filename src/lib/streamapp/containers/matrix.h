@@ -16,11 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __STRMATRIX_H__
 #define __STRMATRIX_H__
 
 #include "array.h"
+
+#include <QtGlobal>
 
 namespace streamapp
 {
@@ -92,7 +94,7 @@ namespace streamapp
     {
       if( this == &ac_ToCopy )
         return *this;
-      assert( mc_pSamplesArray );
+      Q_ASSERT( mc_pSamplesArray );
       mp_CopyFrom( ac_ToCopy );
       return *this;
     }
@@ -115,8 +117,8 @@ namespace streamapp
                           const unsigned  ac_nPos,
                           const tType     ac_dfVal )
     {
-      assert( ac_nChannel < mc_nChannelCount );
-      assert( ac_nPos     < mc_nBufferSize   );
+      Q_ASSERT( ac_nChannel < mc_nChannelCount );
+      Q_ASSERT( ac_nPos     < mc_nBufferSize   );
 
       mc_pSamplesArray[ac_nChannel][ac_nPos] = ac_dfVal;
     }
@@ -130,8 +132,8 @@ namespace streamapp
         */
     INLINE tType mf_Get( const unsigned  ac_nChannel, const unsigned  ac_nPos )
     {
-      assert( ac_nChannel < mc_nChannelCount );
-      assert( ac_nPos     < mc_nBufferSize   );
+      Q_ASSERT( ac_nChannel < mc_nChannelCount );
+      Q_ASSERT( ac_nPos     < mc_nBufferSize   );
       return mc_pSamplesArray[ac_nChannel][ac_nPos];
     }
 
@@ -143,8 +145,8 @@ namespace streamapp
         */
     INLINE const tType& operator() ( const unsigned  ac_nChannel, const unsigned  ac_nPos ) const
     {
-      assert( ac_nChannel < mc_nChannelCount );
-      assert( ac_nPos     < mc_nBufferSize   );
+      Q_ASSERT( ac_nChannel < mc_nChannelCount );
+      Q_ASSERT( ac_nPos     < mc_nBufferSize   );
       return mc_pSamplesArray[ac_nChannel][ac_nPos];
     }
 
@@ -160,8 +162,8 @@ namespace streamapp
         */
     INLINE tType& operator()( const unsigned ac_nChannel, const unsigned ac_nPos )
     {
-      assert( ac_nChannel < mc_nChannelCount );
-      assert( ac_nPos     < mc_nBufferSize   );
+      Q_ASSERT( ac_nChannel < mc_nChannelCount );
+      Q_ASSERT( ac_nPos     < mc_nBufferSize   );
       return mc_pSamplesArray[ac_nChannel][ac_nPos];
     }
 
@@ -190,8 +192,8 @@ namespace streamapp
         */
     INLINE void mp_CopyFrom( const MatrixAccess<tType>& ac_ToCopyFrom )
     {
-      assert( ac_ToCopyFrom.mf_nGetChannelCount() >= mc_nChannelCount );
-      assert( ac_ToCopyFrom.mf_nGetBufferSize() >= mc_nBufferSize );
+      Q_ASSERT( ac_ToCopyFrom.mf_nGetChannelCount() >= mc_nChannelCount );
+      Q_ASSERT( ac_ToCopyFrom.mf_nGetBufferSize() >= mc_nBufferSize );
       tType** src = ac_ToCopyFrom.mf_pGetArray();
       for( unsigned i = 0 ; i < mc_nChannelCount ; ++i )
         for( unsigned j = 0 ; j < mc_nBufferSize ; ++j )
@@ -207,9 +209,9 @@ namespace streamapp
         */
     INLINE void mp_CopyFrom( const MatrixAccess<tType>& ac_ToCopyFrom, const unsigned ac_nSourceStart, const unsigned ac_nThisStart, const unsigned ac_nSamples )
     {
-      assert( ac_ToCopyFrom.mf_nGetChannelCount() >= mc_nChannelCount );
-      assert( ac_ToCopyFrom.mf_nGetBufferSize() >= ac_nSourceStart + ac_nSamples );
-      assert( mc_nBufferSize >= ac_nThisStart + ac_nSamples );
+      Q_ASSERT( ac_ToCopyFrom.mf_nGetChannelCount() >= mc_nChannelCount );
+      Q_ASSERT( ac_ToCopyFrom.mf_nGetBufferSize() >= ac_nSourceStart + ac_nSamples );
+      Q_ASSERT( mc_nBufferSize >= ac_nThisStart + ac_nSamples );
       tType** src = ac_ToCopyFrom.mf_pGetArray();
       for( unsigned i = 0 ; i < mc_nChannelCount ; ++i )
         for( unsigned j = 0 ; j < ac_nSamples ; ++j )
@@ -232,7 +234,7 @@ namespace streamapp
         */
     INLINE void mp_ClearRegion( const unsigned ac_nStart, const unsigned ac_nLength, const int ac_tVal = 0 )
     {
-      assert( ac_nLength + ac_nStart <= mc_nBufferSize );
+      Q_ASSERT( ac_nLength + ac_nStart <= mc_nBufferSize );
       for( unsigned i = 0 ; i < mf_nGetChannelCount() ; ++i )
         memset( mf_pGetArray()[ i ] + ac_nStart, ac_tVal, ac_nLength * sizeof( tType ) );
     }
@@ -244,7 +246,7 @@ namespace streamapp
         */
     INLINE void mp_Clear( const unsigned ac_nChannel, const int ac_tVal = 0 )
     {
-      assert( ac_nChannel < mf_nGetChannelCount() );
+      Q_ASSERT( ac_nChannel < mf_nGetChannelCount() );
       memset( mf_pGetArray()[ ac_nChannel ], ac_tVal, mf_nGetBufferSize() * sizeof( tType ) );
     }
 
@@ -265,7 +267,7 @@ namespace streamapp
         */
     void mp_SetAll( const unsigned ac_nChannel, const tType ac_tValue )
     {
-      assert( ac_tValue < mc_nChannelCount );
+      Q_ASSERT( ac_tValue < mc_nChannelCount );
       for( unsigned j = 0 ; j < mc_nBufferSize ; ++j )
         mc_pSamplesArray[ ac_nChannel ][ j ] = ac_tValue;
     }
@@ -288,7 +290,7 @@ namespace streamapp
         */
     ArrayAccess<tType> mf_pGetChannel( const unsigned ac_nChannel ) const
     {
-      assert( ac_nChannel < mc_nChannelCount );
+      Q_ASSERT( ac_nChannel < mc_nChannelCount );
       return ArrayAccess<tType>( mc_pSamplesArray[ ac_nChannel ], mf_nGetBufferSize() );
     }
 
@@ -300,7 +302,7 @@ namespace streamapp
         */
     INLINE void mf_pSetChannel( const unsigned  ac_nChannel, const ArrayAccess<tType>& ac_Channel ) const
     {
-      assert( ac_nChannel < mc_nChannelCount );
+      Q_ASSERT( ac_nChannel < mc_nChannelCount );
       mc_pSamplesArray[ ac_nChannel ] = ac_Channel.mf_pGetArray();
     }
 
@@ -450,7 +452,7 @@ namespace streamapp
   void fSwapTwoByTwo( MatrixAccess<tType>& ac_toReverse )
   {
     const unsigned nChan = ac_toReverse.mf_nGetChannelCount();
-    assert( nChan % 2 == 0 ); //even for simplicity
+    Q_ASSERT( nChan % 2 == 0 ); //even for simplicity
     for( unsigned i = 0 ; i < nChan ; i = i + 2 )
     {
       ArrayAccess<tType> temp = ac_toReverse.mf_pGetChannel( i );

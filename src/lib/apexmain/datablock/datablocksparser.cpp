@@ -17,21 +17,21 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "datablock/datablockdata.h"
-#include "datablock/datablocksdata.h"
+#include "apexdata/datablock/datablockdata.h"
+#include "apexdata/datablock/datablocksdata.h"
+
+#include "apextools/exceptions.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
 
 #include "parser/prefixparser.h"
 #include "parser/scriptexpander.h"
 
-#include "xml/apexxmltools.h"
-#include "xml/xercesinclude.h"
-#include "xml/xmlkeys.h"
-
 #include "datablocksparser.h"
-#include "exceptions.h"
 
-#include <memory>
-
+#include <QScopedPointer>
 #include <QUrl>
 
 using namespace apex::ApexXMLTools;
@@ -62,7 +62,6 @@ data::DatablocksData DatablocksParser::Parse
     (XERCES_CPP_NAMESPACE::DOMElement* p_datablocks,
      const QString& scriptLibraryFile, const QVariantMap &scriptParameters)
 {
-    //std::auto_ptr<data::DatablocksData> result(new data::DatablocksData);
     data::DatablocksData result;
 
 #ifndef NOSCRIPTEXPAND
@@ -71,7 +70,7 @@ data::DatablocksData DatablocksParser::Parse
             currentNode=currentNode->getNextSibling()) {
         const QString tag( XMLutils::GetTagName( currentNode ) );
         if (tag == "plugindatablocks") {
-            qDebug("Script library: %s", qPrintable(scriptLibraryFile));
+            qCDebug(APEX_RS, "Script library: %s", qPrintable(scriptLibraryFile));
             ScriptExpander expander(scriptLibraryFile, scriptParameters,
                                     m_parent);
             expander.ExpandScript(currentNode, "getDatablocks");
@@ -85,18 +84,17 @@ data::DatablocksData DatablocksParser::Parse
 
         const QString tag = ApexXMLTools::XMLutils::GetTagName(currentNode);
 
-	//std::cout << "nodetype: " << currentNode->getNodeType() << std::endl;
+        //std::cout << "nodetype: " << currentNode->getNodeType() << std::endl;
         Q_ASSERT(currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
 
         if (tag == "datablock") {
-            std::auto_ptr<data::DatablockData>
+            QScopedPointer<data::DatablockData>
                 d(ParseDatablock((DOMElement*)currentNode, result.prefix()));
-            if (!d.get()) {
+            if (!d)
                 throw ApexStringException("Unknown error creating datablock");
-            } else {
-                result[ d->id()] = d.get();
-                d.release();
-            }
+            result[d->id()] = d.data();
+            // not done above, otherwise d->id() does not work on Windows
+            d.take();
         } else if (tag == "uri_prefix") {
             result.setPrefix(PrefixParser::Parse((DOMElement*)currentNode));
         } else {
@@ -105,7 +103,6 @@ data::DatablocksData DatablocksParser::Parse
         }
     }
 
-    //return result.release();
     return result;
 }
 
@@ -124,7 +121,7 @@ data::DatablockData* DatablocksParser::ParseDatablock
     if (id.isEmpty())
         return 0;
 
-    std::auto_ptr<data::DatablockData> dummy(new data::DatablockData());
+    QScopedPointer<data::DatablockData> dummy(new data::DatablockData());
     dummy->setId(id);
 
     for (DOMNode* currentNode = p_datablock->getFirstChild(); currentNode != 0;
@@ -165,9 +162,7 @@ data::DatablockData* DatablocksParser::ParseDatablock
         }
         else if (tag == "description")
             dummy->setDescription(nodeText);
-        else if (tag == "birth") {
-            dummy->setBirth(QDateTime::fromString(nodeText, Qt::ISODate));
-        } else if (tag == "checksum") {
+        else if (tag == "checksum") {
             dummy->setChecksum(nodeText);
             QString scheck = ApexXMLTools::XMLutils::GetAttribute(currentNode,
                     "check");
@@ -177,6 +172,7 @@ data::DatablockData* DatablocksParser::ParseDatablock
                 dummy->setDoChecksum(true);
         } else if (tag == "uri") {
             QUrl theUrl(nodeText);
+
             /*if (theUrl.isRelative())
             {
                 QString modprefix = p_prefix;
@@ -199,7 +195,7 @@ data::DatablockData* DatablocksParser::ParseDatablock
             dummy->setNbChannels(nodeText.toUInt());
     }
 
-    return dummy.release();
+    return dummy.take();
 }
 
 } // namespace parser

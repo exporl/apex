@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __STR_WIN32_HEADERS_H__
 #define __STR_WIN32_HEADERS_H__
 
-#include "core/_main.h"
-#include <windows.h>
+#include "../../_fromv3/core/_main.h"
+
 #include <Objbase.h>
 #include <WinSock2.h>
+#include <windows.h>
 
 #ifdef _MSC_VER
   #pragma warning ( disable : 4201 )

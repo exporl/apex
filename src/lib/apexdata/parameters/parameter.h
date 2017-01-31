@@ -17,15 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef PARAMETERNAMEH
-#define PARAMETERNAMEH
+#ifndef _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_PARAMETER_H_
+#define _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_PARAMETER_H_
 
 #include <QString>
 #include <QMap>
 #include <QVariant>
 
 //from libtools
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {

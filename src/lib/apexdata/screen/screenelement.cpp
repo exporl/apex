@@ -16,12 +16,10 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "screenelement.h"
-#include "exceptions.h"
 
-#include <qglobal.h>
-#include <assert.h>
+#include "apextools/exceptions.h"
+
+#include "screenelement.h"
 
 #include <QDebug>
 
@@ -36,7 +34,7 @@ ScreenElement::ScreenElement( const QString& i, ScreenElement* p )
 {
     if ( parent )
     {
-        assert( parent->canHaveChildren() );
+        Q_ASSERT( parent->canHaveChildren() );
         parent->addChild( this );
     }
 }

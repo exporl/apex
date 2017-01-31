@@ -1,0 +1,9 @@
+		<screen id="screen" >
+			<gridLayout height="2" width="1" id="main_layout">
+				<label x="1" y="1" id="helplabel">
+				    <text>Type what you hear</text>
+				</label>
+				<textEdit x="1" y="2" id="text" />
+			</gridLayout>
+			<default_answer_element>text</default_answer_element>
+		</screen>

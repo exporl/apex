@@ -1,9 +1,3 @@
-BASEDIR =../../..
-CLEBS += filterplugin buildplugin matlab
+CLEBS *= matlab asciicast buildplugin
 
-include ($$BASEDIR/clebs.pri)
-
-TARGET = matlabfilter
-
-SOURCES +=                                              \
-        matlabfilter.cpp                             \
+!isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)

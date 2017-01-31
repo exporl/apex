@@ -17,11 +17,11 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "datablocksdata.h"
+#include "apextools/apextools.h"
+#include "apextools/exceptions.h"
 
 #include "datablockdata.h"
-#include "exceptions.h"
-#include "apextools.h"
+#include "datablocksdata.h"
 
 namespace apex
 {

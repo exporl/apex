@@ -25,7 +25,7 @@ namespace apex
 namespace data
 {
 
-DeviceData::DeviceData(DeviceType type) : isControlDev(false), devType(type)
+DeviceData::DeviceData(DeviceType type) : isControlDev(false), devType(type), silent(false)
 {
 }
 
@@ -60,5 +60,13 @@ void DeviceData::setNumberOfChannels(unsigned int n)
     setValueByType("channels", n);
 }
 
+void DeviceData::setSilent(bool newSilent) {
+    silent = newSilent;
 }
+
+bool DeviceData::isSilent() const {
+    return silent;
+}
+}
+
 }

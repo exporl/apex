@@ -26,12 +26,12 @@ In @ref sec_strcallback you were promised an example using the @c IEofChack call
 Before you even start of thinking to use @c IThread, make sure you read and understand it's documentation.
 
 We will use 2 threads: the main application thread (0) that prints some time info, and another thread (1) that will do some work for us.
-The work will consist of running a @c Callback, so we implement it as a @c CallbackRunner. See the reference for what it is exactly, and 
+The work will consist of running a @c Callback, so we implement it as a @c CallbackRunner. See the reference for what it is exactly, and
 notice that an @c ISoundCard is also a @c CallbackRunner.
 To keep things interesting, the execution of (1) takes place only every 500mSec, else it would be over before you would even see it.
-The callback we use will be the @c ConnectionManager from the example in @ref sec_strconn. 
+The callback we use will be the @c ConnectionManager from the example in @ref sec_strconn.
 
-We'll wrap that callback into an @c EofCheck callback to check when the input is finished; when that happens, 
+We'll wrap that callback into an @c EofCheck callback to check when the input is finished; when that happens,
 we let @c EofCheck call a @c WaitObjectCallback to inform (0) in a thread-safe way that everything has been done.
 This system is already put together in a streamapp class, namely @c EofCheckWaitCallback, so we'll use that.
 
@@ -99,7 +99,7 @@ private:
 };
 @endcode
 It doesn't do much, except for waiting 500mSec, then seeing if there's a callback, and run it if there is one.
-The class is thread-safe since it uses a @c CriticalSection, so you could eg call m_bStart() as much as you like, 
+The class is thread-safe since it uses a @c CriticalSection, so you could eg call m_bStart() as much as you like,
 everytime with a different @c Callback, while the thread is already running, and it won't crash your application.
 
 So now the application code:
@@ -254,7 +254,7 @@ The message and number of times to print it are defined in the @c gt_ConfigEvent
 so in the @c mp_DispatchEvent we expect a @c gc_eConfigEvent1.
 If we get this event, a_pData should have a pointer to a @c gt_ConfigEvent1. Notice the use of the word should:
 this is the achilles point of the whole event mechanism: you can cast @c void* to anything, that's why you should love it,
-but if you cast it to @c A* while it's actually @c B*, you're in trouble, as this will most certainly lead to accesses to 
+but if you cast it to @c A* while it's actually @c B*, you're in trouble, as this will most certainly lead to accesses to
 memory that you're not allowed to access, or that doesn't exist, and that is why you should take care with void*.
 @code
 class ModuleA : public IThreadedModule
@@ -395,7 +395,7 @@ All modules receive the start and reset events, and each one recieves the config
 also post events, it must post these to the router which will handle it further, therefor we install the router as @c EventDispatcher
 for @c modB.
 
-Important note: do not call for example 
+Important note: do not call for example
 mp_DispatchEventToListener( gc_eResetEvent ) from within modB's thread, as you cannot stop a thread from within it's own
 thread function, but you should already know that
 
@@ -430,7 +430,7 @@ Very simple, innit?
 
 Everything is setup now, lets do the real work. The code below is also put in @c main() for this example,
 but you can as well put in in a function that is called by a gui or so, and run it as many times as you want, it won't hurt.
-What it does should be quite obvious: it configures the two @c ModuleA instances to print "hello earth" 5 times, 
+What it does should be quite obvious: it configures the two @c ModuleA instances to print "hello earth" 5 times,
 then the @c ModuleB instance to print 6 times, and then it starts the whole thing. For simplicity we then just sleep 2 seconds,
 this could be replaced by polling all modules with a "query" event to see when they are done or so, the possibilities are endless.
 
@@ -453,13 +453,13 @@ IThread::sf_Sleep( 2000 );
 Router.mp_DispatchEvent( gc_eResetEvent );
 @endcode
 
-Now compile and run, you expect to see "I'm thread A and I'll print hello earth 4 more times." and stuff like that, but 
-aaaargh, this really hurts, you made a nice application, checked everything, re-checked everything, and then the first time you 
+Now compile and run, you expect to see "I'm thread A and I'll print hello earth 4 more times." and stuff like that, but
+aaaargh, this really hurts, you made a nice application, checked everything, re-checked everything, and then the first time you
 run it, it completely surprises you by coming up with something like this:
 "I'm thread B and I'll priI'm thread A1I'm threadA2nt", and it continues spitting out unreadable stuff. What on earth is going on?
 
 
-Little intermezzo now: you may wonder why streamapp's code is full of CriticalSections, well, if you really have no idea, then 
+Little intermezzo now: you may wonder why streamapp's code is full of CriticalSections, well, if you really have no idea, then
 you probably never wrote an application with more then one thread and shared data between them, and you never went through
 the horror of seeing that data change as if there were evil hobbits creating new connections on your FSB to route it somewhere else,
 after which the same hobbits generate a blue screen (or, for linux, just hang you pc without telling why).
@@ -469,11 +469,11 @@ Note about "the same time": in computer hardware with a cpu there is no such thi
 instruction at a time, but since it will contain subsequent instructions that are actually from different threads, it looks like
 it happens at the same time for the end-user application.
 
-So, the code above is perfect to illustrate why you *must* use @c CriticalSection. What happens is this: all 3 threads are putting stuff 
+So, the code above is perfect to illustrate why you *must* use @c CriticalSection. What happens is this: all 3 threads are putting stuff
 on @c std::cout at the same time, and since @c std::cout is not made to be used in a multithreaded environment,
- it just prints everything as it receives it. In this case, not a big disaster since @c std::cout is thread-safe, it won't corrupt it's 
+ it just prints everything as it receives it. In this case, not a big disaster since @c std::cout is thread-safe, it won't corrupt it's
  memory, but it's not really what you want to see. Suppose you make a @c Tracer implementation that puts everything in a memory buffer,
- the chance that your application raises a segmentation fault are seriously increasing though, as all 3 threads access the memory at the 
+ the chance that your application raises a segmentation fault are seriously increasing though, as all 3 threads access the memory at the
  same time, and that can never be good.
 
 The solution is simple: adjust @c MyTracer like this:

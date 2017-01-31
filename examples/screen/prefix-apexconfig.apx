@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+
+ <!-- @doc
+  @what: shows how to use an 'apexconfig' as a prefix for a filename
+  @description:  idem
+  @how: <uri_prefix source="apexconfig">pictures</uri_prefix>
+  -->
+
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+  </trials>
+ </procedure>
+
+ <screens>
+  <uri_prefix source="apexconfig">pictures</uri_prefix>
+  <screen id="screen1">
+   <gridLayout width="2" height="1" id="main_layout">
+    <picture y="1" id="picture_1" x="1">
+     <uri>1.png</uri>
+    </picture>
+   </gridLayout>
+   <default_answer_element>picture_1</default_answer_element>
+  </screen>
+ </screens>
+
+ <datablocks/>
+
+ <devices/>
+
+ <filters/>
+
+ <stimuli>
+  <fixed_parameters>
+   <parameter id="fixed"/>
+  </fixed_parameters>
+  <stimulus id="stimulus1">
+   <description/>
+   <datablocks/>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="fixed">0</parameter>
+   </fixedParameters>
+  </stimulus>
+ </stimuli>
+
+ <connections/>
+
+</apex:apex>

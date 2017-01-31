@@ -17,9 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "streamappcallbacks.h"
+#include "../multistream.h"
+
 #include "multiproc.h"
-#include "multistream.h"
+#include "streamappcallbacks.h"
+
+#include <QtGlobal>
 
 using namespace streamapp;
 
@@ -200,7 +203,7 @@ void StreamAppChannel::mp_RemoveOutput( const unsigned ac_nIndex )
 
 void StreamAppChannel::mp_RemoveProcessor( const unsigned /*ac_nIndex*/ )
 {
-  assert( 0 );
+  Q_ASSERT( 0 );
   //m_Processors.mp_RemoveItem( ac_nIndex ); //FIXME ??
 }
 

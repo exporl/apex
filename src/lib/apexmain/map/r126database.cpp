@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifdef R126
 
 #include "r126database.h"
@@ -24,7 +24,6 @@
 #include "r126nucleusmaprecord.h"
 
 #include "exceptions.h"
-#include <assert.h>
 #include <objbase.h>    //COM
 #include <ATLComTime.h> //COLEDateTime
 
@@ -60,11 +59,11 @@ namespace r126{
     {
         //only happens first time for some reason
         //but is not a problem..
-      if( hr != RPC_E_CHANGED_MODE )  
+      if( hr != RPC_E_CHANGED_MODE )
         throw( ApexStringException( "CoInitializeEx failed - cannot connect to database" ) );
     }
   }
-    
+
   R126DataBase::~R126DataBase()
   {
     sm_bPatientsRecorded = false;
@@ -82,9 +81,9 @@ namespace r126{
   const bool R126DataBase::mf_bTestConnection() const
   {
     HRESULT hr;
-    try 
+    try
     {
-        //Create the database-connection and recordset objects 
+        //Create the database-connection and recordset objects
       ADODB::_ConnectionPtr connection;
       hr = connection.CreateInstance( __uuidof(ADODB::Connection) );
       if( FAILED(hr) )
@@ -113,7 +112,7 @@ namespace r126{
     sf_DisplayMessage( "Connection OK" );
     return true;
   }
-  
+
   const R126DataBaseSettings* R126DataBase::mf_pGetDataBaseSettings() const
   {
     return m_pConnectionSettings;
@@ -125,9 +124,9 @@ namespace r126{
     {
         //do data exchange
       HRESULT hr;
-      try 
+      try
       {
-          //Create the database-connection and recordset objects 
+          //Create the database-connection and recordset objects
         ADODB::_ConnectionPtr connection;
         hr = connection.CreateInstance(__uuidof(ADODB::Connection));
         if (FAILED(hr))
@@ -162,7 +161,7 @@ namespace r126{
             //Fill pRec from database
           var = PatientRecordSet->Fields->GetItem(L"Surname")->GetValue();
           pRec->m_sSurName = QString( static_cast<char*>(_bstr_t(var.bstrVal)) );
-          
+
           var = PatientRecordSet->Fields->GetItem(L"Firstname")->GetValue();
           pRec->m_sFirstName = QString( static_cast<char*>(_bstr_t(var.bstrVal)) );
 
@@ -210,7 +209,7 @@ namespace r126{
       }
       catch (...)
       {
-        assert( 0 );
+        Q_ASSERT( 0 );
       }
       sm_bPatientsRecorded = true;
     }
@@ -231,9 +230,9 @@ namespace r126{
 
       //do data exchange
     HRESULT hr;
-    try 
+    try
     {
-        //Create the database-connection and recordset objects 
+        //Create the database-connection and recordset objects
       ADODB::_ConnectionPtr connection;
       hr = connection.CreateInstance(__uuidof(ADODB::Connection));
       if (FAILED(hr))
@@ -278,7 +277,7 @@ namespace r126{
 
         var = MAPRecordSet->Fields->GetItem(L"Maxima")->GetValue();
         pRec->m_nMaxima = var.intVal;
-        
+
         var = MAPRecordSet->Fields->GetItem(L"StimulationMode")->GetValue();
         QString sStimulationMode(static_cast<char*>(_bstr_t(var.bstrVal)));
         if (sStimulationMode.left(23) == "LRD_MapStimulationMode_") {
@@ -291,7 +290,7 @@ namespace r126{
         pRec->m_nStimulationRate = var.intVal;
 
         var = MAPRecordSet->Fields->GetItem(L"TotalStimulationRate")->GetValue();
-        //pRec->m_nMaxima = var.intVal; 
+        //pRec->m_nMaxima = var.intVal;
     pRec->m_nTotalRate = var.intVal;    // [Tom]
 
         var = MAPRecordSet->Fields->GetItem(L"Strategy")->GetValue();
@@ -312,11 +311,11 @@ namespace r126{
     catch (_com_error &e)
     {
       e.Description();
-      assert( 0 );
+      Q_ASSERT( 0 );
     }
     catch (...)
     {
-      assert( 0 );
+      Q_ASSERT( 0 );
     }
     return m_aMaps;
   }
@@ -327,9 +326,9 @@ namespace r126{
 
       //do data exchange
     HRESULT hr;
-    try 
+    try
     {
-        //Create the database-connection and recordset objects 
+        //Create the database-connection and recordset objects
       ADODB::_ConnectionPtr connection;
       hr = connection.CreateInstance(__uuidof(ADODB::Connection));
       if (FAILED(hr))
@@ -355,7 +354,7 @@ namespace r126{
       connection->CursorLocation = ADODB::adUseClient;
       _bstr_t sConn( m_pConnectionSettings->mf_sGetConnectionString().ascii() );
       connection->Open( sConn, L"", L"", ADODB::adConnectUnspecified );
-      
+
         //Select the MAP from the database
       QString sqlstring = "SELECT MAP.MAPNumber, MAP.CreationDateTime, MAP.MAPGUID"
         ", MAP.InterPhaseGap, MAP.StimulationRate, MAP.TotalStimulationRate "
@@ -402,7 +401,7 @@ namespace r126{
       int i = 0;
       while( !ChannelRecordSet->ADOEOF )
       {
-        assert( i < sc_nChannels ); //!!
+        Q_ASSERT( i < sc_nChannels ); //!!
         _variant_t var;
 
         var = ChannelRecordSet->Fields->GetItem(L"ActiveElectrode")->GetValue();
@@ -441,7 +440,7 @@ namespace r126{
     catch (_com_error &e)
     {
       e.Description();
-      assert( 0 );
+      Q_ASSERT( 0 );
       delete pRec;
       return 0;
     }

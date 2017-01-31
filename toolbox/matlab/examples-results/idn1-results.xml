@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:results experiment_file="file:/home/tom/data/apex-deviceparameters/apex/tests/regression/procedure/idn1.apx" xmlns:apex="http://www.kuleuven.be/exporl/Lab/Apex">
+<?matlab script="a3cst2psy"?>
+<general>
+	<startdate>Thu Oct 4 16:47:56 2007</startdate>
+	<enddate>Thu Oct 4 16:48:06 2007</enddate>
+	<duration unit="seconds">9</duration>
+	<xsltscript>cst.xsl</xsltscript>
+	<interactive>
+	</interactive>
+</general>
+<trial id="trial1">
+<procedure >
+<stimulus>stimulus1</stimulus>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button1</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<currentanswer>button1</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>432</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial2">
+<procedure >
+<stimulus>stimulus2</stimulus>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button1</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<currentanswer>button1</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>341</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial3">
+<procedure >
+<stimulus>stimulus3</stimulus>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button3</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<currentanswer>button3</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>351</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial4">
+<procedure >
+<stimulus>stimulus4</stimulus>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button2</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<currentanswer>button2</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>393</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial5">
+<procedure >
+<stimulus>stimulus5</stimulus>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button4</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<currentanswer>button4</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>293</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<trial id="trial6">
+<procedure >
+<stimulus>stimulus6</stimulus>
+</procedure>
+<screenresult>
+	<element id="buttongroup1">button6</element>
+</screenresult>
+<corrector>
+<result>true</result>
+<currentanswer>button6</currentanswer>
+</corrector>
+
+<output>
+<wavdevice>
+  <buffer underruns="0"/>
+</wavdevice>
+</output>
+
+<responsetime>480</responsetime>
+<randomgenerators>
+</randomgenerators>
+
+
+</trial>
+<processed>
+Results from file:/home/tom/data/apex-deviceparameters/apex/tests/regression/procedure/idn1.apx
+
+[Stimulus/answer/correct pairs]
+stimulus1	stimulus2	stimulus3	stimulus4	stimulus5	stimulus6
+button1	button1	button3	button2	button4	button6
+true	false	true	false	false	true
+
+
+</processed>
+</apex:results>

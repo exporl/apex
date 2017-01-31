@@ -1,0 +1,446 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:results experiment_file="file:/C:/experiments/u0095372-experiments/Emilie/balance_adjustment_LTASS_right.apx" xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+<general>
+    <apex_version>3.1.x</apex_version>
+    <apex_version_git>(993781) -   Thu Jul 17 08:10:57 2014 +0200</apex_version_git>
+    <startdate>2014-12-16T13:36:56</startdate>
+    <enddate>2014-12-16T13:38:31</enddate>
+    <duration unit="seconds">95</duration>
+    <jscript>apex:resultsviewer.html</jscript>
+    <subject>A04B07</subject>
+    <interactive>
+        <entry expression="/apex:apex/results[1]/subject[1]" new_value="A04B07" succeeded="true" />
+        <entry expression="/apex:apex/procedure[1]/parameters[1]/parameter[2]" new_value="54" succeeded="true" />
+        <entry expression="/apex:apex/filters[1]/filter/gain[@id='gainL']" new_value="60" succeeded="true" />
+    </interactive>
+</general>
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">54</parameter></procedure><screenresult>
+    <element id="button_5"></element>
+    <element id="buttongroup">button_5</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1148</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:36:56</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">59</parameter></procedure><screenresult>
+    <element id="button_5"></element>
+    <element id="buttongroup">button_5</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>608</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:36:59</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">64</parameter></procedure><screenresult>
+    <element id="button_5"></element>
+    <element id="buttongroup">button_5</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>758</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:02</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">69</parameter></procedure><screenresult>
+    <element id="button_2"></element>
+    <element id="buttongroup">button_2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1568</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:05</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">71</parameter></procedure><screenresult>
+    <element id="button_2"></element>
+    <element id="buttongroup">button_2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>820</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:08</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">73</parameter></procedure><screenresult>
+    <element id="button_2"></element>
+    <element id="buttongroup">button_2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1452</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:11</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">75</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2155</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:15</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">76</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1642</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:20</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">77</parameter></procedure><screenresult>
+    <element id="button_-1"></element>
+    <element id="buttongroup">button_-1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1958</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:23</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">76</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1790</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:28</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">77</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>689</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:32</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">78</parameter></procedure><screenresult>
+    <element id="button_-1"></element>
+    <element id="buttongroup">button_-1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1103</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:34</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">77</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>918</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:38</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">78</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1366</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:41</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">79</parameter></procedure><screenresult>
+    <element id="button_-1"></element>
+    <element id="buttongroup">button_-1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>720</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:44</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">78</parameter></procedure><screenresult>
+    <element id="button_-1"></element>
+    <element id="buttongroup">button_-1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1239</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:47</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">77</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1322</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:51</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">78</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>659</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:54</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">79</parameter></procedure><screenresult>
+    <element id="button_-1"></element>
+    <element id="buttongroup">button_-1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1286</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:37:57</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">78</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1029</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:38:01</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">79</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>284</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:38:04</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">80</parameter></procedure><screenresult>
+    <element id="button_-1"></element>
+    <element id="buttongroup">button_-1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>762</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:38:06</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">79</parameter></procedure><screenresult>
+    <element id="button_-1"></element>
+    <element id="buttongroup">button_-1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>799</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:38:09</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">78</parameter></procedure><screenresult>
+    <element id="button_1"></element>
+    <element id="buttongroup">button_1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1001</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:38:12</trial_start_time>
+</trial>
+
+<trial id="trial">
+<procedure type="adjustmentProcedure"><parameter id="gainR">79</parameter></procedure><screenresult>
+    <element id="button_-1"></element>
+    <element id="buttongroup">button_-1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1032</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-16T13:38:15</trial_start_time>
+</trial>
+
+<calibration>
+<parameter id="Lgain">-8.4</parameter>
+<parameter id="Rgain">-37.8</parameter>
+</calibration>
+</apex:results>

@@ -17,36 +17,33 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "screenswriter.h"
+#include "apexdata/screen/answerlabelelement.h"
+#include "apexdata/screen/arclayoutelement.h"
+#include "apexdata/screen/buttonelement.h"
+#include "apexdata/screen/buttongroup.h"
+#include "apexdata/screen/emptyelement.h"
+#include "apexdata/screen/flashplayerelement.h"
+#include "apexdata/screen/gridlayoutelement.h"
+#include "apexdata/screen/labelelement.h"
+#include "apexdata/screen/parameterdata.h"
+#include "apexdata/screen/parameterlabelelement.h"
+#include "apexdata/screen/parameterlistelement.h"
+#include "apexdata/screen/pictureelement.h"
+#include "apexdata/screen/picturelabelelement.h"
+#include "apexdata/screen/screen.h"
+#include "apexdata/screen/screenelementvisitor.h"
+#include "apexdata/screen/screensdata.h"
+#include "apexdata/screen/texteditelement.h"
 
-//from libtools
-#include "xml/apexxmltools.h"
-#include "apextools.h"
-#include "gui/arclayout.h"
+#include "apextools/apextools.h"
 
-//from lib (apex)
-#include "screen/screen.h"
-#include "screen/buttongroup.h"
-#include "screen/screenelementvisitor.h"
-#include "screen/answerlabelelement.h"
-#include "screen/arclayoutelement.h"
-#include "screen/buttonelement.h"
-#include "screen/emptyelement.h"
-#include "screen/flashplayerelement.h"
-#include "screen/gridlayoutelement.h"
-#include "screen/labelelement.h"
-#include "screen/parameterlistelement.h"
-#include "screen/pictureelement.h"
-#include "screen/texteditelement.h"
-#include "screen/parameterdata.h"
-#include "screen/picturelabelelement.h"
-#include "screen/screensdata.h"
-#include "screen/parameterlabelelement.h"
+#include "apextools/gui/arclayout.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
 
 #include "fileprefixwriter.h"
-
-//from xerces
-#include "xml/xercesinclude.h"
+#include "screenswriter.h"
 
 using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::ApexXMLTools;
@@ -56,7 +53,7 @@ using namespace apex::data;
 using apex::writer::ScreensWriter;
 
 class ElementToXMLVisitor
-	: public ScreenElementVisitor
+        : public ScreenElementVisitor
 {
         DOMDocument* domDocument;
         DOMElement* result;
@@ -354,7 +351,7 @@ void ElementToXMLVisitor::visitParameterLabel(const ParameterLabelElement* e)
                                                     "parameter",
                                                     paramData.id);//argh...
     result->appendChild(param);
-    qDebug() << "visited parameter label";
+    qCDebug(APEX_RS) << "visited parameter label";
 }
 
 DOMElement* ElementToXMLVisitor::elementToXML(const ScreenElement* e)
@@ -449,7 +446,7 @@ DOMElement* ScreensWriter::addScreen(DOMDocument *doc, const data::Screen& data)
     e->setAttribute(X("id"),S2X(data.getID()));
 
     DOMElement* layoutEl = screenElementToXml(doc, *data.getRootElement());
-    assert(layoutEl);
+    Q_ASSERT(layoutEl);
     e->appendChild(layoutEl);
 
     const ButtonGroup* buttonGroup = data.getButtonGroup();

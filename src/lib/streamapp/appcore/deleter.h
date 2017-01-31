@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef DELETERR_H
 #define DELETERR_H
 
@@ -71,7 +71,7 @@ namespace appcore
         * @param p pointer to the memory to delete
         */
     template < class tType >
-    void operator() ( tType*& p )  
+    void operator() ( tType*& p )
     {
       delete p;
       p = 0;

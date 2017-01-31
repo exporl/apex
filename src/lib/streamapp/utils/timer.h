@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __ITIMER_H__
 #define __ITIMER_H__
 
@@ -30,20 +30,20 @@ protected:
   ITimer()
   {}
 
-public:  
+public:
   virtual ~ITimer()
   {}
 
     /**
       * Set the time to zero and start counting.
-      */ 
+      */
   virtual void Reset() = 0;
 
     /**
       * Get the elapsed tim.
       * @return the time (preferably nanoseconds)
-      */ 
-  virtual double Elapsed() = 0;    
+      */
+  virtual double Elapsed() = 0;
 };
 
 #endif //#ifndef __ITIMER_H__

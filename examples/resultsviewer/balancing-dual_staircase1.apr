@@ -1,0 +1,1410 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:results experiment_file="file:/C:/experiments/u0095372-experiments/Emilie/balance_adaptive_LTASS_right.apx" xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+<general>
+    <apex_version>3.1.x</apex_version>
+    <apex_version_git>(993781) -   Thu Jul 17 08:10:57 2014 +0200</apex_version_git>
+    <startdate>2014-12-17T13:30:36</startdate>
+    <enddate>2014-12-17T13:34:04</enddate>
+    <duration unit="seconds">207</duration>
+    <jscript>apex:resultsviewer.html</jscript>
+    <subject>L12R04</subject>
+    <interactive>
+        <entry expression="/apex:apex/results[1]/subject[1]" new_value="L12R04" succeeded="true" />
+        <entry expression="/apex:apex/procedure[1]/procedure[1]/parameters[1]/start_value[1]" new_value="68" succeeded="true" />
+        <entry expression="/apex:apex/procedure[1]/procedure[2]/parameters[1]/start_value[1]" new_value="52" succeeded="true" />
+        <entry expression="/apex:apex/filters[1]/filter/gain[@id='gainL']" new_value="60" succeeded="true" />
+    </interactive>
+</general>
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>68</parameter>
+    <stepsize>7</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>0</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1269</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:30:36</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>52</parameter>
+    <stepsize>7</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>0</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3285</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:30:40</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>68</parameter>
+    <stepsize>7</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>1</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1318</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:30:45</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>59</parameter>
+    <stepsize>7</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>1</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1272</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:30:49</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>61</parameter>
+    <stepsize>7</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>2</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1611</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:30:52</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>66</parameter>
+    <stepsize>7</stepsize>
+    <reversals>0</reversals>
+    <saturation>false</saturation>
+    <presentations>2</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1443</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:30:56</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>61</parameter>
+    <stepsize>7</stepsize>
+    <reversals>1</reversals>
+    <saturation>false</saturation>
+    <presentations>3</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1318</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:00</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>66</parameter>
+    <stepsize>7</stepsize>
+    <reversals>1</reversals>
+    <saturation>false</saturation>
+    <presentations>3</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1449</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:03</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>68</parameter>
+    <stepsize>7</stepsize>
+    <reversals>1</reversals>
+    <saturation>false</saturation>
+    <presentations>4</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3136</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:07</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>59</parameter>
+    <stepsize>7</stepsize>
+    <reversals>2</reversals>
+    <saturation>false</saturation>
+    <presentations>4</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1721</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:12</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>68</parameter>
+    <stepsize>7</stepsize>
+    <reversals>2</reversals>
+    <saturation>false</saturation>
+    <presentations>5</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2185</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:16</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>64</parameter>
+    <stepsize>5</stepsize>
+    <reversals>2</reversals>
+    <saturation>false</saturation>
+    <presentations>5</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3370</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:21</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>63</parameter>
+    <stepsize>5</stepsize>
+    <reversals>2</reversals>
+    <saturation>false</saturation>
+    <presentations>6</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>4666</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:26</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>69</parameter>
+    <stepsize>5</stepsize>
+    <reversals>2</reversals>
+    <saturation>false</saturation>
+    <presentations>6</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1141</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:33</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>63</parameter>
+    <stepsize>5</stepsize>
+    <reversals>3</reversals>
+    <saturation>false</saturation>
+    <presentations>7</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>764</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:36</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>69</parameter>
+    <stepsize>5</stepsize>
+    <reversals>3</reversals>
+    <saturation>false</saturation>
+    <presentations>7</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>984</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:39</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>68</parameter>
+    <stepsize>5</stepsize>
+    <reversals>3</reversals>
+    <saturation>false</saturation>
+    <presentations>8</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2059</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:43</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>64</parameter>
+    <stepsize>5</stepsize>
+    <reversals>4</reversals>
+    <saturation>false</saturation>
+    <presentations>8</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2091</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:47</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>68</parameter>
+    <stepsize>5</stepsize>
+    <reversals>4</reversals>
+    <saturation>false</saturation>
+    <presentations>9</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1840</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:51</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>67</parameter>
+    <stepsize>3</stepsize>
+    <reversals>4</reversals>
+    <saturation>false</saturation>
+    <presentations>9</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3027</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:31:55</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>65</parameter>
+    <stepsize>3</stepsize>
+    <reversals>4</reversals>
+    <saturation>false</saturation>
+    <presentations>10</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>5053</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:00</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>70</parameter>
+    <stepsize>3</stepsize>
+    <reversals>4</reversals>
+    <saturation>false</saturation>
+    <presentations>10</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1249</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:08</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>62</parameter>
+    <stepsize>3</stepsize>
+    <reversals>4</reversals>
+    <saturation>false</saturation>
+    <presentations>11</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1314</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:11</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>70</parameter>
+    <stepsize>3</stepsize>
+    <reversals>5</reversals>
+    <saturation>false</saturation>
+    <presentations>11</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2233</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:15</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>62</parameter>
+    <stepsize>3</stepsize>
+    <reversals>5</reversals>
+    <saturation>false</saturation>
+    <presentations>12</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1398</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:19</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>67</parameter>
+    <stepsize>3</stepsize>
+    <reversals>6</reversals>
+    <saturation>false</saturation>
+    <presentations>12</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2333</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:23</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>65</parameter>
+    <stepsize>3</stepsize>
+    <reversals>6</reversals>
+    <saturation>false</saturation>
+    <presentations>13</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1322</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:27</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>70</parameter>
+    <stepsize>3</stepsize>
+    <reversals>6</reversals>
+    <saturation>false</saturation>
+    <presentations>13</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1102</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:31</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>62</parameter>
+    <stepsize>3</stepsize>
+    <reversals>6</reversals>
+    <saturation>false</saturation>
+    <presentations>14</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1373</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:34</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>70</parameter>
+    <stepsize>3</stepsize>
+    <reversals>7</reversals>
+    <saturation>false</saturation>
+    <presentations>14</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>853</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:38</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>62</parameter>
+    <stepsize>3</stepsize>
+    <reversals>7</reversals>
+    <saturation>false</saturation>
+    <presentations>15</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1273</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:41</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>67</parameter>
+    <stepsize>3</stepsize>
+    <reversals>7</reversals>
+    <saturation>false</saturation>
+    <presentations>15</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3037</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:44</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>65</parameter>
+    <stepsize>3</stepsize>
+    <reversals>7</reversals>
+    <saturation>false</saturation>
+    <presentations>16</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2622</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:49</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>67</parameter>
+    <stepsize>3</stepsize>
+    <reversals>7</reversals>
+    <saturation>false</saturation>
+    <presentations>16</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2819</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:54</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>65</parameter>
+    <stepsize>3</stepsize>
+    <reversals>7</reversals>
+    <saturation>false</saturation>
+    <presentations>17</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1295</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:32:59</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>64</parameter>
+    <stepsize>3</stepsize>
+    <reversals>7</reversals>
+    <saturation>false</saturation>
+    <presentations>17</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2601</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:03</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>68</parameter>
+    <stepsize>3</stepsize>
+    <reversals>7</reversals>
+    <saturation>false</saturation>
+    <presentations>18</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3468</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:08</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>64</parameter>
+    <stepsize>3</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>18</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1361</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:13</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>68</parameter>
+    <stepsize>3</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>19</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>900</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:17</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>67</parameter>
+    <stepsize>3</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>19</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1897</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:20</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>65</parameter>
+    <stepsize>3</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>20</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>3096</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:24</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>67</parameter>
+    <stepsize>3</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>20</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1498</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:29</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>62</parameter>
+    <stepsize>3</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>21</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1203</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:33</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>70</parameter>
+    <stepsize>3</stepsize>
+    <reversals>8</reversals>
+    <saturation>false</saturation>
+    <presentations>21</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1426</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:37</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <reversal/>
+    <parameter>62</parameter>
+    <stepsize>3</stepsize>
+    <reversals>9</reversals>
+    <saturation>false</saturation>
+    <presentations>22</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2571</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:40</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <reversal/>
+    <parameter>70</parameter>
+    <stepsize>3</stepsize>
+    <reversals>9</reversals>
+    <saturation>false</saturation>
+    <presentations>22</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1593</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:45</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>65</parameter>
+    <stepsize>3</stepsize>
+    <reversals>9</reversals>
+    <saturation>false</saturation>
+    <presentations>23</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1208</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:49</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>67</parameter>
+    <stepsize>3</stepsize>
+    <reversals>9</reversals>
+    <saturation>false</saturation>
+    <presentations>23</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>887</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:52</trial_start_time>
+</trial>
+
+<trial id="trial1">
+<procedure type="apex:adaptiveProcedure" id="first">
+<answer>button1</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>false</correct>
+    <parameter>65</parameter>
+    <stepsize>3</stepsize>
+    <reversals>9</reversals>
+    <saturation>false</saturation>
+    <presentations>24</presentations>
+</procedure><screenresult>
+    <element id="button1"></element>
+    <element id="buttongroup">button1</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>2472</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:33:55</trial_start_time>
+</trial>
+
+<trial id="trial2">
+<procedure type="apex:adaptiveProcedure" id="second">
+<answer>button2</answer>
+<correct_answer>button2</correct_answer>
+<stimulus>stimulus</stimulus>
+<correct>true</correct>
+    <parameter>67</parameter>
+    <stepsize>3</stepsize>
+    <reversals>9</reversals>
+    <saturation>false</saturation>
+    <presentations>24</presentations>
+</procedure><screenresult>
+    <element id="button2"></element>
+    <element id="buttongroup">button2</element>
+</screenresult>
+<output>
+<device id="wavdevice">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime unit='ms'>1874</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+<trial_start_time>2014-12-17T13:34:00</trial_start_time>
+</trial>
+
+<trial id="VIRTUAL_TRIAL" type="virtual">
+<!-- This is not a real trial, but a virtual trial based on the previous one -->
+<procedure type="apex:adaptiveProcedure" id="first">
+<stimulus>stimulus</stimulus>
+    <parameter>68</parameter>
+    <stepsize>3</stepsize>
+    <reversals>9</reversals>
+    <saturation>false</saturation>
+    <presentations>25</presentations>
+</procedure>
+</trial><trial id="VIRTUAL_TRIAL" type="virtual">
+<!-- This is not a real trial, but a virtual trial based on the previous one -->
+<procedure type="apex:adaptiveProcedure" id="second">
+<stimulus>stimulus</stimulus>
+    <parameter>64</parameter>
+    <stepsize>3</stepsize>
+    <reversals>9</reversals>
+    <saturation>false</saturation>
+    <presentations>25</presentations>
+</procedure>
+</trial><calibration>
+<parameter id="Lgain">-8.4</parameter>
+<parameter id="Rgain">-37.8</parameter>
+</calibration>
+</apex:results>

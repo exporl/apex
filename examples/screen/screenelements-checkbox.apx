@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+
+ <!-- @doc
+  @what: shows how to use a checkbox
+  @description: Checkboxes are shown on the screen: if a checkbox is clicked, the subject is assumed to have responded to the trial
+  @how: <checkBox>
+  -->
+
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>1</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial_1">
+    <answer>button_1</answer>
+    <screen id="screen_1"/>
+    <stimulus id="stimulus_1"/>
+   </trial>
+  </trials>
+ </procedure>
+
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">false</feedback>
+  </reinforcement>
+  <screen id="screen_1">
+   <vLayout height="2" id="vLayout_1">
+    <label x="1" id="button_1" y="1">
+     <text>Ze moet hard studeren om te slagen</text>
+    </label>
+    <hLayout width="4" x="1" id="hLayout_12" y="2">
+     <checkBox x="1" id="checkBox_11" y="1">
+      <text>moet</text>
+     </checkBox>
+     <checkBox x="2" id="checkBox_12" y="1">
+      <text>hard</text>
+     </checkBox>
+     <checkBox x="3" id="checkBox_13" y="1">
+      <text>studeren</text>
+     </checkBox>
+     <checkBox x="4" id="checkBox_14" y="1">
+      <text>slagen</text>
+     </checkBox>
+    </hLayout>
+   </vLayout>
+   <default_answer_element>button_1</default_answer_element>
+  </screen>
+ </screens>
+
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <uri>sentence.wav</uri>
+  </datablock>
+ </datablocks>
+
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>1</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+
+ <filters/>
+
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus_1">
+   <datablocks>
+    <simultaneous>
+     <datablock id="rawdata1"/>
+    </simultaneous>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+
+ <connections/>
+
+ <general/>
+</apex:apex>

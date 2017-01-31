@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
   /**
     * @file events.h
     * Declares a generic communication pattern.
@@ -46,7 +46,7 @@
 #ifndef __EVENTS_H__
 #define __EVENTS_H__
 
-#include "defines.h"
+#include "../../defines.h"
 
   /**
     * namespace containing classes to build an application

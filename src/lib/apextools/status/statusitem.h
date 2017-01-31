@@ -17,10 +17,10 @@
 * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
 *****************************************************************************/
 
-#ifndef APEX_STATUSITEM_H
-#define APEX_STATUSITEM_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_STATUS_STATUSITEM_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_STATUS_STATUSITEM_H_
 
-#include "global.h"
+#include "../global.h"
 
 #include <QList>
 #include <QString>

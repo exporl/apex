@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!-- @doc
+  @what:  a pause of 500ms should be introduced between the stimulus and the standards
+  @description: 1 trials (10 presentations => 10x) - You hear a stimulus (1-2-3-4-5-6) in both ears - Typ the answer/stimulus (een, twee, drie, ...) in the textbox below 'answer'.
+  @how: pause between stimuli (in seconds)
+  -->
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <intervals count="3">
+    <interval element="button1" number="1"/>
+    <interval element="button2" number="2"/>
+    <interval element="button3" number="3"/>
+   </intervals>
+   <pause_between_stimuli>1000</pause_between_stimuli>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+    <standard id="standard1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">false</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout width="3" height="1" id="main_layout">
+    <button x="1" y="1" id="button1">
+     <text>een</text>
+    </button>
+    <button x="2" y="1" id="button2">
+     <text>een</text>
+    </button>
+    <button x="3" y="1" id="button3">
+     <text>een</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+    <button id="button3"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="noisedata">
+   <device>wavdevice</device>
+   <uri>ruisje.wav</uri>
+  </datablock>
+  <datablock id="rawdata">
+   <device>wavdevice</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters>
+  </fixed_parameters>
+  <stimulus id="standard1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="noisedata"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+   </fixedParameters>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

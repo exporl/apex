@@ -36,7 +36,7 @@
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    */
 
 mxArray **gArgoutList;
-int gMaxNargOut, *gArgoutCounterPtr; 
+int gMaxNargOut, *gArgoutCounterPtr;
 
 #define kLastErrBufferSize 64
 char gLastErrBuffer[kLastErrBufferSize];

@@ -17,21 +17,24 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "playmatrix.h"
-#include "datablock.h"
+#include "apexdata/connection/connectiondata.h"
+
+#include "apexdata/stimulus/stimulusdata.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
+
 #include "connection/connection.h"
-#include "connection/connectiondata.h"
-#include "apexfactories.h"
-#include "xml/xmlkeys.h"
-#include "xml/apexxmltools.h"
 
-//from libdata
-#include "stimulus/stimulusdata.h"
-
-#include "xml/xercesinclude.h"
-using namespace xercesc;
+#include "datablock.h"
+#include "playmatrix.h"
 
 #include <QDebug>
+
+#include <QtGlobal>
+
+using namespace xercesc;
 
 using namespace apex;
 using namespace apex::stimulus;
@@ -89,7 +92,7 @@ PlayMatrix* PlayMatrixCreator::createMatrix(
             parseDatablocks(type, data, nSeq, nSim);
         }
 
-        //qDebug() << "before shrink ";
+        //qCDebug(APEX_RS) << "before shrink ";
         //sf_DoDisplay(&m_WorkHere);
 
         //copy results to matrix with right size
@@ -152,22 +155,22 @@ void PlayMatrixCreator::sf_FixDuplicateIDs( PlayMatrix* a_pMatrix,
           const QString sCopy( f_sAppendRow( sCur, i ) );
           a_pMatrix->mp_Set( i, j, sCopy );
           DataBlock* pOrig = a_DataBlocks.value(sCur);
-          qDebug("looking for %s", qPrintable(sCur));
-          assert( pOrig );
+          qCDebug(APEX_RS, "looking for %s", qPrintable(sCur));
+          Q_ASSERT( pOrig );
           if( a_DataBlocks.value(sCopy) == 0 )   //check if no copy was made already for a previous stim
           {
               //copy datablock
             //DataBlock* pCopy = fChooseFactory( pOrig->GetModule() )->DuplicateDataBlock( *pOrig, sCopy );
-              qDebug("Copying datablock %s to %s",
+              qCDebug(APEX_RS, "Copying datablock %s to %s",
                      qPrintable( sCur),
                      qPrintable( sCopy));
             DataBlock* pCopy = pOrig->GetCopy( sCopy);
-            assert( pCopy );
+            Q_ASSERT( pCopy );
             a_DataBlocks[ sCopy ] = pCopy;
 
               //copy all connections from datablock
             //tConnections& curcs = a_Connections.find( pOrig->GetDevice() ).value();
-            qDebug("Size of connections map: %d",
+            qCDebug(APEX_RS, "Size of connections map: %d",
                    a_Connections.size());
 
             /*Q_ASSERT( a_Connections.contains( pOrig->GetDevice()) );
@@ -178,8 +181,8 @@ void PlayMatrixCreator::sf_FixDuplicateIDs( PlayMatrix* a_pMatrix,
                   it!=a_Connections.end(); ++it) {
               //const tConnection& cur = curcs.at( i );
                 const data::ConnectionData* current=*it;
-                qDebug() << "sCur=" << sCur;
-                qDebug() << "fromId() = " << current->fromId();
+                qCDebug(APEX_RS) << "sCur=" << sCur;
+                qCDebug(APEX_RS) << "fromId() = " << current->fromId();
                 if (current->fromId()== sCur) {
                     data::ConnectionData *newconnection =
                             new data::ConnectionData(*current);
@@ -192,7 +195,7 @@ void PlayMatrixCreator::sf_FixDuplicateIDs( PlayMatrix* a_pMatrix,
                 tConnection newc = cur;
                 newc.m_sFromID = sCopy;
                 curcs.push_back( newc );
-                qDebug("Copying connection to %s", qPrintable( newc.m_sToID));
+                qCDebug(APEX_RS, "Copying connection to %s", qPrintable( newc.m_sToID));
               }*/
             }
           }
@@ -278,7 +281,7 @@ PlayMatrix* PlayMatrixCreator::sf_pShrinkedMatrix( const PlayMatrix* ac_pSrc, co
         PlayMatrix* pNew = new PlayMatrix( fullRows.size(), ac_nSeq);
         int i=0;
         Q_FOREACH(int r, fullRows) {
-            qDebug("Adding row %d", r);
+            qCDebug(APEX_RS, "Adding row %d", r);
             for( unsigned j = 0 ; j < ac_nSeq ; ++j )
                 pNew->mp_Set( i , j , pRet->operator() ( r , j ) );
             ++i;
@@ -288,7 +291,7 @@ PlayMatrix* PlayMatrixCreator::sf_pShrinkedMatrix( const PlayMatrix* ac_pSrc, co
         pRet=pNew;
 
 #ifdef PRINTPLAYMATRIX
-        qDebug("New playmatrix:");
+        qCDebug(APEX_RS, "New playmatrix:");
         sf_DoDisplay(pRet);
 #endif
     }
@@ -305,8 +308,8 @@ bool PlayMatrixCreator::sf_bCheckMatrixValid( const PlayMatrix* a_pMatrix, const
   const unsigned cnRows = a_pMatrix->mf_nGetChannelCount();
   const unsigned cnCols = a_pMatrix->mf_nGetBufferSize();
 
-  /*assert( cnRows );
-  assert( cnCols );*/
+  /*Q_ASSERT( cnRows );
+  Q_ASSERT( cnCols );*/
 
   if( cnCols == 1 )
     return true;
@@ -324,7 +327,7 @@ bool PlayMatrixCreator::sf_bCheckMatrixValid( const PlayMatrix* a_pMatrix, const
       const QString& sCur = a_pMatrix->operator() ( i, j );
       if( !sCur.isEmpty() )
       {
-//          qDebug("Checking device of %s", qPrintable(sCur));
+//          qCDebug(APEX_RS, "Checking device of %s", qPrintable(sCur));
           Q_ASSERT(a_DataBlocks.value( sCur));
         if( a_DataBlocks.value( sCur )->GetDevice() != sDevice )
         {
@@ -345,8 +348,8 @@ PlayMatrix* PlayMatrixCreator::sf_pCreateSubMatrix( const PlayMatrix* a_pMatrix,
   const unsigned cnRows = a_pMatrix->mf_nGetChannelCount();
   const unsigned cnCols = a_pMatrix->mf_nGetBufferSize();
 
-  assert( cnRows );
-  assert( cnCols );
+  Q_ASSERT( cnRows );
+  Q_ASSERT( cnCols );
 
   PlayMatrix* pTemp = new PlayMatrix( cnRows, cnCols );
   unsigned nFinalRows = 0;
@@ -401,8 +404,8 @@ DataBlockMatrix* PlayMatrixCreator::sf_pConvert( const PlayMatrix* ac_pSrc, cons
   const unsigned cnRows = ac_pSrc->mf_nGetChannelCount();
   const unsigned cnCols = ac_pSrc->mf_nGetBufferSize();
 
-//  assert( cnRows );			[Tom] can be empty...
-//  assert( cnCols );
+//  Q_ASSERT( cnRows );                   [Tom] can be empty...
+//  Q_ASSERT( cnCols );
 
   DataBlockMatrix* pRet = new DataBlockMatrix( cnRows, cnCols, true );
 

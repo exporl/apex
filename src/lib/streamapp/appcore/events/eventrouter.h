@@ -16,13 +16,18 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __EVENTROUTER_H__
 #define __EVENTROUTER_H__
 
-#include "events.h"
 #include "containers/ownedarray.h"
+
+#include "events.h"
+
+#include <QtGlobal>
+
 #include <map>
+
 using namespace streamapp;
 
 namespace appcore
@@ -146,7 +151,7 @@ namespace appcore
         */
     void mp_RegisterEventDispatcher( IEventDispatcher<tType>* a_pListener, const tType& ac_eEventType )
     {
-      assert( a_pListener != this );
+      Q_ASSERT( a_pListener != this );
       mt_It it = m_Container.find( ac_eEventType );
       if( it == m_Container.end() )
       {

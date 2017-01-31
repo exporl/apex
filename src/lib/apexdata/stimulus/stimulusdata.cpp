@@ -17,9 +17,9 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "stimulusdata.h"
+#include "apextools/apextools.h"
 
-#include "apextools.h"
+#include "stimulusdata.h"
 
 apex::data::StimulusData::StimulusData()
 {
@@ -63,7 +63,7 @@ QString apex::data::StimulusDatablocksContainer::typeName() const
         case SIMULTANEOUS:
             return "simultaneous";
     }
-    
+
     Q_ASSERT(false);
     return QString();
 }
@@ -109,7 +109,7 @@ QStringList apex::data::StimulusDatablocksContainer::toStringList() const
 {
     if (type==DATABLOCK)
         return QStringList() << id;
-    
+
     QStringList result;
     result.append( typeName() + ": " );
     for (const_iterator it=begin(); it!=end(); ++it) {

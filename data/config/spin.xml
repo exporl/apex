@@ -3,8 +3,8 @@
 <!-- Configuration for apex SPIN runner -->
 
 <apex:spin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.3/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.3/experiment.xsd"
-  xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment">
+  xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.3/experiment.xsd"
+  xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
   <uri_prefix source="apexconfig">speechmaterials</uri_prefix>
   
   <noises>
@@ -21,8 +21,19 @@
       <rms>-26.68</rms>
     </noise>
     <noise id="koen-nederlands">
-      <uri>noise/thesis-jorien/nederlands-normaal.wav</uri>
+      <description>Male talker reading "the north wind and the sun" in Dutch. Maximal silent gaps of 100ms.</description>
+      <uri>noise/fluctuating-noise/nederlands-normaal.wav</uri>
       <rms>-25</rms>
+    </noise>
+    <noise id="koen-zweeds">
+      <description>Male talker reading "the north wind and the sun" in Swedish. Maximal silent gaps of 100ms.</description>
+      <uri>noise/fluctuating-noise/zweeds-normaal.wav</uri>
+      <rms>-25</rms>
+    </noise>
+    <noise id="ists-no-gaps">
+      <description>ISTS noise with  maximal silent gaps of 100ms.</description>
+      <uri>noise/fluctuating-noise/ISTS-removed_silence.wav</uri>
+      <rms>-38</rms>
     </noise>
     <noise id="multitalker">
       <description>Auditec multitalker babble</description>
@@ -87,8 +98,42 @@
     </screen>
   </subject_screen>
   
-  <experimenter_screen>
-    <screen id="experimenter_screen">
+  <experimenter_screen_quiet>
+    <screen id="experimenter_screen_quiet">
+      <gridLayout height="2" width="1" id="main_layout" rowstretch="1,2">
+        <gridLayout width="2" height="4" columnstretch="1,4" rowstretch="1,1,2,2" id="parameter_layout" col="1" row="1">
+          <label id="snrlabel" col="1" row="1">
+            <text>level</text>
+          </label>
+          <parameterlabel id="snr" col="2" row="1">
+            <parameter>gain</parameter>
+          </parameterlabel>
+          <label id="sentence" col="1" row="2">
+            <text>zin</text>
+          </label>
+          <parameterlabel id="sentence" col="2" row="2">
+            <parameter>sentence</parameter>
+          </parameterlabel>
+        </gridLayout>
+        <gridLayout height="1" width="2" id="answer_layout" col="1" row="2">
+          <button x="1" y="1" id="correct">
+            <text>Correct</text>
+          </button>
+          <button x="2" y="1" id="wrong">
+            <text>Wrong</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="correct"/>
+        <button id="wrong"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </experimenter_screen_quiet>
+
+  <experimenter_screen_noise>
+    <screen id="experimenter_screen_noise">
       <gridLayout height="2" width="1" id="main_layout" rowstretch="1,2">
         <gridLayout width="2" height="4" columnstretch="1,4" rowstretch="1,1,2,2" id="parameter_layout" col="1" row="1">
           <label id="snrlabel" col="1" row="1">
@@ -119,7 +164,7 @@
       </buttongroup>
       <default_answer_element>buttongroup</default_answer_element>
     </screen>
-  </experimenter_screen>
+  </experimenter_screen_noise>
   
   <custom_screens>
     <screen id="threephonemescreen" description="3 Phoneme score screen">

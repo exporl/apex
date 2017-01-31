@@ -16,13 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "bufferedreader.h"
-#include "bufferedreaderthread.h"
+
+#include "_fromv3/core/containers/circularlogic.h"
+
+#include "callback/callback.h"
+
 #include "utils/checks.h"
 #include "utils/tracer.h"
-#include "callback/callback.h"
-#include "core/containers/circularlogic.h"
+
+#include "bufferedreader.h"
+#include "bufferedreaderthread.h"
 
 using appcore::Lock;
 using appcore::UnLock;

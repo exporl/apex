@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __Controllers_H__
 #define __Controllers_H__
 
+#include "apextools/apextypedefs.h"
+
 #include "apexmodule.h"
-#include "apextypedefs.h"
 
 namespace apex
 {
@@ -68,4 +69,4 @@ namespace apex
   }
 }
 
-#endif //#ifndef __DEVICEOUTPUT_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_DEVICE_CONTROLLERS_H_

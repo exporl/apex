@@ -20,6 +20,7 @@
 #include "apexrandom.h"
 #include "apextools.h"
 #include "exceptions.h"
+#include "services/paths.h"
 
 #include <QDateTime>
 #include <QDir>
@@ -33,6 +34,7 @@
 #include <QUrl>
 #include <QVariant>
 #include <QWidget>
+#include <QThread>
 
 #include <algorithm>
 #include <cmath>
@@ -46,7 +48,6 @@
 #include <unistd.h>
 #endif
 
-
 namespace apex {
 
 // copied and modified from qobject.cpp
@@ -56,16 +57,20 @@ void ApexTools::connectSlotsByNameToPrivate(QObject *publicObject, QObject *priv
         return;
     const QMetaObject *mo = privateObject->metaObject();
     Q_ASSERT(mo);
-    const QObjectList list = qFindChildren<QObject*>(publicObject, QString());
+    const QObjectList list = publicObject->findChildren<QObject*>(QString());
     for (int i = 0; i < mo->methodCount(); ++i) {
+#if QT_VERSION < 0x050000
         const char *slot = mo->method(i).signature();
+#else
+        const char *slot = mo->method(i).methodSignature();
+#endif
         Q_ASSERT(slot);
         if (slot[0] != 'o' || slot[1] != 'n' || slot[2] != '_')
             continue;
         bool foundIt = false;
         for(int j = 0; j < list.count(); ++j) {
             const QObject *co = list.at(j);
-            QByteArray objName = co->objectName().toAscii();
+            QByteArray objName = co->objectName().toLatin1();
             int len = objName.length();
             if (!len || qstrncmp(slot + 3, objName.data(), len) ||
                     slot[len+3] != '_')
@@ -77,8 +82,12 @@ void ApexTools::connectSlotsByNameToPrivate(QObject *publicObject, QObject *priv
                 for (int k = 0; k < co->metaObject()->methodCount(); ++k) {
                     if (smo->method(k).methodType() != QMetaMethod::Signal)
                         continue;
-
-                    if (!qstrncmp(smo->method(k).signature(), slot + len + 4,
+#if QT_VERSION < 0x050000
+                    const char *smoSignature = smo->method(k).signature();
+#else
+                    const char *smoSignature = smo->method(k).methodSignature();
+#endif
+                    if (!qstrncmp(smoSignature, slot + len + 4,
                                 slotlen)) {
                         sigIndex = k;
                         break;
@@ -97,7 +106,7 @@ void ApexTools::connectSlotsByNameToPrivate(QObject *publicObject, QObject *priv
             while (mo->method(i + 1).attributes() & QMetaMethod::Cloned)
                   ++i;
         } else if (!(mo->method(i).attributes() & QMetaMethod::Cloned)) {
-            qWarning("connectSlotsByName: No matching signal for %s", slot);
+            qCWarning(APEX_RS, "connectSlotsByName: No matching signal for %s", slot);
         }
     }
 }
@@ -108,8 +117,8 @@ void ApexTools::connectSlotsByNameToPrivate(QObject *publicObject, QObject *priv
  * @return
  */
 QString ApexTools::MakeDirEnd(QString p_path) {
-	if (p_path.isEmpty())
-		return p_path;
+        if (p_path.isEmpty())
+                return p_path;
 
     if (p_path.right(1) != "/") {
             p_path = p_path + "/";
@@ -123,8 +132,8 @@ QString ApexTools::addPrefix(const QString& base, const QString& prefix)
 {
     QString result;
 
-	if (prefix.isEmpty())
-		return base;
+        if (prefix.isEmpty())
+                return base;
 
     QUrl theUrl(base);
     if (theUrl.isRelative())
@@ -137,7 +146,7 @@ QString ApexTools::addPrefix(const QString& base, const QString& prefix)
 
 
 QString ApexTools::absolutePath(const QString& path) {
-	QFileInfo fi(path);
+        QFileInfo fi(path);
     return fi.absoluteFilePath();
 }
 
@@ -319,7 +328,7 @@ void ApexTools::ReplaceWhiteSpaceWithNBSP( QString& a_StringToSearch )
 {
 //  const unsigned nLen = a_StringToSearch.length();
   const QString s( " " );
-  const QChar p( *s.toAscii() );
+  const QChar p( *s.toLatin1() );
   const QString sNBSP( "%20" );
 
   ReplaceCharInString( a_StringToSearch, p, sNBSP );
@@ -351,7 +360,7 @@ bool ApexTools::bQStringToBoolean( const QString& ac_sBoolean ) {
 int ApexTools::maximumFontPointSize (const QString &text, const QSize &box,
         const QFont &originalFont)
 {
-    qDebug() << "getting point size for text" << text;
+    //qCDebug(APEX_RS) << "getting point size for text" << text;
     const int width = box.width();
     const int height = box.height();
     QFont font (originalFont);
@@ -395,7 +404,7 @@ QString ApexTools::findReadableFile (const QString &baseName,
                        QStringList (prefixes) << QString()) {
                 fileInfo.setFile (QDir (directory
                                        ), prefix + baseName + extension);
-                /*qDebug("Trying %s",
+                /*qCDebug(APEX_RS, "Trying %s",
                                                  qPrintable(directory+"/"+prefix + baseName + extension));*/
                 if (fileInfo.exists() && fileInfo.isFile() &&
                         fileInfo.isReadable())
@@ -461,6 +470,32 @@ QStringList ApexTools::toStringList(const QList<int> intList)
         result << QString::number(i);
 
     return result;
+}
+
+QString ApexTools::fetchVersion() {
+    QFile commitFile(Paths::Get().GetDocPath() + QLatin1String("commit.txt"));
+    QString version;
+    if (commitFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString diffstat = QString::fromLocal8Bit(commitFile.readAll());
+        QStringList lines = diffstat.split(QLatin1Char('\n'));
+        QString firstLine = lines.value(0);
+        QString hash = firstLine.section(QLatin1Char(' '), 1, 1).left(6);
+        QString dateLine = lines.filter(QRegExp(QLatin1String("^Date: .*"))).value(0);
+        QString date = dateLine.section(QLatin1Char(' '), 1);
+        version = QString::fromLatin1("(%1) - %2").arg(hash, date);
+    }
+
+    return version;
+}
+
+QString ApexTools::fetchDiffstat() {
+    QFile commitFile(Paths::Get().GetDocPath() + QLatin1String("commit.txt"));
+    QString diffstat;
+    if (commitFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        diffstat = QString::fromLocal8Bit(commitFile.readAll());
+    }
+
+    return diffstat;
 }
 
 }

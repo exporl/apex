@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef BUTTONRUNDELEGATE_H
-#define BUTTONRUNDELEGATE_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_BUTTONRUNDELEGATE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_BUTTONRUNDELEGATE_H_
 
 #include "screenelementrundelegate.h"
 

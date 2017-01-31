@@ -17,16 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __MAINWINDOW_H__
-#define __MAINWINDOW_H__
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_MAINWINDOW_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_MAINWINDOW_H_
+
+#include "apextools/random.h"
 
 #include "gui/apexmainwndbase.h"
-//#include "gui/mainwindowconfig.h"
 
-#include "screen/screenrundelegate.h"
 #include "screen/screenelementrundelegate.h"
-
-#include <random.h>
+#include "screen/screenrundelegate.h"
 
 #include <QScopedPointer>
 
@@ -85,6 +84,9 @@ class ConsoleStatusReporter;
        * Setting the state.
        */
       void Paused();
+      void setPaused(bool paused);
+      bool isPaused() const;
+
       void Initted();
       void Started();
       void Stopped();
@@ -106,11 +108,8 @@ class ConsoleStatusReporter;
        */
       MRU* GetMru();
       const QString& GetOpenDir() const;
-      void MruLoad( const QString& ac_sIniFile );
-      void MruSave( const QString& ac_sIniFile );
-      void MruFile( const QString& ac_sFile );
+      void MruLoad();
       void SetOpenDir( const QString& ac_sDir );
-      void MruClear();
 
       /**
        * Set the icon.
@@ -124,6 +123,18 @@ class ConsoleStatusReporter;
        */
       void ApplyConfig(const data::ScreensData* const c);
 
+      /**
+       * Sets the correct answer of the currently running trial. This will
+       * update any screen element that does something with this answer
+       * (eg an answer label).
+       */
+      void setAnswer(const QString& answer);
+
+      /**
+       * Returns the currently running screen, 0 if there is no screen running.
+       */
+      ScreenRunDelegate* currentScreen() const;
+
         /**
           * this is quite a hack: we suppose child mode always uses flash movies;
           * once a movie is clicked, the keyboard input events disappear.. they are not received by qt,
@@ -132,6 +143,13 @@ class ConsoleStatusReporter;
           *  back to qt, so both the menu shortcuts and movie shortcuts can be used again.
           */
       void ReclaimFocus();
+
+      bool startEnabled() const;
+      bool stopEnabled() const;
+      bool screenEnabled() const;
+      bool pauseEnabled() const;
+      bool skipEnabled() const;
+      bool repeatEnabled() const;
 
       QString fetchVersion() const;
       QString fetchDiffstat() const;
@@ -143,7 +161,8 @@ class ConsoleStatusReporter;
        * Does nothing if ac_pScreen is the same as the current screen.
        * @param ac_pScreen the screen
        */
-      void SetScreen( gui::ScreenRunDelegate* ac_Screen );
+      void SetScreen(gui::ScreenRunDelegate* ac_Screen);
+      ScreenRunDelegate *setScreen(const QString& id);
 
       /**
        * Enable/Disable all elements in screen
@@ -157,10 +176,11 @@ class ConsoleStatusReporter;
        * @param ac_eMode the kind of feedback
        * @param ac_sID the element to put feedback on
        */
-      void FeedBack( const ScreenElementRunDelegate::FeedbackMode& ac_eMode, const QString& ac_sID );
+      void feedback(ScreenElementRunDelegate::FeedbackMode mode,
+                    const QString& elementId);
 
       /**
-       * Same as FeedBack( ScreenElement::HighlightFeedback, ac_sID ).
+       * Same as FeedBack( ScreenElement::mc_eHighLight, ac_sID ).
        * @param ac_sID the element to highlight
        */
       void HighLight( const QString& ac_sID );
@@ -186,13 +206,15 @@ class ConsoleStatusReporter;
        * Set the max number of steps for the progressbar, if any.
        * @param ac_nTrials the number of trials
        */
-      void SetNumTrials( const unsigned ac_nTrials );
+      //void SetNumTrials( const unsigned ac_nTrials );
 
       /**
        * Set the current step the progressbar, if any.
        * @param ac_nTrial the current trial
        */
-      void SetProgress( const unsigned ac_nTrial );
+      //void SetProgress( const unsigned ac_nTrial );
+
+      void setProgress(double percentage);
 
       /**
        * Enable the stop button in the panel
@@ -214,9 +236,12 @@ class ConsoleStatusReporter;
           */
       void EnableAutoAnswer( const bool ac_bEnable = true );
 
+      void EnableSelectSoundcard(const bool  ac_bEnable = true );
+
       QWidget* centralWidget();
 
       void updateStatusReporting();
+      void doDeterministicAutoAnswer();
 
     signals:
      void Answered( const ScreenResult* a_Answer );
@@ -249,8 +274,6 @@ class ConsoleStatusReporter;
           */
       void AnswerFromElement( ScreenElementRunDelegate* );
 
-      void doDeterministicAutoAnswer();
-
     protected:
         /**
           * Override this to do appropriate actions
@@ -261,16 +284,18 @@ class ConsoleStatusReporter;
         ExperimentRunDelegate* m_rd;
         const data::ScreensData*        m_config;
 
-      QScopedPointer<MRU>                    m_pMRU;
-      QScopedPointer<IPanel>                 m_pPanel;
-      QScopedPointer<ApexCentralWidget>      m_pCentral;
+        QScopedPointer<MRU>                    m_pMRU;
+        QScopedPointer<IPanel>                 m_pPanel;
+        QScopedPointer<ApexCentralWidget>      m_pCentral;
+
+      bool paused;
 
       QString m_sSavefileName;
       ScreenRunDelegate* runningScreen;
       ScreenElementRunDelegate* m_pCurFeedback;
 
       QScopedPointer<ConsoleStatusReporter> consoleStatus;
-      QScopedPointer<ScreenStatusReporter> screenStatus;
+      QScopedPointer<ScreenStatusReporter>  screenStatus;
 
       Random randomGenerator;
     };
@@ -278,4 +303,4 @@ class ConsoleStatusReporter;
   }
 }
 
-#endif //#ifndef __MAINWINDOW_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_MAINWINDOW_H_

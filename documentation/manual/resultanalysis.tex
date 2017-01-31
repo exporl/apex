@@ -1,0 +1,220 @@
+\chapter{Displaying and analysing results}
+\label{chap:Results}
+\section{The results XML file}
+\index{The results XML file}
+
+After completion of the experiment a file containing results is
+always given. The default results file is in the XML format and it
+contains all the information about the course of the completed
+experiment. In the following sections, we see how to display the
+results on the screen in a user-friendly format and how to import
+them into other software for further analysis.
+
+\apex automatically assigns a default name to the results file,
+namely it appends ``-apr'' to the name of the experiment file
+(e.g. closedsetword-apr). It will never overwrite an existing
+results file, but will append a number to results (e.g.
+closedsetword-apr-1) in the case of an existing results file.
+
+The results are stored in the element
+\begin{lstlisting}
+<apex:results>
+
+</apex:results>
+\end{lstlisting}
+
+The XML file contains \element{general} information, such as
+
+\begin{itemize}
+\item the testing date
+
+\item the testing duration
+
+\item the name of the XSLT script file (see~\ref{sec:Using XSLT
+transforms}).
+
+\item information on the procedure (eg: the adaptive parameter)
+
+\end{itemize}
+
+In addition, for each completed \element{trial} presented to the
+subject it includes
+
+\begin{itemize}
+\item details of the procedure (stimulus that was presented and
+the values of the variable parameters in the specific trial).
+
+\item the response that was chosen by the subject
+
+\item the outcome of the corrector
+
+\item possible errors of the output system/device (eg. underruns)
+
+\item the response time (time between the moment the buttons are
+ enabled and the moment an answer is given)
+
+
+\item in case a random generator was used: the value of the random
+generator in the specific trial
+\end{itemize}
+
+Remark: with an adaptive procedure the number of
+\element{reversals} is given
+
+
+\section{Displaying results}
+
+APEX has infrastructure to show experiment results on the screen, directly after the experiment, or by opening the results file afterwards with APEX. The system is based on Javascript and HTML, which makes it easy to modify for the end user.
+
+\todo[inline]{explain what HTML is}
+
+In the \xml{<results>} element of the experiment file, you can define the HTML file to be used to display results, e.g.,
+
+\begin{lstlisting}
+  <results>
+      <page>apex:resultsviewer.html</page>
+      <showduringexperiment>true</showduringexperiment>
+      <showafterexperiment>true</showafterexperiment>
+  </results>
+\end{lstlisting}
+
+\xml{<page>} can either refer to a file in the same folder as the experiment file, e.g., \xml{<page>myresults.html</page>}, to a folder somewhere on disk, e.g., \xml{<page>/C/users/tom/myresults.html</page>}, or to a file in the APEX resultsviewer folder, e.g., \xml{<page>apex:specialresultsviewer.html</page>}.
+
+If \xml{<showduringexperiment>} is true, the resultsviewer will be shown while the experiment is running, and will be updated after each trial. If \xml{<showafterexperiment>} is true, it will be shown after the experiment has finished.
+
+\subsection{The results HTML file}
+
+If you want to make small changes to the way results are shown, the best way to start is to copy \filename{resultsviewer.html} to the same folder where your experiment file is stored, rename it something sensible, change the reference in your experiment file, and then modify the HTML file according to the desired result. \todo{give example}
+
+Currently the following divs are available:
+
+\begin{lstlisting}
+ <div id="procedureparameterplot" style="width:600px;height:300px;"></div>
+   <br>
+   <div id="procedureparametervalues"></div>
+   <div id="procedureparameterlastvalue"></div>
+   <div id="procedureparameterreversals"></div>
+   <div id="procedureparametermeanrevs"></div>
+   <div id="procedureparametermeantrials"></div>
+   <div id="procedureparametertable"></div>
+
+
+   <div id="confusionmatrixplot"></div>
+   <div id="confusionmatrixtable"><table></table></div>
+   <div id="confusionmatrixsummary"></div>
+\end{lstlisting}
+\todo{document each div, automatically extract from resultviewer.html documentation?}
+
+\subsection{The internals - APEX}
+
+If you want to change more than the basic screen layout, you need to change or add some javascript code. In what follows, the internals will be explained. First the APEX side will be explained: how the results viewer gets the actual data from APEX. Next resultsviewer.html and the associated javscript code will be explained.
+
+When results are to be viewed (depending on \xml{<showduringexperiment>} and \xml{<showafterexperiment>}), APEX will load the results HTML file in a basic web browser (called QWebView, based on WebKit). Then, every time a trial is finished, it will call a javascript function \xml{newAnswer}, with as argument a string containing the XML that would normally be written to the results file. For example, after a trial, the following Javascript code cold be executed:
+
+
+\begin{lstlisting}
+	newAnswer("<trial id=\"trial1\">\n<procedure type=\"apex:adaptiveProcedure\">\n<answer>down</answer>\n<correct_answer>up</correct_answer>\n<stimulus>stimulus1</stimulus>\n<correct>false</correct>\n\t<parameter>0</parameter>\n\t<stepsize>2</stepsize>\n\t<reversals>2</reversals>\n\t<saturation>false</saturation>\n\t<presentations>4</presentations>\n</procedure><screenresult>\n\t<element id=\"buttongroup1\">down</element>\n\t<element id=\"down\"></element>\n</screenresult>\n<output>\n<device id=\"wavdevice\">\n  <buffer underruns=\"0\"/>\n</device>\n</output>\n<responsetime unit=\'ms\'>135</responsetime>\n<randomgenerators>\n\n</randomgenerators>\n<trial_start_time>2015-10-22T11:28:15</trial_start_time>\n</trial>\n\n");
+\end{lstlisting}
+
+What happens next, fully depends on the HTML/Javascript code.
+
+Whenever new results should be displayed, APEX will call the \xml{plot} function in Javascript. Note that before each plot any number of calls to newAnswer can occur.
+
+\subsection{The internals - \filename{resultsviewer.html}}
+
+The resultsviewer implements the \function{newAnswer} and a number of plotting functions that can be used to display results. In resultsviewer.html itself, the plot() function needs to be implemented, which can refer to any of the plotting functions defined in the provided javascript libraries, e.g., the following code will show a confusion matrix if a constant procedure was used, and a staircase of the adaptive parameter otherwise:
+
+\begin{lstlisting}
+<script type="text/javascript">
+  $(document).ready(function(){
+
+  });
+
+  function plot() {
+    if ( containsAdaptive(results.xml[0])) {
+      plot_rtprocedureparameter();
+    } else {
+      plot_rtconfusionmatrix();
+    }
+  }
+</script>
+\end{lstlisting}
+
+\filename{Resultsviewer.html} can include the following javascript libraries:
+
+\begin{description}
+\item[rtresults.js] Implements \function{newAnswer} and collects the results in variable \function{results}, which has the following members (all Arrays):
+answers, correctanswers, parametervalues, xml, trials, stimuli, standards results \todo{explain each member}. \filename{rtresults.js} does not contain any plotting functions. If you want to do some extra processing when newAnswer is called, you can implement \function{extraNewAnswer}.
+
+\item[rtconfusionmatrix.js] implements \function{plot\_rtconfusionmatrix}, which will calculate and plot a confusion matrix.
+\item[rtlocalisation.js] implements \function{plot\_rtlocalisation}, which adds extra functionality on top of \filename{rtconfusionmatrix.js}, specifically for localisation experiments. It will parse the stimulus ID to extract the angle of incidence  (by implementation of \function{extraNewAnswer}), and show extra metrics such as the RMS ans absolute localisation error.
+\item[rtprocedureparameter.js] implements \function{plot\_rtprocedureparameter} which will plot the staircase of an adaptive procedure and show a number of performance metrics, such as the mean of the last N trials and of the last N reversals. To set the value of N,  you need to define the variable reversalsForMean, e.g.,
+\begin{lstlisting}
+\item[rtprocedureparameter.js] implements \function{plot\_rtprocedureparameter} which will plot the staircase of an adaptive procedure and show a number of performance metrics, such as the mean of the last N trials and of the last N reversals. To set the value of N,  you need to define the variable reversalsForMean, e.g.,
+\begin{lstlisting}
+$(document).ready(function(){
+	reversalsForMean=8;}
+	);
+\end{lstlisting}
+}
+
+\item[rtpsignifit.js] implements \function{extraPlot}, which will be automatically called from the plot functions above when this file is loaded. It demonstrates the use of psignifit to estimate psychometric function parameters \citep{Wichmann2001,Wichmann2001a}.
+
+\end{description}
+
+\todo{Add example of how to make a small change}
+
+
+
+\section{Exporting results}
+
+While you could simply copy-paste the relevant information from the results XML file into the desired format, this is labour intensive and error prone. Therefore several options are provided to convert the XML file in a more user friendly format.
+
+The first option, \xml{<saveprocessedresults>}, will append a section to the results file containing the essential data in comma separated values (CSV) format, which can be easily copied to another program.
+
+A next option, XSLT transforms, uses the XSLT programming language to convert the results XML file into another format, which could be text, XML, HTML, etc.
+
+If you conduct your analysis in Matlab or R, the most efficient option will be to use the APEX Matlab or R toolbox, and import your result XML file directly. In the R toolbox, a function is also provided to convert a series of results XML files into one main CSV file.
+
+\subsection{saveprocessedresults}
+
+
+If \element{saveprocessedresults} is \xml{true} in the experiment
+file the processed data will be appended to the XML file under
+\element{processed}
+
+\todo{add example of output}
+
+The results file contains a lot of information. A summary of the
+relevant results can be obtained through an XSLT transform (see
+next paragraph).
+
+
+
+\subsection{Using the APEX Matlab Toolbox}
+
+\todo{refer to AMT section, add teaser here}
+
+\subsection{Using the APEX R Toolbox}
+
+\todo{}
+
+\subsection{XSLT transforms}
+
+An XSLT script transforms the results XML file to a summary of the
+results. An XSLT script is provided with APEX (\filename{apexresult.xsl}), which can do the most common transformations. You can also create your own scripts, provided you have some XSLT knowledge. Please note that we are phasing out the use of XSLT in APEX, in favour of HTML resultsviewer and the APEX Matlab and R toolbox. Therefore the \filename{apexresult.xsl} is no longer maintained, and we advise against using it in new projects.
+
+\label{sec:Using XSLT transforms}
+
+\oxygen{ To execute an XSLT transform, a transformation scenario
+has to be configured once. This is done by clicking on the
+``Configure transformation scenario'' button in Oxygen. If you
+then click on ``new'', you can search for the appropriate XSLT
+script in \filename{xslt/} and give it a name in the upper field of the ``edit scenario'' box. If you then
+click on ``transform now'', the processed results are shown
+immediately.}
+
+The processed results can be saved in the results XML file and/or
+shown immediately after a test (in the last case the program asks
+whether you want to see them or not).
+

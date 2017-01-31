@@ -17,12 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef DATABLOCKSWRITERH
-#define DATABLOCKSWRITERH
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_DATABLOCKSWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_DATABLOCKSWRITER_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
+
 namespace XERCES_CPP_NAMESPACE
 {
 class DOMDocument;

@@ -17,22 +17,21 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXAPEXPARAMETERS_H
-#define APEXAPEXPARAMETERS_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_APEXPARAMETERS_H_
+#define _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_APEXPARAMETERS_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include <QMap>
+#include <QString>
+
 namespace XERCES_CPP_NAMESPACE
 {
 class DOMElement;
 };
-
-#include "xml/apexxmltools.h"
-
-#include <QString>
-
-#include <QMap>
 
 namespace apex
 {
@@ -61,7 +60,7 @@ class APEXDATA_EXPORT ApexParameters //: public std::map<QString,QString>
         {
             const_iterator(const QMap<QString, QString>::const_iterator& it);
             const_iterator() {}
-            
+
             const_iterator& operator=(const QMap<QString, QString>::
                     const_iterator& it);
             const_iterator& operator++(); //prefix++
@@ -99,7 +98,7 @@ class APEXDATA_EXPORT ApexParameters //: public std::map<QString,QString>
         //virtual bool SetParameter(const QString& p_name, const QString& p_id, const QString& p_value, XERCES_CPP_NAMESPACE::DOMElement* base=0)
         virtual bool SetParameter(const QString& , const QString& , const QString& , XERCES_CPP_NAMESPACE::DOMElement*)
         {
-//              qDebug("ApexParameters: SetParameter: should not come here?");
+//              qCDebug(APEX_RS, "ApexParameters: SetParameter: should not come here?");
             return true;
         }
 

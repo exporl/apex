@@ -17,82 +17,79 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXRESULTPARAMETERS_H
-#define APEXRESULTPARAMETERS_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_RESULT_RESULTPARAMETERS_H_
+#define _EXPORL_SRC_LIB_APEXDATA_RESULT_RESULTPARAMETERS_H_
 
-//from libdata
-#include "parameters/apexparameters.h"
+#include "../parameters/apexparameters.h"
 
-#include "xml/xercesinclude.h"
-using namespace xercesc;
+#include "apextools/xml/xercesinclude.h"
 
-
-#include <QString>
-#include <QPair>
 #include <QList>
+#include <QPair>
+#include <QString>
 #include <QUrl>
+
+using namespace xercesc;
 
 namespace apex {
 namespace data
 {
 
-    typedef QList<QPair<QString,QString> > tXsltParameters;
+    typedef QMap<QString,QString> tScriptParameters;
 
 /**
 Stores info on how the results are to be processed
 
 @author Tom Francart,,,
 */
-class APEXDATA_EXPORT ResultParameters : public ApexParameters
+class APEXDATA_EXPORT ResultParameters
 {
 public:
     ResultParameters(DOMElement* p_paramElement);
     ResultParameters();
 
-    ~ResultParameters();
+    virtual ~ResultParameters();
+
+    bool Parse(DOMElement* p_paramElement);
 
     virtual bool SetParameter(const QString& arg1, const QString& arg2, const QString& arg3, DOMElement* arg4);
 
+    const QString& matlabScript() const;
+    const QString& subject() const;
+    void setSubject(const QString& subject);
 
-    const QString& GetXsltScript() const { return m_xsltScript; };
-    void setXsltScript(const QString& script){m_xsltScript = script;};
-    const QString& GetMatlabScript() const { return m_matlabScript; };
-    const QString& GetSubject() const { return m_subject; };
-    void setSubject(const QString& subject){m_subject = subject;};
+    bool showResultsAfter() const;
+    void setShowResultsAfter(bool show);
 
-    bool showXsltResultsAfter() const { return m_bShowResultsXslt;  };
-    bool showJavascriptResultsAfter() const { return m_showAfter; };
-    bool showResultsAfter() const {
-        return showXsltResultsAfter() || showJavascriptResultsAfter();
-    };
-    void setShowResults(bool show) {m_bShowResultsXslt = show;};
-    bool GetSaveResults() const { return m_bSaveProcessedResults; };
-    void setSaveResults(bool save) {m_bSaveProcessedResults=save; };
+    bool saveResults() const;
+    void setSaveResults(bool save);
 
-    const QUrl& resultPage() const { return m_resultPage; };
-    void setResultPage(const QString &scriptname) { m_resultPage=scriptname; };
-    bool showRTResults() const { return m_showRealtime;};
+    const QUrl& resultPage() const;
+    void setResultPage(const QString &scriptname);
+    bool showRTResults() const;
 
-    tXsltParameters GetXsltParameters() const
-    { return mXsltParameters; };
-    void setXsltParameter(const QString& name, const QString& value);
+    tScriptParameters resultParameters() const;
+
+    const QString extraScript() const;
+
+    //New functions for version 3.1.1
+
+    void setResultParameter(const QString& name, const QString& value);
 
     bool operator==(const ResultParameters& other) const;
 
   private:
-    QString m_xsltScript;
     QString m_matlabScript;
     QString m_subject;
-    
+    QString m_extraScript;          // javascript code to be executed after loading the results page, from tag <resultscript>
+
     QUrl m_resultPage;
     bool m_showRealtime;
     bool m_showAfter;
 
-    bool m_bShowResultsXslt;
     bool m_bSaveProcessedResults;
 
-    tXsltParameters mXsltParameters;
-
+    tScriptParameters mResultParameters;
 
 };
 

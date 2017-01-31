@@ -16,8 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#ifndef _APEX_GUI_ARCLAYOUT_H_
-#define _APEX_GUI_ARCLAYOUT_H_
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_GUI_ARCLAYOUT_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_GUI_ARCLAYOUT_H_
 
 #include "../global.h"
 #include <QLayout>
@@ -78,7 +78,7 @@ public Q_SLOTS:
     ArcLayoutFlags arcLayoutFlags() const;
 
 private:
-    std::auto_ptr<ArcLayoutPrivate> d;
+    QScopedPointer<ArcLayoutPrivate> d;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS (ArcLayout::ArcLayoutFlags)

@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef PLUGINFILTERINTERFACE_H
-#define PLUGINFILTERINTERFACE_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_FILTER_PLUGINFILTERINTERFACE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_FILTER_PLUGINFILTERINTERFACE_H_
 
 #include <QtPlugin>
 
@@ -141,7 +141,6 @@ protected:
      */
     void setErrorMessage (const QString &error) const
     {
-        qDebug ("Filter error: %s", qPrintable (error));
         this->error = error;
     }
 
@@ -206,6 +205,6 @@ public:
             unsigned sampleRate) const = 0;
 };
 
-Q_DECLARE_INTERFACE (PluginFilterCreator, "be.exporl.apex.pluginfilter/1.0")
+Q_DECLARE_INTERFACE(PluginFilterCreator, "be.exporl.apex.pluginfilter/1.0")
 
 #endif

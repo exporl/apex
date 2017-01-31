@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+    @what: Try to add wav filter to L34Device
+    @description: Since it is not possible to add a wav filter to an L34Device, an error occurs
+    @how: see filters and device
+  -->
+
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>100</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+   <trial id="trial2">
+    <answer>button2</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus2"/>
+   </trial>
+   <trial id="trial3">
+    <answer>button3</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus3"/>
+   </trial>
+   <trial id="trial4">
+    <answer>button4</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus4"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout width="3" id="main_layout" height="2">
+    <button id="button1" x="1" y="1">
+     <text>fadein.qic</text>
+    </button>
+    <button id="button2" x="1" y="2">
+     <text>fadechan.qic</text>
+    </button>
+    <button id="button3" x="2" y="2">
+     <text>fadechan-single.qic</text>
+    </button>
+    <button id="button4" x="2" y="1">
+     <text>10 pulses+powerup</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+    <button id="button3"/>
+    <button id="button4"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli/</uri_prefix>
+  <datablock id="rawdata1">
+   <device>l34device</device>
+   <description>sample raw l34 datablock</description>
+   <uri>fadein.qic</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>l34device</device>
+   <description>sample raw l34 datablock</description>
+   <uri>fadechan.qic</uri>
+  </datablock>
+  <datablock id="rawdata3">
+   <device>l34device</device>
+   <description>[0-255] on every channel, per channel</description>
+   <uri>fadechan-single.qic</uri>
+  </datablock>
+  <datablock id="d10pulses">
+   <device>l34device</device>
+   <uri>10pulses+powerup-ch1.qic</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="l34device" xsi:type="apex:L34DeviceType">
+   <device_id>1</device_id>
+   <implant>cic3</implant>
+   <trigger>none</trigger>
+   <defaultmap>
+    <inline>
+     <number_electrodes>3</number_electrodes>
+     <mode>MP1+2</mode>
+     <pulsewidth>25</pulsewidth>
+     <pulsegap>8</pulsegap>
+     <period>150</period>
+     <channel number="1" comfort="255" electrode="1" threshold="1"/>
+     <channel number="2" comfort="255" electrode="2" threshold="1"/>
+     <channel number="3" comfort="255" electrode="3" threshold="1"/>
+     <channel number="4" comfort="255" electrode="4" threshold="1"/>
+     <channel number="5" comfort="255" electrode="5" threshold="1"/>
+     <channel number="6" comfort="255" electrode="6" threshold="1"/>
+     <channel number="7" comfort="255" electrode="7" threshold="1"/>
+     <channel number="8" comfort="255" electrode="8" threshold="1"/>
+     <channel number="9" comfort="255" electrode="9" threshold="1"/>
+     <channel number="10" comfort="255" electrode="10" threshold="1"/>
+     <channel number="11" comfort="255" electrode="11" threshold="1"/>
+     <channel number="12" comfort="255" electrode="12" threshold="1"/>
+     <channel number="13" comfort="255" electrode="13" threshold="1"/>
+     <channel number="14" comfort="255" electrode="14" threshold="1"/>
+     <channel number="15" comfort="255" electrode="15" threshold="1"/>
+     <channel number="16" comfort="255" electrode="16" threshold="1"/>
+     <channel number="17" comfort="255" electrode="17" threshold="1"/>
+     <channel number="18" comfort="255" electrode="18" threshold="1"/>
+     <channel number="19" comfort="255" electrode="19" threshold="1"/>
+     <channel number="20" comfort="255" electrode="20" threshold="1"/>
+     <channel number="21" comfort="255" electrode="21" threshold="1"/>
+     <channel number="22" comfort="255" electrode="22" threshold="1"/>
+    </inline>
+   </defaultmap>
+  </device>
+ </devices>
+ <filters>
+  <filter id="filter" xsi:type="apex:amplifier">
+   <device>l34device</device>
+   <channels>1</channels>
+   <basegain>0</basegain>
+   <gain>0</gain>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata2"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus3">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata3"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus4">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="d10pulses"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

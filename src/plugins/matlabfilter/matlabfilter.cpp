@@ -16,16 +16,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "pluginfilterinterface.h"
+#include "apexmain/filter/pluginfilterinterface.h"
 
-#include "engine.h"     // matlab engine
+#include "apextools/global.h"
+
+#include "engine.h"
 #include "mex.h"
 
-#include <QStringList>
-#include <QMap>
 #include <QDebug>
+#include <QLoggingCategory>
+#include <QMap>
+#include <QStringList>
 
 #include <cmath>
+
+Q_DECLARE_LOGGING_CATEGORY(APEX_MATLABFILTER)
+Q_LOGGING_CATEGORY(APEX_MATLABFILTER, "apex.matlabfilter")
 
 class MatlabFilterCreator :
     public QObject,
@@ -33,14 +39,15 @@ class MatlabFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA(IID "apex.matlabfilter")
+#endif
 public:
     virtual QStringList availablePlugins() const;
 
     virtual PluginFilterInterface *createFilter (const QString &name,
             unsigned channels, unsigned blocksize, unsigned fs) const;
 };
-
-Q_EXPORT_PLUGIN2 (matlabfilter, MatlabFilterCreator)
 
 class MatlabFilter:
     public QObject,
@@ -62,7 +69,7 @@ public:
 private:
     bool initializeMatlab();
     void sendParameters();
-    
+
     unsigned channels;
     unsigned blockSize;
 
@@ -78,7 +85,7 @@ private:
 };
 
 
-// MatlabFilter =============================================================
+// MatlabFilter ================================================================
 
 MatlabFilter::MatlabFilter (unsigned channels, unsigned blockSize) :
     channels (channels),
@@ -126,8 +133,8 @@ void MatlabFilter::sendParameters()
     }
     engEvalString(engine, command.join("\n").toLatin1());
     engEvalString(engine, "global apex");
-    
-    qDebug("Sending comand: %s", qPrintable(command.join("\n")));
+
+    qCDebug(APEX_MATLABFILTER, "Sending comand: %s", qPrintable(command.join("\n")));
 }
 
 bool MatlabFilter::prepare (unsigned numberOfFrames)
@@ -145,7 +152,7 @@ bool MatlabFilter::prepare (unsigned numberOfFrames)
     // call prepare function
     if (!preparefunction.isEmpty())
         engEvalString(engine, preparefunction.toLatin1() );
-  
+
     return true;
 }
 
@@ -170,11 +177,11 @@ bool MatlabFilter::initializeMatlab ()
             return false;
         }
         matlabInitialized=true;
-        
+
         // create data buffer
         buffer = mxCreateDoubleMatrix(1, blockSize, mxREAL);
         Q_ASSERT(buffer);
-        qDebug("Created buffer with size %d", blockSize);
+        qCDebug(APEX_MATLABFILTER, "Created buffer with size %d", blockSize);
         engEvalString(engine, QString("apex.blockSize=%1").arg(blockSize).toLatin1());
     }
 
@@ -226,14 +233,14 @@ void MatlabFilter::process (double * const *data)
     int r = engEvalString(engine, QString("buffer=%1(buffer)").
             arg(processfunction).toLatin1() );
     if (r!=0)
-        qDebug("could not evaluate matlab command");
+        qCDebug(APEX_MATLABFILTER, "could not evaluate matlab command");
 
     mxArray* result = engGetVariable(engine,"buffer");
     memcpy(data[0], mxGetPr(result),blockSize*sizeof(double));
     mxDestroyArray(result);
 }
 
-// MatlabFilterCreator ======================================================
+// MatlabFilterCreator =========================================================
 
 QStringList MatlabFilterCreator::availablePlugins() const
 {

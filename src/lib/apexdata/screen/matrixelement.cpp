@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "matrixelement.h"
 
 #include "screenelementvisitor.h"
@@ -74,10 +74,10 @@ bool MatrixElement::operator==(const MatrixElement& other) const
 void apex::data::MatrixElement::setButton(int row, int col,
                                           MatrixButton & button)
 {
-    qDebug("MatrixElement::setButton at (%d,%d) to %s/%s",
+    qCDebug(APEX_RS, "MatrixElement::setButton at (%d,%d) to %s/%s",
            row, col, qPrintable(button.name),
                                 qPrintable(button.text));
-    
+
     // FIXME: it's rather slow to resize for each new element
     if (col> m_buttons.size()) {
         /*QVector<MatrixButton> newlist;
@@ -87,7 +87,7 @@ void apex::data::MatrixElement::setButton(int row, int col,
 
     if (row>m_buttons[col-1].size())
         m_buttons[col-1].resize(row);
-    
+
     m_buttons[col-1][row-1]=button;
 }
 

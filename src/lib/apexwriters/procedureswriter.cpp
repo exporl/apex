@@ -17,41 +17,36 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-/**
-* @author Job Noorman
-*/
+#include "apexdata/corrector/correctordata.h"
 
+#include "apexdata/procedure/adaptiveproceduredata.h"
+#include "apexdata/procedure/multiproceduredata.h"
+#include "apexdata/procedure/proceduredata.h"
+#include "apexdata/procedure/proceduredata.h"
+#include "apexdata/procedure/scriptproceduredata.h"
+#include "apexdata/procedure/trialdata.h"
+
+#include "apextools/apextools.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "correctorwriter.h"
 #include "procedureswriter.h"
-#include "procedure/apexprocedureconfig.h"
-#include "procedure/apexmultiprocedureconfig.h"
-#include "procedure/apexmultiprocedureparameters.h"
-#include "procedure/apexprocedureparameters.h"
-#include "procedure/apexadaptiveprocedureparameters.h"
-#include "procedure/pluginprocedureparameters.h"
-#include "procedure/apextrial.h"
-
-//from libtools
-#include "apextools.h"
-#include "xml/apexxmltools.h"
-
-#include "xml/xercesinclude.h"
-#include <vector>
 
 using namespace apex;
 using namespace apex::ApexXMLTools;
 using namespace XERCES_CPP_NAMESPACE;
 
-using apex::data::ApexTrial;
-using apex::data::ApexProcedureConfig;
-using apex::data::ApexMultiProcedureConfig;
-using apex::data::ApexProcedureParameters;
-using apex::data::ApexAdaptiveProcedureParameters;
-using apex::data::PluginProcedureParameters;
-using apex::data::ApexAnswer;
+using apex::data::TrialData;
+using apex::data::ProcedureData;
+using apex::data::MultiProcedureData;
+using apex::data::AdaptiveProcedureData;
+using apex::data::ScriptProcedureData;
 using apex::writer::ProceduresWriter;
 
 DOMElement* ProceduresWriter::addElement(DOMDocument* doc,
-        const ApexProcedureConfig& data)
+        const ProcedureData& data)
 {
     DOMElement* root = doc->getDocumentElement();
     DOMElement* procedure = doc->createElement(X("procedure"));
@@ -60,46 +55,43 @@ DOMElement* ProceduresWriter::addElement(DOMDocument* doc,
     if (!isMultiProcedure(data))
         fillProcedure(procedure, data);
     else
+    {
         fillMultiProcedure(procedure,
-                           dynamic_cast<const ApexMultiProcedureConfig&>(data));
+                           dynamic_cast<const MultiProcedureData&>(data));
+    }
 
     return procedure;
 }
 
 void ProceduresWriter::fillProcedure(DOMElement* theElement,
-                                     const ApexProcedureConfig& data)
+                                     const ProcedureData& data)
 {
     DOMDocument* doc = theElement->getOwnerDocument();
 
     DOMElement* parameters = doc->createElement(X("parameters"));
-    //get the parameters
-    const ApexProcedureParameters& procParams = data.GetParameters();
 
     //get the type of the parameters
-    QString type = getTypeString(procParams.GetType());
+    QString type = getTypeString(data.type());
     theElement->setAttribute(X("xsi:type"), S2X(type));
 
     //check if the procedure has an id attribute
-    //FIXME cannot get the id this way and GetID() has been
-    //removed from ApexProcedureParameters
-    if (procParams.HasParameter("id"))
-        theElement->setAttribute(X("id"),
-                                 S2X(procParams.GetParameter("id")));
+    if (!data.GetID().isEmpty())
+        theElement->setAttribute(X("id"), S2X(data.GetID()));
 
     //fill them and append to procedure
-    fillParametersElement(procParams, parameters);
+    fillParametersElement(data, parameters);
     theElement->appendChild(parameters);
 
     DOMElement* trials = doc->createElement(X("trials"));
     //get the trials
-    const std::vector<ApexTrial*>& procTrials = data.GetTrials();
+    const data::tTrialList& procTrials = data.GetTrials();
     //fill them and append to procedure
     fillTrialsElement(procTrials, trials);
     theElement->appendChild(trials);
 }
 
 void ProceduresWriter::fillMultiProcedure(DOMElement* theElement,
-        const ApexMultiProcedureConfig& data)
+        const MultiProcedureData& data)
 {
     DOMDocument* doc = theElement->getOwnerDocument();
 
@@ -109,33 +101,33 @@ void ProceduresWriter::fillMultiProcedure(DOMElement* theElement,
     DOMElement* params = doc->createElement(X("parameters"));
     theElement->appendChild(params);
     //  <order>
-    QString order = getOrderString(data.GetParameters().GetOrder());
+    QString order = getOrderString(data.order());
     params->appendChild(XMLutils::CreateTextElement(doc, "order", order));
 
     //get all procedures and append one by one
-    //NOTE typedef std::vector<ApexProcedureConfig*>
+    //NOTE typedef std::vector<ProcedureData*>
     //tProcConfigList in apexmultiprocedureconfig.h
-    data::tProcConfigList procs = data.GetProcedures();
+    data::tProcConfigList procs = data.procedures();
     data::tProcConfigList::const_iterator it;
 
     for (it = procs.begin(); it != procs.end(); it++)
     {
         DOMElement* procedure = doc->createElement(X("procedure"));
 
-        const ApexProcedureConfig& d = **it;
+        const ProcedureData& d = **it;
 
         if (!isMultiProcedure(d))
             fillProcedure(procedure, d);
         else
             fillMultiProcedure(procedure,
-                               dynamic_cast<const ApexMultiProcedureConfig&>(d));
+                               dynamic_cast<const MultiProcedureData&>(d));
 
         theElement->appendChild(procedure);
     }
 }
 
 void ProceduresWriter::fillParametersElement
-(const ApexProcedureParameters& params, DOMElement* theElement)
+(const ProcedureData& data, DOMElement* theElement)
 {
     int n; //used for temp integers
 
@@ -143,7 +135,7 @@ void ProceduresWriter::fillParametersElement
     DOMDocument* doc = theElement->getOwnerDocument();
 
     //<presentations>
-    n = params.GetPresentations();
+    n = data.presentations();
     if (n > 0)
     {
         theElement->appendChild(XMLutils::CreateTextElement
@@ -152,15 +144,15 @@ void ProceduresWriter::fillParametersElement
 
     //<skip>
     theElement->appendChild(XMLutils::CreateTextElement
-            (doc, "skip", params.GetSkip()));
+            (doc, "skip", data.skip()));
 
     //<order>
-    QString order = getOrderString(params.GetOrder());
+    QString order = getOrderString(data.order());
     theElement->appendChild(XMLutils::CreateTextElement
             (doc, "order", order));
 
     //<defaultstandard>
-    QString ds = params.GetDefaultStandard();
+    QString ds = data.defaultStandard();
     if (!ds.isEmpty())
     {
         theElement->appendChild(XMLutils::CreateTextElement
@@ -169,21 +161,46 @@ void ProceduresWriter::fillParametersElement
 
     //<uniquestandard>
     theElement->appendChild(XMLutils::CreateTextElement
-            (doc, "uniquestandard", params.GetUniqueStandard()));
+            (doc, "uniquestandard", data.uniqueStandard()));
 
-    if (params.GetType() == ApexProcedureParameters::TYPE_MULTI)
+    if (data.type() == ProcedureData::MultiType)
         return; //only order parameter for multiprocedure
 
     //<choices>
-    n = params.GetChoices().nChoices;
+    /*n = params.GetChoices().choices();
     if (n >= 0)
     {
         theElement->appendChild(XMLutils::CreateTextElement
                                 (doc, "choices", n));
+    }*/
+
+    apex::data::Choices cs = data.choices();
+
+    if (cs.hasMultipleIntervals()) {
+        DOMElement* intervals = doc->createElement(X("intervals"));
+        intervals->setAttribute(X("count"), S2X(QString::number(cs.nChoices())));
+
+        if (!cs.selectedIntervals().isEmpty()) {
+            QStringList selectedIntervals;
+            Q_FOREACH (const int i, cs.selectedIntervals()) {
+                selectedIntervals.push_back(QString::number(i+1));
+            }
+            intervals->setAttribute(X("select"), S2X(selectedIntervals.join(",")));
+        }
+
+        for (int i = 0; i < cs.nChoices(); ++i) {
+            DOMElement* interval = doc->createElement(X("interval"));
+            interval->setAttribute(X("number"), S2X(QString::number(i+1)));
+            interval->setAttribute(X("element"), S2X(cs.element(i)));
+            intervals->appendChild(interval);
+        }
+        theElement->appendChild(intervals);
+    } else {
+        CorrectorWriter::addElement(theElement, *(data.correctorData()));
     }
 
     //<pause_between_stimuli>
-    n = params.GetPauseBetweenStimuli();
+    n = data.pauseBetweenStimuli();
     if (n > 0)
         theElement->appendChild(XMLutils::CreateTextElement
                                 (doc, "pause_between_stimuli", n));
@@ -191,29 +208,29 @@ void ProceduresWriter::fillParametersElement
     //<time_before_first_trial>
     theElement->appendChild(XMLutils::CreateTextElement
                             (doc, "time_before_first_trial",
-                             params.GetTimeBeforeFirstStimulus()));
+                             data.timeBeforeFirstStimulus()));
 
     //<input_during_stimulus>
     theElement->appendChild(XMLutils::CreateTextElement
                             (doc, "input_during_stimulus",
-                             params.GetInputDuringStimulus()));
+                             data.inputDuringStimulus()));
 
     //add type specific parameters
-    switch (params.GetType())
+    switch (data.type())
     {
-        case ApexProcedureParameters::TYPE_ADAPTIVE:
+        case ProcedureData::AdaptiveType:
 
             finishAsAdaptive(*dynamic_cast<
-                    const ApexAdaptiveProcedureParameters*>(&params), theElement);
+                    const AdaptiveProcedureData*>(&data), theElement);
             break;
 
-        case ApexProcedureParameters::TYPE_CONSTANT:
-        case ApexProcedureParameters::TYPE_TRAINING:
+        case ProcedureData::ConstantType:
+        case ProcedureData::TrainingType:
             break;//nothing special here
-        case ApexProcedureParameters::TYPE_PLUGIN:
+        case ProcedureData::PluginType:
 
             finishAsPlugin(*dynamic_cast<
-                    const PluginProcedureParameters*>(&params), theElement);
+                    const ScriptProcedureData*>(&data), theElement);
             break;
 
         default:
@@ -221,18 +238,37 @@ void ProceduresWriter::fillParametersElement
     }
 }
 
-void ProceduresWriter::finishAsAdaptive(const ApexAdaptiveProcedureParameters&
-        params, DOMElement* toFinish)
+void ProceduresWriter::fillCorrector(const data::CorrectorData& correctorData, DOMElement* corrector)
+{
+    QString type;
+    switch (correctorData.type())
+    {
+        case data::CorrectorData::EQUAL:
+        {
+            type = "apex:isequal";
+            break;
+        }
+        default:
+        {
+             qFatal("Invalid corrector type");
+        }
+    }
+
+    corrector->setAttribute(X("xsi:type"), S2X(type));
+}
+
+void ProceduresWriter::finishAsAdaptive(const AdaptiveProcedureData&data,
+                                        DOMElement* toFinish)
 {
     DOMDocument* doc = toFinish->getOwnerDocument();
 
     //nUp
-    toFinish->appendChild(XMLutils::CreateTextElement(doc, "nUp", params.nUp()));
+    toFinish->appendChild(XMLutils::CreateTextElement(doc, "nUp", data.nUp()));
     //nDown
     toFinish->appendChild(XMLutils::CreateTextElement(doc, "nDown",
-                          params.nDown()));
+                          data.nDown()));
     //adapt_parameter
-    Q_FOREACH(QString adap, params.adaptingParameters())
+    Q_FOREACH(QString adap, data.adaptingParameters())
     {
         toFinish->appendChild(XMLutils::CreateTextElement(doc,
                               "adapt_parameter", adap));
@@ -240,32 +276,32 @@ void ProceduresWriter::finishAsAdaptive(const ApexAdaptiveProcedureParameters&
 
     //start_value
     toFinish->appendChild(XMLutils::CreateTextElement(doc, "start_value",
-                          params.startValue()));
+                          data.startValue()));
     //stop_after_type
     toFinish->appendChild(XMLutils::CreateTextElement(doc, "stop_after_type",
-                          params.stopAfterTypeString()));
+                          data.stopAfterTypeString()));
     //stop_after
     toFinish->appendChild(XMLutils::CreateTextElement(doc, "stop_after",
-                          params.stopAfter()));
+                          data.stopAfter()));
     //min_value
-    if (params.hasMinValue())
+    if (data.hasMinValue())
     {
         toFinish->appendChild(XMLutils::CreateTextElement(doc, "min_value",
-                              params.minValue()));
+                              data.minValue()));
     }
     //max_value
-    if (params.hasMaxValue())
+    if (data.hasMaxValue())
     {
         toFinish->appendChild(XMLutils::CreateTextElement(doc, "max_value",
-                              params.maxValue()));
+                              data.maxValue()));
     }
 
     //TODO rev_for_mean
     //larger_is_easier
     toFinish->appendChild(XMLutils::CreateTextElement(doc, "larger_is_easier",
-                          ApexTools::boolToString(params.largerIsEasier())));
+                          ApexTools::boolToString(data.largerIsEasier())));
     //repeat_first_until_correct
-    if (params.repeatFirstUntilCorrect())
+    if (data.repeatFirstUntilCorrect())
     {
         toFinish->appendChild(XMLutils::CreateTextElement(doc,
                               "repeat_first_until_correct", "true"));
@@ -274,31 +310,54 @@ void ProceduresWriter::finishAsAdaptive(const ApexAdaptiveProcedureParameters&
     //stepsizes
     DOMElement* stepsizes = doc->createElement(X("stepsizes"));
     stepsizes->appendChild(XMLutils::CreateTextElement(doc, "change_after",
-                           params.changeStepsizeAfterString()));
+                           data.changeStepsizeAfterString()));
 
-    std::map<int,float> stepsizesMap = params.stepsizes();
-    std::map<int,float>::const_iterator it;
-    for (it = stepsizesMap.begin(); it != stepsizesMap.end(); it++)
+    QMap<int,float> upStepsizesMap = data.upStepsizes();
+    QMap<int,float> downStepsizesMap = data.downStepsizes();
+
+    QMap<int,float>::const_iterator it;
+    for (it = upStepsizesMap.begin(); it != upStepsizesMap.end(); it++) {
+        if (downStepsizesMap.contains(it.key())) {
+            auto stepsize = createStepsizeElement(doc, it.key(), it.value());
+            stepsizes->appendChild(stepsize);
+        } else {
+            auto stepsize = createStepsizeElement(doc, it.key(), it.value(), "up");
+            stepsizes->appendChild(stepsize);
+        }
+    }
+
+    for (it = downStepsizesMap.begin(); it != downStepsizesMap.end(); it++)
     {
-        DOMElement* stepsize = doc->createElement(X("stepsize"));
-        stepsize->setAttribute(X("begin"), S2X(QString::number(it->first)));
-        stepsize->setAttribute(X("size"), S2X(QString::number(it->second)));
-        stepsizes->appendChild(stepsize);
+        if (!upStepsizesMap.contains(it.key())) {
+            auto stepsize = createStepsizeElement(doc, it.key(), it.value(), "down");
+            stepsizes->appendChild(stepsize);
+        }
     }
 
     toFinish->appendChild(stepsizes);
 }
 
-void ProceduresWriter::finishAsPlugin(const data::PluginProcedureParameters&
-        params, DOMElement* toFinish)
+DOMElement* ProceduresWriter::createStepsizeElement(DOMDocument* doc, int begin, float size, QString direction)
+{
+    DOMElement* stepsize = doc->createElement(X("stepsize"));
+    stepsize->setAttribute(X("begin"), S2X(QString::number(begin)));
+    stepsize->setAttribute(X("size"), S2X(QString::number(size)));
+    if (!direction.isEmpty()) {
+        stepsize->setAttribute(X("direction"), S2X(direction));
+    }
+    return stepsize;
+}
+
+void ProceduresWriter::finishAsPlugin(const data::ScriptProcedureData &data,
+                                      DOMElement* toFinish)
 {
     DOMDocument* doc = toFinish->getOwnerDocument();
 
     //script
     toFinish->appendChild(XMLutils::CreateTextElement(doc, "script",
-                          params.GetScript()));
+                          data.script()));
     //adjust_parameter
-    QString adj = params.GetAdjustParameter();
+    QString adj = data.adjustParameter();
     if (!adj.isEmpty())
     {
         toFinish->appendChild(XMLutils::CreateTextElement(doc,
@@ -306,8 +365,8 @@ void ProceduresWriter::finishAsPlugin(const data::PluginProcedureParameters&
     }
 
     //parameter
-    data::tPluginProcedureParameterList paramList = params.GetCustomParameters();
-    data::tPluginProcedureParameterList::const_iterator it;
+    data::tScriptProcedureParameterList paramList = data.customParameters();
+    data::tScriptProcedureParameterList::const_iterator it;
     for (it = paramList.begin(); it != paramList.end(); it++)
     {
         DOMElement* parameter = XMLutils::CreateTextElement(doc, "parameter",
@@ -318,45 +377,44 @@ void ProceduresWriter::finishAsPlugin(const data::PluginProcedureParameters&
 }
 
 void ProceduresWriter::fillTrialsElement
-(const std::vector<ApexTrial*>& trials, DOMElement* theElement)
+(const data::tTrialList& trials, DOMElement* theElement)
 {
     DOMDocument* doc = theElement->getOwnerDocument();
 
-    std::vector<ApexTrial*>::const_iterator it;
+    data::tTrialList::const_iterator it;
     for (it = trials.begin(); it != trials.end(); it++)
     {
-        QString temp;
-
         DOMElement* trialElem = doc->createElement(X("trial"));
-        ApexTrial* trial = *it;
+        TrialData* trial = *it;
 
         //set the id attribute
         trialElem->setAttribute(X("id"), S2X(trial->GetID()));
 
         //<answer>
-        ApexAnswer answer = trial->GetAnswer();
-        temp = answer.string();
-        if (!temp.isEmpty())
+        QString answer = trial->GetAnswer();
+        if (!answer.isEmpty())
             trialElem->appendChild(XMLutils::CreateTextElement
-                                   (doc, "answer", temp));
+                                   (doc, "answer", answer));
 
         //<answer_element>
-        temp = trial->GetAnswerElement();
-        if (!temp.isEmpty())
+        answer = trial->GetAnswerElement();
+        if (!answer.isEmpty())
+        {
             trialElem->appendChild(XMLutils::CreateTextElement
-                                   (doc, "answer_element", temp));
+                                   (doc, "answer_element", answer));
+        }
 
         //<screen>
-        temp = trial->GetScreen();
-        if (!temp.isEmpty())
+        answer = trial->GetScreen();
+        if (!answer.isEmpty())
         {
             DOMElement* screen = doc->createElement(X("screen"));
-            screen->setAttribute(X("id"), S2X(temp));
+            screen->setAttribute(X("id"), S2X(trial->GetScreen()));
             trialElem->appendChild(screen);
         }
 
         //<stimulus>
-        //NOTE see apextrial.h for tStimulusList
+        //NOTE see trialdata.h for tStimulusList
         tStimulusList stimuli = trial->GetStimuli();
         for (tStimulusList::const_iterator itStim = stimuli.begin();
                 itStim != stimuli.end(); itStim++)
@@ -389,34 +447,34 @@ QString ProceduresWriter::getTypeString(int type)
 
     switch (type)
     {
-        case ApexProcedureParameters::TYPE_ADAPTIVE:
+        case ProcedureData::AdaptiveType:
 
-            typeString = "adaptiveProcedureType";
+            typeString = "adaptiveProcedure";
             break;
 
-        case ApexProcedureParameters::TYPE_CONSTANT:
+        case ProcedureData::ConstantType:
 
-            typeString = "constantProcedureType";
+            typeString = "constantProcedure";
             break;
 
-        case ApexProcedureParameters::TYPE_TRAINING:
+        case ProcedureData::TrainingType:
 
-            typeString = "trainingProcedureType";
+            typeString = "trainingProcedure";
             break;
 
-        case ApexProcedureParameters::TYPE_MULTI:
+        case ProcedureData::MultiType:
 
-            typeString = "multiProcedureType";
+            typeString = "multiProcedure";
             break;
 
-        case ApexProcedureParameters::TYPE_PLUGIN:
+        case ProcedureData::PluginType:
 
-            typeString = "pluginProcedureType";
+            typeString = "pluginProcedure";
             break;
 
         default:
             qFatal("WRITER: unknown procedure type (%i) \
-                   returned from ApexProcedureParameters.", type);
+                   returned from ProcedureData.", type);
     }
 
     return typePrefix + ":" + typeString;
@@ -428,33 +486,32 @@ QString ProceduresWriter::getOrderString(int order)
 
     switch (order)
     {
-        case ApexProcedureParameters::ORDER_RANDOM:
+        case ProcedureData::RandomOrder:
 
             orderString = "random";
             break;
 
-        case ApexProcedureParameters::ORDER_SEQUENTIAL:
+        case ProcedureData::SequentialOrder:
 
             orderString = "sequential";
             break;
 
-        case ApexProcedureParameters::ORDER_ONEBYONE:
+        case ProcedureData::OneByOneOrder:
 
             orderString = "onebyone";
             break;
 
         default:
             qFatal("WRITER: unknown order (%i) returned \
-                   from ApexProcedureParameters.", order);
+                   from ProcedureParameters.", order);
     }
 
     return orderString;
 }
 
-bool ProceduresWriter::isMultiProcedure(const ApexProcedureConfig& data)
+bool ProceduresWriter::isMultiProcedure(const ProcedureData& data)
 {
-    return getTypeString(data.GetParameters().GetType())
-           .contains("multiProcedureType");
+    return getTypeString(data.type()).contains("multiProcedureType");
 }
 
 

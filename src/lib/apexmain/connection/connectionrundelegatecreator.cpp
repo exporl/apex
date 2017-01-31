@@ -16,14 +16,19 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "connectionrundelegatecreator.h"
-#include "exceptions.h"
+
+#include "apextools/exceptions.h"
+
 #include "stimulus/datablock.h"
-#include "stimulus/outputdevice.h"
 #include "stimulus/filter.h"
-#include <map>
+#include "stimulus/outputdevice.h"
+
+#include "connectionrundelegatecreator.h"
+
+#include <QRegExp>
+
 #include <iostream>
+#include <map>
 
 using namespace apex;
 using namespace apex::stimulus;
@@ -148,7 +153,7 @@ namespace apex { namespace stimulus { namespace details
       for( tConnections::size_type i = 0  ; i < m_Connections.size() ; ++i )
       {
         const tConnection& cur = m_Connections[ i ];
-        if( cur.m_nToChannel != (int) streamapp::sc_nInfinite )
+        if( cur.m_nToChannel >= 0 )
           if( cur.m_sToID == ac_sToID )
             m_Map[ cur.m_nToChannel ] = true;
       }
@@ -167,7 +172,7 @@ namespace apex { namespace stimulus { namespace details
       for( tConnections::size_type i = 0  ; i < m_Connections.size() ; ++i )
       {
         const tConnection& cur = m_Connections[ i ];
-        if( cur.m_nFromChannel != (int) streamapp::sc_nInfinite )
+        if( cur.m_nFromChannel >= 0 )
           if( cur.m_sFromID == ac_sFromID )
             m_Map[ cur.m_nFromChannel ] = true;
       }
@@ -217,13 +222,13 @@ bool ConnectionRunDelegateCreator::AddConnection (const data::ConnectionData& da
             QRegExp re(data.fromId());
             if (data.matchType()== data::MATCH_WILDCARD)
                 re.setPatternSyntax(QRegExp::Wildcard);
-                        
+
             for (tDataBlockMapCIt it = m_DBlocks.begin(); it != m_DBlocks.end(); ++it) {
 
                 if (re.exactMatch(it.key())) {
                     tConnection temp (data);
                     temp.m_sFromID = it.key();
-                
+
                     try {
                         mp_AddConnection (temp);
                     } catch (ApexStringException &e) {
@@ -236,9 +241,9 @@ bool ConnectionRunDelegateCreator::AddConnection (const data::ConnectionData& da
                 }
             }
 
-        
+
         } else {
-            
+
                 qFatal("Invalid match type");
         }
     } catch (ApexStringException& e) {
@@ -260,7 +265,7 @@ bool ConnectionRunDelegateCreator::mp_bMakeDefaultConnections()
       tConnection Cur;
       Cur.m_sFromID = it.key();
       Cur.m_sToID = it.value()->GetDevice();
-//      qDebug("Making connection from %s to %s", qPrintable (Cur.m_sFromID), qPrintable (Cur.m_sToID));
+//      qCDebug(APEX_RS, "Making connection from %s to %s", qPrintable (Cur.m_sFromID), qPrintable (Cur.m_sToID));
 
       const unsigned nChannels = it.value()->GetParameters().nbChannels();
 
@@ -291,7 +296,7 @@ const tConnection& ConnectionRunDelegateCreator::mf_IsValid( const tConnection& 
   {
     bFound = true;
     sDevice = itF.value()->GetDevice();
-    if( ac_Connection.m_nFromChannel != (int) streamapp::sc_nInfinite )
+    if( ac_Connection.m_nFromChannel >= 0 )
         if( ac_Connection.m_nFromChannel >= (int) itF.value()->GetParameters().nbChannels())
         details::f_ThrowNotEnoughOutput( ac_Connection.m_sFromID );
   }
@@ -304,7 +309,7 @@ const tConnection& ConnectionRunDelegateCreator::mf_IsValid( const tConnection& 
     {
       bFound = true;
       sDevice = itFi.value()->GetDevice();
-      if( ac_Connection.m_nFromChannel != streamapp::sc_nInfinite )
+      if( ac_Connection.m_nFromChannel >= 0 )
           if( ac_Connection.m_nFromChannel >= (int) itFi.value()->GetParameters().numberOfChannels() )
           details::f_ThrowNotEnoughOutput( ac_Connection.m_sFromID );
     }
@@ -324,9 +329,11 @@ const tConnection& ConnectionRunDelegateCreator::mf_IsValid( const tConnection& 
     if( itD.key() != sDevice )
             throw (ApexConnectionBetweenDifferentDevicesException("Attempted connection between " + sDevice + " and " + itD.key() + ", ignoring"));
 
-    if( ac_Connection.m_nToChannel != streamapp::sc_nInfinite )
-                  if( ac_Connection.m_nToChannel >= itD.value()->GetParameters().numberOfChannels() )
-              details::f_ThrowNotEnoughInput( ac_Connection.m_sToID );
+    if (ac_Connection.m_nToChannel >= 0)
+    {
+        if( ac_Connection.m_nToChannel >= (int) itD.value()->GetParameters().numberOfChannels() )
+            details::f_ThrowNotEnoughInput( ac_Connection.m_sToID );
+    }
   }
 
   if( !bFound )
@@ -339,8 +346,8 @@ const tConnection& ConnectionRunDelegateCreator::mf_IsValid( const tConnection& 
       if( itFi.value()->GetDevice() != sDevice )
               throw (ApexConnectionBetweenDifferentDevicesException("Attempted connection between " + sDevice + " and " + itFi.value()->GetDevice() + ", ignoring"));
 
-      if( ac_Connection.m_nToChannel != streamapp::sc_nInfinite )
-        if( ac_Connection.m_nToChannel >= itFi.value()->GetParameters().numberOfChannels() )
+      if( ac_Connection.m_nToChannel >= 0 )
+        if( ((unsigned int)ac_Connection.m_nToChannel) >= itFi.value()->GetParameters().numberOfChannels() )
           details::f_ThrowNotEnoughInput( ac_Connection.m_sToID );
     }
   }
@@ -354,7 +361,7 @@ const tConnection& ConnectionRunDelegateCreator::mf_IsValid( const tConnection& 
 void ConnectionRunDelegateCreator::mp_AddConnection( const tConnection& ac_Connection )
 {
 #ifdef PRINTCONNECTIONS
-  qDebug("Adding connection from " + ac_Connection.m_sFromID + " to " + ac_Connection.m_sToID );
+  qCDebug(APEX_RS, "Adding connection from " + ac_Connection.m_sFromID + " to " + ac_Connection.m_sToID );
 #endif
 
   tDataBlockMapCIt itD = m_DBlocks.find( ac_Connection.m_sFromID );

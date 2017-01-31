@@ -16,18 +16,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#ifndef _RBA_SRC_LIB_PLUMBING_PLUGINUTILS_H_
-#define _RBA_SRC_LIB_PLUMBING_PLUGINUTILS_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SERVICES_PLUGINLOADER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SERVICES_PLUGINLOADER_H_
 
-#include "global.h"
-#include "services/servicemanager.h"
-#include "exceptions.h"
+#include "apextools/exceptions.h"
+#include "apextools/global.h"
 
-#include <QObject>
+#include "apextools/services/servicemanager.h"
+
+#include <QCoreApplication>
 #include <QMap>
+#include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QCoreApplication>
 
 namespace apex
 {
@@ -40,14 +41,10 @@ namespace apex
 
         PluginLoader();
 
-        QStringList pluginDirectories();
-
         void insert (const QString &path, QObject *plugin);
         QList<QObject*> allAvailablePlugins() const;
         QString pluginPath (const QObject *object) const;
         QMap<QString, QString> pluginsWithErrors() const;
-
-        void scanPath(const QString &pluginDirectory);
 
         template <typename T>
             QList<T*> availablePlugins()

@@ -17,11 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "connectionswriter.h"
-#include "xml/apexxmltools.h"
-#include "connection/connectiondata.h"
+#include "apexdata/connection/connectiondata.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "connectionswriter.h"
 
 #include <QDebug>
 

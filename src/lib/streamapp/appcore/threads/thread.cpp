@@ -16,10 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "thread.h"
-#include "locks.h"
+
 #include "containers/dynarray.h"
+
+#include "locks.h"
+#include "thread.h"
+
+#include <QtGlobal>
 
 void* f_CreateThread( void* a_pUserData );
 void  f_KillThread( void* a_hHandle );
@@ -68,8 +71,8 @@ void IThread::sf_ThreadEntryPoint( IThread* const ac_pThreadToRun )
 
   s_RunningThreadsLock.mf_Enter();
   s_RunningThreads.mp_RemoveItem( ac_pThreadToRun );
-  s_RunningThreadsLock.mf_Leave(); 
-  
+  s_RunningThreadsLock.mf_Leave();
+
   ac_pThreadToRun->mv_hThreadHandle = 0;
   ac_pThreadToRun->mv_nThreadID = 0;
 }
@@ -122,7 +125,7 @@ bool IThread::mf_bIsRunning() const
 bool IThread::mf_bWaitForThreadToStop( const int ac_nTimeoutInMSec ) const
 {
     //how do you expect this thread to wait for itself to stop??
-  assert( mf_nGetThreadID() != mf_nGetCurrentThreadID() );
+  Q_ASSERT( mf_nGetThreadID() != mf_nGetCurrentThreadID() );
 
     //sleep in pieces to allow checking regularly
   const int nMsecPerCount = 5;

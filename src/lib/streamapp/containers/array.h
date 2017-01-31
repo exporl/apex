@@ -16,13 +16,17 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __STRARRAY_H__
 #define __STRARRAY_H__
 
-#include "defines.h"
+//defines is moved one level up
+/**@Abhi
+  */
+//#include "defines.h"  //[OLD]
+
+#include "../defines.h"
 #include <string.h>
-#include <assert.h>
 
 namespace streamapp
 {
@@ -90,7 +94,7 @@ namespace streamapp
     INLINE void  mp_Set( const unsigned  ac_nPos,
                          const tType     ac_dfVal )
     {
-      assert( ac_nPos < mc_nBufferSize );
+      Q_ASSERT( ac_nPos < mc_nBufferSize );
       mc_pArray[ ac_nPos ] = ac_dfVal;
     }
 
@@ -101,7 +105,7 @@ namespace streamapp
         */
     INLINE tType mf_Get( const unsigned ac_nPos ) const
     {
-      assert( ac_nPos < mc_nBufferSize );
+      Q_ASSERT( ac_nPos < mc_nBufferSize );
       return mc_pArray[ ac_nPos ];
     }
 
@@ -112,7 +116,7 @@ namespace streamapp
         */
     INLINE const tType& operator()( const unsigned ac_nPos ) const
     {
-      assert( ac_nPos < mc_nBufferSize );
+      Q_ASSERT( ac_nPos < mc_nBufferSize );
       return mc_pArray[ ac_nPos ];
     }
 
@@ -123,7 +127,7 @@ namespace streamapp
         */
     INLINE tType& operator()( const unsigned ac_nPos )
     {
-      assert( ac_nPos < mc_nBufferSize );
+      Q_ASSERT( ac_nPos < mc_nBufferSize );
       return mc_pArray[ ac_nPos ];
     }
 
@@ -142,7 +146,7 @@ namespace streamapp
         */
     INLINE void mp_CopyFrom( const ArrayAccess& ac_ToCopy )
     {
-      assert( ac_ToCopy.mf_nGetBufferSize() >= mc_nBufferSize );
+      Q_ASSERT( ac_ToCopy.mf_nGetBufferSize() >= mc_nBufferSize );
       for( unsigned i = 0 ; i < mc_nBufferSize ; ++ i )
         mc_pArray[ i ] = ac_ToCopy( i );
     }

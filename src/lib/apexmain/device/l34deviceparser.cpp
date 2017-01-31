@@ -17,12 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "l34deviceparser.h"
-#include "device/l34devicedata.h"
-#include "map/apexmap.h"
+#include "apexdata/device/l34devicedata.h"
+
+#include "apexdata/map/apexmap.h"
+
 #include "map/mapfactory.h"
 
 #include "services/errorhandler.h"
+
+#include "l34deviceparser.h"
 
 namespace apex
 {

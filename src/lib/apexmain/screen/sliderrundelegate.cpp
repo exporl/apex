@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "screen/screenrundelegate.h"
+
+#include "apexdata/screen/sliderelement.h"
+
+#include "apextools/apextools.h"
+
 #include "gui/guidefines.h"
 
-#include "screen/sliderelement.h"
+#include "screen/screenrundelegate.h"
 #include "screen/sliderrundelegate.h"
-
-#include "apextools.h"
 
 namespace apex
 {
@@ -52,8 +53,8 @@ bool SliderRunDelegate::hasInterestingText() const
 
 const QString SliderRunDelegate::getText() const
 {
-	int sliderValue = QSlider::value();
-	return QString::number(sliderValue);
+        int sliderValue = QSlider::value();
+        return QString::number(sliderValue);
 }
 
 void SliderRunDelegate::resizeEvent( QResizeEvent* e )
@@ -63,13 +64,13 @@ void SliderRunDelegate::resizeEvent( QResizeEvent* e )
     ApexTools::shrinkTillItFits (this, getText(), QSize (2, 2));
 
   if (element->GetReset()) {
-	  if (element->HasDefault()){
-		qDebug("Reset me!!!!\n");
+          if (element->HasDefault()){
+                qCDebug(APEX_RS, "Reset me!!!!\n");
         QSlider::setValue((int)element->GetValue());
-	  }
-	  else {
-	    QSlider::setValue(0);
-	  }
+          }
+          else {
+            QSlider::setValue(0);
+          }
   }
 }
 
@@ -98,7 +99,7 @@ apex::rundelegates::SliderRunDelegate::SliderRunDelegate(
     if ( !element->getShortCut().isEmpty() )
         QSlider::setAccel( e->getShortCut() );
 
-	connect( this, SIGNAL( valueChanged(int) ), this, SLOT( sendAnsweredSignal() ) );*/
+        connect( this, SIGNAL( valueChanged(int) ), this, SLOT( sendAnsweredSignal() ) );*/
 
     QFont font = defaultFont;
     if ( element->getFontSize() != -1 )
@@ -106,14 +107,14 @@ apex::rundelegates::SliderRunDelegate::SliderRunDelegate(
     QSlider::setFont( font );
     initialFont = font;
 
-	QSlider::setMinimum((int)element->GetMin());
+        QSlider::setMinimum((int)element->GetMin());
     QSlider::setMaximum((int)element->GetMax());
-	if (element->HasDefault()){
+        if (element->HasDefault()){
         QSlider::setValue((int)element->GetValue());
-	}
-	QSlider::setTickPosition((QSlider::TickPosition)element->GetTickPos());
-	QSlider::setTickInterval((int)element->GetTickInt());
-	QSlider::setSingleStep(element->GetStepSize());
-	QSlider::setPageStep(element->GetPageSize());
+        }
+        QSlider::setTickPosition((QSlider::TickPosition)element->GetTickPos());
+        QSlider::setTickInterval((int)element->GetTickInt());
+        QSlider::setSingleStep(element->GetStepSize());
+        QSlider::setPageStep(element->GetPageSize());
 
 }

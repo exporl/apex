@@ -17,11 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef XMLDOCUMENTGETTERH
-#define XMLDOCUMENTGETTERH
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_XML_XMLDOCUMENTGETTER_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_XML_XMLDOCUMENTGETTER_H_
 
 #include "xercesinclude.h"
-using namespace XERCES_CPP_NAMESPACE;
 
 #include <QScopedPointer>
 #include <QString>
@@ -66,7 +65,7 @@ namespace ApexXMLTools
                                             const QString& schemaFilename,
                                             const QString& p_namespace      );
 
-     xercesc::DOMDocument* GetXMLDocument( const MemBufInputSource& data,
+     xercesc::DOMDocument* GetXMLDocument( const XERCES_CPP_NAMESPACE::MemBufInputSource& data,
                                             const QString& schemaFilename,
                                             const QString& p_namespace      );
 

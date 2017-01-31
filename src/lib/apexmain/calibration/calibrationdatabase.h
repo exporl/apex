@@ -20,12 +20,12 @@
  * Calibration database declaration.
  */
 
-#ifndef _APEX_SRC_CALIBRATION_CALIBRATIONDATABASE_H_
-#define _APEX_SRC_CALIBRATION_CALIBRATIONDATABASE_H_
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_CALIBRATION_CALIBRATIONDATABASE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_CALIBRATION_CALIBRATIONDATABASE_H_
+
+#include "apextools/global.h"
 
 #include <QString>
-
-#include "global.h"
 
 namespace apex
 {
@@ -167,6 +167,17 @@ public:
      */
     bool isCalibrated (const QString &setup, const QString &profile,
             const QString &name) const;
+
+    /** Returns whether the given hardware setup is a global setup. I.e. it is
+     * stored at machine level rather than user level.
+     *
+     * Do not use slashes in the @a setup argument,
+     * they will be replaced by underscores.
+     *
+     * @param setup hardware setup for the calibration
+     * @return true if this hardware setup is global, false otherwise
+     */
+    bool isGlobal(const QString& setup) const;
 
     /** Returns the target amplitude for a calibration. You have to ensure
      * that a calibration for the given combination of hardware setup,

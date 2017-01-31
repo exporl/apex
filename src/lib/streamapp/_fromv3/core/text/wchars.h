@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 /**
   *      -- v3tov2 plugin --
   * Do not modify this file by hand,
@@ -38,7 +38,7 @@
 #ifndef __STR_WCHARS_H__
 #define __STR_WCHARS_H__
 
-#include "core/_main.h"
+#include "../_main.h"
 
 S_NAMESPACE_BEGIN
 
@@ -82,7 +82,7 @@ namespace wchars
       * @param ac_pwsSrc source string
       * @param a_sDest destination
       * @return false if source contains chars that cannot be represented
-      
+
   s_dll bool gf_bWCharToChar( const s_wchar* ac_pwsSrc, String& a_sDest ) s_no_throw;*/
 
     /**

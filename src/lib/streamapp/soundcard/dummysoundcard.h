@@ -20,11 +20,11 @@
 #ifndef DUMMYSOUNDCARD_H
 #define DUMMYSOUNDCARD_H
 
-#include <QTimer>
-#include <QObject>
+#include "../typedefs.h"
 
-#include "soundcard/soundcard.h"
-#include "typedefs.h"
+#include "soundcard.h"
+
+#include <QTimer>
 
 class QIODevice;
 

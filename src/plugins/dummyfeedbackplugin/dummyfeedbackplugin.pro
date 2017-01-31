@@ -1,15 +1,3 @@
-BASEDIR = ../../..
-CLEBS *= buildplugin
-TARGET = dummyfeedbackplugin
+CLEBS *= asciicast buildplugin
 
-include ($$BASEDIR/clebs.pri)
-
-# WTF? TODO FIXME path???
-INCLUDEPATH *= $$BASEDIR/src/lib/apexmain/
-
-
-SOURCES *=	dummyfeedbackplugin.cpp	
-
-# WTF? TODO FIXME path???
-HEADERS +=	$$BASEDIR/src/lib/apexmain/feedback/pluginfeedbackinterface.h \
-
+!isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)

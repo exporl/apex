@@ -17,10 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXGENERALPARAMETERS_H
-#define APEXGENERALPARAMETERS_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_GENERALPARAMETERS_H_
+#define _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_GENERALPARAMETERS_H_
 
-#include "parameters/apexparameters.h"
+#include "apexparameters.h"
 
 namespace apex {
 namespace data
@@ -40,6 +40,7 @@ public:
     bool GetExitAfter() const { return m_bExitAfter; };
     void setExitAfter(bool exit) {m_bExitAfter = exit;};
     bool GetAutoSave() const { return m_bAutoSave; };
+    void setAutoSave(bool autoSave) { m_bAutoSave = autoSave; };
 
       /**
         * Wait for start.

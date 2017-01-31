@@ -5,9 +5,9 @@
 	<title>psignifit standalone usage notes</title>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	 
+
 	<style type="text/css">
-	<!-- 
+	<!--
 		body {color: #000000; background-color: #FFFFFF; font-size: 12px;}
 		a:link {color: #0000DD; background-color: #FFFFFF;}
 		a:active {color: #FF0000; background-color: #FFFFFF;}
@@ -24,7 +24,7 @@
 	All its input comes from a text document called "prefs" in the application folder.
 	Edit the "prefs" document, then simply double-click on the application to run.
 </p>
-<p>	
+<p>
 	On Windows, the flexibility of the standalone is limited simply because the flexibility
 	of the command-line is limited. It is highly recommded that you download
 	<a href="http://cygwin.com">Cygwin</a>, and then use a Cygwin-compiled version of
@@ -45,7 +45,7 @@
 	<dt>Or via a mixture of piped input on <samp>stdin</samp> and files named on the command line:</dt>
 		<dd><samp>echo "#random_seed  12345" | cat prefs - | psignifit dat -</samp></dd>
 </dl>
-<p>	
+<p>
 	Example <samp>dat</samp> and <samp>prefs</samp> are supplied with the binary distribution.
 	(NB: for the Mac application, the "prefs" file must contain the data too, so there is no separate <samp>dat</samp> file.
 </p>
@@ -62,7 +62,7 @@
 1.62550, 2.44760, 3.24168        (0.023 confidence level)
 1.87944, 2.63461, 3.35152        (0.159 confidence level)    (rows denote confidence
 2.31639, 2.92715, 3.64109        (0.841 confidence level)     levels - default values shown)
-2.52740, 3.05343, 3.90114        (0.977 confidence level)     
+2.52740, 3.05343, 3.90114        (0.977 confidence level)
 
  (F=0.2)  (F=0.5)  (F=0.8)
 (columns denote threshold

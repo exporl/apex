@@ -1,0 +1,12 @@
+[submodule "clebs"]
+	path = clebs
+	url = https://github.com/exporl/clebs
+[submodule "apex-confidential"]
+	path = apex-confidential
+	url = ssh://gerrit/apex-confidential
+[submodule "common"]
+	path = common
+	url = ssh://gerrit/common
+[submodule "coh"]
+	path = coh
+	url = ssh://gerrit/coh

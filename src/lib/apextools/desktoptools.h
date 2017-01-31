@@ -1,5 +1,5 @@
-#ifndef DESKTOPTOOLS_H
-#define DESKTOPTOOLS_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_DESKTOPTOOLS_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_DESKTOPTOOLS_H_
 
 #include <QString>
 #include "global.h"

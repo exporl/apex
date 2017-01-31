@@ -17,51 +17,33 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "xml/xercesinclude.h"
-using namespace XERCES_CPP_NAMESPACE;
+#include "apextools/apextools.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "services/errorhandler.h"
+#include "services/mainconfigfileparser.h"
 
 #include "scriptexpander.h"
-
-#include "xml/apexxmltools.h"
-#include "apextools.h"
-#include "services/mainconfigfileparser.h"
-#include "services/errorhandler.h"
 #include "xmlpluginapi.h"
 
+#include <QFileDialog>
 #include <QMap>
-#include <QString>
+#include <QMessageBox>
 #include <QScriptEngine>
 #include <QScriptEngineDebugger>
-#include <QMessageBox>
-#include <QFileDialog>
+#include <QString>
+
 #include <iostream>
 
-
+using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::ApexXMLTools;
 
 namespace apex
 {
 namespace parser
 {
-
-
-    // FIXME
-    bool WriteElement(XERCES_CPP_NAMESPACE::DOMElement* e, QString filename)
-    {
-    // FIXME: error handling
-        DOMImplementation* impl =
-                DOMImplementationRegistry::getDOMImplementation(X("Core"));
-
-
-        LocalFileFormatTarget formatTarget(filename.toAscii());
-        DOMWriter* domWriter = impl->createDOMWriter();
-        if ( domWriter->canSetFeature( X( "format-pretty-print" ), true ) )
-            domWriter->setFeature( X( "format-pretty-print" ), true );
-        domWriter->writeNode( &formatTarget, *e );
-
-        return true;
-    }
-
 
 const QString ScriptExpander::INSTANCENAME("pLuGiNiNtErFaCe");
 
@@ -107,7 +89,7 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
                                    QStringList() <<                                    Paths::Get().GetNonBinaryPluginPath()
                                    << QDir::currentPath(),
                                    QStringList() << "" << ".js");
-                qDebug("opening %s", qPrintable(filename));
+                qCDebug(APEX_RS, "opening %s", qPrintable(filename));
                 QFile file(filename);
                 if (! file.open(QIODevice::ReadOnly) )
                 {
@@ -154,7 +136,8 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
 
     // attach the main script library to the current script
     QString mainPluginLibrary(
-        MainConfigFileParser::Get().GetPluginScriptLibrary());
+        Paths::Get().GetNonBinaryPluginPath() +
+        MainConfigFileParser::Get().data().pluginScriptLibrary());
     if ( ! mainPluginLibrary.isEmpty() ) {
         QFile file(mainPluginLibrary);
         if (! file.open(QIODevice::ReadOnly) )
@@ -169,11 +152,14 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
     }
 
 
-    qDebug("Executing XML plugin script");
+    qCDebug(APEX_RS, "Executing XML plugin script");
 
     QScriptEngine m_scriptEngine;
     QScriptEngineDebugger m_scriptEngineDebugger;
     m_scriptEngineDebugger.attachTo(&m_scriptEngine);
+
+    // for consistency, add a console.log function that proxies to the internal print method
+    m_scriptEngine.evaluate("console = { log: function() { print.apply(0, Array.prototype.slice.call(arguments, 0)); } }");
 
     // create API
     XMLPluginAPI api;
@@ -195,7 +181,7 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
     }
 
 
-//    qDebug("Script to be evaluated :\n%s\n=================",
+//    qCDebug(APEX_RS, "Script to be evaluated :\n%s\n=================",
 //           qPrintable(localscript));
 
     if (!  m_scriptEngine.canEvaluate(localscript))
@@ -219,20 +205,20 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
 /*    else
     {
         XMLString=result.toString();
-        qDebug("Result: %s", qPrintable(XMLString));
+        qCDebug(APEX_RS, "Result: %s", qPrintable(XMLString));
     }*/
 
 
 
     // evaluate given function
-    
+
     m_scriptEngine.globalObject().setProperty(INSTANCENAME, result );
 
     //result = m_scriptEngine.evaluate (INSTANCENAME+".GetScreens").call(result);
 
-    qDebug("=========== Evaluating %s ==================", qPrintable(function));
+    qCDebug(APEX_RS, "=========== Evaluating %s ==================", qPrintable(function));
     result = m_scriptEngine.evaluate(function + "()");
-    qDebug("========== end evaluation ==============");
+    qCDebug(APEX_RS, "========== end evaluation ==============");
 
 
     if (m_scriptEngine.hasUncaughtException())
@@ -279,7 +265,7 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
     }
     catch (DOMException& e )
     {
-        qDebug("Xerces exception: %s", qPrintable(X2S(e.getMessage())));
+        qCDebug(APEX_RS, "Xerces exception: %s", qPrintable(X2S(e.getMessage())));
     }
 
 
@@ -293,7 +279,7 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
 
 XERCES_CPP_NAMESPACE::DOMNode* ScriptExpander::StringToDOM(QString s)
 {
-    //qDebug("String to be converted: %s", qPrintable(s));
+    //qCDebug(APEX_RS, "String to be converted: %s", qPrintable(s));
     DOMElement* root = ParseXMLDocument(s, false);
     return root;
 
@@ -362,26 +348,9 @@ DOMElement* ScriptExpander::ParseXMLDocument(QString s, bool dovalidation)
 
 DOMDocument* ScriptExpander::Revalidate(DOMNode* doc)
 {
-    DOMImplementation* impl =
-        DOMImplementationRegistry::getDOMImplementation(X("Core"));
-
-
-    //LocalFileFormatTarget formatTarget(filename.toAscii());
-    DOMWriter* domWriter = impl->createDOMWriter();
-    if ( domWriter->canSetFeature( X( "format-pretty-print" ), true ) )
-        domWriter->setFeature( X( "format-pretty-print" ), true );
-    //domWriter->writeNode( &formatTarget, *e );
-
-    /*XMLCh* written = domWriter->writeToString(*doc);
-    QByteArray writtenString = QString::fromUtf16(written).toUtf8();
-    delete written;*/
-    MemBufFormatTarget outputMemBuf;
-    domWriter->writeNode(&outputMemBuf, *doc);
-
-    //ParseXMLDocument(written, true);
+    QByteArray b = XMLutils::elementToString(doc).toUtf8();
 
     XercesDOMParser* parser = new XercesDOMParser();
-
 
     parser->setIncludeIgnorableWhitespace(false);   // ignore whitespace that can be ignored according to the xml specs
     parser->setValidationScheme(XercesDOMParser::Val_Always);
@@ -397,22 +366,11 @@ DOMDocument* ScriptExpander::Revalidate(DOMNode* doc)
     parser->setErrorHandler(errReporter);
 //    }
 
- /*    MemBufInputSource source(reinterpret_cast<const XMLByte*>
-            (writtenString.data()), writtenString.size(),
-                             "membufid",
-                             false);*/
-
-   MemBufInputSource source(outputMemBuf.getRawBuffer(), outputMemBuf.getLen(),
-                             "membufid",
-                             false);
+    MemBufInputSource source(reinterpret_cast<const XMLByte *>(b.constData()), b.length(), "membufid", false);
 
     QString temp( Paths::Get().GetExperimentSchemaPath() );
     ApexTools::ReplaceWhiteSpaceWithNBSP( temp );
-    parser->setExternalSchemaLocation(
-            QString((EXPERIMENT_NAMESPACE) + QString(" ") + temp)
-            .toAscii() );
-
-
+    parser->setExternalSchemaLocation(QFile::encodeName(QString(EXPERIMENT_NAMESPACE) + " " + temp));
 
     parser->parse( source );
     bool bFailed = parser->getErrorCount() != 0;
@@ -427,18 +385,11 @@ DOMDocument* ScriptExpander::Revalidate(DOMNode* doc)
                                         QMessageBox::Yes | QMessageBox::No,
                                         QMessageBox::Yes);
             if (answer == QMessageBox::Yes) {
-                QString filename ( QFileDialog::getSaveFileName(m_parent,
-                                            tr("Save XML document"),
-                                "output.xml"));
-
-                LocalFileFormatTarget formatTarget(filename.toAscii());
-                if ( domWriter->canSetFeature( X( "format-pretty-print" ), true ) )
-                    domWriter->setFeature( X( "format-pretty-print" ), true );
-                domWriter->writeNode( &formatTarget, *doc );
-
+                XMLutils::WriteElement(doc, QFileDialog::getSaveFileName(m_parent,
+                            tr("Save XML document"), "output.xml"));
             }
         } else {
-            qDebug("No parent defined, not interactive");
+            qCDebug(APEX_RS, "No parent defined, not interactive");
         }
         throw ApexStringException("XML code generated by a plugin did not validate. Check the plugin");
     }

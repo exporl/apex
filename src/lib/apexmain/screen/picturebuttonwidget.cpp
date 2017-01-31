@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "picturebuttonwidget.h"
 
 #include <QPushButton>
@@ -28,17 +28,17 @@
 
 
 void PictureButtonWidget::setPixmap(QPixmap p) {
-	pixmap=p;
+        pixmap=p;
 }
 
 void PictureButtonWidget::setBorderSize(int s) {
-	bordersize=s;
+        bordersize=s;
 }
 
 
 PictureButtonWidget::PictureButtonWidget(QWidget* parent):
         QPushButton(parent),
-	bordersize(0)
+        bordersize(0)
 {
    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
@@ -46,11 +46,11 @@ PictureButtonWidget::PictureButtonWidget(QWidget* parent):
 
 void PictureButtonWidget::paintEvent(QPaintEvent* e)
 {
-	QPushButton::paintEvent(e);
-	QPainter painter(this);
-	QRect rect(QPoint(), size());
-	rect.adjust(bordersize,bordersize,-bordersize,-bordersize);
-	painter.drawPixmap( rect, pixmap, pixmap.rect() );
+        QPushButton::paintEvent(e);
+        QPainter painter(this);
+        QRect rect(QPoint(), size());
+        rect.adjust(bordersize,bordersize,-bordersize,-bordersize);
+        painter.drawPixmap( rect, pixmap, pixmap.rect() );
 }
 
 
@@ -64,5 +64,5 @@ void PictureButtonWidget::mousePressEvent( QMouseEvent* ev )
     pf.setY( ((qreal) pi.y()) / this->height() );
     emit mousePressed( pf );
 
-    //qDebug("Clicked PictureButtonWidget at (%f, %f)", pf.x(), pf.y());
+    //qCDebug(APEX_RS, "Clicked PictureButtonWidget at (%f, %f)", pf.x(), pf.y());
 }

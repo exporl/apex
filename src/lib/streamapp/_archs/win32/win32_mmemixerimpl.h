@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
   /**
     * @file win32_mmemixerimpl.h
     * helpers for the IMatrixMixer implementation using win32 Mme
@@ -25,9 +25,11 @@
 #ifndef __WIN32_MMEMIXERIMPL_H__
 #define __WIN32_MMEMIXERIMPL_H__
 
+#include "../../containers/matrix.h"
+
+#include "../../mixers/mixerelement.h"
+
 #include <string>
-#include "containers/matrix.h"
-#include "mixers/mixerelement.h"
 
 namespace streamapp
 {

@@ -17,13 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __CONNECTIONDATA_H_
-#define __CONNECTIONDATA_H_
+#ifndef _EXPORL_SRC_LIB_APEXDATA_CONNECTION_CONNECTIONDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_CONNECTION_CONNECTIONDATA_H_
 
 #include <QVector>
 #include <QString>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {

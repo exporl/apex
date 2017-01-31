@@ -1,10 +1,12 @@
-#ifndef APEX_IIRFILTER_H
-#define APEX_IIRFILTER_H
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_SIGNALPROCESSING_IIRFILTER_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_SIGNALPROCESSING_IIRFILTER_H_
 
 
 #include "../global.h"
 
-#include <QVector>
+#include <QList>
+#include <QString>
+#include <QFile>
 
 /**
  * IIR filter, identical to Matlab implementation (filter.m)
@@ -30,12 +32,17 @@ public:
 
     void process(double* const data, unsigned count);
 
+    /* Load IIR filters from file (1 separate filter per channel) */
+    static QList<IirFilter* > load (const QString &filePath,
+            unsigned maximumLength = 0);
+
 private:
     unsigned blocksize;
     QVector<double> B;
     QVector<double> A;
 
     QVector<double> delayX,delayY;
+
 };
 
 

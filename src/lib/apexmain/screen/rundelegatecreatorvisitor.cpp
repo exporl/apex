@@ -16,39 +16,47 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "rundelegatecreatorvisitor.h"
 
-#include "screen/answerlabelelement.h"
-#include "screen/arclayoutelement.h"
-#include "screen/buttonelement.h"
-#include "screen/matrixelement.h"
-#include "screen/flashplayerelement.h"
-#include "screen/gridlayoutelement.h"
-#include "screen/labelelement.h"
-#include "screen/parameterlistelement.h"
-#include "screen/parameterlabelelement.h"
-#include "screen/pictureelement.h"
-#include "screen/picturelabelelement.h"
-#include "screen/texteditelement.h"
-#include "screen/spinboxelement.h"
-#include "screen/sliderelement.h"
-#include "screen/checkboxelement.h"
+#include "apexdata/screen/answerlabelelement.h"
+#include "apexdata/screen/arclayoutelement.h"
+#include "apexdata/screen/buttonelement.h"
+#include "apexdata/screen/checkboxelement.h"
+#include "apexdata/screen/flashplayerelement.h"
+#include "apexdata/screen/gridlayoutelement.h"
+#include "apexdata/screen/htmlelement.h"
+#include "apexdata/screen/labelelement.h"
+#include "apexdata/screen/matrixelement.h"
+#include "apexdata/screen/parameterlabelelement.h"
+#include "apexdata/screen/parameterlistelement.h"
+#include "apexdata/screen/pictureelement.h"
+#include "apexdata/screen/picturelabelelement.h"
+#include "apexdata/screen/sliderelement.h"
+#include "apexdata/screen/spinboxelement.h"
+#include "apexdata/screen/texteditelement.h"
 
 #include "screen/answerlabelrundelegate.h"
 #include "screen/arclayoutrundelegate.h"
 #include "screen/buttonrundelegate.h"
-#include "screen/matrixrundelegate.h"
-#include "screen/gridlayoutrundelegate.h"
-#include "screen/labelrundelegate.h"
-#include "screen/parameterlistrundelegate.h"
-#include "screen/parameterlabelrundelegate.h"
-#include "screen/picturerundelegate.h"
-#include "screen/picturelabelrundelegate.h"
-#include "screen/texteditrundelegate.h"
-#include "screen/spinboxrundelegate.h"
-#include "screen/sliderrundelegate.h"
 #include "screen/checkboxrundelegate.h"
+#include "screen/gridlayoutrundelegate.h"
+
+// TODO ANDROID htmlrundelegate uses webkitwidgets
+#ifndef Q_OS_ANDROID
+#include "screen/htmlrundelegate.h"
+#endif
+
+#include "screen/labelrundelegate.h"
+#include "screen/matrixrundelegate.h"
+#include "screen/parameterlabelrundelegate.h"
+#include "screen/parameterlistrundelegate.h"
+#include "screen/picturelabelrundelegate.h"
+#include "screen/picturerundelegate.h"
+#include "screen/sliderrundelegate.h"
+#include "screen/spinboxrundelegate.h"
+#include "screen/texteditrundelegate.h"
+
+#include "rundelegatecreatorvisitor.h"
+
 #ifdef FLASH
 #include "screen/flashplayerrundelegate.h"
 #endif
@@ -129,7 +137,7 @@ void RunDelegateCreatorVisitor::visitEmpty(const EmptyElement* /*e*/)
 {
     // this is intentional..  we don't show empty elements, in fact
     // they really shouldn't be here at all
-    qDebug("Empty Screen element in running experiment");
+    qCDebug(APEX_RS, "Empty Screen element in running experiment");
     lastcreated = 0;
 }
 
@@ -198,6 +206,15 @@ void RunDelegateCreatorVisitor::visitTextEdit(const TextEditElement* e)
     lastcreated = d;
 }
 
+// TODO ANDROID htmlrundelegate uses webkitwidgets
+#ifndef Q_OS_ANDROID
+void RunDelegateCreatorVisitor::visitHtml(const HtmlElement* e)
+{
+    HtmlRunDelegate* d = new HtmlRunDelegate(m_rd, parent, e);
+    elementToRunningMap[e] = d;
+    lastcreated = d;
+}
+#endif
 
 ScreenElementRunDelegate* RunDelegateCreatorVisitor::createRunDelegate(
     const ScreenElement* e)

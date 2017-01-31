@@ -17,16 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "appcore/qt_msghandler.h"
+#include "apextools/services/application.h"
+#include "apextools/services/servicemanager.h"
 
-#include "services/application.h"
-#include "services/servicemanager.h"
+#include "common/debug.h"
 
-#include "utils/stdredirector.h"
+#include "services/errorhandler.h"
 
 #include "apexcontrol.h"
 #include "apexloader.h"
-#include "debug.h"
 
 #include <iostream>
 
@@ -37,11 +36,39 @@
 using namespace std;
 using namespace apex;
 
+QtMessageHandler defaultHandler;
+
+void messageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    ErrorHandler &errors = ErrorHandler::Get();
+    QString source = QString::fromLatin1("%2 (%3: %1, %4)")
+        .arg(context.line).arg(context.category, context.file, context.function);
+    switch(type) {
+    case QtDebugMsg:
+        errors.addMessage(source, msg);
+        break;
+#if QT_VERSION >= 0x050500
+    case QtInfoMsg:
+        errors.addMessage(source, msg);
+        break;
+#endif
+    case QtWarningMsg:
+        errors.addWarning(source, msg);
+        break;
+    case QtCriticalMsg:
+        errors.addError(source, msg);
+        break;
+    case QtFatalMsg:
+        errors.addError(source, msg);
+    }
+    defaultHandler(type, context, msg);
+}
+
 int ApexLoader::Load( int argc, char *argv[] )
 {
-#ifdef NOCONSOLE
-    appcore::QtMsgHandler::sf_pInstance();
-    utils::StdRedirector::sf_pInstance();
+#if QT_VERSION < 0x050300
+    // Show all debug output
+    QLoggingCategory::setFilterRules(QStringLiteral("*=true"));
 #endif
 
     // make sure apex does not crash if the user tries to close the console window
@@ -59,13 +86,16 @@ int ApexLoader::Load( int argc, char *argv[] )
     ServiceManager& services = ServiceManager::Get();
     services.SetCommandLine (argc, argv);
 
-    // make sure the application is constructed before ApexControl to
-    // avoid thread problems with QT thinking ApexControl and Application being
-    // in two different threads. This causes all kinds of funny effects
-    // because signal-slot connections then stop being simple function calls
-    (void) apex::Application::Get();
+    // forward all qt messages to the status window; disabled until the status
+    // window gets some better filtering support
+    // defaultHandler = qInstallMessageHandler(messageOutput);
 
-    enableCoreDumps(QCoreApplication::applicationFilePath());
+    // make sure some things are constructed before ApexControl to
+    // avoid thread problems.
+    (void) apex::Application::Get();
+    (void) ErrorHandler::Get();
+
+    cmn::enableCoreDumps(QCoreApplication::applicationFilePath());
 
     int nRetCode = apex::ApexControl::Get().exec();
     // Deletion of the main window by C++ causes segfaults and QThread warnings

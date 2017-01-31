@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SBELEMENT_H
-#define SBELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_SPINBOXELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_SPINBOXELEMENT_H_
 
 #include "screenelement.h"
 
 #include <QString>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {

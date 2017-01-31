@@ -17,30 +17,30 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "filterparser.h"
+#include "apexdata/datablock/datablockdata.h"
+#include "apexdata/datablock/datablocksdata.h"
 
-#include "stimulus/wav/wavdeviceio.h"
-#include "stimulus/filtertypes.h"
+#include "apexdata/device/devicesdata.h"
+#include "apexdata/device/wavdevicedata.h"
 
-#include "datablock/datablocksdata.h"
-#include "datablock/datablockdata.h"
+#include "apexdata/filter/filterdata.h"
+#include "apexdata/filter/pluginfilterdata.h"
+#include "apexdata/filter/wavparameters.h"
 
-#include "device/devicesdata.h"
-#include "device/wavdevicedata.h"
+#include "apexdata/parameters/parametermanagerdata.h"
 
-#include "filter/filterdata.h"
-#include "filter/pluginfilterdata.h"
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
 
 #include "parser/plugindataparser.h"
 
-#include "parameters/parametermanagerdata.h"
+#include "stimulus/filtertypes.h"
 
-#include "xml/apexxmltools.h"
-#include "xml/xmlkeys.h"
+#include "wavstimulus/wavdeviceio.h"
 
-#include "filter/wavparameters.h"
+#include "filterparser.h"
 
-#include "xml/xercesinclude.h"
 using namespace XERCES_CPP_NAMESPACE;
 
 using namespace apex::stimulus;
@@ -78,8 +78,7 @@ data::FilterData* FilterParser::ParseFilter( DOMElement* a_pBase, data::Paramete
 
     // new structure
     data::FilterData* data;
-    std::auto_ptr<parser::SimpleParametersParser> parser(0);
-
+    QScopedPointer<parser::SimpleParametersParser> parser;
 
     if (type== sc_sFilterPluginFilterType) {
         data = new data::PluginFilterData();
@@ -105,7 +104,7 @@ data::FilterData* FilterParser::ParseFilter( DOMElement* a_pBase, data::Paramete
         throw( ApexStringException( "WavDeviceFactory::CreateFilterParameters: Unknown filtertype" + type ) );
 
 
-    if (parser.get()==0)
+    if (!parser)
         parser.reset(new parser::SimpleParametersParser());
 
 
@@ -120,7 +119,7 @@ data::FilterData* FilterParser::ParseFilter( DOMElement* a_pBase, data::Paramete
        // look for device to get sample rate and buffer size
 
         //data::DeviceData* temp;
-		//TODO remove old code when commit 2165 proves to be ok
+                //TODO remove old code when commit 2165 proves to be ok
         //try {
                 //temp=ac_DevicesData.GetDeviceData( dev );
         //} catch (ApexStringException &e) {

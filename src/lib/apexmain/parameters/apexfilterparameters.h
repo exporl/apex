@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef APEXAPEXFILTERPARAMETERS_H
-#define APEXAPEXFILTERPARAMETERS_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_PARAMETERS_APEXFILTERPARAMETERS_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_PARAMETERS_APEXFILTERPARAMETERS_H_
 
 #include "stimulus/idevicefactoryelement.h"
 //#include "apexextendedparameters.h"

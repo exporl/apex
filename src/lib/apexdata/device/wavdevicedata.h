@@ -17,13 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_DATAWAVDEVICEDATA_H
-#define APEX_DATAWAVDEVICEDATA_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_DEVICE_WAVDEVICEDATA_H_
+#define _EXPORL_SRC_LIB_APEXDATA_DEVICE_WAVDEVICEDATA_H_
 
-#include "device/devicedata.h"
+#include "devicedata.h"
 
-//from libtools
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {

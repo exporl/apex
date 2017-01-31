@@ -16,24 +16,27 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "stimulus/stimulusparameters.h"
+#include "apexdata/experimentdata.h"
+
+#include "apexdata/stimulus/stimulusparameters.h"
+
 #include "parameters/parametermanager.h"
+
 #include "runner/experimentrundelegate.h"
+
 #include "stimulus/datablock.h"
 #include "stimulus/stimulusoutput.h"
+
+#include "streamapp/utils/checks.h"
+
 #include "calibrationio.h"
-
-//#include <appcore/threads/waitableobject.h>
-
-//from libtools
-#include "experimentdata.h"
-
-#include <utils/checks.h>
 
 #include <QMessageBox>
 #include <QThread>
 #include <QTimer>
 
+//#include <appcore/threads/waitableobject.h>
+//from libtools
 using namespace apex::stimulus;
 using namespace utils;
 using namespace appcore;
@@ -108,7 +111,7 @@ public:
     ExperimentRunDelegate *runDelegate;
     stimulus::StimulusOutput * const stimulusOutput;
     QString currentStimulus;
-    std::auto_ptr<ClippingNotifier> clippingNotifier;
+    QScopedPointer<ClippingNotifier> clippingNotifier;
     bool looping;
 };
 
@@ -120,10 +123,10 @@ CalibrationIO::CalibrationIO (ExperimentRunDelegate *runDelegate,
 {
 
     if (clipChecking) {
-        d->clippingNotifier.reset (new ClippingNotifier
+        d->clippingNotifier.reset(new ClippingNotifier
                 (runDelegate->modOutput()->GetDevices()));
-        connect (d->clippingNotifier.get(), SIGNAL (clippingOccured(bool)),
-                 this, SIGNAL (clippingOccured(bool)));
+        connect (d->clippingNotifier.data(), SIGNAL(clippingOccured(bool)),
+                 this, SIGNAL(clippingOccured(bool)));
     }
 
     // disable continuous for all devices
@@ -160,13 +163,13 @@ void CalibrationIO::setStimulus (const QString &name)
 
 void CalibrationIO::setParameter (const QString &name, double value)
 {
-	ParameterManager *manager = d->runDelegate->GetParameterManager();
-    /*qDebug("CalibrationIO::setParameter: sending " + name + "="
+        ParameterManager *manager = d->runDelegate->GetParameterManager();
+    /*qCDebug(APEX_RS, "CalibrationIO::setParameter: sending " + name + "="
             + QString::number(value));*/
     manager->setParameter (name, value, false);
-	d->runDelegate->GetModOutput()->SendParametersToClients();
+        d->runDelegate->GetModOutput()->SendParametersToClients();
     d->runDelegate->GetModOutput()->PrepareClients();
-	//d->runDelegate->GetModOutput()->HandleParam(name,value);
+        //d->runDelegate->GetModOutput()->HandleParam(name,value);
 }
 
 void CalibrationIO::setLooping (bool looping)
@@ -193,15 +196,15 @@ void CalibrationIO::setLooping (bool looping)
 
 void CalibrationIO::startOutput()
 {
-	qDebug("startOutput()");
+        qCDebug(APEX_RS, "startOutput()");
     try {
         stopOutput();
 
         Stimulus* stimulus = d->runDelegate->GetStimulus(d->currentStimulus);
         // will also handle params from stimulus if there are any
-		qDebug("loadStimulus()");
+                qCDebug(APEX_RS, "loadStimulus()");
         d->stimulusOutput->LoadStimulus (stimulus, false);
-		qDebug("resumeDevides()");
+                qCDebug(APEX_RS, "resumeDevides()");
         // use resume since this is not blocking
         d->stimulusOutput->ResumeDevices();
 

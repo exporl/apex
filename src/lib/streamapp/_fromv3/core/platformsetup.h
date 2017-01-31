@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 /**
   *      -- v3tov2 plugin --
   * Do not modify this file by hand,
@@ -38,13 +38,15 @@
 #ifndef __STR_PLATFORMSETUP_H__
 #define __STR_PLATFORMSETUP_H__
 
+#include <QtGlobal>
+
   //first figure out the platform.
   //one of these must be defined externally,
   //else compilation won't even start. (whether or not the compiler recognizes
   //the #error command, it *will* annoy you)
 #if defined WIN32
   #define S_WIN32 1
-#elif defined LINUX
+#elif defined Q_OS_UNIX
   #define S_LINUX 1
   #ifdef DAVINCI_ARM
     #define S_DAVINCI 1
@@ -210,8 +212,8 @@
   #endif
 
 #ifndef S_C6X_CINCLUDE
-  #include <cassert>
-  #define s_assertf assert( 0 );
+  #include <QtGlobal>
+  #define s_assertf Q_ASSERT( 0 );
 #else
   #define s_assertf
 #endif

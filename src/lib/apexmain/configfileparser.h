@@ -17,25 +17,24 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXCONFIGFILEPARSER_H
-#define APEXCONFIGFILEPARSER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_CONFIGFILEPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_CONFIGFILEPARSER_H_
 
 class QString;
 class QDomDocument;
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmldocumentgetter.h"
+
+#include "parser/apexparser.h"
+
+#include <QObject>
+
 namespace XERCES_CPP_NAMESPACE
 {
   class DOMDocument;
 };
-//using namespace XERCES_CPP_NAMESPACE;
-
-#include <QObject>
-
-#include "xml/apexxmltools.h"
-#include "xml/xmldocumentgetter.h"
-
-#include "parser/apexparser.h"
 
 namespace apex {
 
@@ -46,7 +45,7 @@ namespace apex {
 @author Tom Francart,,,
 */
 
-class ConfigFileParser: public parser::Parser //public QObject
+class APEX_EXPORT ConfigFileParser: public parser::Parser //public QObject
 {
 public:
     ConfigFileParser(const QString& configFilename,

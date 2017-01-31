@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "xmlpluginapi.h"
 #include "services/errorhandler.h"
 
@@ -48,14 +48,14 @@ QStringList XMLPluginAPI::files(QString path)
             d.setPath( p.left( p.length()-wildcard.length()));
         d.setNameFilters( QStringList()<< wildcard );
 
-        qDebug() << d.entryList();
+        qCDebug(APEX_RS) << d.entryList();
 
         return d.entryList();
     }
-    
+
     /*QDir dir(path.toString(), wildcard.toString());
 
-    qDebug("found %d files in path %s:",
+    qCDebug(APEX_RS, "found %d files in path %s:",
         dir.entryList().size(),
                       qPrintable(path.toString()));
     return dir.entryList();*/
@@ -69,7 +69,7 @@ QString XMLPluginAPI::stripPath(QString s)
     QDir d(s);
     if (d.exists())
         return s;
-    
+
     QStringList parts( QDir::fromNativeSeparators(s).split("/") );
     QString wildcard( parts.at(parts.size()-1) );
 

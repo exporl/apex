@@ -20,29 +20,27 @@
 #ifndef __SOUNDCARDWRAPPERFACTORY_H_
 #define __SOUNDCARDWRAPPERFACTORY_H_
 
-#include "defines.h"
-#include "typedefs.h"
-#include "factorytypes.h"
-#include "utils/stringexception.h"
+#include "../defines.h"
+#include "../factorytypes.h"
+#include "../typedefs.h"
 
-#if defined( S_WIN32 ) //|| defined( S_MAC )
-#include "win32_asiowrapper.h"
-#endif
-#if defined( S_MAC )
-#include "osx_coreaudiowrapper.h"
-#endif
-#if defined( S_POSIX )
-#include "linux_jackwrapper.h"
-#endif
-#if defined( S_TEST_JACK )
-#include "_archs/linux/linux_jackwrapper.h"
-#endif
-#include "soundcard/portaudiowrapper.h"
-#include "soundcard/soundcard.h"
-#include "soundcard/qtaudiowrapper.h"
-#include "soundcard/dummysoundcard.h"
+#include "../utils/stringexception.h"
+
+#include "dummysoundcard.h"
+#include "portaudiowrapper.h"
+#include "soundcard.h"
 
 #include <QDebug>
+
+#if defined( S_WIN32 ) //|| defined( S_MAC )
+#include "../_archs/win32/win32_asiowrapper.h"
+#endif
+#if defined( S_MAC )
+#include "../_archs/osx/osx_coreaudiowrapper.h"
+#endif
+#if defined(ENABLEJACK)
+#include "../_archs/linux/linux_jackwrapper.h"
+#endif
 
 namespace streamapp
 {
@@ -71,19 +69,19 @@ public:
      * @param a_sError receives soundcard error info, if any
      * @return an instance or 0 if it couldn't be created
      */
-    static ISoundCard *CreateSoundCard(const std::string& ac_sDriverName, const
+    static ISoundCard *CreateSoundCard(const std::string& cardName, const
             gt_eDeviceType ac_eType, std::string& a_sError )
     {
-        qDebug( "CreateSoundCard" );
+        qCDebug(APEX_SA, "CreateSoundCard" );
         try {
             if (ac_eType == PORTAUDIO) {
-                return new PortAudioWrapper(ac_sDriverName);
+                return new PortAudioWrapper(QString::fromStdString(cardName));
             } else if (ac_eType == DUMMY) {
-                    return new DummySoundcard(ac_sDriverName);
+                    return new DummySoundcard(cardName);
 #if defined(S_WIN32)
             } else if (ac_eType == ASIO) {
-                if (ac_sDriverName != sc_sDefault.toStdString())
-                    return new AsioWrapper(ac_sDriverName);
+                if (cardName != sc_sDefault.toStdString())
+                    return new AsioWrapper(cardName);
                 Q_FOREACH (const std::string &driver,
                         AsioWrapper::sf_saGetDriverNames(a_sError)) {
                     try {
@@ -95,12 +93,12 @@ public:
 #endif
 #if defined(S_MAC)
             } else if (ac_eType == COREAUDIO) {
-                return new CoreAudioWrapper(ac_sDriverName);
+                return new CoreAudioWrapper(cardName);
 #endif
-#if defined(S_POSIX) || defined(S_TEST_JACK)
+#if defined(ENABLEJACK)
             } else if (ac_eType == JACK) {
-                if (ac_sDriverName != sc_sDefault.toStdString())
-                    return new JackWrapper(ac_sDriverName);
+                if (cardName != sc_sDefault.toStdString())
+                    return new JackWrapper(cardName);
                 tStringVector drvrs(JackWrapper::sf_saGetDriverNames(a_sError));
                 if (drvrs.size())
                     return new JackWrapper(drvrs.at(0));
@@ -137,7 +135,7 @@ public:
         if (ac_eType == COREAUDIO)
             return CoreAudioWrapper::sf_saGetDriverNames(a_sError);
 #endif
-#if defined(S_POSIX) || defined(S_TEST_JACK)
+#if defined(ENABLEJACK)
         if (ac_eType == JACK)
             return JackWrapper::sf_saGetDriverNames(a_sError);
 #endif

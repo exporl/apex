@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SCREENLAYOUTELEMENT_H
-#define SCREENLAYOUTELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREENLAYOUTELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREENLAYOUTELEMENT_H_
 
 #include "screenelement.h"
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -56,9 +56,9 @@ class APEXDATA_EXPORT ScreenLayoutElement
          * throw an ApexStringException if not...
          */
         virtual void checkChild(const ScreenElement* childel) const = 0;
-        
+
         bool operator==(const ScreenLayoutElement& other) const;
-        
+
     private:
         std::vector<ScreenElement*> children;
 };

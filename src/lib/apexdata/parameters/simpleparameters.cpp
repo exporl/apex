@@ -17,12 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-//from libdata
-#include "simpleparameters.h"
+#include "apextools/apextools.h"
+#include "apextools/exceptions.h"
 
-//from libtools
-#include "exceptions.h"
-#include <apextools.h>
+#include "simpleparameters.h"
 
 #include <QDebug>
 
@@ -61,7 +59,7 @@ ParameterList SimpleParametersPrivate::parametersByType(const QString& type) con
 void SimpleParametersPrivate::printParameters() const
 {
     Q_FOREACH (Parameter param, parameters)
-        qDebug() << param.type() << param.defaultValue();
+        qCDebug(APEX_RS) << param.type() << param.defaultValue();
 }
 
 
@@ -109,7 +107,7 @@ Parameter SimpleParameters::parameterByType(const QString& type) const
 
 void SimpleParameters::setValueByType(const QString& type, const QVariant& value)
 {
-    //qDebug() << "setValueByType" << type << value;
+    //qCDebug(APEX_RS) << "setValueByType" << type << value;
 
     if (hasParameter(type))
     {
@@ -118,7 +116,7 @@ void SimpleParameters::setValueByType(const QString& type, const QVariant& value
     }
     else
     {
-        //qDebug() << this << ": adding parameter (set) " << type;
+        //qCDebug(APEX_RS) << this << ": adding parameter (set) " << type;
         d->parameters.append(Parameter(id(), type, value, NO_CHANNEL, false));
     }
 }
@@ -142,13 +140,13 @@ ParameterList SimpleParameters::parameters() const
 
 void SimpleParameters::addParameter(const Parameter& param)
 {
-    //qDebug() << "addParameter" << param.type() << param.defaultValue();
+    //qCDebug(APEX_RS) << "addParameter" << param.type() << param.defaultValue();
     Parameter newParam = param; //copy to set owner
     newParam.setOwner(id());
 
     if (!hasParameter(newParam.type()))
     {
-        //qDebug() << this << ": adding parameter (add)" << param.type() << param.defaultValue();
+        //qCDebug(APEX_RS) << this << ": adding parameter (add)" << param.type() << param.defaultValue();
         d->parameters.append(newParam);
     }
     else
@@ -202,7 +200,7 @@ void SimpleParameters::addParameter(const Parameter& param)
 
 void SimpleParameters::removeParameter(const Parameter& param)
 {
-    //qDebug() << this << ": removing parameter " << param.type();
+    //qCDebug(APEX_RS) << this << ": removing parameter " << param.type();
     d->parameters.removeAll(param);
 }
 

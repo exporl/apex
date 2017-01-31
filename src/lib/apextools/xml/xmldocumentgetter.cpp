@@ -23,6 +23,8 @@
 #include "../apextools.h"
 #include "apexxmltools.h"
 
+#include <QFile>
+
 using namespace xercesc;
 
 using namespace apex;
@@ -70,10 +72,10 @@ void XMLDocumentGetter::setSchemaAndNamespace( const QString& schemaFilename,
     QString temp(schemaFilename);
     ApexTools::ReplaceWhiteSpaceWithNBSP(temp);
 
-    qDebug("%s", qPrintable(QString(xmlNamespace + QString(" ") + temp)));
+    qCDebug(APEX_RS, "%s", qPrintable(QString(xmlNamespace + QString(" ") + temp)));
 
-    theParser->setExternalSchemaLocation(
-                    QString(xmlNamespace + QString(" ") + temp).toAscii());
+    theParser->setExternalSchemaLocation(QFile::encodeName(xmlNamespace + " "
+                                                           + temp));
 }
 
 DOMDocument* XMLDocumentGetter::GetXMLDocument(const QString& filename,
@@ -83,7 +85,7 @@ DOMDocument* XMLDocumentGetter::GetXMLDocument(const QString& filename,
     theParser.reset( new XercesDOMParser() );
     fInitParser( theParser.data(), theErrReporter.data() );
     setSchemaAndNamespace(schemaFilename, xmlNamespace );
-    theParser->parse(filename.toAscii());
+    theParser->parse(QFile::encodeName(filename));
     bool bFailed = theParser->getErrorCount() != 0;
 
     if (bFailed)
@@ -116,7 +118,7 @@ DOMDocument* XMLDocumentGetter::GetXMLDocument(const QString& filename)
     theParser->setDoSchema(false);
     theParser->setValidationSchemaFullChecking(false);
 
-    theParser->parse(filename.toAscii());
+    theParser->parse(QFile::encodeName(filename));
     bool bFailed = theParser->getErrorCount() != 0;
 
     if (bFailed)

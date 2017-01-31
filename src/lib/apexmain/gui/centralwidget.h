@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef __CENTRALWIDGET_H__
-#define __CENTRALWIDGET_H__
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_CENTRALWIDGET_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_CENTRALWIDGET_H_
 
 #include <QColor>
 #include <QGridLayout>
@@ -75,7 +75,7 @@ namespace apex
           * or 100% if no panel was set.
           * @param a_pScreen the layout containing created widgets or 0
           */
-	void mp_SetScreen( QLayout* a_pScreen );
+        void mp_SetScreen( QLayout* a_pScreen );
         void setScreenWidget(QWidget* w);
 
         /**
@@ -90,7 +90,7 @@ namespace apex
       void mp_LayoutNow();
 
         /**
-          * Override settig background color to know what to draw for feedback == NoFeedback
+          * Override settig background color to know what to draw for feedback == mc_eOff
           * @param ac_Color the color
           */
       void setBackgroundColor( const QColor& ac_Color );
@@ -145,4 +145,4 @@ namespace apex
   }
 }
 
-#endif //#ifndef __CENTRALWIDGET_H__
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_CENTRALWIDGET_H_

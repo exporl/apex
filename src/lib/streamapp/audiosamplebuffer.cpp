@@ -16,13 +16,19 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "file/binaryfile.h"
+
+#include "utils/stringutils.h"
+
 #include "audiosamplebuffer.h"
-#include "utils/stringutils.h" //for printing
 #include "stream.h"
 #include "streamappfactory.h"
-#include "file/binaryfile.h"
+
 #include <math.h>
+
+#include <QtGlobal>
+
 #include <iostream>
 
 using namespace streamapp;
@@ -43,7 +49,7 @@ AudioSampleBuffer::~AudioSampleBuffer()
 
 void AudioSampleBuffer::mf_dCalculateRMS( const unsigned ac_nChannel, StreamType& a_RMS ) const
 {
-  assert( ac_nChannel < mf_nGetChannelCount() );
+  Q_ASSERT( ac_nChannel < mf_nGetChannelCount() );
   const unsigned c_nSamples = mf_nGetBufferSize();
   StreamType* src = mf_pGetArray()[ ac_nChannel ];
 
@@ -58,7 +64,7 @@ void AudioSampleBuffer::mf_dCalculateRMS( const unsigned ac_nChannel, StreamType
 
 void AudioSampleBuffer::mf_dCalculateMinMax( const unsigned ac_nChannel, double& a_Min, double& a_Max ) const
 {
-  assert( ac_nChannel < mf_nGetChannelCount() );
+  Q_ASSERT( ac_nChannel < mf_nGetChannelCount() );
   const unsigned c_nSamples = mf_nGetBufferSize();
   StreamType* src = mf_pGetArray()[ ac_nChannel ];
 
@@ -78,7 +84,7 @@ void AudioSampleBuffer::mf_dCalculateMinMax( const unsigned ac_nChannel, double&
 
 void AudioSampleBuffer::mf_dCalculateAbsMinMax( const unsigned ac_nChannel, double& a_Abs ) const
 {
-  assert( ac_nChannel < mf_nGetChannelCount() );
+  Q_ASSERT( ac_nChannel < mf_nGetChannelCount() );
   const unsigned c_nSamples = mf_nGetBufferSize();
   StreamType* src = mf_pGetArray()[ ac_nChannel ];
 
@@ -110,7 +116,7 @@ void AudioSampleBuffer::mp_ApplyGain( const double ac_dGain )
 
 void AudioSampleBuffer::mp_ApplyGain( const unsigned ac_nChannel, const double ac_dGain )
 {
-  assert( ac_nChannel < mf_nGetChannelCount() );
+  Q_ASSERT( ac_nChannel < mf_nGetChannelCount() );
 
   if( ac_dGain == 1.0 )
     return;

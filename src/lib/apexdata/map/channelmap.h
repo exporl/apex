@@ -28,7 +28,7 @@
 #include <qstring.h>
 
 //from libtools
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {

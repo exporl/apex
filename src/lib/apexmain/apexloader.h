@@ -1,8 +1,7 @@
-#ifndef _APEXLOADER_H
-#define _APEXLOADER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_APEXLOADER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_APEXLOADER_H_
 
-#include "global.h"
-
+#include "apextools/global.h"
 
 class APEX_EXPORT ApexLoader {
 

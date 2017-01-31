@@ -17,28 +17,36 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apexresultsink.h"
-#include "trialresult.h"
-#include "apexcontrol.h"
-#include "services/filedialog.h"
-#include "runner/experimentrundelegate.h"
-#include "xml/apexxmltools.h"
+#include "apexdata/experimentdata.h"
 
-#include "apextools.h"
-#include "services/mainconfigfileparser.h"
-#include "apexcontrol.h"        // get main window
+#include "apexdata/interactive/parameterdialogresults.h"
+
+#include "apexdata/mainconfigfiledata.h"
+
+#include "apexdata/parameters/generalparameters.h"
+
+#include "apexdata/result/resultparameters.h"
+
+#include "apextools/apextools.h"
+
+#include "apextools/xml/apexxmltools.h"
+
 #include "gui/mainwindow.h"
 
-#include "parameters/generalparameters.h"
+#include "runner/experimentrundelegate.h"
 
-//from libdata
-#include "result/resultparameters.h"
-#include "interactive/parameterdialogresults.h"
-#include "experimentdata.h"
+#include "services/errorhandler.h"
+#include "services/filedialog.h"
+#include "services/mainconfigfileparser.h"
 
-#include <qmessagebox.h>
-#include <qdatetime.h>
-#include <qregexp.h>
+#include "apexcontrol.h"
+#include "apexcontrol.h"
+#include "apexresultsink.h"
+#include "trialresult.h"
+
+#include <QDateTime>
+#include <QMessageBox>
+#include <QRegExp>
 
 using apex::ApexXMLTools::XMLutils;
 
@@ -47,16 +55,16 @@ const QString apex::ApexResultSink::resultsExtension( ".apr");
 
 void apex::ApexResultSink::SaveAs(bool askFilename ) {
 #ifdef SHOWSLOTS
-    qDebug("ApexResultSink::Finished( )");
+    qCDebug(APEX_RS, "ApexResultSink::Finished( )");
 #endif
 
-    qDebug("ApexResultSink::SaveAs(): m_filename=%s", qPrintable(m_filename));
-        qDebug("Current path = %s",
+    qCDebug(APEX_RS, "ApexResultSink::SaveAs(): m_filename=%s", qPrintable(m_filename));
+        qCDebug(APEX_RS, "Current path = %s",
                 qPrintable(QDir::current().path()));
 
 
     if (m_bSaved) {
-        qDebug("ApexResultSink::SaveAs: not saving, already saved");
+        qCDebug(APEX_RS, "ApexResultSink::SaveAs: not saving, already saved");
         return;
     }
 
@@ -65,7 +73,7 @@ void apex::ApexResultSink::SaveAs(bool askFilename ) {
 
     // save data if any
     if (m_Results.size() <= 0) {
-        qDebug("Nothing to save, exiting");
+        qCDebug(APEX_RS, "Nothing to save, exiting");
     }
 
 
@@ -140,12 +148,13 @@ void apex::ApexResultSink::Finished(bool askFilename ) {
 
 }
 
-namespace apex {
+namespace apex
+{
 
-ApexResultSink::ApexResultSink(ExperimentRunDelegate& p_rd) :
-        ApexModule(p_rd),
-        m_filename(),
-m_bSaved(false) {
+ApexResultSink::ApexResultSink(ExperimentRunDelegate& p_rd) : ApexModule(p_rd),
+                                                              m_filename(),
+                                                              m_bSaved(false)
+{
     //currentTrial=new TrialResult;
     //      currentTrial=NULL;
     //      m_bSaturation=false;
@@ -157,7 +166,7 @@ m_bSaved(false) {
 
         // get subject name
         QString subject= p_rd.GetData().
-                resultParameters()->GetSubject();
+                resultParameters()->subject();
 
         if (! subject.isEmpty())
             m_filename = file.path() + "/" + file.baseName()
@@ -167,9 +176,9 @@ m_bSaved(false) {
                 + "-results" + resultsExtension;
 
 
-/*        qDebug("ApexResultSink::ApexResultSink - m_filename=%s",
+/*        qCDebug(APEX_RS, "ApexResultSink::ApexResultSink - m_filename=%s",
                 qPrintable(m_filename));
-        qDebug("Current path = %s",
+        qCDebug(APEX_RS, "Current path = %s",
                 qPrintable(QDir::current().path()));*/
 
     }
@@ -195,7 +204,7 @@ ApexResultSink::~ApexResultSink() {
  */
 bool apex::ApexResultSink::Save( const QString & p_filename, const bool p_overwrite ) {
 #ifdef SHOWSLOTS
-    qDebug("SLOT ApexResultSink::Save( const QString & p_filename )");
+    qCDebug(APEX_RS, "SLOT ApexResultSink::Save( const QString & p_filename )");
 #endif
 
 
@@ -228,7 +237,7 @@ bool apex::ApexResultSink::Save( const QString & p_filename, const bool p_overwr
 
     out << CollectEndResults() <<endl;
     PrintXMLFooter(out);
-    
+
     if (file.error() != QFile::NoError) {
         ErrorHandler::Get().addError(metaObject()->className(),"Error while writing to file " + p_filename);
         return false;
@@ -241,9 +250,9 @@ bool apex::ApexResultSink::Save( const QString & p_filename, const bool p_overwr
 void apex::ApexResultSink::PrintXMLHeader( QTextStream & out ) {
     QString cfn = ApexControl::Get().GetCurrentExperiment().fileName();
 
-	// make cfn relative
-	/*QDir curDir(QDir::currentDirPath());
-	cfn = curDir.relativeFilePath(cfn);*/
+        // make cfn relative
+        /*QDir curDir(QDir::currentDirPath());
+        cfn = curDir.relativeFilePath(cfn);*/
 
 #ifdef WIN32
 
@@ -251,16 +260,6 @@ void apex::ApexResultSink::PrintXMLHeader( QTextStream & out ) {
 #endif
 
     out << "<?xml version='1.0' encoding='UTF-8'?>" << endl;
-
-    QString xsltscript = m_rd. GetData().
-            resultParameters()->GetXsltScript();
-    if (!xsltscript.isEmpty())
-        out << "<?xml-stylesheet  href=\"" <<
-                ApexTools::MakeDirEnd(
-                MainConfigFileParser::Get().GetXsltOnlinePath()) <<
-                xsltscript <<
-                "\" type=\"text/xsl\"?>" << endl;
-
 
     out << "<apex:results experiment_file=\"file:" <<  XMLutils::xmlEscapedText(cfn) << "\" ";
     out << "xmlns:apex=\"http://med.kuleuven.be/exporl/apex/result\">" << endl;
@@ -274,30 +273,28 @@ void apex::ApexResultSink::PrintXMLFooter( QTextStream & out ) {
 
 
 void apex::ApexResultSink::PrintIntro(QTextStream& out) {
-    /*QDateTime end;
-    end=QDateTime::currentDateTime();*/
-
-    QString xsltscript = m_rd. GetData().
-            resultParameters()->GetXsltScript();
-
-    QString ms=m_rd.GetData().resultParameters()->GetMatlabScript();
+    QString ms=m_rd.GetData().resultParameters()->matlabScript();
     if (!ms.isEmpty())
         out << "<?matlab script=\"" << ms << "\"?>" << endl;
 
-
-    data::tXsltParameters xp =
-        m_rd.GetData().resultParameters()->GetXsltParameters();
+    data::tScriptParameters xp =
+            m_rd.GetData().resultParameters()->resultParameters();
     if (!xp.isEmpty()) {
         out << "<parameters>" << endl;
-        for (data::tXsltParameters::const_iterator it=xp.begin();
-                it!=xp.end(); ++it) {
-            out << "<parameter name=\"" << it->first << "\">" << it->second
+
+        QMapIterator<QString,QString> it(xp);
+        while (it.hasNext()) {
+            it.next();
+            out << "<parameter name=\"" << it.key() << "\">" << it.value()
                 <<"</parameter>" << endl;
         }
         out << "</parameters>" << endl;
     }
 
     out << "<general>" << endl;
+
+    out << "\t<apex_version>" << APEX_VERSION << "</apex_version>" << endl;
+    out << "\t<apex_version_git>" << ApexTools::fetchVersion() << "</apex_version_git>" << endl;
 
     QString description = ApexControl::Get().GetCurrentExperiment().experimentDescription();
     if (!description.isEmpty()) {
@@ -308,35 +305,29 @@ void apex::ApexResultSink::PrintIntro(QTextStream& out) {
     out << "\t<enddate>" << XMLutils::xmlEscapedText(m_endTime.toString(Qt::ISODate)) << "</enddate>" << endl;
     out << "\t<duration unit=\"seconds\">" << ApexControl::Get().GetStartTime().secsTo(m_endTime) << "</duration>" << endl;
     if ( m_rd.GetData().resultParameters()) {
-        if (!xsltscript.isEmpty())
-            out << "\t<xsltscript>" << xsltscript << "</xsltscript>" << endl;
-
         QString rtscript( m_rd.GetData().resultParameters()->resultPage().toString());
         if (!rtscript.isEmpty())
             out << "\t<jscript>" << rtscript << "</jscript>" << endl;
 
-        QString subject(m_rd.GetData().resultParameters()->GetSubject());
+        QString subject(m_rd.GetData().resultParameters()->subject());
         if ( !subject.isEmpty())
             out <<"\t<subject>" << subject << "</subject>" << endl;
     }
 
-    
+
     const data::ParameterDialogResults* r = m_rd.GetData().parameterDialogResults();
     if (r) {
         out << "\t<interactive>" << endl;
         data::ParameterDialogResults::const_iterator it;
         for (it = r->begin(); it!=r->end(); ++it)
         {
+                out << "\t\t<entry>" << endl
+                    << "\t\t\t<expression>" << XMLutils::xmlEscapedText(it->xpath()) << "</expression>" << endl
+                    << "\t\t\t<new_value>" << XMLutils::xmlEscapedText(it->newValue()) << "</new_value>" << endl
+                    << "\t\t\t<succeeded>" << XMLutils::xmlEscapedText(it->succeeded() ? "true" : "false") << "</succeeded>" << endl
+                    << "\t\t\t<description>" << XMLutils::xmlEscapedText(it->description()) << "</description>" << endl
+                    << "\t\t</entry>" << endl;
 
-                    if (! (*it).xpath().isEmpty())
-                         out << "\t\t<entry expression=" << XMLutils::xmlEscapedAttribute(it->xpath())
-                                << " new_value=" << XMLutils::xmlEscapedAttribute(it->newValue())
-                                << " succeeded=" << XMLutils::xmlEscapedAttribute(it->succeeded() ? "true" : "false")
-                             << " />" <<endl;
-                    else
-                        out << "\t\t<entry description=" << XMLutils::xmlEscapedAttribute(it->description())
-                                << " new_value=" << XMLutils::xmlEscapedAttribute(it->newValue())
-                             << " />" <<endl;
         }
         out << "\t</interactive>" << endl;
     }
@@ -351,14 +342,18 @@ void apex::ApexResultSink::PrintIntro(QTextStream& out) {
 /**
  * Query all modules for extra XML data
  */
-void apex::ApexResultSink::CollectResults( ) {
-    // create new ApexTrial
+void apex::ApexResultSink::CollectResults(const QString& trial, const QString& extraXml)
+{
+    //TODO is this method still needed?
+    // create new TrialData
+    Q_ASSERT(!trial.isEmpty());
     TrialResult* currentTrial = new TrialResult;
-    currentTrial->name = ApexControl::Get().GetCurrentTrial();
-    currentTrial->timestamp=QDateTime::currentDateTime(); //[ stijn ] FIXME has to be set when trial starts
-    //      currentTrial->correctAnswer=-1;
+    currentTrial->name = trial;
 
     m_Results.push_back(currentTrial);
+
+    if (!extraXml.isEmpty())
+        currentTrial->extra += extraXml;
 
     const ModuleList* modules = m_rd.modules();
 
@@ -386,10 +381,13 @@ const QString apex::ApexResultSink::CollectEndResults( ) {
 
     const ModuleList* modules = m_rd.modules();
 
+    if (!m_extraXml.isEmpty())
+        result += m_extraXml;
+
     for (ModuleList::const_iterator it = modules->
-         begin();
-         it!=modules->end();
-         ++it) {
+            begin();
+            it!=modules->end();
+            ++it) {
         result += (*it)->GetEndXML();
     }
 
@@ -408,13 +406,18 @@ void apex::ApexResultSink::SetFilename( const QString & p_filename ) {
     m_filename = p_filename;
 
     if (re.indexIn(p_filename) == -1) {
-        qDebug("ApexResultSink::SetFilename: No match");
+        qCDebug(APEX_RS, "ApexResultSink::SetFilename: No match");
         m_filename += resultsExtension;
     } else {
-        qDebug("ApexResultSink::SetFilename: match");
+        qCDebug(APEX_RS, "ApexResultSink::SetFilename: match");
     }
 
     return;
+}
+
+void apex::ApexResultSink::setExtraXml(const QString& x)
+{
+    m_extraXml = x;
 }
 
 

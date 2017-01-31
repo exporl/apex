@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __ITHREAD_H_
 #define __ITHREAD_H_
 
-#include "defines.h"
-#include "waitableobject.h"
+#include "../../defines.h"
+
 #include "criticalsection.h"
+#include "waitableobject.h"
 
 #ifndef S_C6X
 #include <string>

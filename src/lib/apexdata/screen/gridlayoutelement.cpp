@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "gridlayoutelement.h"
 
-#include "screenelementvisitor.h"
-#include "screen.h"
+#include "apextools/exceptions.h"
+
 #include "emptyelement.h"
-
-#include "exceptions.h"
+#include "gridlayoutelement.h"
+#include "screen.h"
+#include "screenelementvisitor.h"
 
 namespace apex
 {

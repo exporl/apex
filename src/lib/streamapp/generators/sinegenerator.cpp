@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "sinegenerator.h"
 
 using namespace streamapp;
@@ -37,7 +37,7 @@ SineGenerator::SineGenerator( const unsigned       ac_nChan,
 SineGenerator::~SineGenerator(  )
 {}
 
-const Stream& SineGenerator::Read() 
+const Stream& SineGenerator::Read()
 {
   for( unsigned j = 0 ; j < mc_nSize ; ++j )
   {

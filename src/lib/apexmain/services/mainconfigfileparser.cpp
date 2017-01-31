@@ -18,23 +18,31 @@
  *****************************************************************************/
 
 
-#include "xml/xercesinclude.h"
-using namespace xercesc;
+#include "apexdata/mainconfigfiledata.h"
 
-#include "stimulus/wav/soundcarddrivers.h"
-#include "services/paths.h"
-#include "apextools.h"
+#include "apextools/apextools.h"
+
+#include "apextools/services/paths.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
+
+#include "wavstimulus/soundcarddrivers.h"
+
 #include "mainconfigfileparser.h"
-#include "xml/xmlkeys.h"
-#include "xml/apexxmltools.h"
-using namespace apex::XMLKeys;
-using namespace apex::ApexXMLTools;
 
-#include <string>
-#include <iostream>
+#include <QDomDocument>
+#include <QUrl>
 
 #include <QtGlobal>
-#include <QDomDocument>
+
+#include <iostream>
+#include <string>
+
+using namespace xercesc;
+using namespace apex::XMLKeys;
+using namespace apex::ApexXMLTools;
 
 namespace apex {
 
@@ -44,11 +52,10 @@ namespace apex {
             ConfigFileParser(
                     Paths::Get().GetApexConfigFilePath(),
                     Paths::Get().GetApexConfigSchemaPath(),
-                    getConfigfileNamespace()),
-            m_xslt_path_online("https://gilbert.med.kuleuven.be/apex/xslt"),
-            m_SndDrivers(new SndDriversMap())
+                    getConfigfileNamespace())
+
     {
-        m_plugin_script_library = "pluginscriptlibrary.js";
+
     }
 
     bool MainConfigFileParser::CFParse() {
@@ -73,16 +80,12 @@ namespace apex {
         DOMElement* pathnode = XMLutils::GetElementsByTagName( root, "paths" );
 
         if ( (tnode = XMLutils::GetElementsByTagName( pathnode, "perl" )) ) // this is correct
-            m_perl_path = XMLutils::GetFirstChildText( tnode );
-
-        if ( (tnode = XMLutils::GetElementsByTagName( pathnode, "xslt" )) ) // this is correct
-            m_xslt_path_online = XMLutils::GetFirstChildText( tnode );
+            m_data.setPerlPath( XMLutils::GetFirstChildText( tnode ) );
 
 
         if ( (tnode = XMLutils::GetElementsByTagName( pathnode, "pluginscriptlibrary" )) ){
-            m_plugin_script_library = XMLutils::GetFirstChildText( tnode );
-//            std::string scriptlibraryST = m_plugin_script_library.toUtf8().constData();
-//            std::cout<<"m_plugin_script_library in the XXXXCFParse function is: ******#######"<<scriptlibraryST<<endl;
+            m_data.setPluginScriptLibrary(
+                       Paths::Get().GetNonBinaryPluginPath() + XMLutils::GetFirstChildText( tnode ) );
         }
 
 
@@ -94,7 +97,7 @@ namespace apex {
             DOMElement* el = (DOMElement*) curCard; //card
 
             const QString id     = XMLutils::GetAttribute( el, "id" );
-            t_SndDrivers* names = new t_SndDrivers();
+            //t_SndDrivers* names = new t_SndDrivers();
             for( DOMNode* curDrvr=curCard->getFirstChild(); curDrvr!=0; curDrvr=curDrvr->getNextSibling() )
             {
                 DOMElement* elD = (DOMElement*) curDrvr;
@@ -106,15 +109,18 @@ namespace apex {
                     throw(0);
                 }
                 const QString m_sDriverName  = XMLutils::GetFirstChildText( elD );
-                names->mp_AddItem( new t_SndDriverInfo( m_eDevType, m_sDriverName ) );
+                //names->mp_AddItem( new t_SndDriverInfo( m_eDevType, m_sDriverName ) );
+
+                m_data.addSoundDriver(id,  driver, m_sDriverName);
             }
 
-            m_SndDrivers->insert(std::pair<QString,t_SndDrivers*>(id,names));
+            //m_SndDrivers->insert(std::pair<QString,t_SndDrivers*>(id,names));
+
+
         }
 
         ParsePrefixes(root);
-        m_schemas_path=ApexTools::MakeDirEnd(m_schemas_path);
-        m_experiment_schema=m_schemas_path+m_experiment_schema;
+        //m_data.setSchemasPath(ApexTools::MakeDirEnd(m_schemas_path));
 
         return true;
     }
@@ -136,16 +142,14 @@ namespace apex {
             Q_ASSERT(tag=="prefix");
 
             if (!id.isEmpty()) {
-                m_prefixes[id]=prefix;
+                //m_prefixes[id]=prefix;
+                m_data.addPrefix(id, prefix);
             }
         }
 
     }
 
-    const stimulus::SndDriversMap* MainConfigFileParser::GetSoundCardDrivers() const
-    {
-        return m_SndDrivers.get();
-    }
+
 
     bool MainConfigFileParser::upgradeFrom(QDomDocument& doc,
                                            const QVector<int>& v)
@@ -167,31 +171,10 @@ namespace apex {
             return false;
     }
 
-}
 
-/**
- * Return prefix according to given id, if no prefix is found, an empty string is returned
- * @param p_id
- * @return
- */
-const QString  apex::MainConfigFileParser::GetPrefix( const QString & p_id )
-{
-
-    std::map<QString, QString>::const_iterator p = m_prefixes.find(p_id);
-    if ( p != m_prefixes.end() )
-        return (*p).second;
-    else {
-        qDebug("Prefix with id %s not found", qPrintable (p_id));
-        throw ApexStringException( QString(tr("Prefix with id %1 not found")).arg(p_id));
+    const data::MainConfigFileData& MainConfigFileParser::data() const {
+        return m_data;
     }
 
 }
 
-const QString apex::MainConfigFileParser::GetPluginScriptLibrary()
-{
-    QString filename( Paths::Get().GetNonBinaryPluginPath() +
-                      m_plugin_script_library);
-//    std::cout<<"Filename returned by getplugin script library is: "<<filename.toStdString()<<std::endl;
-//    std::cout<<"Value of m_plugin_script_library is: "<<m_plugin_script_library.toStdString()<<std::endl;
-    return filename;
-}

@@ -1,39 +1,30 @@
-﻿<?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0/experiment.xsd"
- xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0/experiment"
- version="1">
-
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0/experiment.xsd">
   <!--
-	  Show the use of combined simultaneous and sequential datablocks
+          Show the use of combined simultaneous and sequential datablocks
   -->
   <procedure xsi:type="apex:trainingProcedureType">
     <parameters>
       <presentations>10</presentations>
       <skip>0</skip>
       <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
     </parameters>
-
     <trials>
-      <trial id="trial" >
+      <trial id="trial">
         <answer>button</answer>
-        <screen id="screen1" />
-        <stimulus id="stimulus1" />
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
       </trial>
-      </trials>
+    </trials>
   </procedure>
-
-  <corrector xsi:type="apex:isequal"/>
-
   <screens>
     <reinforcement>
       <progressbar>false</progressbar>
       <feedback>false</feedback>
     </reinforcement>
-    <screen id="screen1" >
-
-
-      <gridLayout height="1" width="1" id="answer_layout">
+    <screen id="screen1">
+      <gridLayout width="1" height="1" id="answer_layout">
         <button row="1" col="1" id="button">
           <text>play</text>
         </button>
@@ -44,7 +35,6 @@
       <default_answer_element>bg</default_answer_element>
     </screen>
   </screens>
-
   <datablocks>
     <uri_prefix>file:../stimuli</uri_prefix>
     <datablock id="rawdata1">
@@ -59,49 +49,42 @@
     <datablock id="silence">
       <uri>silence:500</uri>
     </datablock>
-    
   </datablocks>
-
   <devices>
     <device id="soundcard" xsi:type="apex:wavDeviceType">
       <driver>portaudio</driver>
-      <card>default</card>
+      <card>interactive</card>
       <channels>2</channels>
       <gain>0</gain>
       <samplerate>44100</samplerate>
     </device>
   </devices>
-
-  
-
   <stimuli>
     <fixed_parameters/>
-    <stimulus id="stimulus1" >
+    <stimulus id="stimulus1">
       <datablocks>
         <sequential>
-          <datablock id="rawdata1" />
+          <datablock id="rawdata1"/>
           <datablock id="silence"/>
           <simultaneous>
-            <datablock id="rawdata3" />
-            <datablock id="rawdata2" />
+            <datablock id="rawdata3"/>
+            <datablock id="rawdata2"/>
           </simultaneous>
         </sequential>
       </datablocks>
     </stimulus>
   </stimuli>
-
-
   <connections>
-      <connection>
-        <from>
-          <id>rawdata1</id>
-          <channel>0</channel>
-        </from>
-        <to>
-          <id>soundcard</id>
-          <channel>0</channel>
+    <connection>
+      <from>
+        <id>rawdata1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
       </to>
-      </connection>
+    </connection>
     <connection>
       <from>
         <id>silence</id>
@@ -112,7 +95,6 @@
         <channel>0</channel>
       </to>
     </connection>
-    
     <connection>
       <from>
         <id>rawdata1</id>
@@ -144,6 +126,4 @@
       </to>
     </connection>
   </connections>
-
-
 </apex:apex>

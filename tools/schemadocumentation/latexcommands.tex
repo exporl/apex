@@ -1,0 +1,40 @@
+\documentclass[a4paper,12pt]{article}
+
+
+\newenvironment{docindent}%
+        {\list{}{\listparindent 1.5em%
+                \itemindent     0em}%
+                \item\relax}
+        {\endlist}
+
+
+\title{APEX~3 reference manual}
+\author{Tom Francart}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+
+\section*{Warning}
+
+This is a preliminary version of the APEX~3 reference manual. It has not been proofread
+yet and will hence contain errors. It also contains documentation on experimental
+features, which have not been sufficiently tested.
+
+This reference manual is automatically generated from the APEX~3 schema. The same
+documentation can be shown in context using a specialized XML editor. Please
+refer to the APEX~3 user manual for more information.
+
+
+\newpage
+
+\tableofcontents
+
+
+\input{all.tex}
+
+
+\end{document}

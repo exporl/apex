@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "screen/screenelement.h"
+
+#include "apexdata/screen/screenelement.h"
+
+#include "apextools/apextools.h"
 
 #include "labelrundelegatebase.h"
-#include "apextools.h"
 
 apex::rundelegates::LabelRunDelegateBase::LabelRunDelegateBase(
         ExperimentRunDelegate* p_exprd,
@@ -29,12 +30,10 @@ apex::rundelegates::LabelRunDelegateBase::LabelRunDelegateBase(
         ScreenElementRunDelegate(p_exprd, screenEl)
 {
     setAlignment (Qt::AlignCenter);
-//    guicore::widgetattributes::gf_ApplyDefaultAlignment( this );
-//    guicore::widgetattributes::gf_SetBackGroundColor( this, QColor( 158, 224, 255 ) );
     setAutoFillBackground( true );
     setFrameShape( QLabel::Box );
     setBackgroundRole( QPalette::AlternateBase );
-    
+
     /*setStyleSheet(screenEl->getStyle());
     setBgColor(this, screenEl->getBGColor());
     setFgColor(this, screenEl->getFGColor());*/

@@ -17,14 +17,16 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef FILTER_H
-#define FILTER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_FILTER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_FILTER_H_
 
-#include "filter/filterdata.h"
-#include "parameters/parameter.h"
-#include "./idevicefactoryelement.h"
-#include <assert.h>
-#include <defines.h>
+#include "apexdata/filter/filterdata.h"
+
+#include "apexdata/parameters/parameter.h"
+
+#include "streamapp/defines.h"
+
+#include "idevicefactoryelement.h"
 
 namespace apex
 {
@@ -148,4 +150,4 @@ namespace apex
     } //end ns stimulus
 } //end ns apex
 
-#endif //#ifndef FILTER_H
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_FILTER_H_

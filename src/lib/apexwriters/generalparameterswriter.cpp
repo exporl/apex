@@ -17,12 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "generalparameterswriter.h"
-#include "xml/apexxmltools.h"
-#include "apextools.h"
-#include "parameters/generalparameters.h"
+#include "apexdata/parameters/generalparameters.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/apextools.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "generalparameterswriter.h"
 
 using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::ApexXMLTools;

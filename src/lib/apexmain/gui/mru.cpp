@@ -17,155 +17,145 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "streamapp/appcore/deleter.h"
+
 #include "mru.h"
-#include <appcore/deleter.h>
-#include <appcore/qt_inifile.h>
-#include <appcore/qt_utils.h>
-#include <algorithm>
-#include <qstringlist.h>
+
+#include <QDebug>
+#include <QFileInfo>
 #include <QMenu>
-//#inc
+#include <QSettings>
+#include <QStringList>
+
+#include <algorithm>
 
 namespace
 {
-  const QString sc_sFileKey( "recent files" );
-  const QString sc_sFileVal( "file" );
-  const QString sc_sDirKey( "recent dirs" );
-  const QString sc_sDirVal( "dir" );
-  const size_t  sc_nMaxItems = 10;
+const QString recentFilesGroup( "recentFiles" );
+const QString fileKey( "file" );
+const QString recentDirGroup( "recentDirs" );
+const QString dirKey( "dir" );
+const size_t  sc_nMaxItems = 10;
 }
 
 namespace apex
 {
-  MRU::MRU( QMenu* const ac_pMenuToMru ) :
-    mc_pMenu( ac_pMenuToMru ),
-    mc_pList( new mt_MRUvector() )
-  {
-  }
+MRU::MRU( QMenu* const ac_pMenuToMru ) :
+    m_menu( ac_pMenuToMru ),
+    m_items( new MRUvector() )
+{
+}
 
-  MRU::~MRU()
-  {
-    mp_RemoveAllItems();
-    delete mc_pList;
-  }
+MRU::~MRU()
+{
+    removeAllItems();
+    delete m_items;
+}
 
-  void MRU::mp_LoadFromFile( const QString& ac_sFile )
-  {
-    appcore::CIniFile file;
-    f_CreateFileIfNotExist( ac_sFile, QIODevice::ReadWrite ); //make sure the file is there
-    file.mp_SetFilename( ac_sFile );
-    file.mp_LoadFromFile();
-    if( file.mf_eGetStatus() == appcore::CIniFile::mc_eOK )
-    {
-      file.mp_AddKey( sc_sFileKey );  //make sure it exists
-      file.mp_AddKey( sc_sDirKey );  //make sure it exists
-      bool bFound = true;
-      unsigned  n = 0;
-      while( bFound && n < sc_nMaxItems - 1 )
-      {
-        const QString sItem = file.mf_sGetValueString( sc_sFileKey, sc_sFileVal + QString::number( n ) );
-        if( !sItem.isEmpty() )
-          mp_AddItem( sItem );
-        else
-          bFound = false;
-        ++n;
-      }
-      const QString sItem = file.mf_sGetValueString( sc_sDirKey, sc_sDirVal );
-      if( !sItem.isEmpty() )
-        mp_SetOpenDir( sItem );
+void MRU::loadFromFile()
+{
+    QSettings settings;
+
+    int size = settings.beginReadArray(recentFilesGroup);
+    for (int i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        addItem(settings.value(fileKey).toString());
     }
-  }
+    settings.endArray();
 
-  void MRU::mp_SaveToFile( const QString& ac_sFile )
-  {
-    f_CreateFileIfNotExist( ac_sFile, QFile::ReadWrite );
-    appcore::CIniFile file;
-    file.mp_SetFilename( ac_sFile );
-    file.mp_LoadFromFile();
-    if( file.mf_eGetStatus() == appcore::CIniFile::mc_eOK )
-    {
-      file.mp_AddKey( sc_sFileKey );  //make sure it exists
-      file.mp_AddKey( sc_sDirKey );  //make sure it exists
+    settings.beginGroup(recentDirGroup);
+    setOpenDir(settings.value(dirKey).toString());
+    settings.endGroup();
+}
 
-      const size_t size = mc_pList->size();
-      for( unsigned n = 0 ; n < size ; ++n )
-        file.mp_SetValueString( sc_sFileKey, sc_sFileVal + QString::number( n ), mc_pList->at( n )->text() );
+void MRU::saveToFile()
+{
+    QSettings settings;
 
-      file.mp_SetValueString( sc_sDirKey, sc_sDirVal, mv_sOpenDir );
-      file.mp_CommitToFile();
+    settings.beginWriteArray(recentFilesGroup);
+    for (int i = 0; i < m_items->size(); ++i) {
+        settings.setArrayIndex(i);
+        settings.setValue(fileKey, m_items->at(i)->text());
     }
-  }
+    settings.endArray();
 
-  void MRU::mp_SetOpenDir( const QString& ac_sFile )
-  {
-    mv_sOpenDir = ac_sFile;
-  }
+    settings.beginGroup(recentDirGroup);
+    settings.setValue(dirKey, m_openDirName);
+    settings.endGroup();
 
-  const QString& MRU::mf_sGetOpenDir() const
-  {
-//    qDebug("MRU::mf_sGetOpenDir");
-    return mv_sOpenDir;
-  }
+    settings.sync();
+}
 
-  void MRU::mp_AddItem( const QString& ac_sItem, const bool ac_bEnable )
-  {
-    const size_t size = mc_pList->size();
+void MRU::setOpenDir( const QString& dirName )
+{
+    m_openDirName = dirName;
+}
+
+const QString& MRU::openDir() const
+{
+    //    qCDebug(APEX_RS, "MRU::mf_sGetOpenDir");
+    return m_openDirName;
+}
+
+void MRU::addAndSave(const QString &item, const bool enable){
+    addItem(item, enable);
+    setOpenDir(QFileInfo(item).absolutePath());
+    saveToFile();
+}
+
+void MRU::addItem( const QString& item, const bool enable )
+{
+    const size_t size = m_items->size();
     if( !size )
-      mc_pMenu->addSeparator();
-    else
-    {
+        m_menu->addSeparator();
+    else {
         //check duplicate
-      mt_MRUvector::const_iterator it = mc_pList->begin();
-      while( it != mc_pList->end() )
-      {
-        if( (*it)->text() == ac_sItem )
-          return;
-        ++it;
-      }
+        MRUvector::iterator it = m_items->begin();
+        while( it != m_items->end() ) {
+            if( (*it)->text() == item ) {
+                std::iter_swap(it, (m_items->end()-1));
+                return;
+            }
+            ++it;
+        }
     }
-    MRUAction* p = new MRUAction( mc_pMenu, ac_sItem );
-    if( size + 1 >= sc_nMaxItems )
-    {
-      mt_MRUvector::iterator it = mc_pList->begin();
-      mc_pMenu->removeAction (*it);
-      mc_pList->erase( it );
+     if (!QFileInfo::exists(item))
+         return;
+    MRUAction* p = new MRUAction( m_menu, item );
+    if( size + 1 >= sc_nMaxItems ) {
+        MRUvector::iterator it = m_items->begin();
+        m_menu->removeAction (*it);
+        m_items->erase( it );
     }
-    mc_pList->push_back( p );
-    mc_pMenu->addAction (p);
-    p->setEnabled( ac_bEnable );
+    m_items->push_back( p );
+    m_menu->addAction (p);
+    p->setEnabled( enable );
     connect( p, SIGNAL( Activated( const QString& ) ), this, SIGNAL( Released(const QString&) ) );
-  }
+}
 
-  void MRU::mp_RemoveItem( const QString& /*ac_sItem*/ )
-  {
-    //unused..
-  }
-
-  void MRU::mp_RemoveAllItems()
-  {
+void MRU::removeAllItems()
+{
     disconnect();
-    for_each( mc_pList->begin(), mc_pList->end(), appcore::Deleter() );
-    mc_pList->clear();
-  }
+    std::for_each( m_items->begin(), m_items->end(), appcore::Deleter() );
+    m_items->clear();
+}
 
-  void MRU::mf_Enable( const bool ac_bEnable )
-  {
-    mt_MRUvector::const_iterator it = mc_pList->begin();
-    while( it != mc_pList->end() )
-    {
-      (*it)->setEnabled( ac_bEnable );
-      ++it;
+void MRU::enable( const bool enable )
+{
+    MRUvector::const_iterator it = m_items->begin();
+    while( it != m_items->end()){
+        (*it)->setEnabled( enable );
+        ++it;
     }
-  }
+}
 
-QStringList MRU::items() const
+QStringList MRU::items(bool filterNonExistingFiles) const
 {
     QStringList result;
-
-    mt_MRUvector::const_iterator it = mc_pList->begin();
-    while (it != mc_pList->end())
-        result << (*it++)->text();
-
+    Q_FOREACH (MRUAction* action, *m_items) {
+        if (!filterNonExistingFiles || QFileInfo(action->text()).exists())
+            result << action->text();
+    }
     return result;
 }
 

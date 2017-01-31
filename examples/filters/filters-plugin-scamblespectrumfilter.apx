@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+    @what: Demonstrate scramblespectrum filter
+    @description: The scramblespectrum filter will randomize the spectrum to reduce monaural spectral cues in a localisation experiment
+    @how: parameters to the scramblespectrumfilter are specified in <filter>
+  -->
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>100</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button0</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus0"/>
+   </trial>
+   <trial id="trial2">
+    <answer>button10</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus10"/>
+   </trial>
+   <trial id="trial3">
+    <answer>button20</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus20"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">false</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout width="3" id="main_layout" height="1">
+    <button row="1" id="button0" col="1">
+     <text>range 0</text>
+    </button>
+    <button row="1" id="button10" col="2">
+     <text>range 10</text>
+    </button>
+    <button row="1" id="button20" col="3">
+     <text>range 20</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button0"/>
+    <button id="button10"/>
+    <button id="button20"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <uri>ruisje.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters>
+  <filter xsi:type="apex:pluginfilter" id="pluginfilter">
+   <device>wavdevice</device>
+   <channels>1</channels>
+   <continuous>false</continuous>
+   <plugin>scramblespectrum</plugin>
+   <parameter id="scramblerange" name="range">10</parameter>
+   <parameter name="minfreq">100</parameter>
+   <parameter name="maxfreq">16000</parameter>
+   <parameter name="bandwidth">0.3333</parameter>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus0">
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters>
+    <parameter id="scramblerange">0</parameter>
+   </variableParameters>
+  </stimulus>
+  <stimulus id="stimulus10">
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters>
+    <parameter id="scramblerange">10</parameter>
+   </variableParameters>
+  </stimulus>
+  <stimulus id="stimulus20">
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters>
+    <parameter id="scramblerange">20</parameter>
+   </variableParameters>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>_ALL_</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>pluginfilter</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>pluginfilter</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+ </connections>
+</apex:apex>

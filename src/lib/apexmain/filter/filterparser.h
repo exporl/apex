@@ -17,12 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEX_PARSERFILTERPARSER_H
-#define APEX_PARSERFILTERPARSER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_FILTER_FILTERPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_FILTER_FILTERPARSER_H_
+
+#include "apextools/xml/xercesinclude.h"
 
 #include "parser/apexparser.h"
 
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
     class DOMElement;
@@ -35,14 +36,14 @@ namespace apex {
         class FilterData;
         class DevicesData;
         class DatablocksData;
-		class PluginFilterData;
-		class ParameterManagerData;
+                class PluginFilterData;
+                class ParameterManagerData;
     }
 
 namespace parser {
 
 /**
-	@author Tom Francart,,, <tom.francart@med.kuleuven.be>
+        @author Tom Francart,,, <tom.francart@med.kuleuven.be>
 */
 class APEX_EXPORT FilterParser : public Parser
 {

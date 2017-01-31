@@ -1,0 +1,200 @@
+<ui version="4.0" >
+ <class>SnrWidget</class>
+ <widget class="QWidget" name="SnrWidget" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>402</width>
+    <height>116</height>
+   </rect>
+  </property>
+  <property name="sizePolicy" >
+   <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="0" column="0" >
+    <widget class="QStackedWidget" name="snrStack" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="currentIndex" >
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="page" >
+      <widget class="QWidget" name="layoutWidget" >
+       <property name="geometry" >
+        <rect>
+         <x>2</x>
+         <y>5</y>
+         <width>386</width>
+         <height>89</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="snrLayout" >
+        <item row="0" column="1" >
+         <widget class="QLabel" name="label" >
+          <property name="text" >
+           <string>SNR (dB)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2" >
+         <widget class="QLabel" name="label_2" >
+          <property name="text" >
+           <string>Speech (dB)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3" >
+         <widget class="QLabel" name="label_3" >
+          <property name="text" >
+           <string>Noise (dB)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" >
+         <widget class="QRadioButton" name="snrSpeechRadio" >
+          <property name="text" >
+           <string/>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" >
+         <widget class="spin::gui::DecibelLineEdit" name="snrSpeechLine" />
+        </item>
+        <item row="1" column="2" >
+         <widget class="spin::gui::DecibelLineEdit" name="speechlevelLine" />
+        </item>
+        <item row="1" column="3" >
+         <widget class="spin::gui::DecibelLabel" name="noiselevelLbl" >
+          <property name="text" >
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="4" >
+         <widget class="Line" name="line" >
+          <property name="frameShadow" >
+           <enum>QFrame::Sunken</enum>
+          </property>
+          <property name="midLineWidth" >
+           <number>10</number>
+          </property>
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" >
+         <widget class="QRadioButton" name="snrNoiseRadio" >
+          <property name="text" >
+           <string/>
+          </property>
+          <property name="checked" >
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1" >
+         <widget class="spin::gui::DecibelLineEdit" name="snrNoiseLine" />
+        </item>
+        <item row="3" column="2" >
+         <widget class="spin::gui::DecibelLabel" name="speechlevelLbl" >
+          <property name="text" >
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3" >
+         <widget class="spin::gui::DecibelLineEdit" name="noiselevelLine" />
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="page_2" >
+      <layout class="QGridLayout" name="gridLayout_2" >
+       <item row="0" column="0" >
+        <layout class="QVBoxLayout" name="verticalLayout" >
+         <item>
+          <widget class="QLabel" name="label_4" >
+           <property name="text" >
+            <string>The SNR calculation tool can only be used when both speechlevels and noiselevels are locked on all channels.</string>
+           </property>
+           <property name="wordWrap" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout" >
+           <item>
+            <spacer name="horizontalSpacer" >
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0" >
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="lockLevelsBtn" >
+             <property name="text" >
+              <string>Lock levels</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2" >
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0" >
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>spin::gui::DecibelLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>decibellineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>spin::gui::DecibelLabel</class>
+   <extends>QLabel</extends>
+   <header>decibellabel.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

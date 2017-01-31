@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <?define BaseRegKey="Software\ExpORL\APEX3" ?>
+    <Product Id="5AC5D6AA-B7FC-4CBC-BDBD-DAA945ED1316" UpgradeCode="E7DA4D21-0679-494A-93D5-6865E2E05B6C" Name="Apex" Manufacturer="ExpORL" Version="3.1.1" Language="1033">
+        <Package Id="*" Description="Apex" Manufacturer="ExpORL" InstallerVersion="200" InstallPrivileges="elevated" InstallScope="perMachine" Compressed="yes"/>
+        <MediaTemplate EmbedCab="yes"/>
+        <Icon Id="apex.exe" SourceFile="$(env.ApexInstallPath)/bin/apex.exe"/>
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramMenuFolder">
+                <Component Id="ProgramMenuComp" Guid="*">
+                    <Shortcut Id="ProgramMenuShortcut" Name="Apex" Target="[INSTALLDIR]bin\apex.exe" WorkingDirectory="PersonalFolder" Icon="apex.exe"/>
+                    <RegistryValue Root="HKCU" Key="$(var.BaseRegKey)" Name="Shortcut" Type="integer" Value="1" KeyPath="yes"/>
+                </Component>
+            </Directory>
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="INSTALLDIR" Name="Apex">
+                    <Directory Id="BinInstallFolder" Name="bin">
+                        <Component Id="FiletypeComp" Guid="*">
+                            <File Id="ApexExe" KeyPath="yes" Source="$(env.ApexInstallPath)\bin\apex.exe"/>
+                            <ProgId Id="Apex.Experiment" Icon="ApexExe" Description="APEX experiment file" Advertise="no">
+                                <Extension Id="apx" ContentType="application/x-apex-experiment">
+                                    <Verb Id="open" Command="Open" TargetFile="ApexExe" Argument="&quot;%1&quot;"/>
+                                </Extension>
+                            </ProgId>
+                            <ProgId Id="Apex.Results" Icon="ApexExe" Description="APEX results file" Advertise="no">
+                                <Extension Id="apr" ContentType="application/x-apex-results">
+                                    <Verb Id="open" Command="Open" TargetFile="ApexExe" Argument="&quot;%1&quot;"/>
+                                </Extension>
+                            </ProgId>
+                        </Component>
+                    </Directory>
+                </Directory>
+            </Directory>
+            <Directory Id="PersonalFolder" />
+        </Directory>
+
+        <Feature Id="Complete" Title="Apex" Absent="disallow" AllowAdvertise="no" Description="The complete program.">
+            <ComponentRef Id="FiletypeComp"/>
+            <ComponentRef Id="ProgramMenuComp"/>
+            <ComponentGroupRef Id="AllFilesGroup"/>
+        </Feature>
+
+        <!-- copy of Minimal UI with WelcomeEulaDlg -> WelcomeDlg -->
+        <UI Id="WixUI_Minimal">
+            <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+            <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+            <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+            <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+            <Property Id="WixUI_Mode" Value="Minimal" />
+            <DialogRef Id="ErrorDlg" />
+            <DialogRef Id="FatalError" />
+            <DialogRef Id="FilesInUse" />
+            <DialogRef Id="MsiRMFilesInUse" />
+            <DialogRef Id="PrepareDlg" />
+            <DialogRef Id="ProgressDlg" />
+            <DialogRef Id="ResumeDlg" />
+            <DialogRef Id="UserExit" />
+            <DialogRef Id="WelcomeDlg" />
+            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="PrepareDlg">1</Publish>
+            <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+            <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+            <Property Id="ARPNOMODIFY" Value="1" />
+        </UI>
+        <UIRef Id="WixUI_Common" />
+    </Product>
+</Wix>

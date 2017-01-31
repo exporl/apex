@@ -15,8 +15,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,    *
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
-#ifndef APEXMAINWNDBASE_H
-#define APEXMAINWNDBASE_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_APEXMAINWNDBASE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_APEXMAINWNDBASE_H_
 
 #include <qvariant.h>
 #include <qmainwindow.h>
@@ -70,10 +70,12 @@ public:
     QAction* showMessageWindowAction;
     QAction* showScreenStatusAction;
     QAction* showConsoleStatusAction;
+    QAction* selectSoundcardAction;
 
 Q_SIGNALS:
     void fileOpen();
     void startPluginRunner();
+    void selectSoundcard();
     void fileSaveAs();
     void fileExit();
     void startClicked();
@@ -83,7 +85,7 @@ Q_SIGNALS:
     void recalibrateClicked();
     void autoAnswerClicked(bool);
     void showStimulus();
-    void repeatStimulus();
+    void repeatTrial();
     void saveExperiment();
     void statusReportingChanged();
 
@@ -98,4 +100,4 @@ protected Q_SLOTS:
     virtual void languageChange();
 };
 
-#endif // APEXMAINWNDBASE_H
+#endif // _EXPORL_SRC_LIB_APEXMAIN_GUI_APEXMAINWNDBASE_H_

@@ -17,11 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "audioformatconvertor.h"
-#include "utils/dataconversion.h"
-#include "audiosamplebuffer.h"
 #include "callback/callback.h"
+
+#include "utils/dataconversion.h"
+
+#include "audioformatconvertor.h"
 #include "audiosamplebuffer.h"
+#include "audiosamplebuffer.h"
+
+#include <QtGlobal>
 
 using namespace streamapp;
 using namespace dataconversion;
@@ -74,8 +78,8 @@ unsigned AudioFormatConvertor::ReadFromSource( AudioFormatReader* const a_cpSour
   const unsigned nChannels                = a_cpSource->mf_nChannels();
   const AudioFormat::mt_eBitMode& eMode   = a_cpSource->mf_eBitMode();
 
-  assert( nChannels <= Stream::mf_nGetChannelCount() );
-  assert( ac_nSamples <= Stream::mf_nGetBufferSize() );
+  Q_ASSERT( nChannels <= Stream::mf_nGetChannelCount() );
+  Q_ASSERT( ac_nSamples <= Stream::mf_nGetBufferSize() );
 
   if( eMode == AudioFormat::MSBfloat64 )
   {
@@ -185,8 +189,8 @@ unsigned AudioFormatConvertor::ReadFromSource( AudioFormatReader* const a_cpSour
 unsigned AudioFormatConvertor::WriteToSource( AudioFormatWriter* const a_cpSource, const unsigned ac_nSamples, const bool ac_bNorm, const bool ac_bClipping )
 {
   const unsigned nChannels = a_cpSource->mf_nChannels();
-  assert( nChannels <= Stream::mf_nGetChannelCount() );
-  assert( ac_nSamples <= Stream::mf_nGetBufferSize() );
+  Q_ASSERT( nChannels <= Stream::mf_nGetChannelCount() );
+  Q_ASSERT( ac_nSamples <= Stream::mf_nGetBufferSize() );
   const bool     bFloating = f_bIsFloating( a_cpSource->mf_eBitMode() );
   StreamType**   src       = Stream::mf_pGetArray();
   int**          dest      = m_WorkHere.mf_pGetArray();

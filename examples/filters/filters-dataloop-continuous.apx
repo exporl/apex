@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+<!--@doc
+  @what: Shows use of dataloop generator - wivineruis.wav should play continuously over trials (see filters - noisegen - apex:dataloop)
+  @description: The noise is playing continuously over trials. When you click on the button 'dataloop - silence/dataloop - 1', in both ears a noise stimulus is played and in the left ear 'silence-two(twee)'(=stimulus2)/'one-two(een-twee)'(=stimulus1) is presented
+                Dataloop continuous: playing noise continuously over trials and according to the users input dataloop - silence/ dataloop - 1, stimulus2 or stimulus1 is presented
+  @how: trainingProcedure - dataloop generator - continuous: true
+-->
+ <procedure xsi:type="apex:trainingProcedure">
+  <parameters>
+   <presentations>100</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+   <trial id="trial2">
+    <answer>button2</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus2"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout height="1" width="2">
+    <button id="button1" x="2" y="1">
+     <text>dataloop - 1</text>
+    </button>
+    <button id="button2" x="1" y="1">
+     <text>dataloop - silence</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>file:../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>soundcard1</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>soundcard1</device>
+   <uri>wd2.wav</uri>
+  </datablock>
+  <datablock id="noisedata">
+   <device>soundcard1</device>
+   <uri>wivineruis.wav</uri>
+  </datablock>
+  <datablock id="silence">
+   <device>soundcard1</device>
+   <uri>silence:10000</uri>
+   <channels>1</channels>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="soundcard1" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters>
+  <filter id="noisegen" xsi:type="apex:dataloop">
+   <device>soundcard1</device>
+   <channels>1</channels>
+   <continuous>true</continuous> <!-- continuous:true => continuously noise over trials-->
+   <datablock>noisedata</datablock>
+   <basegain>0</basegain>
+   <gain>0</gain>
+   <randomjump>false</randomjump>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <sequential>
+     <datablock id="rawdata1"/>
+     <datablock id="rawdata2"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>silence</description>
+   <datablocks>
+    <sequential>
+     <datablock id="silence"/>
+     <datablock id="rawdata2"/>
+    </sequential>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>noisegen</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard1</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>_ALL_</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>soundcard1</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+ </connections>
+</apex:apex>

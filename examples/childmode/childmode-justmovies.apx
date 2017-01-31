@@ -1,0 +1,191 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+  @what: Shows use of child mode: without intro and outro movies, but with the normal panel
+  @description: The child needs to find the stimulus in one of the three eggs. One egg has a different sound than the two other eggs. The same progressbar is used as in adult experiments, feedback is childfriendly.
+  @how: Flash elements, same panel as adult experiments (no childmode selected in <screens>)
+ -->
+ <procedure xsi:type="apex:adaptiveProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <intervals count="3">
+    <interval number="1" element="button1"/>
+    <interval number="2" element="button2"/>
+    <interval number="3" element="button3"/>
+   </intervals>
+   <nUp>1</nUp>
+   <nDown>1</nDown>
+   <adapt_parameter>snr</adapt_parameter>
+   <start_value>3</start_value>
+   <stop_after_type>reversals</stop_after_type>
+   <stop_after>2</stop_after>
+   <larger_is_easier>true</larger_is_easier>
+   <stepsizes>
+    <stepsize begin="0" size="2"/>
+    <stepsize begin="2" size="1"/>
+   </stepsizes>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+    <stimulus id="stimulus2"/>
+    <stimulus id="stimulus3"/>
+    <stimulus id="stimulus4"/>
+    <stimulus id="stimulus5"/>
+    <standard id="standard1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <uri_prefix>../movies</uri_prefix>
+  <general>
+   <showpanel>true</showpanel>
+  </general>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="3600">true</feedback>
+   <showcurrent>true</showcurrent>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout id="answer_layout" x="1" height="3" y="1" width="3">
+    <flash id="button1" x="1" y="2">
+     <uri>dragon/stillegg.swf</uri>
+     <feedback>
+      <highlight>dragon/shakeegg.swf</highlight>
+      <positive>dragon/goodegg.swf</positive>
+      <negative>dragon/badegg2.swf</negative>
+     </feedback>
+    </flash>
+    <flash id="button2" x="2" y="2">
+     <uri>dragon/stillegg.swf</uri>
+     <feedback>
+      <highlight>dragon/shakeegg.swf</highlight>
+      <positive>dragon/goodegg.swf</positive>
+      <negative>dragon/badegg2.swf</negative>
+     </feedback>
+    </flash>
+    <flash id="button3" x="3" y="2">
+     <uri>dragon/stillegg.swf</uri>
+     <feedback>
+      <highlight>dragon/shakeegg.swf</highlight>
+      <positive>dragon/goodegg.swf</positive>
+      <negative>dragon/badegg2.swf</negative>
+     </feedback>
+    </flash>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+    <button id="button3"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>wavdevice</device>
+   <uri>wd2.wav</uri>
+  </datablock>
+  <datablock id="rawdata3">
+   <device>wavdevice</device>
+   <uri>wd3.wav</uri>
+  </datablock>
+  <datablock id="rawdata4">
+   <device>wavdevice</device>
+   <uri>wd4.wav</uri>
+  </datablock>
+  <datablock id="rawdata5">
+   <device>wavdevice</device>
+   <uri>wd5.wav</uri>
+  </datablock>
+  <datablock id="noisedata">
+   <device>wavdevice</device>
+   <uri>ruisje.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters>
+   <parameter id="snr"/>
+  </fixed_parameters>
+  <stimulus id="standard1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="noisedata"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="snr">20</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="snr">1</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata2"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="snr">2</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus3">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata3"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="snr">3</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus4">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata4"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="snr">4</parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus5">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata5"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+    <parameter id="snr">5</parameter>
+   </fixedParameters>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

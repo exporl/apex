@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef APEXTRIALRESULT_H
-#define APEXTRIALRESULT_H
 
-#include <qdatetime.h>
-#include <qstring.h>
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_TRIALRESULT_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_TRIALRESULT_H_
 
-#include "screen/screenresult.h"
-#include "procedure/adaptiveprocedure.h"
+#include "apexdata/procedure/adaptiveproceduredata.h"
+
+#include "apexdata/screen/screenresult.h"
+
+#include <QDateTime>
+#include <QString>
 
 namespace apex {
 
@@ -39,9 +40,9 @@ public:
     TrialResult();
 
     ~TrialResult();
-        
+
     public:                 // we make it a simple struct
-                
+
     QString name;
     QString stimulus;
     QString extra;                          // extra xml data
@@ -50,7 +51,7 @@ public:
     bool correctorResult;
     int answerTime;                         // # of ms before answer
     int correctAnswer;                      // the correct answer if defined by procedure
-    data::t_adaptParam targetParam;
+    data::adapting_parameter targetParam;
     bool defTargetParam;            // is target parameter defined?
 
     QString toXML() const;

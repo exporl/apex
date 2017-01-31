@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __STRDXMIXER_H__
 #define __STRDXMIXER_H__
 
-#include "typedefs.h"
-#include "mixers/mixer.h"
-#include "mixers/mixerelement.h"
+#include "../../mixers/mixer.h"
+#include "../../mixers/mixerelement.h"
+
+#include "../../typedefs.h"
 
 namespace streamapp
 {

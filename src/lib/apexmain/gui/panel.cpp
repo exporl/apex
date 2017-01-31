@@ -16,21 +16,23 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "panel.h"
-#include "gui/guidefines.h"
-#include "panelelements.h"
-//#include "mainwindowconfig.h"
-#include "screen/screensdata.h"
-#include "exceptions.h"
-#include "apextools.h"
+
+#include "apexdata/screen/screensdata.h"
+
+#include "apextools/apextools.h"
+#include "apextools/exceptions.h"
+
 #include "fileprefixconvertor.h"
+#include "guidefines.h"
+#include "panel.h"
+#include "panelelements.h"
+
 #ifdef FLASH
-#include "gui/flashwidget.h"
+#include "flashwidget.h"
 #endif
 
-#include <QPushButton>
 #include <QGridLayout>
+#include <QPushButton>
 #include <QSpacerItem>
 
 namespace apex
@@ -86,7 +88,7 @@ Panel::Panel( QWidget* a_pParent,
                     mwndc->statusWaitingForStartPicture());
     else
         m_pStatusPicture = 0;
-    
+
     int maxbuttonheight=QFontMetrics( m_pStart->font()).height()*6;
     m_pStart->setMaximumHeight(maxbuttonheight);
     m_pStop->setMaximumHeight(maxbuttonheight);
@@ -220,12 +222,18 @@ void Panel::mp_SetProgressSteps( const unsigned ac_nProgress )
     m_pProgressBar->setMaximum( (int) ac_nProgress );
 }
 
+//TODO remove
 void Panel::mp_Paused()
 {
     if ( m_pPause->text() == "Continue" )
         m_pPause->setText( "Pause" );
     else
         m_pPause->setText( "Continue" );
+}
+
+void Panel::setPaused(bool paused)
+{
+    m_pPause->setText(paused ? tr("Continue") : tr("Pause"));
 }
 
 void Panel::mp_Layout()
@@ -371,7 +379,7 @@ void ChildModePanel::mp_SetProgressSteps( const unsigned ac_nProgress )
 
 PanelQProxy* IPanel::getSignalSlotProxy()
 {
-    return objectProxy.get();
+    return objectProxy.data();
 }
 
 }

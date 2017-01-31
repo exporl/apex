@@ -1,7 +1,7 @@
 //
 // C++ Interface: rtresultsink
 //
-// Description: 
+// Description:
 //
 //
 // Author: Tom Francart,,, <tom.francart@med.kuleuven.be>, (C) 2009
@@ -9,45 +9,58 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#ifndef APEXRTRESULTSINK_H
-#define APEXRTRESULTSINK_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_RTRESULTSINK_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_RTRESULTSINK_H_
+
+#include "apextools/global.h"
 
 #include <QString>
 #include <QObject>
 #include <QUrl>
 #include <QWidget>
+#include <QWebFrame>
 
 class QWebView;
 
 namespace apex {
 
-    class ScreenResult;
+    class ApexScreenResult;
     //class ExperimentRunDelegate;
     class RTResultSinkPrivate;
 
 
 /**
-	@author Tom Francart,,, <tom.francart@med.kuleuven.be>
+        @author Tom Francart,,, <tom.francart@med.kuleuven.be>
 */
-class RTResultSink:
+class APEX_EXPORT RTResultSink:
     public QObject{
-    
+
     Q_OBJECT
 public:
-    //RTResultSink(ExperimentRunDelegate& p_rd);
-    //RTResultSink(const data::ResultParameters* const p_rp);
-
     /**
      * If webview is 0, RTResultSink will create a webview and take ownership
      * of it. Otherwise it will not take ownership
      */
-    RTResultSink(const QUrl& page, QWebView* webview=0);
+    RTResultSink(QUrl page, QMap<QString,QString> resultParameters = QMap<QString, QString>(), QString extraScript =  0, QWebView* webview=0);
 
     ~RTResultSink();
 
     void show(bool visible=true);
 
-    //void newAnswer ( const ScreenResult* r, bool correct);
+    /**
+     * @brief
+     * @return HTML code for current state of page
+     */
+    QString currentHtml() const;
+
+    QVariant evaluateJavascript(QString script);
+
+    QWebFrame* mainWebFrame() const;     // needed for unit test
+
+    //void newAnswer ( const ApexScreenResult* r, bool correct);
+
+    void setJavascriptParameters (QMap<QString,QString> resultParameters) const;
+    void executeJavaScript (QString JScode) const;
 
 public slots:
     //! Add a single <trial> block to the results

@@ -1,0 +1,11 @@
+    <filter id="pulsegen" xsi:type="apex:generator">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <type>singlepulse</type>
+      <basegain>0</basegain>
+      <gain>0</gain>
+      <frequency>0</frequency>
+      <phase>0</phase>
+      <pulsewidth>20</pulsewidth>
+    </filter>

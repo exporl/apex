@@ -17,62 +17,98 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "simplerunner.h"
-#include "experimentdata.h"
-#include "services/filedialog.h"
-#include "services/errorhandler.h"
-#include "services/paths.h"
-#include "result/resultparameters.h"
+#include "common/global.h"
+#include "apexdata/experimentdata.h"
+
+#include "apexdata/result/resultparameters.h"
+
+#include "apextools/services/paths.h"
+
+#include "gui/centralwidget.h"
+#include "gui/mainwindow.h"
+
+// TODO ANDROID resultviewer uses webkitwidgets
+#ifndef Q_OS_ANDROID
 #include "result/resultviewer.h"
+#endif
+
+#include "services/errorhandler.h"
+#include "services/filedialog.h"
 
 #include "apexcontrol.h"
-#include "gui/mainwindow.h"
-#include "gui/centralwidget.h"
+#include "simplerunner.h"
+
+// TODO ANDROID flowerunner uses webkitwidgets
+#ifndef Q_OS_ANDROID
+#include "flowrunner.h"
+#endif
 
 #include <QDebug>
 
 using namespace apex;
 
-void SimpleRunner::SelectFromDir (const QString& path)
+SimpleRunner::SimpleRunner()
+    : flowRunner(0)
+{}
+
+void SimpleRunner::selectFromDir (const QString& path)
 {
-    qDebug ("Selecting from Directory %s", qPrintable (path));
+    qCDebug(APEX_RS, "Selecting from Directory %s", qPrintable (path));
 
-     QStringList filters;
-    filters << "APEX  files (*.apx *.apr *.xml)"
-         << "APEX experiment files (*.apx)"
-         << "APEX results files (*.apr)"
-         << "XML files (*.xml)"
-         << "All files (*)";
+    QStringList filters;
+    filters << "APEX  files (*.apx *.apf *.apr *.xml)"
+            << "APEX experiment files (*.apx)"
+            << "APEX flow (*.apf)"
+            << "APEX results files (*.apr)"
+            << "XML files (*.xml)"
+            << "All files (*)";
 
-    Select( FileDialog::Get().mf_sGetExistingFile( path, filters ) );
+    select( FileDialog::Get().mf_sGetExistingFile( path, filters ) );
 }
 
-void SimpleRunner::Select (const QString& name)
+void SimpleRunner::select (const QString& name)
 {
-    qDebug ("Selecting File %s", qPrintable (name));
-    if (name.endsWith(QLatin1String(".apr"))) { // show results
-        qDebug("Loading resultsviewer for %s", qPrintable(name));
+    qCDebug(APEX_RS, "Selecting File %s", qPrintable (name));
+    if (name.endsWith(QL1S(".apr"))) { // show results
+        // TODO ANDROID resultviewer uses webkitwidgets
+#ifndef Q_OS_ANDROID
+        qCDebug(APEX_RS, "Loading resultsviewer for %s", qPrintable(name));
         data::ResultParameters rvparam;
-        rvparam.setShowResults(true);
+        rvparam.setShowResultsAfter(true);
         rvparam.setSaveResults(false);
-        ResultViewer rv(&rvparam, name, Paths::Get().GetXsltScriptsPath());
+        ResultViewer rv(&rvparam, name);
         connect(&rv, SIGNAL(errorMessage(QString,QString)), this, SIGNAL(errorMessage(QString, QString)));
         QDir::setCurrent(QFileInfo(name).absolutePath());
-        rv.ProcessResult();
         rv.show(false);
+#endif
+    } else if(name.endsWith(QLatin1String(".apf"))) {
+        // TODO ANDROID rtresultsink uses webkitwidgets
+#ifndef Q_OS_ANDROID
+        flowRunner = new FlowRunner();
+        connect(flowRunner, SIGNAL(selected(data::ExperimentData*)), this, SIGNAL(selected(data::ExperimentData*)));
+        connect(flowRunner, SIGNAL(setResultsFilePath(QString)), this, SIGNAL(setResultsFilePath(QString)));
+        connect(flowRunner, SIGNAL(foundExpressions(QMap<QString, QString>)), this, SLOT(setExpressions(QMap<QString, QString>)));
+        connect(flowRunner, SIGNAL(opened(QString)), this, SIGNAL(opened(QString)));
+        connect(this, SIGNAL(savedFile(QString)), flowRunner, SIGNAL(savedFile(QString)));
+        flowRunner->select(name);
+#endif
     } else if (!name.isEmpty()) {               // load experiment file
         //apex::ExperimentParser* parser = new apex::ExperimentConfigFileParser( name );
         data::ExperimentData* data = parseExperiment(name);
-        emit Selected (data);
+        emit opened(name);
+        emit selected(data);
     }
 }
 
-// TODO: Check when this is called
-void SimpleRunner::Finished()
-{
+void SimpleRunner::makeVisible() {
+    // TODO ANDROID flowrunner uses webkitwidgets
+#ifndef Q_OS_ANDROID
+    if (flowRunner) {
+        flowRunner->makeVisible();
+    }
+#endif
 }
 
-// TODO: Dummy implementation
-void SimpleRunner::Run()
-{
+void SimpleRunner::setExpressions(const QMap<QString, QString>& exprs) {
+    expressions = exprs;
 }

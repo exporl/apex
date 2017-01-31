@@ -17,23 +17,24 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "asiosys.h"
-#include "asio.h"
-#include "asiodrivers.h"
-#ifndef Q_CC_MSVC
-#include "iasiothiscallresolver.h"
-#endif
+#include "../../appcore/threads/criticalsection.h"
+#include "../../appcore/threads/thread.h"
+#include "../../appcore/threads/thread.h"
+
+#include "../../audioformat.h"
+
+#include "../../utils/dataconversion.h"
+#include "../../utils/stringexception.h"
 
 #include "win32_asiowrapper.h"
-#include "audioformat.h"
-#include "utils/dataconversion.h"
-//#include "utils/timers.h"
-#include "utils/stringexception.h"
-#include "appcore/threads/thread.h"
-#include "appcore/threads/criticalsection.h"
+
 #include <iostream>
 
-#include "appcore/threads/thread.h"
+/* Do not change the order of these includes. */
+#include <asiosys.h>
+#include <asio.h>
+#include <asiodrivers.h>
+#include "iasiothiscallresolver.h"
 
 using namespace utils;
 using namespace dataconversion;

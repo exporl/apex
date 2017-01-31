@@ -1,0 +1,1287 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet  href="https://gilbert.med.kuleuven.be/apex/xslt/apexresult.xsl" type="text/xsl"?>
+<apex:results experiment_file="file:/C:/score/stimuli/pimm/cnc/50_cnc_quiet_ace_50dBA_el/score_CNC_female_set01_list017.apx" xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+<parameters>
+<parameter name="snr">0</parameter>
+<parameter name="level">50</parameter>
+<parameter name="speechmaterial">CNC_female</parameter>
+<parameter name="set">1</parameter>
+<parameter name="list">17</parameter>
+<parameter name="processing">ACE</parameter>
+<parameter name="modality">el</parameter>
+<parameter name="spatial_setup">monaural</parameter>
+<parameter name="noise">LTASS</parameter>
+<parameter name="showextra">score</parameter>
+</parameters>
+<general>
+    <startdate>Fri 30. Mar 11:04:47 2012</startdate>
+    <enddate>Fri 30. Mar 11:11:22 2012</enddate>
+    <duration unit="seconds">394</duration>
+    <xsltscript>apexresult.xsl</xsltscript>
+    <jscript>apex:resultsviewer.html</jscript>
+    <subject>name</subject>
+</general>
+<trial id="trial_1">
+<procedure >
+<stimulus>stim_1</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>BOAT</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>3609</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_2">
+<procedure >
+<stimulus>stim_2</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>WET</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>2532</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_3">
+<procedure >
+<stimulus>stim_3</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">gail</element>
+    <element id="score">110</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>gail</answer>
+<correctanswer>GAVE</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>6266</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_4">
+<procedure >
+<stimulus>stim_4</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">000</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>JAZZ</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>2891</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_5">
+<procedure >
+<stimulus>stim_5</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">chip</element>
+    <element id="score">010</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>chip</answer>
+<correctanswer>TIFF</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>3125</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_6">
+<procedure >
+<stimulus>stim_6</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>SASH</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1156</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_7">
+<procedure >
+<stimulus>stim_7</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">whip</element>
+    <element id="score">110</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>whip</answer>
+<correctanswer>WICK</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>6546</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_8">
+<procedure >
+<stimulus>stim_8</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">loot</element>
+    <element id="score">110</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>loot</answer>
+<correctanswer>LEWD</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>6812</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_9">
+<procedure >
+<stimulus>stim_9</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">beach</element>
+    <element id="score">011</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>beach</answer>
+<correctanswer>PEACH</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>4532</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_10">
+<procedure >
+<stimulus>stim_10</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">ball</element>
+    <element id="score">010</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>ball</answer>
+<correctanswer>FORM</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>5016</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_11">
+<procedure >
+<stimulus>stim_11</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">000</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>HAZE</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>2500</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_12">
+<procedure >
+<stimulus>stim_12</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">000</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>TIER</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1954</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_13">
+<procedure >
+<stimulus>stim_13</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">nip</element>
+    <element id="score">000</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>nip</answer>
+<correctanswer>LET</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>5312</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_14">
+<procedure >
+<stimulus>stim_14</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">dark</element>
+    <element id="score">101</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>dark</answer>
+<correctanswer>DYKE</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>5656</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_15">
+<procedure >
+<stimulus>stim_15</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">lunch</element>
+    <element id="score">010</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>lunch</answer>
+<correctanswer>NUDGE</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>6563</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_16">
+<procedure >
+<stimulus>stim_16</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">bort</element>
+    <element id="score">010</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>bort</answer>
+<correctanswer>PORCH</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>3515</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_17">
+<procedure >
+<stimulus>stim_17</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">war</element>
+    <element id="score">001</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>war</answer>
+<correctanswer>MERE</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>4625</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_18">
+<procedure >
+<stimulus>stim_18</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">girl</element>
+    <element id="score">110</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>girl</answer>
+<correctanswer>GIRTH</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>6469</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_19">
+<procedure >
+<stimulus>stim_19</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">u</element>
+    <element id="score">010</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>u</answer>
+<correctanswer>MUM</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>5688</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_20">
+<procedure >
+<stimulus>stim_20</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">spook</element>
+    <element id="score">000</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>spook</answer>
+<correctanswer>RIG</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>9204</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_21">
+<procedure >
+<stimulus>stim_21</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">hope</element>
+    <element id="score">011</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>hope</answer>
+<correctanswer>COPE</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>5172</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_22">
+<procedure >
+<stimulus>stim_22</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>SOOT</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1844</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_23">
+<procedure >
+<stimulus>stim_23</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>YAP</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>3735</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_24">
+<procedure >
+<stimulus>stim_24</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>SHARK</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1719</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_25">
+<procedure >
+<stimulus>stim_25</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">i</element>
+    <element id="score">010</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>i</answer>
+<correctanswer>VILE</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>4797</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_26">
+<procedure >
+<stimulus>stim_26</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>CHUCK</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1734</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_27">
+<procedure >
+<stimulus>stim_27</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>NAIL</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>750</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_28">
+<procedure >
+<stimulus>stim_28</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">rent</element>
+    <element id="score">110</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>rent</answer>
+<correctanswer>WRETCH</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>6438</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_29">
+<procedure >
+<stimulus>stim_29</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>POURED</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1922</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_30">
+<procedure >
+<stimulus>stim_30</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">kew</element>
+    <element id="score">100</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>kew</answer>
+<correctanswer>KEEN</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>6094</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_31">
+<procedure >
+<stimulus>stim_31</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">knock</element>
+    <element id="score">010</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>knock</answer>
+<correctanswer>LONG</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>9203</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_32">
+<procedure >
+<stimulus>stim_32</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">two</element>
+    <element id="score">100</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>two</answer>
+<correctanswer>TURF</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>5828</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_33">
+<procedure >
+<stimulus>stim_33</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">deal</element>
+    <element id="score">001</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>deal</answer>
+<correctanswer>BILL</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>4750</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_34">
+<procedure >
+<stimulus>stim_34</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">bone</element>
+    <element id="score">000</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>bone</answer>
+<correctanswer>FAME</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>4781</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_35">
+<procedure >
+<stimulus>stim_35</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>DOG</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1250</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_36">
+<procedure >
+<stimulus>stim_36</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">jack</element>
+    <element id="score">110</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>jack</answer>
+<correctanswer>JAB</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>5578</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_37">
+<procedure >
+<stimulus>stim_37</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">000</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>MOON</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>2703</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_38">
+<procedure >
+<stimulus>stim_38</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>SHINE</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>828</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_39">
+<procedure >
+<stimulus>stim_39</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">u</element>
+    <element id="score">010</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>u</answer>
+<correctanswer>THUD</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>9344</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_40">
+<procedure >
+<stimulus>stim_40</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">cut</element>
+    <element id="score">110</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>cut</answer>
+<correctanswer>CUP</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>3641</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_41">
+<procedure >
+<stimulus>stim_41</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">owl</element>
+    <element id="score">000</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>owl</answer>
+<correctanswer>RAIN</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>3734</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_42">
+<procedure >
+<stimulus>stim_42</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">sign</element>
+    <element id="score">101</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>sign</answer>
+<correctanswer>SEWN</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>10219</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_43">
+<procedure >
+<stimulus>stim_43</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>CHAIR</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>3438</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_44">
+<procedure >
+<stimulus>stim_44</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>DIAL</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>3125</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_45">
+<procedure >
+<stimulus>stim_45</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>RIGHT</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>3157</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_46">
+<procedure >
+<stimulus>stim_46</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">mouse</element>
+    <element id="score">011</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>mouse</answer>
+<correctanswer>LOUSE</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>4968</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_47">
+<procedure >
+<stimulus>stim_47</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">000</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>WORSE</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1531</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_48">
+<procedure >
+<stimulus>stim_48</stimulus>
+</procedure>
+<screenresult>
+    <element id="response"></element>
+    <element id="score">111</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer></answer>
+<correctanswer>BOIL</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>1906</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_49">
+<procedure >
+<stimulus>stim_49</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">fruit</element>
+    <element id="score">011</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>fruit</answer>
+<correctanswer>HOOT</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>9812</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<trial id="trial_50">
+<procedure >
+<stimulus>stim_50</stimulus>
+</procedure>
+<screenresult>
+    <element id="response">chad</element>
+    <element id="score">011</element>
+</screenresult>
+<corrector>
+<result>false</result>
+<answer>chad</answer>
+<correctanswer>HAD</correctanswer>
+</corrector>
+<output>
+<device id="soundcard">
+  <buffer underruns="0"/>
+</device>
+</output>
+<responsetime>5453</responsetime>
+<randomgenerators>
+
+</randomgenerators>
+</trial>
+
+<calibration>
+<parameter id="soundcardgainL">-4.3</parameter>
+</calibration>
+<processed>
+
+
+ExperimentFile=file:/C:/score/stimuli/pimm/cnc/50_cnc_quiet_ace_50dBA_el/score_CNC_female_set01_list017.apx
+Duration=394 seconds
+Header=trial;stimulus;correctanswer;corrector;useranswer;score
+START
+trial_1;stim_1;BOAT;false;;111
+trial_2;stim_2;WET;false;;111
+trial_3;stim_3;GAVE;false;gail;110
+trial_4;stim_4;JAZZ;false;;000
+trial_5;stim_5;TIFF;false;chip;010
+trial_6;stim_6;SASH;false;;111
+trial_7;stim_7;WICK;false;whip;110
+trial_8;stim_8;LEWD;false;loot;110
+trial_9;stim_9;PEACH;false;beach;011
+trial_10;stim_10;FORM;false;ball;010
+trial_11;stim_11;HAZE;false;;000
+trial_12;stim_12;TIER;false;;000
+trial_13;stim_13;LET;false;nip;000
+trial_14;stim_14;DYKE;false;dark;101
+trial_15;stim_15;NUDGE;false;lunch;010
+trial_16;stim_16;PORCH;false;bort;010
+trial_17;stim_17;MERE;false;war;001
+trial_18;stim_18;GIRTH;false;girl;110
+trial_19;stim_19;MUM;false;u;010
+trial_20;stim_20;RIG;false;spook;000
+trial_21;stim_21;COPE;false;hope;011
+trial_22;stim_22;SOOT;false;;111
+trial_23;stim_23;YAP;false;;111
+trial_24;stim_24;SHARK;false;;111
+trial_25;stim_25;VILE;false;i;010
+trial_26;stim_26;CHUCK;false;;111
+trial_27;stim_27;NAIL;false;;111
+trial_28;stim_28;WRETCH;false;rent;110
+trial_29;stim_29;POURED;false;;111
+trial_30;stim_30;KEEN;false;kew;100
+trial_31;stim_31;LONG;false;knock;010
+trial_32;stim_32;TURF;false;two;100
+trial_33;stim_33;BILL;false;deal;001
+trial_34;stim_34;FAME;false;bone;000
+trial_35;stim_35;DOG;false;;111
+trial_36;stim_36;JAB;false;jack;110
+trial_37;stim_37;MOON;false;;000
+trial_38;stim_38;SHINE;false;;111
+trial_39;stim_39;THUD;false;u;010
+trial_40;stim_40;CUP;false;cut;110
+trial_41;stim_41;RAIN;false;owl;000
+trial_42;stim_42;SEWN;false;sign;101
+trial_43;stim_43;CHAIR;false;;111
+trial_44;stim_44;DIAL;false;;111
+trial_45;stim_45;RIGHT;false;;111
+trial_46;stim_46;LOUSE;false;mouse;011
+trial_47;stim_47;WORSE;false;;000
+trial_48;stim_48;BOIL;false;;111
+trial_49;stim_49;HOOT;false;fruit;011
+trial_50;stim_50;HAD;false;chad;011
+END
+
+</processed>
+</apex:results>

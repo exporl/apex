@@ -45,7 +45,7 @@ const QString apex::ScreenResult::toXML( ) const
 
     temp += ">\n";
 
-    for ( QMap<QString,QString>::const_iterator p=m_map.begin(); p!=m_map.end(); ++p)
+    for (const_iterator p=begin(); p!=end(); ++p)
     {
         // do not report stuff for buttons and labels
         temp+="\t<element id=\"" + p.key() + "\">" + p.value() + "</element>\n";
@@ -60,7 +60,7 @@ const QString apex::ScreenResult::toXML( ) const
 
 void apex::ScreenResult::clear( )
 {
-    m_map.clear();
+    map.clear();
     stimulusparams.clear();
 }
 
@@ -79,37 +79,30 @@ const QPointF&  apex::ScreenResult::lastClickPosition() const
     return mLastClickPosition;
 }
 
-const QMap<QString,QString>& apex::ScreenResult::map() const
-{
-    return m_map;
+apex::ScreenResult::Parent::const_iterator apex::ScreenResult::begin() const {
+    return map.begin();
 }
 
-QMap<QString,QString>& apex::ScreenResult::map()
-{
-    return m_map;
+apex::ScreenResult::Parent::const_iterator apex::ScreenResult::end() const {
+    return map.end();
 }
 
-QString &	apex::ScreenResult::operator[] ( const QString & key )
-{
-    return m_map.operator [](key);
+const apex::ScreenResult::ValueType apex::ScreenResult::value (const KeyType& key, const ValueType& defaultValue) const {
+    return map.value(key, defaultValue);
 }
 
-const QString apex::ScreenResult::operator[] ( const QString & key ) const
-{
-    return m_map.operator [](key);
+apex::ScreenResult::ValueType& apex::ScreenResult::operator[](const KeyType& key) {
+    return map[key];
 }
 
-apex::ScreenResult::const_iterator apex::ScreenResult::find ( const QString & key ) const
-{
-    return m_map.find( key );
+const apex::ScreenResult::ValueType apex::ScreenResult::operator[](const KeyType& key) const {
+    return map[key];
 }
 
-apex::ScreenResult::const_iterator apex::ScreenResult::end () const
-{
-    return m_map.end();
+bool apex::ScreenResult::contains(const KeyType& key) const {
+    return map.contains(key);
 }
 
-apex::ScreenResult::const_iterator apex::ScreenResult::begin () const
-{
-    return m_map.begin();
+const apex::ScreenResult::Parent apex::ScreenResult::get() const {
+    return map;
 }

@@ -17,13 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef ARCLAYOUTELEMENT_H
-#define ARCLAYOUTELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_ARCLAYOUTELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_ARCLAYOUTELEMENT_H_
 
 #include "screenlayoutelement.h"
 //#include "gui/arclayout.h"
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -56,7 +56,7 @@ class APEXDATA_EXPORT ArcLayoutElement
         void setType(/*ArcLayout::ArcType*/int t);
 
         void checkChild(const ScreenElement* childel) const;
-        
+
         bool operator==(const ArcLayoutElement& other) const;
 };
 }

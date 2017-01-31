@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:results experiment_file="file:/home/tom/data/apex/examples/controller/controller-plugincontroller.apx" xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+<general>
+        <apex_version>3.1.x</apex_version>
+        <apex_version_git></apex_version_git>
+        <startdate>2016-01-27T17:28:44</startdate>
+        <enddate>2016-01-27T17:28:45</enddate>
+        <duration unit="seconds">0</duration>
+        <jscript>apex:resultsviewer.html</jscript>
+</general>
+
+</apex:results>

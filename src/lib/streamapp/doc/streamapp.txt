@@ -186,8 +186,8 @@ try
   std::cout << "read " << pIn->mf_nGetNumSamplesRead() << " samples " << std::endl;
 
     //since we passed the end, this asserts are always ok
-  assert( pIn->mf_bIsEndOfStream() == true );
-  assert( pIn->mf_lCurrentPosition() == lEnd );
+  Q_ASSERT( pIn->mf_bIsEndOfStream() == true );
+  Q_ASSERT( pIn->mf_lCurrentPosition() == lEnd );
 
     //go back to start
   pIn->mp_SeekPosition( 0L );
@@ -306,7 +306,7 @@ own winamp:
   InputStream* pI = StreamAppFactory::sf_pInstance()->mf_pReaderStream( "in.wav", nSamples );
 
     //make sure it's stereo too
-  assert( pI->mf_nGetNumChannels() == pCard->mf_nGetNumOutputChannels() );
+  Q_ASSERT( pI->mf_nGetNumChannels() == pCard->mf_nGetNumOutputChannels() );
 //....
   if(   pCard->mp_bStart( cb )   )
   {
@@ -454,9 +454,9 @@ Just step through the example and see your console for what's going on. Afterwar
       //get input streams
     PositionableInputStream* pI1 = pFac->mf_pReaderStream( "d:/_Input32.wav", nSamples );
     PositionableInputStream* pI2 = pFac->mf_pReaderStream( "d:/_Input32 short.wav", nSamples );
-    assert( pI1->mf_lSampleRate() == pI2->mf_lSampleRate() );
-    assert( pI1->mf_nGetNumChannels() == 2 );
-    assert( pI2->mf_nGetNumChannels() == 2 );
+    Q_ASSERT( pI1->mf_lSampleRate() == pI2->mf_lSampleRate() );
+    Q_ASSERT( pI1->mf_nGetNumChannels() == 2 );
+    Q_ASSERT( pI2->mf_nGetNumChannels() == 2 );
 
       //get two processors
     MyLimiter limit1( 2, 512, 0.8 );

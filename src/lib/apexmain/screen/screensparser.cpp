@@ -17,25 +17,26 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include <QFile>
-#include <QDir>
-#include <QUrl>
+#include "apexdata/screen/screensdata.h"
 
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
 
-#include "screensparser.h"
-#include "screenparser.h"
+#include "gui/guidefines.h"
+
 #include "parser/prefixparser.h"
 #include "parser/scriptexpander.h"
-#include "screen/screensdata.h"
-//#include "gui/mainwindowconfig.h"
-#include "gui/guidefines.h"
 
 #include "services/errorhandler.h"
 
-#include "xml/apexxmltools.h"
-#include "xml/xmlkeys.h"
+#include "screenparser.h"
+#include "screensparser.h"
 
-#include "xml/xercesinclude.h"
+#include <QDir>
+#include <QFile>
+#include <QUrl>
+
 using namespace XERCES_CPP_NAMESPACE;
 
 using namespace apex::gui;
@@ -61,7 +62,7 @@ data::ScreensData* ScreensParser::ParseScreens(
             data::ParameterManagerData* pmd)
     {
     data::ScreensData* screens=new data::ScreensData();
-    std::auto_ptr<ScreenParser> m_screenParser(new ScreenParser( screens, pmd ));
+    QScopedPointer<ScreenParser> m_screenParser(new ScreenParser( screens, pmd ));
 
 
 //start with default font
@@ -158,7 +159,7 @@ data::ScreensData* ScreensParser::ParseScreens(
                 {
                     QString plugin( XMLutils::GetAttribute( reinf, "name" ) );
                     data::FeedbackPluginParameters params;
-                    
+
                     for ( DOMNode* pnode = reinf->getFirstChild() ; pnode != 0 ;
                         pnode = pnode->getNextSibling() ) {
                         QString name( XMLutils::GetAttribute( pnode, "name" ));
@@ -166,7 +167,7 @@ data::ScreensData* ScreensParser::ParseScreens(
 
                         params.push_back(QPair<QString,QString>(name,value));
                     }
-                    
+
                     screens->addFeedbackPlugin( plugin, params);
                 }
                 else
@@ -197,12 +198,12 @@ data::ScreensData* ScreensParser::ParseScreens(
                     // Flash thing wants absolute path:
                     QDir d(absPath);
                     absPath = d.absolutePath();
-                    qDebug("%s", qPrintable (file));
+                    qCDebug(APEX_RS, "%s", qPrintable (file));
                     if ( !QFile::exists(absPath))
                     {
                         ErrorHandler::Get().addItem( StatusItem(StatusItem::Error,"ScreenParser",
                                           "Cannot find panel movie: " + file));
-                        return false;
+                        return 0;
                     }
                     screens->setPanelMovie(file);
                 }

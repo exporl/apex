@@ -16,13 +16,18 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "audioformatstream.h"
-#include "audioformat.h"
+
 #include "appcore/threads/locks.h"
+
 #include "utils/checks.h"
+
+#include "audioformat.h"
+#include "audioformatstream.h"
 #include "audiosamplebuffer.h"
+
 #include <math.h>
+
+#include <QtGlobal>
 
 using namespace utils;
 using namespace appcore;
@@ -63,8 +68,8 @@ const double& AudioFormatReaderStream::mf_dGetGain() const
 void AudioFormatReaderStream::mp_ReplaceReader( AudioFormatReader* const ac_pSource, const bool ac_bDeleteReader )
 {
   PtrCheck( ac_pSource );
-  assert( ac_pSource->mf_eBitMode() == m_pSource->mf_eBitMode() );
-  assert( ac_pSource->mf_nChannels() == m_pSource->mf_nChannels() );
+  Q_ASSERT( ac_pSource->mf_eBitMode() == m_pSource->mf_eBitMode() );
+  Q_ASSERT( ac_pSource->mf_nChannels() == m_pSource->mf_nChannels() );
   const Lock L( mc_ReadLock );
   if( mv_bDeleteReader )
     delete m_pSource;
@@ -138,8 +143,8 @@ void AudioFormatWriterStream::Write( const Stream& ac_Stream )
 void AudioFormatWriterStream::mp_ReplaceWriter( AudioFormatWriter* const ac_cpSource, const bool ac_bDeleteWriter )
 {
   PtrCheck( ac_cpSource );
-  assert( ac_cpSource->mf_eBitMode() == m_pSource->mf_eBitMode() );
-  assert( ac_cpSource->mf_nChannels() == m_pSource->mf_nChannels() );
+  Q_ASSERT( ac_cpSource->mf_eBitMode() == m_pSource->mf_eBitMode() );
+  Q_ASSERT( ac_cpSource->mf_nChannels() == m_pSource->mf_nChannels() );
   const Lock L( mc_WriteLock );
   if( mv_bDeleteWriter )
     delete m_pSource;
@@ -173,8 +178,8 @@ PositionableAudioFormatReaderStream::~PositionableAudioFormatReaderStream()
 void PositionableAudioFormatReaderStream::mp_ReplaceReader( PositionableAudioFormatReader* const ac_pSource, const bool ac_bDeleteReader )
 {
   PtrCheck( ac_pSource );
-  assert( ac_pSource->mf_eBitMode() == m_pSource->mf_eBitMode() );
-  assert( ac_pSource->mf_nChannels() == m_pSource->mf_nChannels() );
+  Q_ASSERT( ac_pSource->mf_eBitMode() == m_pSource->mf_eBitMode() );
+  Q_ASSERT( ac_pSource->mf_nChannels() == m_pSource->mf_nChannels() );
   const Lock L( mc_ReadLock );
   if( mv_bDeleteReader )
     delete m_pSource;
@@ -279,7 +284,7 @@ INLINE void PositionableAudioFormatReaderStream::mp_SetNumLoops( const unsigned 
     }
   }
   else
-    assert( 0 && "loop not set" );
+    Q_ASSERT( 0 && "loop not set" );
 }
 
 INLINE unsigned PositionableAudioFormatReaderStream::mf_nGetNumLoops() const

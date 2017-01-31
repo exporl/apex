@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "multiwavefile.h"
 #include "streamappfactory.h"
 #include "utils/stringutils.h"
@@ -65,10 +65,10 @@ MultiInputWaveFile::~MultiInputWaveFile()
 bool MultiInputWaveFile::mp_bOpen( const unsigned ac_nBufferSize, const std::string& ac_sFileNamePrefix )
 {
   mp_Close();
-  
+
   bool      bFound = true;
   unsigned  nFound = 0;
-  
+
   while( bFound )
   {
     const std::string sCur( ac_sFileNamePrefix + "_ch" + toString( nFound ) + ".wav" );
@@ -80,7 +80,7 @@ bool MultiInputWaveFile::mp_bOpen( const unsigned ac_nBufferSize, const std::str
       MultiPosInputStream<>::mp_AddItem( p );
     }
   }
-  
+
   if( nFound )
     return true;
   return false;

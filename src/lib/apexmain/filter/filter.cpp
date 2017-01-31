@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "stimulus/filter.h"
+
+#include "apexdata/parameters/parameter.h"
+
 #include "parameters/parametermanager.h"
-#include "parameters/parameter.h"
+
+#include "stimulus/filter.h"
 
 namespace apex
 {

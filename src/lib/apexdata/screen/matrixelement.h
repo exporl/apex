@@ -17,15 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef MATRIXELEMENT_H
-#define MATRIXELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_MATRIXELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_MATRIXELEMENT_H_
 
 #include "screenelement.h"
 
 #include <QString>
 #include <QVector>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -50,7 +50,7 @@ class APEXDATA_EXPORT MatrixElement
                     text(t) {};
 
             MatrixButton() {};
-            
+
             bool operator==(const MatrixButton& other) const;
         };
 
@@ -74,7 +74,7 @@ class APEXDATA_EXPORT MatrixElement
 
         void setAutoContinue(bool v);
         bool autoContinue() const;
-        
+
         bool operator==(const MatrixElement& other) const;
 
     private:

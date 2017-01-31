@@ -8,7 +8,6 @@
     >
     
     <xsl:output indent="yes"/>
-    <xsl:include href="confusionmatrix.xsl"/>
     <xsl:include href="plotstaircase.xsl"/>
 
     <!-- Output target, can be
@@ -39,7 +38,7 @@
     <!-- Determine procedure type -->
     <xsl:variable name="proceduretype">
         <xsl:choose>
-            <xsl:when test="apex:results/trial[1]/procedure/@type = 'adaptiveProcedure'">
+            <xsl:when test="apex:results/trial[1]/procedure/@type = 'apex:adaptiveProcedure' or apex:results/trial[1]/procedure/@type = 'adaptiveProcedure'">
                 <xsl:text>adaptive</xsl:text>
             </xsl:when>
             <xsl:otherwise>
@@ -128,9 +127,6 @@
              <xsl:if test="$proceduretype='adaptive'">
                 - <a href="#staircase">Staircase</a> 
              </xsl:if>
-             <xsl:if test="$proceduretype='constant'">
-                - <a href="#confmat">Confusion matrix</a>
-             </xsl:if>
             </p>
             <dl>
                 <dt><xsl:text>ExperimentFile</xsl:text></dt><dd><xsl:value-of select="$experiment_file"/></dd>
@@ -162,8 +158,15 @@
             </table>
             
             <p>
-                <xsl:variable name="numcorrect" select="count(trial/corrector[result='true'])"></xsl:variable>
-                <xsl:variable name="numtotal" select="count(trial)"/>
+                <xsl:variable name="numcorrect" select="count(trial/procedure[correct='true'])"></xsl:variable>
+                <xsl:variable name="numtotal">
+                    <xsl:if test="$proceduretype='adaptive'">
+                        <xsl:value-of select="count(trial)-1"/>
+                    </xsl:if>
+                    <xsl:if test="$proceduretype='constant'">
+                        <xsl:value-of select="count(trial)"/>
+                    </xsl:if>
+                </xsl:variable>
                 <xsl:value-of select="$numcorrect" />
                 <xsl:text>/</xsl:text>
                 <xsl:value-of select="$numtotal"/>
@@ -184,8 +187,9 @@
             
             <xsl:if test="$proceduretype='constant'">
                 <h2>Confusion matrix</h2>
-                <a name="confmat"/>
-                <xsl:call-template name="confusionmatrix"/>
+                In previous versions of APEX, a confusion matrix was presented here. Alas, the implementation was very unstable. We suggest that if you want a confusionmatrix, you
+                make one using JavaScript (e.g. using scripts/rtresults-confusionmatrix.html and rtconfusionmatrix.js). An example can be found in examples/results/realtimeresults-confusionmatrix.xml,
+                normally only the results element should be changed to the one presented in examples/results/realtimeresults-confusionmatrix.xml.                
             </xsl:if>
             
             
@@ -202,11 +206,11 @@
         <xsl:text>;</xsl:text>
         <xsl:value-of select="procedure/stimulus"/>
         <xsl:text>;</xsl:text>
-        <xsl:value-of select="corrector/correctanswer"/>
+        <xsl:value-of select="procedure/correctanswer"/>
         <xsl:text>;</xsl:text>
-        <xsl:value-of select="corrector/result"/>
+        <xsl:value-of select="procedure/correct"/>
         <xsl:text>;</xsl:text>
-        <xsl:value-of select="corrector/answer"/>
+        <xsl:value-of select="procedure/answer"/>
         <xsl:if test="$showClickPosition='1'">
             <xsl:text>;</xsl:text>
             <xsl:value-of select="screenresult/@xclickposition"/>
@@ -234,9 +238,9 @@
             </xsl:if>
             <td><xsl:value-of select="@id"/></td>
             <td><xsl:value-of select="procedure/stimulus"/></td>
-            <td><xsl:value-of select="corrector/correctanswer"/></td>
-            <td><xsl:value-of select="corrector/answer"/></td>
-            <td><xsl:value-of select="corrector/result"/></td>
+            <td><xsl:value-of select="procedure/correctanswer"/></td>
+            <td><xsl:value-of select="procedure/answer"/></td>
+            <td><xsl:value-of select="procedure/correct"/></td>
             <xsl:if test="$proceduretype='adaptive'">
                 <td><xsl:value-of select="procedure/parameter"/></td>
             </xsl:if>
@@ -266,10 +270,10 @@
         <xsl:apply-templates select="trial/procedure/reversal" mode="showreversals"/>
     </xsl:template>
     <xsl:template match="trial/procedure/reversal" mode="showreversals">
-        <!-- get previous trial-->
-        <xsl:variable name="stimname" select="../../preceding-sibling::trial[1]/procedure/parameter"/>
-        <!--xsl:value-of select="../parameter"/-->
-        <xsl:value-of select="$stimname"/>
+        <!-- For apex 3.0: get previous trial-->
+        <!--xsl:variable name="stimname" select="../../preceding-sibling::trial[1]/procedure/parameter"/-->
+        <!--xsl:value-of select="$stimname"/-->
+        <xsl:value-of select="../parameter"/>
         <xsl:text>&#x9; </xsl:text>
     </xsl:template>
     

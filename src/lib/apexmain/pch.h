@@ -26,7 +26,6 @@
 
 #include <algorithm>
 
-#include <assert.h>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>                      // random, srand
@@ -34,7 +33,6 @@
 #include <exception>
 #include <fstream>
 #include <fstream>
-#include <generators/sinegenerator.h>
 #include <iostream>
 #include <istream>
 #include <list>
@@ -97,8 +95,7 @@
 #include <string>
 #include <vector>
 
-// Never ever use xerces or xalan includes directly
-#include "xml/xercesinclude.h"
-#include "xml/xalaninclude.h"
+// Never ever use xerces includes directly
+#include "apextools/xml/xercesinclude.h"
 
 #endif      // C++

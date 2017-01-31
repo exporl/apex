@@ -17,14 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "connectionparser.h"
-#include "parameters/parametermanagerdata.h"
-#include "xml/xmlkeys.h"
-#include "xml/apexxmltools.h"
-#include "xml/xercesinclude.h"
+#include "apexdata/connection/connectiondata.h"
 
-//from libdata
-#include "connection/connectiondata.h"
+#include "apexdata/parameters/parametermanagerdata.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
+
+#include "connectionparser.h"
 
 #include <memory>
 
@@ -37,7 +38,7 @@ using namespace apex::parser;
 
 ConnectionData* ConnectionParser::Parse (xercesc::DOMNode* node)
 {
-    std::auto_ptr<ConnectionData> data (new ConnectionData());
+    QScopedPointer<ConnectionData> data(new ConnectionData());
 
     for (DOMNode* connNode = node->getFirstChild(); connNode != NULL; connNode = connNode->getNextSibling()) {
         Q_ASSERT (connNode->getNodeType() == DOMNode::ELEMENT_NODE);
@@ -79,7 +80,7 @@ ConnectionData* ConnectionParser::Parse (xercesc::DOMNode* node)
 
 
 
-    return data.release();
+    return data.take();
 }
 
 

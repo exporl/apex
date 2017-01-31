@@ -17,13 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SIMPLEPARAMETERSPARSER
-#define SIMPLEPARAMETERSPARSER
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_PARSER_SIMPLEPARAMETERSPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_PARSER_SIMPLEPARAMETERSPARSER_H_
+
+#include "apextools/xml/xercesinclude.h"
 
 #include <QString>
 #include <QVariant>
 
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
     class DOMElement;

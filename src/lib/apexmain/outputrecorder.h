@@ -1,7 +1,7 @@
-#ifndef OUTPUTRECORDER_H
-#define OUTPUTRECORDER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_OUTPUTRECORDER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_OUTPUTRECORDER_H_
 
-#include <status/errorlogger.h>
+#include "apextools/status/errorlogger.h"
 
 namespace apex
 {

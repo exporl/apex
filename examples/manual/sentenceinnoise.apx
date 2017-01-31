@@ -1,263 +1,266 @@
 <?xml version='1.0' encoding='Windows-1252'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0.3/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0.3/experiment.xsd"
-	xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0.3/experiment" version="1">
-	<procedure xsi:type="apex:adaptiveProcedureType">
-		<parameters>
-			<presentations>1</presentations>
-			<order>sequential</order>
-			<nUp>1</nUp>
-			<nDown>1</nDown>
-			<adapt_parameter>gain</adapt_parameter>
-			<start_value>0</start_value>
-			<stop_after_type>presentations</stop_after_type>
-			<stop_after>1</stop_after>
-			<larger_is_easier>true</larger_is_easier>
-			<repeat_first_until_correct>true</repeat_first_until_correct>
-			<stepsizes>
-				<stepsize begin="0" size="2"/>
-			</stepsizes>
-		</parameters>
-		<trials>
-			<trial id="trial_sentence1">
-				<answer>button_correct</answer>
-				<screen id="screen"/>
-				<stimulus id="stimulus_sentence1"/>
-			</trial>
-			<trial id="trial_sentence2">
-				<answer>button_correct</answer>
-				<screen id="screen"/>
-				<stimulus id="stimulus_sentence2"/>
-			</trial>
-			<trial id="trial_sentence3">
-				<answer>button_correct</answer>
-				<screen id="screen"/>
-				<stimulus id="stimulus_sentence3"/>
-			</trial>
-			<trial id="trial_sentence4">
-				<answer>button_correct</answer>
-				<screen id="screen"/>
-				<stimulus id="stimulus_sentence4"/>
-			</trial>
-			<trial id="trial_sentence5">
-				<answer>button_correct</answer>
-				<screen id="screen"/>
-				<stimulus id="stimulus_sentence5"/>
-			</trial>
-		</trials>
-	</procedure>
-	<corrector xsi:type="apex:isequal"/>
-	<screens>
-		<reinforcement>
-			<progressbar>true</progressbar>
-			<feedback length="600">false</feedback>
-		</reinforcement>
-		<screen id="screen">
-	   <gridLayout height="2" width="1" id="main_layout" rowstretch="1,2">			
-               <gridLayout width="4" height="4" columnstretch="1,4,2,2" rowstretch="1,1,2,2" id="parameter_layout" row="1" col="1">
-	 
-	<label id="snrlabel" row="1" col="1">
-	<text>snr</text>
-	</label>
-	<parameterlabel id="snr" row="2" col="1">
-	  <parameter>gain</parameter>
-	</parameterlabel>
-	<label id="sentence" row="1" col="2">
-	<text>sentence</text>
-	</label>
-	<parameterlabel id="sentence" row="2" col="2">
-	<fontsize>12</fontsize>
-	<parameter>sentence</parameter>
-	</parameterlabel>		
-				
-	</gridLayout>
-	
-	<gridLayout height="1" width="2" id="answer_layout" x="1" y="2">
-	<button x="1" y="1" id="button_correct">
-	<text>Correct</text>
-	 </button>
-	<button x="2" y="1" id="button_wrong">
-	<text>Incorrect</text>
-	</button>
-		
-	</gridLayout>	
-	</gridLayout>
-	<buttongroup id="buttongroup">
-	<button id="button_correct"/>
-	<button id="button_wrong"/>
-	</buttongroup>
-	<default_answer_element>buttongroup</default_answer_element>
-	</screen>
-	</screens>
-	<datablocks>
-		<uri_prefix> sentences</uri_prefix>
-		<datablock id="datablock_sentence1">
-			<device>wavdevice</device>
-			<uri>sent1.wav</uri>
-		</datablock>
-		<datablock id="datablock_sentence2">
-			<device>wavdevice</device>
-			<uri>sent2.wav</uri>
-		</datablock>
-		<datablock id="datablock_sentence3">
-			<device>wavdevice</device>
-			<uri>sent3.wav</uri>
-		</datablock>
-		<datablock id="datablock_sentence4">
-			<device>wavdevice</device>
-			<uri>sent4.wav</uri>
-		</datablock>
-		<datablock id="datablock_sentence5">
-			<device>wavdevice</device>
-			<uri>sent5.wav</uri>
-		</datablock>
-		<datablock id="noisedata">
-			<device>wavdevice</device>
-			<uri>noise.wav</uri>
-		</datablock>
-		<datablock id="silence">
-			<device>wavdevice</device>
-			<uri>silence:500</uri>
-		</datablock>
-	</datablocks>
-	<devices>
-		<device id="wavdevice" xsi:type="apex:wavDeviceType">
-			<driver>portaudio</driver>
-			<card>default</card>
-			<channels>1</channels>
-			<samplerate>44100</samplerate>
-		</device>
-	</devices>
-	<filters>
-		<filter xsi:type="apex:dataloop" id="noisegen">
-			<device>wavdevice</device>
-			<channels>1</channels>
-			<continuous>false</continuous>
-			<datablock>noisedata</datablock>
-			<basegain>0</basegain>
-			<gain>0</gain>
-			<randomjump>true</randomjump>
-		</filter>
-		<filter xsi:type="apex:amplifier" id="amplifier">
-			<device>wavdevice</device>
-			<channels>1</channels>
-			<basegain>0</basegain>
-			<gain id="gain">0</gain>
-		</filter>
-	</filters>
-	<stimuli>
-		<fixed_parameters>
-			<parameter id="sentence"/>
-		</fixed_parameters>
-		<stimulus id="stimulus_sentence1">
-			<datablocks>
-				<sequential>
-					<datablock id="silence"/>
-					<datablock id="datablock_sentence1"/>
-					<datablock id="silence"/>
-				</sequential>
-			</datablocks>
-			<fixedParameters>
-				<parameter id="sentence">This is <b> sentence </b>
-					<b>one</b></parameter>
-			</fixedParameters>
-		</stimulus>
-		<stimulus id="stimulus_sentence2">
-			<datablocks>
-				<sequential>
-					<datablock id="silence"/>
-					<datablock id="datablock_sentence2"/>
-					<datablock id="silence"/>
-				</sequential>
-			</datablocks>
-			<fixedParameters>
-				<parameter id="sentence">This is <b> sentence </b>
-					<b>two</b></parameter>
-			</fixedParameters>
-		</stimulus>
-		<stimulus id="stimulus_sentence3">
-			<datablocks>
-				<sequential>
-					<datablock id="silence"/>
-					<datablock id="datablock_sentence3"/>
-					<datablock id="silence"/>
-				</sequential>
-			</datablocks>
-			<fixedParameters>
-				<parameter id="sentence">This is <b> sentence </b>
-					<b>three</b></parameter>
-			</fixedParameters>
-		</stimulus>
-		<stimulus id="stimulus_sentence4">
-			<datablocks>
-				<sequential>
-					<datablock id="silence"/>
-					<datablock id="datablock_sentence4"/>
-					<datablock id="silence"/>
-				</sequential>
-			</datablocks>
-			<fixedParameters>
-				<parameter id="sentence">This is <b> sentence </b>
-					<b>four</b></parameter>
-			</fixedParameters>
-		</stimulus>
-		<stimulus id="stimulus_sentence5">
-			<datablocks>
-				<sequential>
-					<datablock id="silence"/>
-					<datablock id="datablock_sentence5"/>
-					<datablock id="silence"/>
-				</sequential>
-			</datablocks>
-			<fixedParameters>
-				<parameter id="sentence">This is <b> sentence </b>
-					<b>five</b></parameter>
-			</fixedParameters>
-		</stimulus>
-	</stimuli>
-	<connections>
-		<connection>
-			<from>
-				<id>_ALL_</id>
-				<channel>0</channel>
-			</from>
-			<to>
-				<id>amplifier</id>
-				<channel>0</channel>
-			</to>
-		</connection>
-		<connection>
-			<from>
-				<id>amplifier</id>
-				<channel>0</channel>
-			</from>
-			<to>
-				<id>wavdevice</id>
-				<channel>0</channel>
-			</to>
-		</connection>
-		<connection>
-			<from>
-				<id>noisegen</id>
-				<channel>0</channel>
-			</from>
-			<to>
-				<id>wavdevice</id>
-				<channel>0</channel>
-			</to>
-		</connection>
-	</connections>
-	<results>
-		<xsltscript>apexresult.xsl</xsltscript>
- 		<xsltscriptparameters>
-      		<parameter name="reversals for mean">4</parameter>
-    	</xsltscriptparameters>
-		<showresults>true</showresults>
-		<saveprocessedresults>true</saveprocessedresults>
-		
-	</results>
-	<interactive>
-		<entry type="int" description="SNR start value"
-			expression="/apex:apex/procedure/parameters/start_value" default="4"/>
-	</interactive>
+ <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!--  @doc
+   @what: Sentences in noise task
+   @description: A sentence is presented in noise, the subject responds verbally, the test leader can indicatie whether the response was correct or incorrect, repeated 4 times. Initial SNR is set via interactive GUI.
+   @how: Full experiment
+  -->
+ <procedure xsi:type="apex:adaptiveProcedure">
+  <parameters>
+   <presentations>1</presentations>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+   <nUp>1</nUp>
+   <nDown>1</nDown>
+   <adapt_parameter>gain</adapt_parameter>
+   <start_value>0</start_value>
+   <stop_after_type>presentations</stop_after_type>
+   <stop_after>1</stop_after>
+   <larger_is_easier>true</larger_is_easier>
+   <repeat_first_until_correct>true</repeat_first_until_correct>
+   <stepsizes>
+    <stepsize begin="0" size="2"/>
+   </stepsizes>
+  </parameters>
+  <trials>
+   <trial id="trial_sentence1">
+    <answer>button_correct</answer>
+    <screen id="screen"/>
+    <stimulus id="stimulus_sentence1"/>
+   </trial>
+   <trial id="trial_sentence2">
+    <answer>button_correct</answer>
+    <screen id="screen"/>
+    <stimulus id="stimulus_sentence2"/>
+   </trial>
+   <trial id="trial_sentence3">
+    <answer>button_correct</answer>
+    <screen id="screen"/>
+    <stimulus id="stimulus_sentence3"/>
+   </trial>
+   <trial id="trial_sentence4">
+    <answer>button_correct</answer>
+    <screen id="screen"/>
+    <stimulus id="stimulus_sentence4"/>
+   </trial>
+   <trial id="trial_sentence5">
+    <answer>button_correct</answer>
+    <screen id="screen"/>
+    <stimulus id="stimulus_sentence5"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="600">false</feedback>
+  </reinforcement>
+  <screen id="screen">
+   <gridLayout height="2" rowstretch="1,2" width="1" id="main_layout">
+    <gridLayout row="1" col="1" columnstretch="1,4,2,2" height="4" rowstretch="1,1,2,2" width="4" id="parameter_layout">
+     <label row="1" col="1" id="snrlabel">
+      <text>snr</text>
+     </label>
+     <parameterlabel row="2" col="1" id="snr">
+      <parameter>gain</parameter>
+     </parameterlabel>
+     <label row="1" col="2" id="sentence">
+      <text>sentence</text>
+     </label>
+     <parameterlabel row="2" col="2" id="sentence">
+      <fontsize>12</fontsize>
+      <parameter>sentence</parameter>
+     </parameterlabel>
+    </gridLayout>
+    <gridLayout x="1" y="2" height="1" width="2" id="answer_layout">
+     <button x="1" y="1" id="button_correct">
+      <text>Correct</text>
+     </button>
+     <button x="2" y="1" id="button_wrong">
+      <text>Incorrect</text>
+     </button>
+    </gridLayout>
+   </gridLayout>
+   <buttongroup id="buttongroup">
+    <button id="button_correct"/>
+    <button id="button_wrong"/>
+   </buttongroup>
+   <default_answer_element>buttongroup</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix> sentences</uri_prefix>
+  <datablock id="datablock_sentence1">
+   <device>wavdevice</device>
+   <uri>sent1.wav</uri>
+  </datablock>
+  <datablock id="datablock_sentence2">
+   <device>wavdevice</device>
+   <uri>sent2.wav</uri>
+  </datablock>
+  <datablock id="datablock_sentence3">
+   <device>wavdevice</device>
+   <uri>sent3.wav</uri>
+  </datablock>
+  <datablock id="datablock_sentence4">
+   <device>wavdevice</device>
+   <uri>sent4.wav</uri>
+  </datablock>
+  <datablock id="datablock_sentence5">
+   <device>wavdevice</device>
+   <uri>sent5.wav</uri>
+  </datablock>
+  <datablock id="noisedata">
+   <device>wavdevice</device>
+   <uri>noise.wav</uri>
+  </datablock>
+  <datablock id="silence">
+   <device>wavdevice</device>
+   <uri>silence:500</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="wavdevice">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>1</channels>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters>
+  <filter xsi:type="apex:dataloop" id="noisegen">
+   <device>wavdevice</device>
+   <channels>1</channels>
+   <continuous>false</continuous>
+   <datablock>noisedata</datablock>
+   <basegain>0</basegain>
+   <gain>0</gain>
+   <randomjump>true</randomjump>
+  </filter>
+  <filter xsi:type="apex:amplifier" id="amplifier">
+   <device>wavdevice</device>
+   <channels>1</channels>
+   <basegain>0</basegain>
+   <gain id="gain">0</gain>
+  </filter>
+ </filters>
+ <stimuli>
+  <fixed_parameters>
+   <parameter id="sentence"/>
+  </fixed_parameters>
+  <stimulus id="stimulus_sentence1">
+   <datablocks>
+    <sequential>
+     <datablock id="silence"/>
+     <datablock id="datablock_sentence1"/>
+     <datablock id="silence"/>
+    </sequential>
+   </datablocks>
+   <fixedParameters>
+    <parameter id="sentence">This is <b>sentence</b>
+     <b>one</b>
+    </parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus_sentence2">
+   <datablocks>
+    <sequential>
+     <datablock id="silence"/>
+     <datablock id="datablock_sentence2"/>
+     <datablock id="silence"/>
+    </sequential>
+   </datablocks>
+   <fixedParameters>
+    <parameter id="sentence">This is <b>sentence</b>
+     <b>two</b>
+    </parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus_sentence3">
+   <datablocks>
+    <sequential>
+     <datablock id="silence"/>
+     <datablock id="datablock_sentence3"/>
+     <datablock id="silence"/>
+    </sequential>
+   </datablocks>
+   <fixedParameters>
+    <parameter id="sentence">This is <b>sentence</b>
+     <b>three</b>
+    </parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus_sentence4">
+   <datablocks>
+    <sequential>
+     <datablock id="silence"/>
+     <datablock id="datablock_sentence4"/>
+     <datablock id="silence"/>
+    </sequential>
+   </datablocks>
+   <fixedParameters>
+    <parameter id="sentence">This is <b>sentence</b>
+     <b>four</b>
+    </parameter>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus_sentence5">
+   <datablocks>
+    <sequential>
+     <datablock id="silence"/>
+     <datablock id="datablock_sentence5"/>
+     <datablock id="silence"/>
+    </sequential>
+   </datablocks>
+   <fixedParameters>
+    <parameter id="sentence">This is <b>sentence</b>
+     <b>five</b>
+    </parameter>
+   </fixedParameters>
+  </stimulus>
+ </stimuli>
+ <connections>
+  <connection>
+   <from>
+    <id>_ALL_</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>amplifier</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>amplifier</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+  <connection>
+   <from>
+    <id>noisegen</id>
+    <channel>0</channel>
+   </from>
+   <to>
+    <id>wavdevice</id>
+    <channel>0</channel>
+   </to>
+  </connection>
+ </connections>
+ <results>
+  <page>apex:resultsviewer.html</page>
+  <resultparameters>
+   <parameter name="reversals for mean">4</parameter>
+  </resultparameters>
+  <showduringexperiment>false</showduringexperiment>
+  <showafterexperiment>true</showafterexperiment>
+  <saveprocessedresults>true</saveprocessedresults>
+ </results>
+ <interactive>
+  <entry description="SNR start value" expression="/apex:apex/procedure/parameters/start_value" default="4" type="int"/>
+ </interactive>
 </apex:apex>

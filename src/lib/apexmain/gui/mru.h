@@ -17,83 +17,81 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef MRUH_H
-#define MRUH_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_MRU_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_GUI_MRU_H_
 
-#include <qobject.h>
-#include <qaction.h>
-#include <vector>
+#include <QObject>
+#include <QAction>
 
 class QString;
 class QMenu;
 
 namespace apex
 {
-    /**
+/**
       * Derived QAction that emits Activated with it's text
       ***************************************************** */
-  class MRUAction : public QAction
-  {
-      Q_OBJECT
-  public:
+class MRUAction : public QAction
+{
+    Q_OBJECT
+public:
     MRUAction( QObject* a_pParent, const QString& ac_sText ) :
-     QAction( a_pParent )
+        QAction( a_pParent )
     {
-      QAction::setText( ac_sText );
-      connect( this, SIGNAL(triggered() ), this, SLOT( Activated() ) );
+        QAction::setText( ac_sText );
+        connect( this, SIGNAL(triggered() ), this, SLOT( Activated() ) );
     }
     virtual ~MRUAction()
     {}
 
-  signals:
+signals:
     void Activated( const QString& );
 
-  private slots:
+private slots:
     virtual void Activated()
     { emit Activated( QAction::text() ); }
-  };
+};
 
-    /**
+/**
       * Class with simple MRU functionality
       *   inserts seperator and strings added to menu
       *   emits text of item clicked
       *********************************************** */
-  class MRU : public QObject
-  {
+class MRU : public QObject
+{
     Q_OBJECT
-  public:
-    MRU( QMenu* const ac_pMenuToMru );
+public:
+    MRU(QMenu* const menuToMRU);
     ~MRU();
 
-      //load/save the list from/to an ini file
-    void mp_LoadFromFile( const QString& ac_sFile );
-    void mp_SaveToFile( const QString& ac_sFile );
+    void loadFromFile();
 
-      //get/set the open dir (doesn't affect the menu but is handy to store in file)
-    void mp_SetOpenDir( const QString& ac_sFile );
-    const QString& mf_sGetOpenDir() const;
+    //get/set the open dir (doesn't affect the menu but is handy to store in file)
+    void setOpenDir(const QString& file);
+    const QString& openDir() const;
 
-    void mp_AddItem( const QString& ac_sItem, const bool ac_bEnable = true );
-    void mp_RemoveItem( const QString& ac_sItem );
+    void enable(const bool enable);
 
-      //!will also remove seperator
-    void mp_RemoveAllItems();
+    QStringList items(bool filterNonExistingFiles=true) const;
 
-    void mf_Enable( const bool ac_bEnable );
+public slots:
+    void addAndSave(const QString& item, const bool enable = true);
 
-    QStringList items() const;
+signals:
+    void Released(const QString& fileName);
 
-    typedef std::vector<MRUAction*> mt_MRUvector;
+private:
+    typedef QVector<MRUAction*> MRUvector;
 
-  signals:
-    void Released( const QString& ac_sFileName );
+    QMenu* const m_menu;
+    MRUvector* const m_items;
+    QString m_openDirName;
 
-  private:
-    QMenu* const   mc_pMenu;
-    mt_MRUvector* const mc_pList;
-    QString             mv_sOpenDir;
-  };
+    void addItem(const QString& item, const bool enable = true);
+    void saveToFile();
+    void removeAllItems();
+};
 
 }
 
-#endif //#ifndef MRUH_H
+#endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_MRU_H_

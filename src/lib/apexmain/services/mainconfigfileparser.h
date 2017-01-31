@@ -17,20 +17,26 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef MAINCONFIGFILEPARSERSERVICE_H
-#define MAINCONFIGFILEPARSERSERVICE_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SERVICES_MAINCONFIGFILEPARSER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SERVICES_MAINCONFIGFILEPARSER_H_
 
-#include "version.h"
+#include "../configfileparser.h"
 
-#include "services/servicemanager.h"
-#include "services/paths.h"
-#include "configfileparser.h"
+#include "apexdata/mainconfigfiledata.h"
 
+#include "apextools/global.h"
+
+#include "apextools/services/paths.h"
+#include "apextools/services/servicemanager.h"
+
+#include "apextools/version.h"
+
+#include "apextools/xml/xercesinclude.h"
+
+#include <map>
 #include <memory>
 #include <string>
-#include <map>
 
-#include "xml/xercesinclude.h"
 namespace XERCES_CPP_NAMESPACE
 {
   class DOMElement;
@@ -42,7 +48,7 @@ namespace apex {
         class SndDriversMap;
     }
 
-    class MainConfigFileParser: public ConfigFileParser, public Service<MainConfigFileParser> {
+    class APEX_EXPORT MainConfigFileParser: public ConfigFileParser, public Service<MainConfigFileParser> {
     public:
         MainConfigFileParser();
         virtual bool CFParse();
@@ -52,14 +58,9 @@ namespace apex {
             return "Configuration";
         }
 
-        const QString& GetPerlPath() { return m_perl_path; };
-        const QString& GetXsltOnlinePath() { return m_xslt_path_online; };
-        const QString GetPluginScriptLibrary();
-        const stimulus::SndDriversMap* GetSoundCardDrivers() const;
-
-        const QString GetPrefix(const QString& p_id);
-
         ~MainConfigFileParser();
+
+        const data::MainConfigFileData& data() const;
 
     protected:
         virtual const QString getConfigfileNamespace()
@@ -71,18 +72,10 @@ namespace apex {
         virtual bool upgradeFrom(QDomDocument& doc, const QVector<int>& v);
 
     private:
-        void ParsePrefixes(XERCES_CPP_NAMESPACE::DOMElement* p_root);
-
         static const int m_configfileVersion = 1;
-        QString m_schemas_path;
-        QString m_experiment_schema;
-        QString m_perl_path;
-        QString m_scripts_path;
-        QString m_xslt_path_online;
-        QString m_plugins_path;
-        QString m_plugin_script_library;
-        std::auto_ptr<stimulus::SndDriversMap> m_SndDrivers;
-        std::map<QString,QString> m_prefixes;
+        void ParsePrefixes(XERCES_CPP_NAMESPACE::DOMElement* p_root);
+        data::MainConfigFileData m_data;
+
 
     };
 

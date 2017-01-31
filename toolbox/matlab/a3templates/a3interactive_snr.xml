@@ -1,0 +1,1 @@
+<entry type="int" description="Fixed SNR value" expression="/apex:apex/filters/filter[@id='amplifier']/gain" default="0" />

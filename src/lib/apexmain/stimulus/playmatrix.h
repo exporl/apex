@@ -17,10 +17,11 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apextypedefs.h"
-#include "streamapptypedefs.h"
+#include "apextools/apextypedefs.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "streamapptypedefs.h"
 
 using namespace xercesc;
 

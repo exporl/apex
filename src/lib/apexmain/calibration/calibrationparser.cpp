@@ -16,17 +16,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "xml/apexxmltools.h"
-#include "xml/xmlkeys.h"
-#include "calibrationparser.h"
-#include "exceptions.h"
+#include "apexdata/calibration/calibrationdata.h"
+#include "apexdata/calibration/soundlevelmeterdata.h"
+
+#include "apextools/exceptions.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmlkeys.h"
+
 #include "parser/simpleparametersparser.h"
 
-#include "xml/xercesinclude.h"
-
-//from libdata
-#include "calibration/calibrationdata.h"
-#include "calibration/soundlevelmeterdata.h"
+#include "calibrationparser.h"
 
 using namespace apex::ApexXMLTools;
 using namespace XERCES_CPP_NAMESPACE;

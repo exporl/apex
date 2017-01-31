@@ -24,15 +24,36 @@
 #ifndef __TYPEDEFS_H__
 #define __TYPEDEFS_H__
 
+#include <QLoggingCategory>
+#include <QString>
+
 #include <map>
 #include <string>
 #include <vector>
-#include <QString>
+
+Q_DECLARE_LOGGING_CATEGORY(APEX_SA)
+
+// TODO: workaround for missing defines on Qt 5.2, remove after switch to 16.04 LTS
+#if QT_VERSION < 0x050300
+#undef qCDebug
+#define qCDebug(category, ...) \
+    for (bool qt_category_enabled = category().isDebugEnabled(); qt_category_enabled; qt_category_enabled = false) \
+        QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO, category().categoryName()).debug(__VA_ARGS__)
+#undef qCWarning
+#define qCWarning(category, ...) \
+    for (bool qt_category_enabled = category().isWarningEnabled(); qt_category_enabled; qt_category_enabled = false) \
+        QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO, category().categoryName()).warning(__VA_ARGS__)
+#undef qCCritical
+#define qCCritical(category, ...) \
+    for (bool qt_category_enabled = category().isCriticalEnabled(); qt_category_enabled; qt_category_enabled = false) \
+        QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO, category().categoryName()).critical(__VA_ARGS__)
+#endif
 
 namespace streamapp
 {
 
   const QString sc_sDefault( "default" );     //!< "default" string
+  const QString sc_sFromGUI( "interactive" );     //!< "interactive" string
   const std::string sc_sNull( "" );               //!< null string
 
     /**
@@ -74,6 +95,7 @@ namespace streamapp
   typedef enum
   {
     gc_eMessage,
+    gc_eInfo,
     gc_eWarning,
     gc_eError,
     gc_eCritical,

@@ -17,11 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "../../utils/tracer.h"
+
 #include "linux_headers.h"
-#include "utils/tracer.h"
+
 #include <stdarg.h>
-#include <iostream>
 #include <stdio.h>
+
+#include <iostream>
 
 namespace
 {

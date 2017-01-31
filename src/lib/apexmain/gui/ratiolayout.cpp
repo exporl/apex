@@ -56,7 +56,7 @@ int RatioLayoutPrivate::doLayout (const QRect &rect, bool activate) const
 
     int newHeight = rect.height();
     int newWidth = rect.width();
-    
+
     if (rectRatio > ratio)
         newHeight = int(ratio * rect.width());
     else

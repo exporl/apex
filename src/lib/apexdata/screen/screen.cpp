@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
+#include "apextools/apextools.h"
+
+#include "buttongroup.h"
+#include "gridlayoutelement.h"
 #include "screen.h"
 
-#include "gridlayoutelement.h"
-#include "buttongroup.h"
-
-#include "apextools.h"
 namespace apex
 {
 namespace data

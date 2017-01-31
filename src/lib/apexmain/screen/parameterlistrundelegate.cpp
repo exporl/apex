@@ -16,27 +16,30 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "parameterlistrundelegate.h"
 
-#include "screen/parameterlistelement.h"
-#include "screen/screenrundelegate.h"
-#include "stimulus/stimulusparameters.h"
-#include "stimulus/stimulus.h"
+#include "apexdata/screen/parameterlistelement.h"
 
-#include "runner/experimentrundelegate.h"
+#include "apexdata/stimulus/stimulusparameters.h"
+
 #include "parameters/parametermanager.h"
 
-#include <QList>
+#include "runner/experimentrundelegate.h"
+
+#include "screen/screenrundelegate.h"
+
+#include "stimulus/stimulus.h"
+
+#include "parameterlistrundelegate.h"
+
 #include <QAbstractTableModel>
 #include <QHeaderView>
-
-#include <assert.h>
+#include <QList>
 
 namespace
 {
     struct ModelData
     {
+        QString id;
         QString name;
         QString value;
     };
@@ -58,6 +61,8 @@ public:
     QVariant headerData(
         int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
     void dataChanged();
+
+    int rowIndex(const QString& id);
 };
 
 int ParameterListRunDelegate::Model::rowCount( const QModelIndex& index ) const {
@@ -74,7 +79,16 @@ int ParameterListRunDelegate::Model::columnCount( const QModelIndex& index ) con
 }
 
 void ParameterListRunDelegate::Model::dataChanged() {
-    reset();
+    beginResetModel();
+    endResetModel();
+}
+
+int ParameterListRunDelegate::Model::rowIndex(const QString &id)
+{
+    for (int i=0; i<length(); ++i)
+        if (at(i).id == id)
+            return i;
+    return -1;
 }
 
 QVariant ParameterListRunDelegate::Model::data(
@@ -88,7 +102,7 @@ QVariant ParameterListRunDelegate::Model::data(
     case 1:
         return at( index.row() ).value;
     default:
-        assert( false );
+        Q_ASSERT( false );
         return QVariant();
     }
 }
@@ -155,8 +169,32 @@ ParameterListRunDelegate::ParameterListRunDelegate(
     setStyleSheet(element->getStyle());
     setModel( model );
     verticalHeader()->hide();
-    horizontalHeader()->setClickable( false );
+#if QT_VERSION < 0x050000
+    horizontalHeader()->setClickable(false);
+#else
+    horizontalHeader()->setSectionsClickable( false );
+#endif
     resizeColumnsToContents();
+
+
+    for ( ParameterListElement::ParameterListT::const_iterator it=
+          element->getParameterList().begin();
+          it!=element->getParameterList().end(); ++it)
+    {
+        ModelData d;
+
+        d.name = (*it).GetName();
+        d.id = (*it).id;
+        model->push_back( d );
+    }
+    model->dataChanged();
+    resizeColumnsToContents();
+
+    ParameterManager* mgr = p_exprd->GetParameterManager();
+    connect(mgr, SIGNAL(parameterChanged(QString, QVariant)),
+            this, SLOT(updateParameter(QString, QVariant)));
+
+    // FIXME: set initial parameter values
 }
 
 ParameterListRunDelegate::~ParameterListRunDelegate()
@@ -168,45 +206,30 @@ QWidget* ParameterListRunDelegate::getWidget()
     return this;
 }
 
-void ParameterListRunDelegate::newStimulus( stimulus::Stimulus* stimulus )
+//void ParameterListRunDelegate::newStimulus( stimulus::Stimulus* stimulus )
+void ParameterListRunDelegate::updateParameter(const QString& id,
+                                                const QVariant& value)
 {
-#ifdef PRINTPARAMETERLIST
-    qDebug("ApexParameterlist::NewStimulus: Getting parameters from stimulus id=" + stimulus->GetID());
-#endif
-    model->clear();
-    /*const data::StimulusParameters* varParam = stimulus->GetVarParameters();
-    const data::StimulusParameters* fixParam = stimulus->GetFixParameters();*/
+    QString newValue(value.toString());
 
-    for ( ParameterListElement::ParameterListT::const_iterator it=
-              element->getParameterList().begin();
-          it!=element->getParameterList().end(); ++it)
-    {
-        ModelData d;
-        QVariant value;
+    for (int i=0; i<model->length(); ++i) {
+        if (model->at(i).id == id) {
 
-        /*QVariant pmvalue( m_rd->GetParameterManager()->parameterValue((*it).id));
-        if (pmvalue.isValid()){
-            value=pmvalue.toString();
-        } else if ( varParam->contains((*it).id))
-        {
-            value=varParam->value((*it).id).toString();
-        } else if (fixParam->contains((*it).id)) {
-            value=fixParam->value((*it).id).toString();
-        }*/
+            QString expression( element->getParameterList().at(i).expression );
+            if (! expression.isEmpty()) {
+                newValue=QString::number( ParseExpression(expression,
+                                                          value.toDouble()));
+            } else {
+                newValue=value.toString();
+            }
 
-        value = parameterValue(stimulus,  m_rd->GetParameterManager(), (*it).id);
-
-        if (! (*it).expression.isEmpty()) {
-            double newvalue=ParseExpression((*it).expression,value.toDouble());
-            value=QString::number(newvalue);
+            model->operator[](i).value = newValue;
         }
-
-        d.name = (*it).GetName();
-        d.value = value.toString();
-        model->push_back( d );
     }
+
     model->dataChanged();
     resizeColumnsToContents();
+
 }
 
 const ScreenElement* ParameterListRunDelegate::getScreenElement() const
@@ -214,11 +237,11 @@ const ScreenElement* ParameterListRunDelegate::getScreenElement() const
     return element;
 }
 
-void ParameterListRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
+/*void ParameterListRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
 {
     connect( d, SIGNAL( newStimulus( stimulus::Stimulus* ) ),
              this, SLOT( newStimulus( stimulus::Stimulus* ) ) );
-}
+}*/
 
 }
 }

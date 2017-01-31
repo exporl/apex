@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "labelrundelegate.h"
 
-#include "apextools.h"
+#include "apexdata/screen/labelelement.h"
 
-#include "screen/labelelement.h"
+#include "apextools/apextools.h"
+
 #include "gui/guidefines.h"
+
+#include "labelrundelegate.h"
 
 namespace apex
 {
@@ -35,7 +36,7 @@ namespace rundelegates
     : LabelRunDelegateBase( p_exprd, parent, e, defaultFont ), element( e )
 {
     setObjectName(element->getID());
-    
+
     setText( e->getText() );
 
      // set minimum size hint
@@ -44,7 +45,7 @@ namespace rundelegates
     // font with minimum size:
     QFont minfont(font());
     minfont.setPointSize(10);
-    
+
     QStringList l( e->getText().split("\n"));
     int maxlen=0;
     int pos=-1;
@@ -60,7 +61,7 @@ namespace rundelegates
     setMinimumWidth( fm.width(l.at(pos)));
     setMinimumHeight( (fm.height()+fm.lineSpacing())*l.size());
 
-    
+
 }
 
 const ScreenElement* LabelRunDelegate::getScreenElement() const

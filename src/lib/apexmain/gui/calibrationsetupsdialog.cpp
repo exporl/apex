@@ -210,6 +210,12 @@ void CalibrationSetupsDialogPrivate::on_list_currentItemChanged()
     ui.remove->setEnabled (item != NULL);
     ui.exportSetup->setEnabled (item != NULL);
     checkRenameButton();
+
+    if(item != NULL && database.isGlobal(item->text().mid(0, item->text().indexOf(" ")))) {
+        ui.remove->setDisabled(true);
+        ui.rename->setDisabled(true);
+    }
+
     ui.detailsList->clear();
     if (item) {
         const QString setup = item->data (setupNameRole).toString();

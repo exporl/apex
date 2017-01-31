@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "systemutils.h"
 #include <fstream>
 #include <iostream>
@@ -46,7 +46,7 @@ bool systemutils::f_bCopyFile( const std::string& ac_sInputFile, const std::stri
   while( readBytes == sc_nBufferSize )
   {
     inFileStream.read( buff, sc_nBufferSize );
-    readBytes = inFileStream.gcount();
+    readBytes = (int)inFileStream.gcount();
     outFileStream.write( buff, readBytes );
   }
   inFileStream.close();
@@ -61,7 +61,7 @@ bool systemutils::f_bFileExists( const std::string& ac_sFile )
     return false;
   inFileStream.close();
   return true;
-}  
+}
 
 bool systemutils::f_bClearFile( const std::string& ac_sFile )
 {

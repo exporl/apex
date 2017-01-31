@@ -17,26 +17,20 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-//original includes, needed when this file gets pût back in the "datablock" dir
-// #include "datablockswriter.h"
-// #include "fileprefixwriter.h"
-// #include "datablocksdata.h"
-// #include "xml/apexxmltools.h"
+#include "apexdata/datablock/datablockdata.h"
+#include "apexdata/datablock/datablocksdata.h"
 
-//temp includes
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
 #include "datablockswriter.h"
 #include "fileprefixwriter.h"
-#include "datablock/datablocksdata.h"
-#include "datablock/datablockdata.h"
-#include "xml/apexxmltools.h"
 
 #include <QUrl>
 
+using namespace XERCES_CPP_NAMESPACE;
 using namespace apex;
 using namespace apex::ApexXMLTools;
-
-#include "xml/xercesinclude.h"
-using namespace XERCES_CPP_NAMESPACE;
 
 using apex::data::DatablockData;
 using apex::data::DatablocksData;
@@ -56,7 +50,7 @@ DOMElement* DatablocksWriter::addElement(DOMDocument* doc, const data::Datablock
 
     for (DatablocksData::const_iterator it = d.begin(); it != d.end(); ++it)
     {
-        //qDebug("Creating datablock node");
+        //qCDebug(APEX_RS, "Creating datablock node");
 
         DOMElement* datablock = doc->createElement(X("datablock"));
         datablocks->appendChild(datablock);
@@ -76,10 +70,6 @@ DOMElement* DatablocksWriter::addElement(DOMDocument* doc, const data::Datablock
             datablock->appendChild(
                 XMLutils::CreateTextElement(doc, "description" , d->description()));
         }
-
-        if (!d->birth().isNull())
-            datablock->appendChild(
-                XMLutils::CreateTextElement(doc, "birth" , d->birth()));
 
         if (!d->checksum().isEmpty())
             datablock->appendChild(

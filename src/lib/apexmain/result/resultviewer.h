@@ -17,14 +17,16 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef APEXRESULTVIEWER_H
-#define APEXRESULTVIEWER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RESULT_RESULTVIEWER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RESULT_RESULTVIEWER_H_
 
-#include <qstring.h>
-#include <qobject.h>
+#include "apextools/global.h"
+
 #include <QByteArray>
-#include <QUrl>
 #include <QDialog>
+#include <QObject>
+#include <QString>
+#include <QUrl>
 
 class Ui_ResultViewer;
 
@@ -39,39 +41,29 @@ namespace apex {
     /**
       @author Tom Francart,,,
       */
-    class ResultViewer: public QObject {
+    class APEX_EXPORT ResultViewer: public QObject {
         Q_OBJECT                                        // we use the tr() function
     public:
         ResultViewer(const data::ResultParameters* p_param,
-                const QString& p_resultfile,
-                const QString& p_xsltpath=QString());
+                const QString& p_resultfile);
         void show(bool ask);
         bool addtofile( const QString& p_filename);
-        bool ProcessResult();
-        const QString GetResultHtml() const;
 
         ~ResultViewer();
 
     private:
-        bool ProcessResultXslt();
         bool ProcessResultJavascript();
+        bool findResultPage();          // Look for result page in results file, using tag <jscript>
+        QByteArray createCSVtext();
 
-        void showXslt();
         void showJavascript();
 
         void setupDialog();
         void showDialog();
 
         const data::ResultParameters* m_pParam;
-        QString m_sResultfile;
-        QString m_sXsltPath;
-        QUrl m_resultPagePath;
-
-        QByteArray m_result_html;
-        QByteArray m_result_text;
-
-        bool m_xsltOK;
-        bool m_javascriptOK;
+        QString m_sResultfile;          // Results file that is currently being used
+        QUrl m_resultPagePath;          // HTML page to show results
 
         RTResultSink* m_rtr;
         QDialog* m_dialog;

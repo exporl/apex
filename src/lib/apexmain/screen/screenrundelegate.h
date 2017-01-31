@@ -17,17 +17,18 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SCREENRUNDELEGATE_H
-#define SCREENRUNDELEGATE_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_SCREENRUNDELEGATE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_SCREENRUNDELEGATE_H_
 
-#include "apextypedefs.h"
-#include "screen/screenelement.h"
+#include "apexdata/screen/screenelement.h"
+
+#include "apextools/apextypedefs.h"
+
 #include "screen/rundelegatedefines.h"
 #include "screen/screenelementrundelegate.h"
-//#include "elementfactory.h"
 
-#include <QObject>
 #include <QLayout>
+#include <QObject>
 
 #include <memory>
 
@@ -117,7 +118,7 @@ class ScreenRunDelegate : public QObject
     private:
 
         QLayout* layout;
-        std::auto_ptr<QWidget> widget;
+        QScopedPointer<QWidget> widget;
 
         const data::Screen* screen;
         ScreenElementRunDelegate* feedbackElement;

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "apexparser.h"
 
 namespace apex {
@@ -35,8 +35,8 @@ Parser::~Parser()
 
 /**
  * Stub for experimentconfigfileparser method, to be removed FIXME
- * @param p_message 
- * @return 
+ * @param p_message
+ * @return
  */
 void Parser::AddStatusMessage( QString p_message ) {
     log().addMessage( "ExperimentConfigFileParser", p_message);

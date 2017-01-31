@@ -17,16 +17,19 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "file/wavefile.h"
-#include "utils/stringexception.h"
-#include "utils/stringutils.h"
-#include "utils/dataconversion.h"
-#include "utils/tracer.h"
-#include <core/containers/looplogic.h>
-#include "defines.h"
-#include <assert.h>
-#include <iostream>
+#include "../_fromv3/core/containers/looplogic.h"
+
+#include "../defines.h"
+
+#include "../file/wavefile.h"
+
+#include "../utils/dataconversion.h"
+#include "../utils/stringexception.h"
+#include "../utils/stringutils.h"
+#include "../utils/tracer.h"
+
 #include <cstring>
+#include <iostream>
 
 using namespace std;
 using namespace dataconversion;

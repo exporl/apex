@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef PARAMETERSCONTAINERRUNDELEGATE_H
-#define PARAMETERSCONTAINERRUNDELEGATE_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_PARAMETERSCONTAINERRUNDELEGATE_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_PARAMETERSCONTAINERRUNDELEGATE_H_
 
 #include "screenelementrundelegate.h"
 

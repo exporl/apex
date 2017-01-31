@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "apextimer.h"
 
 #include <QDateTime>
@@ -31,7 +31,7 @@ ApexTimer::ApexTimer(ExperimentRunDelegate& p_rd) :
 
 QString ApexTimer::GetResultXML( ) const
 {
-    //qDebug("ApexTimer::GetResultXML\n");
+    //qCDebug(APEX_RS, "ApexTimer::GetResultXML\n");
 
     QString temp("<responsetime unit='ms'>%1</responsetime>");
     temp = temp.arg(m_result);
@@ -42,14 +42,14 @@ QString ApexTimer::GetResultXML( ) const
 
 void ApexTimer::start()
 {
-    //qDebug("Starting timer");
+    //qCDebug(APEX_RS, "Starting timer");
     m_result=-1;
     m_time.restart();
 }
 
 void ApexTimer::stop()
 {
-    //qDebug("Stopping timer");
+    //qCDebug(APEX_RS, "Stopping timer");
     m_result = m_time.elapsed();
 }
 

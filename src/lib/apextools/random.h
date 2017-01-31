@@ -21,189 +21,34 @@
  * Java-style random generator declaration.
  */
 
-#ifndef _RBA_SRC_LIB_PLUMBING_RANDOM_H_
-#define _RBA_SRC_LIB_PLUMBING_RANDOM_H_
+#ifndef _EXPORL_SRC_LIB_APEXTOOLS_RANDOM_H_
+#define _EXPORL_SRC_LIB_APEXTOOLS_RANDOM_H_
+
+#include "common/global.h"
+#include "common/random.h"
 
 #include "global.h"
 
 namespace apex
 {
 
-class RandomPrivate;
-
-/** This class generates pseudorandom numbers. It uses the same algorithm as the
- * Java java.util.Random class, so that your programs behave exactly the same
- * way, if started with the same seed. The algorithm is described in <em>The Art
- * of Computer Programming, Volume 2</em> by Donald Knuth in Section 3.2.1. It
- * is a 48-bit seed, linear congruential formula. If two instances of this class
- * are created with the same seed and the same calls to these classes are made,
- * they behave exactly the same way. If you want to implement your own
- * pseudorandom algorithm, you should extend this class and overload the
- * #next() and #setSeed() methods. This class shouldn't be used for security
- * sensitive purposes (like generating passwords or encryption keys).
- */
-class APEXTOOLS_EXPORT Random
+class APEXTOOLS_EXPORT Random: public cmn::Random
 {
 public:
-    /** Creates a new pseudorandom number generator. The seed is initialized to
-     * the current time, as if by
-     * <tt>setSeed(QDateTime::currentDateTime().toTime_t());</tt>.
-     */
     Random();
+    Random(const Random& other);
+    Random(quint64 seed);
 
-    /** If true, seed will be 0 for all random generators instantiated from then on
-      */
-    static void setDeterministic(bool d);
+    unsigned nextUInt();
+    unsigned nextUInt(unsigned n);
 
-    /** Creates a new pseudorandom number generator, starting with the
-     * specified seed, using <code>setSeed(seed);</code>.
-     *
-     * @param seed the initial seed
-     */
-    Random (quint64 seed);
-
-    /** Virtual destructor to make the compiler happy. */
-    virtual ~Random();
-
-    /** Fills an array of bytes with random numbers. All possible values are
-     * (approximately) equally likely.
-     *
-     * @param bytes the byte array that should be filled
-     * @param size the number of random bytes that should be generated
-     */
-    void nextBytes (char *bytes, unsigned size) const;
-
-    /** Generates the next pseudorandom boolean. True and false have the same
-     * probability.
-     *
-     * @return the next pseudorandom boolean
-     */
-    bool nextBool() const;
-
-    /** Generates the next pseudorandom double uniformly distributed between 0.0
-     * (inclusive) and 1.0 (exclusive).
-     *
-     * @return the next pseudorandom double
-     */
-    double nextDouble() const;
-
-    /** Generates the next pseudorandom double uniformly distributed between the
-     * parameters @a min (inclusive) and @a max (exclusive).
-     *
-     * @param min minimum value for the pseudorandom double
-     * @param max maximum value for the pseudorandom double
-     * @return the next pseudorandom double from the given range
-     */
-    double nextDouble (double min, double max) const;
-
-    /** Generates the next pseudorandom float uniformly distributed
-     * between 0.0f (inclusive) and 1.0f (exclusive).
-     *
-     * @return the next pseudorandom float
-     */
-    float nextFloat() const;
-
-    /** Generates the next pseudorandom float uniformly distributed between the
-     * parameters @a min (inclusive) and @a max (exclusive).
-     *
-     * @param min minimum value for the pseudorandom float
-     * @param max maximum value for the pseudorandom float
-     * @return the next pseudorandom float from the given range
-     */
-    float nextFloat (double min, double max) const;
-
-    /** Generates the next pseudorandom, Gaussian (normally) distributed double
-     * value, with mean 0.0 and standard deviation 1.0.
-     *
-     * This is described in section 3.4.1 of <em>The Art of Computer
-     * Programming, Volume 2</em> by Donald Knuth.
-     *
-     * @return the next pseudorandom Gaussian distributed double
-     */
-    double nextGaussian() const;
-
-    /** Generates the next pseudorandom number. This returns an int value whose
-     * 32 bits are independent chosen random bits (0 and 1 are equally likely).
-     *
-     * @return the next pseudorandom value
-     */
-    int nextInt() const;
-
-    /** Generates the next pseudorandom number. This returns an unsigned value
-     * whose 32 bits are independent chosen random bits (0 and 1 are equally
-     * likely).
-     *
-     * @return the next pseudorandom value
-     */
-    unsigned nextUInt() const;
-
-    /** Generates the next pseudorandom number. This returns
-     * a value between 0(inclusive) and <code>n</code>(exclusive), and
-     * each value has the same likelihodd (1/<code>n</code>).
-     *
-     * The algorithm would return every value with exactly the same probability,
-     * if the #next()-method would be a perfect random number generator.
-     *
-     * The loop at the bottom of the implementation only accepts a value, if the
-     * random number was between 0 and the highest number less then 1<<32, which
-     * is divisible by n. The probability for this is high for small n, and the
-     * worst case is 1/2 (for n=(1<<31)+1).
-     *
-     * A special treatment for n = power of 2, selects the high bits of the
-     * random number (the loop at the bottom would select the low order bits).
-     * This is done, because the low order bits of linear congruential number
-     * generators (like the one used in this class) are known to be "less
-     * random" than the high order bits.
-     *
-     * @param n the upper bound
-     * @return the next pseudorandom value
-     */
-    unsigned nextUInt (unsigned n) const;
-
-    unsigned operator()(unsigned n) const;
-
-    /** Generates the next pseudorandom long long (64 bit) number. All bits of
-     * this long are independently chosen and 0 and 1 have equal likelihood.
-     *
-     * @return the next pseudorandom value
-     */
-    qint64 nextLongLong() const;
-
-    /** Generates the next pseudorandom unsigned long long (64 bit) number. All
-     * bits of this long are independently chosen and 0 and 1 have equal
-     * likelihood.
-     *
-     * @return the next pseudorandom value
-     */
-    quint64 nextULongLong() const;
-    unsigned nextULongLong(const quint64 n) const;
-
-    /** Sets the seed for this pseudorandom number generator.  As described
-     * above, two instances of the same random class, starting with the same
-     * seed, should produce the same results, if the same methods are called.
-     *
-     * @param seed the new seed
-     */
-    virtual void setSeed (quint64 seed);
-
-
-protected:
-    /**
-     * Generates the next pseudorandom number.  This returns an unsigned value
-     * whose <code>bits</code> low order bits are independent chosen random bits
-     * (0 and 1 are equally likely).
-     *
-     * @param bits the number of random bits to generate, in the range 1..32
-     * @return the next pseudorandom value
-     */
-    virtual unsigned next (unsigned bits) const;
+    unsigned operator()(unsigned n);
 
 private:
-    RandomPrivate *d;
-    static bool deterministic;
+    DECLARE_PRIVATE(cmn::Random)
 };
 
-} // namespace rba
+} // namespace cmn
 
 #endif
 

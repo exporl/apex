@@ -17,48 +17,20 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef CORRECTOR_H
-#define CORRECTOR_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_CORRECTOR_CORRECTOR_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_CORRECTOR_CORRECTOR_H_
 
-#include "apexmodule.h"
-#include "comparator.h"
-
-#include <memory>
+#include <QVariant>
 
 namespace apex {
-    namespace data
-    {
-    class CorrectorData;
-    }
-    class ScreenResult;
 
-    class Corrector : public ApexModule {
-        Q_OBJECT
-    public:
-        Corrector (ExperimentRunDelegate& p_rd, const data::CorrectorData* data );
-        virtual QString GetResultXML() const;
+class Corrector
+{
+public:
+    virtual const QVariant compare(const QVariant& a, const QVariant& b) const=0;
+    virtual ~Corrector() {}
+};
 
-    public:
-        virtual bool Correct (const ScreenResult& p_answer);
-        virtual bool GetLastResult() const { return m_currentResult; };
-
-        virtual const QString GetCorrectAnswer (unsigned p_position = 0) const;
-
-    public slots:
-
-        virtual void SetCorrectAnswer (const unsigned p_answer);
-        virtual void SetComparator (Comparator* comparator);
-
-    protected:
-        bool Compare (const QString& m1, const QString& m2);
-        const data::CorrectorData* const data;
-        bool m_currentResult;
-
-        QString m_currentAnswer;
-        QString m_correctAnswer;
-    private:
-        std::auto_ptr<Comparator> comparator;
-    };
-}
+} // ns apex
 
 #endif

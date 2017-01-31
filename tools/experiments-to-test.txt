@@ -1,0 +1,99 @@
+#This file shouldn't contain multi procedures with training procedures in it, because the behaviour of the resultschecker is dependent on the type of the main procedure. Otherwise it will mistake a training procedure for a multi procedure.
+#If the new keyword is present, the test will be run without upgrading the xml, i.e. it uses the 3.1.0 file.
+procedure/adaptive-1up-1down.apx new
+procedure/adaptive-1up-2down.apx new
+procedure/adaptive-2up-1down.apx new
+procedure/choices-randomstimulus-randomstandard.apx noresults new
+procedure/soundquality.xml new
+randomgenerator/multi-interval.xml new
+#Part without new keyword, these files will be upgraded
+connections/connections-all-mixed-monostereo.xml
+#connections/connections-byname-invalid.xml #invalid xml
+connections/connections-byname.xml
+connections/connections-byregexp.xml
+connections/connections-bywildcard.xml
+connections/connections-stereo2mono.xml
+controller/plugincontroller.xml
+filters/amplifier-defaultparameters.xml
+#filters/complexprocessing.xml #Behaviour of button without trial in master is different from the behaviour in procedure-refactory
+filters/dataloop-2simultaneous.xml
+filters/dataloop-jump.xml
+filters/dataloop.xml
+filters/filters-onlyfilter.xml
+filters/filters-singlepulsepolarity.xml
+filters/randomjump.xml
+filters/sinegenerator.xml
+filters/singlepulse-defaultparameters.xml
+filters/wavamplifier.xml
+filters/wavfadeincos.xml
+filters/wavfadeinlin.xml
+filters/wavfadeoutcos.xml
+filters/wavfadeoutlin.xml
+general/scriptparameters.apx
+l34/simpleQIC.xml
+parameters/connectionparameter.xml
+#parameters/connectionparameterfilter.xml #expects a calibration
+parameters/devicechannelparameter.xml
+parameters/deviceparameter.xml
+parameters/filterchannelparameter.xml
+parameters/filterchannelparameter2.xml
+parameters/filterparameter.xml
+parameters/restoreparameter.xml
+parameters/spinboxparameter.xml
+#parameters/wavfadeinout.xml #not enough channels
+procedure/adaptive_stopafter_presentations.xml
+procedure/adaptive_stopafter_reversals.xml
+procedure/adaptive_stopafter_trials.xml
+procedure/adp1.xml
+procedure/afc-choices.xml
+procedure/afc-uniquestandard.xml
+procedure/aid-selectrandom.xml
+procedure/aid1.xml
+procedure/cst-multistimulus.xml
+procedure/extrasimple.apx
+#procedure/heartrainprocedure_short.apx #soundcard not found
+procedure/idn1-mono.apx
+procedure/idn1-skip.apx
+procedure/idn1.apx
+procedure/idn2-skip.apx
+procedure/idn2.apx
+procedure/multiparameters-fixed.xml
+procedure/multiparameters-variable.xml
+procedure/multiprocedure-aid.xml
+procedure/multiprocedure-idn.xml
+procedure/multiprocedure-mixed.xml
+procedure/multiprocedure-onebyone.xml
+procedure/multiprocedure-random.xml
+#procedure/multiprocedure-train-train.xml #Behaviour of button without trial in master is different from the behaviour in procedure-refactory
+procedure/multiprocedure.xml
+procedure/multistandard-unique.xml
+procedure/noanswer.apx
+procedure/pause_between_stimuli.xml
+procedure/pluginprocedure.apx
+procedure/randomchannel.xml
+procedure/repeatuntillcorrect-endaftertrials.xml
+procedure/repeatuntillcorrect-multitrial.xml
+procedure/repeatuntillcorrect-singletrial.xml
+procedure/selectrandom.xml
+procedure/stepsizes/a.xml
+procedure/stepsizes/after-reversals.xml
+procedure/stepsizes/b.xml
+#procedure/stepsizes/c.xml #invalid xml
+procedure/time-between-trials.apx
+procedure/train1.xml
+procedure/train2.xml
+procedure/uniform-double.xml
+procedure/uniform-int.xml
+randomgenerator/randomchannel.xml
+randomgenerator/uniform-double.xml
+randomgenerator/uniform-int.xml
+randomgenerator/uniform-smallint.xml
+#screenplugin/screenplugin-emptyresult.apx #empty javascript
+xmlplugin/autostimulus.apx
+xmlplugin/autotrials.apx
+xmlplugin/datablockplugin.apx
+xmlplugin/datablockplugin_l34.apx
+xmlplugin/screenplugin-multiscreen.apx
+xmlplugin/screenplugin.apx
+xmlplugin/stimulusplugin.apx
+#Needed so the last experiment will be run

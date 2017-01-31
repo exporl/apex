@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "streamappfactory.h"
 #include "stream.h"
 #include "audioformatstream.h"
@@ -29,14 +29,16 @@
 using namespace utils;
 using namespace streamapp;
 
+Q_LOGGING_CATEGORY(APEX_SA, "apex.streamapp")
+
 StreamAppFactory::StreamAppFactory() :
   mv_nChannels        (  2         ),
   mv_bNormalize       (  true     ),
   mv_bDeleteSources   (  true      ),
   mv_nBufferSize      (  512       ),
-  mv_nSampleRate      (  44100     ), 
+  mv_nSampleRate      (  44100     ),
 //  mv_bAllowResampling (  false     ),
-  mv_eBitMode         (  AudioFormat::MSBint16   )  
+  mv_eBitMode         (  AudioFormat::MSBint16   )
 {
 
 }
@@ -87,7 +89,7 @@ PositionableInputStream* StreamAppFactory::mf_pSilentStream(  const unsigned ac_
     throw StringException( "InputWaveFile : couldn't open " + ac_sName );
   }
   return new PositionableAudioFormatReaderStream( p, ac_nBufferSize, mv_bNormalize, true );
-}  
+}
 
 OutputStream*             StreamAppFactory::mf_pWriterStream( const std::string& ac_sName )
 {
@@ -109,7 +111,7 @@ AudioFormatWriter* StreamAppFactory::mf_pWriter( const std::string& ac_sName, co
     throw StringException( "OutputWaveFile : couldn't open " + ac_sName );
   }
   return p;
-} 
+}
 
 OutputStream* StreamAppFactory::mf_pWriterStream( const std::string& ac_sName, const unsigned ac_nChannels, const unsigned ac_nSampleRate, const unsigned ac_nBufferSize, const AudioFormat::mt_eBitMode ac_eBitMode )
 {
@@ -147,5 +149,5 @@ InputStream*              StreamAppFactory::mf_pSoundCardIn( const ISoundCard& a
 
 OutputStream*             StreamAppFactory::mf_pSoundCardOut( const ISoundCard& ac_SoundCard )
 {
-  return new AudioFormatWriterStream( ac_SoundCard.mf_pCreateWriter(), ac_SoundCard.mf_nGetBufferSize(), mv_bNormalize, true );  
+  return new AudioFormatWriterStream( ac_SoundCard.mf_pCreateWriter(), ac_SoundCard.mf_nGetBufferSize(), mv_bNormalize, true );
 }

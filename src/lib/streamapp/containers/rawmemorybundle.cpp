@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "rawmemorybundle.h"
+
 #include "utils/checks.h"
+
+#include "rawmemorybundle.h"
 
  #include <QtGlobal>        // Q_ASSERT
 

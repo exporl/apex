@@ -1,0 +1,340 @@
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.kuleuven.be/exporl/Lab/Apex ../../../../Checkouts/apex3/trunk/apex/schemas/apex-schema.xsd"
+ xmlns:apex="http://www.kuleuven.be/exporl/Lab/Apex"
+ version="1">
+
+    <procedure xsi:type="apex:pluginProcedureType">
+        <parameters>
+            <presentations>100</presentations>
+            <skip>0</skip>
+            <order>sequential</order>
+            <script>mwf-delta</script>
+        </parameters>
+        <trials>
+            <trial id="trial">
+                <screen id="screen"/>
+                <stimulus id="stimulus"/>
+            </trial>
+        </trials>
+    </procedure>
+
+    <corrector xsi:type="apex:isequal"/>
+
+    <screens>
+        <reinforcement>
+            <progressbar>true</progressbar>
+            <feedback length="300">false</feedback>
+        </reinforcement>
+
+        <screen id="screen">
+            <hLayout width="3">
+                <gridLayout height="5" id="main_layout" width="1" x="1">
+                    <button id="down" x="1" y="1">
+                        <text>snr down -2</text>
+                    </button>
+                    <button id="ddown" x="1" y="2">
+                        <text>snr down -10</text>
+                    </button>
+                    <button id="onoff" x="1" y="3">
+                        <text>wiener on/off</text>
+                     </button>
+                    <button id="up" x="1" y="4">
+                        <text>snr up +2</text>
+                     </button>
+                     <button id="uup" x="1" y="5">
+                        <text>snr up +10</text>
+                     </button>
+                </gridLayout>
+                <parameterlist id="pl" x="2">
+                    <parameter>signal-angle</parameter>
+                    <parameter>noise1-angle</parameter>
+                    <parameter>noise2-angle</parameter>
+                    <parameter>noise3-angle</parameter>
+                    <parameter>signal-gain</parameter>
+                    <parameter>snr-left</parameter>
+                    <parameter>snr-right</parameter>
+                    <parameter>wiener-noise-angle-left</parameter>
+                    <parameter>wiener-signal-angle-left</parameter>
+                    <parameter>wiener-noise-angle-right</parameter>
+                    <parameter>wiener-signal-angle-right</parameter>
+                    <parameter>disabled-left</parameter>
+                    <parameter>disabled-right</parameter>
+                </parameterlist>
+            </hLayout>
+
+            <buttongroup id="buttongroup">
+                <button id="up"/>
+                <button id="down"/>
+                <button id="onoff"/>
+                <button id="uup"/>
+                <button id="ddown"/>
+            </buttongroup>
+            <default_answer_element>buttongroup</default_answer_element>
+        </screen>
+    </screens>
+
+    <datablocks>
+        <datablock id="voice-data">
+            <device>wavdevice</device>
+            <description>sample raw datablock</description>
+            <uri>text.wav</uri>
+        </datablock>
+        <datablock id="noise1-data">
+            <device>wavdevice</device>
+            <description>sample raw datablock</description>
+            <uri>babble.wav</uri>
+        </datablock>
+        <datablock id="noise2-data">
+            <device>wavdevice</device>
+            <description>sample raw datablock</description>
+            <uri>babble.wav</uri>
+        </datablock>
+        <datablock id="noise3-data">
+            <device>wavdevice</device>
+            <description>sample raw datablock</description>
+            <uri>babble.wav</uri>
+        </datablock>
+    </datablocks>
+
+    <devices>
+        <device id="wavdevice" xsi:type="apex:wavDeviceType">
+            <driver>portaudio</driver>
+            <card>default</card>
+            <channels>2</channels>
+            <gain>0</gain>
+            <samplerate>44100</samplerate>
+            <buffersize>8192</buffersize>
+            <blocksize>16384</blocksize>
+        </device>
+    </devices>
+
+    <filters>
+        <filter id="signal-hrtffilter" xsi:type="apex:pluginfilter">
+            <device>wavdevice</device>
+            <channels>4</channels>
+            <continuous>false</continuous>
+            <plugin>hrtf</plugin>
+            <parameter id="signal-angle" name="angle">0</parameter>
+            <parameter name="uri">GHB_0_5s_20480_angle${angle}.bin</parameter>
+        </filter>
+        <filter id="noise1-hrtffilter" xsi:type="apex:pluginfilter">
+            <device>wavdevice</device>
+            <channels>4</channels>
+            <continuous>false</continuous>
+            <plugin>hrtf</plugin>
+            <parameter id="noise1-angle" name="angle">60</parameter>
+            <parameter name="uri">GHB_0_5s_20480_angle${angle}.bin</parameter>
+        </filter>
+        <filter id="noise2-hrtffilter" xsi:type="apex:pluginfilter">
+            <device>wavdevice</device>
+            <channels>4</channels>
+            <continuous>false</continuous>
+            <plugin>hrtf</plugin>
+            <parameter id="noise2-angle" name="angle">60</parameter>
+            <parameter name="uri">GHB_0_5s_20480_angle${angle}.bin</parameter>
+        </filter>
+        <filter id="noise3-hrtffilter" xsi:type="apex:pluginfilter">
+            <device>wavdevice</device>
+            <channels>4</channels>
+            <continuous>false</continuous>
+            <plugin>hrtf</plugin>
+            <parameter id="noise3-angle" name="angle">60</parameter>
+            <parameter name="uri">GHB_0_5s_20480_angle${angle}.bin</parameter>
+        </filter>
+        <filter id="signal-amplifier" xsi:type="apex:amplifier">
+            <device>wavdevice</device>
+            <channels>4</channels>
+            <continuous>false</continuous>
+            <basegain>10.7543</basegain>
+            <gain id="signal-gain">0</gain>
+        </filter>
+        <filter id="adder" xsi:type="apex:amplifier">
+            <device>wavdevice</device>
+            <channels>4</channels>
+            <continuous>false</continuous>
+            <gain>0</gain>
+        </filter>
+        <filter id="wienerfilter-left" xsi:type="apex:pluginfilter">
+            <device>wavdevice</device>
+            <channels>4</channels>
+            <continuous>false</continuous>
+            <plugin>wiener</plugin>
+            <parameter id="wiener-noise-angle-left" name="noise-angle">60</parameter>
+            <parameter id="wiener-signal-angle-left" name="signal-angle">0</parameter>
+            <parameter id="snr-left" name="snr">0</parameter>
+            <parameter id="disabled-left" name="disabled">false</parameter>
+            <parameter name="uri">S${signal-angle}N${noise-angle}/corr0mic_4mics_MWFfilter_eta_0_GHB_0_5s_L_96_vu_man__0_auditec_20480_${noise-angle}deg_mu_5_left_SNR${snr}.bin</parameter>
+        </filter>
+        <filter id="wienerfilter-right" xsi:type="apex:pluginfilter">
+            <device>wavdevice</device>
+            <channels>4</channels>
+            <continuous>false</continuous>
+            <plugin>wiener</plugin>
+            <parameter id="wiener-noise-angle-right" name="noise-angle">60</parameter>
+            <parameter id="wiener-signal-angle-right" name="signal-angle">0</parameter>
+            <parameter id="snr-right" name="snr">0</parameter>
+            <parameter id="disabled-right" name="disabled">false</parameter>
+            <parameter name="uri">S${signal-angle}N${noise-angle}/corr0mic_4mics_MWFfilter_eta_0_GHB_0_5s_L_96_vu_man__0_auditec_20480_${noise-angle}deg_mu_5_right_SNR${snr}.bin</parameter>
+        </filter>
+    </filters>
+
+    <stimuli>
+        <fixed_parameters/>
+        <stimulus id="stimulus">
+            <datablocks>
+                <simultaneous>
+                    <datablock id="voice-data"/>
+                    <datablock id="noise1-data"/>
+                    <datablock id="noise2-data"/>
+                    <datablock id="noise3-data"/>
+                </simultaneous>
+            </datablocks>
+            <variableParameters/>
+            <fixedParameters/>
+        </stimulus>
+    </stimuli>
+
+    <connections>
+        <connection>
+            <from><id>voice-data</id><channel>0</channel></from>
+            <to><id>signal-hrtffilter</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise1-data</id><channel>0</channel></from>
+            <to><id>noise1-hrtffilter</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise2-data</id><channel>0</channel></from>
+            <to><id>noise2-hrtffilter</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise3-data</id><channel>0</channel></from>
+            <to><id>noise3-hrtffilter</id><channel>0</channel></to>
+        </connection>
+
+    <connection>
+            <from><id>signal-hrtffilter</id><channel>0</channel></from>
+            <to><id>signal-amplifier</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>signal-hrtffilter</id><channel>1</channel></from>
+            <to><id>signal-amplifier</id><channel>1</channel></to>
+        </connection>
+        <connection>
+            <from><id>signal-hrtffilter</id><channel>2</channel></from>
+            <to><id>signal-amplifier</id><channel>2</channel></to>
+        </connection>
+        <connection>
+            <from><id>signal-hrtffilter</id><channel>3</channel></from>
+            <to><id>signal-amplifier</id><channel>3</channel></to>
+        </connection>
+
+        <connection>
+            <from><id>signal-amplifier</id><channel>0</channel></from>
+            <to><id>adder</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>signal-amplifier</id><channel>1</channel></from>
+            <to><id>adder</id><channel>1</channel></to>
+        </connection>
+        <connection>
+            <from><id>signal-amplifier</id><channel>2</channel></from>
+            <to><id>adder</id><channel>2</channel></to>
+        </connection>
+        <connection>
+            <from><id>signal-amplifier</id><channel>3</channel></from>
+            <to><id>adder</id><channel>3</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise1-hrtffilter</id><channel>0</channel></from>
+            <to><id>adder</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise1-hrtffilter</id><channel>1</channel></from>
+            <to><id>adder</id><channel>1</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise1-hrtffilter</id><channel>2</channel></from>
+            <to><id>adder</id><channel>2</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise1-hrtffilter</id><channel>3</channel></from>
+            <to><id>adder</id><channel>3</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise2-hrtffilter</id><channel>0</channel></from>
+            <to><id>adder</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise2-hrtffilter</id><channel>1</channel></from>
+            <to><id>adder</id><channel>1</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise2-hrtffilter</id><channel>2</channel></from>
+            <to><id>adder</id><channel>2</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise2-hrtffilter</id><channel>3</channel></from>
+            <to><id>adder</id><channel>3</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise3-hrtffilter</id><channel>0</channel></from>
+            <to><id>adder</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise3-hrtffilter</id><channel>1</channel></from>
+            <to><id>adder</id><channel>1</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise3-hrtffilter</id><channel>2</channel></from>
+            <to><id>adder</id><channel>2</channel></to>
+        </connection>
+        <connection>
+            <from><id>noise3-hrtffilter</id><channel>3</channel></from>
+            <to><id>adder</id><channel>3</channel></to>
+        </connection>
+
+        <connection>
+            <from><id>adder</id><channel>0</channel></from>
+            <to><id>wienerfilter-left</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>adder</id><channel>1</channel></from>
+            <to><id>wienerfilter-left</id><channel>1</channel></to>
+        </connection>
+        <connection>
+            <from><id>adder</id><channel>2</channel></from>
+            <to><id>wienerfilter-left</id><channel>2</channel></to>
+        </connection>
+        <connection>
+            <from><id>adder</id><channel>3</channel></from>
+            <to><id>wienerfilter-left</id><channel>3</channel></to>
+        </connection>
+        <connection>
+            <from><id>adder</id><channel>0</channel></from>
+            <to><id>wienerfilter-right</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>adder</id><channel>1</channel></from>
+            <to><id>wienerfilter-right</id><channel>1</channel></to>
+        </connection>
+        <connection>
+            <from><id>adder</id><channel>2</channel></from>
+            <to><id>wienerfilter-right</id><channel>2</channel></to>
+        </connection>
+        <connection>
+            <from><id>adder</id><channel>3</channel></from>
+            <to><id>wienerfilter-right</id><channel>3</channel></to>
+        </connection>
+
+        <connection>
+            <from><id>wienerfilter-left</id><channel>0</channel></from>
+            <to><id>wavdevice</id><channel>0</channel></to>
+        </connection>
+        <connection>
+            <from><id>wienerfilter-right</id><channel>0</channel></from>
+            <to><id>wavdevice</id><channel>1</channel></to>
+        </connection>
+    </connections>
+
+</apex:apex>

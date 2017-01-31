@@ -35,7 +35,7 @@ QVariant ParameterManager::parameterValue (const QString &id) const
     data::Parameter name(data.parameterById(id));
     if (!name.isValid())
     {
-        qDebug() << "ParameterManager: cannot get parameter" << id;
+        qCDebug(APEX_RS) << "ParameterManager: cannot get parameter" << id;
         return QVariant();
     }
 
@@ -47,6 +47,7 @@ QVariant ParameterManager::parameterValue (const QString &id) const
 
 data::ParameterValueMap ParameterManager::parametersForOwner(const QString& owner) const
 {
+
     data::ParameterValueMap result;
 
     data::PMRuntimeSettings::const_iterator it;
@@ -68,21 +69,28 @@ void ParameterManager::setParameter(const QString& id, const QVariant& value,
 
     if (!name.isValid())
     {
-        qDebug() << "ParameterManager::SetParameter: cannot set parameter"
+        qCDebug(APEX_RS) << "ParameterManager::SetParameter: cannot set parameter"
                  << id << "to value" << value.toString();
 
-        apex::StatusItem info(StatusItem::Error, "ParameterManager",
-                          "unknown parameter: " + id);
+        ErrorHandler::Get().addError("ParameterManager",
+                                     QObject::tr("unknown parameter: %1").arg(id));
         showContents();
     }
     else
+    {
+        qCDebug(APEX_RS) << "ParameterManager::SetParameter: setting parameter"
+                 << id << "to value" << value.toString();
+
         paramValues.insert(name,data::ValueReset(value,canReset));
+        emit parameterChanged(id, value);
+    }
 }
 
 void ParameterManager::registerParameter(const QString& id,
                                          const data::Parameter& name)
 {
     data.registerParameter(id, name);
+    emit parameterChanged(id, parameterValue(id));
 }
 
 
@@ -90,45 +98,58 @@ void ParameterManager::showContents() const
 {
     data.showContents();
 
-    qDebug() << "Registered values:";
-    qDebug() << "==================";
+    qCDebug(APEX_RS) << "Registered values:";
+    qCDebug(APEX_RS) << "==================";
 
     data::PMRuntimeSettings::const_iterator it;
     for (it = paramValues.begin(); it != paramValues.end(); ++it)
     {
-        qDebug().nospace() << "name=" << it.key().toString()
+        qCDebug(APEX_RS).nospace() << "name=" << it.key().toString()
                            << ", value=" << it.value().value.toString();
     }
 
-    qDebug() << "==================";
+    qCDebug(APEX_RS) << "==================";
 }
 
 void ParameterManager::reset()
 {
+    QStringList removedIds;
+
     QMutableMapIterator<data::Parameter,data::ValueReset> it(paramValues);
     while (it.hasNext())
     {
         it.next();
         if (it.value().reset)
+        {
+            removedIds << it.key().id();
             it.remove();
+        }
     }
+
+    Q_FOREACH (QString id, removedIds)
+        emit parameterChanged(id, parameterValue(id));
 }
 
 void ParameterManager::forceReset()
 {
+    QList<data::Parameter> parameters = paramValues.keys();
     paramValues.clear();
+
+    Q_FOREACH (data::Parameter parameter, parameters)
+        emit parameterChanged(parameter.id(), parameterValue(parameter.id()));
+}
+
+void ParameterManager::setAllToDefaultValue(bool force)
+{
+    QList<data::Parameter> parameters = paramValues.keys();
+    Q_FOREACH (data::Parameter parameter, parameters)
+        if (force || paramValues[parameter].reset)
+            paramValues[parameter].value = parameter.defaultValue();
 }
 
 void ParameterManager::resetParameter(const QString& id)
 {
     paramValues.remove(data.parameterById(id));
-    // we set the parameter explicitly to its default value
-    // if we would just remove it from paramValues, the default parameter might not be reset
-//     data::Parameter name( data.parameterById(id));
-//     paramValues[name] = data::ValueReset(name.defaultValue(),
-//                                      paramValues[name].reset );
-//     qDebug("%s", qPrintable("Resetting parameter with id=" + id +
-//             " to value " + QString::number(name.defaultValue().toInt())));
 }
 
 data::Parameter ParameterManager::parameter(const QString& id) const

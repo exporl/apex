@@ -17,13 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef SOUNDLEVELMETERDATAH
-#define SOUNDLEVELMETERDATAH
+#ifndef SOUNDLEVELMETERDATA_H_
+#define SOUNDLEVELMETERDATA_H_
 
-#include "parameters/simpleparameters.h"
+#include "../parameters/simpleparameters.h"
 
-//from libtools
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {

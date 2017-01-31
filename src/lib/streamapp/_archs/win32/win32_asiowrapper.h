@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __ASIOWRAPPER_H_
 #define __ASIOWRAPPER_H_
 
-#include "typedefs.h"
-#include "soundcard/soundcard.h"
+#include "../../soundcard/soundcard.h"
+
+#include "../../typedefs.h"
 
 struct DriverInfo;
 

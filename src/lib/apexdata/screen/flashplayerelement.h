@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef FLASHPLAYERELEMENT_H
-#define FLASHPLAYERELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_FLASHPLAYERELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_FLASHPLAYERELEMENT_H_
 
 #include "screenelement.h"
 
 #include <QString>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -60,7 +60,7 @@ class APEXDATA_EXPORT FlashPlayerElement
         void setNegative(const QString& p);
         void setHighlight(const QString& p);
         void setOverrideFeedback(bool o);
-        
+
         bool operator==(const FlashPlayerElement& other) const;
 };
 }

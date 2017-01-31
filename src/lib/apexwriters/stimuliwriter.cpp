@@ -17,19 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apexdata/stimulus/stimulidata.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
 #include "stimuliwriter.h"
 
-//from libtools
-#include "xml/apexxmltools.h"
-
-//from libdata
-#include "stimulus/stimulidata.h"
-
-//from xerces
-#include "xml/xercesinclude.h"
-
-#include <QStringList>
 #include <QDebug>
+#include <QStringList>
 
 using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::ApexXMLTools;

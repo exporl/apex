@@ -16,9 +16,12 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#include "memorystream.h"
+
 #include "appcore/threads/locks.h"
+
+#include "memorystream.h"
+
+#include <QtGlobal>
 
 using namespace appcore;
 using namespace streamapp;
@@ -80,7 +83,7 @@ INLINE unsigned long MemoryInputStream::mf_lTotalSamples() const
 
 void MemoryInputStream::mp_SeekPosition( const unsigned long ac_nPosition )
 {
-  assert( ac_nPosition <= mf_lTotalSamples() * mf_nGetNumLoops() );
+  Q_ASSERT( ac_nPosition <= mf_lTotalSamples() * mf_nGetNumLoops() );
 
   const Lock L( mc_ReadLock );
 
@@ -109,7 +112,7 @@ INLINE void MemoryInputStream::mp_SetNumLoops( const unsigned ac_nLoops )
   if( !mv_bEOF && ac_nLoops >= mv_nLoops )
     mv_nLoops = ac_nLoops;
   else
-    assert( 0 && "loop not set" );
+    Q_ASSERT( 0 && "loop not set" );
 }
 
 INLINE unsigned MemoryInputStream::mf_nGetNumLoops() const

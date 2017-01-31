@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
-#ifndef APEXAPEXTIMER_H
-#define APEXAPEXTIMER_H
+
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_TIMER_APEXTIMER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_TIMER_APEXTIMER_H_
 
 #include <apexmodule.h>
 #include <qdatetime.h>
@@ -32,12 +32,14 @@ Implements a timer that measures the response time of the user
 */
 class ApexTimer : public ApexModule
 {
+    Q_OBJECT
 public:
     ApexTimer(ExperimentRunDelegate& p_rd);
 
-    void start();
     virtual QString GetResultXML() const;
 
+public slots:
+    void start();
     void stop();
 
 private:

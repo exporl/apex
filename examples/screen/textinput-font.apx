@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+
+ <!-- @doc
+  @what: example of font input
+  @description: screen shows two 'input fields' with different fonts
+  @how: <textEdit> <font>
+  -->
+
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+  </trials>
+ </procedure>
+
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">true</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout width="2" height="2" id="main_layout">
+    <textEdit row="1" col="1" id="text1">
+     <font>Times</font>
+     <text>times</text>
+    </textEdit>
+    <textEdit row="1" col="2" id="text2">
+     <font>Helvetica</font>
+     <text>helvetica</text>
+    </textEdit>
+   </gridLayout>
+   <default_answer_element>text1</default_answer_element>
+  </screen>
+ </screens>
+
+ <datablocks/>
+ <devices/>
+ <filters/>
+
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <description/>
+   <datablocks/>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+
+ <connections/>
+
+</apex:apex>

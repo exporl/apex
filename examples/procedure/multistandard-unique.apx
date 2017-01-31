@@ -1,0 +1,197 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+ <!-- @doc
+    @what: Multiple standards - Unique standard
+    @description: 2 trials: trial1 = match one of the button with the noise-stimulus (standards/reference-signals = numbers)
+                            trial2 = match one of the buttons with the stimulus '2' (standards/reference-signals = noise)
+    @how: 2 trials - constantProcedure
+  -->
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>10</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <uniquestandard>true</uniquestandard> <!-- If you have multiple standard-stimuli (see trial1), apex will try to present another standard in each interval of the trial -->
+   <intervals count="5">
+    <interval element="button1" number="1"/>
+    <interval element="button2" number="2"/>
+    <interval element="button3" number="3"/>
+    <interval element="button4" number="4"/>
+    <interval element="button5" number="5"/>
+   </intervals>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <screen id="screen1"/>
+    <stimulus id="standard1"/>
+    <standard id="stimulus1"/>
+    <standard id="stimulus2"/>
+    <standard id="stimulus3"/>
+    <standard id="stimulus4"/>
+    <standard id="stimulus5"/>
+   </trial>
+   <trial id="trial2">
+    <screen id="screen2"/>
+    <stimulus id="stimulus2"/>
+    <standard id="standard1"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">true</feedback>
+  </reinforcement>
+  <screen id="screen1">
+   <gridLayout width="5" height="1" id="main_layout">
+    <button x="1" y="1" id="button1">
+     <text>noise</text>
+    </button>
+    <button x="2" y="1" id="button2">
+     <text>noise</text>
+    </button>
+    <button x="3" y="1" id="button3">
+     <text>noise</text>
+    </button>
+    <button x="4" y="1" id="button4">
+     <text>noise</text>
+    </button>
+    <button x="5" y="1" id="button5">
+     <text>noise</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+    <button id="button3"/>
+    <button id="button4"/>
+    <button id="button5"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+  <screen id="screen2">
+   <gridLayout width="5" height="1" id="main_layout">
+    <button x="1" y="1" id="button1">
+     <text>2</text>
+    </button>
+    <button x="2" y="1" id="button2">
+     <text>2</text>
+    </button>
+    <button x="3" y="1" id="button3">
+     <text>2</text>
+    </button>
+    <button x="4" y="1" id="button4">
+     <text>2</text>
+    </button>
+    <button x="5" y="1" id="button5">
+     <text>2</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup1">
+    <button id="button1"/>
+    <button id="button2"/>
+    <button id="button3"/>
+    <button id="button4"/>
+    <button id="button5"/>
+   </buttongroup>
+   <default_answer_element>buttongroup1</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="rawdata1">
+   <device>wavdevice</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="rawdata2">
+   <device>wavdevice</device>
+   <uri>wd2.wav</uri>
+  </datablock>
+  <datablock id="rawdata3">
+   <device>wavdevice</device>
+   <uri>wd3.wav</uri>
+  </datablock>
+  <datablock id="rawdata4">
+   <device>wavdevice</device>
+   <uri>wd4.wav</uri>
+  </datablock>
+  <datablock id="rawdata5">
+   <device>wavdevice</device>
+   <uri>wd5.wav</uri>
+  </datablock>
+  <datablock id="noisedata">
+   <device>wavdevice</device>
+   <uri>ruisje.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device id="wavdevice" xsi:type="apex:wavDeviceType">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+   <buffersize>512</buffersize>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters>
+  </fixed_parameters>
+  <stimulus id="standard1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="noisedata"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus1">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata2"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus3">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata3"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus4">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata4"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+   </fixedParameters>
+  </stimulus>
+  <stimulus id="stimulus5">
+   <description>Eenvoudige teststimulus</description>
+   <datablocks>
+    <datablock id="rawdata5"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters>
+   </fixedParameters>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

@@ -17,12 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef GENERALPARAMETERSWRITER_H
-#define GENERALPARAMETERSWRITER_H
+#ifndef _EXPORL_SRC_LIB_APEXWRITERS_GENERALPARAMETERSWRITER_H_
+#define _EXPORL_SRC_LIB_APEXWRITERS_GENERALPARAMETERSWRITER_H_
 
-#include "global.h"
+#include "apextools/global.h"
 
-#include "xml/xercesinclude.h"
+#include "apextools/xml/xercesinclude.h"
 
 namespace XERCES_CPP_NAMESPACE
 {
@@ -39,7 +39,6 @@ class GeneralParameters;
 
 namespace writer
 {
-using namespace XERCES_CPP_NAMESPACE;
 
 /**
 *@author Job Noorman <jobnoorman@gmail.com>
@@ -55,7 +54,7 @@ class APEXWRITERS_EXPORT GeneralParametersWriter
         *
         *@return the created element
          */
-        static DOMElement* addElement(DOMDocument* doc,
+        static XERCES_CPP_NAMESPACE::DOMElement* addElement(XERCES_CPP_NAMESPACE::DOMDocument* doc,
                                       const data::GeneralParameters& data);
 };
 

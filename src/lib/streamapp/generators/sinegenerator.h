@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __SINEGENERATOR_H__
 #define __SINEGENERATOR_H__
 
-#include "stream.h"
-#include "typedefs.h"
-#include "utils/math.h"
+#include "../stream.h"
+#include "../typedefs.h"
+
+#include "../utils/math.h"
 
 namespace streamapp
 {
@@ -42,8 +43,8 @@ namespace streamapp
         * @param ac_nBufferSize the buffersize of the stream
         * @param ac_lSampleRate the samplerate used for the stream
         */
-    SineGenerator( const unsigned       ac_nChan, 
-                   const unsigned       ac_nBufferSize, 
+    SineGenerator( const unsigned       ac_nChan,
+                   const unsigned       ac_nBufferSize,
                    const unsigned long  ac_lSampleRate );
 
       /**

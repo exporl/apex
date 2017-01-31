@@ -1,11 +1,8 @@
-BASEDIR = ..
-
-include ($$BASEDIR/clebs.pri)
+!isEmpty(_PRO_FILE_):include(../clebs/clebs.pri)
 
 TEMPLATE = subdirs
 
+unix: examples.commands = ../tools/documentation-examples-text.sh >index.txt
 examples.path = $$DATADIR/examples
 examples.files = *
-#examples.files = `find -name *.xml -or -name *.apx`
-
 INSTALLS *= examples

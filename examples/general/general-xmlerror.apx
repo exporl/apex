@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8'?>
+ <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+  <!--  @doc
+   @what: Error in XML file
+   @description:
+   @how:
+  -->
+ <procedure xsi:type="apex:constantProcedure">
+  <parameters>
+   <presentations>2</presentations>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+  </parameters>
+  <trials>
+   <trial id="trial1">
+    <answer>button1</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus1"/>
+   </trial>
+   <trial id="trial2">
+    <answer>button2</answer>
+    <screen id="screen1"/>
+    <stimulus id="stimulus2"/>
+   </trial>
+  </trials>
+ </procedure>
+ <screens>
+  <screen id="screen1">
+   <gridLayout width="2" height="1">
+    <button col="1" row="1" id="button1">
+     <text>1</text>
+    </button>
+    <button col="2" row="1" id="button2">
+     <text>2</text>
+    </button>
+   </gridLayout>
+   <buttongroup id="buttongroup">
+    <button id="button1"/>
+    <button id="button2"/>
+   </buttongroup>
+   <default_answer_element>&#xd;
+      buttongroup&#xd;
+    </default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <uri_prefix>../stimuli</uri_prefix>
+  <datablock id="datablock1">
+   <device>soundcard</device>
+   <uri>wd1.wav</uri>
+  </datablock>
+  <datablock id="datablock2">
+   <device>soundcard</device>
+   <uri>wd2.wav</uri>
+  </datablock>
+ </datablocks>
+ <devices>
+  <device xsi:type="apex:wavDeviceType" id="soundcard">
+   <driver>portaudio</driver>
+   <card>interactive</card>
+   <channels>2</channels>
+   <gain>0</gain>
+   <samplerate>44100</samplerate>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters/>
+  <stimulus id="stimulus1">
+   <datablocks>
+    <datablock id="datablock1"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+  <stimulus id="stimulus2">
+   <datablocks>
+    <datablock id="datablock2"/>
+   </datablocks>
+   <variableParameters/>
+   <fixedParameters/>
+  </stimulus>
+ </stimuli>
+ <connections/>
+</apex:apex>

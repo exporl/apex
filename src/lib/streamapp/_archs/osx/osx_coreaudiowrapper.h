@@ -16,12 +16,14 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __COREADUDIOWRAPPER_H_
 #define __COREADUDIOWRAPPER_H_
 
-#include "typedefs.h"
-#include "soundcard/soundcard.h"
+#include "../../soundcard/soundcard.h"
+
+#include "../../typedefs.h"
+
 #include <CoreAudio/AudioHardware.h>
 
 namespace streamapp

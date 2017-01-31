@@ -17,14 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef CHECKBOXELEMENT_H
-#define CHECKBOXELEMENT_H
+#ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_CHECKBOXELEMENT_H_
+#define _EXPORL_SRC_LIB_APEXDATA_SCREEN_CHECKBOXELEMENT_H_
 
 #include "screenelement.h"
 #include <QString>
 #include <Qt>
 
-#include "global.h"
+#include "apextools/global.h"
 
 namespace apex
 {

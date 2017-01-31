@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __WAVEFILE_H_
 #define __WAVEFILE_H_
 
+#include "../audioformat.h"
+
 #include <fstream>
-#include "audioformat.h"
 
   //!define a WORD
 #ifdef WORD
@@ -214,12 +215,12 @@ namespace streamapp
 
       /**
         * Implementation of the PositionableAudioFormatReader method.
-        
+
     bool mp_bSetLoopStart( const unsigned long ac_lPosition );*/
 
       /**
         * Implementation of the PositionableAudioFormatReader method.
-        
+
     bool mp_bSetLoopEnd( const unsigned long ac_lPosition );*/
 
   private:

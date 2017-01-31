@@ -16,11 +16,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "signalprocessing/iirfilter.h"
-#include "signalprocessing/peakfilter.h"
+#include "apexmain/filter/pluginfilterinterface.h"
 
-#include "pluginfilterinterface.h"
-#include "random.h"
+#include "apextools/random.h"
+
+#include "apextools/signalprocessing/iirfilter.h"
+#include "apextools/signalprocessing/peakfilter.h"
 
 #include <QMap>
 #include <QStringList>
@@ -28,13 +29,15 @@
 
 #include <cmath>
 
-
 class ScrambleSpectrumFilterCreator :
     public QObject,
     public PluginFilterCreator
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA(IID "apex.scramblespectrumfilter")
+#endif
 public:
     virtual QStringList availablePlugins() const;
 
@@ -42,7 +45,10 @@ public:
             unsigned channels, unsigned blockSize, unsigned fs) const;
 };
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN2 (scramblespectrumfilter, ScrambleSpectrumFilterCreator)
+#endif
+
 
 class ScrambleSpectrumFilter:
     public QObject,
@@ -79,7 +85,7 @@ private:
 };
 
 
-// ScrambleSpectrumFilter ==================================================================
+// ScrambleSpectrumFilter ======================================================
 
 ScrambleSpectrumFilter::ScrambleSpectrumFilter (
         unsigned channels, unsigned blockSize, double fs) :
@@ -152,7 +158,7 @@ bool ScrambleSpectrumFilter::setParameter (const QString &type, int channel,
    if (type == "bandwidth" && channel == -1) {
        double oldvalue=bandwidth;
         bandwidth=value.toDouble(&ok);
-        qDebug("set bandwidth to %f", bandwidth);
+        qCDebug(APEX_RS, "set bandwidth to %f", bandwidth);
         if (!ok)
             return false;
         if (bandwidth<=0) {
@@ -177,7 +183,7 @@ bool ScrambleSpectrumFilter::setParameter (const QString &type, int channel,
 
 bool ScrambleSpectrumFilter::prepare (unsigned numberOfFrames)
 {
-    qDebug("ScrambleSpectrumFilter::prepare ");
+    qCDebug(APEX_RS, "ScrambleSpectrumFilter::prepare ");
     Q_UNUSED(numberOfFrames);
     Q_ASSERT(bandwidth>0);
     // Create peak filters per critical band
@@ -211,9 +217,9 @@ bool ScrambleSpectrumFilter::prepare (unsigned numberOfFrames)
         newfreq=newfreq*fact;
         ++count;
 
-//        qDebug("newfreq=%f", newfreq);
+//        qCDebug(APEX_RS, "newfreq=%f", newfreq);
     }
-    qDebug("Created %d filters", count);
+    qCDebug(APEX_RS, "Created %d filters", count);
 
     return true;
 }
@@ -233,7 +239,7 @@ void ScrambleSpectrumFilter::process (double * const *data)
     }
 }
 
-// ScrambleSpectrumFilterCreator ===========================================================
+// ScrambleSpectrumFilterCreator ===============================================
 
 QStringList ScrambleSpectrumFilterCreator::availablePlugins() const
 {

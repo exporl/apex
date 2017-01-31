@@ -16,16 +16,20 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #ifndef __SOUNDCARD_H_
 #define __SOUNDCARD_H_
 
+#include "../audioformat.h"
+
+#include "../callback/callbackrunner.h"
+
+#include "../defines.h"
+
+#include "../utils/vectorutils.h"
+
+#include <iostream>
 #include <string>
-#include <iostream> //FIXME remove
-#include "defines.h"
-#include "audioformat.h"
-#include "utils/vectorutils.h"
-#include "callback/callbackrunner.h"
 
 namespace streamapp
 {
@@ -43,7 +47,7 @@ namespace streamapp
       m_nMaxOutputChannels( 0 )
     {
     }
-    
+
     unsigned                    m_nMaxInputChannels;
     unsigned                    m_nMaxOutputChannels;
     unsigned                    m_nDefaultBufferSize;

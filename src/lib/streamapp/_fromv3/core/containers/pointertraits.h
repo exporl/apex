@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 /**
   *      -- v3tov2 plugin --
   * Do not modify this file by hand,
@@ -31,10 +31,14 @@
 #ifndef __STR_POINTERTRAITS_H__
 #define __STR_POINTERTRAITS_H__
 
+#include "../mpl/if.h"
+
+#include "../typetraits/checks.h"
+#include "../typetraits/removepointer.h"
+
 #include "pointertopointer.h"
-#include "core/mpl/if.h"
-#include "core/typetraits/checks.h"
-#include "core/typetraits/removepointer.h"
+
+#include <string.h>
 
 S_NAMESPACE_BEGIN
 

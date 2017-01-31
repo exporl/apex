@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
- 
+
 #include "screenelementvisitor.h"
 
 void apex::data::ScreenElementVisitor::visitAnswerLabel( AnswerLabelElement* e )
@@ -104,6 +104,11 @@ void apex::data::ScreenElementVisitor::visitTwoPartLayout( TwoPartLayoutElement*
     visitTwoPartLayout( const_cast<const TwoPartLayoutElement*>( e ) );
 }
 
+void apex::data::ScreenElementVisitor::visitHtml( HtmlElement* e )
+{
+    visitHtml( const_cast<const HtmlElement*>( e ) );
+}
+
 void apex::data::ScreenElementVisitor::visitAnswerLabel( const AnswerLabelElement* /*e*/ )
 {
 }
@@ -113,6 +118,10 @@ void apex::data::ScreenElementVisitor::visitArcLayout( const ArcLayoutElement* /
 }
 
 void apex::data::ScreenElementVisitor::visitButton( const ButtonElement* /*e*/ )
+{
+}
+
+void apex::data::ScreenElementVisitor::visitHtml( const HtmlElement* /*e*/ )
 {
 }
 

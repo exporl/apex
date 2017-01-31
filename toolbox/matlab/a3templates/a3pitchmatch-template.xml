@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.0/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.0/experiment.xsd"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.0/experiment">
+
+    <procedure xsi:type="apex:constantProcedureType">
+        <parameters>
+            <presentations>4</presentations>
+            <order>random</order>
+        </parameters>
+        <trials>
+            $$trials$$
+        </trials>
+    </procedure>
+
+    <corrector xsi:type="apex:isequal"/>
+
+    <screens>
+        <general>
+            <repeatbutton>true</repeatbutton>
+        </general>
+        <reinforcement>
+            <progressbar>true</progressbar>
+            <feedback>false</feedback>
+        </reinforcement>
+        <screen id="$$screenid$$">
+            <gridLayout width="1" height="2" rowstretch="1,3" id="mainlayout">
+                <label id="questionlabel" col="1" row="1">
+                    <text>$$screenquestion$$</text>
+                </label>
+
+                <gridLayout width="2" height="1" col="1" row="2">
+                    <button id="buttonlower" row="1" col="1">
+                        <text>$$buttonlowertext$$</text>
+                    </button>
+                    <button id="buttonhigher" row="1" col="2">
+                        <text>$$buttonhighertext$$</text>
+                    </button>
+                </gridLayout>
+            </gridLayout>
+            <buttongroup id="buttongroup">
+                <button id="buttonhigher"/>
+                <button id="buttonlower"/>
+            </buttongroup>
+            <default_answer_element>buttongroup</default_answer_element>
+        </screen>
+    </screens>
+
+    <datablocks>
+        $$datablocks$$
+    </datablocks>
+
+    <devices>
+        <device id="soundcard" xsi:type="apex:wavDeviceType">
+            <card>default</card>
+            <channels>2</channels>
+            <gain>0</gain>
+            <samplerate>44100</samplerate>
+        </device>
+    </devices>
+
+    <filters>
+        <filter id="filter_rove_standard" xsi:type="apex:amplifier">
+            <device>soundcard</device>
+            <channels>1</channels>
+            <gain id="standard_gain">0</gain>
+        </filter>
+        <filter id="filter_rove_stimulus" xsi:type="apex:amplifier">
+            <device>soundcard</device>
+            <channels>1</channels>
+            <gain id="stimulus_gain">0</gain>
+        </filter>
+    </filters>
+
+    <stimuli>
+        $$stimuli$$
+    </stimuli>
+
+    <connections>
+        <connection>
+            <from>
+                <id>filter_rove_standard</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>soundcard</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+
+        <connection>
+            <from>
+                <id>filter_rove_stimulus</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>soundcard</id>
+                <channel>1</channel>
+            </to>
+        </connection>
+
+        $$connections$$
+    </connections>
+
+    <randomgenerators>
+        <randomgenerator id="rove_standard" xsi:type="apex:uniform">
+            <min>-10</min>
+            <max>0</max>
+            <type>double</type>
+            <parameter>standard_gain</parameter>
+        </randomgenerator>
+        <randomgenerator id="rove_stimulus" xsi:type="apex:uniform">
+            <min>-10</min>
+            <max>0</max>
+            <type>double</type>
+            <parameter>stimulus_gain</parameter>
+        </randomgenerator>
+
+    </randomgenerators>
+
+    <results>
+        <xsltscript>apexresult.xsl</xsltscript>
+        <saveprocessedresults>true</saveprocessedresults>
+    </results>
+
+</apex:apex>

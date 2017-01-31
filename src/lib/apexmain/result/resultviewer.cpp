@@ -17,46 +17,54 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "resultviewer.h"
-#include "ui_resultviewer.h"
+#include "apexdata/result/resultparameters.h"
 
-#include "../resultsink/apexresultsink.h"
-#include "services/paths.h"
+#include "apextools/apextools.h"
+#include "apextools/pathtools.h"
+
+#include "apextools/services/paths.h"
+
+#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xercesinclude.h"
+
+#include "parser/xmlpluginapi.h"
+
+#include "resultsink/apexresultsink.h"
+#include "resultsink/rtresultsink.h"
+
+#include "services/accessmanager.h"
+#include "services/errorhandler.h"
 #include "services/mainconfigfileparser.h"
 
-#include "xml/apexxmltools.h"
-#include "xml/xercesinclude.h"
-#include "xml/xalaninclude.h"
+#include "resultviewer.h"
+#include "ui_resultviewer.h"
+#include "webpageprocessor.h"
 
-#ifdef USEXALANFORMATNUMBER
-#include <xalanc/ICUBridge/ICUFormatNumberFunctor.hpp>
-#endif
-
-XALAN_USING_XERCES(XMLPlatformUtils);
-XALAN_USING_XALAN(XalanTransformer);
-XALAN_USING_XALAN(XSLTInputSource);
-XALAN_USING_XALAN(XSLTResultTarget);
-
-//from libdata
-#include "result/resultparameters.h"
-#include "resultsink/rtresultsink.h"
+#include <QDebug>
+#include <QDir>
+#include <QFile>
+#include <QFile>
+#include <QFileDialog>
+#include <QHash>
+#include <QIODevice>
+#include <QMessageBox>
+#include <QPointer>
+#include <QPrintDialog>
+#include <QPrinter>
+#include <QScriptEngine>
+#include <QScriptEngineDebugger>
+#include <QTextEdit>
+#include <QTextStream>
+#include <QTimer>
+#include <QUrl>
+#include <QWebFrame>
+#include <QWebPage>
+#include <QWebView>
+#include <QXmlQuery>
+#include <QXmlStreamReader>
 
 #include <iostream>
 #include <sstream>
-#include <qfile.h>
-#include <qmessagebox.h>
-#include <qtextedit.h>
-#include <QFileDialog>
-#include <QXmlStreamReader>
-#include <QDebug>
-#include <QWebView>
-#include <QPrinter>
-#include <QPrintDialog>
-#include <QFile>
-#include <QTextStream>
-#include <QIODevice>
-#include <QXmlQuery>
-#include <QHash>
 
 static const char* ERROR_SOURCE = "ResultViewer";
 
@@ -68,12 +76,9 @@ namespace
 }
 
 ResultViewer::ResultViewer(const data::ResultParameters* p_param,
-        const QString& p_resultfile, const QString& p_xsltpath):
+        const QString& p_resultfile):
     m_pParam(p_param),
     m_sResultfile(p_resultfile),
-    m_sXsltPath(p_xsltpath),
-    m_xsltOK(false),
-    m_javascriptOK(false),
     m_rtr(0),
     m_dialog(0),
     m_ui(0)
@@ -84,194 +89,81 @@ ResultViewer::~ResultViewer()
 {
 }
 
-/**
- * Show current results
- */
-bool ResultViewer::ProcessResult()
+QByteArray ResultViewer::createCSVtext()
 {
-    if (!QFile::exists(m_sResultfile)) {
-        qDebug("Results file not found %s", qPrintable (m_sResultfile));
-        QMessageBox::warning(0, tr("Results file not found"),
-                             tr("Processed results can only be shown if you save the "
-                             "results, not processing."), QMessageBox::Abort,
-                             QMessageBox::NoButton);
-                             return false;
+    //This function should run the javascript script and put
+    //the output in a variable so it can be added to a file later.
+    //Load the file with the results
+    //Open the xml file and load the contents
+    QFile resultsfile(m_sResultfile);
+    resultsfile.open(QIODevice::ReadOnly);
+    if(!resultsfile.isOpen()){
+        emit errorMessage(ERROR_SOURCE, "resultsfile could not be loaded");
+        return QByteArray();
     }
+    QString xmlString = resultsfile.readAll();
 
+    //Load the html page with accessmanager:
+    QUrl p_page("apex:apr2csv.html");
+    QPointer<QWebView> webView = new QWebView();
+    QPointer<WebPageProcessor> page = new WebPageProcessor(webView);
+    QPointer<AccessManager> am = new AccessManager(page);
+    page->setNetworkAccessManager(am);
+    page->mainFrame()->load( am->prepare(p_page) );
 
-    m_xsltOK = ProcessResultXslt();
-    m_javascriptOK = ProcessResultJavascript();
-    return m_xsltOK || m_javascriptOK;
+    //Wait for the page to load the javascript files:
+    QEventLoop loop;
+    QTimer *timeoutTimer = new QTimer();
+
+    connect(page,SIGNAL(loadFinished(bool)),&loop,SLOT(quit()));
+    //Set timeout in case page fails to load...
+    //Should an error message be givven here?
+    connect(timeoutTimer,SIGNAL(timeout()), &loop,SLOT(quit()));
+    timeoutTimer->start(5000); //5 second timeout
+
+    loop.exec();
+
+    QVariant jsResult = page->mainFrame()->evaluateJavaScript("process(\"" +
+                                                              ApexTools::escapeJavascriptString(xmlString)
+                                                              + "\")");
+    return jsResult.toByteArray();
 }
 
-
-bool ResultViewer::ProcessResultXslt()
+bool ResultViewer::findResultPage()
 {
-    Q_ASSERT (m_pParam);
 
-    QString document(m_sResultfile);
-
-    // find xslt script
-    QString script( Paths::findReadableFile (m_pParam->GetXsltScript(),
-                        QStringList() <<m_sXsltPath,
-                        QStringList() << ".xsl"    ));
-
-    qDebug("Using script: %s", qPrintable(script));
-
-
-    if (!QFile::exists(script)) {
-        // try to get processing instruction from results file:
-        qDebug("Fetching script name from results file");
-        QFile resultsfile(document);
-        if (!resultsfile.exists())
-            qDebug("Resultsfile does not exist");
-        if( resultsfile.open(QIODevice::ReadOnly) ) {
-            QXmlStreamReader xsr( &resultsfile );
+    // read resultpage from XML file
+    QFile resultsfile(m_sResultfile);
+    if (!resultsfile.exists())
+        qCDebug(APEX_RS, "Resultsfile does not exist");
+    if( resultsfile.open(QIODevice::ReadOnly) ) {
+        QXmlStreamReader xsr( &resultsfile );
+        if (! xsr.error() == QXmlStreamReader::NoError)
+            qCDebug(APEX_RS, "XMLStreamReader error: %s", qPrintable(xsr.errorString()));
+        while (!xsr.atEnd()) {
+            xsr.readNext();
             if (! xsr.error() == QXmlStreamReader::NoError)
-                qDebug("XMLStreamReader error: %s", qPrintable(xsr.errorString()));
-            while (!xsr.atEnd()) {
-                xsr.readNext();
-                if (xsr.isProcessingInstruction() &&
-                    xsr.processingInstructionTarget() ==
-                            QLatin1String("xml-stylesheet")) {
-                        qDebug("processingInstructionData: %s", qPrintable(xsr.processingInstructionData().toString()));
-                        QRegExp rx("href=\"([^\"]*)\"");
-                        int pos = rx.indexIn(
-                                xsr.processingInstructionData().toString());
-                        if (pos>-1) {
-                            script=rx.cap(1);
-                            qDebug("New script: %s", qPrintable(script));
-
-                            QString xsltOnline=MainConfigFileParser::Get().
-                                        GetXsltOnlinePath();
-                            if (script.startsWith(xsltOnline)) {
-                                 script=script.right(
-                                         script.length()-xsltOnline.length()-1);
-                                 qDebug("finding readable file named %s",
-                                         qPrintable(script));
-                                 qDebug("xsltpath= %s", qPrintable(m_sXsltPath));
-                                script=Paths::findReadableFile (script,
-                                    QStringList() <<m_sXsltPath,
-                                    QStringList() );
-                            }
-                            break;
-                        } else {
-                             qDebug("Regexp did not match in %s",
-                                qPrintable(xsr.processingInstructionData()
-                                    .toString()));
-                        }
-                    }
+                qCDebug(APEX_RS, "XMLStreamReader error: %s", qPrintable(xsr.errorString()));
+            //qCDebug(APEX_RS) << xsr.name();
+            if (xsr.isStartElement() && xsr.name() == "jscript") {
+                if (xsr.readNext() == QXmlStreamReader::Characters) {
+                    m_resultPagePath = xsr.text().toString();
+                    qCDebug(APEX_RS) << "Found results page: " << m_resultPagePath;
+                    return true;
                 }
             }
         }
-
-
-    if (script.isEmpty() )
-        return false;
-
-backtoscript:
-        // ask user
-    if (!QFile::exists(script)) {
-        int result = QMessageBox::warning(0, tr("Script file not found"),
-                tr("The xslt script you specified in the experiment file (%1)\n"
-                    " could not be found, can't process results.\n"
-                    "Would you like to specify another script?").arg(script),
-                QMessageBox::Ok| QMessageBox::Abort, QMessageBox::Ok);
-
-        if (result == QMessageBox::Ok) {
-            script = QFileDialog::getOpenFileName(0, tr("Open XSLT script"),
-                    m_sXsltPath, tr("XSLT scripts (*.xsl)"));
-            goto backtoscript;
-        } else {
-            return false;
-        }
     }
 
-
-
- XalanTransformer::initialize();
-
-
-    XalanTransformer transformer;
-#ifdef USEXALANFORMATNUMBER
-    xalanc::ICUFormatNumberFunctor(transformer.getMemoryManager());
-#endif
-
-
-
-    XSLTInputSource xmlin(QFile::encodeName(document));
-    XSLTInputSource sheet(QFile::encodeName(script));
-
-    //make target stream with char buf
-    std::ostringstream ostrTarget_html;
-    std::ostringstream ostrTarget_text;
-
-    XSLTResultTarget targ_html( ostrTarget_html );
-
-
-    // Setup target for pure text output
-    xalanc::XalanStdOutputStream xsos (ostrTarget_text);
-    xalanc::XalanOutputStreamPrintWriter xospw(xsos);
-    xalanc::FormatterToText textFormatter(xospw);
-    XSLTResultTarget targ_text( textFormatter );
-
-    transformer.setStylesheetParam("target", "'html'");
-    transformer.transform(xmlin,sheet,targ_html);
-
-    transformer.setStylesheetParam("target", "'parser'");
-    transformer.transform(xmlin,sheet,targ_text);
-
-    XalanTransformer::terminate();
-
-    //make sure buffer has an endline and construct QString with it
-    ostrTarget_text << std::ends;
-    m_result_html = ostrTarget_html.str().c_str();
-    m_result_text = ostrTarget_text.str().c_str();
-
-//    qDebug( m_result_text.constData() );
-    return true;
-}
-
-
-bool ResultViewer::ProcessResultJavascript()
-{
-    qDebug("Trying to find result page url");
     // find name of result page
     if (! m_pParam->resultPage().isEmpty()) {
         m_resultPagePath = m_pParam->resultPage();
         return true;
     }
 
-    // read resultpage from XML file
-    QFile resultsfile(m_sResultfile);
-    if (!resultsfile.exists())
-        qDebug("Resultsfile does not exist");
-    if( resultsfile.open(QIODevice::ReadOnly) ) {
-        QXmlStreamReader xsr( &resultsfile );
-        if (! xsr.error() == QXmlStreamReader::NoError)
-            qDebug("XMLStreamReader error: %s", qPrintable(xsr.errorString()));
-        while (!xsr.atEnd()) {
-            xsr.readNext();
-            if (! xsr.error() == QXmlStreamReader::NoError)
-                qDebug("XMLStreamReader error: %s", qPrintable(xsr.errorString()));
-            //qDebug() << xsr.name();
-            if (xsr.isStartElement() && xsr.name() == "jscript") {
-                if (xsr.readNext() == QXmlStreamReader::Characters) {
-                    m_resultPagePath = xsr.text().toString();
-                    break;
-                }
-            }
-        }
-    }
-
-    if ( m_resultPagePath.isEmpty()) {
-        qDebug("Empty result page path");
-        return false;
-    } else {
-        qDebug()<< "Found result page " << m_resultPagePath.toString();
-        return true;
-    }
+    return false;
 }
+
 
 void ResultViewer::show(bool ask)
 {
@@ -282,14 +174,17 @@ void ResultViewer::show(bool ask)
         return;
     }
 
-    if (m_javascriptOK && m_xsltOK) {
-        emit errorMessage("ResultViewer", "Both Javascript and XSLT results were requested. Only javascript results analysis will be shown");
-        showJavascript();
-    } else if (m_javascriptOK) {
-        showJavascript();
-    } else if (m_xsltOK) {
-        showXslt();
+    if (!QFile::exists(m_sResultfile)) {
+        qCDebug(APEX_RS, "Results file not found %s", qPrintable (m_sResultfile));
+        QMessageBox::warning(0, tr("Results file not found"),
+                             tr("Processed results can only be shown if you save the "
+                             "results, not processing."), QMessageBox::Abort,
+                             QMessageBox::NoButton);
+        return;
     }
+
+    findResultPage();
+    showJavascript();
 
     return;
 }
@@ -312,35 +207,6 @@ void ResultViewer::showDialog()
     delete(m_dialog);
 }
 
-void ResultViewer::showXslt()
-{
-    setupDialog();
-
-    QString contentType;
-    if ( m_result_html.contains("html")) {
-        if ( m_result_html.contains("xml")  )
-            contentType="application/xhtml+xml";
-        else
-            contentType="text/html";
-    } else
-        contentType="text/plain";
-
-    qDebug("HTML\n----------------");
-    qDebug()<<m_result_html;
-    qDebug("Text\n----------------");
-    qDebug()<<m_result_text;
-
-    m_ui->webView->setContent(m_result_html, contentType);
-    showDialog();
-
-// #define WEBKIT
-// #ifdef WEBKIT
-//     QWebView webview;
-//     webview.setHtml(m_result);
-//     webview.show();
-// #endif
-}
-
 void ResultViewer::showJavascript()
 {
     setupDialog();
@@ -350,7 +216,9 @@ void ResultViewer::showJavascript()
     m_dialog->setWindowTitle(tr("APEX Results - %1").
         arg(QFileInfo(m_sResultfile).fileName()) );
 
-    m_rtr = new RTResultSink( m_resultPagePath, m_ui->webView );
+    m_rtr = new RTResultSink( m_resultPagePath, m_pParam->resultParameters(), m_pParam->extraScript(), m_ui->webView);
+   // m_rtr->setJavascriptParameters(m_pParam->resultParameters());   // input is a QMap found as member mResultParameters in structure Resultparameters
+   // m_rtr->executeJavaScript(m_pParam->extraScript());         // input is a Qstring found as member m_extraScript in structure ResultParameters
     showDialog();
     delete(m_rtr);
 }
@@ -362,26 +230,23 @@ void ResultViewer::loadFinished(bool ok)
         emit errorMessage(ERROR_SOURCE, tr("ResultViewer: cannot load results page"));
         return;
     }
-    // TODO: set script name
 
-    //    rtr.show();
     QFile resultsfile(m_sResultfile);
     if (!resultsfile.exists())
-        qDebug("Resultsfile does not exist");
+        qCDebug(APEX_RS, "Resultsfile does not exist");
     if( resultsfile.open(QIODevice::ReadOnly) ) {
 
         QTextStream stream(&resultsfile);
 
         m_rtr->newResults( stream.readAll() );
         m_rtr->plot();
-        qDebug("Showing rtresultsink");
+        qCDebug(APEX_RS, "Showing rtresultsink");
         //        rtr.show();
     }
 }
 
 void ResultViewer::exportToPdf()
 {
-    //m_ui->webView
     QString filename( QFileDialog::getSaveFileName(0,
                 tr("Export results page to PDF"),
                 "", "*.pdf"));
@@ -405,28 +270,42 @@ void ResultViewer::print()
 
 bool apex::ResultViewer::addtofile( const QString & p_filename )
 {
+    QByteArray result_csv = createCSVtext();
+
     QFile f(p_filename);
-    //if (!f.open(IO_Append | IO_WriteOnly)) {
     if (!f.open(QFile::ReadWrite)) {
         QMessageBox::warning(0, tr("Can't open file for append"), tr("Can't "
                 "open resultfile for appending processed results, discarding.\n"
                 "You can reprocess them using an XSLT processor"),
                 QMessageBox::Ok, QMessageBox::NoButton);
-        qDebug("File %s not found", qPrintable (p_filename));
+        qCDebug(APEX_RS, "File %s not found", qPrintable (p_filename));
         return false;
     }
-
-    // overwrite the </apex:results> thing
-    // -1 to account for windows cr/lf
-    f.seek(f.size()- ApexResultSink::c_fileFooter.length() - 1);
 
     QTextStream out(&f);
     out.setCodec("UTF-8");
 
-    out << "<processed>" << endl << endl;
-    out << m_result_text;
-    out << endl << "</processed>" << endl;
+    //see if the "processed" tags are allready present.
+    QByteArray textData = f.readAll();
+    QString fileText(textData);
 
+    int processedIndex = fileText.lastIndexOf("<processed>");
+
+    if(processedIndex < 0)
+    {
+        // overwrite the </apex:results> thing
+        // -1 to account for windows cr/lf
+        f.seek(f.size()- ApexResultSink::c_fileFooter.length() - 1);
+        out << "<processed>" << endl << endl;
+        out << result_csv;
+    }
+    else
+    {
+        f.seek(processedIndex+11);
+        out << result_csv;
+    }
+
+    out << endl << "</processed>" << endl;
     out << ApexResultSink::c_fileFooter;
 
     f.close();
@@ -435,8 +314,4 @@ bool apex::ResultViewer::addtofile( const QString & p_filename )
 }
 
 
-const QString apex::ResultViewer::GetResultHtml() const
-{
-    return m_result_html;
-};
 
