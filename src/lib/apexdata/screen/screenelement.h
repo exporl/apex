@@ -83,7 +83,7 @@ class APEXDATA_EXPORT ScreenElement
 
         bool disabled;
 
-        FilePrefix uriPrefix;
+        FilePrefix filePrefix;
 
     private:
         virtual void deleteChild(ScreenElement* child);

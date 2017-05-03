@@ -22,7 +22,9 @@
 
 #include "../audioformat.h"
 
-#include <fstream>
+#include <QFile>
+#include <QString>
+#include <QScopedPointer>
 
   //!define a WORD
 #ifdef WORD
@@ -56,8 +58,8 @@ namespace streamapp
     struct WAVEFORM
     {
       short wFormatTag;
-      short nChannels;
-      unsigned nSamplesPerSec;
+      short channelCount;
+      unsigned samplesPerSecond;
       unsigned nAvgBytesPerSec;
       short nBlockAlign;
       short wBitsPerSample;
@@ -96,13 +98,13 @@ namespace streamapp
         * Constructor.
         */
     WaveFileData() :
-      m_pRIFF( new RIFF() ),
-      m_pFMT( new FMT()  ),
-      m_pDATA( new DATA() ),
-      m_nBytesPerSample( 0 ),
-      m_nDataLeft( 0 ),
-      m_nReadOffset( 0 ),
-      m_nBytesPerFrame( 0 )
+      riffHeader(new RIFF()),
+      fmtHeader(new FMT() ),
+      dataHeader(new DATA()),
+      bytesPerSample(0),
+      dataLeft(0),
+      readOffset(0),
+      bytesPerFrame(0)
     {}
 
       /**
@@ -114,27 +116,27 @@ namespace streamapp
       /**
         * The header size.
         */
-    static const unsigned long sf_lHeaderSize = sizeof( RIFF ) + sizeof( FMT ) + sizeof( DATA );
+    static const unsigned long waveHeaderSize = sizeof(RIFF) + sizeof(FMT) + sizeof(DATA);
 
       /**
         * Destructor.
         */
     ~WaveFileData()
     {
-      delete  m_pRIFF;
-      delete  m_pFMT;
-      delete  m_pDATA;
+      delete  riffHeader;
+      delete  fmtHeader;
+      delete  dataHeader;
     }
 
   protected:
-    RIFF* m_pRIFF;
-    FMT*  m_pFMT;
-    DATA* m_pDATA;
+    RIFF* riffHeader;
+    FMT*  fmtHeader;
+    DATA* dataHeader;
     AudioFormat::mt_eBitMode m_eBitMode;
-    unsigned short m_nBytesPerSample;
-    unsigned long m_nDataLeft;
-    unsigned long m_nReadOffset;
-    unsigned long m_nBytesPerFrame; //m_nBytesPerSample * nChannels
+    unsigned short bytesPerSample;
+    unsigned long dataLeft;
+    unsigned long readOffset;
+    unsigned long bytesPerFrame; //bytesPerSample * nChannels
     char tempBuffer[ tempBufSize ];
   };
 
@@ -159,10 +161,10 @@ namespace streamapp
 
       /**
         * Open a file for reading.
-        * @param ac_sFileName the file's path
+        * @param fileName the file's path
         * @return false if the file cannot be opened
         */
-    bool mp_bOpen( const std::string& ac_sFileName );
+    bool mp_bOpen(const QString& fileName);
 
       /**
         * Close the file.
@@ -173,19 +175,19 @@ namespace streamapp
       /**
         * Implementation of the AudioFormat method.
         */
-    unsigned long Read( void** a_pBuf, const unsigned ac_nSamples );
+    unsigned long Read(void** a_pBuf, const unsigned ac_nSamples);
 
       /**
         * Implementation of the AudioFormat method.
         */
     unsigned mf_nChannels() const
-    { return m_pFMT->fmtFORMAT.nChannels; }
+    { return fmtHeader->fmtFORMAT.channelCount; }
 
       /**
         * Implementation of the AudioFormat method.
         */
     unsigned long mf_lSampleRate() const
-    { return m_pFMT->fmtFORMAT.nSamplesPerSec; }
+    { return fmtHeader->fmtFORMAT.samplesPerSecond; }
 
       /**
         * Implementation of the AudioFormat method.
@@ -211,17 +213,17 @@ namespace streamapp
       /**
         * Implementation of the PositionableAudioFormatReader method.
         */
-    void mp_SeekPosition( const unsigned long ac_nPosition );
+    void mp_SeekPosition(const unsigned long ac_nPosition);
 
       /**
         * Implementation of the PositionableAudioFormatReader method.
 
-    bool mp_bSetLoopStart( const unsigned long ac_lPosition );*/
+    bool mp_bSetLoopStart(const unsigned long ac_lPosition);*/
 
       /**
         * Implementation of the PositionableAudioFormatReader method.
 
-    bool mp_bSetLoopEnd( const unsigned long ac_lPosition );*/
+    bool mp_bSetLoopEnd(const unsigned long ac_lPosition);*/
 
   private:
       /**
@@ -239,7 +241,7 @@ namespace streamapp
       */
     void ReadDATA();
 
-    void mf_Convert( int*& dest0, int*& dest1, const unsigned ac_nChannels );
+    void mf_Convert(int*& dest0, int*& dest1, const unsigned nSamplesRead);
 
       /**
         * Checks if four byte data matches the specified characters.
@@ -250,14 +252,13 @@ namespace streamapp
         * @param D the fourth character
         * @return
         */
-    bool CheckID ( char *idPar, char A, char B, char C, char D );
+    bool CheckID (char *idPar, char A, char B, char C, char D);
 
     typedef containers::LoopLogic< unsigned long, true > mt_LoopLogic;
 
-    unsigned long   m_lTotalSamples;  //keep as member to avoid calculating it everytime
-    WaveFileData    m_Data;
-    std::ifstream*  m_pif;
-    mt_LoopLogic*   m_pLoop;
+    unsigned long   totalSampleCount;  //keep as member to avoid calculating it everytime
+    QScopedPointer<QFile> inputFile;
+    mt_LoopLogic*   loopLogic;
   };
 
     /**
@@ -275,14 +276,14 @@ namespace streamapp
       /**
         * Open a file for writing.
         * Replaces the file if it exists already, else creates a new one.
-        * @param ac_sFileName the file's path
-        * @param ac_nChannels the number of channels
+        * @param fileName the file's path
+        * @param channelCount the number of channels
         * @param ac_lFs the samplerate
         * @param ac_eMode the bitmode to use
         * @return false if the file cannot be opened or if the parameters are not supported by the format
         */
-    bool mp_bOpen( const std::string& ac_sFileName,
-                   const unsigned ac_nChannels, const unsigned long ac_lFs, const AudioFormat::mt_eBitMode ac_eMode = AudioFormat::MSBint16 );
+    bool mp_bOpen( const QString& fileName,
+                   const unsigned channelCount, const unsigned long ac_lFs, const AudioFormat::mt_eBitMode ac_eMode = AudioFormat::MSBint16 );
 
       /**
         * Close the file.
@@ -293,19 +294,19 @@ namespace streamapp
       /**
         * Implementation of the AudioFormatWriter method.
         */
-    unsigned long Write( const void** a_pBuf, const unsigned ac_nSamples );
+    unsigned long Write(const void** a_pBuf, const unsigned ac_nSamples);
 
       /**
         * Implementation of the AudioFormat method.
         */
     unsigned mf_nChannels() const
-    { return m_pFMT->fmtFORMAT.nChannels; }
+    { return fmtHeader->fmtFORMAT.channelCount; }
 
       /**
         * Implementation of the AudioFormat method.
         */
     unsigned long mf_lSampleRate() const
-    { return m_pFMT->fmtFORMAT.nSamplesPerSec; }
+    { return fmtHeader->fmtFORMAT.samplesPerSecond; }
 
       /**
         * Implementation of the AudioFormat method.
@@ -319,7 +320,7 @@ namespace streamapp
         */
     void WriteHeader();
 
-    std::ofstream* m_pof;
+    QScopedPointer<QFile> outputFile;
   };
 
 }

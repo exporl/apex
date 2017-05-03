@@ -73,9 +73,9 @@ void NoiseStartpointDialog::setupConnections(StartLevelWidget* slw)
 void NoiseStartpointDialog::accept()
 {
     if (widgets.randomRadio->isChecked())
-        emit startpointChosen(-1);
+        Q_EMIT startpointChosen(-1);
     else
-        emit startpointChosen(widgets.startpointLine->text().toDouble());
+        Q_EMIT startpointChosen(widgets.startpointLine->text().toDouble());
 
     QDialog::accept();
 }

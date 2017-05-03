@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __AUDIOFORMATSTREAM_H__
-#define __AUDIOFORMATSTREAM_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_AUDIOFORMATSTREAM_H__
+#define _APEX_SRC_LIB_STREAMAPP_AUDIOFORMATSTREAM_H__
 
 #include "stream.h"
 #include "defines.h"
@@ -45,11 +45,10 @@ namespace streamapp
         * Constructor.
         * @param ac_cpSource the AudioFormatReader to read from (also defines the number of channels)
         * @param ac_nBufferSize the buffer size in samples
-        * @param ac_bNormalize if true, normalizes the input samples
         * @param ac_bDeleteReader if true, deletes ac_pSource upon destruction or replacing reader
         */
     AudioFormatReaderStream( AudioFormatReader* const ac_cpSource, const unsigned ac_nBufferSize,
-                             const bool ac_bNormalize = false, const bool ac_bDeleteReader = false );
+                             const bool ac_bDeleteReader);
 
       /**
         * Destructor.
@@ -137,7 +136,6 @@ namespace streamapp
   private:
     AudioFormatReader*              m_pSource;
     AudioFormatConvertor            m_Output;
-    const bool                      mc_bNormalize;
     unsigned                        mv_nReadLastTime;
     bool                            mv_bDeleteReader;
     bool                            mv_bEOF;
@@ -163,11 +161,10 @@ namespace streamapp
         * Constructor.
         * @param ac_pSource the PositionableAudioFormatReader to read from (defines number of channels)
         * @param ac_nBufferSize the buffersize in samples
-        * @param ac_bNormalize if true, normalizes the input samples
         * @param ac_bDeleteReader if true, deletes ac_pSource upon destruction or replacing reader
         */
     PositionableAudioFormatReaderStream( PositionableAudioFormatReader* const ac_pSource, const unsigned ac_nBufferSize,
-                                          const bool ac_bNormalize = false, const bool ac_bDeleteReader = false );
+                                          const bool ac_bDeleteReader);
 
       /**
         * Destructor.
@@ -301,7 +298,6 @@ namespace streamapp
     }
 
   private:
-    const bool                        mc_bNormalize;
     bool                              mv_bDeleteReader;
     bool                              mv_bEOF;
     bool                              mv_bOutputCleared;
@@ -330,12 +326,11 @@ namespace streamapp
         * Constructor.
         * @param ac_pSink the AudioFormatWriter to write to (defines number of channels)
         * @param ac_nBufferSize the buffersize in samples
-        * @param ac_bNormalize if true, expects normalized input samples
         * @param ac_bClipping if true, clips the output
         * @param ac_bDeleteWriter if true, deletes ac_pSink upon destruction or replacing writer
         */
     AudioFormatWriterStream( AudioFormatWriter* const ac_pSink, const unsigned ac_nBufferSize,
-                             const bool ac_bNormalize = false, const bool ac_bClipping = true, const bool ac_bDeleteWriter = false );
+                             const bool ac_bDeleteWriter);
 
       /**
         * Destructor.
@@ -415,8 +410,6 @@ namespace streamapp
   private:
     AudioFormatWriter*              m_pSource;
     AudioFormatConvertor            m_Output;
-    const bool                      mc_bNormalize;
-    const bool                      mc_bClipping;
     bool                            mv_bEOF;
     bool                            mv_bDeleteWriter;
     const appcore::CriticalSection  mc_WriteLock;
@@ -424,4 +417,4 @@ namespace streamapp
 
 }
 
-#endif     //#ifndef __AUDIOFORMATSTREAM_H__
+#endif     //#ifndef _APEX_SRC_LIB_STREAMAPP_AUDIOFORMATSTREAM_H__

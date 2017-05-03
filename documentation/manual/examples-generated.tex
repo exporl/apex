@@ -252,16 +252,6 @@
 \end{description}
 
 \subsection{controller}
-\subsubsection{controller/controller-pa5.apx}
-\begin{description}
-\item[Short] 
- TDT programmable attenuator (PA5) controller
-\item[Description] 
- Attenuation of pa5 changes according to adaptive procedure
-\item[How] 
-
-\end{description}
-
 \subsubsection{controller/controller-plugincontroller.apx}
 \begin{description}
 \item[Short] 
@@ -273,6 +263,13 @@
 \end{description}
 
 \subsubsection{controller/osccontroller.apx}
+\begin{description}
+\item[Short] 
+\item[Description] 
+\item[How] 
+\end{description}
+
+\subsubsection{controller/osccontroller\_avatar.apx}
 \begin{description}
 \item[Short] 
 \item[Description] 
@@ -531,6 +528,16 @@
  filters: generator makes a soundcard pulse with a negative polarity
 \end{description}
 
+\subsubsection{filters/filters-vocoder.apx}
+\begin{description}
+\item[Short] 
+ Demonstration of vocoder plugin.
+\item[Description] 
+ Play a sentence either vocoded or unvocoded
+\item[How] 
+ A vocoder-plugin filter has been added in the connections.
+\end{description}
+
 \subsubsection{filters/filters-wavamplifier.apx}
 \begin{description}
 \item[Short] 
@@ -731,7 +738,7 @@
 \item[Description] 
  datablock does not exist in folder stimuli, running the experiment gives an error.
 \item[How] 
- uri\_prefix is used to find stimuli, invalid.qic does not exist
+ uri\_prefix is used to find stimuli, invalid.aseq does not exist
 \end{description}
 
 \subsubsection{l34/L34DummySync.apx}
@@ -794,6 +801,16 @@
  Use \textless{}defaultmap\textgreater{} \textless{}from\_r126/\textgreater{}
 \end{description}
 
+\subsubsection{l34/rfgenxs-bilateral.apx}
+\begin{description}
+\item[Short] 
+ Test of synchronized bilateral CI setup with an RFGenXS
+\item[Description] 
+ Test whether the stimuli are given on the first, the second or both channels
+\item[How] 
+ With an RFGenXS, stimuli can be presented stimultaneously
+\end{description}
+
 \subsubsection{l34/setvolume.apx}
 \begin{description}
 \item[Short] 
@@ -804,7 +821,7 @@
  Add variable parameter id=l34volume, see device: volume 100 is default
 \end{description}
 
-\subsubsection{l34/simpleAseq.apx}
+\subsubsection{l34/simpleaseq.apx}
 \begin{description}
 \item[Short] 
 
@@ -814,7 +831,17 @@
 
 \end{description}
 
-\subsubsection{l34/simpleQIC.apx}
+\subsubsection{l34/simpleaseq-dummy.apx}
+\begin{description}
+\item[Short] 
+
+\item[Description] 
+
+\item[How] 
+
+\end{description}
+
+\subsubsection{l34/simpleaseq-examples.apx}
 \begin{description}
 \item[Short] 
  power-up test?
@@ -824,17 +851,7 @@
 
 \end{description}
 
-\subsubsection{l34/simpleQIC-dummy.apx}
-\begin{description}
-\item[Short] 
-
-\item[Description] 
-
-\item[How] 
-
-\end{description}
-
-\subsubsection{l34/simpleQIC-SP12.apx}
+\subsubsection{l34/simpleaseq-sp12.apx}
 \begin{description}
 \item[Short] 
 
@@ -854,7 +871,7 @@
 
 \end{description}
 
-\subsubsection{l34/wordsQIC.apx}
+\subsubsection{l34/wordsaseq.apx}
 \begin{description}
 \item[Short] 
 
@@ -1170,11 +1187,8 @@
 \subsubsection{procedure/choices-randomstimulus-randomstandard.apx}
 \begin{description}
 \item[Short] 
- Regression test - Show use of intervals and random selection of stimuli/standard(reference) - 4 presentations (2 trials =\textgreater{} 8x)
 \item[Description] 
- adaptive procedure, select random stimulus, random standard (no selection) of the 2 trials =\textgreater{} If you click correct/wrong (trial1) or true/false (trial2) your response is correct/false. The stimuli changes according to the 'snr' (the larger the values of snr, the easier the experiment)
 \item[How] 
- adaptiveProcedure - intervals(two choices: correct/wrong - true/false) - larger is easier:true - adapt\_parameter (snr: snr (order, not in dB - see stimuli)
 \end{description}
 
 \subsubsection{procedure/continuous-waitbeforefirst.apx}
@@ -1312,13 +1326,6 @@
  When you click on the button 'correct or wrong', you hear a stimulus 'wd1.wav (een/one)' in both ears. When you click again, the gain of the stimulus decreases/increases according to the button (correct/false)
 \item[How] 
  adaptiveProcedure - stop\_after\_type: reversals - nUp/nDown - adapt\_parameter (gain: gain of stimulus) -
-\end{description}
-
-\subsubsection{procedure/matrix\_adaptief\_spraak\_original\_01.apx}
-\begin{description}
-\item[Short] 
-\item[Description] 
-\item[How] 
 \end{description}
 
 \subsubsection{procedure/multiparameters-fixed.apx}
@@ -1519,6 +1526,13 @@
  When you click on a button with a certain number, the next time you have to click on the number you just have heard - parameter: stepsize \& startvalue
 \item[How] 
  pluginProcedure with a certain script
+\end{description}
+
+\subsubsection{procedure/pluginprocedure-matrixtest.apx}
+\begin{description}
+\item[Short] 
+\item[Description] 
+\item[How] 
 \end{description}
 
 \subsubsection{procedure/randomchannel.apx}
@@ -1770,7 +1784,17 @@
 \item[Description] 
  Resultparameters specified in \textless{}results\textgreater{}/\textless{}resultparameters\textgreater{} will be passed on to the resultviewer
 \item[How] 
- These parameters will be made available in a hash params. Additionaly, the javascript code in \textless{}resultscript\textgreater{} will be executed when the resultsviewer is loaded.
+ These parameters will be made available in a hash params. 
+\end{description}
+
+\subsubsection{results/results-resultparams-localization-polarplot.apx}
+\begin{description}
+\item[Short] 
+
+\item[Description] 
+
+\item[How] 
+
 \end{description}
 
 \subsubsection{results/results-saveprocessedresults.apx}

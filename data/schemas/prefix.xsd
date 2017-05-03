@@ -1,19 +1,16 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
-    
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
     <xs:complexType name="prefixType">
         <xs:annotation>
             <xs:documentation>
                 A prefix can be specified inline (ie: here) or by specifying the ID of a prefix in the main configfile. 
-                You can specify a complete URI or part of it. Use a scheme if you want to specify an absolute url.
                 Example:
-                Absolute:     file:c:/program files/bla
-                Relative:     ./stimuli
+                Absolute:     c:/program files/bla
+                Relative:     ../stimuli
             </xs:documentation>
         </xs:annotation>
         <xs:simpleContent>
-            <!--xs:extension base="xs:anyURI"-->
             <xs:extension base="xs:string">
                 <xs:attribute name="source" default="inline">
                     <xs:simpleType>
@@ -31,10 +28,7 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>
-                
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-    
-    
-    </xs:schema>
+</xs:schema>

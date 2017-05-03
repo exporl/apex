@@ -14,15 +14,11 @@
 #CLEBS -= pch
 
 # Uncomment to disable certain modules although all dependencies are available
-# Do not disable flash or pa5 here!
+# Do not disable flash here!
 #CLEBS_DISABLED *= syllib original tester hrtf sink screeneditor perl
-
-# Uncomment for support of the programmable attenuator
-#CONFIG += PA5
 
 # Use multiple cores in windows
 #win32:QMAKE_CXXFLAGS += /MP2
-
 
 # Dependencies for Unix:
 #unix:MATLABROOT=/usr/local/matlab
@@ -43,21 +39,6 @@
 #win32:XALANCDLLDIR_RELEASE = $${XALANCDLLDIR}/release
 #win32:XALANCDLLDIR_DEBUG = $${XALANCDLLDIR}/debug
 #win32:XALANCINCLUDEDIR = $${XALANCROOT}/src
-
-#win32:XERCESCROOT = $$BASEDIR/../api/xerces
-#win32:XERCESCLIB = xerces-c_3
-#win32:XERCESCLIB_RELEASE = $${XERCESCLIB}
-#win32:XERCESCLIB_DEBUG = $${XERCESCLIB}d
-#win32:XERCESCLIBDIR = $${XERCESCROOT}/build/win32/vc10
-#win32:XERCESCLIBDIR_RELEASE = $${XERCESCLIBDIR}/release
-#win32:XERCESCLIBDIR_DEBUG = $${XERCESCLIBDIR}/debug
-#win32:XERCESCDLL = xerces-c_3_1
-#win32:XERCESCDLL_RELEASE = $${XERCESCDLL}.dll
-#win32:XERCESCDLL_DEBUG = $${XERCESCDLL}d.dll
-#win32:XERCESCDLLDIR = $${XERCESCLIBDIR}
-#win32:XERCESCDLLDIR_RELEASE = $${XERCESCDLLDIR}/release
-#win32:XERCESCDLLDIR_DEBUG = $${XERCESCDLLDIR}/debug
-#win32:XERCESCINCLUDEDIR = $${XERCESCROOT}/src
 
 #win32:PORTAUDIOROOT = $$BASEDIR/../api/portaudio
 #win32:PORTAUDIOLIB = portaudio_x86

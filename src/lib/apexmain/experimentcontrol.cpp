@@ -9,33 +9,28 @@
 
 #include "apexdata/stimulus/stimulusparameters.h"
 
-#include "apextools/services/paths.h"
+#include "apextools/apexpaths.h"
+#include "apextools/exceptions.h"
+
+#include "device/controldevice.h"
+#include "device/plugincontroller.h"
 
 #include "procedure/procedureapiimplementation.h"
 
 #include "randomgenerator/randomgenerators.h"
 
-// TODO ANDROID resultviewer uses webkitwidgets
-#ifndef Q_OS_ANDROID
-#include "result/resultviewer.h"
-#endif
-
 #include "resultsink/apexresultsink.h"
 
-// TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
-#include "resultsink/rtresultsink.h"
-#endif
-
 #include "runner/experimentrundelegate.h"
-
-#include "services/pluginloader.h"
 
 #include "stimulus/stimulusoutput.h"
 
 #include "timer/apextimer.h"
 
 #include "trial/trialstarttime.h"
+
+#include "wavstimulus/wavdevice.h"
+#include "wavstimulus/wavdeviceio.h"
 
 #include "apexcontrol.h"
 #include "experimentcontrol.h"
@@ -51,6 +46,12 @@
 #include <QState>
 #include <QStateMachine>
 #include <QTimer>
+
+// TODO ANDROID resultviewer uses webkitwidgets
+#ifndef Q_OS_ANDROID
+#include "result/resultviewer.h"
+#include "resultsink/rtresultsink.h"
+#endif
 
 //#define PRINT_EXPERIMENT_STATES
 static const char* ERROR_SOURCE = "ExperimentControl";
@@ -118,6 +119,13 @@ class ExperimentControlPrivate : public QObject
         void outroDone();
         void errorMessage(const QString& source, const QString& message);
         void savedResults(QString filename);
+        /**
+         * @brief parametersLoaded sends out the stimulus' params map
+         *        after it's prepared in playNextStimulus
+         * @param params QvariantMap with <QString,QVariant>
+         */
+        void parametersLoaded(const QVariantMap& params);
+        void trialStarted();
 
     private:
 
@@ -169,14 +177,14 @@ class ExperimentControlPrivate : public QObject
 
 ExperimentControlPrivate::ExperimentControlPrivate(ExperimentControl* qq,
                                                    ExperimentControl::Flags f)
-                                    : q(qq),
-                                      flags(f),
-                                      io(new ExperimentIo()),
-                                      procedure(0),
-                                      api(0),
-                                      pauseAfterTrial(false),
-                                      isFirstTrial(true),
-                                      stopped(false)
+    : q(qq),
+      flags(f),
+      io(new ExperimentIo()),
+      procedure(0),
+      api(0),
+      pauseAfterTrial(false),
+      isFirstTrial(true),
+      stopped(false)
 {
     connect(io, SIGNAL(responseGiven(const ScreenResult*)),
             this, SLOT(processResponse(const ScreenResult*)));
@@ -236,7 +244,7 @@ void ExperimentControlPrivate::setupStates()
     connect(waitForStart, SIGNAL(entered()), this, SLOT(waitForStart()));
 
     // [Tom] Removed property setting: leads to unpredictable results when leaving states
-//    running->assignProperty(io, "stopEnabled", true);
+    //    running->assignProperty(io, "stopEnabled", true);
 
     running->addTransition(running, SIGNAL(finished()), showingResult);
     running->addTransition(this, SIGNAL(needPause()), pause);
@@ -485,7 +493,7 @@ void ExperimentControlPrivate::loadExperiment(ExperimentRunDelegate* runDelegate
     try
     {
         api.reset(new ProcedureApiImplementation(
-            *rd, flags & ExperimentControl::Deterministic));
+                      *rd, flags & ExperimentControl::Deterministic));
         connect(api.data(), SIGNAL(showMessageBox(QString, QString)),
                 this, SLOT(showMessageBox(QString, QString)));
         connect(api.data(), SIGNAL(stoppedWithError(QString, QString)), q, SIGNAL(errorMessage(QString,QString)));
@@ -493,30 +501,38 @@ void ExperimentControlPrivate::loadExperiment(ExperimentRunDelegate* runDelegate
         if (flags & ExperimentControl::Deterministic)
             rd->modRandomGenerators()->doDeterministicGeneration();
 
-
         procedure.reset(rd->makeProcedure(api.data(),
                                           rd->GetData().procedureData()));
 
         if (procedure.isNull()) {
             QString procedureType = rd->GetData().procedureData()->name();
-            error =
-                tr("Cannot find a suitable procedure creator plugin for type %1")
-                                                    .arg(procedureType);
+            error = tr("Cannot find a suitable procedure creator plugin for type %1")
+                    .arg(procedureType);
         }
 
+        //  OUTPUTDEVICE X CONTROLDEVICE SYNCHRONIZATION
+        stimulus::tDeviceMap::Iterator devIt;
+        stimulus::tDeviceMap deviceMap =  rd->GetDevices () ;
+
+        device::tControllerMap::Iterator conIt;
+        device::tControllerMap controlMap = rd->GetControllers ();
+
+        for(devIt=deviceMap.begin(); devIt != deviceMap.end(); ++devIt){
+            for(conIt=controlMap.begin(); conIt != controlMap.end(); ++conIt){
+                qCDebug(APEX_RS) << "Connecting outputdevice " << devIt.key() << " with controldevice" << conIt.key();
+
+                connect(devIt.value (),SIGNAL(stimulusStarted()),conIt.value (),SLOT(syncControlDeviceOutput()));
+            }
+        }
     }
-    catch (ApexStringException e)
-    {
+    catch (const std::exception &e) {
         error = e.what();
     }
 
-    if (!error.isEmpty())
-    {
-        q->log().addError(ERROR_SOURCE, error);
+    if (!error.isEmpty()) {
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(ERROR_SOURCE, error)));
         machine.stop();
-    }
-    else
-    {
+    } else {
         this->procedure = procedure.take();
         this->api = api.take();
 
@@ -546,7 +562,19 @@ void ExperimentControlPrivate::waitForStart()
 // TODO ANDROID rtresultsink uses webkitwidgets
 #ifndef Q_OS_ANDROID
     if (rd->modRTResultSink())
+    {
         rd->modRTResultSink()->show();
+        //  Let rv know when trial starts
+        connect(this,SIGNAL(trialStarted()),rd->modRTResultSink(),SLOT(trialStarted()));
+        //  Send params to resultsviewer when they are loaded
+        connect(this,SIGNAL(parametersLoaded(const QVariantMap &)),rd->modRTResultSink(),SLOT(newStimulusParameters(const QVariantMap &)));
+        //  let rv know when device does playStimulus
+        stimulus::tDeviceMap deviceMap =  rd->GetDevices () ;
+        for (auto devIt=deviceMap.begin(); devIt != deviceMap.end(); ++devIt)
+        {
+            connect(devIt.value(), SIGNAL(stimulusStarted()), rd->modRTResultSink(), SLOT(stimulusStarted()));
+        }
+    }
 #endif
 }
 
@@ -580,15 +608,16 @@ void ExperimentControlPrivate::startNextTrial()
 
     io->setProgress(procedure->progress());
     try {
+        Q_EMIT trialStarted();
         currentTrial = procedure->setupNextTrial();
-    } catch (const ApexStringException& e) {
-        emit errorMessage(ERROR_SOURCE, e.what());
-        emit trialsDone();
+    } catch (const std::exception &e) {
+        Q_EMIT errorMessage(ERROR_SOURCE, e.what());
+        Q_EMIT trialsDone();
     }
     io->setAnswer(currentTrial.answer());
 
     if (!currentTrial.isValid())
-        emit trialsDone();
+        Q_EMIT trialsDone();
 }
 
 void ExperimentControlPrivate::restartTrial()
@@ -627,7 +656,7 @@ void ExperimentControlPrivate::showNextScreen()
     {
         currentScreen = -1;
         if(!stopped) {
-            emit screensDone();
+            Q_EMIT screensDone();
         }
     }
     else
@@ -641,7 +670,7 @@ void ExperimentControlPrivate::playNextStimulus()
     if (++currentStimulus >= currentTrial.stimulusCount(currentScreen))
     {
         currentStimulus = -1;
-        emit stimuliDone();
+        Q_EMIT stimuliDone();
     }
     else
     {
@@ -656,20 +685,28 @@ void ExperimentControlPrivate::playNextStimulus()
         for (QVariantMap::const_iterator it=varparams.begin(); it != varparams.end(); ++it) {
             paramMgr->setParameter(it.key(), it.value(), true);
         }
+        QVariantMap allparams(varparams);
 
         const QVariantMap& fixparams( stim->GetFixParameters()->map() );
         for (QVariantMap::const_iterator it=fixparams.begin(); it != fixparams.end(); ++it) {
             paramMgr->setParameter(it.key(), it.value(), true);
+            allparams.insert(it.key(),it.value());
         }
 
         // set parameters obtained from procedure
         QMap<QString, QVariant> parameters =
-                        currentTrial.parameters(currentScreen, currentStimulus);
+                currentTrial.parameters(currentScreen, currentStimulus);
 
         QMap<QString, QVariant>::const_iterator it;
-        for (it = parameters.begin(); it != parameters.end(); ++it)
+        for (it = parameters.begin(); it != parameters.end(); ++it) {
             paramMgr->setParameter(it.key(), it.value(), true);
+            allparams.insert(it.key(),it.value());
+        }
 
+        if ( allparams.size() > 0 )
+        {
+            Q_EMIT parametersLoaded(allparams);
+        }
 
         //run random parameter generators
         rd->modRandomGenerators()->ApplyGenerators();
@@ -686,7 +723,10 @@ void ExperimentControlPrivate::playNextStimulus()
             silence = rd->GetData().procedureData()->timeBeforeFirstStimulus();
         }
 
+
+        qCDebug(APEX_RS, "Calling playNextStimulus at time: %s", qPrintable(QString::number(QDateTime::currentMSecsSinceEpoch())));
         io->playStimulus(stimulus, silence);
+
 
         //highlight current screen element if needed
         if (rd->GetData().screensData()->hasShowCurrentEnabled())
@@ -711,7 +751,7 @@ void ExperimentControlPrivate::waitAfterStimulus()
 
     if (!currentTrial.doWaitAfter(currentScreen, currentStimulus))
     {
-        emit stimulusTimeoutDone();
+        Q_EMIT stimulusTimeoutDone();
         return;
     }
 
@@ -730,17 +770,17 @@ void ExperimentControlPrivate::checkResponseNeededAfterStimuli()
 
     if (currentTrial.acceptResponse(currentScreen) &&
             ! rd->GetData().procedureData()->inputDuringStimulus())
-        emit needResponse();
+        Q_EMIT needResponse();
     else
-        emit dontNeedResponse();
+        Q_EMIT dontNeedResponse();
 }
 
 void ExperimentControlPrivate::checkResponseNeededDuringStimuli()
 {
     if (rd->GetData().procedureData()->inputDuringStimulus()
-        && currentTrial.acceptResponse(currentScreen))
+            && currentTrial.acceptResponse(currentScreen))
     {
-        emit needResponse();
+        Q_EMIT needResponse();
     }
 }
 
@@ -749,10 +789,10 @@ void ExperimentControlPrivate::checkPauseNeeded()
     if (pauseAfterTrial)
     {
         pauseAfterTrial = false;
-        emit needPause();
+        Q_EMIT needPause();
     }
     else
-        emit dontNeedPause();
+        Q_EMIT dontNeedPause();
 }
 
 void ExperimentControlPrivate::postponePause()
@@ -824,29 +864,29 @@ void ExperimentControlPrivate::showOutro()
 
 void ExperimentControlPrivate::showResult()
 {
-    // TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
     rd->modOutput()->CloseDevices();
     if (rd->modResultSink() != 0)
     {
         rd->modResultSink()->setExtraXml(procedure->finalResultXml());
         rd->modResultSink()->Finished();
-        emit savedResults(rd->modResultSink()->GetFilename());
+        Q_EMIT savedResults(rd->modResultSink()->GetFilename());
 
         if (rd->modResultSink()->IsSaved())
         {
             if (rd->GetData().resultParameters()->showResultsAfter() ||
-                rd->GetData().resultParameters()->saveResults())
+                    rd->GetData().resultParameters()->saveResults())
             {
+                // TODO ANDROID ResultViewer uses webkitwidgets
+#ifndef Q_OS_ANDROID
                 ResultViewer rv(rd->GetData().resultParameters(),
                                 rd->modResultSink()->GetFilename());
                 connect(&rv, SIGNAL(errorMessage(QString,QString)), this, SIGNAL(errorMessage(QString, QString)));
+
 
                 //bool result = rv.ProcessResult();
 
                 /*if (result)
                 {*/
-
 
                     if (rd->GetData().resultParameters()->showResultsAfter())
                         if (rd->modRTResultSink())
@@ -856,10 +896,10 @@ void ExperimentControlPrivate::showResult()
                         rv.addtofile(rd->modResultSink()->GetFilename());
 
                 //}
+#endif
             }
         }
     }
-#endif
 }
 
 void ExperimentControlPrivate::afterExperiment()
@@ -872,7 +912,7 @@ void ExperimentControlPrivate::afterExperiment()
     procedure = 0;
     api = 0;
 
-    q->log().addMessage(ERROR_SOURCE, tr("Experiment done"));
+    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(ERROR_SOURCE, tr("Experiment done"))));
 
     io->enableSelectSoundcard();
 }
@@ -910,13 +950,13 @@ void ExperimentControlPrivate::processResponse(const apex::ScreenResult* result)
         pm->setParameter(it->first, it->second, true);
     }
 
-    emit responseGiven();
+    Q_EMIT responseGiven();
 }
 
 void ExperimentControlPrivate::handleStopped()
 {
     stopped = true;
-    emit trialsDone();
+    Q_EMIT trialsDone();
     stopStimulus();
 }
 
@@ -949,7 +989,7 @@ void ExperimentControlPrivate::printLeaveState( )
 #endif
 
 ExperimentControl::ExperimentControl(Flags flags) :
-            d(new ExperimentControlPrivate(this, flags))
+    d(new ExperimentControlPrivate(this, flags))
 {
     connect(&d->machine, SIGNAL(finished()), this, SIGNAL(experimentDone()));
     connect(d, SIGNAL(savedResults(QString)), this, SIGNAL(savedResults(QString)));
@@ -968,7 +1008,7 @@ void ExperimentControl::loadExperiment(ExperimentRunDelegate* runDelegate)
 void ExperimentControl::start()
 {
     if (isRunning())
-        log().addWarning(ERROR_SOURCE, tr("Experiment already running"));
+        qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(ERROR_SOURCE, tr("Experiment already running"))));
     else
         d->start();
 }

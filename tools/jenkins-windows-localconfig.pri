@@ -14,11 +14,8 @@ CLEBS -= pch
 CLEBS *= nosilent
 
 # Uncomment to disable certain modules although all dependencies are available
-# Do not disable flash or pa5 here!
+# Do not disable flash here!
 CLEBS_DISABLED -= documentation/manual
-
-# Uncomment for support of the programmable attenuator
-#CONFIG += PA5
 
 # Dependencies for Unix:
 MATLABROOT=c:/api-vs2008/matlab71
@@ -38,21 +35,6 @@ win32:XALANCROOT = c:/api-vs2010/xml-xalan/c
 #win32:XALANCDLLDIR_RELEASE = $${XALANCDLLDIR}/release
 #win32:XALANCDLLDIR_DEBUG = $${XALANCDLLDIR}/debug
 #win32:XALANCINCLUDEDIR = $${XALANCROOT}/src
-
-win32:XERCESCROOT = c:/api-vs2010/xerces-c-3.1.2
-#win32:XERCESCLIB = xerces-c_3
-#win32:XERCESCLIB_RELEASE = $${XERCESCLIB}
-#win32:XERCESCLIB_DEBUG = $${XERCESCLIB}d
-#win32:XERCESCLIBDIR = $${XERCESCROOT}/build/win32/vc10
-#win32:XERCESCLIBDIR_RELEASE = $${XERCESCLIBDIR}/release
-#win32:XERCESCLIBDIR_DEBUG = $${XERCESCLIBDIR}/debug
-#win32:XERCESCDLL = xerces-c_3_1
-#win32:XERCESCDLL_RELEASE = $${XERCESCDLL}.dll
-#win32:XERCESCDLL_DEBUG = $${XERCESCDLL}d.dll
-#win32:XERCESCDLLDIR = $${XERCESCLIBDIR}
-#win32:XERCESCDLLDIR_RELEASE = $${XERCESCDLLDIR}/release
-#win32:XERCESCDLLDIR_DEBUG = $${XERCESCDLLDIR}/debug
-#win32:XERCESCINCLUDEDIR = $${XERCESCROOT}/src
 
 win32:XML2ROOT = c:/api-vs2010/xml2
 win32:ICONVROOT = c:/api-vs2010/iconv
@@ -85,6 +67,15 @@ win32:FFTW3ROOT = c:/api-vs2010/fftw3
 #win32:FFTW3LIBDIR_RELEASE = $${FFTW3LIBDIR}
 #win32:FFTW3LIBDIR_DEBUG = $${FFTW3LIBDIR}
 #win32:FFTW3INCLUDEDIR = $${FFTW3ROOT}
+
+win32:FFTW3FROOT = c:/api-vs2010/fftw3
+#win32:FFTW3FLIB = libfftw3f-3
+#win32:FFTW3FLIB_RELEASE = $${FFTW3FLIB}
+#win32:FFTW3FLIB_DEBUG = $${FFTW3FLIB}
+#win32:FFTW3FLIBDIR = $${FFTW3FROOT}
+#win32:FFTW3FLIBDIR_RELEASE = $${FFTW3FLIBDIR}
+#win32:FFTW3FLIBDIR_DEBUG = $${FFTW3FLIBDIR}
+#win32:FFTW3FINCLUDEDIR = $${FFTW3FROOT}
 
 # Boost
 win32:BOOSTROOT = c:/api-vs2010/boost

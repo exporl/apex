@@ -1,0 +1,458 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1">
+  <!--
+        misty.xlm
+        File that was actually used to present to the participants.
+        Comes from vcv_v2.xml.
+
+        Created June 22, 2015.
+        Arturo Moncada-Torres - KU Leuven
+        arturo.moncadatorres@med.kuleuven.be
+        http://www.arturomoncadatorres.com
+        -->
+  <!-- Procedures -->
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>8</presentations>
+      <order>random</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="tr_1">
+        <answer>b_b</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_aba"/>
+      </trial>
+      <trial id="tr_2">
+        <answer>b_ch</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_acha"/>
+      </trial>
+      <trial id="tr_3">
+        <answer>b_d</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_ada"/>
+      </trial>
+      <trial id="tr_4">
+        <answer>b_f</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_afa"/>
+      </trial>
+      <trial id="tr_5">
+        <answer>b_m</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_ama"/>
+      </trial>
+      <trial id="tr_6">
+        <answer>b_n</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_ana"/>
+      </trial>
+      <trial id="tr_7">
+        <answer>b_p</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_apa"/>
+      </trial>
+      <trial id="tr_8">
+        <answer>b_s</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_asa"/>
+      </trial>
+      <trial id="tr_9">
+        <answer>b_t</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_ata"/>
+      </trial>
+      <trial id="tr_10">
+        <answer>b_v</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_ava"/>
+      </trial>
+      <trial id="tr_11">
+        <answer>b_w</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_awa"/>
+      </trial>
+      <trial id="tr_12">
+        <answer>b_z</answer>
+        <screen id="sc_buttons"/>
+        <stimulus id="st_aza"/>
+      </trial>
+    </trials>
+  </procedure>
+  <!-- Screens -->
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <!--<feedback length="500">true</feedback>-->
+      <feedback length="500">false</feedback>
+    </reinforcement>
+    <screen id="sc_buttons">
+      <gridLayout columnstretch="2,1,1,1,1,2" width="6" height="5">
+        <button row="2" col="1" id="b_a1">
+          <disabled>true</disabled>
+          <text>a</text>
+        </button>
+        <button row="1" col="2" id="b_b">
+          <text>b</text>
+        </button>
+        <button row="1" col="3" id="b_ch">
+          <text>ch</text>
+        </button>
+        <button row="1" col="4" id="b_d">
+          <text>d</text>
+        </button>
+        <button row="1" col="5" id="b_f">
+          <text>f</text>
+        </button>
+        <button row="2" col="2" id="b_m">
+          <text>m</text>
+        </button>
+        <button row="2" col="3" id="b_n">
+          <text>n</text>
+        </button>
+        <button row="2" col="4" id="b_p">
+          <text>p</text>
+        </button>
+        <button row="2" col="5" id="b_s">
+          <text>s</text>
+        </button>
+        <button row="3" col="2" id="b_t">
+          <text>t</text>
+        </button>
+        <button row="3" col="3" id="b_v">
+          <text>v</text>
+        </button>
+        <button row="3" col="4" id="b_w">
+          <text>w</text>
+        </button>
+        <button row="3" col="5" id="b_z">
+          <text>z</text>
+        </button>
+        <button row="2" col="6" id="b_a2">
+          <disabled>true</disabled>
+          <text>a</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="b_a1"/>
+        <button id="b_b"/>
+        <button id="b_ch"/>
+        <button id="b_d"/>
+        <button id="b_f"/>
+        <button id="b_m"/>
+        <button id="b_n"/>
+        <button id="b_p"/>
+        <button id="b_s"/>
+        <button id="b_t"/>
+        <button id="b_v"/>
+        <button id="b_w"/>
+        <button id="b_z"/>
+        <button id="b_a2"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  <!-- Datablocks
+                Remember, basically, a <datablock> is a wave file on disk with
+                an ID assigned, such that it can be referred to elsewhere
+                in the experiment file. -->
+  <datablocks>
+    <prefix>./audio/original_subset/</prefix>
+    <datablock id="db_aba">
+      <device>wavdevice</device>
+      <file>aba.wav</file>
+    </datablock>
+    <datablock id="db_acha">
+      <device>wavdevice</device>
+      <file>acha.wav</file>
+    </datablock>
+    <datablock id="db_ada">
+      <device>wavdevice</device>
+      <file>ada.wav</file>
+    </datablock>
+    <datablock id="db_afa">
+      <device>wavdevice</device>
+      <file>afa.wav</file>
+    </datablock>
+    <datablock id="db_ama">
+      <device>wavdevice</device>
+      <file>ama.wav</file>
+    </datablock>
+    <datablock id="db_ana">
+      <device>wavdevice</device>
+      <file>ana.wav</file>
+    </datablock>
+    <datablock id="db_apa">
+      <device>wavdevice</device>
+      <file>apa.wav</file>
+    </datablock>
+    <datablock id="db_asa">
+      <device>wavdevice</device>
+      <file>asa.wav</file>
+    </datablock>
+    <datablock id="db_ata">
+      <device>wavdevice</device>
+      <file>ata.wav</file>
+    </datablock>
+    <datablock id="db_ava">
+      <device>wavdevice</device>
+      <file>ava.wav</file>
+    </datablock>
+    <datablock id="db_awa">
+      <device>wavdevice</device>
+      <file>awa.wav</file>
+    </datablock>
+    <datablock id="db_aza">
+      <device>wavdevice</device>
+      <file>aza.wav</file>
+    </datablock>
+    <datablock id="db_noise">
+      <device>wavdevice</device>
+      <file>noise.wav</file>
+    </datablock>
+    <datablock id="silence">
+      <device>wavdevice</device>
+      <file>silence:500</file>
+    </datablock>
+  </datablocks>
+  <!-- Devices -->
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain channel="0" id="gainleft">0</gain>
+      <gain channel="1" id="gainright">0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <!-- Filters -->
+  <filters>
+    <filter xsi:type="apex:dataloop" id="noisegen">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <continuous>true</continuous>
+      <datablock>db_noise</datablock>
+      <basegain>0</basegain>
+      <invertgain>1</invertgain>
+      <gain id="noisegain">0</gain>
+      <randomjump>true</randomjump>
+    </filter>
+    <filter xsi:type="apex:amplifier" id="amplifier">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="gain">0</gain>
+    </filter>
+  </filters>
+  <!-- Stimuli -->
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="st_aba">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_aba"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_acha">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_acha"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_ada">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_ada"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_afa">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_afa"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_ama">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_ama"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_ana">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_ana"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_apa">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_apa"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_asa">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_asa"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_ata">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_ata"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_ava">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_ava"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_awa">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_awa"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_aza">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="db_aza"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="st_silence">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+    </stimulus>
+  </stimuli>
+  <!-- Connections -->
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>noisegen</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+  <calibration profile="vcv">
+    <stimuli>
+      <stimulus id="st_silence"/>
+    </stimuli>
+    <parameters>
+      <parameter id="gainleft">
+        <!-- Calibration is preferably done in dbA -->
+        <targetamplitude>60</targetamplitude>
+        <!-- 65 dbSPL ~ 60 dbA-->
+        <calibrationamplitude>80</calibrationamplitude>
+        <!-- Set to higher value to avoid interference from other sounds. -->
+        <mute>-150</mute>
+        <!-- Shut up gain value of other channel. -->
+      </parameter>
+    </parameters>
+  </calibration>
+  <!-- Results -->
+  <results>
+    <page>apex:resultsviewer.html</page>
+    <resultparameters/>
+    <showduringexperiment>false</showduringexperiment>
+    <showafterexperiment>true</showafterexperiment>
+    <saveprocessedresults>true</saveprocessedresults>
+    <subject/>
+  </results>
+  <!-- Interactive -->
+  <interactive>
+    <entry expression="/apex:apex/results/subject" description="Participant" default="" type="string"/>
+    <entry expression="/apex:apex/datablocks[1]/uri_prefix[1]" description="EE Amp. Factor" default="file:./audio/amp0|file:./audio/amp1|file:./audio/amp2|file:./audio/amp3|file:./audio/amp4|file:./audio/amp5|file:./audio/amp6|file:./audio/amp7|file:./audio/amp8|file:./audio/amp9|file:./audio/amp10|file:./audio/amp11|file:./audio/amp12|file:./audio/amp13|file:./audio/amp14|file:./audio/amp15|file:./audio/amp16|file:./audio/amp17|file:./audio/amp18|file:./audio/amp19|file:./audio/amp20|file:./audio/amp21|file:./audio/amp22|file:./audio/amp23|file:./audio/amp24" type="combo"/>
+    <!--<entry default="0" description="SNR [dB]" expression="/apex:apex/filters/filter[@id='amplifier']/gain" type="double"/>-->
+    <entry expression="/apex:apex/filters/filter[@id='noisegen']/gain" description="SNR [dB]" default="0" type="int"/>
+    <!--<entry default="0" description="SNR [dB]" expression="/apex:apex/filters/filter[@id='noisegen']/gain" type="double"/>-->
+  </interactive>
+</apex:apex>

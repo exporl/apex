@@ -9,7 +9,7 @@
 	<startdate>2015-04-21T15:50:56</startdate>
 	<enddate>2015-04-21T15:51:00</enddate>
 	<duration unit="seconds">4</duration>
-	<jscript>../../data/scripts/rtresults.html</jscript>
+	<jscript>../../resultsviewer/resultsviewer.html</jscript>
 	<subject>d</subject>
 	<interactive>
 		<entry expression="/apex:apex/results/subject" new_value="d" succeeded="true" />

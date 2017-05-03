@@ -29,36 +29,28 @@
 
 namespace apex
 {
-class StatusReporter;
 
 namespace data
 {
 
-typedef  QStringList FixedParameterList;
+typedef QStringList FixedParameterList;
 
 
 class APEXDATA_EXPORT StimuliData:
             public QMap<QString,StimulusData>
 {
-    public:
-        void setFixedParameters(FixedParameterList p);
-        /** Check whether each fixed parameter is defined in each stimulus.
-         * if so, return true, otherwise return false
-         **/
-        bool CheckFixedParameters(StatusReporter* err);
+public:
+    void setFixedParameters(FixedParameterList p);
+    const FixedParameterList& GetFixedParameters() const;
 
-        const FixedParameterList& GetFixedParameters() const;
+    bool operator==(const StimuliData& other) const;
 
-        bool operator==(const StimuliData& other) const;
-
-    private:
-        FixedParameterList m_fixedParameters;
+private:
+    FixedParameterList m_fixedParameters;
 };
 
 }
+
 }
-
-
-
 
 #endif

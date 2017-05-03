@@ -16,7 +16,7 @@ temp=['<datablock id="' id '">' lf];
 if (~isempty(device))
     temp=[temp tb '<device>' device '</device>' lf];
 end
-temp=[temp tb '<uri>' xmlfilename(filename) '</uri>' lf];
+temp=[temp tb '<file>' xmlfilename(filename) '</file>' lf];
 if (channels)
    temp=[temp wraptag('channels', num2str(channels))];
 end

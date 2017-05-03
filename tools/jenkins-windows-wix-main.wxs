@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <?define BaseRegKey="Software\ExpORL\APEX3" ?>
-    <Product Id="5AC5D6AA-B7FC-4CBC-BDBD-DAA945ED1316" UpgradeCode="E7DA4D21-0679-494A-93D5-6865E2E05B6C" Name="Apex" Manufacturer="ExpORL" Version="3.1.1" Language="1033">
+    <Product Id="5AC5D6AA-B7FC-4CBC-BDBD-DAA945ED1316" UpgradeCode="E7DA4D21-0679-494A-93D5-6865E2E05B6C" Name="Apex" Manufacturer="ExpORL" Version="3.1.4" Language="1033">
         <Package Id="*" Description="Apex" Manufacturer="ExpORL" InstallerVersion="200" InstallPrivileges="elevated" InstallScope="perMachine" Compressed="yes"/>
         <MediaTemplate EmbedCab="yes"/>
         <Icon Id="apex.exe" SourceFile="$(env.ApexInstallPath)/bin/apex.exe"/>

@@ -10,3 +10,6 @@
 [submodule "coh"]
 	path = coh
 	url = ssh://gerrit/coh
+[submodule "bertha-lib"]
+	path = bertha-lib
+	url = ssh://gerrit/bertha-lib

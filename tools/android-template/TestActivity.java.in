@@ -1,0 +1,10 @@
+package be.kuleuven.med.exporl.apex;
+
+import org.qtproject.qt5.android.bindings.QtActivity;
+
+public class -- %%INSERT_TEST_ACTIVITY%% -- extends QtActivity
+{
+    public -- %%INSERT_TEST_ACTIVITY%% --() {
+        super();
+    }
+}

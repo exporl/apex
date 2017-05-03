@@ -71,17 +71,17 @@ void ScreensData::manageScreen( Screen* s )
 
 const FilePrefix& ScreensData::prefix() const
 {
-    return uriPrefix;
+    return filePrefix;
 }
 
 void ScreensData::setPrefix(FilePrefix prefix)
 {
-    uriPrefix = prefix;
+    filePrefix = prefix;
 }
 
 bool ScreensData::hasPrefix() const
 {
-    return !uriPrefix.value().isEmpty();
+    return !filePrefix.value().isEmpty();
 }
 
 bool ScreensData::hasDefaultFont() const
@@ -481,7 +481,7 @@ bool ScreensData::operator==(const ScreensData& other)
             movieOfPanel == other.movieOfPanel &&
             feedbackPositive == other.feedbackPositive &&
             feedbackNegative == other.feedbackNegative &&
-            uriPrefix == other.uriPrefix;
+            filePrefix == other.filePrefix;
 }
 
 }

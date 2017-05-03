@@ -1,7 +1,7 @@
 \chapter{Scripting APEX}
 \label{chap:scripting}
 
-APEX is designed to allow setting up experiments without programming. However, in some cases it can be convenient to script some tasks, to avoid repetitive typing work and in case special behaviour is desired which it not built into APEX. In the following sections, we will describe how to implement custom procedures using Javascript (section~\ref{sec:pluginprocedure}), and how to automatically generate trials, datablocks and stimuli (section~\ref{sec:pluginxml}).
+APEX is designed to allow setting up experiments without programming. However, in some cases it can be convenient to script some tasks, to avoid repetitive typing work and in case special behaviour is desired which is not built into APEX. In the following sections, we will describe how to implement custom procedures using Javascript (section~\ref{sec:pluginprocedure}), and how to automatically generate trials, datablocks and stimuli (section~\ref{sec:pluginxml}).
 
 The programming language used for these scripts is JavaScript, as implemented by Qt. Abundant online documentation of the Javascript language is available \todo{add reference to good tutorial}, and in most cases modifying examples provided with APEX will suffice to achieve the desired results.
 
@@ -36,7 +36,7 @@ In the experiment file, the plugin procedure is specified as follows:
     </procedure>
 \end{lstlisting}
 
-They key here is the use of \xml{xsi:type="apex:pluginProcedure}, and referring to a javascript file in the \xml{script} element. In this case, we refer to \filename{testprocedure.js}. APEX will try to find the in the following folders (order as indicated):
+The key here is the use of \xml{xsi:type="apex:pluginProcedure}, and to refer to a javascript file in the \xml{script} element. In this case, we refer to \filename{testprocedure.js}. APEX will try to find the javascript in the following folders (order as indicated):
 \begin{enumerate}
 \item the folder where the experiment file resides
 \item the pluginprocedures folder in the main APEX folder
@@ -143,7 +143,7 @@ adjustmentProcedure.prototype.processResult = function(screenresult)
 
 
 
-To further aid writing plugin procedures, 2 extra facilities are available: a javascript library with convenient functions and an API to APEX. The javascript library resides in \filename{apex/pluginprocedures/pluginscriptlibrary.js}. The APEX API is described in section~\ref{scriptapi}.
+To further aid writing plugin procedures, 2 extra facilities are available: a javascript library with convenient functions and an API to APEX. The javascript library resides in \filename{apex/pluginprocedures/pluginscriptlibrary.js}. The APEX API is described in section~\ref{sec:scriptapi}.
 
 
 
@@ -273,7 +273,7 @@ Similarly to trials, datablocks and stimuli, screens can also be generated using
 To debug generating XML from JavaScript code, the usual mechanisms are available, such as the use of the \function{debugger;} statement in JavaScript, which will open a graphical debugger. You can also save the experiment file in its expanded form after opening it in APEX, using the "Experiment|Save experiment as..." option in the menu.
 
 
-\section{Screens}
+\section{Screens} \todo{komt vrij beknopt over, maar kan moeilijk inschatten of meer moet uitgeschreven worden (Lot)}
 
 To make screens more interactive, \xml{<htmlelement>} can be used.
 
@@ -301,7 +301,7 @@ reset(); enabled();
 \end{lstlisting}
 
 
-When the trial is finished, and the screenresult is needed.
+When the trial is finished, and the screenresult is needed:
 
 \begin{lstlisting}
 getResult();    // returns string

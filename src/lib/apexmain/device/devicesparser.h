@@ -25,47 +25,37 @@
 
 #include "apextools/apextypedefs.h"
 
-#include "apextools/xml/xercesinclude.h"
-
-#include "parser/apexparser.h"
-
 #include <QObject>
 
-namespace XERCES_CPP_NAMESPACE
+namespace apex
 {
-    class DOMElement;
+
+namespace data
+{
+class PluginControllerData;
+class ParameterManagerData;
+}
+
+namespace parser
+{
+
+struct tAllDevices
+{
+    data::DevicesData outputdevices;
+    data::DevicesData controldevices;
 };
 
-
-namespace apex{
-
-    namespace data {
-        class PluginControllerData;
-        class ParameterManagerData;
-    }
-
-    namespace parser {
-
-        struct tAllDevices {
-            data::DevicesData outputdevices;
-            data::DevicesData controldevices;
-        };
-
-/**
-        @author Tom Francart,,, <tom.francart@med.kuleuven.be>
-*/
-    class APEX_EXPORT DevicesParser: public Parser {
-        Q_DECLARE_TR_FUNCTIONS ( DevicesParser );
+class APEX_EXPORT DevicesParser
+{
+    Q_DECLARE_TR_FUNCTIONS (DevicesParser);
 public:
     DevicesParser();
-
     ~DevicesParser();
 
-    //data::DevicesData Parse(XERCES_CPP_NAMESPACE::DOMElement* dom);
-    tAllDevices Parse(XERCES_CPP_NAMESPACE::DOMElement* dom,data::ParameterManagerData* pm);
-    data::DeviceData* ParseDevice( XERCES_CPP_NAMESPACE::DOMElement* p_base, data::ParameterManagerData* pm );
+    tAllDevices Parse(const QDomElement &dom, data::ParameterManagerData* pm);
 
-
+private:
+    data::DeviceData* ParseDevice(const QDomElement &p_base, data::ParameterManagerData* pm);
 };
 
 }

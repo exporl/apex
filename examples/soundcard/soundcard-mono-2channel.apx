@@ -1,82 +1,82 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+  <!-- @doc
   @what: Demonstrate what happens when you use wavdevice with one channel not connected
   @description: When you only use one of two defined channels you will not get an error, only a message: "not every inputchannel of soundcard is connected"
   @how: Devices: 2 channels defined, only 1 used in <connections>
  -->
   <procedure xsi:type="apex:trainingProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>correct</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>false</progressbar>
-   <feedback>false</feedback>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout id="answer_layout" height="2" width="2" x="1" y="2">
-    <button id="correct" x="1" y="1">
-     <text>OK</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="correct"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>file:../stimuli</uri_prefix>
-  <datablock id="wd1">
-   <device>soundcard</device>
-   <uri>wd1-mono.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <master>soundcard</master>
-  <device id="soundcard" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>4096</buffersize>
-  </device>
- </devices>
- <filters/>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="wd1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>wd1</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>false</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout height="2" id="answer_layout" x="1" y="2" width="2">
+        <button id="correct" x="1" y="1">
+          <text>OK</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="correct"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="wd1">
+      <device>soundcard</device>
+      <file>wd1-mono.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <master>soundcard</master>
+    <device xsi:type="apex:wavDeviceType" id="soundcard">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>4096</buffersize>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="wd1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>wd1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
 </apex:apex>

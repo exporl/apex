@@ -22,37 +22,29 @@
 
 #include "../parameters/apexparameters.h"
 
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
 
 #include <QList>
 #include <QPair>
 #include <QString>
 #include <QUrl>
 
-using namespace xercesc;
-
-namespace apex {
+namespace apex
+{
 namespace data
 {
 
-    typedef QMap<QString,QString> tScriptParameters;
+typedef QMap<QString,QString> tScriptParameters;
 
-/**
-Stores info on how the results are to be processed
-
-@author Tom Francart,,,
-*/
 class APEXDATA_EXPORT ResultParameters
 {
 public:
-    ResultParameters(DOMElement* p_paramElement);
     ResultParameters();
-
     virtual ~ResultParameters();
 
-    bool Parse(DOMElement* p_paramElement);
+    bool Parse(const QDomElement &p_paramElement);
 
-    virtual bool SetParameter(const QString& arg1, const QString& arg2, const QString& arg3, DOMElement* arg4);
+    virtual bool SetParameter(const QString& arg1, const QString& arg2, const QString& arg3, const QDomElement &arg4);
 
     const QString& matlabScript() const;
     const QString& subject() const;
@@ -78,7 +70,7 @@ public:
 
     bool operator==(const ResultParameters& other) const;
 
-  private:
+private:
     QString m_matlabScript;
     QString m_subject;
     QString m_extraScript;          // javascript code to be executed after loading the results page, from tag <resultscript>
@@ -90,7 +82,6 @@ public:
     bool m_bSaveProcessedResults;
 
     tScriptParameters mResultParameters;
-
 };
 
 }

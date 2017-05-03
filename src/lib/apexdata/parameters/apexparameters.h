@@ -22,16 +22,10 @@
 
 #include "apextools/global.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
 
 #include <QMap>
 #include <QString>
-
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMElement;
-};
 
 namespace apex
 {
@@ -44,76 +38,68 @@ Parses, holds and checks parameters for a procedure
 
 @author Tom Francart,,,
 */
-class APEXDATA_EXPORT ApexParameters //: public std::map<QString,QString>
+class APEXDATA_EXPORT ApexParameters
 {
-        typedef std::pair<QString, QString> tParamMapPair;
+    typedef std::pair<QString, QString> tParamMapPair;
 
-    public:
-        ApexParameters(XERCES_CPP_NAMESPACE::DOMElement* p_paramElement=0);
-        virtual ~ApexParameters();
+public:
+    ApexParameters();
+    virtual ~ApexParameters();
 
-        /**
-         * Used to iterate the parameters. I know it looks strange but M$VC
-         * cannot handle template inheritance across libraries...
-         */
-        struct APEXDATA_EXPORT const_iterator
-        {
-            const_iterator(const QMap<QString, QString>::const_iterator& it);
-            const_iterator() {}
+    /**
+        * Used to iterate the parameters. I know it looks strange but M$VC
+        * cannot handle template inheritance across libraries...
+        */
+    struct APEXDATA_EXPORT const_iterator
+    {
+        const_iterator(const QMap<QString, QString>::const_iterator& it);
+        const_iterator() {}
 
-            const_iterator& operator=(const QMap<QString, QString>::
-                    const_iterator& it);
-            const_iterator& operator++(); //prefix++
-            const_iterator  operator++(int); //postfix++
-            bool operator==(const const_iterator& other) const;
-            bool operator!=(const const_iterator& other) const;
-            const QString& key();
-            const QString& value();
+        const_iterator& operator=(const QMap<QString, QString>::
+                const_iterator& it);
+        const_iterator& operator++(); //prefix++
+        const_iterator  operator++(int); //postfix++
+        bool operator==(const const_iterator& other) const;
+        bool operator!=(const const_iterator& other) const;
+        const QString& key();
+        const QString& value();
 
-            private:
+        private:
 
-                QMap<QString, QString>::const_iterator it;
-        };
+            QMap<QString, QString>::const_iterator it;
+    };
 
-        QMap<QString, QString>::const_iterator begin() const;
-        QMap<QString, QString>::const_iterator end() const;
+    QMap<QString, QString>::const_iterator begin() const;
+    QMap<QString, QString>::const_iterator end() const;
 
-        virtual bool Parse(XERCES_CPP_NAMESPACE::DOMElement* p_paramElement=0);                   // don't do this in the constructor because of overriding of the SetParameter function
+    virtual bool Parse(const QDomElement &p_paramElement);                   // don't do this in the constructor because of overriding of the SetParameter function
 
 
-        virtual QString GetParameter(const QString& p_name) const;         //[ stijn ] changed to reference again; no need to make extra copies
+    virtual QString GetParameter(const QString& p_name) const;         //[ stijn ] changed to reference again; no need to make extra copies
 
-        virtual bool HasParameter(const QString& p_name) const;
+    virtual bool HasParameter(const QString& p_name) const;
 
-        virtual void SetParameter(const QString& ac_sName, const QString& ac_sValue)
-        {
-            parameters[ac_sName] = ac_sValue;
-        }
+    virtual void SetParameter(const QString& ac_sName, const QString& ac_sValue)
+    {
+        parameters[ac_sName] = ac_sValue;
+    }
 
-        virtual bool CheckParameters();
+    virtual bool CheckParameters();
 
-        virtual bool operator==(const ApexParameters& other) const;
+    virtual bool operator==(const ApexParameters& other) const;
 
-    protected:
-        //virtual bool SetParameter(const QString& p_name, const QString& p_id, const QString& p_value, XERCES_CPP_NAMESPACE::DOMElement* base=0)
-        virtual bool SetParameter(const QString& , const QString& , const QString& , XERCES_CPP_NAMESPACE::DOMElement*)
-        {
+protected:
+    //virtual bool SetParameter(const QString& p_name, const QString& p_id, const QString& p_value, QDomElement base=0)
+    virtual bool SetParameter(const QString& , const QString& , const QString& , const QDomElement &)
+    {
 //              qCDebug(APEX_RS, "ApexParameters: SetParameter: should not come here?");
-            return true;
-        }
+        return true;
+    }
 
+private:
+    QDomElement m_paramElement;
 
-
-        static ApexXMLTools::XMLutils sXMLUtils;
-
-    private:
-        XERCES_CPP_NAMESPACE::DOMElement* m_paramElement;
-
-        QMap<QString, QString> parameters;
-
-
-
-
+    QMap<QString, QString> parameters;
 };
 
 }

@@ -21,7 +21,7 @@
 
 #include "r126settingsdialog.h"
 #include "map/r126database.h"
-#include "services/paths.h"
+#include "apexpaths.h"
 using namespace r126;
 
 #include <QRadioButton>
@@ -45,7 +45,6 @@ namespace apex{
 
   void R126SettingsDialog::Init()
   {
-    R216SettingsBase::setIcon(QPixmap( Paths::Get().mf_sMainLogoPath()));
     if( !m_sServer.isEmpty() )
     {
       lineEditRemotePc->setText( m_sServer );

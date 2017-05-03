@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
     
     <xs:include schemaLocation="prefix.xsd"></xs:include>
     <xs:include schemaLocation="xmlgeneratingplugin.xsd"></xs:include>
     
     <xs:complexType name="screensType">
         <xs:sequence>
-            <xs:element name="uri_prefix" type="apex:prefixType" minOccurs="0"
+            <xs:element name="prefix" type="apex:prefixType" minOccurs="0"
                 maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>Defines a prefix for the filenames of media
                         files used in the screens below. The prefix is concatenated
                         in the front of the filenames given below before trying to
                         open any file. 
-                        When specifying the file protocol, make sure to only use one /
-                        eg: file:/c:/tests/file.xml and NOT 
-                        file://c:/tests/file.xml
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -715,7 +712,7 @@
       <xs:complexContent>
         <xs:extension base="apex:screenElementType">
           <xs:sequence>
-            <xs:element name="uri" type="xs:anyURI">
+            <xs:element name="file" type="xs:anyURI">
               <xs:annotation>
                 <xs:documentation>
                   Filename of the picture. The format can be any of: PNG, BMP,
@@ -725,7 +722,7 @@
                 </xs:documentation>
               </xs:annotation>
             </xs:element>
-              <xs:element name="uriDisabled" type="xs:anyURI" minOccurs="0">
+              <xs:element name="disabledfile" type="xs:string" minOccurs="0">
                   <xs:annotation>
                       <xs:documentation>
                           Picture to be used if the element is disabled
@@ -820,7 +817,7 @@
       <xs:annotation>
         <xs:documentation>
           A screen element able to display different media depending on the state uses this to define the media.
-          The paths are absolute or relative, eventually prefixed by the uri-prefix.
+          The paths are absolute or relative, eventually prefixed by the prefix.
           highlight = shown during stimulus play when 'showcurrent' is true.
           positive = shown as positive feedback when feedback is true.
           negative = shown as negative feedback when feedback is true.
@@ -841,7 +838,7 @@
       <xs:complexContent>
         <xs:extension base="apex:screenElementType">
           <xs:sequence>
-              <xs:element name="uri">
+              <xs:element name="file">
                   <xs:annotation>
                       <xs:documentation> Filename of the picture. The format can be any of: PNG, BMP,
                           XBM, XPM, JPEG, MNG, GIF, PBM (P1 or P4), PGM (P2 or P5), and PPM (P3 or
@@ -850,7 +847,7 @@
                   </xs:annotation>
                   <xs:complexType>
                      <xs:simpleContent>
-                         <xs:extension base="xs:anyURI">
+                         <xs:extension base="xs:string">
                              <xs:attribute name="id" type="xs:ID"></xs:attribute>
                          </xs:extension>
                      </xs:simpleContent>
@@ -872,7 +869,7 @@
       <xs:complexContent>
         <xs:extension base="apex:screenElementType">
           <xs:sequence>
-            <xs:element name="uri" type="xs:anyURI">
+            <xs:element name="file" type="xs:string">
               <xs:annotation>
                 <xs:documentation>Flash movie to be put on the screen.</xs:documentation>
               </xs:annotation>

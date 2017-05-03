@@ -18,7 +18,7 @@ if (strcmp(type, 'opc'))
 elseif (strcmp(type, 'mao'))
    result=readfile('maoscreen-header.xml');
    if (param1)
-       result=[result '<parameter name="snr" expression="-1*x+0">noisegain</parameter>'];
+       result=[result '<parameter name="snr" expression="1*x+0">noisegen_gain</parameter>']; % for vary_noise: invertgain=true!
    else
        result=[result '<parameter name="snr">gain</parameter>'];
    end
@@ -27,7 +27,7 @@ elseif (strcmp(type, 'mao'))
 elseif (strcmp(type, 'multiproc'))
    result=readfile('maoscreen-header.xml');
    if (param1)
-       result=[result '<parameter name="snr" expression="-1*x+0">noisegain</parameter>'];
+       result=[result '<parameter name="snr" expression="1*x+0">noisegen_gain</parameter>']; % for vary_noise: invertgain=true!
    else
        result=[result '<parameter name="snr">gain</parameter>'];
    end

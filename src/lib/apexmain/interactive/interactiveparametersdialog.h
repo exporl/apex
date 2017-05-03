@@ -44,7 +44,7 @@ public:
     virtual ~InteractiveParametersDialog();
 
     void apply();
-    virtual void warning(QString title, QString message);
+    virtual void warning(const QString &message) Q_DECL_OVERRIDE;
 private:
     void buildWidgets();
     bool dialogResult();

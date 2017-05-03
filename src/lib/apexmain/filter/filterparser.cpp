@@ -29,33 +29,28 @@
 
 #include "apexdata/parameters/parametermanagerdata.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
-#include "apextools/xml/xmlkeys.h"
+#include "apexmain/parser/simpleparametersparser.h"
 
-#include "parser/plugindataparser.h"
+#include "apextools/exceptions.h"
+
+#include "apextools/xml/xmlkeys.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "stimulus/filtertypes.h"
 
-#include "wavstimulus/wavdeviceio.h"
-
 #include "filterparser.h"
 
-using namespace XERCES_CPP_NAMESPACE;
-
 using namespace apex::stimulus;
-using namespace apex::ApexXMLTools;
 
-#include <memory>
+namespace apex
+{
 
-#include <QDebug>
-
-namespace apex {
-
-namespace parser {
+namespace parser
+{
 
 FilterParser::FilterParser()
-    : Parser()
 {
 }
 
@@ -65,83 +60,45 @@ FilterParser::~FilterParser()
 }
 
 
-data::FilterData* FilterParser::ParseFilter( DOMElement* a_pBase, data::ParameterManagerData* parameterManagerData )
+data::FilterData* FilterParser::ParseFilter(const QDomElement &a_pBase,
+        data::ParameterManagerData* parameterManagerData )
 {
-    clearLog();
-
-    if( !a_pBase )
-        throw( ApexStringException( "DOMELement is not valid" ) );
-
-    const QString type( ApexXMLTools::XMLutils::GetAttribute( a_pBase, XMLKeys::gc_sType ) );
-
-
+    const QString type(a_pBase.attribute(XMLKeys::gc_sType));
 
     // new structure
     data::FilterData* data;
     QScopedPointer<parser::SimpleParametersParser> parser;
 
-    if (type== sc_sFilterPluginFilterType) {
+    if (type == sc_sFilterPluginFilterType) {
         data = new data::PluginFilterData();
-    } else if( type == sc_sFilterAmplifierType )
+    } else if (type == sc_sFilterAmplifierType) {
         data = new data::WavFilterParameters();
-    else if( type == sc_sFilterFaderType )
+    } else if (type == sc_sFilterFaderType) {
         data = new data::WavFaderParameters();
-    else if( type == sc_sFilterDataLoopType )
+    } else if (type == sc_sFilterDataLoopType) {
         data = new data::DataLoopGeneratorParameters();
-    else if( type == sc_sFilterGeneratorType )
-    {
-        const QString sGenType( ApexXMLTools::XMLutils::FindChild( a_pBase, "type" ) );
-        if( sGenType == sc_sFilterNoiseGeneratorType )
+    } else if (type == sc_sFilterGeneratorType) {
+        const QString sGenType(a_pBase.firstChildElement(QSL("type")).text());
+        if (sGenType == sc_sFilterNoiseGeneratorType)
             data = new data::WavGeneratorParameters();
-        else if( sGenType == sc_sFilterSinglePulseGenType )
+        else if (sGenType == sc_sFilterSinglePulseGenType)
             data = new data::SinglePulseGeneratorParameters();
-        else if( sGenType == sc_sFilterSineGenType )
+        else if (sGenType == sc_sFilterSineGenType)
             data = new data::SineGeneratorParameters();
         else
-            throw( ApexStringException( "WavDeviceFactory::CreateFilterParameters: Unknown filtertype" + sGenType ) );
+            throw ApexStringException("WavDeviceFactory::CreateFilterParameters: Unknown filtertype" + sGenType);
+    } else {
+        throw ApexStringException("WavDeviceFactory::CreateFilterParameters: Unknown filtertype" + type);
     }
-    else
-        throw( ApexStringException( "WavDeviceFactory::CreateFilterParameters: Unknown filtertype" + type ) );
-
 
     if (!parser)
         parser.reset(new parser::SimpleParametersParser());
 
-
     parser->SetParameterManagerData(parameterManagerData);
     parser->Parse(a_pBase, data);
 
-        const QString dev( data->device() );
-        const QString nchannels( data->numberOfChannels());
-        const QString id( data->id() );
-
-
-       // look for device to get sample rate and buffer size
-
-        //data::DeviceData* temp;
-                //TODO remove old code when commit 2165 proves to be ok
-        //try {
-                //temp=ac_DevicesData.GetDeviceData( dev );
-        //} catch (ApexStringException &e) {
-                //throw ApexStringException("Error parsing filter: " + e.what());
-        //}
-
-        //if( temp->GetDeviceType() != data::TYPE_WAVDEVICE) {
-                //throw ApexStringException(QString(tr("Filters of type %1 are only implemented for a WavDevice")).arg(type));
-        //}
-
-        //data::WavDeviceData& devParam = dynamic_cast<data::WavDeviceData&> (*temp);
-
-        //data->SetSampleRate (devParam.GetSampleRate());
-        //data->SetBlockSize (devParam.GetBlockSize());
-
-        return data;
-
-
+    return data;
 }
 
-
-
 }
-
 }

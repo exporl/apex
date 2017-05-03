@@ -20,14 +20,13 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_MAPFACTORY_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_MAP_MAPFACTORY_H_
 
-#include "apextools/status/errorlogger.h"
-
-#include "apextools/xml/xercesinclude.h"
-
 #include "r126nucleusmaprecord.h"
 
+#include <QCoreApplication>
+
 using namespace r126;
-using namespace xercesc;
+
+class QDomElement;
 
 namespace apex
 {
@@ -42,19 +41,17 @@ Creates maps based on XML data or the Mapping wizard
 
 @author Tom Francart,,,
 */
-class MapFactory: public ErrorLogger
+class MapFactory
 {
+    Q_DECLARE_TR_FUNCTIONS(MapFactory)
 public:
     MapFactory();
 
-        virtual data::ApexMap* GetMap(DOMElement* p_base);
+    virtual data::ApexMap* GetMap(const QDomElement &p_base);
 
     virtual ~MapFactory();
 
-        static data::ApexMap* R126ToApexMap(const R126NucleusMAPRecord* p_map);
-
-
-
+    static data::ApexMap* R126ToApexMap(const R126NucleusMAPRecord* p_map);
 };
 
 }

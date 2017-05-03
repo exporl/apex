@@ -16,7 +16,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
+#include "common/testutils.h"
+
 #include "syllib/firfilter.h"
+
 #include "tester.h"
 
 using namespace syl;
@@ -62,6 +65,8 @@ void FilterTest::processTime (double *data, unsigned dataLength)
 
 void TestSyl::firFilter()
 {
+    TEST_EXCEPTIONS_TRY
+
     const unsigned char dump[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x40,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x40,
@@ -90,131 +95,129 @@ void TestSyl::firFilter()
 
     QByteArray array (reinterpret_cast<const char *> (dump), sizeof (dump));
 
-    try {
-        { // Basic loading, rounding up to 4 taps
-            QBuffer buffer (&array);
-            QList<FirFilter> filters;
-            Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
-                filters.append (FirFilter (taps, false));
-            QCOMPARE (filters.size(), 4);
-            QCOMPARE (filters[0].length(), 4u);
-            QCOMPARE (filters[1].length(), 4u);
-            QCOMPARE (filters[2].length(), 4u);
-            QCOMPARE (filters[3].length(), 4u);
-            ARRAYCOMP (filters[0].taps(), taps +  0, 4);
-            ARRAYCOMP (filters[1].taps(), taps +  4, 4);
-            ARRAYCOMP (filters[2].taps(), taps +  8, 4);
-            ARRAYCOMP (filters[3].taps(), taps + 12, 4);
+    { // Basic loading, rounding up to 4 taps
+        QBuffer buffer (&array);
+        QList<FirFilter> filters;
+        Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
+            filters.append (FirFilter (taps, false));
+        QCOMPARE (filters.size(), 4);
+        QCOMPARE (filters[0].length(), 4u);
+        QCOMPARE (filters[1].length(), 4u);
+        QCOMPARE (filters[2].length(), 4u);
+        QCOMPARE (filters[3].length(), 4u);
+        ARRAYCOMP (filters[0].taps(), taps +  0, 4);
+        ARRAYCOMP (filters[1].taps(), taps +  4, 4);
+        ARRAYCOMP (filters[2].taps(), taps +  8, 4);
+        ARRAYCOMP (filters[3].taps(), taps + 12, 4);
 
-            double data[20];
-            memset (data, 0, sizeof (data));
-            data[0] = 1.0;
-            FirFilter filter = filters.at (0);
-            FilterTest test (filter);
-            test.processTime (data, 20);
-            ARRAYCOMP (data, taps + 0, 4);
-        }
-
-        { // Now with FFT
-            QBuffer buffer (&array);
-            QList<FirFilter> filters;
-            Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
-                filters.append (FirFilter (taps, false));
-            FirFilter filter = filters.at (0);
-
-            double data[20];
-            memset (data, 0, sizeof (data));
-            data[0] = 1.0;
-            QCOMPARE (filter.position(), 0u);
-            filter.process (data, 20);
-            QCOMPARE (filter.position(), 20u);
-            ARRAYFUZZCOMP (data + 4, taps + 0, 1e-18, 4);
-        }
-
-        { // Basic loading, limited to 2
-            QBuffer buffer (&array);
-            QList<FirFilter> filters;
-            Q_FOREACH (const QVector<double> &taps,
-                    FirFilter::load (&buffer, 2))
-                filters.append (FirFilter (taps, false));
-            QCOMPARE (filters.size(), 4);
-            QCOMPARE (filters[0].length(), 2u);
-            QCOMPARE (filters[1].length(), 2u);
-            QCOMPARE (filters[2].length(), 2u);
-            QCOMPARE (filters[3].length(), 2u);
-            QCOMPARE (filters[0].taps()[2], 0.0);
-            QCOMPARE (filters[0].taps()[3], 0.0);
-            QCOMPARE (filters[1].taps()[2], 0.0);
-            QCOMPARE (filters[1].taps()[3], 0.0);
-            QCOMPARE (filters[2].taps()[2], 0.0);
-            QCOMPARE (filters[2].taps()[3], 0.0);
-            QCOMPARE (filters[3].taps()[2], 0.0);
-            QCOMPARE (filters[3].taps()[3], 0.0);
-        }
-
-        { // Filter position
-            QBuffer buffer (&array);
-            QList<FirFilter> filters;
-            Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
-                filters.append (FirFilter (taps, false));
-            FirFilter filter = filters[0];
-            double data[128];
-            QCOMPARE (filter.position(), 0u);
-            QCOMPARE (filters[0].position(), 0u);
-            QCOMPARE (filters[1].position(), 0u);
-            filters[0].process (data, 128);
-            QCOMPARE (filters[0].position(), 128u);
-            QCOMPARE (filter.position(), 0u);
-            QCOMPARE (filters[1].position(), 0u);
-        }
-
-        // Processing
-        double data[128];
-        for (unsigned i = 0; i < 128; ++i)
-            data[i] = rand() / (RAND_MAX + 1.0);
-        double data2[128];
-        double data3[128];
-        memcpy (data2, data, sizeof (data));
-        memcpy (data3, data, sizeof (data));
-
-        {
-            QBuffer buffer (&array);
-            QList<FirFilter> filters;
-            Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
-                filters.append (FirFilter (taps, false));
-            FirFilter filter = filters.at (0);
-            FilterTest test (filter);
-            test.processTime (data, 128);
-        }
-
-        {
-            QBuffer buffer (&array);
-            QList<FirFilter> filters;
-            Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
-                filters.append (FirFilter (taps, false));
-            FirFilter filter = filters.at (0);
-            for (unsigned i = 0; i < 128;) {
-                const unsigned length = qMin (128u, i + (rand() % 15)) - i;
-                filter.process (data2 + i, length);
-                i += length;
-            }
-        }
-        ARRAYFUZZCOMP (data, data2 + 4, 1e-18, 128 - 4);
-
-        { // synchronous
-            QBuffer buffer (&array);
-            QList<FirFilter> filters;
-            Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
-                filters.append (FirFilter (taps, true));
-            FirFilter filter = filters.at (0);
-            for (unsigned i = 0; i < 128;) {
-                const unsigned length = filter.length();
-                filter.process (data3 + i, length);
-                i += length;
-            }
-        }
-        ARRAYFUZZCOMP (data, data3, 1e-18, 128);
-    } catch (std::exception &e) {
-        QFAIL (qPrintable (QString::fromLatin1("Exception thrown: %1").arg (QString::fromLocal8Bit(e.what()))));
+        double data[20];
+        memset (data, 0, sizeof (data));
+        data[0] = 1.0;
+        FirFilter filter = filters.at (0);
+        FilterTest test (filter);
+        test.processTime (data, 20);
+        ARRAYCOMP (data, taps + 0, 4);
     }
+
+    { // Now with FFT
+        QBuffer buffer (&array);
+        QList<FirFilter> filters;
+        Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
+            filters.append (FirFilter (taps, false));
+        FirFilter filter = filters.at (0);
+
+        double data[20];
+        memset (data, 0, sizeof (data));
+        data[0] = 1.0;
+        QCOMPARE (filter.position(), 0u);
+        filter.process (data, 20);
+        QCOMPARE (filter.position(), 20u);
+        ARRAYFUZZCOMP (data + 4, taps + 0, 1e-18, 4);
+    }
+
+    { // Basic loading, limited to 2
+        QBuffer buffer (&array);
+        QList<FirFilter> filters;
+        Q_FOREACH (const QVector<double> &taps,
+                FirFilter::load (&buffer, 2))
+            filters.append (FirFilter (taps, false));
+        QCOMPARE (filters.size(), 4);
+        QCOMPARE (filters[0].length(), 2u);
+        QCOMPARE (filters[1].length(), 2u);
+        QCOMPARE (filters[2].length(), 2u);
+        QCOMPARE (filters[3].length(), 2u);
+        QCOMPARE (filters[0].taps()[2], 0.0);
+        QCOMPARE (filters[0].taps()[3], 0.0);
+        QCOMPARE (filters[1].taps()[2], 0.0);
+        QCOMPARE (filters[1].taps()[3], 0.0);
+        QCOMPARE (filters[2].taps()[2], 0.0);
+        QCOMPARE (filters[2].taps()[3], 0.0);
+        QCOMPARE (filters[3].taps()[2], 0.0);
+        QCOMPARE (filters[3].taps()[3], 0.0);
+    }
+
+    { // Filter position
+        QBuffer buffer (&array);
+        QList<FirFilter> filters;
+        Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
+            filters.append (FirFilter (taps, false));
+        FirFilter filter = filters[0];
+        double data[128];
+        QCOMPARE (filter.position(), 0u);
+        QCOMPARE (filters[0].position(), 0u);
+        QCOMPARE (filters[1].position(), 0u);
+        filters[0].process (data, 128);
+        QCOMPARE (filters[0].position(), 128u);
+        QCOMPARE (filter.position(), 0u);
+        QCOMPARE (filters[1].position(), 0u);
+    }
+
+    // Processing
+    double data[128];
+    for (unsigned i = 0; i < 128; ++i)
+        data[i] = rand() / (RAND_MAX + 1.0);
+    double data2[128];
+    double data3[128];
+    memcpy (data2, data, sizeof (data));
+    memcpy (data3, data, sizeof (data));
+
+    {
+        QBuffer buffer (&array);
+        QList<FirFilter> filters;
+        Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
+            filters.append (FirFilter (taps, false));
+        FirFilter filter = filters.at (0);
+        FilterTest test (filter);
+        test.processTime (data, 128);
+    }
+
+    {
+        QBuffer buffer (&array);
+        QList<FirFilter> filters;
+        Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
+            filters.append (FirFilter (taps, false));
+        FirFilter filter = filters.at (0);
+        for (unsigned i = 0; i < 128;) {
+            const unsigned length = qMin (128u, i + (rand() % 15)) - i;
+            filter.process (data2 + i, length);
+            i += length;
+        }
+    }
+    ARRAYFUZZCOMP (data, data2 + 4, 1e-18, 128 - 4);
+
+    { // synchronous
+        QBuffer buffer (&array);
+        QList<FirFilter> filters;
+        Q_FOREACH (const QVector<double> &taps, FirFilter::load (&buffer))
+            filters.append (FirFilter (taps, true));
+        FirFilter filter = filters.at (0);
+        for (unsigned i = 0; i < 128;) {
+            const unsigned length = filter.length();
+            filter.process (data3 + i, length);
+            i += length;
+        }
+    }
+    ARRAYFUZZCOMP (data, data3, 1e-18, 128);
+
+    TEST_EXCEPTIONS_CATCH
 }

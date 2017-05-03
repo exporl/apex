@@ -31,8 +31,6 @@
 ** Validate (unit tests)
 ** Remove streamapp
 
-* L34 backend uit RBA
-
 * Real test / demo mode, with compulsory subject ID, automatic upload of results file to server
 
 * GUI
@@ -76,7 +74,7 @@
 * Localisation experiment plugin (like SPIN)
 
 * Documentation
-** Upgrade to 3.1.2
+** Upgrade to 3.1.3
 ** Document results handling
 ** Document plugins (procedure, javascript document generation)
 

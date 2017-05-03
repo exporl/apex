@@ -28,9 +28,7 @@
 #include "apextools/apextypedefs.h"
 #include "apextools/global.h"
 
-#include "apextools/status/errorlogger.h"
-
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
 
 #include <QCoreApplication>
 #include <QFont>
@@ -39,148 +37,132 @@
 class QWidget;
 class QObject;
 
-namespace XERCES_CPP_NAMESPACE
-{
-  class DOMElement;
-};
-
 namespace apex
 {
-  namespace data
-  {
-    class Screen;
-    class ScreenElement;
-    class ScreenLayoutElement;
-    class ButtonGroup;
-    class ScreensData;
-    class ParameterManagerData;
-  }
+namespace data
+{
+class Screen;
+class ScreenElement;
+class ScreenLayoutElement;
+class ButtonGroup;
+class ScreensData;
+class ParameterManagerData;
+}
 
-  namespace gui
-  {
-    using data::ScreenElement;
-    using data::ScreenLayoutElement;
+namespace gui
+{
+using data::ScreenElement;
+using data::ScreenLayoutElement;
 
-
+/**
+ * The ScreenParser class is a class that knows how to parse the
+ * data about a screen in an Apex Experiment file into an instance
+ * of the \ref Screen class.  It needs a pointer to a ScreensData
+ * instance, and it will store newly created screens in that
+ * object.
+ */
+class APEX_EXPORT ScreenParser
+{
+    Q_DECLARE_TR_FUNCTIONS(ScreenParser)
+public:
+    static QString f_CheckPath( const QString& ac_sBasePath, const QString& ac_sRelativePath );
+    static QString f_CheckPath(data::FilePrefix p, const QString& ac_sRelativePath);
 
     /**
-     * The ScreenParser class is a class that knows how to parse the
-     * data about a screen in an Apex Experiment file into an instance
-     * of the \ref Screen class.  It needs a pointer to a ScreensData
-     * instance, and it will store newly created screens in that
-     * object.
-     */
-    class APEX_EXPORT ScreenParser
-      : public ErrorLogger
+    * Create a new ScreenParser, that will store its created
+    * screens in the given \ref ScreensData instance.
+    */
+    ScreenParser(data::ScreensData* screens, data::ParameterManagerData* pmd=0);
+
+    /**
+    * Set the base path for relative paths.
+    * @param ac_sPath the path
+    */
+    void mp_SetBasePath( const data::FilePrefix& ac_sPath )
     {
-        Q_DECLARE_TR_FUNCTIONS(ScreenParser)
+        m_sPath = ac_sPath;
+    }
 
-    public:
-        static QString f_CheckPath( const QString& ac_sBasePath, const QString& ac_sRelativePath );
+    const QString GetBasePath() const
+    {
+        return  FilePrefixConvertor::convert( m_sPath );
+    }
 
-        static QString f_CheckPath(data::FilePrefix p, const QString& ac_sRelativePath);
+    /**
+    * Create a Screen.
+    * @param a_pElement the DOMElement
+    * @return the newly created screen ( dynamically allocated with new ), or 0 for error (call GetError() for description)
+    */
+    data::Screen* createScreen(const QDomElement &a_pElement);
 
-    public:
-      /**
-       * Create a new ScreenParser, that will store its created
-       * screens in the given \ref ScreensData instance.
-       */
-      ScreenParser( data::ScreensData* screens,
-                    data::ParameterManagerData* pmd=0);
+    /**
+    * Create a test Screen.
+    * Creates a Screen with a GridLayout and two buttons.
+    * @return the screen ( dynamically allocated with new )
+    */
+    data::Screen* createTestScreen();
 
-      /**
-       * Set the base path for relative paths.
-       * @param ac_sPath the path
-       */
-      void mp_SetBasePath( const data::FilePrefix& ac_sPath )
-      {
-          m_sPath = ac_sPath;
-            // FIXME: makedirend
-      }
+private:
+    /**
+    * Create a ScreenElement with the given parent.
+    * @return a Button.
+    */
+    ScreenElement* createTestScreenElement(ScreenElement* parent);
 
+    ScreenLayoutElement* createLayout(const QDomElement &e, ScreenElement* parent, ScreenElementMap& elements );
+    ScreenElement* createElement(const QDomElement &e, ScreenElement* parent, ScreenElementMap& elements );
+    ScreenElement* createNonLayoutElement(const QDomElement &e, ScreenElement* parent, ScreenElementMap& elements);
 
-      const QString GetBasePath( ) const {
-          return  FilePrefixConvertor::convert( m_sPath );
-      }
-
-      /**
-       * Create a Screen.
-       * @param a_pElement the DOMElement
-       * @return the newly created screen ( dynamically allocated with new ), or 0 for error (call GetError() for description)
-       */
-        data::Screen* createScreen( XERCES_CPP_NAMESPACE::DOMElement* a_pElement );
-
-      /**
-       * Create a test Screen.
-       * Creates a Screen with a GridLayout and two buttons.
-       * @return the screen ( dynamically allocated with new )
-       */
-      data::Screen* createTestScreen();
-
-    private:
-      /**
-       * Create a ScreenElement with the given parent.
-       * @return a Button.
-       */
-      ScreenElement* createTestScreenElement( ScreenElement* parent);
-
-      ScreenLayoutElement* createLayout(
-          XERCES_CPP_NAMESPACE::DOMElement* e, ScreenElement* parent, ScreenElementMap& elements );
-      ScreenElement* createElement(
-        XERCES_CPP_NAMESPACE::DOMElement* e, ScreenElement* parent, ScreenElementMap& elements );
-      ScreenElement* createNonLayoutElement(
-        XERCES_CPP_NAMESPACE::DOMElement* e, ScreenElement* parent, ScreenElementMap& elements );
-
-      /**
-       * Struct for parsing feedback media paths
-       */
-      struct mt_FeedBackPaths
-      {
+    /**
+    * Struct for parsing feedback media paths
+    */
+    struct mt_FeedBackPaths
+    {
         QString m_sPositive;
         QString m_sNegative;
         QString m_sHighLight;
         QString m_sDisabled;
-      };
-
-      /**
-       * Parse mt_FeedBackPaths.
-       * Must be deleted after using it.
-       * @param a_pElement the DOMElement
-       * @param ac_sElementID the ID of the element the paths are parsed for
-       * @return the struct, or 0 when one of the paths doesn't exist
-       */
-      mt_FeedBackPaths* parseFeedBackPaths( XERCES_CPP_NAMESPACE::DOMElement* a_pElement, const QString& ac_sElementID );
-
-      /**
-       * parse columnstretch or rowstretch into tStretchList
-       */
-      data::tStretchList parseStretchList(QString d);
-
-      /**
-       * Create a ButtonGroup.
-       * @param a_pElement the DOMElement
-       * @param idToElementMap Used for input validation
-       * @return the newly created ButtonGroup, or 0 for error (call GetError() for description)
-       */
-      data::ButtonGroup* createButtonGroup( XERCES_CPP_NAMESPACE::DOMElement* a_pElement, const ScreenElementMap& p_idToElementMap );
-
-      /**
-       * Shortcut for adding 'Unknown Tag' error
-       * @param ac_sSource the method
-       * @param ac_sTag the unknown tag
-       */
-      void addUnknownTag( const QString& ac_sSource, const QString& ac_sTag );
-
-      //! Check whether the given string is a valid color
-      bool checkColor (const QString& value,
-                       const QString& element="") const;
-
-    private:
-      data::ScreensData* screens;
-      data::ParameterManagerData* parameterManagerData;
-      data::FilePrefix   m_sPath;
     };
-  }
+
+    /**
+    * Parse mt_FeedBackPaths.
+    * Must be deleted after using it.
+    * @param a_pElement the DOMElement
+    * @param ac_sElementID the ID of the element the paths are parsed for
+    * @return the struct, or 0 when one of the paths doesn't exist
+    */
+    mt_FeedBackPaths* parseFeedBackPaths(const QDomElement &a_pElement, const QString& ac_sElementID );
+
+    /**
+    * parse columnstretch or rowstretch into tStretchList
+    */
+    data::tStretchList parseStretchList(const QString &d);
+
+    /**
+    * Create a ButtonGroup.
+    * @param a_pElement the DOMElement
+    * @param idToElementMap Used for input validation
+    * @return the newly created ButtonGroup, or 0 for error (call GetError() for description)
+    */
+    data::ButtonGroup* createButtonGroup(const QDomElement &a_pElement, const ScreenElementMap& p_idToElementMap );
+
+    /**
+    * Shortcut for adding 'Unknown Tag' error
+    * @param ac_sSource the method
+    * @param ac_sTag the unknown tag
+    */
+    void addUnknownTag(const QString& ac_sSource, const QString& ac_sTag);
+
+    //! Check whether the given string is a valid color
+    bool checkColor(const QString& value, const QString& element="") const;
+
+private:
+    data::ScreensData* screens;
+    data::ParameterManagerData* parameterManagerData;
+    data::FilePrefix m_sPath;
+};
+
+}
 }
 
 #endif

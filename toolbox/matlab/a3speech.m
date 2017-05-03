@@ -4,8 +4,8 @@ function a3speech(p)
 
 p.script='a3speech';
 
-p=ensure_field(p, 'apexversion', '3.0');
-p=ensure_field(p, 'type',   'vu');        % list, lint, nva, vu
+p=ensure_field(p, 'apexversion', '3.1.1');
+p=ensure_field(p, 'type',   'vu');        % list, list_man, lint, nva, vu
 p=ensure_field(p, 'list',       1);         % number of list
 
 p=ensure_field(p,'vu_male', 1);             % use male VU speaker
@@ -20,10 +20,10 @@ p=ensure_field(p,'fixed_snr',0);                % snr, if the noise is not varie
 
 p=ensure_field(p,'manual_correction', 1);       % have the experimentor correct manually?
 
-p=ensure_field(p, 'filename', 'speech.xml');    % filename of generated file
+p=ensure_field(p, 'filename', 'speech.apx');    % filename of generated file
 
 if (p.prefix_from_main==0)
-    error('Prefix always from main configfile');
+    warning('Prefix not from main configfile');
 end
 p=ensure_field(p,'prefix_from_main', 1);        % use the prefix from main configfile
 % prefix_name                                  % if using prefix from main
@@ -58,10 +58,15 @@ if (~p.fixed_noise && p.ask_snr)
     error('Invalid combination of fixed and ask snr');
 end
 
-p=ensure_field(p,'exit_after',1);           % exit after experiment is finished
+p=ensure_field(p,'exit_after',0);           % exit after experiment is finished
 p=ensure_field(p,'saveprocessedresults',1);           % save xslt processed results at end of results file
+p=ensure_field(p,'addmarkup',0);
 
-p=ensure_field(p,'hrtffilter', 0);          % do hrtf filtering of speech and noise
+p=ensure_field(p,'filter', 0);          % do filtering of speech and noise
+p=ensure_field(p,'filter_definition', 'hrtffilter_speech.xml');
+p=ensure_field(p,'filter_interactive', 0);
+p=ensure_field(p,'filter_type', 0);
+p=ensure_field(p,'feedback_length',300);
 
 PROC_ADP=1;
 PROC_CST=2;
@@ -91,7 +96,9 @@ p=ensure_field(p,'order', 'sequential' );
 
 % constants     WARNING: paths must end in /
 p=ensure_field(p, 'LIST_path', 'dutch/list/');
+p=ensure_field(p, 'LIST_man_path', 'dutch/LISTman/');
 p=ensure_field(p, 'LIST_noise_file', 'dutch/list/noise/wivineruis.wav');
+p=ensure_field(p, 'LIST_man_noise_file', 'dutch/LISTman/noise/jwruis.wav');
 
 p=ensure_field(p, 'LINT_path', 'dutch/lint_rescaled/');
 p=ensure_field(p, 'LINT_noise_file', 'dutch/lint_rescaled/noise.wav');
@@ -113,6 +120,7 @@ p=ensure_field(p, 'BKB_like_noise_file', [p.BKB_like_path 'noise/ILTASS.wav']);
 
 % default prefixes:
 p=ef(p,'LIST_prefix', 'LIST');
+p=ef(p,'LIST_man_prefix', 'LIST_man');
 p=ef(p,'LINT_prefix', 'LINT');
 p=ef(p,'VU_prefix', 'VU');
 p=ef(p,'NVA_prefix', 'NVA');
@@ -122,6 +130,7 @@ p=ef(p,'BKB_like_prefix', 'BKB_like');
 p=derive_params(p);
 
 
+p=ensure_field(p, 'matlab_directory','/home/tom/matlab/');
 if (isunix)
     delim='/';
 else
@@ -136,10 +145,26 @@ if (strcmp(p.type, 'list'))
 %     d=dir( [prefix '*.wav']);
 %     list=dir2list(d);
 
-    filelist=getLISTfiles(p.list);
+    filelist=getLIST_manfiles(p.list,p.matlab_directory);
     p.noisefile=p.LIST_noise_file;
 
-    t_answers=getLISTanswers(p.list,0);
+    t_answers=getLISTanswers(p.list,p.addmarkup,p.matlab_directory);
+
+elseif (strcmp(p.type, 'list_man'))
+    % generate list of filenames
+    if p.list==39
+        prefix=[p.LIST_man_path 'oefenlijst' delim];
+    else
+        prefix=[p.LIST_man_path];
+    end
+    p.mcprefix=p.LIST_man_prefix;
+%     d=dir( [prefix '*.wav']);
+%     list=dir2list(d);
+    
+    filelist=getLIST_manfiles(p.list,p.matlab_directory);
+    p.noisefile=p.LIST_man_noise_file;
+
+    t_answers=getLIST_mananswers(p.list,p.addmarkup,p.matlab_directory);
 
 elseif (strcmp(p.type, 'lint'))
     if (~strcmp(p.lint_speaker, 'ag') &&  ~strcmp(p.lint_speaker, 'md') && ~strcmp(p.lint_speaker, 'jw') && ~strcmp(p.lint_speaker, 'wd'))
@@ -159,7 +184,7 @@ elseif (strcmp(p.type, 'nva'))
     dbprefix=num2str(p.list);
     prefix=[p.NVA_path dbprefix delim];
     p.mcprefix=p.NVA_prefix;
-    [filelist,t_answers]=getNVAfiles(p.list);
+    [filelist,t_answers]=getNVAfiles(p.list,p.matlab_directory);
 
 elseif (strcmp(p.type, 'vu'))
 
@@ -208,7 +233,11 @@ screennames= repmat( {'screen'}, length(trialnames), 1);
 %% create datablocks
 datablocknames=gendatablocknames(filelist);
 
+if p.prefix_from_main
 datablocks=[  '<uri_prefix source="apexconfig">' p.prefix_name '</uri_prefix>' lf ];
+else
+    datablocks='';
+end
 %dbprefix=makedirend(dbprefix);
 for i=1:length(filelist)
     datablocks=[datablocks ...
@@ -262,13 +291,13 @@ stimuli=a3stimuli(datablocknames, newstimulinames,{},fixparams,p.add_silence_bef
 %% screens %%
 
 if (p.manual_correction)
-    screens=a3screens( a3screen('mao',p.vary_noise) );
+    screens=a3screens( a3screen('mao',p.vary_noise) , '' , p.feedback_length );
     answers=repmat({'correct'}, size(trialnames,1),size(trialnames,2));
 else
     if (strcmp(p.type, 'lint'))
-        screens=a3screens( a3screen('lint') );
+        screens=a3screens( a3screen('lint') , '' , p.feedback_length );
     else
-        screens=a3screens( a3screen('opc') );
+        screens=a3screens( a3screen('opc') , '' , p.feedback_length );
     end
     answers=t_answers;
 end
@@ -300,18 +329,18 @@ end
 
     devices=a3devices(a3wavdevice('wavdevice', {'cardgain1' 'cardgain2'}));
 
-    if (p.hrtffilter)
+    if (p.filter)
        if (~p.noise)
            error('Not implemented');
        end
 
        connections=[ a3connection('_ALL_', 0, 'amplifier', 0) ...
-                                a3connection('amplifier', 0, 'speechhrtffilter', 0) ...
-                                a3connection('speechhrtffilter', 0, 'wavdevice', 0) ...
-                                a3connection('speechhrtffilter', 1, 'wavdevice', 1) ...
-                                a3connection('noisegen', 0, 'noisehrtffilter', 0) ...
-                            a3connection('noisehrtffilter', 0, 'wavdevice', 0) ...
-                            a3connection('noisehrtffilter', 1, 'wavdevice', 1) ...
+                                a3connection('amplifier', 0, 'speechfilter', 0) ...
+                                a3connection('speechfilter', 0, 'wavdevice', 0) ...
+                                a3connection('speechfilter', 1, 'wavdevice', 1) ...
+                                a3connection('noisegen', 0, 'noisefilter', 0) ...
+                            a3connection('noisefilter', 0, 'wavdevice', 0) ... 
+                            a3connection('noisefilter', 1, 'wavdevice', 1) ...
                             ];
 
     else
@@ -354,15 +383,22 @@ else
         a3amplifier(p.basegain_speech) ];
 end
 
-if (p.hrtffilter)
-   filters=[filters readfile('hrtffilter_speech.xml') ];
+if (p.filter_type)
+    replaces.filter_type = p.filter_type;
+    p.filter_definition = readfile_replace(p.filter_definition,replaces);
+else
+    p.filter_definition = readfile(p.filter_definition);
+end
+
+if (p.filter)
+   filters=[filters p.filter_definition];
 end
 
 filters=a3filters(filters);
 
 %% calibration
 if ( length(p.calibration_profile))
-    if (p.hrtffilter)
+    if (p.filter)
         calibration= a3calibration(p.calibration_profile, 'calibrationstimulus', {'cardgain1' 'cardgain2'}, p.target_calibration);
     else
         calibration= a3calibration(p.calibration_profile, 'calibrationstimulus', 'cardgain', p.target_calibration);
@@ -389,8 +425,8 @@ if (p.ask_subject)
    interactive=[interactive a3interactive_entry_bytype('subject')];
 end
 
-if (p.hrtffilter)
-    interactive=[interactive readfile('speech_interactive_hrtf.xml')];
+if (p.filter_interactive)
+    interactive=[interactive readfile(p.filter_interactive)];
 end
 
 interactive=a3interactive(interactive);
@@ -405,9 +441,9 @@ interactive=a3interactive(interactive);
 
 
 if (p.manual_correction)
-    results=a3results('apexresult.xsl','','',1,p.saveprocessedresults, '<parameter name="reversals for mean">6</parameter>');
+    results=a3results('apex:resultsviewer.html','','',1,p.saveprocessedresults);    
 else
-    results=a3results('apexresult.xsl','','',0,p.saveprocessedresults, '<parameter name="reversals for mean">6</parameter>');
+    results=a3results('apex:resultsviewer.html','','',0,p.saveprocessedresults);    
 end
 
 
@@ -468,18 +504,15 @@ end
 
 
 
-function list=getLISTfiles(listnr)
+function list=getLISTfiles(listnr,matlab_directory)
+    load([matlab_directory 'zinnen' delim 'zinnen.mat'])
+    load([matlab_directory 'zinnen' delim 'selectzinnen.mat'])
+    load([matlab_directory 'zinnen' delim 'lijstjes.mat'])
 
-    if (isunix)
-        load /home/tom/matlab/zinnen/zinnen.mat
-        load /home/tom/matlab/zinnen/selectzinnen.mat
-        load /home/tom/matlab/zinnen/lijstjes.mat
-    else
-        load p:\matlab\zinnen\zinnen.mat
-        load p:\matlab\zinnen\selectzinnen.mat
-        load p:\matlab\zinnen\lijstjes.mat
-    end
+    list=ZinnenLists(listnr,:);
 
+function list=getLIST_manfiles(listnr,matlab_directory)
+    load([matlab_directory 'zinnen' delim 'lijstjes_man.mat'])
 
      list=ZinnenLists(listnr,:);
 
@@ -487,10 +520,10 @@ function list=getLISTfiles(listnr)
 
 
 
-function [list,answers]=getNVAfiles(listnr)
+function [list,answers]=getNVAfiles(listnr,matlab_directory)
 % zoek lijst op
 if (isunix)
-        load /home/tom/matlab/zinnen/nva.mat
+    load([matlab_directory 'zinnen' delim 'nva.mat'])
 else
     error('Not implemented');
 end
@@ -537,14 +570,14 @@ end
 
 
 
-function answers=getLISTanswers(listnr,addmarkup)
+function answers=getLISTanswers(listnr,addmarkup,matlab_directory)
 % addmarkup determines whether to label keywords etc.
 
     if (isunix)
-        load /home/tom/matlab/zinnen/zinnen.mat
-        load /home/tom/matlab/zinnen/selectzinnen.mat
-        load /home/tom/matlab/zinnen/splitsbaar.mat
-        load /home/tom/matlab/zinnen/lijstjes.mat
+        load([matlab_directory 'zinnen' delim 'zinnen.mat'])
+        load([matlab_directory 'zinnen' delim 'selectzinnen.mat'])
+        load([matlab_directory 'zinnen' delim 'splitsbaar.mat'])
+        load([matlab_directory 'zinnen' delim 'lijstjes.mat'])
     else
        error('windows not supported');
     end
@@ -564,7 +597,43 @@ function answers=getLISTanswers(listnr,addmarkup)
         nr=str2num(list{c}(t{1}(1):t{1}(2)));
 
         if (addmarkup)
-            result=xmlzin(zinnen{nr},selectzinnen{nr},splitsbaar{nr});
+            result=xmlzin(zinnen{nr},selectzinnen{nr},splitsbaar{nr},'b','i');
+        else
+            result=zinnen{nr};
+        end
+        answers{c}=result;
+    end
+
+
+     
+function answers=getLIST_mananswers(listnr,addmarkup,matlab_directory)
+% addmarkup determines whether to label keywords etc.
+
+    if (isunix)
+        load([matlab_directory 'zinnen' delim 'zinnen.mat'])
+        load([matlab_directory 'zinnen' delim 'selectzinnen.mat'])
+        load([matlab_directory 'zinnen' delim 'splitsbaar_man.mat'])
+        load([matlab_directory 'zinnen' delim 'lijstjes_man.mat'])
+    else
+       error('windows not supported');
+    end
+    
+    list=ZinnenLists(listnr,:);
+    
+    answers=cell(size(list));
+    
+    for c=1:length(list)
+         p='(\d+).wav';
+    
+        [s,f,t]=regexp(list{c},p);
+        if (length(t)==0)
+            error('Can''t parse sentence list');
+        end
+    
+        nr=str2num(list{c}(t{1}(1):t{1}(2)));
+
+        if (addmarkup)
+            result=xmlzin(zinnen{nr},selectzinnen{nr},splitsbaar{nr},'b','i');
         else
             result=zinnen{nr};
         end
@@ -625,6 +694,8 @@ function g=getspeechgain(p)
 
 if (strcmp(p.type,'list'))
     g=-25;
+elseif (strcmp(p.type,'list_man'))
+    g=-27.9122; % to be verified
 elseif strcmp(p.type,'lint')
     %% [Tom] was -25, 28/3/7
     %    g=-32.6;

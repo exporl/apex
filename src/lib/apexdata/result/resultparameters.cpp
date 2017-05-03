@@ -19,24 +19,13 @@
 
 #include "apextools/apextools.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "resultparameters.h"
 
-using namespace apex::ApexXMLTools;
-using namespace xercesc;
 using namespace apex::data;
-
-ResultParameters::ResultParameters(DOMElement* p_paramElement):
-        m_resultPage("apex:resultsviewer.html"),
-        m_showRealtime(false),
-        m_showAfter(false),
-        m_bSaveProcessedResults(false)
-{
-    Q_UNUSED(p_paramElement);
-
-}
 
 ResultParameters::ResultParameters():
         m_resultPage("apex:resultsviewer.html"),
@@ -47,36 +36,26 @@ ResultParameters::ResultParameters():
 {
 }
 
-
 ResultParameters::~ResultParameters()
 {
 }
 
+bool ResultParameters::Parse(const QDomElement &p_paramElement)
+{
+    for (QDomElement currentNode = p_paramElement.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        QString tag   = currentNode.tagName();
+        QString id    = currentNode.attribute(QSL("id"));
+        QString value = currentNode.text();
 
-bool ResultParameters::Parse(DOMElement* p_paramElement) {
+        SetParameter(tag, id, value, currentNode);
+    }
 
-        for (DOMNode* currentNode=p_paramElement->getFirstChild(); currentNode!=0; currentNode=currentNode->getNextSibling()) {
-                Q_ASSERT(currentNode);
-                if (currentNode->getNodeType() == DOMNode::ELEMENT_NODE) {
-//                      DOMElement* el = (DOMElement*) currentNode;
-
-                        QString tag   = XMLutils::GetTagName( currentNode );
-                        QString id    = XMLutils::GetAttribute( currentNode, "id" );
-                        QString value = XMLutils::GetFirstChildText( currentNode );
-
-                        SetParameter(tag, id, value, (DOMElement*) currentNode);
-                        //insert( tParamMapPair(tag,value) );           // insert in map [ stijn ] removed this, quite redundant
-
-                } else {
-                        Q_ASSERT(0);            // TODO
-                }
-        }
-
-        return true;
+    return true;
 }
 
 
-bool ResultParameters::SetParameter(const QString& p_name, const QString& /*p_id*/, const QString& p_value, DOMElement* p_elem)
+bool ResultParameters::SetParameter(const QString& p_name, const QString& /*p_id*/, const QString& p_value, const QDomElement &p_elem)
 {
     if (p_name=="matlabscript") {
         m_matlabScript = p_value;
@@ -85,16 +64,12 @@ bool ResultParameters::SetParameter(const QString& p_name, const QString& /*p_id
     } else if (p_name == "saveprocessedresults") {
         m_bSaveProcessedResults = ApexTools::bQStringToBoolean( p_value );
     } else if(p_name == "resultparameters") {
-        for (DOMNode* current=p_elem->getFirstChild(); current!=0;
-             current=current->getNextSibling()) {
-            Q_ASSERT(current);
-            Q_ASSERT(current->getNodeType() == DOMNode::ELEMENT_NODE);
-            const QString tag = XMLutils::GetTagName( current);
+        for (QDomElement current = p_elem.firstChildElement(); !current.isNull();
+                current = current.nextSiblingElement()) {
+            const QString tag = current.tagName();
             Q_ASSERT(tag=="parameter");
-
-            QString name = XMLutils::GetAttribute( current, "name" );
-            QString value = XMLutils::GetFirstChildText(current);
-
+            QString name = current.attribute(QSL("name"));
+            QString value = current.text();
             setResultParameter(name,value);
         }
     } else if (p_name == "resultscript") {

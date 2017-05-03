@@ -31,66 +31,56 @@ TrialData::TrialData()
 
 }
 
-
 TrialData::~TrialData()
 {
 }
 
-
 void TrialData::SetAnswer( const QString & p_answer )
 {
-        m_answer = p_answer;
+    m_answer = p_answer;
 }
 
 void TrialData::SetScreen( const QString & p_screen )
 {
-        m_screen = p_screen;
+    m_screen = p_screen;
 }
 
-/*void TrialData::SetStimulus( const QString & p_stimulus )
-{
-        m_stimulus = p_stimulus;
-}*/
-
 void TrialData::SetID(const QString& p_id) {
-        m_ID=p_id;
+    m_ID=p_id;
 }
 
 void TrialData::AddStimulus( const QString & p_answer )
 {
-        m_stimuli.push_back(p_answer);
+    m_stimuli.push_back(p_answer);
 }
 
 const QString  TrialData::GetStimulus( QString & p_name ) const
 {
-        if (m_stimuli.size() != 1)
-                qCDebug(APEX_RS, "TrialData::GetStimulus: Warning: more than one stimulus found");
+    if (m_stimuli.size() != 1)
+            qCDebug(APEX_RS, "TrialData::GetStimulus: Warning: more than one stimulus found");
 
-        tStimulusList::const_iterator p = std::find(m_stimuli.begin(), m_stimuli.end(), p_name);
-        if ( p != m_stimuli.end() ) return (*p);
-        else throw(1);          // FIXME
+    tStimulusList::const_iterator p = std::find(m_stimuli.begin(), m_stimuli.end(), p_name);
+    if ( p != m_stimuli.end() ) return (*p);
+    else throw(1);          // FIXME
 }
-
 
 /**
  * @return the id of a random stimulus from this trial
  */
 const QString TrialData::GetRandomStimulus( ) const
 {
-        if (m_stimuli.size() == 1)
-                return *(m_stimuli.begin());
+    if (m_stimuli.size() == 1)
+            return *(m_stimuli.begin());
 
-        tStimulusList::const_iterator p = m_stimuli.begin();
-        //int rs = ApexTools::RandomRange(0, ((int)m_stimuli.size())-1 ); // stimulus number to be used
-        int rs = mRandom.nextUInt(((int)m_stimuli.size()) ); // stimulus number to be used
-        qCDebug(APEX_RS, "TrialData::GetRandomStimulus: Selecting random stimulus #%i", rs);
-        for (int i=0; i<rs; ++i)
-                ++p;
-        Q_ASSERT(p!=m_stimuli.end());
-        return *p;
+    tStimulusList::const_iterator p = m_stimuli.begin();
+    //int rs = ApexTools::RandomRange(0, ((int)m_stimuli.size())-1 ); // stimulus number to be used
+    int rs = mRandom.nextUInt(((int)m_stimuli.size()) ); // stimulus number to be used
+    qCDebug(APEX_RS, "TrialData::GetRandomStimulus: Selecting random stimulus #%i", rs);
+    for (int i=0; i<rs; ++i)
+            ++p;
+    Q_ASSERT(p!=m_stimuli.end());
+    return *p;
 }
-
-
 
 /**
  * Returns the first stimulus' id, if there's only one, otherwise return random stimulus from the list
@@ -98,33 +88,41 @@ const QString TrialData::GetRandomStimulus( ) const
  */
 const QString TrialData::GetStimulus(  ) const
 {
-//    qCDebug(APEX_RS, "TrialData::GetStimulus " );
-        if (m_stimuli.size()!=1) {
-                //int pos = ApexTools::RandomRange((int)m_stimuli.size()-1) ;
-                int pos = mRandom.nextUInt(((int)m_stimuli.size())) ;
-                qCDebug(APEX_RS, "Returning random stimulus #%i", pos);
-                tStimulusList::const_iterator it= m_stimuli.begin();
-                for (int i=0; i<pos; ++i)
-                        ++it;
-                return (*it);
-        } else {
-                return( m_stimuli.front() );
-        }
+    if (m_stimuli.size()!=1) {
+        //int pos = ApexTools::RandomRange((int)m_stimuli.size()-1) ;
+        int pos = mRandom.nextUInt(((int)m_stimuli.size())) ;
+        qCDebug(APEX_RS, "Returning random stimulus #%i", pos);
+        tStimulusList::const_iterator it= m_stimuli.begin();
+        for (int i=0; i<pos; ++i)
+                ++it;
+        return (*it);
+    } else {
+        return( m_stimuli.front() );
+    }
+}
+
+/**
+ * Returns all stimuli in a trial
+ * Implemented with QStringList because QtScript does not handle typedefs well
+ * @return
+ */
+const QStringList TrialData::GetStimulusList() const
+{
+    return m_stimuli;
 }
 
 const apex::tStimulusList::const_iterator TrialData::GetStimulusIterator( ) const
 {
-        return m_stimuli.begin();
+    return m_stimuli.begin();
 }
 
 const QString TrialData::GetAnswer( ) const
 {
-        return m_answer;
+    return m_answer;
 }
 
 void TrialData::AddStandard( const QString & p_name )
 {
-        //m_standard = p_name;
     m_standards.push_back(p_name);
 }
 
@@ -134,7 +132,6 @@ void TrialData::AddStandard( const QString & p_name )
  */
 const QString TrialData::GetRandomStandard( ) const
 {
-
     if (m_standards.size()>1) {
         //int pos = ApexTools::RandomRange((int)m_standards.size()-1) ;
         int pos = mRandom.nextUInt((int)m_standards.size()) ;
@@ -148,12 +145,7 @@ const QString TrialData::GetRandomStandard( ) const
     } else {
         return( m_standards.front() );
     }
-
-
-        //return m_standard;
 }
-
-
 
 const QString TrialData::GetAnswerElement( ) const
 {

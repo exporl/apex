@@ -20,8 +20,6 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_STIMULUS_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_STIMULUS_H_
 
-#include "apexdata/factoryelement.h"
-
 #include "apexdata/stimulus/stimulusdata.h"
 
 #include "apextools/apextypedefs.h"
@@ -32,7 +30,6 @@ namespace apex
 {
 
 class ExperimentConfigFileParser;
-
 
 namespace data
 {
@@ -45,95 +42,96 @@ namespace stimulus
 class StimulusFactory;
 
 /**
-  * Stimulus
-  *   represents a single stimulus.
-  *   Has a list of datablocks and parameters.
-  ******************************************** */
-class Stimulus : public FactoryElement
+ * Stimulus
+ *   represents a single stimulus.
+ *   Has a list of datablocks and parameters.
+ ******************************************** */
+class Stimulus
 {
-        friend class StimulusFactory;
-        friend class ExperimentConfigFileParser;
-    public:
-        /**
-          * Constructor.
-          * @param ac_sID a unique identifier
-          * @param ac_sDescription small description
-          * @param ac_fixParams fixed parameters, cannot be changed
-          * @param ac_varParams parameters that can be changed during the experiment
-          */
-        Stimulus( const data::StimulusData& data );
+    friend class StimulusFactory;
+    friend class ExperimentConfigFileParser;
+public:
+    /**
+     * Constructor.
+     * @param ac_sID a unique identifier
+     * @param ac_sDescription small description
+     * @param ac_fixParams fixed parameters, cannot be changed
+     * @param ac_varParams parameters that can be changed during the experiment
+     */
+    Stimulus( const data::StimulusData& data );
 
-        /**
-          * Destructor.
-          */
-        virtual ~Stimulus();
+    /**
+     * Destructor.
+     */
+    virtual ~Stimulus();
 
-        /**
-          * Get the id.
-          * @return string reference
-          */
-        const QString GetID() const;
-
-
-        /**
-          * Get the playmatrix.
-          * @return const pointer
-          */
-        PlayMatrix* GetPlayMatrix() const
-        {
-            return mc_PlayMatrix;
-        }
-
-        void SetPlayMatrix(PlayMatrix* pm)
-        {
-            mc_PlayMatrix=pm;
-        }
-
-        /**
-          * Get the fixed parameters.
-          * @return a pointer
-          */
-        const data::StimulusParameters* GetFixParameters() const;
-
-        /**
-          * Get the variable parameters.
-          * It is allowed to change the parameters (eg by adaptiveprocedure).
-          * @return a pointer
-          */
-        const data::StimulusParameters* GetVarParameters() const;
-
-        /**
-          * Get the map with datablocks ordered per device.
-          * @return unmutable tQStringVectorMap
-          */
-        const tQStringVectorMap& GetDeviceDataBlocks() const
-        {
-            return m_DeviceDataBlocks;
-        }
+    /**
+     * Get the id.
+     * @return string reference
+     */
+    const QString GetID() const;
 
 
-        /**
-        * Get the map with datablocks ordered per device.
-        * Used when a class needs to set a parameter on the devices' datablocks.
-        * @return mutable tQStringVectorMap
-         */
-        tQStringVectorMap& ModDeviceDataBlocks()
-        {
-            return m_DeviceDataBlocks;
-        }
+    /**
+     * Get the playmatrix.
+     * @return const pointer
+     */
+    PlayMatrix* GetPlayMatrix() const
+    {
+        return mc_PlayMatrix;
+    }
 
-        const data::StimulusData* data() const {return &m_data;}
+    void SetPlayMatrix(PlayMatrix* pm)
+    {
+        mc_PlayMatrix=pm;
+    }
 
-        void ConstructDevDBlockMap( const tDeviceMap& ac_Devices, tDataBlockMap& a_DataBlocks );
+    /**
+     * Get the fixed parameters.
+     * @return a pointer
+     */
+    const data::StimulusParameters* GetFixParameters() const;
 
-    private:
+    /**
+     * Get the variable parameters.
+     * It is allowed to change the parameters (eg by adaptiveprocedure).
+     * @return a pointer
+     */
+    const data::StimulusParameters* GetVarParameters() const;
 
-        const data::StimulusData m_data;
-        PlayMatrix*  mc_PlayMatrix;
-        tQStringVectorMap m_DeviceDataBlocks; //datablocks ordered per device
-        //const QString id;
+    /**
+     * Get the map with datablocks ordered per device.
+     * @return unmutable tQStringVectorMap
+     */
+    const tQStringVectorMap& GetDeviceDataBlocks() const
+    {
+        return m_DeviceDataBlocks;
+    }
+
+
+    /**
+     * Get the map with datablocks ordered per device.
+     * Used when a class needs to set a parameter on the devices' datablocks.
+     * @return mutable tQStringVectorMap
+     */
+    tQStringVectorMap& ModDeviceDataBlocks()
+    {
+        return m_DeviceDataBlocks;
+    }
+
+    const data::StimulusData* data() const {return &m_data;}
+
+    void ConstructDevDBlockMap( const tDeviceMap& ac_Devices, tDataBlockMap& a_DataBlocks );
+
+private:
+
+    const data::StimulusData m_data;
+    PlayMatrix*  mc_PlayMatrix;
+    tQStringVectorMap m_DeviceDataBlocks; //datablocks ordered per device
+    //const QString id;
 };
 
-} //end ns stimulus
-} //end ns apex
+}
+}
+
 #endif //STIMULUS_H

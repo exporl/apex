@@ -20,43 +20,46 @@
 #ifndef _EXPORL_SRC_LIB_APEXTOOLS_STATUS_SCREENSTATUSREPORTER_H_
 #define _EXPORL_SRC_LIB_APEXTOOLS_STATUS_SCREENSTATUSREPORTER_H_
 
-#include "statusreporter.h"
+#include "../global.h"
 
-#include <QObject>
+#include "statusitem.h"
+
+#include <QMainWindow>
+
+class QCloseEvent;
+class QTreeWidget;
 
 namespace apex
 {
 
-class StatusWindow;
-
-/**
- * @class ScreenStatusReporter
- * @author Job Noorman
- *
- * This class reports its status to the screen using a StatusWindow.
- */
-class APEXTOOLS_EXPORT ScreenStatusReporter : public QObject, public StatusReporter
+class APEXTOOLS_EXPORT ScreenStatusReporter : public QMainWindow
 {
-        Q_OBJECT
+    Q_OBJECT
+public:
+    ScreenStatusReporter();
+    virtual ~ScreenStatusReporter();
 
-    public:
+public Q_SLOTS:
+    void addItem(const apex::StatusItem& item);
 
-        ScreenStatusReporter();
-        ~ScreenStatusReporter();
+private Q_SLOTS:
+    void updateLevels();
+    void copyAllToClipboard();
+    void copySelectedToClipboard();
 
-        void clear();
+protected:
+    virtual void hideEvent(QHideEvent *) Q_DECL_OVERRIDE;
+    virtual void showEvent(QShowEvent *) Q_DECL_OVERRIDE;
 
-    public Q_SLOTS:
+Q_SIGNALS:
+    void visibilityChanged(bool visible);
 
-        void setReportLevels(StatusItem::Levels levels);
-        void showWindow();
-        void hideWindow();
-
-    private:
-
-        void report(const StatusItem& e);
-
-        StatusWindow* window;
+private:
+    StatusItem::Levels reportLevels;
+    QTreeWidget *list;
+    QAction *warningsAction;
+    QAction *infoMessagesAction;
+    QAction *debugMessagesAction;
 };
 
 }

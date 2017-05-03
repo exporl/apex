@@ -1,5 +1,5 @@
-#ifndef _EXPORL_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREAPI_H_
-#define _EXPORL_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREAPI_H_
+#ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREAPI_H_
+#define _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREAPI_H_
 
 #include <QObject>
 #include <QStringList>
@@ -25,6 +25,10 @@ public:
 public slots:
     // Functions to change something to Apex
 
+    QStringList parameterNames(const QString stimulusID) const;
+
+    QVariantMap parameterMap(const QString stimulusID) const;
+
     QVariant parameterValue (const QString& parameter_id);
 
     /**
@@ -32,17 +36,14 @@ public slots:
      */
     void registerParameter(const QString& name); //TODO more parameters?
 
-    /*QString screenElementText(const QString& screenId,
-                              const QString& elementId) const;*/
-
     // Functions to get something from Apex
     /** Get list of trials for this procedure
      * will return a QList of ApexTrial objects
      */
     QObjectList trials() const;
-    float apexVersion() const;
 
     QStringList stimuli() const;
+
     QVariant fixedParameterValue(const QString stimulusID,
                                     const QString parameterID);
 
@@ -56,6 +57,11 @@ public slots:
     void showMessage(const QString& message) const;
 
     void abort(const QString& message) const;
+
+    /**
+      * Returns full filepath for relative path
+      */
+    QString absoluteFilePath(const QString& path);
 
 signals:
     void showMessageBox(const QString title, const QString text) const;

@@ -1,8 +1,9 @@
 #### Prerequisites
 
-The libraries and tools necessary for apex are built in the android-prebuild and android-build scripts.
-Some configure scripts or source files had to be modified, these are explained in comments in the script.
-Everything should be built into the .build/android directory.
+The libraries and tools necessary for apex are built in the
+android-prepare-api.sh and android-buildprepare-api.shscripts. Some configure
+scripts or source files had to be modified, these are explained in comments in
+the script.
 
 ###### A note on Qt 5.6 for android
 
@@ -17,7 +18,7 @@ but apex will build.
 ---
 #### Building
 
-To build simply run tools/android-prebuild and tools/android-build.
+To build simply run tools/android-prepare-api.sh and tools/android-build.sh.
 
 ---
 ### Todo

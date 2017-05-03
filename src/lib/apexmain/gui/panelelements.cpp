@@ -17,10 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apextools/global.h"
+
+#include "common/paths.h"
+
 #include "panelelements.h"
 
 #include <QResizeEvent>
 
+using namespace cmn;
 
 apex::gui::ApexFeedbackPicture::ApexFeedbackPicture( QWidget* a_pParent,
                                                    QString okFilename,
@@ -28,13 +33,13 @@ apex::gui::ApexFeedbackPicture::ApexFeedbackPicture( QWidget* a_pParent,
     : QLabel( a_pParent )
 {
     if (okFilename.isEmpty()) {
-        okPixmap = new QPixmap(Paths::Get().GetDataPath() + "/feedback_ok.png");
+        okPixmap = new QPixmap(Paths::searchFile(QL1S("feedback_ok.png"), Paths::iconDirectories()));
     } else
         okPixmap = new QPixmap(okFilename);
     Q_ASSERT(okPixmap);
 
     if (nOkFilename.isEmpty())
-        nokPixmap = new QPixmap(Paths::Get().GetDataPath() + "/feedback_nok.png");
+        nokPixmap = new QPixmap(Paths::searchFile(QL1S("feedback_nok.png"), Paths::iconDirectories()));
     else
         nokPixmap = new QPixmap(nOkFilename);
     Q_ASSERT(nokPixmap);
@@ -72,21 +77,21 @@ StatusPicture::StatusPicture( QWidget* parent,
 {
     QString targetFile;
     if (answeringFilename.isEmpty())
-        targetFile=Paths::Get().GetDataPath()+"/answering.png";
+        targetFile = Paths::searchFile(QL1S("answering.png"), Paths::iconDirectories());
     else
         targetFile=answeringFilename;
     answeringPixmap = new QPixmap(targetFile);
     Q_ASSERT(! answeringPixmap->isNull());
 
     if (listeningFilename.isEmpty())
-        targetFile=Paths::Get().GetDataPath()+"/listening.png";
+        targetFile = Paths::searchFile(QL1S("listening.png"), Paths::iconDirectories());
     else
         targetFile=listeningFilename;
     listeningPixmap = new QPixmap(targetFile);
     Q_ASSERT(! listeningPixmap->isNull());
 
     if (waitingForStartFilename.isEmpty())
-        targetFile=Paths::Get().GetDataPath()+"/waitforstart.png";
+        targetFile = Paths::searchFile(QL1S("waitforstart.png"), Paths::iconDirectories());
     else
         targetFile=waitingForStartFilename;
     waitingForStartPixmap = new QPixmap(targetFile);

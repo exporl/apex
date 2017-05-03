@@ -25,7 +25,6 @@
 #include "apexdata/screen/buttonelement.h"
 #include "apexdata/screen/buttongroup.h"
 #include "apexdata/screen/flashplayerelement.h"
-#include "apexdata/screen/flashplayerelement.h"
 #include "apexdata/screen/gridlayoutelement.h"
 #include "apexdata/screen/htmlelement.h"
 #include "apexdata/screen/labelelement.h"
@@ -47,9 +46,10 @@
 
 #include "apextools/gui/arclayout.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
 #include "apextools/xml/xmlkeys.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "gui/guidefines.h"
 
@@ -64,9 +64,7 @@
 
 #include <QtGlobal>
 
-using namespace XERCES_CPP_NAMESPACE;
 using namespace apex::XMLKeys;
-using namespace apex::ApexXMLTools;
 using apex::data::ParameterData;
 using apex::data::AnswerLabelElement;
 using apex::data::ArcLayoutElement;
@@ -88,26 +86,24 @@ using apex::data::ScreensData;
 namespace
 {
 
-
 /**
  * Create a keysequence.
  * Throws ApexStringException in case of error.
  * @param a_pElement the DOMElement
  * @return the keysequence
  */
-QKeySequence f_CreateKeySequence( XERCES_CPP_NAMESPACE::DOMElement* a_pElement )
+QKeySequence f_CreateKeySequence(const QDomElement &a_pElement)
 {
-    const QString sKey( XMLutils::GetFirstChildText( a_pElement ) );
-    const QString sMod( XMLutils::GetAttribute( a_pElement, "modifier" ) );
-    const QString sHex( XMLutils::GetAttribute( a_pElement, "hex" ) );
+    const QString sKey(a_pElement.text());
+    const QString sMod(a_pElement.attribute(QSL("modifier")));
+    const QString sHex(a_pElement.attribute(QSL("hex")));
     bool bHex = false;
-    if ( !sHex.isEmpty() )
-        bHex = apex::ApexTools::bQStringToBoolean( sHex );
+    if (!sHex.isEmpty())
+        bHex = apex::ApexTools::bQStringToBoolean(sHex);
 
     //get modifier
     Qt::Modifier eMod = Qt::Modifier(0);
-    if ( !sMod.isEmpty() )
-    {
+    if (!sMod.isEmpty()) {
         if ( sMod == "Alt" )
             eMod = Qt::ALT;
         else if ( sMod == "Ctrl" )
@@ -118,8 +114,7 @@ QKeySequence f_CreateKeySequence( XERCES_CPP_NAMESPACE::DOMElement* a_pElement )
             throw( ApexStringException( "f_CreateKeySequence: unknown modifier " + sMod ) );
     }
 
-    if ( bHex )
-    {
+    if (bHex) {
         //create from hexadecimal
         bool bOk = false;
         const int nHex = sKey.toInt( &bOk, 16 );
@@ -128,19 +123,14 @@ QKeySequence f_CreateKeySequence( XERCES_CPP_NAMESPACE::DOMElement* a_pElement )
         if ( !sMod.isEmpty() )
             return QKeySequence( eMod | nHex );
         return QKeySequence( nHex );
-    }
-    else
-    {
-        //create from string
-        if ( sKey.length() == 1 )
-        {
+    } else {
+        if ( sKey.length() == 1 ) {
+            //create from string
             if ( !sMod.isEmpty() )
                 return QKeySequence( sMod + "+" + sKey );
             return QKeySequence( sKey );
-        }
-        //create from enum
-        else
-        {
+        } else {
+            //create from enum
             int nKey = 0;
             if ( sKey == "UpArrow" )
                 nKey = Qt::Key_Up;
@@ -169,6 +159,7 @@ bool sf_bIsLayout( const QString& ac_sTag )
 {
     return ( ac_sTag == gc_sGridLayout || ac_sTag == gc_sVertLayout || ac_sTag == gc_sHoriLayout || ac_sTag == gc_sArcLayout || ac_sTag == gc_sTwoPartLayout);
 }
+
 }
 
 namespace apex
@@ -186,12 +177,9 @@ namespace gui
 QString ScreenParser::f_CheckPath( const QString& ac_sBasePath, const QString& ac_sRelativePath )
 {
     QString s = ac_sBasePath;
-    if ( !s.isEmpty() && !s.endsWith( '/' ) )
-    {
+    if ( !s.isEmpty() && !s.endsWith( '/' ) ) {
         s += '/';
-    }
-    else if ( s.isEmpty() )
-    {
+    } else if ( s.isEmpty() ) {
         //[ stijn ] a new feature in qt4: QUrl::path() strips the drive
         //from the path on windows. Completely unusable, so just return the path
         if ( !QFile::exists( ac_sRelativePath ) )
@@ -215,90 +203,56 @@ QString ScreenParser::f_CheckPath(data::FilePrefix p, const QString& ac_sRelativ
     return f_CheckPath( FilePrefixConvertor::convert(p), ac_sRelativePath);
 }
 
-Screen* ScreenParser::createScreen( DOMElement* a_pElement )
+Screen* ScreenParser::createScreen(const QDomElement &a_pElement)
 {
-    Q_ASSERT(a_pElement);
     ButtonGroup* buttonGroup = 0;
     ScreenElement* rootElement = 0;
     QString defaultAnswer;
     ScreenElementMap idToElementMap;
 
-    const QString screenID = XMLutils::GetAttribute( a_pElement, gc_sID );
+    const QString screenID =  a_pElement.attribute(gc_sID );
 
-    for ( DOMNode* it = a_pElement->getFirstChild() ; it != 0 ; it = it->getNextSibling() )
-    {
-        // this is only necessary when we parse without
-        // "setIncludeIgnorableWhitespace(false);" and/or
-        // "setCreateCommentNodes(false);", but we sometimes do this like
-        // in the screen editor...
-        if ( it->getNodeType() != DOMNode::ELEMENT_NODE )
-            continue;
+    for (QDomElement it = a_pElement.firstChildElement(); !it.isNull();
+            it = it.nextSiblingElement()) {
+        const QString tag(it.tagName());
 
-        const QString tag( XMLutils::GetTagName( it ) );
-
-        if ( sf_bIsLayout( tag ) )
-        {
-            try
-            {
-                rootElement = createLayout( (DOMElement*) it, 0, idToElementMap );
-            }
-            catch (ApexStringException &s)
-            {
-                log().addError( "Screen Parser", s.what() );
+        if ( sf_bIsLayout( tag ) ) {
+            try {
+                rootElement = createLayout(it, 0, idToElementMap );
+            } catch (const std::exception &s) {
+                qCCritical(APEX_RS, "Screen Parser: %s", s.what());
                 delete rootElement;
                 delete buttonGroup;
-                return 0;
+                return NULL;
             }
-            catch (...)
-            {
-                log().addError( "Screen Parser", "unknown exception" );
-                delete rootElement;
-                delete buttonGroup;
-                return 0;
-            }
-        }
-        else if ( tag == gc_sButtonGroup )
-        {
-            /*try
-            {*/
-            buttonGroup = createButtonGroup( (DOMElement*) it, idToElementMap );
-            /*} catch(ApexStringException &s)      {
-                error->AddError( "Screen Parser", s.what() );
-                delete rootElement;
-                if (buttonGroup) delete buttonGroup;
-                return 0;
-            }*/
-        }
-        else if ( tag == gc_sDefaultAnswer )
-        {
-            defaultAnswer = XMLutils::GetFirstChildText( it );
+        } else if ( tag == gc_sButtonGroup ) {
+            buttonGroup = createButtonGroup(it, idToElementMap );
+        } else if ( tag == gc_sDefaultAnswer ) {
+            defaultAnswer = it.text();
 
             if ( idToElementMap.find(defaultAnswer) == idToElementMap.end() &&
-                    buttonGroup && buttonGroup->getID() != defaultAnswer )
-            {
+                    buttonGroup && buttonGroup->getID() != defaultAnswer ) {
                 throw ApexStringException("Unknown default_answer_element: " + defaultAnswer);
             }
-        }
-        else
+        } else {
             addUnknownTag( "ScreenParser::createScreen", tag );
+        }
     }
 
-    if ( !rootElement )
-    {
+    if ( !rootElement ) {
         delete rootElement;
         delete buttonGroup;
         return 0;
     }
 
-    Screen* screen =
-        new Screen( screenID, rootElement, idToElementMap, buttonGroup, defaultAnswer );
+    Screen* screen = new Screen( screenID, rootElement, idToElementMap, buttonGroup, defaultAnswer );
     screens->manageScreen( screen );
     return screen;
 }
 
-ScreenParser::ScreenParser( ScreensData* s, data::ParameterManagerData* pmd )
-        : screens( s ),
-          parameterManagerData(pmd)
+ScreenParser::ScreenParser( ScreensData* s, data::ParameterManagerData* pmd ) :
+    screens( s ),
+    parameterManagerData(pmd)
 {
 }
 
@@ -336,24 +290,14 @@ ScreenElement* ScreenParser::createTestScreenElement( ScreenElement* parent )
     return e;
 }
 
-ButtonGroup* ScreenParser::createButtonGroup( DOMElement* a_pElement, const ScreenElementMap& p_idToElementMap  )
+ButtonGroup* ScreenParser::createButtonGroup(const QDomElement &a_pElement, const ScreenElementMap& p_idToElementMap  )
 {
-    ButtonGroup* pRet = new ButtonGroup( XMLutils::GetAttribute( a_pElement, gc_sID ) );
+    ButtonGroup* pRet = new ButtonGroup(  a_pElement.attribute(gc_sID ) );
 
-    for ( DOMNode* currentNode = a_pElement->getFirstChild();
-            currentNode != 0 ; currentNode = currentNode->getNextSibling() )
-    {
-        // this is only necessary when we parse without
-        // "setIncludeIgnorableWhitespace(false);" and/or
-        // "setCreateCommentNodes(false);", but we sometimes do this like
-        // in the screen editor...
-        if ( currentNode->getNodeType() != DOMNode::ELEMENT_NODE )
-            continue;
-
-        QString id = XMLutils::GetAttribute( currentNode, gc_sID );
-
-        if ( p_idToElementMap.find(id) == p_idToElementMap.end() )
-        {
+    for (QDomElement currentNode = a_pElement.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        QString id =  currentNode.attribute(gc_sID );
+        if ( p_idToElementMap.find(id) == p_idToElementMap.end() ) {
             throw ApexStringException("Unknown screenelement " + id + " in buttongroup");
         }
         pRet->append( id );
@@ -364,104 +308,83 @@ ButtonGroup* ScreenParser::createButtonGroup( DOMElement* a_pElement, const Scre
 
 void ScreenParser::addUnknownTag( const QString& ac_sSource, const QString& ac_sTag )
 {
-    log().addError( ac_sSource, "Unknown Tag: " + ac_sTag );
+    qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( ac_sSource, "Unknown Tag: " + ac_sTag )));
 }
 
 ScreenParser::mt_FeedBackPaths* ScreenParser::parseFeedBackPaths(
-    DOMElement* a_pElement, const QString& ac_sElementID )
+    const QDomElement &a_pElement, const QString& ac_sElementID )
 {
     mt_FeedBackPaths* pRet = new mt_FeedBackPaths();
 
-    for ( DOMNode* currentNodee = a_pElement->getFirstChild() ;
-            currentNodee != 0; currentNodee = currentNodee->getNextSibling() )
-    {
-        // this is only necessary when we parse without
-        // "setIncludeIgnorableWhitespace(false);" and/or
-        // "setCreateCommentNodes(false);", but we sometimes do this like
-        // in the screen editor...
-        if ( currentNodee->getNodeType() != DOMNode::ELEMENT_NODE )
-            continue;
-        const QString tag( XMLutils::GetTagName( currentNodee ) );
-        const QString value( XMLutils::GetFirstChildText( currentNodee ));
-        if ( tag == "highlight" )
-        {
+    for (QDomElement currentNodee = a_pElement.firstChildElement(); !currentNodee.isNull(); currentNodee = currentNodee.nextSiblingElement()) {
+        const QString tag( currentNodee.tagName() );
+        const QString value( currentNodee.text());
+        if ( tag == "highlight" ) {
             QString p = f_CheckPath( FilePrefixConvertor::convert(m_sPath), value );
-            if ( p.isEmpty() )
-            {
+            if ( p.isEmpty() ) {
                 delete pRet;
-                log().addError( "ScreenParser::parseFeedBackPaths", ac_sElementID + ": " + value + " doesn't exist" );
+                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::parseFeedBackPaths", ac_sElementID + ": " + value + " doesn't exist" )));
                 return 0;
             }
             pRet->m_sHighLight = value;
-        }
-        else if ( tag == "positive" )
-        {
+        } else if ( tag == "positive" ) {
             QString p = f_CheckPath( FilePrefixConvertor::convert(m_sPath), value );
-            if ( p.isEmpty() )
-            {
+            if ( p.isEmpty() ) {
                 delete pRet;
-                log().addError( "ScreenParser::parseFeedBackPaths", ac_sElementID + ": " + value + " doesn't exist" );
+                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::parseFeedBackPaths", ac_sElementID + ": " + value + " doesn't exist" )));
                 return 0;
             }
             pRet->m_sPositive = value;
-        }
-        else if ( tag == "negative" )
-        {
+        } else if ( tag == "negative" ) {
             QString p = f_CheckPath( FilePrefixConvertor::convert(m_sPath), value );
-            if ( p.isEmpty() )
-            {
+            if ( p.isEmpty() ) {
                 delete pRet;
-                log().addError( "ScreenParser::parseFeedBackPaths", ac_sElementID + ": " + value + " doesn't exist" );
+                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::parseFeedBackPaths", ac_sElementID + ": " + value + " doesn't exist" )));
                 return 0;
             }
             pRet->m_sNegative = value;
-        }
-        else if ( tag == "disabled" )
-        {
+        } else if ( tag == "disabled" ) {
             QString p = f_CheckPath( FilePrefixConvertor::convert(m_sPath), value );
-            if ( p.isEmpty() )
-            {
+            if ( p.isEmpty() ) {
                 delete pRet;
-                log().addError( "ScreenParser::parseFeedBackPaths", ac_sElementID + ": " + value + " doesn't exist" );
+                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::parseFeedBackPaths", ac_sElementID + ": " + value + " doesn't exist" )));
                 return 0;
             }
             pRet->m_sDisabled = value;
-        }
-        else
+        } else {
             addUnknownTag( "ScreenParser::parseFeedBackPaths", tag );
+        }
     }
 
     return pRet;
 }
 
-ScreenLayoutElement* ScreenParser::createLayout(
-    DOMElement* element, ScreenElement* parent, ScreenElementMap& elements )
+ScreenLayoutElement* ScreenParser::createLayout(const QDomElement &element,
+        ScreenElement* parent, ScreenElementMap& elements )
 {
     ScreenLayoutElement* ret = 0;
 
-    const QString tag = XMLutils::GetTagName( element );
-    DOMNode* it = element;
+    const QString tag = element.tagName();
+    QDomElement it = element;
 
     //it should be a layout?
     Q_ASSERT( sf_bIsLayout( tag ) );
 
     //get common stuff
-    QString width  = XMLutils::GetAttribute( it, gc_sWidth );
-    QString height = XMLutils::GetAttribute( it, gc_sHeight );
-    QString id     = XMLutils::GetAttribute( it, gc_sID );
-    QString x      = XMLutils::GetAttribute( it, gc_sX );
-    QString y      = XMLutils::GetAttribute( it, gc_sY );
-    QString row      = XMLutils::GetAttribute( it, gc_sRow );
-    QString col      = XMLutils::GetAttribute( it, gc_sCol );
+    QString width  =  it.attribute(gc_sWidth );
+    QString height =  it.attribute(gc_sHeight );
+    QString id     =  it.attribute(gc_sID );
+    QString x      =  it.attribute(gc_sX );
+    QString y      =  it.attribute(gc_sY );
+    QString row      =  it.attribute(gc_sRow );
+    QString col      =  it.attribute(gc_sCol );
 
-    if (!x.isEmpty() && !col.isEmpty())
-    {
-        log().addError( "ScreenParser::createLayout", id + tr(": x and col cannot both be defined") );
+    if (!x.isEmpty() && !col.isEmpty()) {
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createLayout", id + tr(": x and col cannot both be defined") )));
         throw( 0 );
     }
-    if (!y.isEmpty() && !row.isEmpty())
-    {
-        log().addError( "ScreenParser::createLayout", id + tr(": x and col cannot both be defined") );
+    if (!y.isEmpty() && !row.isEmpty()) {
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createLayout", id + tr(": x and col cannot both be defined") )));
         throw( 0 );
     }
 
@@ -482,18 +405,16 @@ ScreenLayoutElement* ScreenParser::createLayout(
     if ( y.isEmpty() && row.isEmpty())
         nY = 1;
 
-    if ( tag == gc_sVertLayout || tag == gc_sHoriLayout || tag == gc_sGridLayout)
-    {
+    if ( tag == gc_sVertLayout || tag == gc_sHoriLayout || tag == gc_sGridLayout) {
         unsigned nW = width.toUInt();
         unsigned nH = height.toUInt();
 
         // columnstretch and rowstretch
-        QString sRowstretch      = XMLutils::GetAttribute( it, "rowstretch" );
-        QString sColstretch      = XMLutils::GetAttribute( it, "columnstretch" );
+        QString sRowstretch      =  it.attribute(QSL("rowstretch"));
+        QString sColstretch      =  it.attribute(QSL("columnstretch"));
 
         data::tStretchList rowstretch;
-        if (!sRowstretch.isEmpty())
-        {
+        if (!sRowstretch.isEmpty()) {
             rowstretch = parseStretchList(sRowstretch);
 //            qCDebug(APEX_RS, "SRowstretch=%s, rowstretch.size=%d", qPrintable(sRowstretch), rowstretch.size());
             if ( rowstretch.size() != (int) nH )
@@ -501,8 +422,7 @@ ScreenLayoutElement* ScreenParser::createLayout(
         }
 
         data::tStretchList colstretch;
-        if (!sColstretch.isEmpty())
-        {
+        if (!sColstretch.isEmpty()) {
             colstretch = parseStretchList(sColstretch);
             if ( colstretch.size() != (int) nW )
                 throw ApexStringException(tr("The number of column stretch factors for layout %1 is not equal to its width").arg(id));
@@ -514,23 +434,19 @@ ScreenLayoutElement* ScreenParser::createLayout(
             nW = 1;
         if ( tag == gc_sHoriLayout )
             nH = 1;
-        if ( nH == 0 || nW == 0 || nW > sc_nMaxElementsInRow || nH > sc_nMaxElementsInCol )
-        {
-            log().addError( "ScreenParser::createLayout", id + ": Width or Height not in range" );
+        if ( nH == 0 || nW == 0 || nW > sc_nMaxElementsInRow || nH > sc_nMaxElementsInCol ) {
+            qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createLayout", id + ": Width or Height not in range" )));
             throw( 0 );
         }
 
         ret = new GridLayoutElement( id, parent, nW, nH, rowstretch, colstretch );
-    }
-    else if ( tag == gc_sArcLayout )
-    {
+    } else if ( tag == gc_sArcLayout ) {
         const unsigned nW = width.toUInt();
-        if ( nW == 0 )
-        {
-            log().addError( "ScreenParser::createLayout", id + ": Width must be > 0" );
+        if ( nW == 0 ) {
+            qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createLayout", id + ": Width must be > 0" )));
             throw( 0 );
         }
-        const QString sType( XMLutils::GetAttribute( it, "type" ) );
+        const QString sType(  it.attribute(QSL("type")) );
 
         ::ArcLayout::ArcType eType = ::ArcLayout::ARC_TOP;
         if ( sType == "lower" )
@@ -545,16 +461,12 @@ ScreenLayoutElement* ScreenParser::createLayout(
         ArcLayoutElement* p = new ArcLayoutElement( id, parent, nW, eType );
 
         ret = p;
-    }
-    else if ( tag == gc_sTwoPartLayout )
-    {
+    } else if ( tag == gc_sTwoPartLayout ) {
 
         throw ApexStringException(tr("TwoPartlayout is obsolete. Please use gridlayout with stretchfactors instead"));
 
-    }
-    else
-    {
-        log().addError( "ScreenParser::createLayout", id + ": unknown layout type" );
+    } else {
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createLayout", id + ": unknown layout type" )));
         throw( 0 );
     }
 
@@ -565,30 +477,12 @@ ScreenLayoutElement* ScreenParser::createLayout(
 
     // go deeper, return value is unused since created elements
     // automatically become children of ret
-    for ( DOMNode* itt = element->getFirstChild() ; itt != 0 ; itt = itt->getNextSibling() )
-    {
-        // this is only necessary when we parse without
-        // "setIncludeIgnorableWhitespace(false);" and/or
-        // "setCreateCommentNodes(false);", but we sometimes do this like
-        // in the screen editor...
-        if ( itt->getNodeType() != DOMNode::ELEMENT_NODE )
-            continue;
-        DOMElement* el = static_cast<DOMElement*>( itt );
-        ScreenElement* childel = createElement( el, ret, elements );
-        if ( childel )
-        {
-            //try {
+    for (QDomElement itt = element.firstChildElement(); !itt.isNull();
+            itt = itt.nextSiblingElement()) {
+        ScreenElement* childel = createElement(itt, ret, elements);
+        if ( childel ) {
             ret->checkChild( childel );
-            /*} catch( ApexStringException& e )
-            {
-                error->AddError( "ScreenParser::createLayout()", e.what() );
-                delete childel;
-                delete ret;
-                throw( 0 );
-            } */
-        }
-        else
-        {
+        } else {
             throw ApexStringException("Error parsing child element of layout");
         }
     }
@@ -597,9 +491,9 @@ ScreenLayoutElement* ScreenParser::createLayout(
 }
 
 ScreenElement* ScreenParser::createElement(
-    DOMElement* element, ScreenElement* parent, ScreenElementMap& elements )
+    const QDomElement &element, ScreenElement* parent, ScreenElementMap& elements )
 {
-    const QString tag = XMLutils::GetTagName( element );
+    const QString tag = element.tagName();
 
     if ( sf_bIsLayout( tag ) )
         return createLayout( element, parent, elements );
@@ -608,24 +502,22 @@ ScreenElement* ScreenParser::createElement(
 }
 
 ScreenElement* ScreenParser::createNonLayoutElement(
-    DOMElement* element, ScreenElement* parent, ScreenElementMap& elements )
+    const QDomElement &element, ScreenElement* parent, ScreenElementMap& elements )
 {
     ScreenElement* ret = 0;
-    const QString tag = XMLutils::GetTagName( element );
-    const QString id  = XMLutils::GetAttribute( element, gc_sID );
-    QString x      = XMLutils::GetAttribute( element, gc_sX );
-    QString y      = XMLutils::GetAttribute( element, gc_sY );
-    QString row      = XMLutils::GetAttribute( element, gc_sRow );
-    QString col      = XMLutils::GetAttribute( element, gc_sCol );
+    const QString tag = element.tagName();
+    const QString id  =  element.attribute(gc_sID );
+    QString x      =  element.attribute(gc_sX );
+    QString y      =  element.attribute(gc_sY );
+    QString row      =  element.attribute(gc_sRow );
+    QString col      =  element.attribute(gc_sCol );
 
-    if (!x.isEmpty() && !col.isEmpty())
-    {
-        log().addError( "ScreenParser::createLayout", id + tr(": x and col cannot both be defined") );
+    if (!x.isEmpty() && !col.isEmpty()) {
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createLayout", id + tr(": x and col cannot both be defined") )));
         throw( 0 );
     }
-    if (!y.isEmpty() && !row.isEmpty())
-    {
-        log().addError( "ScreenParser::createLayout", id + tr(": x and col cannot both be defined") );
+    if (!y.isEmpty() && !row.isEmpty()) {
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createLayout", id + tr(": x and col cannot both be defined") )));
         throw( 0 );
     }
 
@@ -650,81 +542,66 @@ ScreenElement* ScreenParser::createNonLayoutElement(
     Q_ASSERT( !sf_bIsLayout( tag ) );
     Q_ASSERT( parent );
 
-    if ( tag == gc_sButton )
-    {
+    if ( tag == gc_sButton ) {
         ButtonElement* temp = new ButtonElement( id, parent );
         temp->setPrefix(m_sPath);
 
-        DOMElement* te = XMLutils::GetElementsByTagName( element, gc_sText );
-        if ( te )
-            temp->setText( XMLutils::GetFirstChildText( te ) );
+        QDomElement te = element.elementsByTagName(gc_sText).item(0).toElement();
+        if (!te.isNull())
+            temp->setText( te.text() );
 
         ret = temp;
-    }
-    else if ( tag == gc_sSpinBox )
-    {
+    } else if ( tag == gc_sSpinBox ) {
         data::SpinBoxElement* temp = new data::SpinBoxElement( id, parent );
         temp->setPrefix(m_sPath);
 
         qCDebug(APEX_RS, "Creating spinbox %s", qPrintable (id));
 
-        DOMElement* te = XMLutils::GetElementsByTagName( element, gc_sValue );
-        if ( te )
-            temp->SetValue( XMLutils::GetFirstChildText( te ).toFloat() );
+        QDomElement te = element.elementsByTagName(gc_sValue).item(0).toElement();
+        if (!te.isNull())
+            temp->SetValue( te.text().toFloat() );
 
-        te = XMLutils::GetElementsByTagName( element, gc_sMin );
-        if ( te )
-            temp->SetMin( XMLutils::GetFirstChildText( te ).toFloat() );
+        te = element.elementsByTagName(gc_sMin).item(0).toElement();
+        if (!te.isNull())
+            temp->SetMin( te.text().toFloat() );
 
-        te = XMLutils::GetElementsByTagName( element, gc_sMax );
-        if ( te )
-            temp->SetMax( XMLutils::GetFirstChildText( te ).toFloat() );
+        te = element.elementsByTagName(gc_sMax).item(0).toElement();
+        if (!te.isNull())
+            temp->SetMax( te.text().toFloat() );
 
-        te = XMLutils::GetElementsByTagName( element, gc_sStep );
-        if ( te )
-            temp->SetStep( XMLutils::GetFirstChildText( te ).toFloat() );
+        te = element.elementsByTagName(gc_sStep).item(0).toElement();
+        if (!te.isNull())
+            temp->SetStep( te.text().toFloat() );
 
-        te = XMLutils::GetElementsByTagName( element, gc_sParameter );
-        if ( te )
-            temp->SetParameter( XMLutils::GetFirstChildText( te ) );
+        te = element.elementsByTagName(gc_sParameter).item(0).toElement();
+        if (!te.isNull())
+            temp->SetParameter( te.text() );
 
-        te = XMLutils::GetElementsByTagName( element, gc_sReset );
-        if ( te )
-            temp->SetReset( XMLutils::GetFirstChildText( te ) == "true" );
+        te = element.elementsByTagName(gc_sReset).item(0).toElement();
+        if (!te.isNull())
+            temp->SetReset( te.text() == "true" );
 
         ret = temp;
-    }
-    else if ( tag == gc_sMatrix )
-    {
+    } else if ( tag == gc_sMatrix ) {
         data::MatrixElement* temp = new data::MatrixElement(id, parent);
         temp->setPrefix(m_sPath);
 
-        for ( DOMNode* currentNode = element->getFirstChild();
-              currentNode != 0; currentNode = currentNode->getNextSibling() )
-        {
-            // this is only necessary when we parse without
-            // "setIncludeIgnorableWhitespace(false);" and/or
-            // "setCreateCommentNodes(false);", but we sometimes do this like
-            // in the screen editor...
-            if ( currentNode->getNodeType() != DOMNode::ELEMENT_NODE )
-                continue;
-
-            QString tag( XMLutils::GetTagName( currentNode ) );
-            if ( tag == "autocontinue" )
-            {
-                QString value( XMLutils::GetFirstChildText(currentNode));
+        for (QDomElement currentNode = element.firstChildElement(); !currentNode.isNull();
+                currentNode = currentNode.nextSiblingElement()) {
+            QString tag( currentNode.tagName() );
+            if ( tag == "autocontinue" ) {
+                QString value( currentNode.text());
                 temp->setAutoContinue( (value=="true")?true:false);
             } else if ( tag=="element") {
-                int row=XMLutils::GetAttribute(currentNode, "row").toInt();
-                int col=XMLutils::GetAttribute(currentNode, "col").toInt();
+                int row=currentNode.attribute(QSL("row")).toInt();
+                int col=currentNode.attribute(QSL("col")).toInt();
                 QString name;
                 QString text;
 
-                for ( DOMNode* c = currentNode->getFirstChild();
-                      c != 0; c = c->getNextSibling() )
-                {
-                    QString tag( XMLutils::GetTagName( c ) );
-                    QString value( XMLutils::GetFirstChildText(c));
+                for (QDomElement c = currentNode.firstChildElement(); !c.isNull();
+                        c = c.nextSiblingElement()) {
+                    QString tag( c.tagName() );
+                    QString value( c.text());
                     if (tag=="name")
                         name=value;
                     else if (tag=="text")
@@ -741,265 +618,200 @@ ScreenElement* ScreenParser::createNonLayoutElement(
         }
 
         ret=temp;
-    }
-    else if ( tag == gc_sTextEdit )
-    {
+    } else if ( tag == gc_sTextEdit ) {
         TextEditElement* temp = new TextEditElement( id, parent );
         temp->setPrefix(m_sPath);
 
-        DOMElement* te = XMLutils::GetElementsByTagName( element, gc_sText );
-        if ( te )
-            temp->setText( XMLutils::GetFirstChildText( te ) );
+        QDomElement te = element.elementsByTagName(gc_sText).item(0).toElement();
+        if (!te.isNull())
+            temp->setText( te.text() );
 
-        te = XMLutils::GetElementsByTagName( element, gc_sInputmask );
-        if ( te )
-        {
-            const QString sMask( XMLutils::GetFirstChildText( te ) );
-            temp->setInputMask( sMask );
+        te = element.elementsByTagName(gc_sInputmask).item(0).toElement();
+        if (!te.isNull()) {
+            temp->setInputMask( te.text() );
         }
 
         ret = temp;
-    }
-    else if ( tag == gc_sPicture )
-    {
+    } else if ( tag == gc_sPicture ) {
         PictureElement* temp = new PictureElement( id, parent );
         temp->setPrefix(m_sPath);
 
-        for ( DOMNode* currentNode = element->getFirstChild();
-                currentNode != 0; currentNode = currentNode->getNextSibling() )
+        for (QDomElement currentNode = element.firstChildElement(); !currentNode.isNull();
+                currentNode = currentNode.nextSiblingElement())
         {
-            // this is only necessary when we parse without
-            // "setIncludeIgnorableWhitespace(false);" and/or
-            // "setCreateCommentNodes(false);", but we sometimes do this like
-            // in the screen editor...
-            if ( currentNode->getNodeType() != DOMNode::ELEMENT_NODE )
-                continue;
-            QString tag( XMLutils::GetTagName( currentNode ) );
-            if ( tag == gc_sPath )
-            {
-                QString filename=XMLutils::GetFirstChildText( currentNode );
+            QString tag( currentNode.tagName() );
+            if ( tag == QSL("file")) {
+                QString filename=currentNode.text();
                 QString p = f_CheckPath( FilePrefixConvertor::convert(m_sPath),  filename);
-                if ( p.isEmpty() )
-                {
+                if ( p.isEmpty() ) {
                     delete temp;
-                    log().addError( "ScreenParser::createNonLayoutElement", id + ": " + FilePrefixConvertor::convert(m_sPath) + "/" + filename + " doesn't exist" );
+                    qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createNonLayoutElement", id + ": " + FilePrefixConvertor::convert(m_sPath) + "/" + filename + " doesn't exist" )));
                     throw ApexStringException("Error parsing screen");
                 }
                 // check whether it is a valid picture
                 QImage testimage( p );
                 if (testimage.isNull()) {
-                    log().addError( "ScreenParser::createNonLayoutElement", id + ": " + p + " invalid picture.\nCheck whether the file is not corrupt and you have the necessary image plugins." );
+                    qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createNonLayoutElement", id + ": " + p + " invalid picture.\nCheck whether the file is not corrupt and you have the necessary image plugins." )));
                     return 0;
                 }
                 temp->setDefault(filename);
-                temp->setUriId(
-                            XMLutils::GetAttribute(currentNode, "id"));
-                if (! temp->getUriId().isEmpty() && parameterManagerData) {
+                temp->setFileId(
+                            currentNode.attribute(QSL("id")));
+                if (! temp->getFileId().isEmpty() && parameterManagerData) {
                     parameterManagerData->registerParameter(
-                                temp->getUriId(),
+                                temp->getFileId(),
                                 data::Parameter("Picture", "string", temp->getDefault(),
-                                                0, true, temp->getUriId()));
+                                                0, true, temp->getFileId()));
                 }
-            }
-            else if ( tag == gc_sFeedback )
-            {
-                mt_FeedBackPaths* p = parseFeedBackPaths( (DOMElement*) currentNode, id );
-                if ( p )
-                {
+            } else if ( tag == gc_sFeedback ) {
+                mt_FeedBackPaths* p = parseFeedBackPaths(currentNode, id );
+                if ( p ) {
                     temp->setHighlight( p->m_sHighLight );
                     temp->setPositive( p->m_sPositive );
                     temp->setNegative( p->m_sNegative );
                     temp->setDisabled( p->m_sDisabled );
                     delete p;
-                }
-                else
-                {
+                } else {
                     delete temp;
                     return 0;
                 }
                 temp->setOverrideFeedback( true );
-            }
-            else if ( tag == gc_sShortcut )
-            {
-                try
-                {
-                    QKeySequence seq = f_CreateKeySequence( (DOMElement*) currentNode );
+            } else if ( tag == gc_sShortcut ) {
+                try {
+                    QKeySequence seq = f_CreateKeySequence(currentNode );
                     temp->setShortCut( seq.toString() );
+                } catch (const std::exception &e) {
+                    qCCritical(APEX_RS, "ScreenParser::createNonLayoutElement: %s", e.what());
                 }
-                catch ( ApexStringException& e )
-                {
-                    log().addError( "ScreenParser::createNonLayoutElement", e.what() );
-                }
-            }
-            else
+            } else {
                 addUnknownTag( "ScreenParser::createNonLayoutElement", tag );
+            }
         }
 
         ret = temp;
-    }
-    else if ( tag == gc_sLabel )
-    {
+    } else if ( tag == gc_sLabel ) {
         LabelElement* temp = new LabelElement( id, parent );
         temp->setPrefix(m_sPath);
 
-        DOMElement* te = XMLutils::GetElementsByTagName( element, gc_sText );
-        if ( te )
-            temp->setText( XMLutils::GetFirstChildText( te ) );
+        QDomElement te = element.elementsByTagName(gc_sText).item(0).toElement();
+        if (!te.isNull())
+            temp->setText( te.text() );
 
         ret = temp;
-    }
-    else if ( tag == gc_sPictureLabel )
-    {
+    } else if ( tag == gc_sPictureLabel ) {
         PictureLabelElement* temp = new PictureLabelElement( id, parent );
         temp->setPrefix(m_sPath);
 
-        DOMElement* te = XMLutils::GetElementsByTagName( element, gc_sPath );
-        if ( te )
+        QDomElement te = element.elementsByTagName(QSL("file")).item(0).toElement();
+        if (!te.isNull())
         {
-            QString filename = XMLutils::GetFirstChildText( te );
+            QString filename = te.text();
             QString p = f_CheckPath( FilePrefixConvertor::convert(m_sPath), filename );
             if ( p.isEmpty() )
             {
                 delete temp;
-                log().addError( "ScreenParser::createNonLayoutElement", id + ": " + p + " doesn't exist" );
+                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createNonLayoutElement", id + ": " + p + " doesn't exist" )));
                 return 0;
             }
 
             // check whether it is a valid picture
             QImage testimage( p );
             if (testimage.isNull()) {
-                log().addError( "ScreenParser::createNonLayoutElement", id + ": " + p + " invalid picture.\nCheck whether the file is not corrupt and you have the necessary image plugins." );
+                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createNonLayoutElement", id + ": " + p + " invalid picture.\nCheck whether the file is not corrupt and you have the necessary image plugins." )));
                 return 0;
             }
             temp->setPicture( filename );
-        }
-        else
+        } else {
             Q_ASSERT( 0 );
+        }
 
-        te = XMLutils::GetElementsByTagName( element, "uriDisabled" );
-        if ( te )
-        {
-            QString filename = XMLutils::GetFirstChildText( te );
+        te = element.elementsByTagName("disabledfile").item(0).toElement();
+        if (!te.isNull()) {
+            QString filename = te.text();
             QString p = f_CheckPath( FilePrefixConvertor::convert(m_sPath), filename );
-            if ( p.isEmpty() )
-            {
+            if ( p.isEmpty() ) {
                 delete temp;
-                log().addError( "ScreenParser::createNonLayoutElement", id + ": " + p + " doesn't exist" );
+                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createNonLayoutElement", id + ": " + p + " doesn't exist" )));
                 return 0;
             }
 
             // check whether it is a valid picture
             QImage testimage( p );
             if (testimage.isNull()) {
-                log().addError( "ScreenParser::createNonLayoutElement", id + ": " + p + " invalid picture.\nCheck whether the file is not corrupt and you have the necessary image plugins." );
+                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createNonLayoutElement", id + ": " + p + " invalid picture.\nCheck whether the file is not corrupt and you have the necessary image plugins." )));
                 return 0;
             }
             temp->setPictureDisabled( filename );
         }
 
         ret = temp;
-    }
-    else if ( tag == gc_sFlash )
-    {
+    } else if ( tag == gc_sFlash ) {
 #ifndef FLASH
         //throw ApexStringException("this apex version does not support flash");
 #endif
 
         FlashPlayerElement* temp = new FlashPlayerElement( id, parent );
         temp->setPrefix(m_sPath);
-        for ( DOMNode* currentNode = element->getFirstChild() ;
-                currentNode != 0; currentNode = currentNode->getNextSibling() )
-        {
-            // this is only necessary when we parse without
-            // "setIncludeIgnorableWhitespace(false);" and/or
-            // "setCreateCommentNodes(false);", but we sometimes do this like
-            // in the screen editor...
-            if ( currentNode->getNodeType() != DOMNode::ELEMENT_NODE )
-                continue;
-            QString tag( XMLutils::GetTagName( currentNode ) );
-            if ( tag == gc_sPath )
-            {
-                QString filename = XMLutils::GetFirstChildText( currentNode );
+        for (QDomElement currentNode = element.firstChildElement(); !currentNode.isNull();
+                currentNode = currentNode.nextSiblingElement()) {
+            QString tag( currentNode.tagName() );
+            if ( tag == QSL("file")) {
+                QString filename = currentNode.text();
                 QString p = f_CheckPath( m_sPath, filename );
-                if ( p.isEmpty() )
-                {
+                if ( p.isEmpty() ) {
                     delete temp;
                     throw (ApexStringException( id + ": cannot find movie file " + FilePrefixConvertor::convert(m_sPath) + filename ));
 //          return 0;
-                }
-                else
-                {
+                } else {
                     qCDebug(APEX_RS, "File %s found", qPrintable(p));
                 }
                 temp->setDefault(filename);
-            }
-            else if ( tag == gc_sFeedback )
-            {
-                mt_FeedBackPaths* p = parseFeedBackPaths( (DOMElement*) currentNode, id );
-                if ( p )
-                {
+            } else if ( tag == gc_sFeedback ) {
+                mt_FeedBackPaths* p = parseFeedBackPaths(currentNode, id);
+                if ( p ) {
                     temp->setHighlight( p->m_sHighLight );
                     temp->setPositive( p->m_sPositive );
                     temp->setNegative( p->m_sNegative );
                     delete p;
-                }
-                else
-                {
+                } else {
                     delete temp;
                     return 0;
                 }
                 temp->setOverrideFeedback( true );
-            }
-            else if ( tag == gc_sShortcut )
-            {
-                try
-                {
-                    QKeySequence seq = f_CreateKeySequence( (DOMElement*) currentNode );
+            } else if ( tag == gc_sShortcut ) {
+                try {
+                    QKeySequence seq = f_CreateKeySequence(currentNode);
                     temp->setShortCut( seq.toString() );
+                } catch (const std::exception &e) {
+                    qCCritical(APEX_RS, "ScreenParser::createNonLayoutElement: %s", e.what());
                 }
-                catch ( ApexStringException& e )
-                {
-                    log().addError( "ScreenParser::createNonLayoutElement", e.what() );
-                }
-            }
-            else
+            } else {
                 addUnknownTag( "ScreenParser::createNonLayoutElement", tag );
+            }
         }
 
         ret = temp;
-    }
-    else if ( tag == gc_sAnswerLabel )
-    {
+    } else if ( tag == gc_sAnswerLabel ) {
         AnswerLabelElement* temp = new AnswerLabelElement( id, parent );
         temp->setPrefix(m_sPath);
         ret = temp;
-    }
-    else if ( tag == gc_sParameterList )
-    {
+    } else if ( tag == gc_sParameterList ) {
         ParameterListElement* temp = new ParameterListElement( id, parent );
         temp->setPrefix(m_sPath);
 
-        for (DOMNode* currentNode=element->getFirstChild();
-                currentNode!=0; currentNode=currentNode->getNextSibling())
+        for (QDomElement currentNode = element.firstChildElement(); !currentNode.isNull();
+                currentNode = currentNode.nextSiblingElement())
         {
-            // this is only necessary when we parse without
-            // "setIncludeIgnorableWhitespace(false);" and/or
-            // "setCreateCommentNodes(false);", but we sometimes do this like
-            // in the screen editor...
-            if ( currentNode->getNodeType() != DOMNode::ELEMENT_NODE )
-                continue;
-            QString tag = XMLutils::GetTagName(currentNode);
-            QString value = XMLutils::GetFirstChildText(currentNode);
-            QString name= XMLutils::GetAttribute(currentNode,"name");
-            QString expression= XMLutils::GetAttribute(currentNode,"expression");
+            QString tag = currentNode.tagName();
+            QString value = currentNode.text();
+            QString name= currentNode.attribute(QSL("name"));
+            QString expression= currentNode.attribute(QSL("expression"));
 
-            if (tag=="parameter")
-            {
+            if (tag=="parameter") {
                 bool result = temp->addParameter(value,name,expression);
 
-                if (!result)
-                {
-                    log().addError( "ScreenParser::createNonLayoutElement" + id, "invalid expression:" + expression );
+                if (!result) {
+                    qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createNonLayoutElement" + id, "invalid expression:" + expression )));
                 }
             }
         }
@@ -1015,13 +827,13 @@ ScreenElement* ScreenParser::createNonLayoutElement(
         ParameterLabelElement* temp = new ParameterLabelElement(id,parent);
         temp->setPrefix(m_sPath);
 
-        DOMElement* te = XMLutils::GetElementsByTagName( element, "parameter" );
-        if ( !te )
+        QDomElement te = element.elementsByTagName("parameter").item(0).toElement();
+        if (te.isNull())
             qFatal("Parameter element not found");
 
-        QString value = XMLutils::GetFirstChildText(te);
-        QString name= XMLutils::GetAttribute(te,"name");
-        QString expression= XMLutils::GetAttribute(te,"expression");
+        QString value = te.text();
+        QString name= te.attribute(QSL("name"));
+        QString expression= te.attribute(QSL("expression"));
 
         temp->setParameter (ParameterData(value,name,expression));
 
@@ -1034,45 +846,29 @@ ScreenElement* ScreenParser::createNonLayoutElement(
         SliderElement* temp = new SliderElement(id, parent);
         temp->setPrefix(m_sPath);
 
-        for (DOMNode* currentNode=element->getFirstChild();
-                currentNode!=0; currentNode=currentNode->getNextSibling())
-        {
-            if ( currentNode->getNodeType() != DOMNode::ELEMENT_NODE )
-                continue;
-            QString tag = XMLutils::GetTagName(currentNode);
-            QString value = XMLutils::GetFirstChildText(currentNode);
+        for (QDomElement currentNode = element.firstChildElement(); !currentNode.isNull();
+                currentNode = currentNode.nextSiblingElement()) {
+            QString tag = currentNode.tagName();
+            QString value = currentNode.text();
 
-            if (tag=="orientation")
-            {
+            if (tag=="orientation") {
                 if (value=="horizontal")
                     temp->SetOrient(Qt::Horizontal);
                 else if (value=="vertical")
                     temp->SetOrient(Qt::Vertical);
                 else
                     qFatal("Invalid orientation");
-            }
-            else if (tag=="min")
-            {
+            } else if (tag=="min") {
                 temp->SetMin(value.toFloat());
-            }
-            else if (tag=="max")
-            {
+            } else if (tag=="max") {
                 temp->SetMax(value.toFloat());
-            }
-            else if (tag=="value")
-            {
+            } else if (tag=="value") {
                 temp->SetValue(value.toFloat());
-            }
-            else if (tag=="tickinterval")
-            {
+            } else if (tag=="tickinterval") {
                 temp->SetTickInt(value.toInt());
-            }
-            else if (tag=="stepsize")
-            {
+            } else if (tag=="stepsize") {
                 temp->SetStepSize(value.toInt());
-            }
-            else if (tag=="pagesize")
-            {
+            } else if (tag=="pagesize") {
                 temp->SetPageSize(value.toInt());
             } else {
                 qFatal("Invalid tag");
@@ -1081,17 +877,15 @@ ScreenElement* ScreenParser::createNonLayoutElement(
 
         }
         ret=temp;
-    }
-    else if (tag == gc_sHtml)
-    {
+    } else if (tag == gc_sHtml) {
         HtmlElement* temp = new HtmlElement(id,parent);
         temp->setPrefix(m_sPath);
 
-        DOMElement* te = XMLutils::GetElementsByTagName( element, "page" );
-        if ( !te )
+        QDomElement te = element.elementsByTagName("page").item(0).toElement();
+        if (te.isNull())
             qFatal("Parameter page not found");
 
-        QString value = XMLutils::GetFirstChildText(te);
+        QString value = te.text();
 
         temp->setPage(value);
 
@@ -1104,13 +898,10 @@ ScreenElement* ScreenParser::createNonLayoutElement(
     ret->setY( nY - 1 );
 
     // generic attributes
-    for (DOMNode* currentNode=element->getFirstChild();
-         currentNode!=0; currentNode=currentNode->getNextSibling())
-    {
-        if ( currentNode->getNodeType() != DOMNode::ELEMENT_NODE )
-            continue;
-        QString tag = XMLutils::GetTagName(currentNode);
-        QString value = XMLutils::GetFirstChildText(currentNode);
+    for (QDomElement currentNode = element.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        QString tag = currentNode.tagName();
+        QString value = currentNode.text();
 
         if (tag==gc_sFontsize) {
             ret->setFontSize( value.toInt() );
@@ -1133,19 +924,15 @@ ScreenElement* ScreenParser::createNonLayoutElement(
         } else if (tag==gc_sDisabled) {
             ret->setDisabled(apex::ApexTools::bQStringToBoolean( value ));
         } else if (tag==gc_sShortcut) {
-            try
-            {
-                QKeySequence seq = f_CreateKeySequence( (DOMElement*) currentNode );
-                QString action( XMLutils::GetAttribute( currentNode, "action" ) );
+            try {
+                QKeySequence seq = f_CreateKeySequence( currentNode );
+                QString action(  currentNode.attribute(QSL("action")) );
                 if (action.isEmpty())
                     action=QLatin1String("click");
                 ret->setShortCut( seq.toString(), action );
+            } catch (const std::exception &e) {
+                qCCritical(APEX_RS, "ScreenParser::createNonLayoutElement: %s", e.what());
             }
-            catch ( ApexStringException& e )
-            {
-                log().addError( "ScreenParser::createNonLayoutElement", e.what() );
-            }
-
         }
     }
 
@@ -1158,7 +945,7 @@ bool ScreenParser::checkColor (const QString& value, const QString& element) con
     QColor tc(value);
     if (! tc.isValid())
     {
-        log().addError( "ScreenParser::createNonLayoutElement", "Invalid foreground color string \"" + value + "\" for element "+ element);
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ScreenParser::createNonLayoutElement", "Invalid foreground color string \"" + value + "\" for element "+ element)));
         return false;
     }
     return true;
@@ -1167,12 +954,11 @@ bool ScreenParser::checkColor (const QString& value, const QString& element) con
 }
 }
 
-apex::data::tStretchList apex::gui::ScreenParser::parseStretchList(QString d)
+apex::data::tStretchList apex::gui::ScreenParser::parseStretchList(const QString &d)
 {
     QStringList temp( d.split(","));
     data::tStretchList result;
-    for (QStringList::const_iterator it=temp.begin(); it!=temp.end(); ++it)
-    {
+    for (QStringList::const_iterator it=temp.begin(); it!=temp.end(); ++it) {
         result.append( it->toInt());
     }
     return result;

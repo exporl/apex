@@ -31,14 +31,12 @@ namespace parser
 
 ScriptProcedureParser::ScriptProcedureParser()
 {
-
 }
 
-
-data::ProcedureData* ScriptProcedureParser::parse(XERCES_CPP_NAMESPACE::DOMElement* base)
+data::ProcedureData* ScriptProcedureParser::parse(const QDomElement &base)
 {
     data::ScriptProcedureData* data = new data::ScriptProcedureData();
-        ProcedureParsersParent::Parse(base, data);
+    ProcedureParsersParent::Parse(base, data);
     return data;
 }
 
@@ -47,11 +45,9 @@ bool ScriptProcedureParser::trialsValid()
     return true;
 }
 
-void ScriptProcedureParser::SetProcedureParameters(
-    XERCES_CPP_NAMESPACE::DOMElement* p_base)
+void ScriptProcedureParser::SetProcedureParameters(const QDomElement &p_base)
 {
-    data::ScriptProcedureData* param
-            = dynamic_cast<data::ScriptProcedureData*>(currentConfig);
+    data::ScriptProcedureData* param = dynamic_cast<data::ScriptProcedureData*>(currentConfig);
     parser::ScriptProcedureDataParser parser;
     parser.Parse(p_base, param);
 

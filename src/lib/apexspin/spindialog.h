@@ -17,10 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXSPIN_SPINDIALOG_H_
-#define _EXPORL_SRC_LIB_APEXSPIN_SPINDIALOG_H_
-
-#include "apextools/xml/apexxmltools.h"
+#ifndef _APEX_SRC_LIB_APEXSPIN_SPINDIALOG_H_
+#define _APEX_SRC_LIB_APEXSPIN_SPINDIALOG_H_
 
 #include "freefieldwidget.h"
 #include "spinconfig.h"
@@ -50,7 +48,7 @@ class APEXSPIN_EXPORT SpinDialog : public QWizard
 
     public:
 
-        SpinDialog(QString conf, QString schema);
+        SpinDialog();
         virtual ~SpinDialog();
 
         QString getFileName();
@@ -96,8 +94,6 @@ class APEXSPIN_EXPORT SpinDialog : public QWizard
         Ui::SpinMainWizard *widgets;
         data::SpinConfig configuration;
         QString experimentFile;
-        QString configFile;
-        QString schemaFile;
 
         QMap<QWizardPage*, int> pageMap;
 

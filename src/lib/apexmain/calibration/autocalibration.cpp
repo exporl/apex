@@ -17,46 +17,51 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apexmain/apexcontrol.h"
+
+#include "apextools/apexpluginloader.h"
+
+#include "gui/calibrationsetupsdialog.h"
+
 #include "autocalibration.h"
-#include <QTreeWidget>
-#include <QTreeWidgetItem>
-#include <QMap>
+#include "calibrationdatabase.h"
+
 #include <QDir>
+#include <QMap>
 #include <QMessageBox>
 #include <QProgressDialog>
-#include "calibrationdatabase.h"
-#include "gui/calibrationsetupsdialog.h"
-#include "services/pluginloader.h"
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
 
 namespace apex
 {
 
 class CalibratedParameter
 {
-    public:
-        CalibratedParameter() :
-                targetAmplitude (0),
-                outputParameter (0)
-        {
-        }
+public:
+    CalibratedParameter() :
+            targetAmplitude (0),
+            outputParameter (0)
+    {
+    }
 
-        CalibratedParameter (double targetAmplitude, double outputParameter) :
-                targetAmplitude (targetAmplitude),
-                outputParameter (outputParameter)
-        {
-        }
+    CalibratedParameter (double targetAmplitude, double outputParameter) :
+            targetAmplitude (targetAmplitude),
+            outputParameter (outputParameter)
+    {
+    }
 
-    public:
-        double targetAmplitude;
-        double outputParameter;
+public:
+    double targetAmplitude;
+    double outputParameter;
 };
 
 //AutoCalibration ===========================================================
 
 
 AutoCalibration::AutoCalibration(ExperimentRunDelegate *runDelegate,
-                                 const CalibrationData &data,
-                                 const QString &hardwareSetup) :
+        const CalibrationData &data,
+        const QString &hardwareSetup) :
     runDelegate(runDelegate),
     timer(new QTimer(this)),
     intervalTimer(new QTimer(this)),
@@ -65,7 +70,7 @@ AutoCalibration::AutoCalibration(ExperimentRunDelegate *runDelegate,
     measurementResult(0),
     hardwareSetup(hardwareSetup)
 {
-        error.clear();
+    error.clear();
     connect(timer, SIGNAL(timeout()), this, SLOT(afterMeasurement()));
     connect(intervalTimer, SIGNAL(timeout()), this, SLOT(timerInterval()));
     SLM.reset(loadSoundLevelMeterPlugin(slmData.valueByType("plugin").toString()));
@@ -76,7 +81,7 @@ AutoCalibration::AutoCalibration(ExperimentRunDelegate *runDelegate,
     if (!SLM->connect()) {
         error = SLM->errorString();
         QMessageBox::information(0, "Autocalibration - construction failed",
-                                      errorString());
+                errorString());
         return;
     }
 
@@ -90,7 +95,7 @@ AutoCalibration::AutoCalibration(ExperimentRunDelegate *runDelegate,
         if(!SLM->setTransducer(slmData.valueByType("transducer").toString())){
             error = SLM->errorString();
             QMessageBox::information(0, "Autocalibration - construction failed",
-                                        errorString());
+                    errorString());
             return;
         }
     } // FIXME: else: allow user to choose transducer
@@ -109,7 +114,7 @@ bool AutoCalibration::autoCalibrateAll()
     calibrationIO->setStimulus (data.availableStimuli().first());
     calibrationIO->setLooping(true);
 
-    QScopedPointer<AutoCalibrationDialog> newdialog(new AutoCalibrationDialog(runDelegate->GetMainWindow()));
+    QScopedPointer<AutoCalibrationDialog> newdialog(new AutoCalibrationDialog(ApexControl::Get().mainWindow()));
     dialog = newdialog.data();
     Q_ASSERT(dialog);
     setParameters();
@@ -119,53 +124,51 @@ bool AutoCalibration::autoCalibrateAll()
 
 
     connect (dialog, SIGNAL (hardwareSetupChanged(QString)),
-             this, SLOT (hardwareSetupChanged(QString)));
+            this, SLOT (hardwareSetupChanged(QString)));
     connect (dialog, SIGNAL (manageHardwareSetups()),
-             this, SLOT (manageHardwareSetups()));
+            this, SLOT (manageHardwareSetups()));
 
     connect(dialog, SIGNAL(calibrateAllParameters()),
-        this, SLOT(calibratingAllParameters()));
+            this, SLOT(calibratingAllParameters()));
     connect(dialog, SIGNAL(stopAutoCalibration()),
-        this, SLOT(stopCalibrating()));
+            this, SLOT(stopCalibrating()));
     connect(dialog, SIGNAL(slmParameterChanged(QString, QString)),
-        this, SLOT(slmParameterChanged(QString, QString)));
+            this, SLOT(slmParameterChanged(QString, QString)));
     connect(dialog, SIGNAL(calibrateManually()),
-        this, SLOT(goCalibrateManually()));
-        connect(dialog, SIGNAL(advancedCalibrationAmplitudeUnchecked()),
-                this, SLOT(advancedCalibrationAmplitudeUnchecked()));
-        connect(dialog, SIGNAL(beforeCancel()),
-                this, SLOT(beforeCancel()));
-        connect (io.data(), SIGNAL (clippingOccured(bool)),
-                this, SLOT (clippingOccured(bool)));
-        dialog->setHardwareSetups (CalibrationDatabase().hardwareSetups());
+            this, SLOT(goCalibrateManually()));
+    connect(dialog, SIGNAL(advancedCalibrationAmplitudeUnchecked()),
+            this, SLOT(advancedCalibrationAmplitudeUnchecked()));
+    connect(dialog, SIGNAL(beforeCancel()),
+            this, SLOT(beforeCancel()));
+    connect (io.data(), SIGNAL (clippingOccured(bool)),
+            this, SLOT (clippingOccured(bool)));
+    dialog->setHardwareSetups (CalibrationDatabase().hardwareSetups());
 
     dialog->show();
 
     dialog->setHardwareSetup(hardwareSetup);
-        dialog->selectAllParamersByDefault();
+    dialog->selectAllParamersByDefault();
 
     const int returnValue = dialog->exec();
 
     if (returnValue != QDialog::Accepted ){
-                discardCalibrationResults();
+        discardCalibrationResults();
         return false;
     }
     CalibrationDatabase().setCurrentHardwareSetup (hardwareSetup);
     mergeCalibrationResults();
     return false; //TODO --> in apexcontrol.cpp -> updateparameters get's called (result doesn't contain them)
-        //is this the final save?
+    //is this the final save?
 }
 
 SoundLevelMeter* AutoCalibration::loadSoundLevelMeterPlugin(const QString &name)
 {
     qCDebug(APEX_RS, "Loading SLM plugin: %s", qPrintable(name));
 
-    SoundLevelMeterPluginCreator* creator = PluginLoader::Get().
-            createPluginCreator<SoundLevelMeterPluginCreator>(name);
-    //m_plugin.reset (creator->createFilter (name, channels, size, fs));
+    SoundLevelMeterPluginCreator* creator = createPluginCreator<SoundLevelMeterPluginCreator>(name);
 
     QProgressDialog progress(tr("Connecting to sound level meter, please wait..."),
-                             QString(), 0, 10, dialog);
+            QString(), 0, 10, dialog);
     progress.setWindowModality(Qt::WindowModal);
     progress.setMinimumDuration(0);
     progress.setValue(1);
@@ -174,8 +177,8 @@ SoundLevelMeter* AutoCalibration::loadSoundLevelMeterPlugin(const QString &name)
     QCoreApplication::processEvents();
 
     SoundLevelMeter*  slm = creator->createSoundLevelMeter(name);
-        if (!slm)
-                throw ApexStringException(tr("Could not load sound level meter plugin"));
+    if (!slm)
+        throw ApexStringException(tr("Could not load sound level meter plugin"));
 
     return slm;
 }
@@ -184,25 +187,24 @@ bool AutoCalibration::autoCalibrateSingle(bool callback, const QString &paramete
 {
     this->callback = callback;
     this->currentParameter = &parameter;
-        clipped = false;
+    clipped = false;
 
-        if(!callback){
-                muteAllParameters();
-                calibrationIO->setParameter(parameter, outputParameter(parameter));
-                calibrationIO->startOutput();
-        }
-        else
-                emit startOutput();
+    if(!callback){
+        muteAllParameters();
+        calibrationIO->setParameter(parameter, outputParameter(parameter));
+        calibrationIO->startOutput();
+    } else
+        Q_EMIT startOutput();
 
     if(dialog)
-                dialog->setStatus("Starting stimulus");
+        dialog->setStatus("Starting stimulus");
 
     if(!SLM->startMeasurement(measurementType(slmData.measurementType()),
-        frequencyWeightingType(slmData.frequencyWeightingType()),
-        timeWeightingType(slmData.timeWeightingType()),
-             slmData.valueByType("percentile").toDouble())){
-                error = SLM->errorString();
-                return false;
+                frequencyWeightingType(slmData.frequencyWeightingType()),
+                timeWeightingType(slmData.timeWeightingType()),
+                slmData.valueByType("percentile").toDouble())){
+        error = SLM->errorString();
+        return false;
     }
     timerValue = slmData.valueByType("time").toInt();
     timer->start(timerValue*1000);
@@ -211,7 +213,7 @@ bool AutoCalibration::autoCalibrateSingle(bool callback, const QString &paramete
 
     if(dialog)
         dialog->setStatus(tr("Starting measurement for %1 seconds")
-        .arg(slmData.valueByType("time").toInt()));
+                .arg(slmData.valueByType("time").toInt()));
     return true;
 }
 
@@ -259,32 +261,30 @@ void AutoCalibration::afterMeasurement()
     intervalTimer->stop();
     timer->stop();
     SLM->stopMeasurement();
-        if(calibrationIO.isNull())
-                emit stopOutput();
-        else
-                calibrationIO->stopOutput();
+    if(calibrationIO.isNull())
+        Q_EMIT stopOutput();
+    else
+        calibrationIO->stopOutput();
     if(clipped){
         error = tr("Invalid measurement - signal has clipped");
         if(callback)
-            emit measurement_finished(false); //return to calibrator
+            Q_EMIT measurement_finished(false); //return to calibrator
         else
             calibratingAll(false, false);
-    }
-    else if(!SLM->measure()){
+    } else if(!SLM->measure()){
         error = SLM->errorString();
         if(callback)
-                    emit measurement_finished(false); //return to calibrator
+            Q_EMIT measurement_finished(false); //return to calibrator
         else
-                    calibratingAll(false, false);
-    }
-    else {
+            calibratingAll(false, false);
+    } else {
         if(dialog)
-                    dialog->setStatus("Retrieving measurement");
-            measurementResult = SLM->result();
+            dialog->setStatus("Retrieving measurement");
+        measurementResult = SLM->result();
         if(callback)
-                    emit measurement_finished(true); //return to calibrator
+            Q_EMIT measurement_finished(true); //return to calibrator
         else
-                    calibratingAll(false, true);
+            calibratingAll(false, true);
     }
 }
 
@@ -299,21 +299,21 @@ void AutoCalibration::setParameters()
         if(database.isCalibrated(hardwareSetup, data.calibrationProfile(), i.key())){
             parameters.append(QStringList() << i.key()
                     << tr("%1 (%2)").arg(outputParameter(i.key()))
-                        .arg(targetAmplitude(i.key()))
+                    .arg(targetAmplitude(i.key()))
                     << (results.contains(i.key()) ?
                         tr("%1 (%2)").arg(results[i.key()].outputParameter)
-                                                .arg(results[i.key()].targetAmplitude) :
+                        .arg(results[i.key()].targetAmplitude) :
                         tr("- (%1)").arg(data.parameters().begin().value()
-                        .defaultTargetAmplitude()))
-                                        << tr("-"));
+                            .defaultTargetAmplitude()))
+                    << tr("-"));
         }
         else {
             parameters.append(QStringList() << i.key()
-                << "-" << (results.contains(i.key()) ?
-                tr("%1 (%2)").arg(results[i.key()].outputParameter)
-                .arg(results[i.key()].targetAmplitude) : tr("- (%1)")
-                .arg(data.parameters().begin().value().defaultTargetAmplitude()))
-                                << tr("-"));
+                    << "-" << (results.contains(i.key()) ?
+                        tr("%1 (%2)").arg(results[i.key()].outputParameter)
+                        .arg(results[i.key()].targetAmplitude) : tr("- (%1)")
+                        .arg(data.parameters().begin().value().defaultTargetAmplitude()))
+                    << tr("-"));
         }
     }
 }
@@ -326,10 +326,10 @@ void AutoCalibration::setSlmParameters()
     //type - frequency_weighting - time_weighting - percentile - time
 
     slmParameters << QString::number(measurementType(slmData.measurementType()))
-    << QString::number(frequencyWeightingType(slmData.frequencyWeightingType()))
-    << QString::number(timeWeightingType(slmData.timeWeightingType()))
-    << slmData.valueByType("percentile").toString()
-    << slmData.valueByType("time").toString();
+        << QString::number(frequencyWeightingType(slmData.frequencyWeightingType()))
+        << QString::number(timeWeightingType(slmData.timeWeightingType()))
+        << slmData.valueByType("percentile").toString()
+        << slmData.valueByType("time").toString();
     dialog->setSlmParameters(slmParameters);
 }
 
@@ -337,7 +337,7 @@ void AutoCalibration::calibratingAll(bool firstCall, bool succes)
 {
     static int iteration = 0;
     static QString parameter;
-        qCDebug(APEX_RS, "iteration: %d", iteration);
+    qCDebug(APEX_RS, "iteration: %d", iteration);
     if(firstCall){
         selectedParameters = dialog->getSelectedParametersToCalibrate();
         if(selectedParameters.size() < 1){
@@ -353,49 +353,48 @@ void AutoCalibration::calibratingAll(bool firstCall, bool succes)
     }
     if(!succes){
         dialog->setStatus(tr("<span style=\"color:#fff;background-color:#f00\">%1</span>")
-            .arg(error));
-                qCDebug(APEX_RS, "Error on calibrating parameter %s:%s",
-            qPrintable(parameter),qPrintable(error));
+                .arg(error));
+        qCDebug(APEX_RS, "Error on calibrating parameter %s:%s",
+                qPrintable(parameter),qPrintable(error));
         ++iteration;
         dialog->setClipped(parameter);
-                calibrationProgress = iteration * slmData.valueByType("time").toInt();
-                dialog->setProgressBar(0,selectedParameters.size() * slmData.valueByType("time").toInt(),
-                        calibrationProgress);
+        calibrationProgress = iteration * slmData.valueByType("time").toInt();
+        dialog->setProgressBar(0,selectedParameters.size() * slmData.valueByType("time").toInt(),
+                calibrationProgress);
 
-    }
-    else if(!firstCall){
+    } else if(!firstCall){
         qCDebug(APEX_RS, "Succesfully calibrated parameter %s",qPrintable(parameter));
         const double targetAmpl = dialog->targetAmplitude().toDouble();
         const double currentOutputParameter = outputParameter(parameter);
         const double currentAmplitude = measurementResult;
 
         const double newOutputParameter = qBound(
-            data.parameters()[parameter].minimumParameter(),
-            currentOutputParameter + targetAmpl - currentAmplitude,
-            data.parameters()[parameter].maximumParameter());
+                data.parameters()[parameter].minimumParameter(),
+                currentOutputParameter + targetAmpl - currentAmplitude,
+                data.parameters()[parameter].maximumParameter());
 
         if(results.contains(parameter)){
             results[parameter].targetAmplitude = targetAmpl;
             results[parameter].outputParameter = newOutputParameter;
-        }
-        else
+        } else {
             results.insert(parameter, CalibratedParameter(
-                targetAmplitude(parameter), newOutputParameter));
+                        targetAmplitude(parameter), newOutputParameter));
+        }
 
 
-                if (isInCalibrationDatabase (parameter)){
-                        double difference = CalibrationDatabase().targetAmplitude (hardwareSetup,
-                                                data.calibrationProfile(), parameter) -
-                                                CalibrationDatabase().outputParameter (hardwareSetup,
-                                                data.calibrationProfile(), parameter) -
-                                                (targetAmpl - outputParameter(parameter));
+        if (isInCalibrationDatabase (parameter)){
+            double difference = CalibrationDatabase().targetAmplitude (hardwareSetup,
+                    data.calibrationProfile(), parameter) -
+                CalibrationDatabase().outputParameter (hardwareSetup,
+                        data.calibrationProfile(), parameter) -
+                (targetAmpl - outputParameter(parameter));
             dialog->updateParameter(parameter, tr("%1 (%2)")
-                                .arg(outputParameter(parameter)).arg(targetAmpl)),
+                    .arg(outputParameter(parameter)).arg(targetAmpl)),
                 QString::number(difference);
-                }
-                else
+        } else {
             dialog->updateParameter(parameter, tr("%1 (%2)")
-                .arg(outputParameter(parameter)).arg(targetAmpl));
+                    .arg(outputParameter(parameter)).arg(targetAmpl));
+        }
         ++iteration;
     }
 
@@ -424,13 +423,13 @@ void AutoCalibration::slmParameterChanged(const QString &parameter, const QStrin
 
 void AutoCalibration::clippingOccured(bool clipping)
 {
-        if(clipping){
-                clipped = clipping;
-                if(dialog){
-                        dialog->setClipped(*currentParameter);
-                        afterMeasurement();                     //Stop the measurement when clipped
-                }
+    if(clipping) {
+        clipped = clipping;
+        if(dialog){
+            dialog->setClipped(*currentParameter);
+            afterMeasurement();                     //Stop the measurement when clipped
         }
+    }
 }
 
 
@@ -472,18 +471,17 @@ void AutoCalibration::stopCalibrating()
     timer->stop();
     SLM->stopMeasurement();
     if(dialog){
-                intervalTimer->stop();
-                calibrationIO->stopOutput();
-                dialog->setCalibrating(false);
-                dialog->setStatus("Measurement stopped by user");
-                dialog->setProgressBar(0, 0, 0);
-                dialog->setCurrentParameterCalibrated(QString());
+        intervalTimer->stop();
+        calibrationIO->stopOutput();
+        dialog->setCalibrating(false);
+        dialog->setStatus("Measurement stopped by user");
+        dialog->setProgressBar(0, 0, 0);
+        dialog->setCurrentParameterCalibrated(QString());
 
-        }
-        else {
-                error = tr("Measurement stopped by user");
-        emit measurement_finished(false); //return to calibrator
-        }
+    } else {
+        error = tr("Measurement stopped by user");
+        Q_EMIT measurement_finished(false); //return to calibrator
+    }
 }
 
 void AutoCalibration::mergeCalibrationResults()
@@ -502,16 +500,14 @@ void AutoCalibration::mergeCalibrationResults()
         if (isNewlyCalibrated (name)){
             const CalibratedParameter &parameter = results[name];
             database.calibrate (hardwareSetup, profile, name,
-                                parameter.targetAmplitude, parameter.outputParameter);
-        }
-        else if (isInCalibrationDatabase (name)){
+                    parameter.targetAmplitude, parameter.outputParameter);
+        } else if (isInCalibrationDatabase (name)){
             results.insert (name, CalibratedParameter
-                            (database.targetAmplitude (hardwareSetup, profile, name),
-                             database.outputParameter (hardwareSetup, profile, name)));
-        }
-        else {
+                    (database.targetAmplitude (hardwareSetup, profile, name),
+                     database.outputParameter (hardwareSetup, profile, name)));
+        } else {
             dialog->setStatus(tr(
-                "<span style=\"color:#fff;background-color:#f00\">Failed to save an uncalibrated parameter.</span>"));
+                        "<span style=\"color:#fff;background-color:#f00\">Failed to save an uncalibrated parameter.</span>"));
         }
     }
 }
@@ -559,7 +555,7 @@ void AutoCalibration::timerInterval()
 
 void AutoCalibration::advancedCalibrationAmplitudeUnchecked()
 {
-        dialog->setTargetAmplitude(QString::number(data.parameters().begin().value().defaultTargetAmplitude()));
+    dialog->setTargetAmplitude(QString::number(data.parameters().begin().value().defaultTargetAmplitude()));
 }
 
 void AutoCalibration::muteAllParameters()
@@ -573,30 +569,29 @@ void AutoCalibration::muteAllParameters()
 
 void AutoCalibration::beforeCancel()
 {
-        bool save = true;
-        if (!results.size() == 0){
+    bool save = true;
+    if (results.size() != 0){
         QMessageBox::StandardButton  answer =
-           QMessageBox::question(0, "Save calibration?",
-                                  "You have made changes to the calibration.\n"
-                                  "Do you want to save the results?",
-                                  QMessageBox::Discard | QMessageBox::Save,
-                                  QMessageBox::Discard);
+            QMessageBox::question(0, "Save calibration?",
+                    "You have made changes to the calibration.\n"
+                    "Do you want to save the results?",
+                    QMessageBox::Discard | QMessageBox::Save,
+                    QMessageBox::Discard);
         if (answer== QMessageBox::Discard){
             discardCalibrationResults();
-                    save = false;
+            save = false;
         }
-    }
-    else {
+    } else {
         discardCalibrationResults();
         save = false;
     }
-        dialog->finalize(save);
+    dialog->finalize(save);
 }
 
 void AutoCalibration::goCalibrateManually()
 {
-        dialog->finalize(false);
-        emit calibrateManually();
+    dialog->finalize(false);
+    Q_EMIT calibrateManually();
 }
 
 }//namespace APEX

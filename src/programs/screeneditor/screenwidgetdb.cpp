@@ -48,7 +48,6 @@ namespace apex
     using data::TextEditElement;
 
     ScreenWidgetDB::ScreenWidgetDB( ScreenEditor* e )
-      : editor( e )
     {
       QAction* addButtonAction =
         new ScreenEditorAddWidgetAction<ButtonElement>( e, QObject::tr( "button" ) );

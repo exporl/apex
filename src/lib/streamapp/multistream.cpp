@@ -104,7 +104,7 @@ MultiPosInputStream< tOwned >::~MultiPosInputStream()
 template< bool tOwned >
 void MultiPosInputStream< tOwned >::mp_AddItem( PositionableInputStream* const ac_pItem )
 {
-  this->mp_AddItem( ac_pItem );
+  DynStreamList<PositionableInputStream, tOwned>::mp_AddItem( ac_pItem );
   if( this->mf_nGetNumItems() )
     Q_ASSERT( ac_pItem->mf_lSamplesLeft() == this->mf_GetItem( 0 )->mf_lSamplesLeft() );
 }

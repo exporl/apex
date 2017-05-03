@@ -1,13 +1,14 @@
 \newpage
-\section{Example 3: Gap detection: determining the Just noticeable difference}
+\section{Example 3: Gap detection: determining the Just Noticeable Difference}
 
+\todo{example needs modifications, corrector and choices = outdated? modified own version to create new figure }
 
 \subsection{General description of the experiment}
 See \filename{examples/manual/gapdetection.apx}. This is an
 example of a gap detection task: two stimuli are presented to the
 listener in random order, a stationary noise and an interrupted
 noise. During the presentation the intervals are highlighted. The
-subjects' task is to indicate the interval with the
+subject's task is to indicate the interval with the
 interruption(figure~\ref{fig:gapdetection}). Feedback is provided
 (thumb up, thumb down) and the minimal detectable gap is
 determined by means of an adaptive procedure (here 2-down, 1-up).
@@ -42,7 +43,7 @@ value is used to determine the gap threshold. Also, a \element
 {screen} is defined that shows the two response intervals
 indicating ``1'' and ``2''.
 
-To indicate the order in which the sentences should be presented a
+To indicate the order in which the stimuli should be presented a
 \element {procedure} is defined. An adaptive procedure is defined
 containing 1 \element {trial} with five variable stimuli (with
 gap) and the standard stimulus without the gap. Recall that a
@@ -51,7 +52,7 @@ the same in this example), a stimulus and a correct answer. The
 standard and stimuli occur randomly in one of both intervals.
 
 Now only the output logic remains to be defined. The idea is to
-present that standard and a variable trial after each other, and
+present the standard and a variable stimulus after each other, and
 the stimulus to be presented depends on the response of the
 subject. Filters are not used since the signals are not changed.
 
@@ -61,12 +62,16 @@ detail.
 
 \subsection{Detailed description of various elements}
 
-\begin{lstlisting}
+\todo{modifications: to check, corrector?}
+\begin{lstlisting} 
 <procedure xsi:type="apex:adaptiveProcedure">
    <parameters>
      <presentations>1</presentations>
      <order>sequential</order>
-     <choices select="1,2">2</choices>
+     <intervals count="2">
+	<interval number="1" element="button1"/>
+	<interval number="2" element="button2"/>
+	</intervals>
      <pause_between_stimuli>1000</pause_between_stimuli>
      <nUp>1</nUp>
      <nDown>2</nDown>
@@ -76,7 +81,6 @@ detail.
      <stop_after>5</stop_after>
      <min_value>0</min_value>
      <max_value>5</max_value>
-     <rev_for_mean>3</rev_for_mean>
      <larger_is_easier>true</larger_is_easier>
      <stepsizes>
        <change_after>reversals</change_after>
@@ -100,28 +104,35 @@ detail.
 \end{lstlisting}
 
 
-\element{procedure} the attribute The attribute
-\xml{xsi:type="adaptiveProcedureType"} of \element{procedure}
-refers to a procedure in which a parameter is changed according to
+\element{procedure} The attribute
+\xml{xsi:type="adaptiveProcedureType"} refers to a procedure in which a parameter is changed according to
 the response of the subject. In this example 1 trial is defined
 with different stimuli from which the adaptive procedure chooses.
 
 \begin{itemize}
 \item \element{parameters} defines the behavior of the procedure
 (eg., nr of presentations, order of presentation, response
-strategy)
+strategy).
 
 \begin{itemize}
 \item \element{presentation} every trial is presented once.
 
-\item \element{order} it applies to the order of the trials, here
-\element{sequential} (if \xml{random} would be specified, the
-trials would be presented in random order). Since there is only 1
+\item \element{order} applies to the order of the trials. Since there is only 1
 \element{trial}, it does not matter here wether the order is
 specified as \element{sequential} or \element{random}.
 
-\item \element{choices} number of alternatives to choose from
-(here: 2 intervals)
+\item \element{corrector} the corrector checks whether the
+response is correct or not. In this example the number of choices
+in \element{procedure} was 2. This means that \element{procedure}
+will present the target stimulus in either interval 1 or 2.
+\element{procedure} informs \element{corrector} about the correct
+interval. \element{Corrector} also receives the clicked button from the
+screen and looks up the corresponding number in the
+\element{interval} element above and compares it with the number it
+received from \element{procedure}. \todo{check}
+
+\item \element{alternatives} number of alternatives to choose from
+(here: 2 intervals) and the IDs of the buttons (defined under \element{screens} they correspond to.
 
 \item \element{pause_between_stimuli} a pause of 1000 ms will be
 introduced between successive wave files;
@@ -187,7 +198,9 @@ Thereafter no stimulus is skipped.
 
 \index{order}
 
-\index{choices}
+\index{corrector}
+
+\index{alternatives}
 
 \index{pause between stimuli}
 
@@ -205,8 +218,6 @@ Thereafter no stimulus is skipped.
 
 \index{max value}
 
-\index{rev for mean}
-
 \index{larger is easier}
 
 \index{stepsize}
@@ -219,35 +230,7 @@ Thereafter no stimulus is skipped.
 
 \index{standard}
 
-\todo{outdated: now belongs under procedure/parameters}
-\begin{lstlisting}
-<corrector xsi:type="apex:alternatives">
- <answers>
-  <answer number="1" value="button1"/>
-  <answer number="2" value="button2"/>
- </answers>
-</corrector>
-\end{lstlisting}
-\index{corrector} \index{answer}
 
-\begin{itemize}
-\item \element{corrector} the corrector checks whether the
-response is correct or not. In this example the number of choices
-in \element{procedure} was 2. This means that \element{procedure}
-will present the target stimulus in either interval 1 or 2.
-\element{procedure} informs \element{correct} about the correct
-interval. Corrector also receives the clicked button from the
-screen and looks up the corresponding number in the
-\element{answers} element above and compares it with the number it
-received from \element{procedure}.
-
-\begin{itemize}
-
-\item \element{answer}: the \element{answer} allocates an interval
-to a button (on the screen)
-
-\end{itemize}
-\end{itemize}
 
 \begin{lstlisting}
 <screens>
@@ -280,7 +263,7 @@ to a button (on the screen)
 be referred to elsewhere in the experiment file (e.g. in
 \element{procedure} above).
 
-\begin{itemize}
+
 \item \element{reinforcement} includes elements on progress and
 feedback
 
@@ -288,7 +271,7 @@ feedback
 
 \item \element{progressbar} if \xml {true} a progress bar will be
 displayed in the right hand bottom corner of the screen. The
-progress bar can indicate how many trials have been done or it
+progress bar can indicate the percentage of trials that have been done or it
 shows when a reversal occurs in an adaptive procedure. In the
 latter case the progress bar will increase at every reversal while
 the number of trials varies.
@@ -297,7 +280,7 @@ the number of trials varies.
 response (in msec) that \apex waits before presenting the next
 trial. During this interval feedback can be displayed.
 
-\item \element{showcurrent} the interval is highlighted while a
+\item \element{showcurrent} if \xml{true} the interval is highlighted while a
 signal is presented.
 \end{itemize}
 
@@ -313,14 +296,7 @@ The screen is divided into sections according to the values. In
 this example there is an equal number of rows (x) and columns (y).
 
 Gridlayout defines a group of screen elements (those that are
-displayed on the screen). As many elements can be defined in a
-screen, \apex has no way to know which element contains the
-subject's response. Therefore, in \element{default_answer_element}
-the element is designated that contains the subject's response. In
-the case of screen elements that are clicked in order to respond,
-the example is further complicated by the fact that we cannot
-specify just one of the elements (buttons, pictures), but that the
-response rather comes from a group of elements.
+displayed on the screen).
 
 \begin{itemize}
 \item \element{button} for each interval a button is specified;
@@ -330,20 +306,23 @@ this button (interval) displays a number on the screen
 one denotes ``2''.
 
 \end{itemize}
+
+\item \element{buttongroup} defines a group of screen elements
+(those that are displayed on the screen). As many elements can be
+defined in a screen, \apex has no way to know which element
+contains the subject's response. Therefore, in
+\element{default_answer_element} the element is designated that
+contains the subject's response. In the case of screen elements
+that are clicked in order to respond, the example is further
+complicated by the fact that we cannot specify just one of the
+elements (one button, one picture), but that the response rather comes
+from a group of elements. This is when a \element{buttongroup} can
+be used to group together different screen elements.
+
+\end{itemize}
 \end{itemize}
 
-\item \element{buttongroup} This element defines a group of
-buttons, namely those two interval that need to be displayed on
-the screen. The same name (ID) is used as defined before.
 
-\begin{itemize}
-\item \element{default_answer_element} the response that has been
-clicked by the subject is sent to the corrector. It is related to
-the ID of \element{buttongroup}.
-
-\end{itemize}
-\end{itemize}
-\end{itemize}
 
 \index{screens}
 
@@ -444,7 +423,7 @@ path again
 \element{devices} all devices defined in the experiment file are
 grouped in the \element{devices}. Only 1 \element{device} is used
 in this example. The ID is set to soundcard. As an ID is unique
-for a entire experiment file, it can be used later on to refer to
+for an entire experiment file, it can be used later on to refer to
 this device.
 
 \begin{itemize}
@@ -552,13 +531,12 @@ correspond to the sampling rates of all datablocks used with it.
 \end{lstlisting}
 
 
-\element{stimuli} defines the auditory event, e.g. noise with gap
+\element{stimuli} defines the auditory events, e.g. noise with gap
 and noise without gap.
 
 \begin{itemize}
 
-\item \element{fixedParameters} the gap is a fixed parameter that
-is identified by an ID
+\item \element{fixedParameters}
 
 \begin{itemize}
 \item \element{parameter} the gap is a fixed parameter that is
@@ -571,7 +549,7 @@ the (variable) stimulus
 \begin{itemize}
 \item \element{description}
 
-\item \element{datablocks} the ID refers to the
+\item \element{datablocks} the ID refers to the wave file corresponding to the datablock
 
 \item \element{fixedParameter}
 \begin{itemize}
@@ -614,64 +592,59 @@ variable gap
 \index{connections} \index{channel}
 
 \begin{itemize}
-
 \item \element{connections} defines how the different datablocks
 and filters are routed to the output device. The ID \id{_ALL_}
 stands for all the datablocks. In this example they are routed to
 1 channel of the wavdevice.
+\end{itemize}
 
 A visual representation of connections can be obtained by choosing
 ``Show stimulus connections'' under ``Experiment''in the main
 \apex menu (top left menu bar).
 
-\end{itemize}
-\todo{outdated}
+
 \begin{lstlisting}
 <results>
-  <xsltscript>mao.xsl</xsltscript>
-</results>
+  <page>apex:resultsviewer.html</page>
+  <resultparameters>
+   <parameter name="reversals for mean">3</parameter>
+  </resultparameters>
+  <showduringexperiment>false</showduringexperiment>
+  <showafterexperiment>true</showafterexperiment>
+  <saveprocessedresults>true</saveprocessedresults>
+ </results>
 \end{lstlisting}
 
-\element{Results} transforms the results using an XSLT script.
-Even if \element{results} is not specified in the experiment file
-\apex will deliver a results file in \xml{XML}. The results file
+\element{results} Even if \element{results} is not specified in
+the experiment file \apex will save a results file in XML. The results file
 will display the correct answers, the reversals, the entire
 sequence of responses, and the average threshold based on the
 number of reversals and the magnitude of the corresponding gap
 parameter specified in the experiment file.
 
-\begin{itemize}
-\item \element{xsltscript} a script can transform the xml data to
-an easier readable format; this script can be stored in folder
-\filename{scripts} under \apex. For more information please read
-section(~\ref{sec:Using XSLT transforms})
+\todo{new part, to check!}
+\begin{itemize} 
+\item \element{page} URL of the html page to show in the results window. The page should have the appropriate java script methods embedded. More example pages can be found in the \apex resultsviewer folder.
+\item \element{resultparameters} Parameters to be passed to the results page. Each parameter will be set in hash params. \todo{perhaps some moren explanation on what this can be and why it is empty here?}
+\item \element{showduringexperiment} If \xml{true}, an extra window will be created which will show the results of the current experiment while the experiment is being executed. Javascript embedded in the page will be executed upon each new trial.
+\item \element{showafterexperiment} If \xml{true}, when the experiment is finished, a dialog box will appear querying whether results should be shown. If the answer is affirmative, a new window will be opened and the results will be shown after javascript processing.
+\item \element{saveprocessedresults} If \xml{true} the
+experimenter will be asked whether the processed results must be
+appended to the results file. This will only work if the results are successfully saved to disk and your javascript code supports this transformation.
 \end{itemize}
 
-\index{results}
+\index{results} \index{page} \index{resultparameters} \index{showduringexperiment} \index{showafterexperiment} \index{saveprocessedresults}
 
-\index{xsltscript}
+
 
 \begin{lstlisting}
  <general>
-   <exitafter>true</exitafter>
-   <showresults>true</showresults>
-   <saveprocessedresults>true</saveprocessedresults>
-  </general>
+  <exitafter>true</exitafter>
+ </general>
 \end{lstlisting}
 
-\todo{outdated}
-
-\element{general} defines some general parameters. Saving
-\textbf{processed} results in a results file is only possible if a
-XSLT-script is defined. See section(~\ref{sec:Using XSLT
-transforms}).
+\element{general} defines some general parameters.
 
 \begin{itemize}
-\item \element{show results} if \xml{true} a window will appear
-after completion of the experiment asking whether the results
-should be viewed on screen.
-
-\item \element{saveprocessedresults} boolean. If \xml {true} the
-experimenter will be asked whether the results must be saved in a
-results file.
+\item \element{exitafter} if \xml{true} \apex will close after the experiment has ended and results have been shown.
 \end{itemize}

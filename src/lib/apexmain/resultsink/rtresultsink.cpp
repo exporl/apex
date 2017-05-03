@@ -14,8 +14,7 @@
 #include "psignifit/psignifitwrapper.h"
 #include "runner/experimentrundelegate.h"
 
-#include "services/accessmanager.h"
-#include "services/errorhandler.h"
+#include "accessmanager.h"
 
 #include "rtresultsink.h"
 
@@ -59,7 +58,7 @@ namespace apex {
         m=message.arg(lineNumber).arg(sourceID).arg(message);
 
         qCDebug(APEX_RS) << m;
-        ErrorHandler::Get().addWarning("RealtimeResultSink", m );
+        qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("RealtimeResultSink", m )));
         QWebPage::javaScriptConsoleMessage( message, lineNumber, sourceID );
     }
 
@@ -137,6 +136,43 @@ namespace apex {
         d->webView->setVisible(visible);
     }
 
+    void RTResultSink::newStimulusParameters( const QVariantMap& parameters )
+    {
+        if (parameters.isEmpty()) return;
+
+        QString pstring = "params = {\"";
+        QMapIterator<QString,QVariant> it(parameters);
+        while (it.hasNext()) {
+            it.next();
+            //jsParams.insert(it.key(), it.value().toString());
+            bool isNumber;
+            QString valuestr;
+            (it.value()).toFloat(&isNumber); // if toFloat() fails because it.value() is not a number, isNumber is set to false
+
+            if (!isNumber){  valuestr =  "\"" + it.value().toString() + "\""; }
+            else{ valuestr = it.value().toString(); }
+
+            pstring += it.key() + "\": " + valuestr;
+
+            if(it.hasNext()){ pstring.append(", \""); }
+            else {
+                pstring.append("};");
+                pstring.append("prepare();");
+            }
+        }
+        executeJavaScript(pstring);
+    }
+
+    void RTResultSink::trialStarted()
+    {
+        executeJavaScript( "trialStarted();" );
+    }
+
+    void RTResultSink::stimulusStarted()
+    {
+        executeJavaScript( "stimulusStarted();" );
+    }
+
     void RTResultSink::setJavascriptParameters (QMap<QString,QString> resultParameters) const
     {
             if (!resultParameters.isEmpty()) {
@@ -157,7 +193,7 @@ namespace apex {
                     if(it.hasNext()){ rpstring.append(", \""); }
                     else { rpstring.append("};"); }
                 }
-                d->webView->page()->mainFrame()->evaluateJavaScript(rpstring);
+                executeJavaScript(rpstring);
             }
     }
 
@@ -195,12 +231,12 @@ namespace apex {
 
 
         QXmlStreamReader xsr( xml );
-        if (! xsr.error() == QXmlStreamReader::NoError)
+        if (xsr.error() != QXmlStreamReader::NoError)
             qCDebug(APEX_RS, "XMLStreamReader error: %s", qPrintable(xsr.errorString()));
         while (!xsr.atEnd()) {
             qint64 start = xsr.characterOffset();
             xsr.readNext();
-            if (! xsr.error() == QXmlStreamReader::NoError)
+            if (xsr.error() != QXmlStreamReader::NoError)
                 qCDebug(APEX_RS, "XMLStreamReader error: %s", qPrintable(xsr.errorString()));
             //qCDebug(APEX_RS) << xsr.name();
             if (xsr.isStartElement() && xsr.name() == "trial") {

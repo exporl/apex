@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXSPIN_SPINCONFIG_H_
-#define _EXPORL_SRC_LIB_APEXSPIN_SPINCONFIG_H_
+#ifndef _APEX_SRC_LIB_APEXSPIN_SPINCONFIG_H_
+#define _APEX_SRC_LIB_APEXSPIN_SPINCONFIG_H_
 
 #include "apexdata/fileprefix.h"
 
@@ -30,7 +30,6 @@
 #include <QCoreApplication>
 #include <QMap>
 #include <QString>
-#include <QUrl>
 #include <QVector>
 
 namespace spin
@@ -41,7 +40,7 @@ namespace data
 struct APEXSPIN_EXPORT Speechtoken
 {
     QString id;
-    QUrl uri;
+    QString file;
     QString text;
 };
 
@@ -52,7 +51,7 @@ struct List : QVector<Speechtoken>
 {
     QString id; //FIXME change to unsigned
 
-    void addToken(QString id, QString uri, QString text);
+    void addToken(QString id, QString file, QString text);
 };
 
 struct APEXSPIN_EXPORT Speaker
@@ -104,7 +103,7 @@ struct Noise
     QString id;
     QString name;
     QString description;
-    QUrl uri;
+    QString file;
     double rms;
     QString speechmaterial; //empty if none
     QString category; //the category of the speechmaterial (empty if none)
@@ -132,7 +131,7 @@ public:
     ~SpinConfig(){}
 
     //getters
-    const apex::data::FilePrefix& uri_prefix() const;
+    const apex::data::FilePrefix& prefix() const;
     const QVector<Speaker>& speaker_setup() const;
     const QMap<QString, Noise>& noises() const;
     const QMap<QString, Speechmaterial>& speechmaterials() const;
@@ -189,7 +188,7 @@ public:
     //setters
     void setPrefix(const apex::data::FilePrefix& prefix);
     void addSpeaker(unsigned channel, unsigned angle);
-    void addNoise(QString id, QString uri, double rms, QString name = "",
+    void addNoise(QString id, QString file, double rms, QString name = "",
                     QString description = "", QString speechmaterial = "",
                     QString speechcategory = "");
     void addSpeechmaterial(QString id, double rms, CategoryMap categoryMap,
@@ -214,8 +213,7 @@ public:
 private:
 
     //TODO make private data structure
-    //<uri_prefix>
-    apex::data::FilePrefix prefix;
+    apex::data::FilePrefix filePrefix;
     //<speaker_setup>
     QVector<Speaker> speakers;
     //<noises>

@@ -17,27 +17,25 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXTOOLS_EXCEPTIONS_H_
-#define _EXPORL_SRC_LIB_APEXTOOLS_EXCEPTIONS_H_
+#ifndef _APEX_SRC_LIB_APEXTOOLS_EXCEPTIONS_H_
+#define _APEX_SRC_LIB_APEXTOOLS_EXCEPTIONS_H_
 
 #include "global.h"
 
 #include <exception>
 
-#include <QString>
+class QString;
 
-class APEXTOOLS_EXPORT ApexException : public std::exception {
+class APEXTOOLS_EXPORT ApexException : public std::exception
+{
 };
 
-class APEXTOOLS_EXPORT ApexStringException: public ApexException {
+class APEXTOOLS_EXPORT ApexStringException: public ApexException
+{
 public:
-    ApexStringException (const QString &message);
+    ApexStringException(const QString &message);
 
-    //QString what() const;
-
-    const char *what() const throw();
-
-    ~ApexStringException() throw ();
+    virtual const char *what() const throw() Q_DECL_OVERRIDE;
 
 private:
     const QByteArray message;
@@ -46,26 +44,20 @@ private:
 class APEXTOOLS_EXPORT TrialDataNotFoundException: public ApexException
 {
 public:
-    const char *what() const throw();
+    virtual const char *what() const throw() Q_DECL_OVERRIDE;
 };
 
-class APEXTOOLS_EXPORT ApexConnectionBetweenDifferentDevicesException:
+class APEXTOOLS_EXPORT ApexConnectionBetweenDifferentDevicesException :
     public ApexStringException
 {
 public:
-    ApexConnectionBetweenDifferentDevicesException (const QString& message);
-};
-
-class APEXTOOLS_EXPORT XercesException: public ApexException
-{
-public:
-    const char *what() const throw();
+    ApexConnectionBetweenDifferentDevicesException(const QString& message);
 };
 
 class APEXTOOLS_EXPORT ParseException: public ApexException
 {
 public:
-    const char *what() const throw();
+    virtual const char *what() const throw() Q_DECL_OVERRIDE;
 };
 
 #endif

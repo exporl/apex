@@ -35,9 +35,7 @@ class dummyfeedbackpluginCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFeedbackCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA (IID "apex.dummyfeedbackplugin")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
@@ -45,11 +43,6 @@ public:
         (const QString &name,
          const FeedbackPluginParameters& params) const;
 };
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (dummyfeedbackplugin, dummyfeedbackpluginCreator)
-#endif
-
 
 class dummyfeedbackplugin : public QObject, public PluginFeedbackInterface
 {

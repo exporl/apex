@@ -165,7 +165,7 @@
 
 
 #include <new>
-#include <assert.h>
+#include <QtGlobal>
 
 // We have a mechanism in iasiothiscallresolver.h to ensure that asio.h is
 // #include'd before it in client code, we do NOT want to do this test here.
@@ -367,7 +367,7 @@ HRESULT STDMETHODCALLTYPE IASIOThiscallResolver::QueryInterface(REFIID riid, voi
 {
     (void)riid;     // suppress unused variable warning
 
-    assert( false ); // this function should never be called by the ASIO SDK.
+    Q_ASSERT( false ); // this function should never be called by the ASIO SDK.
 
     *ppv = NULL;
     return E_NOINTERFACE;
@@ -375,14 +375,14 @@ HRESULT STDMETHODCALLTYPE IASIOThiscallResolver::QueryInterface(REFIID riid, voi
 
 ULONG STDMETHODCALLTYPE IASIOThiscallResolver::AddRef()
 {
-    assert( false ); // this function should never be called by the ASIO SDK.
+    Q_ASSERT( false ); // this function should never be called by the ASIO SDK.
 
     return 1;
 }
 
 ULONG STDMETHODCALLTYPE IASIOThiscallResolver::Release()
 {
-    assert( false ); // this function should never be called by the ASIO SDK.
+    Q_ASSERT( false ); // this function should never be called by the ASIO SDK.
 
     return 1;
 }

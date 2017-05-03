@@ -1,6 +1,12 @@
-                    <parameter>sentence</parameter>
-                </parameterlist>
-
+					</parameterlabel>				
+					<label col="1" id="sentence" row="2">
+						<text>zin</text>
+					</label>
+					<parameterlabel col="2" id="sentence" row="2">
+						<parameter>sentence</parameter>
+					</parameterlabel>
+				</gridLayout>
+				
 				<gridLayout height="1" width="2" id="answer_layout" x="1" y="2">
 				    <button x="1" y="1" id="correct">
 					<text>Correct</text>
@@ -16,3 +22,4 @@
 			</buttongroup>
 			<default_answer_element>buttongroup</default_answer_element>
 		</screen>
+		

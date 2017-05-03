@@ -19,41 +19,37 @@
 
 #include "apexdata/corrector/correctordata.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "correctorparser.h"
 
-#include <iostream>
-
-using namespace apex::ApexXMLTools;
 using namespace apex;
-using namespace xercesc;
 using data::CorrectorData;
 
-CorrectorData *CorrectorParser::Parse (DOMElement* dom)
+CorrectorData *CorrectorParser::Parse(const QDomElement &dom)
 {
     QScopedPointer<CorrectorData> data(new CorrectorData);
-    QString type = XMLutils::GetAttribute (dom, "xsi:type");
+    QString type = dom.attribute(QSL("xsi:type"));
 
     if (type == "apex:isequal")
         data->setType(CorrectorData::EQUAL);
     else
         qFatal ("Invalid corrector type %s", qPrintable (type));
 
-    for (DOMNode* currentNode = dom->getFirstChild(); currentNode != NULL;
-        currentNode = currentNode->getNextSibling()) {
-        Q_ASSERT (currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
-
-        const QString tag = XMLutils::GetTagName (currentNode);
+    for (QDomElement currentNode = dom.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        const QString tag = currentNode.tagName();
         if (tag == "language") {
-            const QString value = XMLutils::GetFirstChildText (currentNode);
+            const QString value = currentNode.text();
             if (value == "Dutch")
                 data->setLanguage(CorrectorData::DUTCH);
             else if (value == "English")
                 data->setLanguage(CorrectorData::ENGLISH);
-        } else
-            qFatal ("Unknown corrector tag: %s", qPrintable (tag));
+        } else {
+            qFatal ("Unknown corrector tag: %s", qPrintable(tag));
+        }
     }
     return data.take();
 }

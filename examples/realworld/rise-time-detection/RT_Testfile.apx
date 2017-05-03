@@ -1,1000 +1,1000 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment file:///C:/maaike/Apex_110116/schemas/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
- <!--  @doc
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1">
+  <!--  @doc
    @what: Rise Time detection
    @description: 3AFC, with feedback, 2-down 1-up procedure, childfriendly, rise time is adaptively changed depending on correct/wrong answers. Participants need to pick one out of three snakes for which a different stimulus was heard.
    @how: adaptiveProcedure, different rise times are implemented in different wav-files, childmode with flashelements
   -->
- <procedure xsi:type="apex:adaptiveProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <intervals count="3" select="1,2,3">
-    <interval element="button1" number="1"/>
-    <interval element="button2" number="2"/>
-    <interval element="button3" number="3"/>
-   </intervals>
-   <nUp>1</nUp>
-   <nDown>2</nDown>
-   <adapt_parameter>RTlabel</adapt_parameter>
-   <start_value>2</start_value>
-   <stop_after_type>reversals</stop_after_type>
-   <stop_after>8</stop_after>
-   <larger_is_easier>false</larger_is_easier>
-   <repeat_first_until_correct>false</repeat_first_until_correct>
-   <stepsizes>
-    <change_after>reversals</change_after>
-    <stepsize begin="0" size="4"/>
-    <stepsize begin="2" size="2"/>
-    <stepsize begin="4" size="1"/>
-   </stepsizes>
-  </parameters>
-  <trials>
-   <trial id="trial_1">
-    <screen id="screen1"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_016"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_017"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_019"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_020"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_022"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_024"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_026"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_028"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_030"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_032"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_035"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_038"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_041"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_044"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_047"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_051"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_055"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_060"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_064"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_070"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_075"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_081"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_088"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_095"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_102"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_110"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_119"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_129"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_139"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_150"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_162"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_175"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_189"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_204"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_221"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_238"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_257"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_278"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_300"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_324"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_350"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_378"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_408"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_441"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_476"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_378"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_514"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_555"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_600"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_648"/>
-    <stimulus id="Risetime_Ruis_tot800ms_risems_699"/>
-    <standard id="standard_Risetime_Ruis_015ms"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <uri_prefix>C:\Users\G\Desktop\Dyslexieonderzoek Cohorte B 2013\Movies\snake\</uri_prefix>
-  <general>
-   <showpanel>true</showpanel>
-  </general>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="3000">true</feedback>
-   <feedback_on>clicked</feedback_on>
-   <showcurrent>true</showcurrent>
-  </reinforcement>
-  <childmode>
-   <panel>reinforcement.swf</panel>
-  </childmode>
-  <screen id="screen1">
-   <gridLayout height="3" x="1" y="1" width="3" id="answer_layout">
-    <flash x="1" y="2" id="button1">
-     <shortcut>LeftArrow</shortcut>
-     <uri>still.swf</uri>
-     <feedback>
-      <highlight>sleeping.swf</highlight>
-      <positive>goodsnake.swf</positive>
-      <negative>badsnake.swf</negative>
-     </feedback>
-    </flash>
-    <flash x="2" y="2" id="button2">
-     <shortcut>DownArrow</shortcut>
-     <uri>still.swf</uri>
-     <feedback>
-      <highlight>sleeping.swf</highlight>
-      <positive>goodsnake.swf</positive>
-      <negative>badsnake.swf</negative>
-     </feedback>
-    </flash>
-    <flash x="3" y="2" id="button3">
-     <shortcut>RightArrow</shortcut>
-     <uri>still.swf</uri>
-     <feedback>
-      <highlight>sleeping.swf</highlight>
-      <positive>goodsnake.swf</positive>
-      <negative>badsnake.swf</negative>
-     </feedback>
-    </flash>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-    <button id="button2"/>
-    <button id="button3"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>C:\Users\G\Desktop\Dyslexieonderzoek Cohorte B 2013\1b RT</uri_prefix>
-  <datablock id="datablock_standard_Risetime_Ruis_calibratie">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_calibratie.wav</uri>
-  </datablock>
-  <datablock id="datablock_standard_Risetime_Ruis_015ms">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_015.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_016">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_016.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_017">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_017.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_019">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_019.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_020">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_020.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_022">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_022.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_024">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_024.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_026">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_026.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_028">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_028.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_030">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_030.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_032">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_032.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_035">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_035.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_038">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_038.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_041">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_041.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_044">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_044.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_047">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_047.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_051">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_051.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_055">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_055.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_060">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_060.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_064">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_064.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_070">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_070.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_075">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_075.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_081">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_081.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_088">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_088.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_095">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_095.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_102">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_102.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_110">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_110.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_119">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_119.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_129">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_129.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_139">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_139.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_150">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_150.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_162">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_162.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_175">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_175.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_189">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_189.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_204">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_204.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_221">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_221.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_238">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_238.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_257">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_257.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_278">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_278.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_300">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_300.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_324">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_324.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_350">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_350.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_378">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_378.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_408">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_408.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_441">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_441.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_476">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_476.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_514">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_514.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_555">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_555.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_600">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_600.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_648">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_648.wav</uri>
-  </datablock>
-  <datablock id="datablock_Risetime_Ruis_tot800ms_risems_699">
-   <device>wavdevice</device>
-   <uri>Risetime_Ruis_tot800ms_risems_699.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device xsi:type="apex:wavDeviceType" id="wavdevice">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain channel="0" id="cardgain0">0</gain>
-   <samplerate>32000</samplerate>
-   <buffersize>4096</buffersize>
-   <padzero>1</padzero>
-  </device>
- </devices>
- <filters>
-  <filter xsi:type="apex:amplifier" id="chan0">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="calibchan0">0</gain>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters>
-   <parameter id="RTlabel"/>
-  </fixed_parameters>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_016">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_016"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">50</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_017">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_017"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">49</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_019">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_019"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">48</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_020">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_020"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">47</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_022">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_022"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">46</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_024">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_024"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">45</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_026">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_026"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">44</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_028">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_028"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">43</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_030">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_030"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">42</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_032">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_032"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">41</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_035">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_035"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">40</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_038">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_038"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">39</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_041">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_041"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">38</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_044">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_044"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">37</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_047">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_047"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">36</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_051">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_051"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">35</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_055">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_055"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">34</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_060">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_060"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">33</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_064">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_064"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">32</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_070">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_070"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">31</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_075">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_075"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">30</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_081">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_081"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">29</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_088">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_088"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">28</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_095">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_095"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">27</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_102">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_102"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">26</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_110">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_110"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">25</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_119">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_119"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">24</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_129">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_129"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">23</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_139">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_139"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">22</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_150">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_150"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">21</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_162">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_162"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">20</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_175">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_175"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">19</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_189">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_189"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">18</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_204">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_204"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">17</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_221">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_221"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">16</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_238">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_238"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">15</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_257">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_257"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">14</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_278">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_278"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">13</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_300">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_300"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">12</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_324">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_324"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">11</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_350">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_350"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">10</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_378">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_378"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">9</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_408">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_408"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">8</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_441">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_441"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">7</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_476">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_476"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">6</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_514">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_514"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">5</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_555">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_555"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">4</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_600">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_600"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">3</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_648">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_648"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">2</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Risetime_Ruis_tot800ms_risems_699">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_Risetime_Ruis_tot800ms_risems_699"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">1</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="standard_Risetime_Ruis_015ms">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_standard_Risetime_Ruis_015ms"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">0</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="calibrationstimulus">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_standard_Risetime_Ruis_calibratie"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="RTlabel">calibration</parameter>
-   </fixedParameters>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>chan0</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>chan0</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
- <calibration profile="calib_RTdiscr">
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <intervals count="3" select="1,2,3">
+        <interval element="button1" number="1"/>
+        <interval element="button2" number="2"/>
+        <interval element="button3" number="3"/>
+      </intervals>
+      <nUp>1</nUp>
+      <nDown>2</nDown>
+      <adapt_parameter>RTlabel</adapt_parameter>
+      <start_value>2</start_value>
+      <stop_after_type>reversals</stop_after_type>
+      <stop_after>8</stop_after>
+      <larger_is_easier>false</larger_is_easier>
+      <repeat_first_until_correct>false</repeat_first_until_correct>
+      <stepsizes>
+        <change_after>reversals</change_after>
+        <stepsize size="4" begin="0"/>
+        <stepsize size="2" begin="2"/>
+        <stepsize size="1" begin="4"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial_1">
+        <screen id="screen1"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_016"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_017"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_019"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_020"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_022"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_024"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_026"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_028"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_030"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_032"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_035"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_038"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_041"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_044"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_047"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_051"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_055"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_060"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_064"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_070"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_075"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_081"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_088"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_095"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_102"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_110"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_119"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_129"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_139"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_150"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_162"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_175"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_189"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_204"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_221"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_238"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_257"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_278"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_300"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_324"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_350"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_378"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_408"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_441"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_476"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_378"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_514"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_555"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_600"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_648"/>
+        <stimulus id="Risetime_Ruis_tot800ms_risems_699"/>
+        <standard id="standard_Risetime_Ruis_015ms"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <prefix>C:\Users\G\Desktop\Dyslexieonderzoek Cohorte B 2013\Movies\snake\</prefix>
+    <general>
+      <showpanel>true</showpanel>
+    </general>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="3000">true</feedback>
+      <feedback_on>clicked</feedback_on>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <childmode>
+      <panel>reinforcement.swf</panel>
+    </childmode>
+    <screen id="screen1">
+      <gridLayout width="3" id="answer_layout" x="1" y="1" height="3">
+        <flash id="button1" x="1" y="2">
+          <shortcut>LeftArrow</shortcut>
+          <file>still.swf</file>
+          <feedback>
+            <highlight>sleeping.swf</highlight>
+            <positive>goodsnake.swf</positive>
+            <negative>badsnake.swf</negative>
+          </feedback>
+        </flash>
+        <flash id="button2" x="2" y="2">
+          <shortcut>DownArrow</shortcut>
+          <file>still.swf</file>
+          <feedback>
+            <highlight>sleeping.swf</highlight>
+            <positive>goodsnake.swf</positive>
+            <negative>badsnake.swf</negative>
+          </feedback>
+        </flash>
+        <flash id="button3" x="3" y="2">
+          <shortcut>RightArrow</shortcut>
+          <file>still.swf</file>
+          <feedback>
+            <highlight>sleeping.swf</highlight>
+            <positive>goodsnake.swf</positive>
+            <negative>badsnake.swf</negative>
+          </feedback>
+        </flash>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>C:\Users\G\Desktop\Dyslexieonderzoek Cohorte B 2013\1b RT</prefix>
+    <datablock id="datablock_standard_Risetime_Ruis_calibratie">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_calibratie.wav</file>
+    </datablock>
+    <datablock id="datablock_standard_Risetime_Ruis_015ms">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_015.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_016">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_016.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_017">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_017.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_019">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_019.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_020">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_020.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_022">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_022.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_024">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_024.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_026">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_026.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_028">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_028.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_030">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_030.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_032">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_032.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_035">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_035.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_038">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_038.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_041">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_041.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_044">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_044.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_047">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_047.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_051">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_051.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_055">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_055.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_060">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_060.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_064">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_064.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_070">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_070.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_075">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_075.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_081">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_081.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_088">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_088.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_095">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_095.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_102">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_102.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_110">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_110.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_119">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_119.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_129">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_129.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_139">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_139.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_150">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_150.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_162">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_162.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_175">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_175.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_189">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_189.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_204">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_204.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_221">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_221.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_238">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_238.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_257">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_257.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_278">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_278.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_300">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_300.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_324">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_324.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_350">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_350.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_378">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_378.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_408">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_408.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_441">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_441.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_476">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_476.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_514">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_514.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_555">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_555.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_600">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_600.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_648">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_648.wav</file>
+    </datablock>
+    <datablock id="datablock_Risetime_Ruis_tot800ms_risems_699">
+      <device>wavdevice</device>
+      <file>Risetime_Ruis_tot800ms_risems_699.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain id="cardgain0" channel="0">0</gain>
+      <samplerate>32000</samplerate>
+      <buffersize>4096</buffersize>
+      <padzero>1</padzero>
+    </device>
+  </devices>
+  <filters>
+    <filter id="chan0" xsi:type="apex:amplifier">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="calibchan0">0</gain>
+    </filter>
+  </filters>
   <stimuli>
-   <stimulus id="calibrationstimulus"/>
+    <fixed_parameters>
+      <parameter id="RTlabel"/>
+    </fixed_parameters>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_016">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_016"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">50</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_017">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_017"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">49</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_019">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_019"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">48</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_020">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_020"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">47</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_022">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_022"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">46</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_024">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_024"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">45</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_026">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_026"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">44</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_028">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_028"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">43</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_030">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_030"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">42</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_032">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_032"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">41</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_035">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_035"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">40</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_038">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_038"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">39</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_041">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_041"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">38</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_044">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_044"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">37</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_047">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_047"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">36</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_051">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_051"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">35</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_055">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_055"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">34</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_060">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_060"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">33</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_064">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_064"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">32</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_070">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_070"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">31</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_075">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_075"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">30</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_081">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_081"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">29</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_088">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_088"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">28</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_095">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_095"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">27</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_102">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_102"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">26</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_110">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_110"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">25</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_119">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_119"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">24</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_129">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_129"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">23</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_139">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_139"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">22</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_150">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_150"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">21</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_162">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_162"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">20</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_175">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_175"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">19</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_189">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_189"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">18</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_204">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_204"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">17</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_221">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_221"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">16</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_238">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_238"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">15</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_257">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_257"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">14</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_278">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_278"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">13</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_300">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_300"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">12</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_324">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_324"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">11</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_350">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_350"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">10</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_378">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_378"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">9</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_408">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_408"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">8</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_441">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_441"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">7</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_476">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_476"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">6</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_514">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_514"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">5</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_555">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_555"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">4</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_600">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_600"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">3</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_648">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_648"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">2</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Risetime_Ruis_tot800ms_risems_699">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_Risetime_Ruis_tot800ms_risems_699"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">1</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="standard_Risetime_Ruis_015ms">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_standard_Risetime_Ruis_015ms"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">0</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="calibrationstimulus">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_standard_Risetime_Ruis_calibratie"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="RTlabel">calibration</parameter>
+      </fixedParameters>
+    </stimulus>
   </stimuli>
-  <parameters>
-   <parameter id="calibchan0">
-    <targetamplitude>70</targetamplitude>
-    <mute>-150</mute>
-   </parameter>
-  </parameters>
- </calibration>
- <results>
-  <page>apex:resultviewer.html</page>
-  <resultparameters>
-   <parameter name="reversals for mean">4</parameter>
-  </resultparameters>
-  <showduringexperiment>false</showduringexperiment>
-  <showafterexperiment>true</showafterexperiment>
-  <saveprocessedresults>true</saveprocessedresults>
- </results>
- <interactive>
-  <entry description="aanbiedingsniveau (dB SPL)" default="70" expression="/apex:apex/calibration[1]/parameters[1]/parameter[1]/targetamplitude[1]" type="int"/>
- </interactive>
- <general>
-  <exitafter>true</exitafter>
-  <waitforstart>true</waitforstart>
-  <allowskip>true</allowskip>
- </general>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>chan0</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>chan0</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+  <calibration profile="calib_RTdiscr">
+    <stimuli>
+      <stimulus id="calibrationstimulus"/>
+    </stimuli>
+    <parameters>
+      <parameter id="calibchan0">
+        <targetamplitude>70</targetamplitude>
+        <mute>-150</mute>
+      </parameter>
+    </parameters>
+  </calibration>
+  <results>
+    <page>apex:resultviewer.html</page>
+    <resultparameters>
+      <parameter name="reversals for mean">4</parameter>
+    </resultparameters>
+    <showduringexperiment>false</showduringexperiment>
+    <showafterexperiment>true</showafterexperiment>
+    <saveprocessedresults>true</saveprocessedresults>
+  </results>
+  <interactive>
+    <entry expression="/apex:apex/calibration[1]/parameters[1]/parameter[1]/targetamplitude[1]" type="int" default="70" description="aanbiedingsniveau (dB SPL)"/>
+  </interactive>
+  <general>
+    <exitafter>true</exitafter>
+    <waitforstart>true</waitforstart>
+    <allowskip>true</allowskip>
+  </general>
 </apex:apex>

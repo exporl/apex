@@ -29,21 +29,24 @@ class FlowRunner;
 
 class SimpleRunner : public ExperimentRunner
 {
-        Q_OBJECT
-    public:
-        SimpleRunner();
-        void select(const QString& path);
-        void selectFromDir(const QString& path);
-        virtual void makeVisible();
+    Q_OBJECT
+public:
+    SimpleRunner();
+    virtual bool select(const QString& path) Q_DECL_OVERRIDE;
+    void selectFromDir(const QString& path) Q_DECL_OVERRIDE;
+    virtual void makeVisible() Q_DECL_OVERRIDE;
+
 public slots:
-        void setExpressions(const QMap<QString, QString>& expressions);
-    private:
-        QString path;
-        FlowRunner* flowRunner;
-    signals:
-        void errorMessage(const QString& source, const QString& message);
-        void setResultsFilePath(const QString& filePath);
-        void savedFile(const QString& filePath);
+    void setExpressions(const QMap<QString, QString>& expressions);
+
+private:
+    QString path;
+    FlowRunner* flowRunner;
+
+signals:
+    void errorMessage(const QString& source, const QString& message);
+    void setResultsFilePath(const QString& filePath);
+    void savedFile(const QString& filePath);
 };
 }
 

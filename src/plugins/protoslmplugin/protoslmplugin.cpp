@@ -89,7 +89,7 @@ private:
 
 ProtoSlm::ProtoSlm(const QString &name)
 {
-    server.reset(new SlaveServer(name, QString(), false));
+    server.reset(new SlaveServer(name, QString(), QString(), false));
     if (!initialize()) {
         throw ApexStringException(errorString());
     }
@@ -216,7 +216,3 @@ SoundLevelMeter * ProtoSlmCreator::createSoundLevelMeter(const QString &name) co
 }
 
 #include "protoslmplugin.moc"
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(protoslm, ProtoSlmCreator)
-#endif

@@ -62,7 +62,7 @@ void PictureButtonWidget::mousePressEvent( QMouseEvent* ev )
     QPointF pf;
     pf.setX( ((qreal) pi.x()) / this->width() );
     pf.setY( ((qreal) pi.y()) / this->height() );
-    emit mousePressed( pf );
+    Q_EMIT mousePressed( pf );
 
     //qCDebug(APEX_RS, "Clicked PictureButtonWidget at (%f, %f)", pf.x(), pf.y());
 }

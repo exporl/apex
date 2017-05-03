@@ -46,6 +46,7 @@ Laneau, J., Boets, B., Moonen, M., van Wieringen, A. and Wouters,
 J., "A flexible auditory research platform using acoustic or
 electric stimuli for adults and young children", Journal of
 Neuroscience Methods, 142, pp. 131-136, 2005.
+\todo{add reference apex/spin paper}
 
 \section {Main features of \apex}
 \begin{itemize}
@@ -55,7 +56,7 @@ Multiple platforms are supported, including MS Windows and Linux.
 \item Multiple output devices are supported, including sound
 cards, an interface to cochlear implants from Cochlear and an
 interface to cochlear implants from Advanced  Bionics. The
-supported devices can be used in any combination, a CI (or hearing
+supported implant devices can be used in any combination, a CI (or hearing
 aid) in both ears (bilateral electrical stimulation) or
 simultaneous stimulation via a CI in one ear and acoustical
 stimulation in the other (bimodal stimulation). 
@@ -80,16 +81,17 @@ can be added. (plug-in controller)
 \item There is a {GUI}
 (Graphical User Interface) to calibrate parameters.
 \end{itemize}
+\todo{spin interface?}
 
 \section{Getting help - documentation}
 
-There are 4 forms of documentation available for \apex:
+There are 4 forms of documentation available for \apex: \todo{hier ook verwijzen naar reference manual? die komt nu voor eerst ter sprake onder 2.3.1. Of is dit hetzelfde als schema documentation?}
 
 \begin{description}
 \item[The paper] The \apex paper gives a concise high level overview. It is advisable to read it first. Note that since it was published some implementation details have changed, so please refer to the other documentation for up to date details.
 \item[The manual] You are currently reading the manual. It does not cover every feature of APEX in detail, but endeavours to describe the most often used features in more detail than the paper.
-\item[The schema documentation] The APEX schema defines the structure of an experiment file (see section~\ref{sec:Schema's}). It systematically contains documentation for each element, and exhaustively determines which elements can occur. It is the most up to date and most complete source of documentation, but requires some insight in the general function of APEX, which is provided by the paper and manual. The schema documentation can be consulted in 3 different ways: (1) using the HTML format schema documentation that comes with APEX, in folder \filename{documentation} \todo{check}, (2) when editing an experiment file with the oXygen editor, it will show the documentation for the current element in a different pane and suggest elements when you start typing, or (3) opening the schema \filename{experiment.xsd} directly in the oXygen editor.
-\item[The examples] APEX is shipped with a large number of examples, illustrating most of the features. They are stored in folder \filename{examples} in the main APEX folder, and are documented in chapter~\ref{chap:examples}. The best way to start a new experiment, is probably to take one of the examples and modify it until it suits your needs.
+\item[The schema documentation] The APEX schema defines the structure of an experiment file (see section~\ref{sec:Schema's}). It systematically contains documentation for each element, and exhaustively determines which elements can occur. It is the most up to date and most complete source of documentation, but requires some insight in the general function of APEX, which is provided by the paper and manual. The schema documentation can be consulted in 3 different ways: (1) using the HTML format schema documentation that comes with APEX, in folder \filename{documentation} \todo{check - Lot:waarnaar verwijst dit? en heet folder niet 'doc'?}, (2) when editing an experiment file with the oXygen editor, it will show the documentation for the current element in a different pane and suggest elements when you start typing, or (3) opening the schema \filename{experiment.xsd} directly in the oXygen editor.
+\item[The examples] APEX is shipped with a large number of examples, illustrating most of the features. They are stored in folder \filename{examples} in the main APEX folder, and are documented in chapter~\ref{chap:examples} \todo{chapter reference does not work}. The best way to start a new experiment, is probably to take one of the examples and modify it until it suits your needs.
 \end{description}
 
 
@@ -171,7 +173,7 @@ life sciences.
 
 Chapter~\ref{chap:Basic concepts} discusses the basic concepts of
 \apex. Chapter~\ref{chap:Creating experiment files} describes the
-structure of experiment files. Chapter~\ref{chap:plugins} describes how to extend \apex using plugins. Chapter~\ref{chap:Examples}
+structure of experiment files. Chapter~\ref{chap:scripting} describes how to automate (script) tasks in \apex. Chapter~\ref{chap:Examples}
 discusses 4 example experiments in detail. These experiments are
 also stored in the folder \filename{examples/manual}.
 Chapter~\ref{chap:Examplestrategies} shows how to implement some
@@ -184,4 +186,4 @@ toolbox (appendix~\ref{app:Matlab}), the use of plugins
 (appendix~\ref{sec:Customizing appearance}).
 
 An exhaustive list of all elements that can occur in an \apex
-experiment file are given in a the schema documentation.
+experiment file are given in the schema documentation.

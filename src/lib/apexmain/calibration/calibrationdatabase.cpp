@@ -114,7 +114,7 @@ public:
     CalibrationSetupHandler();
 
     // Returns the message text of the last exception
-    QString error() const;
+    QString errorExceptionString() const;
 
     // Reimplementing QXmlErrorHandler and QXmlContentHandler
     bool startElement (const QString &namespaceURI,
@@ -343,7 +343,7 @@ QString CalibrationDatabase::importHardwareSetup (const QString &fileName)
             CalibrationDatabase().removeHardwareSetup (setup);
         throw ApexStringException
             (QString ("Unable to read calibration file %1: %2")
-                .arg (fileName, handler.error()));
+                .arg (fileName, handler.errorExceptionString()));
     }
     return handler.hardwareSetup();
 }
@@ -449,7 +449,7 @@ QString CalibrationSetupHandler::errorString() const
     return errorMessage;
 }
 
-QString CalibrationSetupHandler::error() const
+QString CalibrationSetupHandler::errorExceptionString() const
 {
     return errorException;
 }

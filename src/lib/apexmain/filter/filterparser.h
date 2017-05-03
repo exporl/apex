@@ -20,47 +20,30 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_FILTER_FILTERPARSER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_FILTER_FILTERPARSER_H_
 
-#include "apextools/xml/xercesinclude.h"
-
-#include "parser/apexparser.h"
-
-namespace XERCES_CPP_NAMESPACE
+namespace apex
 {
-    class DOMElement;
-};
+namespace data
+{
+class FilterData;
+class DevicesData;
+class DatablocksData;
+class PluginFilterData;
+class ParameterManagerData;
+}
 
+namespace parser
+{
 
-namespace apex {
-
-    namespace data {
-        class FilterData;
-        class DevicesData;
-        class DatablocksData;
-                class PluginFilterData;
-                class ParameterManagerData;
-    }
-
-namespace parser {
-
-/**
-        @author Tom Francart,,, <tom.francart@med.kuleuven.be>
-*/
-class APEX_EXPORT FilterParser : public Parser
+class APEX_EXPORT FilterParser
 {
 public:
     FilterParser();
-
     ~FilterParser();
 
-    data::FilterData* ParseFilter( XERCES_CPP_NAMESPACE::DOMElement* a_pBase, data::ParameterManagerData* parameterManagerData  );
-
-
-    //data::PluginFilterData*  ParsePluginFilter( XERCES_CPP_NAMESPACE::DOMElement* a_pBase);
-
+    data::FilterData* ParseFilter(const QDomElement &a_pBase, data::ParameterManagerData* parameterManagerData);
 };
 
 }
-
 }
 
 #endif

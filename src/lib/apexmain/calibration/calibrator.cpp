@@ -18,6 +18,8 @@
 
 #include "apexdata/calibration/calibrationdata.h"
 
+#include "apextools/exceptions.h"
+
 #include "gui/calibrationdialog.h"
 #include "gui/calibrationsetupsdialog.h"
 #include "gui/mainwindow.h"
@@ -25,8 +27,6 @@
 #include "parameters/parametermanager.h"
 
 #include "runner/experimentrundelegate.h"
-
-#include "services/errorhandler.h"
 
 #include "autocalibration.h"
 #include "calibrationdatabase.h"
@@ -150,11 +150,11 @@ void CalibratorPrivate::initAutoCalibration()
         if (data.soundLevelMeterData() && !autoCalibration)
             autoCalibration.reset(new AutoCalibration(runDelegate, data, hardwareSetup));
         autoCalibrationEnabled = true;
-    } catch (ApexStringException &e) {
-        ErrorHandler::Get().addWarning(tr("Calibrator"), e.what());
-        ErrorHandler::Get().addWarning(tr("Calibrator"),
+    } catch (const std::exception &e) {
+        qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(tr("Calibrator"), e.what())));
+        qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(tr("Calibrator"),
                 tr("Could not load sound level meter plugin, "
-                    "disabling automatic calibration"));
+                    "disabling automatic calibration"))));
         autoCalibrationEnabled = false;
     }
 }
@@ -493,7 +493,7 @@ void CalibratorPrivate::beforeCancel()
 {
     qCDebug(APEX_RS, "beforeCancel()");
     bool save = true;
-    if (!results.size() == 0) {
+    if (results.size() != 0) {
         QMessageBox::StandardButton answer =
            QMessageBox::question(0, "Save calibration?",
                                   "You have made changes to the calibration.\n"

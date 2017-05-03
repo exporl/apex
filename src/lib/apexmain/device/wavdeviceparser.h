@@ -22,16 +22,9 @@
 
 #include "apexdata/device/wavdevicedata.h"
 
-#include "apextools/xml/xercesinclude.h"
-
-#include "parser/apexparser.h"
 #include "parser/simpleparametersparser.h"
 
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMElement;
-};
-
+#include <QCoreApplication>
 
 namespace apex
 {
@@ -50,8 +43,8 @@ public:
 
     ~WavDeviceParser();
 
-    virtual void AddParameter(data::SimpleParameters* p, XERCES_CPP_NAMESPACE::DOMElement* e, const QString& owner, const QString& type, const QString& id, const QVariant& value, const int channel);
-    void Parse(XERCES_CPP_NAMESPACE::DOMElement* base, data::WavDeviceData* p);
+    virtual void AddParameter(data::SimpleParameters* p, const QDomElement &e, const QString& owner, const QString& type, const QString& id, const QVariant& value, const int channel) Q_DECL_OVERRIDE;
+    void Parse(const QDomElement &base, data::WavDeviceData* p);
 };
 
 }

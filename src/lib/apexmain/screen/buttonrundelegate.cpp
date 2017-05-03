@@ -80,7 +80,7 @@ void ButtonRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
 
 void apex::rundelegates::ButtonRunDelegate::sendAnsweredSignal()
 {
-    emit answered( this );
+    Q_EMIT answered( this );
 }
 
 apex::rundelegates::ButtonRunDelegate::ButtonRunDelegate(

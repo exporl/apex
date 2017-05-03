@@ -1,86 +1,77 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
-
- <!-- @doc
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- @doc
   @what: shows how to use a bold font by using html code
   @description: screen shows the text written in html code
   @how: &lt;b>  text  &lt;/b>
   -->
-
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>button1</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
-
- <screens>
-  <screen id="screen1">
-   <gridLayout width="1" height="2">
-    <label x="1" id="uitleg" y="1">
-     <text> testtext &lt;b>That&lt;/b> is rather long and tests whether the label stretches correctly. Now it is even longer&#xd;
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>button1</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <screen id="screen1">
+      <gridLayout width="1" height="2">
+        <label x="1" y="1" id="uitleg">
+          <text> testtext &lt;b>That&lt;/b> is rather long and tests whether the label stretches correctly. Now it is even longer&#xd;
           Moreover, it spans multiple lines&#xd;
           Hopefully it doesn't shrink even more</text>
-    </label>
-    <gridLayout width="3" height="1" x="1" y="2">
-     <button x="1" id="button1" y="1">
-      <text>1</text>
-     </button>
-     <button x="2" id="button2" y="1">
-      <text>2</text>
-     </button>
-     <button x="3" id="button3" y="1">
-      <text>3</text>
-     </button>
-    </gridLayout>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
-
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
- </datablocks>
-
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>512</buffersize>
-  </device>
- </devices>
-
- <filters/>
-
- <stimuli>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-   <variableParameters/>
-  </stimulus>
- </stimuli>
-
- <connections/>
-
+        </label>
+        <gridLayout width="3" x="1" y="2" height="1">
+          <button x="1" y="1" id="button1">
+            <text>1</text>
+          </button>
+          <button x="2" y="1" id="button2">
+            <text>2</text>
+          </button>
+          <button x="3" y="1" id="button3">
+            <text>3</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>512</buffersize>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

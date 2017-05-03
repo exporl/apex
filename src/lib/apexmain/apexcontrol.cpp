@@ -1,90 +1,78 @@
+#include "apexdata/device/devicesdata.h"
+
 #include "apexdata/experimentdata.h"
 
 #include "apexdata/parameters/generalparameters.h"
-#include "apexdata/device/devicesdata.h"
 
+#include "apextools/apexpaths.h"
 #include "apextools/apextools.h"
 #include "apextools/desktoptools.h"
 #include "apextools/exceptions.h"
-#include "apextools/pathtools.h"
-
-#include "apextools/services/application.h"
-#include "apextools/services/paths.h"
-
-#include "apextools/status/statusreporter.h"
-
 #include "apextools/version.h"
 
 #include "apexwriters/experimentwriter.h"
 
 #include "calibration/calibrator.h"
 
-#include "common/optioncontext.h"
+#include "common/paths.h"
+
+#include "device/soundcardsettings.h"
 
 #include "gui/connectiondialog.h"
 #include "gui/mainwindow.h"
 #include "gui/mru.h"
 #include "gui/plugindialog.h"
-#include "gui/startupdialog.h"
 #include "gui/soundcardsdialog.h"
+#include "gui/startupdialog.h"
 
 #include "runner/experimentrundelegate.h"
 #include "runner/pluginrunner.h"
 #include "runner/simplerunner.h"
 
-// TODO ANDROID flowrunner uses webkitwidgets
-#ifndef Q_OS_ANDROID
-#include "runner/flowrunner.h"
-#endif
-
 #include "screen/apexscreen.h"
-
-#include "services/errorhandler.h"
-#include "services/mainconfigfileparser.h"
 
 #include "stimulus/stimuluscontrol.h"
 #include "stimulus/stimulusoutput.h"
 
 #include "wavstimulus/soundcarddisplayer.h"
 #include "wavstimulus/wavdeviceio.h"
-#include "device/soundcardsettings.h"
 
 #include "apexcontrol.h"
+#include "errorhandler.h"
 #include "experimentcontrol.h"
 #include "experimentio.h"
+#include "mainconfigfileparser.h"
 #include "outputrecorder.h"
 
 #include <QApplication>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QTimer>
 
-#include <iostream>
+// TODO ANDROID flowrunner uses webkitwidgets
+#ifndef Q_OS_ANDROID
+#include "runner/flowrunner.h"
+#endif
+#ifdef Q_OS_ANDROID
+#include "apexandroidnative.h"
+#endif
 
 using namespace cmn;
 using namespace apex;
 
+ApexControl *ApexControl::instance = NULL;
+
 ApexControl::ApexControl() :
-        mod_experimentselector(new SimpleRunner),
-        m_Wnd(new gui::ApexMainWindow()),
-        m_error(ErrorHandler::Get())
+    mod_experimentselector(new SimpleRunner),
+    m_Wnd(new gui::ApexMainWindow())
 {
+    instance = this;
+
     ApexTools::InitRand();
 
-    //experimentControl->addErrorListener(&ErrorHandler::Get());
-
-    //setup mainwindow
-
-    try
-    {
-        QApplication::setWindowIcon(QIcon(Paths::Get().GetMainLogoPath()));
-    }
-    catch (ApexStringException& e)
-    {
-        m_error.addWarning("ApexControl", tr("Unable to set main logo."));
-        m_error.addWarning("ApexControl", e.what());
-    }
+    QApplication::setWindowIcon(QIcon(Paths::searchFile(QL1S("apex_icon.svg"), Paths::iconDirectories())));
 
     connect(m_Wnd, SIGNAL(fileExit()), this, SLOT(fileExit()));
     connect(m_Wnd, SIGNAL(fileOpen()), this, SLOT(fileOpen()));
@@ -98,13 +86,14 @@ ApexControl::ApexControl() :
             this, SLOT(setAutoAnswer(bool)));
     connect(m_Wnd, SIGNAL(showStimulus()), this, SLOT(ShowStimulus()));
     connect(m_Wnd, SIGNAL(recalibrateClicked()), this, SLOT(calibrate()));
+    connect(m_Wnd, SIGNAL(createShortcut()), this, SLOT(createShortcut()));
     connect(mod_experimentselector.data(), SIGNAL(selected(data::ExperimentData*)),
             this, SLOT(newExperiment(data::ExperimentData*)));
     connect(mod_experimentselector.data(), SIGNAL(errorMessage(QString, QString)),
             this, SLOT(errorMessage(QString,QString)));
 
     //make sure to quit when everything is closed
-    connect(Application::Get().GetApplication(), SIGNAL(lastWindowClosed()),
+    connect(QCoreApplication::instance(), SIGNAL(lastWindowClosed()),
             this, SLOT(fileExit()));
 
     QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath() +
@@ -122,6 +111,7 @@ ApexControl::ApexControl() :
 
 ApexControl::~ApexControl()
 {
+    instance = NULL;
     runDelegate.reset();
     experimentData.reset();
     stimulusControl.reset();
@@ -132,14 +122,14 @@ ApexControl::~ApexControl()
     delete m_Wnd;
 }
 
-const char* ApexControl::Name()
+ApexControl &ApexControl::Get()
 {
-    return "ApexControl";
+    return *instance;
 }
 
 int ApexControl::exec()
 {
-    return Application::Get().GetApplication()->exec();
+    return QCoreApplication::exec();
 }
 
 void ApexControl::StartUp()
@@ -153,91 +143,71 @@ void ApexControl::StartUp()
 
     parseCommandLine();
     qCDebug(APEX_RS) << "Parse commandline done";
+
+#ifdef Q_OS_ANDROID
+    android::ApexAndroidMethods::signalApexInitialized();
+#endif
 }
 
 //parse mainconfig
 bool ApexControl::configure()
 {
-    Paths& paths = Paths::Get();
-
-    m_error.addMessage("APEX", tr("Apex version %1, %2").arg(APEX_VERSION).arg(ApexTools::fetchVersion()));
-    m_error.addMessage("APEX", tr("Compiled with Qt version %1").arg(QT_VERSION_STR));
-    m_error.addMessage("APEX", tr("Running with Qt version %1").arg(qVersion()));
-    m_error.addMessage("APEX", tr(
+    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("APEX", tr("Apex version %1, %2").arg(APEX_SCHEMA_VERSION).arg(ApexTools::fetchVersion()))));
+    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("APEX", tr("Compiled with Qt version %1").arg(QT_VERSION_STR))));
+    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("APEX", tr("Running with Qt version %1").arg(qVersion()))));
+    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("APEX", tr(
                        "The APEX 3 binaries use the Nokia Qt framework available\n"
                        "under the GNU General Public License (GPL version 2) on:\n"
                        "http://qt.nokia.com/. The APEX 3 source code and\n"
                        "binaries are available under the GNU General Public License\n"
-                       "(GPL version 2) on http://www.kuleuven.be/exporl/apex." ));
+                       "(GPL version 2) on http://www.kuleuven.be/exporl/apex." ))));
 
-    m_error.addMessage("ApexControl",
+    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ApexControl",
                        tr("Parsing Apex config file %1\nwith schema %2")
-                            .arg(paths.GetApexConfigFilePath())
-                            .arg(paths.GetApexConfigSchemaPath()));
+                            .arg(ApexPaths::GetApexConfigFilePath())
+                            .arg(ApexPaths::GetApexConfigSchemaPath()))));
 
-    try
-    {
-        MainConfigFileParser& mainConfigFileParser = MainConfigFileParser::Get();
-        mainConfigFileParser.LogErrorsToApex(&m_error);
-        mainConfigFileParser.CFParse();
-    }
-    catch (ApexStringException& e)
-    {
-        m_error.addError("ApexControl",
+    try {
+        MainConfigFileParser::Get().parse();
+    } catch (const std::exception &e) {
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ApexControl",
                          tr("Parsing of main config file failed: %1" )
-                            .arg(e.what()));
+                            .arg(e.what()))));
         return false;
-    }
-    catch (...)
-    {
-        qFatal("Stop throwing garbage!");
     }
 
     //check if experiment schema file exists
-    QString experimentSchema = paths.GetExperimentSchemaPath();
-    if (!QFile::exists(experimentSchema))
-    {
-        m_error.addError("ApexControl",
+    QString experimentSchema = ApexPaths::GetExperimentSchemaPath();
+    if (!QFile::exists(experimentSchema)) {
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ApexControl",
                          tr("Experiment schema file not found: %1\nCheck main config file")
-                                .arg(experimentSchema));
-
+                                .arg(experimentSchema))));
         return false;
     }
 
-    m_error.addMessage("ApexControl", "Done");
-    m_Wnd->SetOpenDir(paths.GetExamplesPath());
+    qCInfo(APEX_RS, "ApexControl: Done");
+    m_Wnd->SetOpenDir(Paths::searchDirectory(QL1S("examples"), Paths::dataDirectories()));
     m_Wnd->MruLoad();  //will override sOpenDir if specified
 
     return true;
-}
-
-void ApexControl::deletePluginCache()
-{
-    QSettings settings(QSettings::UserScope, QLatin1String("Trolltech"));
-    QString key = QString::fromLatin1("Qt Plugin Cache %1.%2.%3")
-                        .arg((QT_VERSION & 0xff0000) >> 16)
-                        .arg((QT_VERSION & 0x00ff00) >>  8);
-
-    settings.remove(key.arg("false"));
-    settings.remove(key.arg("debug"));
 }
 
 void ApexControl::editApexconfig()
 {
     // if necessary copy apexconfig file to user path
     QString userApexConfig(
-        PathTools::GetUserConfigFilePath() + "/" + Paths::cApexConfig);
+        ApexPaths::GetUserConfigFilePath() + QL1S("/apexconfig.xml"));
 
     if (!QFile::exists(userApexConfig))
     {
         qCDebug(APEX_RS) << "Copying file";
-        QFile source(Paths::Get().GetApexConfigFilePath());
+        QFile source(ApexPaths::GetApexConfigFilePath());
 
         if (!source.copy(userApexConfig))
         {
-            m_error.addError("ApexControl",
+            qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ApexControl",
                              tr("Cannot copy apexconfig from %1 to %2")
-                                .arg(source.fileName()).arg(userApexConfig));
+                                .arg(source.fileName()).arg(userApexConfig))));
             return;
         }
     }
@@ -267,77 +237,50 @@ void ApexControl::showPluginDialog()
 void ApexControl::parseCommandLine()
 {
     qCDebug(APEX_RS) << "Parsing command line";
-    QMap<QString, QString> params;
-    QString experimentfile;
-    QStringList files;
-    QString pluginRunner;
-    bool listSoundcards = false;
-    recordExperiments = false;
-    dummySoundcard = false;
-    autoStartExperiments = false;
-    autoAnswer = false;
-    deterministicRandom = false;
-    noResults = false;
-    exitAfter = false;
 
-    OptionContext context(Application::Get().GetApplication()->arguments(),
-            tr("[OPTION...] experimentfile"),
-            OptionGroup(QString(), tr("Program Options"), QString(), QString(),
-                    QList<OptionEntry>()
-                    << OptionEntry(tr("soundcards"), 0, 0,
-                        OptionEntry::NoArgument, &listSoundcards,
-                        tr("List soundcards in the system"))
-                    << OptionEntry(tr("resultsfile"), QLatin1Char('r'), 0,
-                        OptionEntry::RequiredArgument, &mSaveFilename,
-                        tr("Name of the results file"))
-                    << OptionEntry(tr("pluginrunner"), QLatin1Char('p'), 0,
-                        OptionEntry::RequiredArgument, &pluginRunner,
-                        tr("Load plugin runner"))
-                    << OptionEntry(tr("set"), QLatin1Char('s'), 0,
-                        OptionEntry::RequiredArgument, mapOptionValue(&params),
-                        tr("Set additional parameters of the form key=value"))
-                    << OptionEntry(tr("record"), 0, 0,
-                        OptionEntry::NoArgument, &recordExperiments,
-                        tr("Record output of experiments"))
-                    << OptionEntry(tr("virtual-soundcard"), 0, 0,
-                        OptionEntry::NoArgument, &dummySoundcard,
-                        tr("Use a virtual soundcard that will not play any sound and will not wait "
-                           "for the sampling time of each sample, thus running much faster than an "
-                           "actual sound card"))
-                    << OptionEntry(tr("autostart"), QLatin1Char('a'), 0,
-                        OptionEntry::NoArgument, &autoStartExperiments,
-                        tr("Automatically start an experiment when it is loaded"))
-                    << OptionEntry(tr("autoanswer"), QLatin1Char('d'), 0,
-                        OptionEntry::NoArgument, &autoAnswer,
-                        tr("Automatically answer trials"))
-                    << OptionEntry(tr("deterministic"), QLatin1Char('d'), 0,
-                            OptionEntry::NoArgument, &deterministicRandom,
-                            tr("Make all random stuff deterministic"))
-                    << OptionEntry(tr("noresults"), QLatin1Char('n'), 0,
-                            OptionEntry::NoArgument, &noResults,
-                            tr("Do not handle results in any way after an experiment"))
-                    << OptionEntry(tr("autosaveresults"), 0, 0,
-                            OptionEntry::NoArgument, &autoSaveResults,
-                            tr("Automatically save results after the experiment"))
-                    << OptionEntry(tr("exitafter"), QLatin1Char('x'), 0,
-                            OptionEntry::NoArgument, &exitAfter,
-                            tr("Quit Apex after an experiment is done"))
-                    ));
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addPositionalArgument(QSL("experiment"),
+            tr("Experiment to load on startup"));
+    parser.addOption(QCommandLineOption(QSL("soundcards"),
+                tr("List soundcards in the system")));
+    parser.addOption(QCommandLineOption(QStringList() << QSL("resultsfile") << QSL("r"),
+                tr("Name of the results file"), tr("resultfile")));
+    parser.addOption(QCommandLineOption(QSL("pluginrunner"),
+                tr("Load plugin runner"), tr("pluginrunner")));
+    parser.addOption(QCommandLineOption(QSL("record"),
+                tr("Record output of experiments")));
+    parser.addOption(QCommandLineOption(QSL("virtual-soundcard"),
+                tr("Use a virtual soundcard that will not play any sound and will not wait "
+                    "for the sampling time of each sample, thus running much faster than an "
+                    "actual sound card")));
+    parser.addOption(QCommandLineOption(QSL("autostart"),
+                tr("Automatically start an experiment when it is loaded")));
+    parser.addOption(QCommandLineOption(QSL("autoanswer"),
+                tr("Automatically answer trials")));
+    parser.addOption(QCommandLineOption(QSL("deterministic"),
+                tr("Make all random stuff deterministic")));
+    parser.addOption(QCommandLineOption(QSL("noresults"),
+                tr("Do not handle results in any way after an experiment")));
+    parser.addOption(QCommandLineOption(QSL("autosaveresults"),
+                tr("Automatically save results after the experiment")));
+    parser.addOption(QCommandLineOption(QSL("exitafter"),
+                tr("Quit Apex after an experiment is done")));
 
+    parser.process(*qApp);
 
-    try
-    {
-        files = context.parse();
-        if (!files.isEmpty())
-            experimentfile = files[0];
-    }
-    catch (const std::exception &e)
-    {
-        qCDebug(APEX_RS) << "Error parsing command line:" << e.what();
-        m_error.addWarning("ApexControl", tr("Error parsing commandline: %1").
-                            arg(e.what()));
-        return;
-    }
+    QString experimentfile = parser.positionalArguments().value(0);
+    bool listSoundcards = parser.isSet(QSL("soundcards"));
+    mSaveFilename = parser.value(QSL("resultsfile"));
+    QString pluginRunner = parser.value(QSL("pluginrunner"));
+    recordExperiments = parser.isSet(QSL("record"));
+    dummySoundcard = parser.isSet(QSL("virtual-soundcard"));
+    autoStartExperiments = parser.isSet(QSL("autostart"));
+    autoAnswer = parser.isSet(QSL("autoanswer"));
+    deterministicRandom = parser.isSet(QSL("deterministic"));
+    noResults = parser.isSet(QSL("noresults"));
+    autoSaveResults = parser.isSet(QSL("autosaveresults"));
+    exitAfter = parser.isSet(QSL("exitafter"));
 
     if (autoStartExperiments)
         flags |= ExperimentControl::AutoStart;
@@ -352,7 +295,7 @@ void ApexControl::parseCommandLine()
     if (listSoundcards)
     {
         stimulus::SoundCardDisplayer::ShowSoundCards();
-        Application::Get().GetApplication()->quit();
+        QCoreApplication::quit();
         return;
     }
 
@@ -376,8 +319,10 @@ void ApexControl::parseCommandLine()
         QFileInfo url(experimentfile);
         if (url.isFile())
         {
-            m_error.addMessage ("ApexControl" ,"Using filename given on the command line");
-            mod_experimentselector->select (url.absoluteFilePath());
+            qCInfo(APEX_RS, "ApexControl: Using filename given on the command line");
+            if (!mod_experimentselector->select (url.absoluteFilePath()) &&
+                    exitAfter)
+                QCoreApplication::quit();
         }
         else if (url.isDir())
         {
@@ -397,9 +342,6 @@ bool ApexControl::newExperiment(data::ExperimentData* data)
     if (experimentControl && experimentControl->isRunning())
         return false;
 
-//     experimentData.reset();
-//     experimentIo.reset();
-
     experimentControl.reset();
     experimentControl.reset(new ExperimentControl(flags));
     connect(experimentControl.data(), SIGNAL(errorMessage(QString, QString)),
@@ -407,17 +349,12 @@ bool ApexControl::newExperiment(data::ExperimentData* data)
     connect(experimentControl.data(), SIGNAL(savedResults(QString)),
             mod_experimentselector.data(), SIGNAL(savedFile(QString)));
 
-    m_error.clearCounters();
+    ErrorHandler::instance()->clearCounters();
 
-    try
-    {
+    try {
         if (recordExperiments)
-        {
-            OutputRecorder rec;
+            setupOutputRecording(data);
 
-            if (!rec.setupRecording(data))
-                m_error.addItems(rec.logger().items());
-        }
         if (dummySoundcard) {
             const data::DevicesData* devices = data->devicesData();
             data::DevicesData::const_iterator devicesIt = devices->begin();
@@ -434,56 +371,40 @@ bool ApexControl::newExperiment(data::ExperimentData* data)
         experimentData.reset(data);
         runDelegate.reset(new ExperimentRunDelegate(*experimentData,
                                                     MainConfigFileParser::Get().data(),0,
-                                                    deterministicRandom,
-                                                    &ErrorHandler::Get()));
+                                                    deterministicRandom));
         setupIo();
         experimentControl->loadExperiment(runDelegate.data());
 
         connect(experimentControl.data(), SIGNAL(experimentDone()),
                 this, SLOT(afterExperiment()));
 
-        m_error << experimentControl->logger().items();
         m_Wnd->ApplyConfig(experimentData->screensData());
         m_Wnd->EnableSkip(experimentData->generalParameters()->GetAllowSkip());
 
-        if (autoAnswer)
-        {
+        if (autoAnswer) {
             if (deterministicRandom)
                 m_Wnd->doDeterministicAutoAnswer();
 
             setAutoAnswer(true);
         }
-    }
-    catch (std::exception& e)
-    {
-        m_error.addError("ApexControl", e.what());
-    }
-    catch (...)
-    {
-        qFatal("Stop throwing garbage!");
+    } catch (std::exception& e) {
+        qCCritical(APEX_RS, "ApexControl: %s", e.what());
+    } catch (...) {
+        qCCritical(APEX_RS, "ApexControl: FAILED");
     }
 
     m_Wnd->SetOpenDir(QFileInfo(experimentData->fileName()).absolutePath());
 
-    m_error.addMessage("", tr("%n Error(s)", "", m_error.numberOfErrors()));
 
-    if (m_error.numberOfErrors() > 0)
-    {
-        m_error.addMessage("", tr("Errors after the first one could be "
-                                  "generated by earlier errors. Try to fix "
-                                  "the first error first."));
-    }
-
-    m_error.addMessage("", tr("%n Warning(s)", "", m_error.numberOfWarnings()));
-
-    if (m_error.numberOfErrors() == 0)
-    {
-        m_error.addMessage("ApexControl", "DONE");
-        experimentControl->start();
-        return true;
-    }
-    else
+    if (ErrorHandler::instance()->numberOfErrors())
         return false;
+
+    qCInfo(APEX_RS, "ApexControl: DONE");
+    experimentControl->start();
+#ifdef Q_OS_ANDROID
+    android::ApexAndroidMethods::signalExperimentStarted();
+#endif
+    return true;
 }
 
 void ApexControl::afterExperiment()
@@ -500,8 +421,12 @@ void ApexControl::afterExperiment()
     experimentData.reset();
     stimulusControl.reset();
 
+#ifdef Q_OS_ANDROID
+    android::ApexAndroidMethods::signalExperimentFinished();
+#endif
+
     if (quit)
-        Application::Get().GetApplication()->quit();
+        QCoreApplication::quit();
 }
 
 void ApexControl::setupIo()
@@ -575,9 +500,17 @@ void ApexControl::saveExperiment()
     dlg.setAcceptMode(QFileDialog::AcceptSave);
 
     QString loadedFile = experimentData->fileName();
-    if (!loadedFile.isNull())
+    if (!loadedFile.isNull()) {
         dlg.selectFile(loadedFile);
-
+    } else {
+        QStringList docLocations =
+            QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
+        if (loadedFile.isEmpty() && !docLocations.isEmpty())
+            dlg.setDirectory(docLocations.first());
+    }
+#ifdef Q_OS_ANDROID
+    dlg.showMaximized();
+#endif
     if (dlg.exec() == QDialog::Accepted)
     {
         QString file = dlg.selectedFiles().first();
@@ -587,7 +520,7 @@ void ApexControl::saveExperiment()
 
 void ApexControl::fileExit()
 {
-    Application::Get().GetApplication()->quit();
+    QCoreApplication::quit();
 }
 
 void ApexControl::ShowStimulus()
@@ -683,11 +616,6 @@ void ApexControl::selectSoundcard()
     stimulus::WavDeviceIO::showSoundcardDialog();
 }
 
-gui::ApexMainWindow* apex::ApexControl::GetMainWnd()
-{
-    return m_Wnd;
-}
-
 gui::ApexMainWindow* apex::ApexControl::mainWindow()
 {
     return m_Wnd;
@@ -705,7 +633,7 @@ void apex::ApexControl::setResultsFilePath(QString filename) {
 
 void apex::ApexControl::errorMessage(const QString& source, const QString& message)
 {
-    m_error.addError(source, message);
+    qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(source, message)));
 }
 
 void apex::ApexControl::calibrate()
@@ -713,10 +641,30 @@ void apex::ApexControl::calibrate()
     Q_ASSERT(runDelegate->modCalibrator());
 
     if (runDelegate->modOutput()->IsOffLine()) {
-        m_error.addError("ApexControl", "cannot calibrate with offline devices");
+        qCCritical(APEX_RS, "ApexControl: cannot calibrate with offline devices");
         return;
     }
 
     if (runDelegate->modCalibrator()->calibrate(true))
         runDelegate->modCalibrator()->updateParameters();
+}
+
+void ApexControl::createShortcut()
+{
+#ifdef Q_OS_ANDROID
+    QFileDialog dlg(m_Wnd, tr("Create shortcut to experiment"));
+    QStringList docLocations =
+        QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
+    if (!docLocations.isEmpty())
+        dlg.setDirectory(docLocations.first());
+    dlg.setFileMode(QFileDialog::ExistingFiles);
+    dlg.setViewMode(QFileDialog::List);
+    dlg.setNameFilter(tr("Apex experiment files (*.apx *.xml)"));
+    dlg.setDefaultSuffix("apx");
+    dlg.showMaximized();
+    if (dlg.exec() == QDialog::Accepted) {
+        Q_FOREACH (const QString &file, dlg.selectedFiles())
+            android::ApexAndroidMethods::addShortcut(file);
+    }
+#endif
 }

@@ -24,8 +24,8 @@
     * only use these if you know what you're doing.
     */
 
-#ifndef __STREAMUTILS_H__
-#define __STREAMUTILS_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_STREAMUTILS_H__
+#define _APEX_SRC_LIB_STREAMAPP_STREAMUTILS_H__
 
 #include "containers/matrix.h"
 
@@ -275,4 +275,4 @@ namespace streamapp
 
 }
 
-#endif //#ifndef __STREAMUTILS_H__
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_STREAMUTILS_H__

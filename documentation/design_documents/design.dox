@@ -50,7 +50,7 @@ contain experiment-specific information.
 @section sec_modules Modules
 
 outputdevices   (soundcard, l34)
-devices         (PA5, ...)
+devices
 
 
 

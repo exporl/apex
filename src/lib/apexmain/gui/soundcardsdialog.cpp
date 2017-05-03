@@ -17,6 +17,9 @@ SoundcardsDialog::SoundcardsDialog(QWidget *parent) :
 #ifdef Q_OS_WIN32
     QString suggestDriver("WASAPI with the default sound card");
 #endif
+#ifdef Q_OS_ANDROID
+    showMaximized();
+#endif
     ui->infoLabel->setText( ui->infoLabel->text() + QString("\nWhen in doubt select %1.").arg(suggestDriver) );
     connect(ui->hostApiList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(displayDevices(QListWidgetItem*)));
     connect(ui->soundCardList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(selectDevice(QListWidgetItem*)));

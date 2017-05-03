@@ -21,8 +21,8 @@
  * Java-style random generator declaration.
  */
 
-#ifndef _EXPORL_SRC_LIB_APEXTOOLS_RANDOM_H_
-#define _EXPORL_SRC_LIB_APEXTOOLS_RANDOM_H_
+#ifndef _APEX_SRC_LIB_APEXTOOLS_RANDOM_H_
+#define _APEX_SRC_LIB_APEXTOOLS_RANDOM_H_
 
 #include "common/global.h"
 #include "common/random.h"

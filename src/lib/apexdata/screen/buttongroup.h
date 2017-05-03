@@ -20,8 +20,6 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_BUTTONGROUP_H_
 #define _EXPORL_SRC_LIB_APEXDATA_SCREEN_BUTTONGROUP_H_
 
-#include "../factoryelement.h"
-
 #include "apextools/global.h"
 
 #include <QList>
@@ -36,7 +34,7 @@ namespace data
  *   a list containing the ID's of the ScreenElements that can
  *   accept user input.
  */
-class APEXDATA_EXPORT ButtonGroup : /*public std::list<QString>,*/ public FactoryElement
+class APEXDATA_EXPORT ButtonGroup
 {
     public:
         /**

@@ -262,7 +262,7 @@ void FreeFieldWidget::emitSpeechChanged()
     double speech = totalSpeechlevel();
 
     if (speech > -std::numeric_limits<double>::infinity())
-        emit totalSpeechlevelChanged(speech);
+        Q_EMIT totalSpeechlevelChanged(speech);
 }
 
 void FreeFieldWidget::emitNoiseChanged()
@@ -270,7 +270,7 @@ void FreeFieldWidget::emitNoiseChanged()
     double noise = totalNoiselevel();
 
     if (noise > -std::numeric_limits<double>::infinity())
-        emit totalNoiselevelChanged(noise);
+        Q_EMIT totalNoiselevelChanged(noise);
 }
 
 double FreeFieldWidget::totalSpeechlevel() const

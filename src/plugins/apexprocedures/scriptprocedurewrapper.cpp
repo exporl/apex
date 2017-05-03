@@ -21,7 +21,7 @@
 
 using namespace apex;
 
-const QString ScriptProcedureWrapper::INSTANCENAME("pLuGiNiNtErFaCe");
+const QString ScriptProcedureWrapper::INSTANCENAME("pluginINTERFACE");
 
 QScriptValue ScriptProcedureWrapper::executeLine(const QString& line, const QScriptValueList& params) const {
     QString nline = INSTANCENAME + "." + line;
@@ -92,7 +92,7 @@ double ScriptProcedureWrapper::progress()
 
 
 
-ResultHighlight ScriptProcedureWrapper::processResult(const ScreenResult* screenResult)
+ResultHighlight ScriptProcedureWrapper::processResult(const ScreenResult* screenResult) const
 {
     QVariantMap mapS;
     QMapIterator<QString, QString> i(screenResult->get());

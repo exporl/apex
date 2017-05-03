@@ -26,11 +26,6 @@
 
 #include <iostream>
 
-namespace
-{
-  const unsigned sc_nMaxTextSize = 128;
-}
-
 void utils::Tracer::sf_TraceDebug( const std::string& text )
 {
   std::cout << text.c_str() << std::endl;

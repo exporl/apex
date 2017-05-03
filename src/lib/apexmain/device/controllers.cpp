@@ -23,8 +23,6 @@
 
 #include "runner/experimentrundelegate.h"
 
-#include "services/errorhandler.h"
-
 #include "apexcontrol.h"
 #include "controllers.h"
 #include "iapexdevice.h"

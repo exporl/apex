@@ -21,98 +21,63 @@
 
 #include "apextools/apextools.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "generalparameterswriter.h"
-
-using namespace XERCES_CPP_NAMESPACE;
-using namespace apex::ApexXMLTools;
 
 using apex::writer::GeneralParametersWriter;
 using apex::data::GeneralParameters;
 
-
-DOMElement* GeneralParametersWriter::addElement(DOMDocument* doc,
+QDomElement GeneralParametersWriter::addElement(QDomDocument *doc,
         const GeneralParameters& data)
 {
-    DOMElement* rootElement = doc->getDocumentElement();
-    DOMElement* general = doc->createElement(X("general"));
-    rootElement->appendChild(general);
+    QDomElement rootElement = doc->documentElement();
+    QDomElement general = doc->createElement(QSL("general"));
+    rootElement.appendChild(general);
 
     //exitafter
-    if (data.GetExitAfter())
-    {
-        general->appendChild(XMLutils::CreateTextElement(doc, "exitafter",
-                             ApexTools::boolToString(true)));
+    if (data.GetExitAfter()) {
+        general.appendChild(XmlUtils::createTextElement(doc, "exitafter",
+                    ApexTools::boolToString(true)));
     }
 
     //autosave
-    if (data.GetAutoSave())
-    {
-        general->appendChild(XMLutils::CreateTextElement(doc, "autosave",
-                             ApexTools::boolToString(true)));
+    if (data.GetAutoSave()) {
+        general.appendChild(XmlUtils::createTextElement(doc, "autosave",
+                    ApexTools::boolToString(true)));
     }
 
     //waitforstart
-    if (data.GetWaitForStart())
-    {
-        general->appendChild(XMLutils::CreateTextElement(doc, "waitforstart",
-                             ApexTools::boolToString(true)));
+    if (data.GetWaitForStart()) {
+        general.appendChild(XmlUtils::createTextElement(doc, "waitforstart",
+                    ApexTools::boolToString(true)));
     }
 
     //allowskip
-    if (data.GetAllowSkip())
-    {
-        general->appendChild(XMLutils::CreateTextElement(doc, "allowskip",
-                             ApexTools::boolToString(true)));
+    if (data.GetAllowSkip()) {
+        general.appendChild(XmlUtils::createTextElement(doc, "allowskip",
+                    ApexTools::boolToString(true)));
     }
 
     //runoutputtest
-    if (data.RunOutputTest())
-    {
-        general->appendChild(XMLutils::CreateTextElement(doc, "runoutputtest",
-                             ApexTools::boolToString(true)));
+    if (data.RunOutputTest()) {
+        general.appendChild(XmlUtils::createTextElement(doc, "runoutputtest",
+                    ApexTools::boolToString(true)));
     }
 
     //outputtestinput
     QString input = data.OutputTestInput();
-    if (!input.isEmpty())
-    {
-        general->appendChild(XMLutils::CreateTextElement(doc, "outputtestinput",
-                             input));
+    if (!input.isEmpty()) {
+        general.appendChild(XmlUtils::createTextElement(doc, "outputtestinput", input));
     }
 
     //scriptlibrary
     QString lib = data.GetScriptLibrary();
-    if (!lib.isEmpty())
-    {
-        general->appendChild(XMLutils::CreateTextElement(doc, "scriptlibrary",
-                             lib));
+    if (!lib.isEmpty()) {
+        general.appendChild(XmlUtils::createTextElement(doc, "scriptlibrary", lib));
     }
 
     return general;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

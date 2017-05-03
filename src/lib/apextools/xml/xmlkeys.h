@@ -85,7 +85,6 @@ namespace apex
     const QString gc_sParameterList( "parameterlist" );
 
     const QString gc_sText      ( "text" );
-    const QString gc_sPath      ( "uri" );
     const QString gc_sShortcut  ( "shortcut" );
     const QString gc_sFeedback  ( "feedback" );
     const QString gc_sInputmask ( "inputmask" );
@@ -118,11 +117,9 @@ namespace apex
 
     // from apexdefines.h
     const QString sc_sWavDevice( "apex:wavDeviceType" );
-    const QString sc_sL34Device( "apex:L34DeviceType" );
+    const QString sc_sCohDevice( "apex:CohDeviceType" );
     const QString sc_sDummyDevice( "apex:dummyDeviceType" );
 
-    const QString sc_sSoundcardMixer( "apex:soundcardmixer" );
-    const QString sc_sPA5( "apex:PA5" );
     const QString sc_sPluginController( "apex:pluginController" );
 
     const QString sc_sID( gc_sID );

@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXSPIN_SPINEXPERIMENTCONSTANTS_H_
-#define _EXPORL_SRC_LIB_APEXSPIN_SPINEXPERIMENTCONSTANTS_H_
+#ifndef _APEX_SRC_LIB_APEXSPIN_SPINEXPERIMENTCONSTANTS_H_
+#define _APEX_SRC_LIB_APEXSPIN_SPINEXPERIMENTCONSTANTS_H_
 
 #include <QString>
 
@@ -36,7 +36,7 @@ const QString PREFIX_GAIN                   = "gain";
 //silent datablock
 const double  SILENT_DATABLOCK_LENGTH       = 1000.0;
 const QString SILENT_DATABLOCK_ID           = PREFIX_DATABLOCK + "_silence";
-const QString SILENT_DATABLOCK_URI          = "silence:" + QString::number(
+const QString SILENT_DATABLOCK_FILE         = "silence:" + QString::number(
                                                     SILENT_DATABLOCK_LENGTH);
 
 //noise datablock

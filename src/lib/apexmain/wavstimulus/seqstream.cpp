@@ -75,7 +75,7 @@ const Stream& ApexSeqStream::Read()
     {
         //manually get needed samples on offset
       unsigned nOffset = mf_nGetBufferSize() - (unsigned) ( mv_lCurrentPosition - mv_lStartAt );
-      rConv.ReadFromSource( mc_pParent->mf_pGetReader(), mf_nGetBufferSize() - nOffset, true, nOffset );
+      rConv.ReadFromSource( mc_pParent->mf_pGetReader(), mf_nGetBufferSize() - nOffset, nOffset );
       mv_bParentIsPlaying = true;
     }
 
@@ -96,7 +96,7 @@ const Stream& ApexSeqStream::Read()
           AudioFormatConvertor& rConv = mc_pParent->mp_GetConvertor();
             //manually get needed samples on offset
           unsigned nOffset = mf_nGetBufferSize() - (unsigned) ( mv_lCurrentPosition - mv_lStartAt );
-          rConv.ReadFromSource( mc_pParent->mf_pGetReader(), mf_nGetBufferSize() - nOffset, true, nOffset );
+          rConv.ReadFromSource( mc_pParent->mf_pGetReader(), mf_nGetBufferSize() - nOffset, nOffset );
           mv_bParentIsPlaying = true;
         }
         else

@@ -71,6 +71,7 @@ public slots:           // have to be slots to be used in QtScript
         const tStimulusList& GetStandards() const { return m_standards;};
         const tStimulusList::const_iterator GetStimulusIterator() const;
         const tStimulusList& GetStimuli() const {return m_stimuli;};
+        const QStringList GetStimulusList() const;
 
         const QString GetID() const {return m_ID;};
         const QString GetScreen() const {return m_screen;};

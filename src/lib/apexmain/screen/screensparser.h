@@ -20,13 +20,12 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_SCREENSPARSER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_SCREENSPARSER_H_
 
-#include "parser/apexparser.h"
+#include "apextools/xml/xmltools.h"
 
 class QWidget;
 
 namespace apex
 {
-
 
 namespace data
 {
@@ -34,39 +33,26 @@ class ScreensData;
 class ParameterManagerData;
 }
 
-//class MainWindowConfig;
-
 namespace parser
 {
 
-
-
-class APEX_EXPORT ScreensParser: public Parser
+class APEX_EXPORT ScreensParser
 {
-    public:
-        ScreensParser(QWidget* parent=0);
+public:
+    ScreensParser(QWidget* parent = 0);
 
+    data::ScreensData *ParseScreens(const QString &fileName,
+                                    const QDomElement &p_base,
+                                    const QString &scriptLibraryFile,
+                                    const QVariantMap &scriptParameters,
+                                    data::ParameterManagerData *pmd);
 
-        data::ScreensData* ParseScreens(
-                XERCES_CPP_NAMESPACE::DOMElement* p_base,
-                QString scriptLibraryFile, QVariantMap scriptParameters,
-                data::ParameterManagerData* pmd);
-
-
-    private:
-        QWidget*  m_parent;
+private:
+    QWidget*  m_parent;
 };
 
-
-
 }
 }
-
-
-
-
-
-
 
 #endif
 

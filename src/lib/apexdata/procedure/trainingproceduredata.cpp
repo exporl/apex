@@ -17,13 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apextools/xml/xercesinclude.h"
-
 #include "trainingproceduredata.h"
 
 #include <iostream>
 
-using namespace xercesc;
 using namespace apex::data;
 
 TrainingProcedureData::TrainingProcedureData()

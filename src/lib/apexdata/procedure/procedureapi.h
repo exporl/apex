@@ -110,8 +110,6 @@ public:
 
     virtual QString pluginScriptLibrary() const = 0;
 
-    virtual QString nonBinaryPluginPath() const = 0;
-
     virtual QVariant parameterValue(const QString& id) const = 0;
 
     virtual void registerParameter(const QString& name) = 0;

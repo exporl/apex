@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __STREAMAPPDEFINES_H__
-#define __STREAMAPPDEFINES_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_STREAMAPPDEFINES_H__
+#define _APEX_SRC_LIB_STREAMAPP_STREAMAPPDEFINES_H__
 
 #include "containers/matrix.h"
 
@@ -35,4 +35,4 @@ namespace streamapp
   typedef double                            GainType; //!< for mixers etc
 }
 
-#endif //#ifndef __STREAMAPPDEFINES_H__
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_STREAMAPPDEFINES_H__

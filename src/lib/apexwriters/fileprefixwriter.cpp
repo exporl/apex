@@ -19,28 +19,20 @@
 
 #include "apexdata/fileprefix.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "fileprefixwriter.h"
 
-using namespace apex::ApexXMLTools;
-using namespace XERCES_CPP_NAMESPACE;
+using namespace apex;
+using apex::data::FilePrefix;
 
-
-         using apex::data::FilePrefix;
-
-xercesc::DOMElement* apex::writer::FilePrefixWriter::addElement(
-        xercesc::DOMDocument * doc, const data::FilePrefix & d)
+QDomElement apex::writer::FilePrefixWriter::addElement(QDomDocument *doc,
+        const data::FilePrefix &d)
 {
-    DOMElement* result = XMLutils::CreateTextElement(
-                             doc,
-                             "uri_prefix",
-                             d.value());
-
-    if (d.type()==FilePrefix::PREFIX_MAINCONFIG)
-        result->setAttribute(X("source"), X("apexconfig"));
-
+    QDomElement result = XmlUtils::createTextElement(doc, "prefix", d.value());
+    if (d.type() == FilePrefix::PREFIX_MAINCONFIG)
+        result.setAttribute(QSL("source"), QSL("apexconfig"));
     return result;
-
 }

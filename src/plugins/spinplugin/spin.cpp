@@ -20,62 +20,44 @@
 
 #include "apexspin/spindialog.h"
 
-#include "apextools/pathtools.h"
-
-#include <QDebug>
-#include <QDialog>
 #include <QMessageBox>
 #include <QStringList>
 
-class SpinRunnerCreator :
-            public QObject,
-            public PluginRunnerCreator
-{
-        Q_OBJECT
-        Q_INTERFACES(PluginRunnerCreator)
-#if QT_VERSION >= 0x050000
-        Q_PLUGIN_METADATA(IID "apex.spin")
-#endif
-    public:
-        virtual QStringList availablePlugins() const;
+using namespace apex;
 
-        virtual PluginRunnerInterface *createRunner(
-            const QString &name,
-            const QString &apexbasepath) const;
+class SpinRunnerCreator :
+    public QObject,
+    public PluginRunnerCreator
+{
+    Q_OBJECT
+    Q_INTERFACES(PluginRunnerCreator)
+    Q_PLUGIN_METADATA(IID "apex.spin")
+public:
+    virtual QStringList availablePlugins() const;
+    virtual PluginRunnerInterface *createRunner(const QString &name) const;
 };
 
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(spin, SpinRunnerCreator)
-#endif
-
 class SpinRunner:
-            public QObject,
-            public PluginRunnerInterface
+    public QObject,
+    public PluginRunnerInterface
 {
-        Q_OBJECT
+    Q_OBJECT
+public:
+    SpinRunner();
+    ~SpinRunner();
 
-    public:
-        SpinRunner(QString apexbasepath);
-        ~SpinRunner();
-
-        /**
-         * Return absolute path of the experiment to be ran
-         * Can be a newly generated (written) experiment or an existing one
-         * on disk
-         */
-        virtual QString getFileName();
-
-    private:
-        QString basepath;
-        QString configFile;
-        QString schemaFile;
+    /**
+     * Return absolute path of the experiment to be ran
+     * Can be a newly generated (written) experiment or an existing one
+     * on disk
+     */
+    virtual QString getFileName();
 };
 
 // SpinRunner ==================================================================
 
-SpinRunner::SpinRunner(QString apexbasepath)
-        : PluginRunnerInterface("Spin"), basepath(apexbasepath),
-                                configFile("spin.xml"), schemaFile("spin.xsd")
+SpinRunner::SpinRunner() :
+    PluginRunnerInterface("Spin")
 {
 }
 
@@ -83,40 +65,17 @@ SpinRunner::~SpinRunner()
 {
 }
 
-
 QString SpinRunner::getFileName()
 {
-    try
-    {
-        spin::gui::SpinDialog dlg(
-                apex::PathTools::GetConfigFilePath(basepath, configFile),
-                apex::PathTools::GetSchemaPath(basepath, schemaFile));
-
+    try {
+        spin::gui::SpinDialog dlg;
         dlg.exec();
         return dlg.getFileName();
+    } catch (const std::exception &e) {
+        QMessageBox::critical(NULL, tr("Error"),
+                tr("Error occurred:\n%1").arg(e.what()));
     }
-    catch (ApexStringException e)
-    {
-        QString error = e.what();
-        qCDebug(APEX_RS) << error;
-        QString title = tr("Error finding file");
-        QString message = tr("Failed to find %1 file.\n"
-                             "Please fix this problem and restart SPIN.");
-
-        //either config or schema file was not found
-        if (error.contains(configFile))
-            QMessageBox::critical(0, title, message.arg(tr("configuration")));
-        else if (error.contains(schemaFile))
-            QMessageBox::critical(0, title, message.arg(tr("schema")));
-        else
-        {
-            QMessageBox::critical(0, tr("Unknown error"),
-                                  tr("An unknown error occurred:\n%1")
-                                          .arg(error));
-        }
-
-        return "";
-    }
+    return QString();
 }
 
 // SpinRunnerCreator ===========================================================
@@ -127,16 +86,12 @@ QStringList SpinRunnerCreator::availablePlugins() const
 }
 
 PluginRunnerInterface *SpinRunnerCreator::createRunner
-(const QString &name,
- const QString &apexbasepath) const
+(const QString &name) const
 {
-    try
-    {
+    try {
         if (name == "spin")
-            return new SpinRunner(apexbasepath);
-    }
-    catch (...)
-    {
+            return new SpinRunner;
+    } catch (...) {
         // Exceptions silently ignored
     }
 

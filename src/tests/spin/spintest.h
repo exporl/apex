@@ -17,12 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
     *****************************************************************************/
 
-#ifndef _EXPORL_SRC_TESTS_SPIN_SPINTEST_H_
-#define _EXPORL_SRC_TESTS_SPIN_SPINTEST_H_
+#ifndef _APEX_SRC_TESTS_SPIN_SPINTEST_H_
+#define _APEX_SRC_TESTS_SPIN_SPINTEST_H_
 
 #include "../testmacros.h"
-
-#include "apextools/xml/xercesinclude.h"
 
 #include <QtTest>
 
@@ -32,8 +30,6 @@ class SpinTest : public QObject
 
     private Q_SLOTS:
 
-        void initTestCase();
-        void cleanupTestCase();
         void testSnrDefined();
 
         /**

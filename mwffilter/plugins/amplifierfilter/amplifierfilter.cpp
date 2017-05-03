@@ -28,19 +28,13 @@ class AmplifierFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "apex.amplifierfilter")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
     virtual PluginFilterInterface *createFilter (const QString &name,
             unsigned channels, unsigned blocksize, unsigned fs) const;
 };
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (amplifierfilter, AmplifierFilterCreator)
-#endif
 
 class AmplifierFilter:
     public QObject,

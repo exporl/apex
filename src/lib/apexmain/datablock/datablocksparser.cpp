@@ -22,9 +22,10 @@
 
 #include "apextools/exceptions.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
 #include "apextools/xml/xmlkeys.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "parser/prefixparser.h"
 #include "parser/scriptexpander.h"
@@ -32,11 +33,6 @@
 #include "datablocksparser.h"
 
 #include <QScopedPointer>
-#include <QUrl>
-
-using namespace apex::ApexXMLTools;
-
-using namespace XERCES_CPP_NAMESPACE;
 
 using apex::data::FilePrefix;
 
@@ -51,52 +47,40 @@ DatablocksParser::DatablocksParser(QWidget* parent) :
 {
 }
 
-
 DatablocksParser::~DatablocksParser()
 {
 }
 
-/** FIXME: remove document parameter
- */
-data::DatablocksData DatablocksParser::Parse
-    (XERCES_CPP_NAMESPACE::DOMElement* p_datablocks,
-     const QString& scriptLibraryFile, const QVariantMap &scriptParameters)
+data::DatablocksData DatablocksParser::Parse(
+    const QString &fileName, const QDomElement &p_datablocks,
+    const QString &scriptLibraryFile, const QVariantMap &scriptParameters)
 {
     data::DatablocksData result;
 
 #ifndef NOSCRIPTEXPAND
     // find plugin datablocks and expand them
-    for (DOMNode* currentNode=p_datablocks->getFirstChild(); currentNode!=0;
-            currentNode=currentNode->getNextSibling()) {
-        const QString tag( XMLutils::GetTagName( currentNode ) );
+    for (QDomElement currentNode = p_datablocks.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        const QString tag(currentNode.tagName());
         if (tag == "plugindatablocks") {
             qCDebug(APEX_RS, "Script library: %s", qPrintable(scriptLibraryFile));
-            ScriptExpander expander(scriptLibraryFile, scriptParameters,
+            ScriptExpander expander(fileName, scriptLibraryFile, scriptParameters,
                                     m_parent);
             expander.ExpandScript(currentNode, "getDatablocks");
         }
     }
 #endif
 
-    for (DOMNode* currentNode=p_datablocks->getFirstChild(); currentNode!=0;
-            currentNode=currentNode->getNextSibling()) {
-        Q_ASSERT(currentNode);
-
-        const QString tag = ApexXMLTools::XMLutils::GetTagName(currentNode);
-
-        //std::cout << "nodetype: " << currentNode->getNodeType() << std::endl;
-        Q_ASSERT(currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
-
+    for (QDomElement currentNode = p_datablocks.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        const QString tag = currentNode.tagName();
         if (tag == "datablock") {
-            QScopedPointer<data::DatablockData>
-                d(ParseDatablock((DOMElement*)currentNode, result.prefix()));
-            if (!d)
-                throw ApexStringException("Unknown error creating datablock");
+            QScopedPointer<data::DatablockData> d(ParseDatablock(currentNode, result.prefix()));
             result[d->id()] = d.data();
-            // not done above, otherwise d->id() does not work on Windows
+            // not done above, otherwise d->id() does not work
             d.take();
-        } else if (tag == "uri_prefix") {
-            result.setPrefix(PrefixParser::Parse((DOMElement*)currentNode));
+        } else if (tag == "prefix") {
+            result.setPrefix(PrefixParser::Parse(currentNode));
         } else {
             throw ApexStringException( "DatablocksParser::Parse: Unknown "
                     "tag: \"" + tag + "\"" );
@@ -106,98 +90,50 @@ data::DatablocksData DatablocksParser::Parse
     return result;
 }
 
-/** FIXME: remove document parameter
-*/
-data::DatablockData* DatablocksParser::ParseDatablock
-        (XERCES_CPP_NAMESPACE::DOMElement* p_datablock,
-         data::FilePrefix p_prefix)
+data::DatablockData* DatablocksParser::ParseDatablock(const QDomElement &p_datablock,
+        data::FilePrefix p_prefix)
 {
-    //error checks
-    if (!p_datablock)
-        return 0;
-
-    const QString id = ApexXMLTools::XMLutils::GetAttribute(p_datablock,
-            XMLKeys::sc_sID);
-    if (id.isEmpty())
-        return 0;
-
     QScopedPointer<data::DatablockData> dummy(new data::DatablockData());
-    dummy->setId(id);
+    dummy->setId(p_datablock.attribute(XMLKeys::sc_sID));
 
-    for (DOMNode* currentNode = p_datablock->getFirstChild(); currentNode != 0;
-            currentNode = currentNode->getNextSibling())
-    {
-        const QString tag(ApexXMLTools::XMLutils::GetTagName(currentNode));
-        Q_ASSERT(currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
-
-        DOMElement* el = (DOMElement*) currentNode;
-        Q_ASSERT(!el->getFirstChild() ||
-                 el->getFirstChild()->getNodeType() == DOMNode::TEXT_NODE ||
-                 tag == "data");
+    for (QDomElement currentNode = p_datablock.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        const QString tag(currentNode.tagName());
         QString nodeText;
         if (tag == "data") {
-            for (DOMNode* dataNode = el->getFirstChild(); dataNode != NULL;
-                    dataNode = dataNode->getNextSibling()) {
-                if (dataNode->getNodeType() == DOMNode::ELEMENT_NODE) {
-                    nodeText += ApexXMLTools::XMLutils::elementToString
-                        (static_cast<DOMElement*>(dataNode));
+            for (QDomNode dataNode = currentNode.firstChild(); !dataNode.isNull();
+                    dataNode = dataNode.nextSibling()) {
+                if (dataNode.isElement()) {
+                    nodeText += XmlUtils::nodeToString(dataNode);
                 } else {
                     // This should take care of text and cdata nodes
-                    nodeText += X2S(dataNode->getNodeValue());
+                    nodeText += dataNode.nodeValue();
                 }
             }
         } else {
-            nodeText = ApexXMLTools::XMLutils::GetFirstChildText(currentNode);
+            nodeText = currentNode.text();
         }
 
         if (tag == "device") {
             dummy->setDevice(nodeText);
-
-            //get the module
-/*                QString sModule = ApexXMLTools::XMLutils::FindAttribute(
-                        p_datablock->getOwnerDocument()->getDocumentElement()
-                        ->getFirstChild(), "devices",
-                              "device", dummy->m_device, XMLKeys::sc_sType);
-            dummy->m_type=sModule;*/
-        }
-        else if (tag == "description")
+        } else if (tag == "description") {
             dummy->setDescription(nodeText);
-        else if (tag == "checksum") {
-            dummy->setChecksum(nodeText);
-            QString scheck = ApexXMLTools::XMLutils::GetAttribute(currentNode,
-                    "check");
-            if (scheck == "false")
-                dummy->setDoChecksum(false);
-            else
-                dummy->setDoChecksum(true);
-        } else if (tag == "uri") {
-            QUrl theUrl(nodeText);
-
-            /*if (theUrl.isRelative())
-            {
-                QString modprefix = p_prefix;
-                if (!modprefix.isEmpty() && !modprefix.endsWith('/'))
-                    modprefix += '/';
-                dummy->m_uri = QUrl(modprefix + nodeText);
-            }
-            else
-                dummy->m_uri = QUrl(nodeText);*/
-            // FIXME: move this to some convertor
-            dummy->setUri( theUrl );
+        } else if (tag == "file") {
+            dummy->setFile(nodeText);
             dummy->setPrefix(p_prefix);
         } else if (tag == "data") {
             dummy->setDirectData(nodeText);
-        } else if ( tag == "loop" )
+        } else if ( tag == "loop" ) {
             dummy->setNbLoops(nodeText.toUInt());
-        else if ( tag == "gain" )
+        } else if ( tag == "gain" ) {
             dummy->setGain(nodeText.toDouble());
-        else if ( tag == "channels" )
+        } else if ( tag == "channels") {
             dummy->setNbChannels(nodeText.toUInt());
+        }
     }
 
     return dummy.take();
 }
 
-} // namespace parser
-
-} // namespace apex
+}
+}

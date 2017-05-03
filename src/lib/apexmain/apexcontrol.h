@@ -17,10 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXMAIN_APEXCONTROL_H_
-#define _EXPORL_SRC_LIB_APEXMAIN_APEXCONTROL_H_
-
-#include "apextools/services/servicemanager.h"
+#ifndef _APEX_SRC_LIB_APEXMAIN_APEXCONTROL_H_
+#define _APEX_SRC_LIB_APEXMAIN_APEXCONTROL_H_
 
 #include "experimentcontrol.h"
 
@@ -37,7 +35,6 @@ class ExperimentIo;
 class ExperimentRunner;
 class ExperimentRunDelegate;
 class ExperimentControl;
-class StatusReporter;
 
 namespace data
 {
@@ -59,84 +56,84 @@ class StimulusControl;
  *
  * @author Tom Francart,,,
  */
-class ApexControl : public QObject, public Service<ApexControl>
+class APEX_EXPORT ApexControl :
+    public QObject
 {
-        Q_OBJECT
+    Q_OBJECT
+public:
+    ApexControl();
+    ~ApexControl();
 
-    public:
+    static ApexControl &Get();
 
-        ApexControl();
-        ~ApexControl();
+    int exec();
 
-        const char* Name();
-        int exec();
+    const data::ExperimentData&             GetCurrentExperiment();
+    const ExperimentRunDelegate&  GetCurrentExperimentRunDelegate();
 
-        const data::ExperimentData&             GetCurrentExperiment();
-        const ExperimentRunDelegate&  GetCurrentExperimentRunDelegate();
+    gui::ApexMainWindow *mainWindow();
 
-        gui::ApexMainWindow*          GetMainWnd();       // FIXME: remove
-        gui::ApexMainWindow*          mainWindow();
+    QDateTime GetStartTime() const;  //! get time of experiment start
 
-        QDateTime GetStartTime() const;  //! get time of experiment start
-
-        const QString& saveFilename() const;
+    const QString& saveFilename() const;
+    bool isExperimentRunning() const;
 
     public slots:
 
         void StartUp(); // do one-time initialisations that should not occur in the constructor
-        void StopOutput();
-        void setAutoAnswer(bool);
-        void ShowStimulus();
-        void calibrate();
+    void StopOutput();
+    void setAutoAnswer(bool);
+    void ShowStimulus();
+    void calibrate();
 
-        void fileExit();
-        void fileOpen(const QString& file = QString());
-        void saveExperiment();
-        void startPluginRunner();
-        void selectSoundcard();
+    void fileExit();
+    void fileOpen(const QString& file = QString());
+    void saveExperiment();
+    void startPluginRunner();
+    void selectSoundcard();
+    void createShortcut();
 
-        bool newExperiment(data::ExperimentData* data);
+    bool newExperiment(data::ExperimentData* data);
 
-        void deletePluginCache();
-        void editApexconfig();
-        void showPluginDialog();
-        void errorMessage(const QString& source, const QString& message);
+    void editApexconfig();
+    void showPluginDialog();
+    void errorMessage(const QString& source, const QString& message);
 
-        void setResultsFilePath(QString filename);
+    void setResultsFilePath(QString filename);
 
-    private slots:
+private slots:
 
-        void afterExperiment();
+    void afterExperiment();
 
-    private:
+private:
 
-        bool configure();         //parse mainconfig xml, configures apex
-        void parseCommandLine();      //parse cmd and load experiment if any
-        void showStartupDialog();
-        void makeModules();
-        void deleteModules();
-        void setupIo();
-        bool isExperimentRunning() const;
+    bool configure();         //parse mainconfig xml, configures apex
+    void parseCommandLine();      //parse cmd and load experiment if any
+    void showStartupDialog();
+    void makeModules();
+    void deleteModules();
+    void setupIo();
 
-        QScopedPointer<ExperimentRunner> mod_experimentselector;
-        gui::ApexMainWindow* const m_Wnd;
-        QString mSaveFilename;            // parsed from commandline
-        StatusReporter& m_error;
-        ExperimentControl::Flags flags;
+    QScopedPointer<ExperimentRunner> mod_experimentselector;
+    gui::ApexMainWindow* const m_Wnd;
+    QString mSaveFilename;            // parsed from commandline
+    ExperimentControl::Flags flags;
 
-        QScopedPointer<ExperimentControl> experimentControl;
-        QScopedPointer<data::ExperimentData> experimentData;
-        QScopedPointer<stimulus::StimulusControl> stimulusControl;
-        QScopedPointer<ExperimentRunDelegate> runDelegate;
+    QScopedPointer<ExperimentControl> experimentControl;
+    QScopedPointer<data::ExperimentData> experimentData;
+    QScopedPointer<stimulus::StimulusControl> stimulusControl;
+    QScopedPointer<ExperimentRunDelegate> runDelegate;
 
-        bool recordExperiments;
-        bool dummySoundcard;
-        bool autoStartExperiments;
-        bool autoAnswer;
-        bool deterministicRandom;
-        bool noResults;
-        bool autoSaveResults;
-        bool exitAfter;
+    bool recordExperiments;
+    bool dummySoundcard;
+    bool autoStartExperiments;
+    bool autoAnswer;
+    bool deterministicRandom;
+    bool noResults;
+    bool autoSaveResults;
+    bool exitAfter;
+
+    static ApexControl *instance;
 };
 
 }

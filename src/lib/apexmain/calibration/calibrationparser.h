@@ -19,38 +19,24 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_CALIBRATION_CALIBRATIONPARSER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_CALIBRATION_CALIBRATIONPARSER_H_
 
-#include "apextools/xml/xercesinclude.h"
-
-#include "parser/apexparser.h"
-
-namespace XERCES_CPP_NAMESPACE
-{
-
-class DOMElement;
-
-}; // namespace XERCES_CPP_NAMESPACE
-
 namespace apex
 {
 
 namespace data
 {
-
 class CalibrationData;
-
-} // namespace data
+}
 
 namespace parser
 {
 
-class CalibrationParser: public Parser
+class CalibrationParser
 {
 public:
-    data::CalibrationData *Parse (XERCES_CPP_NAMESPACE::DOMElement *a_pBase);
+    data::CalibrationData *Parse(const QDomElement &a_pBase);
 };
 
-} // namespace parser
-
-} // namespace apex
+}
+}
 
 #endif

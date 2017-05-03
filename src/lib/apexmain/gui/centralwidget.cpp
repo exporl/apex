@@ -41,7 +41,6 @@ ApexCentralWidget::ApexCentralWidget( QMainWindow* a_pParent ) :
         m_pPanel( 0 ),
         m_pScreen( 0 ),
         m_pMainLayout(0),
-        m_pMainWindow(a_pParent),
         m_ScreenBG( sc_DefaultBGColor ),
         m_Good( Qt::green ),
         m_Bad( Qt::red ),

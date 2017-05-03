@@ -17,19 +17,20 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apextools/xml/apexxmltools.h"
+#include "common/xmlutils.h"
 
 #include "trialresult.h"
 
-using apex::ApexXMLTools::XMLutils;
+using namespace cmn;
 
-namespace apex {
+namespace apex
+{
 
 TrialResult::TrialResult()
 {
-        answerTime=-1;
-        targetParam=0;
-        defTargetParam=false;
+    answerTime=-1;
+    targetParam=0;
+    defTargetParam=false;
 }
 
 
@@ -40,7 +41,7 @@ TrialResult::~TrialResult()
 QString TrialResult::toXML() const
 {
     QString result;
-    result= "<trial id=" + XMLutils::xmlEscapedAttribute(name) +  ">\n";
+    result= "<trial id=" + xmlEscapedAttribute(name) +  ">\n";
     result += extra;
     result += "</trial>\n\n";
     return result;

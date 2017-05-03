@@ -2,7 +2,10 @@
 
 #include "apexdata/procedure/scriptproceduredata.h"
 
-#include "apextools/services/paths.h"
+#include "apextools/apexpaths.h"
+
+#include "common/exception.h"
+#include "common/paths.h"
 
 #include "scriptprocedure.h"
 #include "scriptresulthighlight.h"
@@ -10,6 +13,7 @@
 #include <QtScript>
 
 using namespace apex;
+using namespace cmn;
 
 Q_SCRIPT_DECLARE_QMETAOBJECT(data::Trial, QObject*)
 Q_SCRIPT_DECLARE_QMETAOBJECT(data::ScriptResultHighlight, QObject*)
@@ -22,29 +26,17 @@ ScriptProcedure::ScriptProcedure(ProcedureApi* api, const data::ProcedureData *d
       m_api(new ScriptProcedureApi(api, this)),
           data(dynamic_cast<const data::ScriptProcedureData*>(data))
 {
-    //Qt < 4.6 does not seed javascript Math.random(), do it manually
-    //TODO remove if it works in 4.6
-#if QT_VERSION < 0x040600
-    qsrand(time(0));
-#endif
-
     //construct script filename
     m_doDebug = this->data->debugger();
 
-    QString newName = Paths::findReadableFile (this->data->script(),
-                                               QStringList() <<  QString() << Paths::Get().GetNonBinaryPluginPath(),
-                                               QStringList() << ".js");
+    QString newName = Paths::searchFile(this->data->script(),
+            QStringList() << QDir::currentPath() << ApexPaths::GetNonBinaryPluginPath());
 
     if(m_doDebug)
-    {
         m_scriptEngineDebugger.attachTo(&m_scriptEngine);
-    }
 
     if(newName.isEmpty())
-    {
-        throw ApexStringException("Cannot find procedure plugin file " +
-                                  (this->data->script()));
-    }
+        throw Exception(tr("Cannot find procedure plugin file: %1").arg(this->data->script()));
 
     qCDebug(APEX_RS, "Looking for %s", qPrintable (newName));
 
@@ -80,29 +72,22 @@ ScriptProcedure::ScriptProcedure(ProcedureApi* api, const data::ProcedureData *d
 
     // load script, script is supposed to define scriptProcedure, which inherits from scriptProcedureInterface
     QFile file(newName);
-    if(!file.open(QIODevice::ReadOnly))
-    {
+    if (!file.open(QIODevice::ReadOnly))
         throw ApexStringException("Cannot open plugin procedure script: " + newName);
-    }
     QString scriptdata(file.readAll());
 
     // attach the main script library to the current script
     int nApiLines = 0;          // number of lines in the API, used to calculate correct error message line
-    QString mainPluginLibrary( api->nonBinaryPluginPath() + api->pluginScriptLibrary() );
-
-    if(!mainPluginLibrary.isEmpty())
-    {
-        QFile file(mainPluginLibrary);
-        if(!file.open(QIODevice::ReadOnly))
-        {
-            throw ApexStringException("Cannot open main script library file: " + mainPluginLibrary);
-        }
+    if(!api->pluginScriptLibrary().isEmpty()) {
+        QFile file(Paths::searchFile(api->pluginScriptLibrary(),
+                QStringList() << ApexPaths::GetNonBinaryPluginPath()));
+        if (!file.open(QIODevice::ReadOnly))
+            throw Exception(tr("Cannot open main script library file: %1").arg(api->pluginScriptLibrary()));
 
         QString append = file.readAll();
         nApiLines=append.count("\n")+1;
 
         scriptdata=append + "\n" + scriptdata;
-        file.close();
     }
 
     //set proceduredata as properties of data object
@@ -132,24 +117,18 @@ ScriptProcedure::ScriptProcedure(ProcedureApi* api, const data::ProcedureData *d
     }
 
     // check for errors from script execution
-    if(m_scriptEngine.hasUncaughtException())
-    {
+    if(m_scriptEngine.hasUncaughtException()) {
         int lineNo = m_scriptEngine.uncaughtExceptionLineNumber();
-        if(lineNo<nApiLines)
-        {
-            throw ApexStringException(QString("Error in scriptProcedure API line %1: %2").arg(lineNo).arg(m_classname.toString()));
-        }
-        else
-        {
-            throw ApexStringException(QString("Error in scriptProcedure line %1: %2").arg(lineNo-nApiLines).arg(m_classname.toString()));
-        }
+        if(lineNo < nApiLines)
+            throw Exception(QString("Error in scriptProcedure API line %1: %2").arg(lineNo).arg(m_classname.toString()));
+        throw Exception(QString("Error in scriptProcedure line %1: %2").arg(lineNo-nApiLines).arg(m_classname.toString()));
     }
 
     // give the wrapper some information
     m_plugin->setEngine(&m_scriptEngine);
     m_plugin->setClassname(&m_classname);
     if (! m_plugin->isValid()) {
-        throw ApexStringException("plugin is not valid");
+        throw Exception("plugin is not valid");
     }
 
     // Change instance name to something we know:
@@ -158,10 +137,7 @@ ScriptProcedure::ScriptProcedure(ProcedureApi* api, const data::ProcedureData *d
     //checkParameter() is not declared in ProcedureInterface
     QString parameterCheckResult = m_plugin->checkParameters();
     if(!parameterCheckResult.isEmpty())
-    {
-        throw ApexStringException(parameterCheckResult);
-    }
-
+        throw Exception(parameterCheckResult);
 }
 
 ScriptProcedure::~ScriptProcedure()

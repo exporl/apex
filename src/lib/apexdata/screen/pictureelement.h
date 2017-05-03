@@ -43,7 +43,7 @@ class APEXDATA_EXPORT PictureElement
         QString positivePath;
         QString negativePath;
         QString disabledPath;
-        QString uriId;
+        QString fileId;
 
         bool overrideFeedback;
     public:
@@ -59,10 +59,10 @@ class APEXDATA_EXPORT PictureElement
         QString getPositive() const;
         QString getNegative() const;
         QString getDisabled() const;
-        QString getUriId() const;
+        QString getFileId() const;
         bool getOverrideFeedback() const;
         void setDefault(const QString& p);
-        void setUriId(const QString& p);
+        void setFileId(const QString& p);
         void setPositive(const QString& p);
         void setNegative(const QString& p);
         void setHighlight(const QString& p);

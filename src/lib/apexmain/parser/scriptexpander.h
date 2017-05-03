@@ -20,23 +20,17 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_PARSER_SCRIPTEXPANDER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_PARSER_SCRIPTEXPANDER_H_
 
-#include "apextools/xml/xercesinclude.h"
 
-#include <QString>
 #include <QCoreApplication>
-
-namespace XERCES_CPP_NAMESPACE
-{
-    class DOMElement;
-    class DOMNode;
-    class DOMDocument;
-};
+#include <QString>
 
 class QWidget;
 
-namespace apex {
-    namespace parser {
+namespace apex
+{
 
+namespace parser
+{
 
 /**
  * Take an xmlGeneratingPluginType from an XML file and expand it to
@@ -45,54 +39,33 @@ namespace apex {
 class ScriptExpander
 {
     Q_DECLARE_TR_FUNCTIONS(ScriptExpander)
-  public:
-      static const QString INSTANCENAME;
+public:
+    static const QString INSTANCENAME;
 
-
-      /**
-       * libraryFile: this file will be concatenated to the script
-       * parent: parent widget (for showing dialog boxes), if 0, no dialog
-       * boxes will be shown
-       */
-    ScriptExpander(QString libraryFile, QVariantMap scriptParameters, QWidget* parent=0);
-
+    /**
+     * libraryFile: this file will be concatenated to the script
+     * parent: parent widget (for showing dialog boxes), if 0, no dialog
+     * boxes will be shown
+     */
+    ScriptExpander(const QString &fileName, const QString &libraryFile,
+            const QVariantMap &scriptParameters, QWidget* parent = 0);
 
     /**
      * Take a base element of type xmlGeneratingPluginType and expand
      * it to a new tree containing plain XML
      * function: function to be called in script
      */
-    void ExpandScript(
-                      XERCES_CPP_NAMESPACE::DOMNode* base,
-                      const QString& function);
+    void ExpandScript(const QDomNode &base, const QString& function);
 
+    QString fileName;
+    QString m_libraryFile;
+    QVariantMap m_scriptParameters;
 
-    private:
-        XERCES_CPP_NAMESPACE::DOMNode* StringToDOM(QString);
-        XERCES_CPP_NAMESPACE::DOMElement* ParseXMLDocument(QString s,
-                bool dovalidation);
-        XERCES_CPP_NAMESPACE::DOMDocument* Revalidate(XERCES_CPP_NAMESPACE::DOMNode* doc);
-
-        /**
-         * Traverse the given tree and look for a node with attribute id=id
-         */
-        XERCES_CPP_NAMESPACE::DOMNode* findById(
-                XERCES_CPP_NAMESPACE::DOMNode* doc, QString id);
-
-        QString m_libraryFile;
-        QVariantMap m_scriptParameters;
-
-        QWidget* m_parent;
-
-
-
+    QWidget* m_parent;
 };
 
-
-    }       // ns parser
-}           // ns apex
-
-
+}
+}
 
 #endif
 

@@ -17,18 +17,17 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_TESTS_APEXMAIN_APEXMAINTEST_H_
-#define _EXPORL_SRC_TESTS_APEXMAIN_APEXMAINTEST_H_
+#ifndef _APEX_SRC_TESTS_APEXMAIN_APEXMAINTEST_H_
+#define _APEX_SRC_TESTS_APEXMAIN_APEXMAINTEST_H_
 
 #include "../testmacros.h"
 
-#include "apextools/xml/xercesinclude.h"
-
 #include <QDomDocument>
 #include <QNetworkReply>
-#include <QWebFrame>
 
 #include <QtTest>
+
+class QWebFrame;
 
 namespace apex
 {
@@ -50,16 +49,14 @@ class ApexMainTest : public QObject
     private Q_SLOTS:
 
         void initTestCase();
-        void testQic();
         void testAseq();
-        void testL34DatablockAseq();
+        void testCohDatablockAseq();
         void testAseqParser();
-        void testL34DatablockAseq_data();
-        void testL34DatablockAseqMapping();
-        void testL34DatablockInvalidFile();
-        void testL34Datablock_invalid();
-        void testL34DatablockQic();
-        void testL34InvalidCL();
+        void testCohDatablockAseq_data();
+        void testCohDatablockAseqMapping();
+        void testCohDatablockInvalidFile();
+        void testCohDatablock_invalid();
+        void testCohInvalidCL();
         void testRandomInterval();
         void testUniformInt();
         void testUniformDouble();

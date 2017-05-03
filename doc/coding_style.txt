@@ -1,9 +1,0 @@
-We use the Qt coding style:
-http://qt-project.org/wiki/Qt_Coding_Style
-
-In summary:
-- 4-spaces indent
-- getters are in lower case and don't start with get
-- setters start with set
-
-

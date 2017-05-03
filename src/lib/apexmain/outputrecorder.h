@@ -1,7 +1,7 @@
-#ifndef _EXPORL_SRC_LIB_APEXMAIN_OUTPUTRECORDER_H_
-#define _EXPORL_SRC_LIB_APEXMAIN_OUTPUTRECORDER_H_
+#ifndef _APEX_SRC_LIB_APEXMAIN_OUTPUTRECORDER_H_
+#define _APEX_SRC_LIB_APEXMAIN_OUTPUTRECORDER_H_
 
-#include "apextools/status/errorlogger.h"
+#include "apextools/global.h"
 
 namespace apex
 {
@@ -11,16 +11,7 @@ namespace data
 class ExperimentData;
 }
 
-class OutputRecorder : public ErrorLogger
-{
-    public:
-
-        bool setupRecording(data::ExperimentData* data);
-
-    private:
-
-        void warning(const QString& msg);
-};
+APEX_EXPORT bool setupOutputRecording(data::ExperimentData* data);
 
 }
 

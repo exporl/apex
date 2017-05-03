@@ -35,7 +35,7 @@ WaitSignaler::WaitSignaler(const appcore::WaitableObject& o) : object(o)
 void WaitSignaler::run()
 {
     object.mf_eWaitForSignal();
-    emit waitDone();
+    Q_EMIT waitDone();
 }
 
 //class StimulusControl *******************************************************
@@ -51,10 +51,16 @@ void StimulusControl::playStimulus(const QString& stimulus, double silenceBefore
     if (silenceBefore > 0.0)
         output->setSilenceBeforeNextStimulus(silenceBefore);
 
-    output->LoadStimulus(stimulus, false);
-    output->PlayStimulus();
-
-    signalWhenDone(output->GetStimulusEnd(), SIGNAL(stimulusPlayed()));
+    try {
+        output->LoadStimulus(stimulus, false);
+        output->PlayStimulus();
+        signalWhenDone(output->GetStimulusEnd(), SIGNAL(stimulusPlayed()));
+    } catch (const std::exception &e) {
+        // TODO: exceptions in slots need to be caught, but there is no way to
+        // signal the error up the stack
+        qCCritical(APEX_RS, "LoadStimulus/PlayStimulus failed: %s", e.what());
+        Q_EMIT stimulusPlayed();
+    }
 }
 
 void StimulusControl::signalWhenDone(const appcore::WaitableObject& o,

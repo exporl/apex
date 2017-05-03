@@ -19,20 +19,16 @@
 
 #include "apextools/apextools.h"
 
-#include "apextools/xml/xercesinclude.h"
-
 #include "multiproceduredata.h"
 
 #include <algorithm>
 
-using namespace xercesc;
 using namespace apex::data;
 
-MultiProcedureData::MultiProcedureData():
+MultiProcedureData::MultiProcedureData() :
         ProcedureData()
 {
 }
-
 
 MultiProcedureData::~MultiProcedureData()
 {
@@ -42,7 +38,6 @@ MultiProcedureData::Type MultiProcedureData::type() const
 {
     return MultiType;
 }
-
 
 QString MultiProcedureData::name() const
 {
@@ -59,7 +54,7 @@ tProcConfigList MultiProcedureData::procedures() const
 {
     tProcConfigList result;
 
-    foreach (const ProcedureData* pi, m_procedureDatas) {
+    Q_FOREACH (const ProcedureData* pi, m_procedureDatas) {
         result.push_back(pi);
     }
 

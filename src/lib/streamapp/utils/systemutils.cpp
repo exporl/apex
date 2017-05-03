@@ -18,56 +18,53 @@
  *****************************************************************************/
 
 #include "systemutils.h"
-#include <fstream>
-#include <iostream>
+
+#include <QString>
+#include <QFile>
 
 using namespace std;
 
 namespace
 {
-  const int sc_nBufferSize = 4096;
+const int sc_nBufferSize = 4096;
 }
 
-bool systemutils::f_bCopyFile( const std::string& ac_sInputFile, const std::string& ac_sOutputFile )
+bool systemutils::f_bCopyFile(const QString& ac_sInputFile, const QString &ac_sOutputFile)
 {
     //try open files
-  ifstream inFileStream( ac_sInputFile.data(), ios::in | ios::binary );
-  if( !inFileStream )
-    return false;
+    QFile inFile(ac_sInputFile);
 
-  ofstream outFileStream( ac_sOutputFile.data(), ios::out | ios::binary );
-  if( !outFileStream )
-    return false;
+    if (!inFile.open(QIODevice::ReadOnly))
+        return false;
+
+    QFile outFile(ac_sOutputFile);
+
+    if (!outFile.open(QIODevice::WriteOnly))
+        return false;
 
     //copy
-  char buff[ sc_nBufferSize ];
-  int readBytes = sc_nBufferSize;
+    char buff[ sc_nBufferSize ];
+    qint64 readBytes = sc_nBufferSize;
 
-  while( readBytes == sc_nBufferSize )
-  {
-    inFileStream.read( buff, sc_nBufferSize );
-    readBytes = (int)inFileStream.gcount();
-    outFileStream.write( buff, readBytes );
-  }
-  inFileStream.close();
-  outFileStream.close();
-  return true;
+    while (readBytes == sc_nBufferSize) {
+        qint64 readBytes = inFile.read(buff, sc_nBufferSize);
+        outFile.write(buff, readBytes);
+    }
+    inFile.close();
+    outFile.close();
+    return true;
 }
 
-bool systemutils::f_bFileExists( const std::string& ac_sFile )
+bool systemutils::f_bFileExists(const QString &ac_sFile)
 {
-  ifstream inFileStream( ac_sFile.data(), ios::in | ios::binary );
-  if( !inFileStream )
-    return false;
-  inFileStream.close();
-  return true;
+    return QFile::exists(ac_sFile);
 }
 
-bool systemutils::f_bClearFile( const std::string& ac_sFile )
+bool systemutils::f_bClearFile(const QString &ac_sFile)
 {
-  ifstream inFileStream( ac_sFile.data(), ios::trunc | ios::binary );
-  if( !inFileStream )
-    return false;
-  inFileStream.close();
-  return true;
+    QFile inFile(ac_sFile);
+    if (!inFile.open(QIODevice::Truncate))
+        return false;
+    inFile.close();
+    return true;
 }

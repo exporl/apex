@@ -18,16 +18,19 @@
  *****************************************************************************/
 
 #include "apextools/apextools.h"
+#include "apextools/exceptions.h"
 #include "apextools/random.h"
 
-#include "apextools/xml/apexxmltools.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/xmlutils.h"
 
 #include "adaptiveprocedure.h"
 #include "parameteradapter.h"
 
 #include <limits>
 
-using apex::ApexXMLTools::XMLutils;
+using namespace cmn;
 
 namespace apex
 {
@@ -157,7 +160,7 @@ data::Trial AdaptiveProcedure::setupNextTrial()
     if (standards.isEmpty())
         standards << d->data->defaultStandard();
     if (standards.isEmpty())
-        throw( ApexStringException(tr("Could not find any standard")));
+        throw ApexStringException(tr("Could not find any standard"));
 
     standards = api->makeStandardList(data,
                                       standards);
@@ -315,13 +318,12 @@ QString AdaptiveProcedure::resultXml(bool isVirtual) const
     }
 
     if (!isVirtual) {
-        result.append(XMLutils::wrapTag("answer", d->lastAnswer));
-        result.append(XMLutils::wrapTag("correct_answer", d->lastCorrectAnswer));
+        result.append(QSL("<%1>%2</%1>").arg(QSL("answer"), xmlEscapedText(d->lastAnswer)));
+        result.append(QSL("<%1>%2</%1>").arg(QSL("correct_answer"), xmlEscapedText(d->lastCorrectAnswer)));
 
         if (d->data->choices().hasMultipleIntervals()) {
-            result.append(XMLutils::wrapTag("correct_interval", d->stimulusPosition+1));
-            result.append(XMLutils::wrapTag("answer_interval",
-                                            d->data->choices().interval(d->lastAnswer)+1 ));
+            result.append(QSL("<%1>%2</%1>").arg(QSL("correct_interval")).arg(d->stimulusPosition + 1));
+            result.append(QSL("<%1>%2</%1>").arg(QSL("answer_interval")).arg(d->data->choices().interval(d->lastAnswer) + 1));
         }
     }
 
@@ -330,24 +332,17 @@ QString AdaptiveProcedure::resultXml(bool isVirtual) const
         result.append("\t<skip/>");
 
     if (!d->data->choices().hasMultipleIntervals()) {
-        QString tag = "stimulus";
-        result.append(XMLutils::wrapTag(tag, d->lastTrial.stimulus(0, 0)));
+        result.append(QSL("<%1>%2</%1>").arg(QSL("stimulus"), xmlEscapedText(d->lastTrial.stimulus(0, 0))));
     } else {
         for (int i = 0; i < d->lastTrial.stimulusCount(0); ++i) {
-            QString tag;
-            if (i == d->stimulusPosition)
-                tag = "stimulus";
-            else
-                tag = "standard";
-
-            result.append(XMLutils::wrapTag(tag, d->lastTrial.stimulus(0, i)));
+            result.append(QSL("<%1>%2</%1>").arg(i == d->stimulusPosition ? QSL("stimulus") : QSL("standard"),
+                    xmlEscapedText(d->lastTrial.stimulus(0, i))));
         }
     }
 
     if (!isVirtual) {
-        result.append(XMLutils::wrapTag("correct",
-                                    ApexTools::boolToString(d->lastAnswerCorrect)));
-        if (d->adapter.lastReversal() )
+        result.append(QSL("<%1>%2</%1>").arg(QSL("correct")).arg(ApexTools::boolToString(d->lastAnswerCorrect)));
+        if (d->adapter.lastReversal())
             result+="\t<reversal/>";
     }
 

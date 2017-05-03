@@ -1,126 +1,126 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!-- @doc
   @what: Demonstration of extra movies (snail movie)
   @description: The experiment starts after a silent introductory movie. The child needs to find the stimulus in one of the three snails. One snail has a different sound than the two other snails. Childfriendly feedback is provided.
   @how: Flash elements of snails
  -->
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <intervals count="3">
-    <interval element="button1" number="1"/>
-    <interval element="button2" number="2"/>
-    <interval element="button3" number="3"/>
-   </intervals>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-    <standard id="standard1"/>
-   </trial>
-  </trials>
- </procedure>
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <intervals count="3">
+        <interval element="button1" number="1"/>
+        <interval element="button2" number="2"/>
+        <interval element="button3" number="3"/>
+      </intervals>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+        <standard id="standard1"/>
+      </trial>
+    </trials>
+  </procedure>
   <screens>
-  <uri_prefix>../movies/</uri_prefix>
-  <general>
-   <showpanel>false</showpanel>
-  </general>
-  <reinforcement>
-   <progressbar>false</progressbar>
-   <feedback length="2000">true</feedback>
-   <showcurrent>true</showcurrent>
-  </reinforcement>
-  <childmode>
-   <intro length="0">intro</intro>
-   <outro length="10000">outro</outro>
-   <panel>reinforcement.swf</panel>
-  </childmode>
-  <screen id="screen1">
-   <gridLayout id="answer_layout" x="1" height="3" y="1" width="3">
-    <flash id="button1" x="1" y="2">
-     <uri>snail/stillsnail.swf</uri>
-     <feedback>
-      <highlight>snail/shakesnail.swf</highlight>
-      <positive>snail/goodsnail.swf</positive>
-      <negative>snail/badsnail.swf</negative>
-     </feedback>
-    </flash>
-    <flash id="button2" x="2" y="2">
-     <uri>snail/stillsnail.swf</uri>
-     <feedback>
-      <highlight>snail/shakesnail.swf</highlight>
-      <positive>snail/goodsnail.swf</positive>
-      <negative>snail/badsnail.swf</negative>
-     </feedback>
-    </flash>
-    <flash id="button3" x="3" y="2">
-     <uri>snail/stillsnail.swf</uri>
-     <feedback>
-      <highlight>snail/shakesnail.swf</highlight>
-      <positive>snail/goodsnail.swf</positive>
-      <negative>snail/badsnail.swf</negative>
-     </feedback>
-    </flash>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-    <button id="button2"/>
-    <button id="button3"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
-  <screen id="intro">
-   <gridLayout id="ilayout" x="1" height="1" y="1" width="1">
-    <flash id="blah" x="1" y="1">
-     <shortcut>s</shortcut>
-     <uri>snail/stillsnail.swf</uri>
-    </flash>
-   </gridLayout>
-  </screen>
-  <screen id="outro">
-   <gridLayout id="olayout" x="1" height="1" y="1" width="1">
-    <flash id="oblah" x="1" y="1">
-     <shortcut>s</shortcut>
-     <uri>snail/outro.swf</uri>
-    </flash>
-   </gridLayout>
-  </screen>
- </screens>
+    <prefix>../movies/</prefix>
+    <general>
+      <showpanel>false</showpanel>
+    </general>
+    <reinforcement>
+      <progressbar>false</progressbar>
+      <feedback length="2000">true</feedback>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <childmode>
+      <intro length="0">intro</intro>
+      <outro length="10000">outro</outro>
+      <panel>reinforcement.swf</panel>
+    </childmode>
+    <screen id="screen1">
+      <gridLayout width="3" id="answer_layout" x="1" y="1" height="3">
+        <flash id="button1" x="1" y="2">
+          <file>snail/stillsnail.swf</file>
+          <feedback>
+            <highlight>snail/shakesnail.swf</highlight>
+            <positive>snail/goodsnail.swf</positive>
+            <negative>snail/badsnail.swf</negative>
+          </feedback>
+        </flash>
+        <flash id="button2" x="2" y="2">
+          <file>snail/stillsnail.swf</file>
+          <feedback>
+            <highlight>snail/shakesnail.swf</highlight>
+            <positive>snail/goodsnail.swf</positive>
+            <negative>snail/badsnail.swf</negative>
+          </feedback>
+        </flash>
+        <flash id="button3" x="3" y="2">
+          <file>snail/stillsnail.swf</file>
+          <feedback>
+            <highlight>snail/shakesnail.swf</highlight>
+            <positive>snail/goodsnail.swf</positive>
+            <negative>snail/badsnail.swf</negative>
+          </feedback>
+        </flash>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+    <screen id="intro">
+      <gridLayout width="1" id="ilayout" x="1" y="1" height="1">
+        <flash id="blah" x="1" y="1">
+          <shortcut>s</shortcut>
+          <file>snail/stillsnail.swf</file>
+        </flash>
+      </gridLayout>
+    </screen>
+    <screen id="outro">
+      <gridLayout width="1" id="olayout" x="1" y="1" height="1">
+        <flash id="oblah" x="1" y="1">
+          <shortcut>s</shortcut>
+          <file>snail/outro.swf</file>
+        </flash>
+      </gridLayout>
+    </screen>
+  </screens>
   <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
-  <datablock id="noisedata">
-   <device>wavdevice</device>
-   <uri>ruisje.wav</uri>
-  </datablock>
- </datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="noisedata">
+      <device>wavdevice</device>
+      <file>ruisje.wav</file>
+    </datablock>
+  </datablocks>
   <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <stimuli>
-  <stimulus id="standard1">
-   <datablocks>
-    <datablock id="noisedata"/>
-   </datablocks>
-  </stimulus>
-  <stimulus id="stimulus1">
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-  </stimulus>
- </stimuli>
- <connections/>
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <stimuli>
+    <stimulus id="standard1">
+      <datablocks>
+        <datablock id="noisedata"/>
+      </datablocks>
+    </stimulus>
+    <stimulus id="stimulus1">
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

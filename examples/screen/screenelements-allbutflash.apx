@@ -1,76 +1,69 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
-
- <!-- @doc
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- @doc
   @what: assembly of different kinds of screenelements
   @description: Different labels and buttons are shown on the screen. First row containg a button and answerlabel, second row containing a label and a parameterlist, last row a textedit and picture
   @how: <button>, <answerlabel>, <label>, <parameterlist>, <textEdit>, <picture>
   -->
-
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>antwoord</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
-
- <screens>
-  <uri_prefix>../pictures</uri_prefix>
-  <screen id="screen1">
-   <gridLayout width="4" height="3" id="main_layout">
-    <button x="1" id="button" y="1">
-     <text>button</text>
-    </button>
-    <label x="1" id="label" y="2">
-     <text>label</text>
-    </label>
-    <textEdit x="1" id="textinput" y="3">
-     <text>textedit</text>
-    </textEdit>
-    <answerlabel x="2" id="answerlabel" y="1"/>
-    <parameterlist x="2" id="paramlist" y="2">
-     <parameter>fixed</parameter>
-    </parameterlist>
-    <picture x="2" id="picture" y="3">
-     <uri>1.jpg</uri>
-    </picture>
-   </gridLayout>
-   <buttongroup id="buttongroup">
-    <button id="button"/>
-    <button id="textinput"/>
-    <button id="picture"/>
-   </buttongroup>
-   <default_answer_element>textinput</default_answer_element>
-  </screen>
- </screens>
-
- <datablocks/>
- <devices/>
- <filters/>
-
- <stimuli>
-  <fixed_parameters>
-   <parameter id="fixed"/>
-  </fixed_parameters>
-  <stimulus id="stimulus1">
-   <description/>
-   <datablocks/>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="fixed">0</parameter>
-   </fixedParameters>
-  </stimulus>
- </stimuli>
-
- <connections/>
-
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>antwoord</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <prefix>../pictures</prefix>
+    <screen id="screen1">
+      <gridLayout width="4" id="main_layout" height="3">
+        <button x="1" y="1" id="button">
+          <text>button</text>
+        </button>
+        <label x="1" y="2" id="label">
+          <text>label</text>
+        </label>
+        <textEdit x="1" y="3" id="textinput">
+          <text>textedit</text>
+        </textEdit>
+        <answerlabel x="2" y="1" id="answerlabel"/>
+        <parameterlist x="2" y="2" id="paramlist">
+          <parameter>fixed</parameter>
+        </parameterlist>
+        <picture x="2" y="3" id="picture">
+          <file>1.jpg</file>
+        </picture>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="button"/>
+        <button id="textinput"/>
+        <button id="picture"/>
+      </buttongroup>
+      <default_answer_element>textinput</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks/>
+  <devices/>
+  <filters/>
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="fixed"/>
+    </fixed_parameters>
+    <stimulus id="stimulus1">
+      <description/>
+      <datablocks/>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="fixed">0</parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

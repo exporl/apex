@@ -1,0 +1,130 @@
+<html>
+    <head>
+    <meta charset="utf-8">
+    
+        <script src="apex:jquery-3.1.1.min.js"></script>
+        <style>
+            #colordiv{ 
+                margin: 0 auto;
+                width: 100px; 
+                background-color: #fff;
+                font-size: 30px;
+                text-align: center;
+            }
+        </style>
+        <script type="text/javascript">
+            $(document).ready(function()
+            {
+            });
+            
+            /**
+             * The following functions are called by Apex at appropriate times
+             * prepare - after params have been set
+             * trialStarted
+             * stimulusStarted
+             */
+             
+            function prepare()
+            {
+                //  Validate params object
+                //  Check for changes, etc
+            }
+            
+            function trialStarted()
+            {
+                //$("#colordiv").hide();
+            }
+
+            function stimulusStarted()
+            {
+                if (typeof params == "undefined")
+                {
+                    console.log("RV - params undefined");
+                    return;
+                }
+                
+                $("#colordiv").show();
+                $("#colordiv").css("color", colors[params["stimcolor"]]);
+                $("#colordiv").html( getShuffled(params["stimcolor"]) );
+                
+                setTimeout(hideStimulus, 1500);
+            }
+            
+            /**
+             * Data and help functions
+             */
+            
+            var colorNames = ["rood","geel","groen","blauw"];
+            var colors = 
+            { 
+                rood: "red",
+                geel: "yellow",
+                groen: "green",
+                blauw: "blue"
+            };
+            //  Shuffled collection of words to show for every color (key)
+            var words =
+            {
+                rood: [],
+                geel: [],
+                groen: [],
+                blauw: []
+            }
+            
+            var shuffled = false;
+            function getShuffled(colorKey)
+            {
+                if(!shuffled)
+                {
+                    $.each(words, function(key, array){
+                        for(var i=0; i<20; i++)
+                        {
+                            if(colorNames[i%4] !== key) array.push(colorNames[i%4]);
+                        }
+                        shuffleArray(array);
+                    });
+                    shuffled = true;
+                }
+                
+                return words[colorKey].pop();
+                 
+            }
+            
+            function hideStimulus()
+            {
+                $("#colordiv").hide();
+            }
+            
+            /**
+             * Randomize array element order in-place.
+             * Using Durstenfeld shuffle algorithm.
+             */
+            function shuffleArray(array) {
+                for (var i = array.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }
+                return array;
+            }
+            
+            function newAnswer()
+            {
+                console.log("RV - Called newanswer");
+            }
+            function plot()
+            {
+                console.log("RV - Called plot");
+            }
+        </script>
+
+    </head>
+    
+    
+    <body>
+        <div id="colordiv"></div>    
+    </body>
+    
+    
+</html>

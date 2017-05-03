@@ -60,9 +60,9 @@ class APEXDATA_EXPORT ConnectionData
         //setters
         void setMatchType(MatchType t);
         void setFromId(const QString& id);
-        void setFromChannel(int channel, const QString& channelId = "");
+        void setFromChannel(int channel, const QString& channelId = QString());
         void setToId(const QString& id);
-        void setToChannel(int channel, const QString& channelId = "");
+        void setToChannel(int channel, const QString& channelId = QString());
         void setDevice(QString id);
 
         ConnectionData& operator=(const ConnectionData& other);

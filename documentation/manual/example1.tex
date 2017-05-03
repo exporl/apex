@@ -6,10 +6,10 @@ figures}
 \filename{examples/manual/closedsetword.apx}. This is an example
 of a closed-set identification test for children. A word (wave
 file) is presented and the child responds by clicking on one of
-four figures on the screen(figure~\ref{fig:closedset}).
+four figures on the screen (figure~\ref{fig:closedset}).
 Subsequently, a new set of figures is shown, and again, a word
 corresponding to one of these figures is routed to the sound card.
-This is repeated 3 times. The three words are embedded in noise at
+This is repeated three times. The three words are embedded in noise at
 a certain signal-to-noise ratio. In this example the level of the
 noise is fixed and the level of the word varies. At the beginning
 of the experiment \apex queries for the SNR (signal to noise
@@ -121,7 +121,7 @@ or viewed in the results file.
 
 \item \element{answer} the correct answer, to be used by \apex to
 determine whether the subject's response is correct. Here, the
-subject gets the opportunity to click on one of 4 pictures. The
+subject gets the opportunity to click on one of four pictures. The
 result from the screen (the subject's response) will be the ID of
 the element of the screen that was clicked. Therefore, in this
 example, we specify the ID of the picture corresponding to the
@@ -231,11 +231,11 @@ can be referred to elsewhere in the experiment file (e.g., in
 (relative with respect to the experiment file). Since \apex knows
 the location of the experiment file, only the folder containing
 the wave files and pictures must be specified. It is also possible
-to give the absolute path, starting at the root. There are 3 ways
+to give the absolute path, starting at the root. There are three ways
 to specify a prefix: by directly specifying an absolute path, by
 directly specifying a path relative to the experiment file or by
 referring to a prefix stored in \filename{apexconfig.xml}. Please
-refer to section~\ref{sec:prefixes} for more information.
+refer to section~\ref{sec:prefixes} for more information.\todo{necessary to repeat all this information here, not enough to refer to prefixes section? (Lot)}
 
 \item \element{reinforcement} includes
 
@@ -243,8 +243,7 @@ refer to section~\ref{sec:prefixes} for more information.
 
 \item \element{progressbar} As the value is \xml{true} a
 progressbar will be displayed in the right hand bottom corner of
-the screen that indicates how many trials have been completed and
-how many remain.
+the screen that indicates the percentage of trials that have been completed.
 
 \item \element{feedback length} duration of time after response
 (in msec) that \apex waits before presenting the next trial.
@@ -307,8 +306,7 @@ used to group together different screen elements.
 \index{gridlayout} \index{picture} \index{path}
 \index{buttongroup} \index{default answer element}
 
-In this example 5 datablocks are defined, 3 for the word files, 1
-for the noise and 1 for silence.
+
 
 \begin{lstlisting}
  <datablocks>
@@ -337,31 +335,32 @@ for the noise and 1 for silence.
 \end{lstlisting}
 \index{datablocks}
 
+A datablock must be made for all wave files used in the
+experiment, including the noise (that will be used by the noise
+generator). In this example 5 datablocks are defined, 3 for the word files, 1
+for the noise and 1 for silence.
 \element{datablocks} contains 5 \element{datablock} elements and a
 prefix.
 \begin{itemize}
 \item \element{uri_prefix} a relative path is specified here. It
 is also possible to give the absolute path, starting at the root
 (see section~\ref{sec:prefixes}).
-
 \item \element{datablock} For each wave file a datablock is made,
-with an ID.  \item Each datablock is associated to a
-\element{device} (by means of the ID of the device). In datablock
+with an ID.  In datablock
 \id{silence} the special syntax is demonstrated for creating a
 datablock containing only silence (i.e., all samples are zeros).
-This is done to prevent the speech and noise from starting at the
-same time. The length of the silence datablock is specified in ms
-after the prefix \xml{silence}. It is added before the signal, not
+This is done to put silence before and after the
+word, to prevent the speech and noise from
+starting at the same time. The length of the silence datablock is specified in ms
+after the prefix \xml{silence}. It is added before the signal (in element \element{stimulus}), not
 before the noise.
+
+\item Each datablock is associated to a
+\element{device} (by means of the ID of the device).
 
 \end{itemize}
 \index{datablocks} \index{uri prefix} \index{datablock}
 \index{device} \index{uri}
-
-A datablock must be made for all wave files used in the
-experiment, including the noise (that will be used by the noise
-generator).
-
 
 
 In the next sections, the output logic will be defined.
@@ -468,11 +467,12 @@ is assigned the ID \id{noisegen}.
 
 
 \item \element{filter} on line~\ref{xml:filter2} the attribute
-\xml{xsi:type="apex:amplifier"} tells \apex that an amplifier is
+\xml{xsi:type="apex:amplifier"} tells \apex that an amplifier has
 to be created. The gain of this amplifier will be varied to change
 the amplitude of the words and thus the SNR. It is assigned ID
 \id{amplifier}. The gain of the amplifier is made a variable
 parameter by assigning it ID \id{gain}
+
 \begin{itemize}
 \item \element{device} The device with which the filter is
 associated \item \element{channels} The number of channels of the
@@ -537,7 +537,7 @@ basegain = -5.
 
 
 \element{stimuli} contains different \element{stimulus}, each with
-an ID \element{stimulus}
+an ID.
 
 \begin{itemize}\item \element{datablocks}
 can be combined in \element{sequential} order (as opposed to
@@ -600,27 +600,39 @@ wavdevice. The channels are numbered from 0 onwards. The level of
 the noise remains constant and does not pass through an amplifier
 (lines~\ref{xml:chc} to~\ref{xml:chd}).
 
-A visual representation of connections can be obtained by choosing
+A visual representation of connections (see Figure~\ref{fig:ex1-output}) can be obtained by choosing
 ``Show stimulus connections'' under ``Experiment''in the main
 \apex menu (top left menu bar).
 
-\todo{idn1 xslt is outdated, we now use javascript results}
 
 \begin{lstlisting}
-<results>
-   <xsltscript>idn.xsl</xsltscript>
-</results>
+ <results>
+  <page>apex:resultsviewer.html</page>
+  <resultparameters/>
+  <showduringexperiment>false</showduringexperiment>
+  <showafterexperiment>true</showafterexperiment>
+  <saveprocessedresults>true</saveprocessedresults>
+ </results>
 \end{lstlisting}
 
 Even if \element{results} is not specified in the experiment file
 \apex will deliver a results file in XML.
-\begin{itemize}
-\item \element{xsltscript}  a script can transform the XML data to
-an easier readable format; this script can be stored in folder
-\filename{scripts} under \apex. For more information please read
-section~\ref{sec:Using XSLT transforms}.
+
+\todo{new part, to check!}
+
+\begin{itemize} 
+\item \element{page} URL of the html page to show in the results window. The page should have the appropriate java script methods embedded. More example pages can be found in the \apex resultsviewer folder.
+\item \element{resultparameters} Parameters to be passed to the results page. Each parameter will be set in hash params. \todo{perhaps some moren explanation on what this can be and why it is empty here?}
+\item \element{showduringexperiment} If true, an extra window will be created which will show the results of the current experiment while the experiment is being executed. Javascript embedded in the page will be executed upon each new trial.
+\item \element{showafterexperiment} If true, when the experiment is finished, a dialog box will appear querying whether results should be shown. If the answer is affirmative, a new window will be opened and the results will be shown after javascript processing.
+\item \element{saveprocessedresults} If \xml {true} the
+experimenter will be asked whether the processed results must be
+appended to the results file. This will only work if the results are successfully saved to disk and your javascript code supports this transformation.
 \end{itemize}
-\index{results} \index{xsltscript}
+
+\index{results} \index{page} \index{resultparameters} \index{showduringexperiment} \index{showafterexperiment} \index{saveprocessedresults}
+
+
 
 \begin{lstlisting}
 <interactive>
@@ -668,28 +680,3 @@ default value to be shown in the input element.
 
 \index{interactive} \index{entry type} \index{expression}
 
-\todo{the elements below are now under the <results> tag}
-
-\begin{lstlisting}
-<general>
-    <showresults>true</showresults>
-    <saveprocessedresults>true</saveprocessedresults>
-</general>
-\end{lstlisting}
-
-\element{general} defines some general parameters. Saving
-processed results in a results file is only possible if a
-XSLT-script is defined. See section~\ref{sec:Using XSLT
-transforms}.
-
-\begin{itemize}
-\item \element{showresults} If \xml {true} a window will appear
-after completion of the experiment asking whether the results
-should be shown on screen.
-
-\item \element{saveprocessedresults} If \xml {true} the
-experimenter will be asked whether the processed results must be
-appended to the results file.
-\end{itemize}
-
-\index{general} \index{showresults} \index{saveprocessedresults}

@@ -19,21 +19,16 @@
 
 #include "apextools/apextools.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
-
 #include "scriptproceduredata.h"
 
 #include <iostream>
 
-using namespace xercesc;
-using namespace apex::ApexXMLTools;
 using namespace apex::data;
 
 tScriptProcedureParameter::tScriptProcedureParameter(const QString& p_name,
-                                                     const QString& p_value):
-        name(p_name),
-        value(p_value)
+        const QString& p_value) :
+    name(p_name),
+    value(p_value)
 {
 }
 
@@ -45,7 +40,6 @@ bool tScriptProcedureParameter::operator==(const tScriptProcedureParameter& othe
 ScriptProcedureData::ScriptProcedureData()
 {
 }
-
 
 ScriptProcedureData::~ScriptProcedureData()
 {

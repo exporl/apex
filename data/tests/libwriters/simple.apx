@@ -48,9 +48,7 @@
       <button id="btn_house"/>
       <button id="btn_mouse"/>
     </buttongroup>
-    <default_answer_element>
-      buttongroup
-    </default_answer_element>
+    <default_answer_element>buttongroup</default_answer_element>
   </screen>
 </screens> 
  

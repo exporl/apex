@@ -28,27 +28,30 @@
 #include "apexdata/result/resultparameters.h"
 
 #include "apextools/apextools.h"
+#include "apextools/version.h"
 
-#include "apextools/xml/apexxmltools.h"
+#include "common/xmlutils.h"
+
+#ifdef Q_OS_ANDROID
+#include "apexandroidnative.h"
+#endif
 
 #include "gui/mainwindow.h"
 
 #include "runner/experimentrundelegate.h"
 
-#include "services/errorhandler.h"
-#include "services/filedialog.h"
-#include "services/mainconfigfileparser.h"
-
-#include "apexcontrol.h"
 #include "apexcontrol.h"
 #include "apexresultsink.h"
 #include "trialresult.h"
 
 #include <QDateTime>
+#include <QFileDialog>
+#include <QHostInfo>
 #include <QMessageBox>
 #include <QRegExp>
+#include <QStandardPaths>
 
-using apex::ApexXMLTools::XMLutils;
+using namespace cmn;
 
 const QString apex::ApexResultSink::c_fileFooter( "</apex:results>\n");
 const QString apex::ApexResultSink::resultsExtension( ".apr");
@@ -89,62 +92,77 @@ void apex::ApexResultSink::SaveAs(bool askFilename ) {
         askFilename=false;
     }
     while (1) {
+        if (askFilename) {
+            QFileDialog dlg(
+                ApexControl::Get().mainWindow(), QString(), m_filename,
+                tr("APEX savedata (*%1);;XML Files (*.xml);;All files (*)")
+                    .arg(resultsExtension));
 
-        /*if (m_rd.GetData().generalParameters()->GetAutoSave()) {
-            askFilename=false;
-            int answer = QMessageBox::question(0, tr("Save?"), QString(tr("Do you want to save the results in file %1?")).arg(m_filename), tr("Save"), tr("Change filename"), tr("Discard"));
-            if (answer==0)
-                saveFileName=m_filename;
-            else if (answer==1)
-                askFilename=true;
-            else if (answer==2)
-                return;
-        }*/
+            QStringList docLocations = QStandardPaths::standardLocations(
+                QStandardPaths::DocumentsLocation);
+#ifndef Q_OS_ANDROID
+            if (m_filename.isEmpty() && !docLocations.isEmpty())
+#else
+            if ((m_filename.isEmpty() ||
+                 !QFileInfo(QFileInfo(m_filename).dir().canonicalPath())
+                      .isWritable()) &&
+                !docLocations.isEmpty())
+#endif
+                dlg.setDirectory(docLocations.first());
 
-        if (askFilename)
-            saveFileName = FileDialog::Get().mf_sGetAnyFile(m_filename, tr("APEX savedata (*%1);;XML Files (*.xml);;All files (*)").arg(resultsExtension) );
+#ifdef Q_OS_ANDROID
+            dlg.showMaximized();
+#endif
+            saveFileName.clear();
+            if (dlg.exec() == QDialog::Accepted)
+                saveFileName = dlg.selectedFiles().first();
+        }
 
-        if (saveFileName.isEmpty()) {                    // user pressed cancel
-            Q_ASSERT("Can't save");
-        } else {
-
+        if (!saveFileName.isEmpty()) {
             if (QFile::exists(saveFileName)) {
-                /*if ( QMessageBox::question(0, tr("File exists"), tr("File already exists, overwrite?"), QMessageBox::Yes, QMessageBox::No, QMessageBox::NoButton) == QMessageBox::No) continue;*/
-                int answer = QMessageBox::question(ApexControl::Get().GetMainWnd(), tr("File exists"), tr("File already exists, what should I do?"), tr("Append"), tr("Overwrite"), tr("Cancel"));
-                if (answer==2)          // cancel
+                int answer = QMessageBox::question(
+                    ApexControl::Get().mainWindow(), tr("File exists"),
+                    tr("File already exists, what should I do?"), tr("Append"),
+                    tr("Overwrite"), tr("Cancel"));
+                if (answer == 2) // cancel
                     continue;
-                else if (answer==0)
-                    overwrite=false;
+                else if (answer == 0)
+                    overwrite = false;
                 else
-                    overwrite=true;
+                    overwrite = true;
             }
 
-            if (Save(saveFileName,overwrite)) {
-                m_filename=saveFileName;
-                m_bSaved=true;
+            if (Save(saveFileName, overwrite)) {
+                m_filename = saveFileName;
+                m_bSaved = true;
                 break;
             } else {
-                int answer = QMessageBox::question(ApexControl::Get().GetMainWnd(), tr("Can't write to file"), tr("I can't write to the requested file.\nCheck whether you have access rights and the disk is not full."), tr("Retry"),  tr("Lose data"));
-                if (answer==0)          // cancel
+                int answer = QMessageBox::question(
+                    ApexControl::Get().mainWindow(), tr("Can't write to file"),
+                    tr("I can't write to the requested file.\nCheck whether "
+                       "you have access rights and the disk is not full."),
+                    tr("Retry"), tr("Lose data"));
+                if (answer == 0) // cancel
                     continue;
                 else
                     break;
             }
         }
-
-        if ( QMessageBox::question(ApexControl::Get().GetMainWnd(), tr("Lose data?"), tr("Do you want to discard the results?"), QMessageBox::Save | QMessageBox::Discard, QMessageBox::Save) == QMessageBox::Discard)
+        if (QMessageBox::question(ApexControl::Get().mainWindow(),
+                                  tr("Lose data?"),
+                                  tr("Do you want to discard the results?"),
+                                  QMessageBox::Save | QMessageBox::Discard,
+                                  QMessageBox::Save) == QMessageBox::Discard)
             break;
-
     }
 #endif
 }
-
 
 void apex::ApexResultSink::Finished(bool askFilename ) {
     m_endTime = QDateTime::currentDateTime();
     SaveAs(askFilename);
 
-    emit(Saved());
+    Q_EMIT(Saved());
 
 }
 
@@ -216,8 +234,8 @@ bool apex::ApexResultSink::Save( const QString & p_filename, const bool p_overwr
 
     QFile file(p_filename);
     if (!file.open(flags | QFile::WriteOnly | QFile::Text) ) {
-        ErrorHandler::Get().addError(metaObject()->className(),
-                          "Can't write output to file " + p_filename);
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(metaObject()->className(),
+                          "Can't write output to file " + p_filename)));
         return false;
     }
 
@@ -239,7 +257,7 @@ bool apex::ApexResultSink::Save( const QString & p_filename, const bool p_overwr
     PrintXMLFooter(out);
 
     if (file.error() != QFile::NoError) {
-        ErrorHandler::Get().addError(metaObject()->className(),"Error while writing to file " + p_filename);
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(metaObject()->className(),"Error while writing to file " + p_filename)));
         return false;
     }
 
@@ -250,27 +268,19 @@ bool apex::ApexResultSink::Save( const QString & p_filename, const bool p_overwr
 void apex::ApexResultSink::PrintXMLHeader( QTextStream & out ) {
     QString cfn = ApexControl::Get().GetCurrentExperiment().fileName();
 
-        // make cfn relative
-        /*QDir curDir(QDir::currentDirPath());
-        cfn = curDir.relativeFilePath(cfn);*/
-
 #ifdef WIN32
-
     cfn = "/" + cfn;
 #endif
 
     out << "<?xml version='1.0' encoding='UTF-8'?>" << endl;
 
-    out << "<apex:results experiment_file=\"file:" <<  XMLutils::xmlEscapedText(cfn) << "\" ";
-    out << "xmlns:apex=\"http://med.kuleuven.be/exporl/apex/result\">" << endl;
+    out << "<apex:results experiment_file=" << xmlEscapedAttribute(QSL("file:") + cfn);
+    out << " xmlns:apex=\"http://med.kuleuven.be/exporl/apex/result\">" << endl;
 }
 
 void apex::ApexResultSink::PrintXMLFooter( QTextStream & out ) {
-    //out << "</apex:results>" << endl;
     out << c_fileFooter;
 }
-
-
 
 void apex::ApexResultSink::PrintIntro(QTextStream& out) {
     QString ms=m_rd.GetData().resultParameters()->matlabScript();
@@ -293,16 +303,26 @@ void apex::ApexResultSink::PrintIntro(QTextStream& out) {
 
     out << "<general>" << endl;
 
-    out << "\t<apex_version>" << APEX_VERSION << "</apex_version>" << endl;
+    out << "\t<apex_version>" << APEX_SCHEMA_VERSION << "</apex_version>" << endl;
     out << "\t<apex_version_git>" << ApexTools::fetchVersion() << "</apex_version_git>" << endl;
+
+#ifdef Q_OS_ANDROID
+    out << "\t<serial>" << apex::android::ApexAndroidMethods::getDeviceSerialNumber()
+        << "/<serial>" << endl;
+#else
+    out << "\t<hostname>" << QHostInfo::localHostName() << "</hostname>"
+        << endl;
+#endif
+    out << "\t<device_id>" << ApexTools::getApexGUID().toString()
+        << "</device_id>" << endl;
 
     QString description = ApexControl::Get().GetCurrentExperiment().experimentDescription();
     if (!description.isEmpty()) {
         out << "\t<description>" << description << "</description>" << endl;
     }
 
-    out << "\t<startdate>" << XMLutils::xmlEscapedText(ApexControl::Get().GetStartTime().toString(Qt::ISODate)) << "</startdate>" << endl;
-    out << "\t<enddate>" << XMLutils::xmlEscapedText(m_endTime.toString(Qt::ISODate)) << "</enddate>" << endl;
+    out << "\t<startdate>" << xmlEscapedText(ApexControl::Get().GetStartTime().toString(Qt::ISODate)) << "</startdate>" << endl;
+    out << "\t<enddate>" << xmlEscapedText(m_endTime.toString(Qt::ISODate)) << "</enddate>" << endl;
     out << "\t<duration unit=\"seconds\">" << ApexControl::Get().GetStartTime().secsTo(m_endTime) << "</duration>" << endl;
     if ( m_rd.GetData().resultParameters()) {
         QString rtscript( m_rd.GetData().resultParameters()->resultPage().toString());
@@ -322,10 +342,10 @@ void apex::ApexResultSink::PrintIntro(QTextStream& out) {
         for (it = r->begin(); it!=r->end(); ++it)
         {
                 out << "\t\t<entry>" << endl
-                    << "\t\t\t<expression>" << XMLutils::xmlEscapedText(it->xpath()) << "</expression>" << endl
-                    << "\t\t\t<new_value>" << XMLutils::xmlEscapedText(it->newValue()) << "</new_value>" << endl
-                    << "\t\t\t<succeeded>" << XMLutils::xmlEscapedText(it->succeeded() ? "true" : "false") << "</succeeded>" << endl
-                    << "\t\t\t<description>" << XMLutils::xmlEscapedText(it->description()) << "</description>" << endl
+                    << "\t\t\t<expression>" << xmlEscapedText(it->xpath()) << "</expression>" << endl
+                    << "\t\t\t<new_value>" << xmlEscapedText(it->newValue()) << "</new_value>" << endl
+                    << "\t\t\t<succeeded>" << xmlEscapedText(it->succeeded() ? "true" : "false") << "</succeeded>" << endl
+                    << "\t\t\t<description>" << xmlEscapedText(it->description()) << "</description>" << endl
                     << "\t\t</entry>" << endl;
 
         }
@@ -365,7 +385,7 @@ void apex::ApexResultSink::CollectResults(const QString& trial, const QString& e
             currentTrial->extra += x + "\n";
     }
 
-    emit (collected(currentTrial->toXML()));
+    Q_EMIT (collected(currentTrial->toXML()));
 }
 
 QString apex::ApexResultSink::GetResultXML( ) const

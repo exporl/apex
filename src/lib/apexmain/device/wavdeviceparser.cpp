@@ -37,18 +37,14 @@ WavDeviceParser::~WavDeviceParser()
 {
 }
 
-void WavDeviceParser::Parse(XERCES_CPP_NAMESPACE::DOMElement* base, data::WavDeviceData* p)
+void WavDeviceParser::Parse(const QDomElement &base, data::WavDeviceData* p)
 {
-
-    Q_ASSERT(base);
-
     SimpleParametersParser::Parse(base, p);
 }
 
 void WavDeviceParser::AddParameter(data::SimpleParameters* p,
-        XERCES_CPP_NAMESPACE::DOMElement* e, const QString& owner,
-        const QString& type, const QString& id, const QVariant& value,
-        const int channel)
+        const QDomElement &e, const QString& owner, const QString& type,
+        const QString& id, const QVariant& value, const int channel)
 {
     SimpleParametersParser::AddParameter(p, e, owner, type, id, value, channel);
 

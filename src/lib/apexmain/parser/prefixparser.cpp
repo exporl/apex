@@ -17,28 +17,27 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "prefixparser.h"
 
-using namespace XERCES_CPP_NAMESPACE;
+namespace apex
+{
 
-namespace apex {
+using data::FilePrefix;
 
-    using data::FilePrefix;
-
-namespace parser {
+namespace parser
+{
 
 PrefixParser::PrefixParser()
- : Parser()
 {
 }
-
 
 PrefixParser::~PrefixParser()
 {
 }
-
 
 /**
  * Parse the given prefix node according to the apex:prefixType:
@@ -47,25 +46,23 @@ PrefixParser::~PrefixParser()
  * @param currentNode
  * @return the prefix
 */
-
-FilePrefix PrefixParser::Parse(XERCES_CPP_NAMESPACE::DOMElement* currentNode) {
+FilePrefix PrefixParser::Parse(const QDomElement &currentNode)
+{
     FilePrefix prefix;
 
-    const QString attrib (ApexXMLTools::XMLutils::GetAttribute(currentNode, "source"));
-    const QString value (ApexXMLTools::XMLutils::GetFirstChildText (currentNode));
+    const QString attrib(currentNode.attribute(QSL("source")));
+    const QString value(currentNode.text());
 
-    prefix.setValue( value.trimmed() );
+    prefix.setValue(value.trimmed());
     if (attrib.isEmpty() || attrib == "inline") {
-        prefix.setType( FilePrefix::PREFIX_INLINE );
+        prefix.setType(FilePrefix::PREFIX_INLINE);
     } else if (attrib == "apexconfig") {
-        prefix.setType( FilePrefix::PREFIX_MAINCONFIG );
+        prefix.setType(FilePrefix::PREFIX_MAINCONFIG);
     } else {
-        Q_ASSERT (0 && "invalid attribute value");
+        qFatal("invalid attribute value");
     }
     return prefix;
-
 }
 
 }
-
 }

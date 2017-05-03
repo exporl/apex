@@ -174,11 +174,11 @@ void AutoCalibrationDialogPrivate::on_hardware_currentIndexChanged
         ++ignoreHardware;
         p->setHardwareSetup (oldHardwareSetup);
         --ignoreHardware;
-        emit p->manageHardwareSetups();
+        Q_EMIT p->manageHardwareSetups();
     } else {
         const QString value = ui.hardware->itemText(index);
         if (oldHardwareSetup != value) {
-            emit p->hardwareSetupChanged (value);
+            Q_EMIT p->hardwareSetupChanged (value);
             oldHardwareSetup = value;
         }
     }
@@ -194,7 +194,7 @@ void AutoCalibrationDialogPrivate::setHardwareSetups (QStringList value)
     ui.hardware->addItem (tr ("<Manage setups...>"), true);
     p->setHardwareSetup (current);
     --ignoreHardware;
-    // The handler will only emit if the old and the new setup are different
+    // The handler will only Q_EMIT if the old and the new setup are different
     on_hardware_currentIndexChanged (ui.hardware->currentIndex());
 }
 
@@ -265,6 +265,9 @@ AutoCalibrationDialog::AutoCalibrationDialog (QWidget *parent) :
     QDialog (parent),
     d (new AutoCalibrationDialogPrivate (this))
 {
+#ifdef Q_OS_ANDROID
+    showMaximized();
+#endif
 }
 
 AutoCalibrationDialog::~AutoCalibrationDialog()
@@ -381,17 +384,17 @@ QStringList AutoCalibrationDialog::getSelectedParametersToCalibrate()
 
 void AutoCalibrationDialog::slmTypeChanged(const QString &text)
 {
-        emit slmParameterChanged("type",text);
+        Q_EMIT slmParameterChanged("type",text);
 }
 
 void AutoCalibrationDialog::slmFreqWeighChanged(const QString &text)
 {
-        emit slmParameterChanged("frequency_weighting",text);
+        Q_EMIT slmParameterChanged("frequency_weighting",text);
 }
 
 void AutoCalibrationDialog::slmTimeWeighChanged(const QString &text)
 {
-        emit slmParameterChanged("time_weighting",text);
+        Q_EMIT slmParameterChanged("time_weighting",text);
 }
 
 void AutoCalibrationDialog::slmPercChanged(const QString &text)
@@ -399,7 +402,7 @@ void AutoCalibrationDialog::slmPercChanged(const QString &text)
         bool ok;
         double percentile = text.toDouble(&ok);
         if(ok && percentile >= 0 && percentile <= 1)
-                emit slmParameterChanged("percentile",QString::number(percentile));
+                Q_EMIT slmParameterChanged("percentile",QString::number(percentile));
         else {
                 setStatus(tr("<span style=\"color:#fff;background-color:#f00\">"
                 "Invalid percentile parameter.</span>"));
@@ -408,7 +411,7 @@ void AutoCalibrationDialog::slmPercChanged(const QString &text)
 
 void AutoCalibrationDialog::slmTimeChanged(const QString &text)
 {
-                emit slmParameterChanged("time",text);
+                Q_EMIT slmParameterChanged("time",text);
 }
 
 QString AutoCalibrationDialog::targetAmplitude() const
@@ -437,7 +440,7 @@ void AutoCalibrationDialog::enableUserDefinedCalibrationAmplitude(int checkState
         {
                 d->ui.amplitudeTxt->setEnabled(false);
                 d->ui.amplitudeLbl->setEnabled(false);
-                emit advancedCalibrationAmplitudeUnchecked();
+                Q_EMIT advancedCalibrationAmplitudeUnchecked();
         }
 }
 

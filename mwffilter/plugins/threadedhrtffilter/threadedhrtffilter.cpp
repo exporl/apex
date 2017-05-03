@@ -35,19 +35,13 @@ class ThreadedHrtfFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "apex.threadedhrtffilter")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
     virtual PluginFilterInterface *createFilter (const QString &name,
             unsigned channels, unsigned blockSize, unsigned fs) const;
 };
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (threadedhrtffilter, ThreadedHrtfFilterCreator)
-#endif
 
 class ThreadedHrtfFilter:
     public QObject,
@@ -118,7 +112,7 @@ void ThreadedHrtfFilter::resetParameters()
 bool ThreadedHrtfFilter::isValidParameter (const QString &type,
         int channel) const
 {
-    if (type == QLatin1String("uri") && channel == -1)
+    if (type == QLatin1String("file") && channel == -1)
         return true;
     if (type == QLatin1String("limit") && channel == -1)
         return true;
@@ -142,7 +136,7 @@ bool ThreadedHrtfFilter::isValidParameter (const QString &type,
 bool ThreadedHrtfFilter::setParameter (const QString &type, int channel,
         const QString &value)
 {
-    if (type == QLatin1String("uri") && channel == -1) {
+    if (type == QLatin1String("file") && channel == -1) {
         newFilePath = QUrl (value).path();
         return true;
     }

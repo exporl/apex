@@ -19,17 +19,7 @@
 
 #include "apexdata/procedure/scriptproceduredata.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
-
 #include "scriptproceduredataparser.h"
-
-namespace XERCES_CPP_NAMESPACE
-{
-    class DOMElement;
-};
-using namespace apex::ApexXMLTools;
-
 
 #include <QString>
 
@@ -39,26 +29,23 @@ namespace apex
 namespace parser
 {
 
-
 ScriptProcedureDataParser::ScriptProcedureDataParser()
 {
 }
 
-void ScriptProcedureDataParser::Parse(
-        XERCES_CPP_NAMESPACE::DOMElement* p_base,
+void ScriptProcedureDataParser::Parse(const QDomElement &p_base,
         data::ScriptProcedureData *p_data)
 {
    ProcedureDataParser::Parse(p_base, p_data);
 }
 
-bool ScriptProcedureDataParser::SetParameter(const QString p_name,
-        const QString id, const QString p_value ,
-        XERCES_CPP_NAMESPACE::DOMElement* node, data::ProcedureData *data)
+bool ScriptProcedureDataParser::SetParameter(const QString &p_name,
+        const QString &id, const QString &p_value,
+        const QDomElement &node, data::ProcedureData *data)
 {
     Q_ASSERT(data);
 
-    data::ScriptProcedureData* scriptData =
-            dynamic_cast<data::ScriptProcedureData*>(data);
+    data::ScriptProcedureData* scriptData = dynamic_cast<data::ScriptProcedureData*>(data);
 
     Q_ASSERT (scriptData);
 
@@ -67,26 +54,14 @@ bool ScriptProcedureDataParser::SetParameter(const QString p_name,
     } else if ( p_name == "script") {
         scriptData->setScript(p_value);
     } else if ( p_name == "parameter") {
-        QString name = XMLutils::GetAttribute(node, "name");
+        QString name = node.attribute(QSL("name"));
         scriptData->appendParameter(name, p_value);
     } else {
-        return
-                ProcedureDataParser::SetParameter(
-                p_name,id, p_value, node, scriptData);
-
+        return ProcedureDataParser::SetParameter(p_name,id, p_value, node, scriptData);
     }
 
     return true;
-
-
-
-
-
-}
-
-
 }
 
 }
-
-
+}

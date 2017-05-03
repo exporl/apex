@@ -17,19 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXWRITERS_EXPERIMENTWRITER_H_
-#define _EXPORL_SRC_LIB_APEXWRITERS_EXPERIMENTWRITER_H_
+#ifndef _APEX_SRC_LIB_APEXWRITERS_EXPERIMENTWRITER_H_
+#define _APEX_SRC_LIB_APEXWRITERS_EXPERIMENTWRITER_H_
 
 #include "apextools/global.h"
 
-#include "apextools/xml/xercesinclude.h"
-
 #include <QStringList>
 
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMElement;
-}
+class QDomElement;
 
 namespace apex
 {
@@ -37,28 +32,30 @@ namespace data
 {
 class ExperimentData;
 }
+
 namespace writer
 {
+
 class APEXWRITERS_EXPORT ExperimentWriter
 {
-    public:
+    Q_DECLARE_TR_FUNCTIONS(ExperimentWriter)
+public:
+    /**
+     * Writes the given data to the given file.
+     * If screens is not empty, the strings in the list will be parsed to
+     * DOMElements and used as the screens in ScreensData. No validation
+     * is used here so make sure it is valid xml.
+     */
+    static void write(const data::ExperimentData& data, const QString& file,
+            const QStringList& screens = QStringList());
 
-        /**
-         * Writes the given data to the given file.
-         * If screens is not empty, the strings in the list will be parsed to
-         * DOMElements and used as the screens in ScreensData. No validation
-         * is used here so make sure it is valid xml.
-         */
-        static void write(const data::ExperimentData& data, const QString& file,
-                          const QStringList& screens = QStringList());
-
-    private:
-
-        static void throwIfNull(XERCES_CPP_NAMESPACE::DOMElement* e,
-                                const QString& failingWrite);
+private:
+    static void throwIfNull(const QDomElement &e, const QString &where);
 };
-}//ns writer
-}//ns apex
+
+}
+}
+
 #endif
 
 

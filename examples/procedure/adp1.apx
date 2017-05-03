@@ -1,251 +1,250 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- @doc
   @what: Regression test for ADP - Experiment stops after 4 reversals
   @description: adaptive procedure, one of the following sequences are played: noise een noise, een noise noise, noise noise een => answer: one of the three sequences. Stepsize changes after 2 trials => stepsize determines the parameter 'snr'
                 If the subject gives the correct answer => experiment becomes more difficult (snr: lower number (rawdata1): less gain (-20)<=> higher number (rawdata3): normal gain (0) see stimuli)
   @how: adaptiveProcedure - adapt_parameter (snr: snr (order, not in dB) - intervals - stepsize determines the change in snr (1-2-3) not the value in dB
  -->
- <procedure xsi:type="apex:adaptiveProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <intervals count="3">
-    <interval number="1" element="button1"/>
-    <interval number="2" element="button2"/>
-    <interval number="3" element="button3"/>
-   </intervals>
-   <nUp>1</nUp>
-   <nDown>1</nDown>
-   <adapt_parameter>snr</adapt_parameter>
-   <start_value>5</start_value>
-   <stop_after_type>reversals</stop_after_type>
-   <stop_after>10</stop_after>
-   <larger_is_easier>true</larger_is_easier>
-   <stepsizes>
-    <change_after>reversals</change_after>
-    <stepsize size="1" begin="0"/>
-    <stepsize size="1" begin="2"/>
-   </stepsizes>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-    <stimulus id="stimulus2"/>
-    <stimulus id="stimulus3"/>
-    <standard id="standard1"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="1500">false</feedback>
-   <showcurrent>true</showcurrent>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout id="main_layout" width="3" height="2">
-    <label id="l1" row="1" col="1">
-     <text>correct answer:</text>
-    </label>
-    <answerlabel id="al" row="1" col="2"/>
-    <button id="button1" row="2" col="1">
-     <text>1</text>
-    </button>
-    <button id="button2" row="2" col="2">
-     <text>2</text>
-    </button>
-    <button id="button3" row="2" col="3">
-     <text>3</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-    <button id="button2"/>
-    <button id="button3"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
-  <datablock id="rawdata2">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
-  <datablock id="rawdata3">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
-  <datablock id="noisedata">
-   <device>wavdevice</device>
-   <uri>ruisje.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>512</buffersize>
-  </device>
- </devices>
- <filters>
-  <filter id="amplifier" xsi:type="apex:amplifier">
-   <device>wavdevice</device>
-   <channels>2</channels>
-   <basegain>5</basegain>
-   <gain>0</gain>
-  </filter>
-  <filter id="amplifier1" xsi:type="apex:amplifier">
-   <device>wavdevice</device>
-   <channels>2</channels>
-   <continuous>false</continuous>
-   <basegain>5</basegain>
-   <gain>-10</gain>
-  </filter>
-  <filter id="amplifier2" xsi:type="apex:amplifier">
-   <device>wavdevice</device>
-   <channels>2</channels>
-   <continuous>false</continuous>
-   <basegain>5</basegain>
-   <gain>-20</gain>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters>
-   <parameter id="snr"/>
-  </fixed_parameters>
-  <stimulus id="standard1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="noisedata"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="snr">20</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="snr">1</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="stimulus2">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata2"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="snr">2</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="stimulus3">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata3"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="snr">3</parameter>
-   </fixedParameters>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>noisedata</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>rawdata3</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>rawdata2</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier1</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier1</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>rawdata1</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier2</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier2</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <intervals count="3">
+        <interval number="1" element="button1"/>
+        <interval number="2" element="button2"/>
+        <interval number="3" element="button3"/>
+      </intervals>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>snr</adapt_parameter>
+      <start_value>5</start_value>
+      <stop_after_type>reversals</stop_after_type>
+      <stop_after>10</stop_after>
+      <larger_is_easier>true</larger_is_easier>
+      <stepsizes>
+        <change_after>reversals</change_after>
+        <stepsize size="1" begin="0"/>
+        <stepsize size="1" begin="2"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+        <stimulus id="stimulus2"/>
+        <stimulus id="stimulus3"/>
+        <standard id="standard1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="1500">false</feedback>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout id="main_layout" width="3" height="2">
+        <label id="l1" row="1" col="1">
+          <text>correct answer:</text>
+        </label>
+        <answerlabel id="al" row="1" col="2"/>
+        <button id="button1" row="2" col="1">
+          <text>1</text>
+        </button>
+        <button id="button2" row="2" col="2">
+          <text>2</text>
+        </button>
+        <button id="button3" row="2" col="3">
+          <text>3</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="rawdata2">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="rawdata3">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="noisedata">
+      <device>wavdevice</device>
+      <file>ruisje.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>512</buffersize>
+    </device>
+  </devices>
+  <filters>
+    <filter id="amplifier" xsi:type="apex:amplifier">
+      <device>wavdevice</device>
+      <channels>2</channels>
+      <basegain>5</basegain>
+      <gain>0</gain>
+    </filter>
+    <filter id="amplifier1" xsi:type="apex:amplifier">
+      <device>wavdevice</device>
+      <channels>2</channels>
+      <continuous>false</continuous>
+      <basegain>5</basegain>
+      <gain>-10</gain>
+    </filter>
+    <filter id="amplifier2" xsi:type="apex:amplifier">
+      <device>wavdevice</device>
+      <channels>2</channels>
+      <continuous>false</continuous>
+      <basegain>5</basegain>
+      <gain>-20</gain>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="snr"/>
+    </fixed_parameters>
+    <stimulus id="standard1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="noisedata"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="snr">20</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="snr">1</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus2">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata2"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="snr">2</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus3">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata3"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="snr">3</parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>noisedata</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>rawdata3</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>rawdata2</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier1</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>rawdata1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier2</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier2</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
 </apex:apex>
-

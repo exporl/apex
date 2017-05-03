@@ -1,118 +1,120 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1">
+  <!-- @doc
   @what: Regression test for adapting device parameters - gain of device varies according to user input
   @description: A sinus is played in the left ear. The sinus is played continuously over trial but when you click on 'higher/lower' the sinus is played again but the gain of the sinus is adapted with +5/-5 dB.
   @how: adaptiveProcedure - datablock/stimulus: silence - filter: generator: sinus - continuous: true - adapt_parameter: gain - (!basegain has to be low enough otherwise there is clipping!)
     -->
- <procedure xsi:type="apex:adaptiveProcedure">
-  <parameters>
-   <presentations>100</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-   <nUp>1</nUp>
-   <nDown>1</nDown>
-   <adapt_parameter>gain</adapt_parameter> <!-- adapt_parameter = gain sinus -->
-   <start_value>0</start_value>
-   <stop_after_type>presentations</stop_after_type>
-   <stop_after>100</stop_after>
-   <larger_is_easier>false</larger_is_easier>
-   <stepsizes>
-    <stepsize begin="0" size="5"/>
-   </stepsizes>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>up</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">false</feedback>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout height="1" width="3" id="main_layout">
-    <button id="up" x="1" y="1">
-     <text>higher</text>
-    </button>
-    <button id="down" x="2" y="1">
-     <text>lower</text>
-    </button>
-    <parameterlist id="pl" x="3" y="1">
-     <parameter>gain</parameter>
-    </parameterlist>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="up"/>
-    <button id="down"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>file:../stimuli</uri_prefix>
-  <datablock id="silence">
-   <device>wavdevice</device>
-   <uri>silence:1000</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <filters>
-  <filter id="generator" xsi:type="apex:generator">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <continuous>true</continuous>
-   <type>sinus</type>
-   <basegain>-30</basegain>
-   <gain id="gain">0</gain> <!-- id:gain = gain of sinus -->
-   <frequency>1000</frequency>
-   <phase>0</phase>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="silence"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>generator</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>100</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>gain</adapt_parameter>
+      <!-- adapt_parameter = gain sinus -->
+      <start_value>0</start_value>
+      <stop_after_type>presentations</stop_after_type>
+      <stop_after>100</stop_after>
+      <larger_is_easier>false</larger_is_easier>
+      <stepsizes>
+        <stepsize begin="0" size="5"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>up</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout id="main_layout" height="1" width="3">
+        <button id="up" x="1" y="1">
+          <text>higher</text>
+        </button>
+        <button id="down" x="2" y="1">
+          <text>lower</text>
+        </button>
+        <parameterlist id="pl" x="3" y="1">
+          <parameter>gain</parameter>
+        </parameterlist>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="up"/>
+        <button id="down"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="silence">
+      <device>wavdevice</device>
+      <file>silence:1000</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters>
+    <filter xsi:type="apex:generator" id="generator">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <continuous>true</continuous>
+      <type>sinus</type>
+      <basegain>-30</basegain>
+      <gain id="gain">0</gain>
+      <!-- id:gain = gain of sinus -->
+      <frequency>1000</frequency>
+      <phase>0</phase>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="silence"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>generator</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
 </apex:apex>

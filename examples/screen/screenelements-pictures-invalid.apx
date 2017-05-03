@@ -1,154 +1,152 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
-
- <!-- @doc
+<apex:apex version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
+  <!-- @doc
   @what: shows error message for picture
   @description: experiment doesn't load, error message: picture invalid
   @how: wrong file extension for picture (xxx in stead of .png)
   -->
-
- <procedure xsi:type="apex:trainingProcedure">
-  <parameters>
-   <presentations>100</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-   <input_during_stimulus/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>picture_1</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-   <trial id="trial2">
-    <answer>picture_2</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus2"/>
-   </trial>
-   <trial id="trial3">
-    <answer>picture_3</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus3"/>
-   </trial>
-   <trial id="trial4">
-    <answer>picture_4</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus4"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <uri_prefix>../pictures</uri_prefix>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback>true</feedback>
-  </reinforcement>
-  <style>&#xd;
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>100</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+      <input_during_stimulus/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>picture_1</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+      <trial id="trial2">
+        <answer>picture_2</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus2"/>
+      </trial>
+      <trial id="trial3">
+        <answer>picture_3</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus3"/>
+      </trial>
+      <trial id="trial4">
+        <answer>picture_4</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus4"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <prefix>../pictures</prefix>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback>true</feedback>
+    </reinforcement>
+    <style>&#xd;
       QLabel{ border: 1px solid red}&#xd;
     </style>
-  <screen id="screen1">
-   <gridLayout width="2" height="2">
-    <picture x="1" id="picture_1" y="1">
-     <shortcut>a</shortcut>
-     <uri>invalid.xxx</uri>
-    </picture>
-    <picture x="2" id="picture_2" y="1">
-     <shortcut>b</shortcut>
-     <uri>2.png</uri>
-    </picture>
-    <picture x="1" id="picture_3" y="2">
-     <shortcut>c</shortcut>
-     <uri>3.png</uri>
-    </picture>
-    <picturelabel x="2" id="picturelabel" y="2">
-     <uri>4.png</uri>
-    </picturelabel>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="picture_1"/>
-    <button id="picture_2"/>
-    <button id="picture_3"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
-  <datablock id="rawdata2">
-   <device>wavdevice</device>
-   <description>sample raw datablock</description>
-   <uri>wd2.wav</uri>
-  </datablock>
-  <datablock id="rawdata3">
-   <device>wavdevice</device>
-   <uri>wd3.wav</uri>
-  </datablock>
-  <datablock id="rawdata4">
-   <device>wavdevice</device>
-   <uri>wd4.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device xsi:type="apex:wavDeviceType" id="wavdevice">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>512</buffersize>
-  </device>
- </devices>
- <filters/>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
-  <stimulus id="stimulus2">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata2"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
-  <stimulus id="stimulus3">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata3"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
-  <stimulus id="stimulus4">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata4"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
+    <screen id="screen1">
+      <gridLayout height="2" width="2">
+        <picture x="1" y="1" id="picture_1">
+          <shortcut>a</shortcut>
+          <file>invalid.xxx</file>
+        </picture>
+        <picture x="2" y="1" id="picture_2">
+          <shortcut>b</shortcut>
+          <file>2.png</file>
+        </picture>
+        <picture x="1" y="2" id="picture_3">
+          <shortcut>c</shortcut>
+          <file>3.png</file>
+        </picture>
+        <picturelabel x="2" y="2" id="picturelabel">
+          <file>4.png</file>
+        </picturelabel>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="picture_1"/>
+        <button id="picture_2"/>
+        <button id="picture_3"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="rawdata2">
+      <device>wavdevice</device>
+      <description>sample raw datablock</description>
+      <file>wd2.wav</file>
+    </datablock>
+    <datablock id="rawdata3">
+      <device>wavdevice</device>
+      <file>wd3.wav</file>
+    </datablock>
+    <datablock id="rawdata4">
+      <device>wavdevice</device>
+      <file>wd4.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>512</buffersize>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stimulus2">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata2"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stimulus3">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata3"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stimulus4">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata4"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
 </apex:apex>

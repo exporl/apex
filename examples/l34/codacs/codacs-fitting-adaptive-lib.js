@@ -1,47 +1,23 @@
 /* global xml, params */
 /* jshint forin:true, noarg:true, noempty:true, eqeqeq:true, undef:true, curly:true, devel:true, maxerr:50 */
 
-function dacspowerup(r)
-{
-    return xml.tag("stimulus", {"repeat" : r},
-            xml.tag("parameters",
-                xml.tag("pw", 12.0),
-                xml.tag("pg", 6.0),
-                xml.tag("ae", 0),
-                xml.tag("re", -1),
-                xml.tag("cl", 0),
-                xml.tag("t", 51.0)));
-}
-
 // needs at least one powerup pulse before
 function dacsstim(r, amplitude)
 {
-    return xml.tag("stimulus", {"repeat" : r},
-            xml.tag("parameters",
-                xml.tag("ae", (amplitude & 0xf80) >> 7),
-                xml.tag("cl", (amplitude & 0x07f) << 1)));
+    return ciseq(r, xml.tag("stimulus", {type: "codacs"},
+                xml.tag("parameter", {name: "trigger"}, false),
+                xml.tag("parameter", {name: "period"}, 51.0),
+                xml.tag("parameter", {name: "amplitude"}, amplitude)));
 }
 
-function ciseq(pulses, r)
+function ciseq(r, pulses)
 {
-    var i,
-        result = "";
-    for (i = 0; i < r; i += 1) {
-        result += pulses;
-    }
-    return result;
-    // Not possible since repeat attributes are ignored on sequences
-    // return xml.tag("sequence", {"repeat" : r}, pulses);
+    return xml.tag("sequence", {"repeats" : r}, pulses);
 }
 
 function cinicseq(pulses)
 {
-    return xml.tag("nic:sequence", {
-        "xmlns:nic" : "http://www.cochlear.com/nic",
-        "xmlns:xsi" : "http://www.w3.org/2001/XMLSchema-instance",
-        "xsi:schemaLocation" :
-            "http://www.cochlear.com/nic nic-stimuli.xsd"},
-        pulses);
+    return xml.tag("cisequence", ciseq(1, pulses));
 }
 
 function db(id, level)
@@ -60,12 +36,11 @@ function db(id, level)
                 amplitude <  8192 ? ((amplitude -  4096) / 16) + 1280 :
                 amplitude < 16384 ? ((amplitude -  8192) / 32) + 1536 :
                                     ((amplitude - 16384) / 64) + 1792)),
-        sequence = dacspowerup(10000) + ciseq
-            (dacsstim(clickFrames, ulaw) +
-             dacsstim(silenceFrames, 0) +
-             dacsstim(clickFrames, (params.alternatingPolarity ? -1 : 1) * ulaw) +
-             dacsstim(silenceFrames, 0),
-             pulseCount);
+        sequence = dacsstim(10000, 0) + ciseq(pulseCount,
+                dacsstim(clickFrames, ulaw) +
+                dacsstim(silenceFrames, 0) +
+                dacsstim(clickFrames, (params.alternatingPolarity ? -1 : 1) * ulaw) +
+                dacsstim(silenceFrames, 0));
 
     return xml.datablock(id, "l34", '', cinicseq(sequence));
 }

@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXTOOLS_APEXRANDOM_H_
-#define _EXPORL_SRC_LIB_APEXTOOLS_APEXRANDOM_H_
+#ifndef _APEX_SRC_LIB_APEXTOOLS_APEXRANDOM_H_
+#define _APEX_SRC_LIB_APEXTOOLS_APEXRANDOM_H_
 // random function from numerical recipes
 
 #define IA 16807
@@ -87,4 +87,4 @@ float ran1(long *idum) {
         return temp;
 }
 
-#endif //#ifndef _EXPORL_SRC_LIB_APEXTOOLS_APEXRANDOM_H_
+#endif //#ifndef _APEX_SRC_LIB_APEXTOOLS_APEXRANDOM_H_

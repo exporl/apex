@@ -228,7 +228,7 @@ void StartLevelWidget::updateNoiseStartPoint(double to)
     if (to != noiseJump)
     {
         noiseJump = to;
-        emit contentsChanged();
+        Q_EMIT contentsChanged();
     }
 }
 
@@ -240,12 +240,12 @@ void StartLevelWidget::showNoiseStartPointDialog()
 
 void StartLevelWidget::noiselevelChanged(QString level)
 {
-    emit noiselevelChanged(level.toDouble());
+    Q_EMIT noiselevelChanged(level.toDouble());
 }
 
 void StartLevelWidget::speechlevelChanged(QString level)
 {
-    emit speechlevelChanged(level.toDouble());
+    Q_EMIT speechlevelChanged(level.toDouble());
 }
 
 bool StartLevelWidget::hasAllObligedFields(QWidget **w)

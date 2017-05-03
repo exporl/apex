@@ -1,3 +1,4 @@
+/* see http://doc.qt.io/qtinstallerframework/noninteractive.html for more information */
 function Controller() {
     installer.autoRejectMessageBoxes();
     installer.installationFinished.connect(function() {
@@ -34,6 +35,9 @@ Controller.prototype.TargetDirectoryPageCallback = function()
 
 Controller.prototype.ComponentSelectionPageCallback = function() {
     var widget = gui.currentPageWidget();
+    widget.selectComponent("qt.56.android_x86");
+    widget.deselectComponent("qt.56.gcc_64");
+    // widget.deselectComponent("qt.tools"); cannot be disabled
     gui.clickButton(buttons.NextButton);
 }
 

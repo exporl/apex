@@ -22,7 +22,7 @@ if (nargin<6)
     xsltscriptparameters='';
 end
 
-if (length(type)<4 ||  (length(type)>=4) && ~strcmp(type(end-3:end), '.xsl'))
+if (length(type)<4 ||  (length(type)>=4) && ~strcmp(type(end-3:end), '.xsl') && ~strcmp(type(end-4:end), '.html'))
 
     if (strcmp(type, 'mao'))
         script='mao.xsl';
@@ -40,12 +40,17 @@ end
 
 lf=sprintf('\n');
 result=['<results>' lf];
+if strcmp(type(end-3:end), '.xsl')
 result=[result '<xsltscript>' script '</xsltscript>' lf];
 if (length(xsltscriptparameters))
     result=[result wraptag('xsltscriptparameters', xsltscriptparameters) lf];
 end
 
 result=[result '<showresults>'  bool2xml(showresults) '</showresults>' lf];
+elseif strcmp(type(end-4:end), '.html')
+    result=[result '<page>' script '</page>' lf];
+    result=[result '<showafterexperiment>'  bool2xml(showresults) '</showafterexperiment>' lf];
+end
 result=[result '<saveprocessedresults>'  bool2xml(saveprocessedresults) '</saveprocessedresults>' lf];
 if (length(matlabscript))
     result=[result wraptag('matlabscript', matlabscript) lf];

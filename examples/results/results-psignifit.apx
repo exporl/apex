@@ -1,81 +1,81 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- @doc
   @what: Demonstrate the use of 'psignifit' results
   @description: APEX contains an implementation of the psignifit library, which can fit psychometric functions to data
   @how: Psignifit is called from the resultsviewer and the SRT and slope are shown numerically
  -->
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <screen id="screen"/>
-    <stimulus id="stimulus"/>
-   </trial>
-   <trial id="trial2">
-    <screen id="screen"/>
-    <stimulus id="stimulus"/>
-   </trial>
-   <trial id="trial3">
-    <screen id="screen"/>
-    <stimulus id="stimulus"/>
-   </trial>
-   <trial id="trial4">
-    <screen id="screen"/>
-    <stimulus id="stimulus"/>
-   </trial>
-   <trial id="trial5">
-    <screen id="screen"/>
-    <stimulus id="stimulus"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">false</feedback>
-  </reinforcement>
-  <screen id="screen">
-   <gridLayout width="3" id="main_layout" height="1">
-    <label row="1" col="1" id="label">
-     <text>Value [0-1]</text>
-    </label>
-    <textEdit row="1" col="2" id="text"/>
-   </gridLayout>
-   <default_answer_element>text</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <datablock id="dbsilence">
-   <device>wavdevice</device>
-   <uri>silence:10</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain id="gain">0</gain>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <filters/>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus">
-   <datablocks>
-    <datablock id="dbsilence"/>
-   </datablocks>
-  </stimulus>
- </stimuli>
- <results>
-  <page>apex:rtresults-psignifit.html</page>
-  <resultparameters/>
-  <showafterexperiment>true</showafterexperiment>
- </results>
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <screen id="screen"/>
+        <stimulus id="stimulus"/>
+      </trial>
+      <trial id="trial2">
+        <screen id="screen"/>
+        <stimulus id="stimulus"/>
+      </trial>
+      <trial id="trial3">
+        <screen id="screen"/>
+        <stimulus id="stimulus"/>
+      </trial>
+      <trial id="trial4">
+        <screen id="screen"/>
+        <stimulus id="stimulus"/>
+      </trial>
+      <trial id="trial5">
+        <screen id="screen"/>
+        <stimulus id="stimulus"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">false</feedback>
+    </reinforcement>
+    <screen id="screen">
+      <gridLayout width="3" id="main_layout" height="1">
+        <label row="1" id="label" col="1">
+          <text>Value [0-1]</text>
+        </label>
+        <textEdit row="1" id="text" col="2"/>
+      </gridLayout>
+      <default_answer_element>text</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <datablock id="dbsilence">
+      <device>wavdevice</device>
+      <file>silence:10</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain id="gain">0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus">
+      <datablocks>
+        <datablock id="dbsilence"/>
+      </datablocks>
+    </stimulus>
+  </stimuli>
+  <results>
+    <page>apex:resultsviewer.html</page>
+    <resultparameters/>
+    <showafterexperiment>true</showafterexperiment>
+  </results>
 </apex:apex>

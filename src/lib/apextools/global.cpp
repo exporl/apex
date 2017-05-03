@@ -18,10 +18,4 @@
 
 #include "global.h"
 
-// Q_LOGGING_CATEGORY(APEX_RS, "apex.randomstuff")
-// TODO: workaround for non-constness on Qt 5.2, remove after switch to 16.04 LTS
-const QLoggingCategory &APEX_RS()
-{
-    static QLoggingCategory category("apex.randomstuff");
-    return category;
-}
+Q_LOGGING_CATEGORY(APEX_RS, "apex")

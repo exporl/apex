@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __FACTORYTYPES_H__
-#define __FACTORYTYPES_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_FACTORYTYPES_H__
+#define _APEX_SRC_LIB_STREAMAPP_FACTORYTYPES_H__
 
 namespace streamapp
 {
@@ -37,17 +37,6 @@ namespace streamapp
     DUMMY       //!< Dummy soundcard
   };
 
-    /**
-      * Mixertypes for soundcards
-      */
-  enum gt_eMixerType
-  {
-    Mme,
-    Oss,
-    Jack,
-    Rme
-  };
-
 }
 
-#endif //#ifndef __FACTORYTYPES_H__
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_FACTORYTYPES_H__

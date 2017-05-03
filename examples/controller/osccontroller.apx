@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.0/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.0/experiment.xsd">
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1">
   <!--
   Regression test for osc controller
 
@@ -37,14 +37,14 @@
       <feedback length="300">false</feedback>
     </reinforcement>
     <screen id="screen1">
-      <gridLayout width="3" height="1" id="main_layout">
-        <button x="1" y="1" id="up">
+      <gridLayout id="main_layout" height="1" width="3">
+        <button id="up" x="1" y="1">
           <text>louder</text>
         </button>
-        <button x="2" y="1" id="down">
+        <button id="down" x="2" y="1">
           <text>quieter</text>
         </button>
-        <parameterlist x="3" y="1" id="pl">
+        <parameterlist id="pl" x="3" y="1">
           <parameter>gain</parameter>
         </parameterlist>
       </gridLayout>
@@ -56,14 +56,14 @@
     </screen>
   </screens>
   <datablocks>
-    <uri_prefix>../stimuli</uri_prefix>
+    <prefix>../stimuli</prefix>
     <datablock id="rawdata1">
       <device>wavdevice</device>
-      <uri>wd1.wav</uri>
+      <file>wd1.wav</file>
     </datablock>
   </datablocks>
   <devices>
-    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
       <driver>portaudio</driver>
       <card>interactive</card>
       <channels>2</channels>
@@ -71,14 +71,14 @@
       <samplerate>44100</samplerate>
       <buffersize>4096</buffersize>
     </device>
-    <device id="controller" xsi:type="apex:pluginController">
+    <device xsi:type="apex:pluginController" id="controller">
       <plugin>osccontroller</plugin>
       <parameter id="gain" name="oscparameter">10</parameter>
       <parameter id="prefix" name="prefix">apex-example</parameter>
     </device>
   </devices>
   <filters>
-    <filter id="amplifier" xsi:type="apex:amplifier">
+    <filter xsi:type="apex:amplifier" id="amplifier">
       <device>wavdevice</device>
       <channels>2</channels>
       <basegain>0</basegain>

@@ -7,17 +7,13 @@
 #include "proceduredata.h"
 #include "trial.h"
 
-#include <xercesc/util/XercesVersion.hpp>
-
 #include <QtPlugin>
 
-//using namespace apex;
-namespace XERCES_CPP_NAMESPACE
-{
-    class DOMElement;
-}
+class QDomElement;
 
-namespace apex {
+namespace apex
+{
+
 class ResultHighlight
 {
 public:
@@ -121,7 +117,7 @@ class ProcedureParserInterface
 public:
     virtual ~ProcedureParserInterface() {}
 
-    virtual data::ProcedureData* parse(xercesc::DOMElement* base) = 0;
+    virtual data::ProcedureData* parse(const QDomElement &base) = 0;
 };
 
 class ProcedureCreatorInterface
@@ -130,7 +126,7 @@ public:
 
     virtual ~ProcedureCreatorInterface() {}
 
-    virtual QStringList availableProcedurePlugins() const = 0;
+    virtual QStringList availablePlugins() const = 0;
 
     virtual ProcedureInterface* createProcedure(const QString& name,
                                                 ProcedureApi* api,

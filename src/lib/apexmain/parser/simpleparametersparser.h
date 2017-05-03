@@ -20,54 +20,44 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_PARSER_SIMPLEPARAMETERSPARSER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_PARSER_SIMPLEPARAMETERSPARSER_H_
 
-#include "apextools/xml/xercesinclude.h"
-
 #include <QString>
 #include <QVariant>
 
-namespace XERCES_CPP_NAMESPACE
+class QDomElement;
+
+namespace apex
 {
-    class DOMElement;
-};
-
-namespace apex {
-
-
-
-
-    namespace data {
-        class SimpleParameters;
-        class ParameterManagerData;
-    }
-
-    namespace parser {
-
-class SimpleParametersParser {
-    public:
-        virtual ~SimpleParametersParser() {};
-        SimpleParametersParser();
-        SimpleParametersParser(data::ParameterManagerData* d);
-
-        /** Parse parameters under the given DOMElement into SimpleParameters p
-         * Does not take ownership of p
-         */
-        virtual void Parse(XERCES_CPP_NAMESPACE::DOMElement* base, data::SimpleParameters* p);
-        void SetParameterManagerData(data::ParameterManagerData* p) { parameterManagerData=p;};
-
-    protected:
-        virtual void AddParameter(data::SimpleParameters* p, XERCES_CPP_NAMESPACE::DOMElement* e, const QString& owner, const QString& type, const QString& id, const QVariant& value, const int channel);
-
-        data::ParameterManagerData* parameterManagerData;
-
-
-};
-
-
-
-    }
-
+namespace data
+{
+class SimpleParameters;
+class ParameterManagerData;
 }
 
+namespace parser
+{
 
+class SimpleParametersParser
+{
+public:
+    virtual ~SimpleParametersParser() {};
+    SimpleParametersParser();
+    SimpleParametersParser(data::ParameterManagerData* d);
+
+    /** Parse parameters under the given DOMElement into SimpleParameters p
+     * Does not take ownership of p
+     */
+    void Parse(const QDomElement &base, data::SimpleParameters* p);
+    void SetParameterManagerData(data::ParameterManagerData* p) { parameterManagerData=p;};
+
+protected:
+    virtual void AddParameter(data::SimpleParameters* p, const QDomElement &e,
+            const QString& owner, const QString& type, const QString& id,
+            const QVariant& value, const int channel);
+
+    data::ParameterManagerData* parameterManagerData;
+};
+
+}
+}
 
 #endif

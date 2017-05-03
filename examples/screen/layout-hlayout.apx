@@ -1,93 +1,82 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
-
- <!-- @doc
+<apex:apex version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!-- @doc
   @what: shows horizontal layout
   @description: buttons are placed next to each other, in a horizontal layout
   @how: <hLayout>
   -->
-
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>5</presentations>
-   <skip>0</skip>
-   <order>random</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>button1</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
-
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">true</feedback>
-  </reinforcement>
-  <screen id="screen1">
-   <hLayout width="2">
-    <label x="1" id="toplabel" y="1">
-     <text>Do the task!</text>
-    </label>
-    <button x="2" id="button1">
-     <text>Button</text>
-    </button>
-   </hLayout>
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>5</presentations>
+      <skip>0</skip>
+      <order>random</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>button1</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">true</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <hLayout width="2">
+        <label id="toplabel" x="1" y="1">
+          <text>Do the task!</text>
+        </label>
+        <button id="button1" x="2">
+          <text>Button</text>
+        </button>
+      </hLayout>
       <buttongroup id="buttongroup90">
-    <button id="toplabel"/>
-    <button id="button1"/>
-   </buttongroup>
-   <default_answer_element>buttongroup90</default_answer_element>
-  </screen>
- </screens>
-
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
-  <datablock id="rawdata2">
-   <device>wavdevice</device>
-   <uri>wd2.wav</uri>
-  </datablock>
- </datablocks>
-
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>512</buffersize>
-  </device>
- </devices>
-
- <filters>
- </filters>
-
- <stimuli>
-  <fixed_parameters>
-   <parameter id="fixed"/>
-  </fixed_parameters>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="fixed">1</parameter>
-   </fixedParameters>
-  </stimulus>
- </stimuli>
-
- <connections>
- </connections>
-
+        <button id="toplabel"/>
+        <button id="button1"/>
+      </buttongroup>
+      <default_answer_element>buttongroup90</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="rawdata2">
+      <device>wavdevice</device>
+      <file>wd2.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>512</buffersize>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="fixed"/>
+    </fixed_parameters>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="fixed">1</parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

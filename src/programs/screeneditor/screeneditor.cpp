@@ -275,7 +275,7 @@ namespace apex
 
     void ScreenEditor::saveScreen()
     {
-      emit saveScreen( this, getScreenWidget()->getScreen() );
+      Q_EMIT saveScreen( this, getScreenWidget()->getScreen() );
     }
 
     void ScreenEditor::setFile( const QString& f )

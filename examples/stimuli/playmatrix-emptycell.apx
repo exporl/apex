@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
+  <!-- Test the use of a playmatrix (stimulus) with an empty cell -->
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+      <trial id="trial2">
+        <answer>correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus2"/>
+      </trial>
+      <trial id="trial3">
+        <answer>correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus3"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>false</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout height="2" x="1" y="2" width="2" id="answer_layout">
+        <button x="1" y="1" id="correct">
+          <text>OK</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="correct"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="db1">
+      <device>soundcard</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="db2">
+      <device>soundcard</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="db3">
+      <device>soundcard</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="db4">
+      <device>soundcard</device>
+      <file>wd1.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <master>soundcard</master>
+    <device xsi:type="apex:wavDeviceType" id="soundcard">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>4096</buffersize>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <sequential>
+          <simultaneous>
+            <datablock id="db1"/>
+            <datablock id="db2"/>
+          </simultaneous>
+          <datablock id="db3"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stimulus2">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <sequential>
+          <datablock id="db3"/>
+          <simultaneous>
+            <datablock id="db1"/>
+            <datablock id="db2"/>
+          </simultaneous>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stimulus3">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <sequential>
+          <datablock id="db3"/>
+          <simultaneous>
+            <datablock id="db1"/>
+            <datablock id="db2"/>
+          </simultaneous>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stimulus4">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <sequential>
+          <datablock id="db3"/>
+          <simultaneous>
+            <datablock id="db1"/>
+          </simultaneous>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stimulus5">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <sequential>
+          <datablock id="db3"/>
+          <simultaneous>
+            <datablock id="db1"/>
+            <datablock id="db2"/>
+          </simultaneous>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+</apex:apex>

@@ -17,13 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXMAIN_FILEPREFIXCONVERTOR_H_
-#define _EXPORL_SRC_LIB_APEXMAIN_FILEPREFIXCONVERTOR_H_
+#ifndef _APEX_SRC_LIB_APEXMAIN_FILEPREFIXCONVERTOR_H_
+#define _APEX_SRC_LIB_APEXMAIN_FILEPREFIXCONVERTOR_H_
 
 #include "apexdata/fileprefix.h"
 
 #include <QCoreApplication>
-#include <QUrl>
 
 namespace apex {
 
@@ -35,7 +34,7 @@ namespace apex {
         Q_DECLARE_TR_FUNCTIONS(FilePrefixConvertor);
         public:
             static QString convert(data::FilePrefix p);
-            static QUrl addPrefix(data::FilePrefix p, const QUrl& file);
+            static QString addPrefix(data::FilePrefix p, const QString& file);
 
     };
 

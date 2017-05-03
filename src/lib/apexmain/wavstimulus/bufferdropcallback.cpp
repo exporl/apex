@@ -18,16 +18,14 @@
  *****************************************************************************/
 
 #include "bufferdropcallback.h"
-#include "apexcontrol.h"
-#include "error/errorevent.h"
+
 #include <QApplication>
 
-using namespace apex;
 using namespace apex::stimulus;
 
-BufferDropCallback::BufferDropCallback( const QString& ac_sDropSource ) :
-  mv_nDrops( 0 ),
-  m_pError( StatusItem::Error, ac_sDropSource, "!!!!! buffer underrun !!!!!" )
+BufferDropCallback::BufferDropCallback(const QString &dropSource) :
+    mv_nDrops(0),
+    dropSource(dropSource)
 {
 }
 
@@ -37,8 +35,6 @@ BufferDropCallback::~BufferDropCallback()
 
 void BufferDropCallback::mf_Callback()
 {
-    //ok it's not nice to start allocating in the audio thread,
-    //but buffers already dropped so we don't bother with it
-  QApplication::postEvent( &ApexControl::Get(), new ErrorEvent( m_pError ) );
-  ++mv_nDrops;
+    qCCritical(APEX_RS, "%s: !!!!! buffer underrun !!!!!", qPrintable(dropSource));
+    ++mv_nDrops;
 }

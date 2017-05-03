@@ -19,9 +19,10 @@
 
 #include "apexmain/calibration/soundlevelmeter.h"
 
-#include "apexmain/services/pluginloader.h"
-
+#include "apextools/apexpluginloader.h"
 #include "apextools/global.h"
+
+#include "common/pluginloader.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -31,9 +32,8 @@
 
 #include <QtDebug>
 
-#define QL1S QLatin1String
-
 using namespace apex;
+using namespace cmn;
 
 class MainWindow : public QMainWindow
 {
@@ -63,16 +63,14 @@ MainWindow::MainWindow(const QString &plugin, QMainWindow *parent) :
     this->label->setStyleSheet(style);
     setCentralWidget(this->label);
 
-    PluginLoader &loader = PluginLoader::Get();
     QList<SoundLevelMeterPluginCreator*> available =
-        loader.availablePlugins<SoundLevelMeterPluginCreator>();
+        PluginLoader().availablePlugins<SoundLevelMeterPluginCreator>();
     Q_FOREACH (SoundLevelMeterPluginCreator *creator, available) {
         qCDebug(APEX_RS, "Available plugins: %s", qPrintable(creator->availablePlugins().join(QL1S(", "))));
     }
     QString name(plugin.length() > 0 ? plugin : QL1S("dummyslmslave"));
 
-    SoundLevelMeterPluginCreator* creator = PluginLoader::Get().
-        createPluginCreator<SoundLevelMeterPluginCreator>(name);
+    SoundLevelMeterPluginCreator* creator = createPluginCreator<SoundLevelMeterPluginCreator>(name);
     this->slm.reset(creator->createSoundLevelMeter(name));
     this->slm->setTransducer("4196"); // TODO
     this->slm->startMeasurement(SoundLevelMeter::SPL_Measurement,

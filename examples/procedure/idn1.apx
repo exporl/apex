@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.3/experiment.xsd">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
   <!-- @doc
     @what: Matching of stimuli and buttons - Different trials (+ answers) - 1 presentations (6 trials)
     @description: auditive stimulus 1 2 3 4 5 6 - input: buttons 1 2 3 4 5 6 => match the stimulus with the button
@@ -84,35 +84,35 @@
     </screen>
   </screens>
   <datablocks>
-    <uri_prefix>../stimuli</uri_prefix>
+    <prefix>../stimuli</prefix>
     <datablock id="rawdata1">
       <device>wavdevice</device>
-      <uri>wd1.wav</uri>
+      <file>wd1.wav</file>
     </datablock>
     <datablock id="rawdata2">
       <device>wavdevice</device>
-      <uri>wd2.wav</uri>
+      <file>wd2.wav</file>
     </datablock>
     <datablock id="rawdata3">
       <device>wavdevice</device>
       <description>sample raw datablock</description>
-      <uri>wd3.wav</uri>
+      <file>wd3.wav</file>
     </datablock>
     <datablock id="rawdata4">
       <device>wavdevice</device>
-      <uri>wd4.wav</uri>
+      <file>wd4.wav</file>
     </datablock>
     <datablock id="rawdata5">
       <device>wavdevice</device>
-      <uri>wd5.wav</uri>
+      <file>wd5.wav</file>
     </datablock>
     <datablock id="rawdata6">
       <device>wavdevice</device>
-      <uri>wd6.wav</uri>
+      <file>wd6.wav</file>
     </datablock>
     <datablock id="silence">
       <device>wavdevice</device>
-      <uri>silence:1000</uri>
+      <file>silence:1000</file>
     </datablock>
   </datablocks>
   <devices>

@@ -20,7 +20,7 @@ for i=1:length(files)
 
     if (strcmp(ext,'wav'))
         device='soundcard';
-    elseif (strcmp(ext,'qic'))
+    elseif (strcmp(ext,'aseq'))
         device='l34device';
     else
         disp(['I don''t recognize the file ' filename]);

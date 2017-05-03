@@ -5,8 +5,8 @@
 **
 ****************************************************************************/
 
-#ifndef _EXPORL_SRC_PROGRAMS_ACTIVEQT_FLASH_SHOCKWAVEFLASHOBJECTS_H_
-#define _EXPORL_SRC_PROGRAMS_ACTIVEQT_FLASH_SHOCKWAVEFLASHOBJECTS_H_
+#ifndef _APEX_SRC_PROGRAMS_ACTIVEQT_FLASH_SHOCKWAVEFLASHOBJECTS_H_
+#define _APEX_SRC_PROGRAMS_ACTIVEQT_FLASH_SHOCKWAVEFLASHOBJECTS_H_
 
 // Define this symbol to __declspec(dllexport) or __declspec(dllimport)
 #ifndef SHOCKWAVEFLASHOBJECTS_EXPORT

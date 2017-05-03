@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __MULTIPROC_H__
-#define __MULTIPROC_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_MULTIPROC_H__
+#define _APEX_SRC_LIB_STREAMAPP_MULTIPROC_H__
 
 #include "stream.h"
 #include "containers/dynarray.h"
@@ -201,4 +201,4 @@ namespace streamapp
 
 }
 
-#endif //#ifndef __MULTIPROC_H__
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_MULTIPROC_H__

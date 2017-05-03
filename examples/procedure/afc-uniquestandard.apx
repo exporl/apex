@@ -1,136 +1,136 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+<apex:apex version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
   <!-- @doc
   @what: Regression test for Intervals, Standard(reference signal), Uniquestandard(true/false = If uniquestandard is true and multiple standards are defined per trial, Apex will try to present another standard in each interval of the trial)
   @description: In each trial, the 3 standards should be used (uniquestandard = true)
                 targetsignal = noise, 3 reference-signals/standards = twee, drie, vier
   @how: constantProcedure - intervals- uniquestandard: true
 -->
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <uniquestandard>true</uniquestandard>
-   <intervals count="4" select="1,2,3,4">
-    <interval number="1" element="button1"/>
-    <interval number="2" element="button2"/>
-    <interval number="3" element="button3"/>
-    <interval number="4" element="button4"/>
-   </intervals>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-    <standard id="standard1"/>
-    <standard id="standard2"/>
-    <standard id="standard3"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">false</feedback>
-   <showcurrent>true</showcurrent>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout id="main_layout" width="4" height="1">
-    <button id="button1" x="1" y="1">
-     <text>1</text>
-    </button>
-    <button id="button2" x="2" y="1">
-     <text>2</text>
-    </button>
-    <button id="button3" x="3" y="1">
-     <text>3</text>
-    </button>
-    <button id="button4" x="4" y="1">
-     <text>4</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-    <button id="button2"/>
-    <button id="button3"/>
-    <button id="button4"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd2.wav</uri>
-  </datablock>
-  <datablock id="rawdata2">
-   <device>wavdevice</device>
-   <uri>wd3.wav</uri>
-  </datablock>
-  <datablock id="rawdata3">
-   <device>wavdevice</device>
-   <uri>wd4.wav</uri>
-  </datablock>
-  <datablock id="noisedata">
-   <device>wavdevice</device>
-   <uri>ruisje.wav</uri>
-  </datablock>
-  <datablock id="silence">
-   <device>wavdevice</device>
-   <uri>silence:100</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>4096</buffersize>
-  </device>
- </devices>
- <filters/>
- <stimuli>
-  <stimulus id="standard1">
-   <datablocks>
-    <sequential>
-     <datablock id="silence"/>
-     <datablock id="rawdata1"/>
-     <datablock id="silence"/>
-    </sequential>
-   </datablocks>
-  </stimulus>
-  <stimulus id="standard2">
-   <datablocks>
-    <sequential>
-     <datablock id="silence"/>
-     <datablock id="rawdata2"/>
-     <datablock id="silence"/>
-    </sequential>
-   </datablocks>
-  </stimulus>
-  <stimulus id="standard3">
-   <datablocks>
-    <sequential>
-     <datablock id="silence"/>
-     <datablock id="rawdata3"/>
-     <datablock id="silence"/>
-    </sequential>
-   </datablocks>
-  </stimulus>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <sequential>
-     <datablock id="silence"/>
-     <datablock id="noisedata"/>
-     <datablock id="silence"/>
-    </sequential>
-   </datablocks>
-  </stimulus>
- </stimuli>
- <connections/>
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <uniquestandard>true</uniquestandard>
+      <intervals select="1,2,3,4" count="4">
+        <interval number="1" element="button1"/>
+        <interval number="2" element="button2"/>
+        <interval number="3" element="button3"/>
+        <interval number="4" element="button4"/>
+      </intervals>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+        <standard id="standard1"/>
+        <standard id="standard2"/>
+        <standard id="standard3"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">false</feedback>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout height="1" id="main_layout" width="4">
+        <button x="1" y="1" id="button1">
+          <text>1</text>
+        </button>
+        <button x="2" y="1" id="button2">
+          <text>2</text>
+        </button>
+        <button x="3" y="1" id="button3">
+          <text>3</text>
+        </button>
+        <button x="4" y="1" id="button4">
+          <text>4</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+        <button id="button4"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd2.wav</file>
+    </datablock>
+    <datablock id="rawdata2">
+      <device>wavdevice</device>
+      <file>wd3.wav</file>
+    </datablock>
+    <datablock id="rawdata3">
+      <device>wavdevice</device>
+      <file>wd4.wav</file>
+    </datablock>
+    <datablock id="noisedata">
+      <device>wavdevice</device>
+      <file>ruisje.wav</file>
+    </datablock>
+    <datablock id="silence">
+      <device>wavdevice</device>
+      <file>silence:100</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>4096</buffersize>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <stimulus id="standard1">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="rawdata1"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+    </stimulus>
+    <stimulus id="standard2">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="rawdata2"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+    </stimulus>
+    <stimulus id="standard3">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="rawdata3"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+    </stimulus>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="noisedata"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

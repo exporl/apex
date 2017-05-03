@@ -17,13 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
     *****************************************************************************/
 
-#ifndef _EXPORL_SRC_TESTS_APEXTOOLS_APEXTOOLSTEST_H_
-#define _EXPORL_SRC_TESTS_APEXTOOLS_APEXTOOLSTEST_H_
+#ifndef _APEX_SRC_TESTS_APEXTOOLS_APEXTOOLSTEST_H_
+#define _APEX_SRC_TESTS_APEXTOOLS_APEXTOOLSTEST_H_
 
 #include "../testmacros.h"
-
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
 
 #include <QtTest>
 
@@ -35,23 +32,13 @@ class StatusReporter;
 
 class ApexToolsTest : public QObject
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    private slots:
-
-        void initTestCase();
-        void testIirFilter();
-        void testPeakFilter();
-        void testStatusItem();
-        void testStatusReporter();
-        void testStatusDispatcher();
-        //void testResultViewer();      // Qt XSLT processor is not good enough
-        void cleanupTestCase();
-
-    private:
-
-        void initStatusItem(apex::StatusItem* item);
-        void initStatusReporter(apex::StatusReporter* reporter);
+private slots:
+    void testXmlRichText();
+    void testXmlCreateRichText();
+    void testIirFilter();
+    void testPeakFilter();
 };
 
 #endif

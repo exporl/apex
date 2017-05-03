@@ -17,13 +17,17 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apextools/apexpaths.h"
 #include "apextools/apextools.h"
+#include "apextools/exceptions.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
 
-#include "services/errorhandler.h"
-#include "services/mainconfigfileparser.h"
+#include "common/exception.h"
+#include "common/global.h"
+#include "common/paths.h"
+
+#include "mainconfigfileparser.h"
 
 #include "scriptexpander.h"
 #include "xmlpluginapi.h"
@@ -35,122 +39,80 @@
 #include <QScriptEngineDebugger>
 #include <QString>
 
-#include <iostream>
-
-using namespace XERCES_CPP_NAMESPACE;
-using namespace apex::ApexXMLTools;
+using namespace cmn;
 
 namespace apex
 {
 namespace parser
 {
 
-const QString ScriptExpander::INSTANCENAME("pLuGiNiNtErFaCe");
+const QString ScriptExpander::INSTANCENAME("pluginINTERFACE");
 
-void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
-                                  const QString& function)
+ScriptExpander::ScriptExpander(const QString &fileName,
+        const QString &libraryFile,
+        const QVariantMap &scriptParameters, QWidget *parent) :
+    fileName(fileName),
+    m_libraryFile(libraryFile),
+    m_scriptParameters(scriptParameters),
+    m_parent(parent)
 {
+}
 
+void ScriptExpander::ExpandScript(const QDomNode &base, const QString& function)
+{
     // parse XML into localscript and parameters. Localscript is the script
     // itself, either from inline or read from file
     QVariantMap parameters(m_scriptParameters);
     QString localscript;
-    bool fromgeneral=true;
+    bool fromgeneral = true;
 
-    for ( DOMNode* it = base->getFirstChild() ; it != 0 ;
-            it = it->getNextSibling() )
-    {
-        if ( it->getNodeType() != DOMNode::ELEMENT_NODE )
-            continue;
-
-        DOMElement* currentNode = (DOMElement*) it;
-
-        const QString tag( XMLutils::GetTagName( it ) );
-
-        if (tag=="parameter")
-        {
-            QString name = XMLutils::GetAttribute( currentNode, "name" );
-            QVariant value = XMLutils::GetFirstChildText(currentNode);
-            parameters[name]=value;
-            fromgeneral=false;
-
-        }
-        else if (tag=="script")
-        {
-            QString source = XMLutils::GetAttribute( currentNode, "source" );
-            QString value=XMLutils::GetFirstChildText(currentNode);
+    for (QDomElement it = base.firstChildElement(); !it.isNull(); it = it.nextSiblingElement()) {
+        const QString tag(it.tagName());
+        if (tag == "parameter") {
+            QString name = it.attribute(QSL("name"));
+            QVariant value = it.text();
+            parameters[name] = value;
+            fromgeneral = false;
+        } else if (tag == "script") {
+            QString source = it.attribute(QSL("source"));
+            QString value = it.text();
             // get script (inline or from file)
-
-            if (source=="inline")
-                localscript=value;
-            else if (source=="file")
-            {
-                QString filename = ApexTools::findReadableFile (value,
-                                   QStringList() <<                                    Paths::Get().GetNonBinaryPluginPath()
-                                   << QDir::currentPath(),
-                                   QStringList() << "" << ".js");
-                qCDebug(APEX_RS, "opening %s", qPrintable(filename));
-                QFile file(filename);
-                if (! file.open(QIODevice::ReadOnly) )
-                {
-                    throw ApexStringException("Cannot open plugin script: " + filename);
-                }
-                localscript=file.readAll();
-                file.close();
-                fromgeneral=false;
-            }
-            else
-            {
-                qFatal("Invalid attribute value");
+            if (source == "inline") {
+                localscript = value;
+            } else if (source=="file") {
+                QFile file(Paths::searchFile(value,
+                        QStringList() << QDir::currentPath() << ApexPaths::GetNonBinaryPluginPath()));
+                if (!file.open(QIODevice::ReadOnly))
+                    throw Exception(tr("Cannot open plugin script: %1").arg(value));
+                localscript = file.readAll();
+                fromgeneral = false;
+            } else {
+                throw Exception(tr("Invalid script source attribute value"));
             }
         }
-        else
-        {
-            qFatal("Unknown element");
-        }
-
     }
 
     if (fromgeneral && m_libraryFile.isEmpty())
-        throw ApexStringException("No script library present. "
-                "It should be defined in <general>");
-
+        throw Exception(tr("No script library present. It should be defined in <general>"));
 
     // Get the script api and attach it to the current script
-    if (!m_libraryFile.isEmpty())
-    {
-        QString libraryfile = ApexTools::findReadableFile (m_libraryFile,
-                              QStringList() << Paths::Get().GetNonBinaryPluginPath(),
-                              QStringList() << ".js");
-
-        QFile file(libraryfile);
-        if (! file.open(QIODevice::ReadOnly) )
-        {
-            throw ApexStringException("Cannot open script library file: " +
-                                      m_libraryFile);
-        }
-
-        localscript=file.readAll() + "\n" + localscript;
-        file.close();
+    if (!m_libraryFile.isEmpty()) {
+        QFile file(Paths::searchFile(m_libraryFile,
+                QStringList() << QDir::currentPath() << ApexPaths::GetNonBinaryPluginPath()));
+        if (!file.open(QIODevice::ReadOnly))
+            throw Exception(tr("Cannot open script library file: %1").arg(m_libraryFile));
+        localscript = file.readAll() + "\n" + localscript;
     }
 
     // attach the main script library to the current script
-    QString mainPluginLibrary(
-        Paths::Get().GetNonBinaryPluginPath() +
-        MainConfigFileParser::Get().data().pluginScriptLibrary());
-    if ( ! mainPluginLibrary.isEmpty() ) {
-        QFile file(mainPluginLibrary);
-        if (! file.open(QIODevice::ReadOnly) )
-        {
-            std::cout<<"MainpluginLibrary path value is: "<<mainPluginLibrary.toStdString()<<std::endl;
-            throw ApexStringException("Cannot open main script library file: " +
-                    mainPluginLibrary);
-        }
-
-        localscript=file.readAll() + "\n" + localscript;
-        file.close();
+    QString mainPluginLibrary(MainConfigFileParser::Get().data().pluginScriptLibrary());
+    if (!mainPluginLibrary.isEmpty()) {
+        QFile file(Paths::searchFile(mainPluginLibrary,
+            QStringList() << ApexPaths::GetNonBinaryPluginPath()));
+        if (!file.open(QIODevice::ReadOnly))
+            throw Exception(tr("Cannot open main script library file: %1").arg(mainPluginLibrary));
+        localscript = file.readAll() + "\n" + localscript;
     }
-
 
     qCDebug(APEX_RS, "Executing XML plugin script");
 
@@ -166,216 +128,54 @@ void ScriptExpander::ExpandScript(XERCES_CPP_NAMESPACE::DOMNode * base,
     QScriptValue APIObject = m_scriptEngine.newQObject(&api);
     m_scriptEngine.globalObject().setProperty("api", APIObject);
 
-
     // set parameters in params object
     QScriptValue paramsObject = m_scriptEngine.newObject();
     m_scriptEngine.globalObject().setProperty("params", paramsObject);
 
-    for (QMap<QString,QVariant>::const_iterator it=parameters.begin();
-            it!=parameters.end(); ++it)
-    {
-        paramsObject.setProperty(it.key(),
-                                 ApexTools::QVariant2ScriptValue(
-                                         &m_scriptEngine,
-                                         it.value()));
+    for (QMap<QString,QVariant>::const_iterator it = parameters.begin();
+            it != parameters.end(); ++it) {
+        paramsObject.setProperty(it.key(), ApexTools::QVariant2ScriptValue(&m_scriptEngine, it.value()));
     }
 
-
-//    qCDebug(APEX_RS, "Script to be evaluated :\n%s\n=================",
-//           qPrintable(localscript));
-
-    if (!  m_scriptEngine.canEvaluate(localscript))
-    {
-        throw ApexStringException("Can not evaluate script");
-    }
-
+    if (!m_scriptEngine.canEvaluate(localscript))
+        throw Exception("Can not evaluate script");
 
     // Evaluate script as is: load all functions etc.
     QScriptValue result = m_scriptEngine.evaluate(localscript);
 
     // check for errors from script execution
-    QString XMLString;
     if (m_scriptEngine.hasUncaughtException())
-    {
-        int lineNo = m_scriptEngine.uncaughtExceptionLineNumber();
-        throw ApexStringException(
-            QString("Could not execute script at line %1:\n%2")
-            .arg (lineNo-1).arg(result.toString()));
-    }
-/*    else
-    {
-        XMLString=result.toString();
-        qCDebug(APEX_RS, "Result: %s", qPrintable(XMLString));
-    }*/
-
-
+        throw Exception(tr("Could not execute script at line %1:\n%2")
+            .arg(m_scriptEngine.uncaughtExceptionLineNumber()).arg(result.toString()));
 
     // evaluate given function
-
-    m_scriptEngine.globalObject().setProperty(INSTANCENAME, result );
-
-    //result = m_scriptEngine.evaluate (INSTANCENAME+".GetScreens").call(result);
+    m_scriptEngine.globalObject().setProperty(INSTANCENAME, result);
 
     qCDebug(APEX_RS, "=========== Evaluating %s ==================", qPrintable(function));
     result = m_scriptEngine.evaluate(function + "()");
     qCDebug(APEX_RS, "========== end evaluation ==============");
 
-
     if (m_scriptEngine.hasUncaughtException())
-    {
-        int lineNo = m_scriptEngine.uncaughtExceptionLineNumber();
-        QFile outfile("_apexscript.js");
-        if (outfile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            QTextStream out(&outfile);
-            out << localscript;
-            outfile.close();
-        }
-        throw ApexStringException(
-            QString("Could not execute script at line %1:\n%2")
-            .arg (lineNo).arg(result.toString()));
-    }
-    XMLString=result.toString();
+        throw Exception(tr("Could not execute script at line %1:\n%2")
+            .arg(m_scriptEngine.uncaughtExceptionLineNumber()).arg(result.toString()));
 
-    DOMNode* newNode = StringToDOM(XMLString);
+    // replace current node by expanded version
+    QDomNode parent = base.parentNode();
+    QDomDocument doc = base.ownerDocument();
+    QDomNode newNode = doc.importNode(XmlUtils::parseString(QSL("<dummy>") +
+                result.toString() + QSL("</dummy>")).documentElement(), true);
 
+    // take dummy element and add all children
+    while (newNode.hasChildNodes())
+        parent.insertBefore(newNode.firstChild(), base);
 
-    // replace current node (<plugin...>) by newNode (<...>)
-    DOMNode* parent=base->getParentNode();
-    Q_ASSERT(parent);
-    try
-    {
-        DOMDocument* doc = base->getOwnerDocument();
-        newNode = doc->importNode(newNode, true);
+    parent.removeChild(base);
 
-        // take dummy element and add all children
-        DOMNodeList* childList = newNode->getChildNodes();
-
-        while (childList->getLength()) {            // when inserting elements somewhere else, they disappear from the childList (ahem)
-            DOMNode* currentNode = childList->item(0);
-            parent->insertBefore(currentNode, base);
-        }
-
-
-        parent->removeChild(base);
-
-
-        // revalidate the document, get the relevant part of the tree and
-        // replace again. This gives us normalization
-        Revalidate(doc);
-    }
-    catch (DOMException& e )
-    {
-        qCDebug(APEX_RS, "Xerces exception: %s", qPrintable(X2S(e.getMessage())));
-    }
-
-
-    // FIXME: delete original newnode
-
-}
-
-
-
-
-
-XERCES_CPP_NAMESPACE::DOMNode* ScriptExpander::StringToDOM(QString s)
-{
-    //qCDebug(APEX_RS, "String to be converted: %s", qPrintable(s));
-    DOMElement* root = ParseXMLDocument(s, false);
-    return root;
-
-    // debug: print new dom element
-    //for ( DOMNode* currentNode=p_base->getFirstChild(); currentNode!=0; currentNode=currentNode->getNextSibling())
-}
-
-
-DOMElement* ScriptExpander::ParseXMLDocument(QString s, bool dovalidation)
-{
-    XercesDOMParser* parser = new XercesDOMParser();
-
-    if (dovalidation)
-    {
-        parser->setIncludeIgnorableWhitespace(false);   // ignore whitespace that can be ignored according to the xml specs
-        parser->setValidationScheme(XercesDOMParser::Val_Always);
-        parser->setCreateCommentNodes(false);
-        parser->setValidateAnnotations(true);
-        parser->setDoNamespaces(true);
-        parser->setDoSchema(true);
-        parser->setValidationSchemaFullChecking(false);
-    }
-    else
-    {
-        parser->setIncludeIgnorableWhitespace(false);   // ignore whitespace that can be ignored according to the xml specs
-        parser->setValidationScheme(XercesDOMParser::Val_Never);
-        parser->setCreateCommentNodes(false);
-        parser->setValidateAnnotations(false);
-        parser->setDoNamespaces(false);
-        parser->setDoSchema(false);
-        parser->setValidationSchemaFullChecking(false);
-    }
-
-//    if (verbose) {
-    DOMTreeErrorReporter *errReporter = new DOMTreeErrorReporter();
-    errReporter->LogToApex( &apex::ErrorHandler::Get());
-    parser->setErrorHandler(errReporter);
-//    }
-
-
-    // wrap string in dummy element (there should be only one root element)
-    QString t(s);
-    s="<dummy>"+s+"</dummy>";
-
-    QByteArray b(s.toUtf8());
-
-    MemBufInputSource source( reinterpret_cast<const XMLByte *>(b.constData()),
-                              b.length(),
-                              "membufid",
-                              false);
-
-    parser->parse( source );
-    bool bFailed = parser->getErrorCount() != 0;
-
-    if (bFailed)
-        throw ApexStringException("Error parsing string returned by a plugin"
-                " to a DOM tree");          // FIXME: verbosity
-
-    DOMNode* node  = parser->getDocument()->getDocumentElement();
-
-    Q_ASSERT( node->getNodeType() == DOMNode::ELEMENT_NODE);
-    return (DOMElement*) node;
-}
-
-
-
-DOMDocument* ScriptExpander::Revalidate(DOMNode* doc)
-{
-    QByteArray b = XMLutils::elementToString(doc).toUtf8();
-
-    XercesDOMParser* parser = new XercesDOMParser();
-
-    parser->setIncludeIgnorableWhitespace(false);   // ignore whitespace that can be ignored according to the xml specs
-    parser->setValidationScheme(XercesDOMParser::Val_Always);
-    parser->setCreateCommentNodes(false);
-    parser->setValidateAnnotations(true);
-    parser->setDoNamespaces(true);
-    parser->setDoSchema(true);
-    parser->setValidationSchemaFullChecking(true);
-
-//    if (verbose) {
-    DOMTreeErrorReporter *errReporter = new DOMTreeErrorReporter();
-    errReporter->LogToApex( &apex::ErrorHandler::Get());
-    parser->setErrorHandler(errReporter);
-//    }
-
-    MemBufInputSource source(reinterpret_cast<const XMLByte *>(b.constData()), b.length(), "membufid", false);
-
-    QString temp( Paths::Get().GetExperimentSchemaPath() );
-    ApexTools::ReplaceWhiteSpaceWithNBSP( temp );
-    parser->setExternalSchemaLocation(QFile::encodeName(QString(EXPERIMENT_NAMESPACE) + " " + temp));
-
-    parser->parse( source );
-    bool bFailed = parser->getErrorCount() != 0;
-
-   if (bFailed) {
+    // revalidate the document
+    try {
+        XmlUtils::parseString(doc.toString(), QUrl::fromLocalFile(ApexPaths::GetExperimentSchemaPath()),
+                fileName);
+    } catch (const std::exception &e) {
         if (m_parent) {
             int answer = QMessageBox::critical(m_parent,
                                             tr("Error expanding plugin"),
@@ -385,40 +185,16 @@ DOMDocument* ScriptExpander::Revalidate(DOMNode* doc)
                                         QMessageBox::Yes | QMessageBox::No,
                                         QMessageBox::Yes);
             if (answer == QMessageBox::Yes) {
-                XMLutils::WriteElement(doc, QFileDialog::getSaveFileName(m_parent,
+                XmlUtils::writeDocument(doc, QFileDialog::getSaveFileName(m_parent,
                             tr("Save XML document"), "output.xml"));
             }
         } else {
             qCDebug(APEX_RS, "No parent defined, not interactive");
         }
-        throw ApexStringException("XML code generated by a plugin did not validate. Check the plugin");
+        throw;
     }
-
-    return parser->getDocument();
-}
-
-ScriptExpander::ScriptExpander(QString libraryFile, QVariantMap scriptParameters, QWidget *parent):
-        m_libraryFile(libraryFile),
-        m_scriptParameters(scriptParameters),
-        m_parent(parent)
-{
-
 }
 
 }
-}
 
-XERCES_CPP_NAMESPACE::DOMNode * apex::parser::ScriptExpander::findById(XERCES_CPP_NAMESPACE::DOMNode * e, QString id)
-{
-    QString attr( XMLutils::GetAttribute( e, "id"));
-    if (attr==id)
-        return e;
-
-    for (DOMNode* currentNode=e->getFirstChild(); currentNode!=0;
-         currentNode=currentNode->getNextSibling()) {
-        DOMNode* result = findById(currentNode, id);
-        if (result)
-            return result;
-    }
-    return 0;
 }

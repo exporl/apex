@@ -1,6 +1,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
 
     <xs:include schemaLocation="filters.xsd"/>
 
@@ -69,7 +69,7 @@
                                             2 channels is required.</xs:documentation>
                                     </xs:annotation>
                                 </xs:enumeration>
-                                                                <xs:enumeration value="coreaudio">
+                                <xs:enumeration value="coreaudio">
                                     <xs:annotation>
                                         <xs:documentation>CoreAudio is MacOsX' audio framework.</xs:documentation>
                                     </xs:annotation>
@@ -80,7 +80,7 @@
                                             framework. A jack connection will be made to the "drivername" specified in the main config file.</xs:documentation>
                                     </xs:annotation>
                                 </xs:enumeration>
-                          
+
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:element>
@@ -146,7 +146,7 @@
                                 </xs:documentation>
                         </xs:annotation>
                     </xs:element>
-                    <xs:element name="buffersize_apex" minOccurs="0" >
+                    <xs:element name="buffersize_apex" minOccurs="0">
                         <xs:annotation>
                             <xs:documentation>Size of internal apex sound buffer in seconds. This buffer ensures that no buffer
                             underruns occur. The default value is 1s. If continuous filters are used, the system will need
@@ -161,11 +161,11 @@
                         </xs:annotation>
                         <xs:simpleType>
                             <xs:restriction base="xs:decimal">
-                                <xs:minExclusive value="0"></xs:minExclusive>
-                                <xs:maxInclusive value="60"></xs:maxInclusive>
+                                <xs:minExclusive value="0"/>
+                                <xs:maxInclusive value="60"/>
                             </xs:restriction>
                         </xs:simpleType>
-                      <!--xs:simpleType>
+                        <!--xs:simpleType>
                         <xs:restriction base="xs:string">
                           <xs:enumeration value="0.5"/>
                           <xs:enumeration value="1"/>
@@ -182,18 +182,6 @@
                         <xs:annotation>
                             <xs:documentation>If smaller than 16: add padzero*8196 samples to the end of each stream. If larger than 16: add padzero samples to the end of each stream. 
                                 This avoids dropping of the last N frames on some soundcards (notoriously LynxOne and FirefaceUC)</xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-                    <xs:element name="setcardmixer" type="xs:boolean" minOccurs="0">
-                        <xs:annotation>
-                            <xs:documentation>Set all output gains on the software mixer 0 dB to
-                                avoid quantization noise and set all input gains to -infinite dB to
-                                avoid picking up unwanted signals. The software mixer is is the
-                                mixer that is normally controlled using the windows mixer or the
-                                /dev/mixer interface. For all implementations of our knowledge this
-                                is a software mixer. Warning: not all soundcards are supported. All
-                                soundcards that support the windows mixer are
-                                supported. </xs:documentation>
                         </xs:annotation>
                     </xs:element>
                     <xs:element name="cisim" type="apex:cisimType" minOccurs="0">
@@ -219,42 +207,6 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="mixerDeviceType" abstract="true">
-        <xs:annotation>
-            <xs:documentation>Base type for all mixer-type devices (id devices of which the essence is a gain parameter)</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="apex:deviceType">
-                <xs:sequence>
-                    <xs:element name="gain" type="apex:channelGainType"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-        <xs:complexType name="PA5">
-        <xs:complexContent>
-            <xs:extension base="apex:mixerDeviceType">
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="soundcardmixer">
-        <xs:complexContent>
-            <xs:extension base="apex:mixerDeviceType">
-                <xs:sequence>
-                    <xs:element name="type">
-                        <xs:simpleType>
-                            <xs:restriction base="xs:string">
-                                <xs:enumeration value="mme"/>
-                                <!--xs:enumeration value="rme"/ RME mixer code is broken  -->
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:element>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
 
     <xs:complexType name="pluginController">
         <xs:annotation>
@@ -270,7 +222,8 @@
                                 <xs:extension base="xs:string">
                                     <xs:attributeGroup ref="apex:filterParam"/>
                                     <xs:attribute name="name" type="xs:Name" use="required"/>
-                                    <xs:attribute name="channel" type="xs:nonNegativeInteger" use="optional"/>
+                                    <xs:attribute name="channel" type="xs:nonNegativeInteger"
+                                        use="optional"/>
                                 </xs:extension>
                             </xs:simpleContent>
                         </xs:complexType>
@@ -281,42 +234,18 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="L34DeviceType">
+    <xs:complexType name="CohDeviceType">
         <xs:annotation>
-            <xs:documentation>Device using the NICv2 interface to the cochlear L34
+            <xs:documentation>Cochlear stimulation device
             device</xs:documentation>
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="apex:deviceType">
                 <xs:sequence>
-                    <xs:element name="device_type" minOccurs="0" default="L34">
+                    <xs:element name="device" type="xs:string">
                         <xs:annotation>
-                            <xs:documentation>Type of device</xs:documentation>
+                            <xs:documentation>Device identifier. For NIC 2, this identifier consists of three parts: the device type (e.g. l34) , the implant type (e.g. cic3, cic4) and the device number (e.g. 1, ordered according to the assigned COM port, device 0 is a simulated device).</xs:documentation>
                         </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:string">
-                                <xs:enumeration value="L34"/>
-                                <xs:enumeration value="SP12"/>
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:element>
-                    <xs:element name="device_id" type="xs:nonNegativeInteger">
-                        <xs:annotation>
-                            <xs:documentation>Device number. Devices are ordered according to the
-                                assigned com-port (cfr device manager). Device 0 is a simulated
-                                device.</xs:documentation>
-                        </xs:annotation>
-                    </xs:element>
-                    <xs:element name="implant">
-                        <xs:annotation>
-                            <xs:documentation>Implant type. CIC4==freedom</xs:documentation>
-                        </xs:annotation>
-                        <xs:simpleType>
-                            <xs:restriction base="xs:string">
-                                <xs:enumeration value="cic3"/>
-                                <xs:enumeration value="cic4"/>
-                            </xs:restriction>
-                        </xs:simpleType>
                     </xs:element>
 
                     <xs:element name="trigger">
@@ -341,7 +270,8 @@
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:element -->
-                    <xs:element name="powerup_count" minOccurs="0" default="4000" type="xs:nonNegativeInteger">
+                    <xs:element name="powerup_count" minOccurs="0" default="4000"
+                        type="xs:nonNegativeInteger">
                         <xs:annotation>
                             <xs:documentation>Number of powerup pulses to send.
                                 No powerup pulses will be sent if this is set
@@ -352,20 +282,20 @@
                         <xs:complexType>
                             <xs:annotation>
                                 <xs:documentation>
-                                    Volume parameter for L34 device. The current level (in clinical units) is calculated according the following formula:
+                                    Volume parameter for Cochlear device. The current level (in clinical units) is calculated according the following formula:
                                     round(t + (c-t) * volume/100 * mag)
                                     Where:
                                     t=treshold level
                                     c=comfort level
                                     volume=current value of volume parameter
-                                    mag=magnitude in qic file [0,1]
+                                    mag=magnitude [0,1]
                                 </xs:documentation>
                             </xs:annotation>
-                        <xs:simpleContent>
-                            <xs:extension base="apex:volumeParam">
-                                <xs:attributeGroup ref="apex:filterParam"/>
-                            </xs:extension>
-                        </xs:simpleContent>
+                            <xs:simpleContent>
+                                <xs:extension base="apex:volumeParam">
+                                    <xs:attributeGroup ref="apex:filterParam"/>
+                                </xs:extension>
+                            </xs:simpleContent>
                         </xs:complexType>
                     </xs:element>
                     <xs:element name="defaultmap">
@@ -375,7 +305,7 @@
                         </xs:annotation>
                         <xs:complexType>
                             <xs:choice>
-                                <xs:element name="inline" type="apex:L34Map">
+                                <xs:element name="inline" type="apex:CohMap">
                                     <xs:annotation>
                                         <xs:documentation>The map is defined
                                         below</xs:documentation>
@@ -395,7 +325,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="L34Map">
+    <xs:complexType name="CohMap">
         <xs:sequence>
             <xs:element name="number_electrodes">
                 <xs:simpleType>
@@ -404,7 +334,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="mode" type="apex:L34ModeEnum"/>
+            <xs:element name="mode" type="apex:CohModeEnum"/>
             <xs:element name="pulsewidth">
                 <xs:annotation>
                     <xs:documentation>
@@ -437,7 +367,7 @@
             </xs:element>
             <xs:element name="period">
                 <xs:annotation>
-                <xs:documentation>
+                    <xs:documentation>
                     When using a Freedom processor, the maximum period is 13078us
                     When using an L34 processor, the maximum period is 13107us
                     When using a cic3 implant, the minimum period is 70us
@@ -486,7 +416,7 @@
         </xs:sequence>
         <xs:attribute name="id" type="xs:ID"/>
     </xs:complexType>
-    <xs:simpleType name="L34ModeEnum">
+    <xs:simpleType name="CohModeEnum">
         <xs:restriction base="xs:string">
             <xs:enumeration value="MP1+2"/>
             <xs:enumeration value="MP1"/>
@@ -511,7 +441,7 @@
             </xs:enumeration-->
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:complexType name="cisimType">
         <xs:sequence>
             <xs:element name="number_electrodes" type="xs:positiveInteger"/>

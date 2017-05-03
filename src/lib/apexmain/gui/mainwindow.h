@@ -35,7 +35,6 @@ class QString;
 namespace apex
 {
 class ScreenStatusReporter;
-class ConsoleStatusReporter;
     namespace rundelegates
     {
         class ScreenElementRunDelegate;
@@ -294,8 +293,7 @@ class ConsoleStatusReporter;
       ScreenRunDelegate* runningScreen;
       ScreenElementRunDelegate* m_pCurFeedback;
 
-      QScopedPointer<ConsoleStatusReporter> consoleStatus;
-      QScopedPointer<ScreenStatusReporter>  screenStatus;
+      ScreenStatusReporter *screenStatus;
 
       Random randomGenerator;
     };

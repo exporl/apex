@@ -1,5 +1,4 @@
-
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
   <!--  @doc
    @what: LIST 01 sentences
    @description: Noise (male competitive talker) fixed to 55 dB, speech (female) is adapted to 2 dB SNR step size, first sentence is repeated until recognized, final SRT is determined by last 6 trials
@@ -80,7 +79,6 @@
       </trial>
     </trials>
   </procedure>
-
   <screens>
     <general>
       <repeatbutton>true</repeatbutton>
@@ -92,109 +90,103 @@
       <feedback>false</feedback>
     </reinforcement>
     <screen id="experimenter_screen">
-
-      <gridLayout height="2" id="main_layout" rowstretch="1,2" width="1">
-        <gridLayout col="1" columnstretch="1,4" height="4" id="parameter_layout" row="1" rowstretch="1,1,2,2" width="2">
-          <label col="1" id="snrlabel" row="1">
+      <gridLayout rowstretch="1,2" id="main_layout" height="2" width="1">
+        <gridLayout rowstretch="1,1,2,2" id="parameter_layout" col="1" height="4" width="2" columnstretch="1,4" row="1">
+          <label id="snrlabel" col="1" row="1">
             <text>snr</text>
-      </label>
-          <parameterlabel col="2" id="snr" row="1">
+          </label>
+          <parameterlabel id="snr" col="2" row="1">
             <parameter>gain</parameter>
-      </parameterlabel>
-          <label col="1" id="sentence" row="2">
+          </parameterlabel>
+          <label id="sentence" col="1" row="2">
             <text>zin</text>
-      </label>
-          <parameterlabel col="2" id="sentence" row="2">
+          </label>
+          <parameterlabel id="sentence" col="2" row="2">
             <parameter>sentence</parameter>
-      </parameterlabel>
-    </gridLayout>
-        <gridLayout col="1" height="1" id="answer_layout" row="2" width="2">
-          <button id="correct" x="1" y="1">
+          </parameterlabel>
+        </gridLayout>
+        <gridLayout id="answer_layout" col="1" height="1" width="2" row="2">
+          <button x="1" y="1" id="correct">
             <text>Correct</text>
-      </button>
-          <button id="wrong" x="2" y="1">
+          </button>
+          <button x="2" y="1" id="wrong">
             <text>Wrong</text>
-      </button>
-    </gridLayout>
-  </gridLayout>
-
+          </button>
+        </gridLayout>
+      </gridLayout>
       <buttongroup id="buttongroup">
         <button id="correct"/>
         <button id="wrong"/>
-  </buttongroup>
-
+      </buttongroup>
       <default_answer_element>buttongroup</default_answer_element>
-
-</screen>  </screens>
-
+    </screen>
+  </screens>
   <datablocks>
-    <uri_prefix source="apexconfig">speechmaterials</uri_prefix>
+    <prefix source="apexconfig">speechmaterials</prefix>
     <datablock id="datablock_LIST_vrouw_wdz168">
       <device>soundcard</device>
-      <uri>dutch/list/lijst1/wdz168.wav</uri>
+      <file>dutch/list/lijst1/wdz168.wav</file>
     </datablock>
     <datablock id="datablock_LIST_vrouw_wdz20">
       <device>soundcard</device>
-      <uri>dutch/list/lijst1/wdz20.wav</uri>
+      <file>dutch/list/lijst1/wdz20.wav</file>
     </datablock>
     <datablock id="datablock_LIST_vrouw_wdz240">
       <device>soundcard</device>
-      <uri>dutch/list/lijst1/wdz240.wav</uri>
+      <file>dutch/list/lijst1/wdz240.wav</file>
     </datablock>
     <datablock id="datablock_LIST_vrouw_wdz26">
       <device>soundcard</device>
-      <uri>dutch/list/lijst1/wdz26.wav</uri>
+      <file>dutch/list/lijst1/wdz26.wav</file>
     </datablock>
     <datablock id="datablock_LIST_vrouw_wdz4">
       <device>soundcard</device>
-      <uri>dutch/list/lijst1/wdz4.wav</uri>
+      <file>dutch/list/lijst1/wdz4.wav</file>
     </datablock>
     <datablock id="datablock_LIST_vrouw_wdz475">
       <device>soundcard</device>
-      <uri>dutch/list/lijst1/wdz475.wav</uri>
+      <file>dutch/list/lijst1/wdz475.wav</file>
     </datablock>
     <datablock id="datablock_LIST_vrouw_wdz51">
       <device>soundcard</device>
-      <uri>dutch/list/lijst1/wdz51.wav</uri>
+      <file>dutch/list/lijst1/wdz51.wav</file>
     </datablock>
     <datablock id="datablock_LIST_vrouw_wdz6">
       <device>soundcard</device>
-      <uri>dutch/list/lijst1/wdz6.wav</uri>
+      <file>dutch/list/lijst1/wdz6.wav</file>
     </datablock>
     <datablock id="datablock_LIST_vrouw_wdz75">
       <device>soundcard</device>
-      <uri>dutch/list/lijst1/wdz75.wav</uri>
+      <file>dutch/list/lijst1/wdz75.wav</file>
     </datablock>
     <datablock id="datablock_LIST_vrouw_wdz9">
       <device>soundcard</device>
-      <uri>dutch/list/lijst1/wdz9.wav</uri>
+      <file>dutch/list/lijst1/wdz9.wav</file>
     </datablock>
     <datablock id="datablock_noise">
       <device>soundcard</device>
-      <uri>noise/fluctuating%20noise%20paper%20(IJA)/nederlands-normaal.wav</uri>
+      <file>noise/fluctuating noise paper (IJA)/nederlands-normaal.wav</file>
     </datablock>
     <datablock id="datablock_silence">
       <device>soundcard</device>
-      <uri>silence:1000</uri>
+      <file>silence:1000</file>
     </datablock>
   </datablocks>
-
   <devices>
     <master>soundcard</master>
     <device id="soundcard" xsi:type="apex:wavDeviceType">
       <driver>asio</driver>
       <card>default</card>
       <channels>4</channels>
-      <gain channel="0" id="gain0">0</gain>
-      <gain channel="1" id="gain1">0</gain>
-      <gain channel="2" id="gain2">0</gain>
-      <gain channel="3" id="gain3">0</gain>
+      <gain id="gain0" channel="0">0</gain>
+      <gain id="gain1" channel="1">0</gain>
+      <gain id="gain2" channel="2">0</gain>
+      <gain id="gain3" channel="3">0</gain>
       <samplerate>44100</samplerate>
       <blocksize>8192</blocksize>
       <padzero>1</padzero>
     </device>
   </devices>
-
   <filters>
     <filter id="amplifier" xsi:type="apex:amplifier">
       <device>soundcard</device>
@@ -261,7 +253,6 @@
       <direction>out</direction>
     </filter>
   </filters>
-
   <stimuli>
     <fixed_parameters>
       <parameter id="sentence"/>
@@ -291,7 +282,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">De &lt;b&gt;secretaresse&lt;/b&gt; &lt;u&gt;neemt&lt;/u&gt; de &lt;b&gt;telefoon&lt;/b&gt; &lt;u&gt;aan&lt;/u&gt;</parameter>
+        <parameter id="sentence">De &lt;b>secretaresse&lt;/b> &lt;u>neemt&lt;/u> de &lt;b>telefoon&lt;/b> &lt;u>aan&lt;/u></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_vrouw_wdz20">
@@ -303,7 +294,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">Deze &lt;b&gt;bakker&lt;/b&gt; is &lt;b&gt;ook&lt;/b&gt; op &lt;b&gt;zondag&lt;/b&gt; &lt;b&gt;open&lt;/b&gt;</parameter>
+        <parameter id="sentence">Deze &lt;b>bakker&lt;/b> is &lt;b>ook&lt;/b> op &lt;b>zondag&lt;/b> &lt;b>open&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_vrouw_wdz240">
@@ -315,7 +306,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">De &lt;b&gt;politie&lt;/b&gt; &lt;b&gt;bevestigde&lt;/b&gt; de &lt;b&gt;aanhouding&lt;/b&gt;</parameter>
+        <parameter id="sentence">De &lt;b>politie&lt;/b> &lt;b>bevestigde&lt;/b> de &lt;b>aanhouding&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_vrouw_wdz26">
@@ -327,7 +318,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">De &lt;b&gt;operatie&lt;/b&gt; &lt;b&gt;duurde&lt;/b&gt; &lt;b&gt;4&lt;/b&gt; &lt;b&gt;uur&lt;/b&gt;</parameter>
+        <parameter id="sentence">De &lt;b>operatie&lt;/b> &lt;b>duurde&lt;/b> &lt;b>4&lt;/b> &lt;b>uur&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_vrouw_wdz4">
@@ -339,7 +330,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">De &lt;b&gt;leerling&lt;/b&gt; &lt;b&gt;kwam&lt;/b&gt; &lt;b&gt;te&lt;/b&gt; &lt;b&gt;laat&lt;/b&gt; op &lt;b&gt;school&lt;/b&gt;</parameter>
+        <parameter id="sentence">De &lt;b>leerling&lt;/b> &lt;b>kwam&lt;/b> &lt;b>te&lt;/b> &lt;b>laat&lt;/b> op &lt;b>school&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_vrouw_wdz475">
@@ -351,7 +342,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">Zijn &lt;b&gt;stem&lt;/b&gt; is &lt;b&gt;schor&lt;/b&gt;</parameter>
+        <parameter id="sentence">Zijn &lt;b>stem&lt;/b> is &lt;b>schor&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_vrouw_wdz51">
@@ -363,7 +354,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">Hij &lt;b&gt;kreeg&lt;/b&gt; een &lt;b&gt;wagen&lt;/b&gt; van de &lt;b&gt;zaak&lt;/b&gt;</parameter>
+        <parameter id="sentence">Hij &lt;b>kreeg&lt;/b> een &lt;b>wagen&lt;/b> van de &lt;b>zaak&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_vrouw_wdz6">
@@ -375,7 +366,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">&lt;b&gt;Gisteren&lt;/b&gt; hebben wij een &lt;b&gt;film&lt;/b&gt; &lt;b&gt;gezien&lt;/b&gt;</parameter>
+        <parameter id="sentence">&lt;b>Gisteren&lt;/b> hebben wij een &lt;b>film&lt;/b> &lt;b>gezien&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_vrouw_wdz75">
@@ -387,7 +378,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">Wij &lt;b&gt;wonen&lt;/b&gt; in een &lt;b&gt;rustige&lt;/b&gt; &lt;b&gt;buurt&lt;/b&gt;</parameter>
+        <parameter id="sentence">Wij &lt;b>wonen&lt;/b> in een &lt;b>rustige&lt;/b> &lt;b>buurt&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_vrouw_wdz9">
@@ -399,11 +390,10 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">&lt;b&gt;Morgen&lt;/b&gt; &lt;b&gt;gaan&lt;/b&gt; we naar de &lt;b&gt;stad&lt;/b&gt;</parameter>
+        <parameter id="sentence">&lt;b>Morgen&lt;/b> &lt;b>gaan&lt;/b> we naar de &lt;b>stad&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
   </stimuli>
-
   <connections>
     <connection>
       <from>
@@ -496,7 +486,6 @@
       </to>
     </connection>
   </connections>
-
   <calibration profile="spin-koen-nederlands">
     <stimuli>
       <stimulus id="calibrationstimulus"/>
@@ -526,7 +515,6 @@
       </parameter>
     </parameters>
   </calibration>
-
   <results>
     <page>apex:resultviewer.html</page>
     <resultparameters>
@@ -534,9 +522,7 @@
     </resultparameters>
     <showafterexperiment>true</showafterexperiment>
   </results>
-
   <general>
     <allowskip>true</allowskip>
   </general>
-
 </apex:apex>

@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+<!-- @doc
+  @what: Use resultsviewer window to show stimuli by using params
+  @description: Show a custom html&javascript page which receives a signal with the loaded stimulusparameters
+  @how: variable or fixed parameters are set right before stim starts, can be accessed through the params object in the resultspage's javascript, e.g. params["stimcolor"]
+        Apex will call prepare() after sending params and trialStarted() & stimulusStarted() at the appropriate times
+-->
+<procedure xsi:type="apex:constantProcedure">
+    <parameters>
+        <presentations>1</presentations>
+        <skip>0</skip>
+        <order>sequential</order>
+    </parameters>
+    <trials>
+        
+        <trial id="trial1">
+            <answer>rood</answer>
+            <screen id="screen1"/>
+            <stimulus id="stimulus_rood"/>
+        </trial>
+        
+        <trial id="trial2">
+            <answer>blauw</answer>
+            <screen id="screen1"/>
+            <stimulus id="stimulus_blauw"/>
+        </trial>
+        
+        <trial id="trial3">
+            <answer>geel</answer>
+            <screen id="screen1"/>
+            <stimulus id="stimulus_geel"/>
+        </trial>
+        
+        <trial id="trial4">
+            <answer>groen</answer>
+            <screen id="screen1"/>
+            <stimulus id="stimulus_groen"/>
+        </trial>
+        
+    </trials>
+</procedure>
+<screens>
+    <reinforcement>
+        <progressbar>true</progressbar>
+        <feedback length="300">false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+  <gridLayout id="main_layout" width="3" height="2">
+    <button x="1" y="1" id="blauw">
+      <text>blauw</text>
+    </button>
+    <button x="2" y="1" id="rood">
+      <text>rood</text>
+    </button>
+   <button x="1" y="2" id="groen">
+      <text>groen</text>
+    </button>
+    <button x="2" y="2" id="geel">
+      <text>geel</text>
+    </button>
+    <parameterlist x="3" y="1" id="pl">
+      <parameter>stimcolor</parameter>
+    </parameterlist>
+  </gridLayout>
+  <buttongroup id="buttongroup1">
+    <button id="blauw"/>
+    <button id="rood"/>
+    <button id="groen"/>
+    <button id="geel"/>
+  </buttongroup>
+  <default_answer_element>buttongroup1</default_answer_element>
+</screen>
+</screens>
+
+<datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="db_silence">
+        <device>wavdevice</device>
+        <file>silence:10</file>
+    </datablock>
+</datablocks>
+
+<devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+        <driver>portaudio</driver>
+        <card>interactive</card>
+        <channels>2</channels>
+        <gain>0</gain>
+        <samplerate>44100</samplerate>
+        <buffersize>4096</buffersize>
+    </device>
+</devices>
+
+<stimuli>
+    <fixed_parameters>
+        <parameter id="stimcolor"/>
+    </fixed_parameters>
+    
+    <stimulus id="stimulus_rood">
+        <datablocks>
+            <datablock id="db_silence"/>
+        </datablocks>
+        <variableParameters/>
+        <fixedParameters>
+            <parameter id="stimcolor">rood</parameter>
+        </fixedParameters>
+    </stimulus>
+    
+    <stimulus id="stimulus_blauw">
+        <datablocks>
+            <datablock id="db_silence"/>
+        </datablocks>
+        <variableParameters/>
+        <fixedParameters>
+            <parameter id="stimcolor">blauw</parameter>
+        </fixedParameters>
+    </stimulus>
+    
+    <stimulus id="stimulus_groen">
+        <datablocks>
+            <datablock id="db_silence"/>
+        </datablocks>
+        <variableParameters/>
+        <fixedParameters>
+            <parameter id="stimcolor">groen</parameter>
+        </fixedParameters>
+    </stimulus>
+    
+    <stimulus id="stimulus_geel">
+        <datablocks>
+            <datablock id="db_silence"/>
+        </datablocks>
+        <variableParameters/>
+        <fixedParameters>
+            <parameter id="stimcolor">geel</parameter>
+        </fixedParameters>
+    </stimulus>
+    
+</stimuli>
+
+<connections/>
+
+<results>
+    <page>apex:rv-loadparameters.html</page>
+    <showduringexperiment>true</showduringexperiment>
+</results>
+</apex:apex>

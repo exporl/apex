@@ -39,9 +39,7 @@ class MatlabFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "apex.matlabfilter")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
@@ -55,7 +53,7 @@ class MatlabFilter:
 {
     Q_OBJECT
 public:
-    MatlabFilter (unsigned channels, unsigned blockSize);
+    MatlabFilter(unsigned blockSize);
     ~MatlabFilter();
 
     virtual void resetParameters();
@@ -70,7 +68,6 @@ private:
     bool initializeMatlab();
     void sendParameters();
 
-    unsigned channels;
     unsigned blockSize;
 
     bool matlabInitialized;
@@ -87,8 +84,7 @@ private:
 
 // MatlabFilter ================================================================
 
-MatlabFilter::MatlabFilter (unsigned channels, unsigned blockSize) :
-    channels (channels),
+MatlabFilter::MatlabFilter (unsigned blockSize) :
     blockSize (blockSize),
     matlabInitialized(false),
     engine(0),
@@ -251,10 +247,11 @@ PluginFilterInterface *MatlabFilterCreator::createFilter
        (const QString &name, unsigned channels, unsigned size,
         unsigned sampleRate) const
 {
+    Q_UNUSED (channels);
     Q_UNUSED (sampleRate);
 
     if (name == "matlabfilter")
-        return new MatlabFilter (channels, size);
+        return new MatlabFilter(size);
 
     return NULL;
 }

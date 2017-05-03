@@ -22,10 +22,10 @@ xml.trial = function(id, sc, st) {
             st);
 };
 
-xml.datablock = function (id, device, uri, data) {
+xml.datablock = function (id, device, file, data) {
      return xml.tag("datablock", {"id": id},
              !device ? '' : xml.tag("device", device),
-             !uri ? '' : xml.tag("uri", uri),
+             !file ? '' : xml.tag("file", file),
              !data ? '' : xml.tag("data", xml.cdata(data)));
 };
 

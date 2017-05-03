@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREWRAPPER_H_
-#define _EXPORL_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREWRAPPER_H_
+#ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREWRAPPER_H_
+#define _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREWRAPPER_H_
 
 #include "apexdata/screen/screenresult.h"
 
@@ -64,18 +64,18 @@ public slots:
         * Return a Trial structure with screens and stimuli to be presented
         * when finished, return an empty Trial (with no screens added)
         */
-    virtual apex::data::Trial setupNextTrial();
+    virtual apex::data::Trial setupNextTrial() Q_DECL_OVERRIDE;
 
     /**
          * Return the first screen; this is the screen that should be shown
          * before the user presses start if there is no intro screen.
          */
-    virtual QString firstScreen();
+    virtual QString firstScreen() Q_DECL_OVERRIDE;
 
     /**
          * Return XML for the results file
          */
-    virtual const QString resultXml() const;
+    virtual const QString resultXml() const Q_DECL_OVERRIDE;
     virtual const QString finalResultXml() const;
 
     /**
@@ -83,14 +83,14 @@ public slots:
         */
     virtual double progress();
 
-    virtual apex::ResultHighlight processResult(const apex::ScreenResult* screenResult);
+    virtual apex::ResultHighlight processResult(const apex::ScreenResult* screenResult) const Q_DECL_OVERRIDE;
 
     /**
       * Is called before the procedure starts, can be used to check
       * whether all required parameters are present and valid
       * Return empty QString if OK, otherwise error message
       */
-    virtual QString checkParameters () const;
+    virtual QString checkParameters () const Q_DECL_OVERRIDE;
 
 
 private:

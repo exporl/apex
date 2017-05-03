@@ -22,93 +22,62 @@
 
 #include "apextools/exceptions.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
 #include "apextools/xml/xmlkeys.h"
 
 #include "procedureparsersparent.h"
 #include "trialparser.h"
 
-#include <QObject>
+#include <QDomElement>
 
-using namespace xercesc;
 using namespace apex::XMLKeys;
-using namespace apex::ApexXMLTools;
-
 
 namespace apex
 {
 namespace parser
 {
 
-
-ProcedureParsersParent::ProcedureParsersParent() : currentConfig ( 0 )
+ProcedureParsersParent::ProcedureParsersParent() :
+    currentConfig(NULL)
 {
 }
 
-
-void ProcedureParsersParent::Parse ( XERCES_CPP_NAMESPACE::DOMElement* p_base,
-                              data::ProcedureData* c )
+void ProcedureParsersParent::Parse(const QDomElement &p_base, data::ProcedureData* c)
 {
-    currentConfig=c;
+    currentConfig = c;
 
-    try{
-        ParseTrials ( p_base );
-    } catch (const ApexStringException& exception) {
-        throw ApexStringException(
-                QObject::tr("Could not parse trials: %1").arg(exception.what()));
-    }
-        c->SetID ( XMLutils::GetAttribute ( p_base,gc_sID ) );
+    ParseTrials(p_base);
+    c->SetID(p_base.attribute(gc_sID));
 
-        DOMNode* parametersNode = XMLutils::GetElementsByTagName ( p_base, "parameters" );
-        Q_ASSERT ( parametersNode->getNodeType() == DOMNode::ELEMENT_NODE );
-        SetProcedureParameters ( ( DOMElement* ) parametersNode );
+    QDomElement parametersNode = p_base.elementsByTagName("parameters").item(0).toElement();
+    SetProcedureParameters(parametersNode);
 
-    currentConfig=0;
-
+    currentConfig = 0;
 }
 
-
-
-void ProcedureParsersParent::ParseTrials ( DOMElement * p_base )
+void ProcedureParsersParent::ParseTrials(const QDomElement &p_base)
 {
-        Q_ASSERT ( currentConfig != NULL );
-        // parse trials block
-        DOMNode* trialNode = XMLutils::GetElementsByTagName ( p_base, "trials" );
-        Q_ASSERT ( trialNode );
-        Q_ASSERT ( trialNode->getNodeType() == DOMNode::ELEMENT_NODE );
+    Q_ASSERT (currentConfig);
+    // parse trials block
+    QDomNode trialNode = p_base.elementsByTagName("trials").item(0).toElement();
 
     TrialParser trialFactory;
-        // for each trial
-        for ( DOMNode* currentNode=trialNode->getFirstChild(); currentNode!=0; currentNode=currentNode->getNextSibling() )
-        {
-                Q_ASSERT ( currentNode );
-                Q_ASSERT ( currentNode->getNodeType() == DOMNode::ELEMENT_NODE );
-
-                const QString tag = XMLutils::GetTagName ( currentNode );
-                if ( tag == "trial" )
-                {
-                        data::TrialData* newTrial = trialFactory.GetTrial ( currentNode );
-                        Q_ASSERT ( newTrial );
-                        currentConfig->AddTrial ( newTrial );
-                }
-                else
-                {
-            throw ApexStringException(
-                        QObject::tr("ProcedureParsersParent::ParseTrials:"
-                                    " unknown tag %1").arg(qPrintable(tag)));
-                }
-
+    for (QDomElement currentNode = trialNode.firstChildElement();
+            !currentNode.isNull(); currentNode = currentNode.nextSiblingElement()) {
+        const QString tag = currentNode.tagName();
+        if (tag == "trial") {
+            currentConfig->AddTrial(trialFactory.GetTrial(currentNode));
+        } else {
+            throw ApexStringException(tr("ProcedureParsersParent::ParseTrials:"
+                        " unknown tag %1").arg(tag));
         }
+    }
 
     if (!trialsValid()) {
-        throw ApexStringException(
-                    QObject::tr("For this procedure, there is an incorrect"
-                                " number of trials, or some required"
-                                " information is missing from the trials."));
+        throw ApexStringException(tr("For this procedure, there is an incorrect"
+                    " number of trials, or some required"
+                    " information is missing from the trials."));
     }
 }
 
-}   // ns parser
-} // ns apex
-
+}
+}

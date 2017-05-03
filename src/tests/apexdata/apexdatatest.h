@@ -17,12 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_TESTS_APEXDATA_APEXDATATEST_H_
-#define _EXPORL_SRC_TESTS_APEXDATA_APEXDATATEST_H_
+#ifndef _APEX_SRC_TESTS_APEXDATA_APEXDATATEST_H_
+#define _APEX_SRC_TESTS_APEXDATA_APEXDATATEST_H_
 
 #include "../testmacros.h"
-
-#include "apextools/xml/xercesinclude.h"
 
 #include <QtTest>
 
@@ -43,8 +41,6 @@ class ApexDataTest : public QObject
 
     private Q_SLOTS:
 
-        void initTestCase();
-
         void testSimpleParameters();
 
         void testDatablockData();
@@ -61,8 +57,6 @@ class ApexDataTest : public QObject
         void testSoundLevelMeterDataSupported_data();
         void testSoundLevelMeterDataUnsupported();
         void testSoundLevelMeterDataUnsupported_data();
-
-        void cleanupTestCase();
 
     private:
 

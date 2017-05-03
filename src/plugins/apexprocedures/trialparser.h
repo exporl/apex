@@ -17,38 +17,30 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_PLUGINS_APEXPROCEDURES_TRIALPARSER_H_
-#define _EXPORL_SRC_PLUGINS_APEXPROCEDURES_TRIALPARSER_H_
+#ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_TRIALPARSER_H_
+#define _APEX_SRC_PLUGINS_APEXPROCEDURES_TRIALPARSER_H_
 
 #include "apexdata/procedure/trialdata.h"
 
-#include "apextools/xml/xercesinclude.h"
-
-namespace XERCES_CPP_NAMESPACE
+namespace apex
 {
-  class DOMElement;
-  class DOMNode;
-};
-
-namespace apex {
 
 /**
 generates a trial
 
 @author Tom Francart,,,
 */
-class APEXPARSERS_EXPORT TrialParser{
+class APEXPARSERS_EXPORT TrialParser
+{
 public:
     TrialParser();
-
-    data::TrialData* GetTrial(XERCES_CPP_NAMESPACE::DOMNode* p_base);
-
     ~TrialParser();
 
-private:
-        data::TrialData* MakeTrial();
-        QString GetAnswer(XERCES_CPP_NAMESPACE::DOMNode* p_base);
+    data::TrialData* GetTrial(const QDomElement &p_base);
 
+private:
+    data::TrialData* MakeTrial();
+    QString GetAnswer(const QDomElement &p_base);
 };
 
 }

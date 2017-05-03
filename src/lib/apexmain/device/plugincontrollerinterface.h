@@ -111,6 +111,14 @@ class PluginControllerInterface
      */
         virtual bool prepare () = 0;
 
+    /** Lets the plugin play a stimulus if it is able to generate one.
+         * Is called by PluginController's slot syncControlDeviceOutput()
+         * Which is connected to OutputDevice's signal stimulusStarted()
+         * Connection is made in experimentcontrol.cpp
+     */
+        virtual void playStimulus()
+        {
+        }
 
     /** Returns the last error message. The error message explaines why a method
          * such as #isValidParameter(), #setParameter() or #prepare() returned @c

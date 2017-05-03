@@ -1,1194 +1,1190 @@
-<apex:speechmaterialfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.3/experiment.xsd"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
-    
-    <noises>
-        <noise id="HINT_ltass">
-            <description>Long term average speech spectrum noise for HINT</description>
-            <name>HINT</name>
-            <uri>english/hint/hintnoise.wav</uri>
-            <rms>-25</rms>
-            <speechmaterial>HINT</speechmaterial>
-        </noise>
-    </noises>
-    
-    <speechmaterial id="HINT">
-        <rms>-25</rms>
-        <list id="01">
-            <speechtoken id="sentence001">
-                <uri>english/HINT/sentence001.wav</uri>
-                <text>(A/the) boy fell from (a/the) window.</text>
-            </speechtoken>
-            <speechtoken id="sentence002">
-                <uri>english/HINT/sentence002.wav</uri>
-                <text>(A/the) wife helped her husband.</text>
-            </speechtoken>
-            <speechtoken id="sentence003">
-                <uri>english/HINT/sentence003.wav</uri>
-                <text>Big dogs can be dangerous.</text>
-            </speechtoken>
-            <speechtoken id="sentence004">
-                <uri>english/HINT/sentence004.wav</uri>
-                <text>Her shoes (are/were) very dirty.</text>
-            </speechtoken>
-            <speechtoken id="sentence005">
-                <uri>english/HINT/sentence005.wav</uri>
-                <text>(A/the) player lost (a/the) shoe.</text>
-            </speechtoken>
-            <speechtoken id="sentence006">
-                <uri>english/HINT/sentence006.wav</uri>
-                <text>Somebody stole the money.</text>
-            </speechtoken>
-            <speechtoken id="sentence007">
-                <uri>english/HINT/sentence007.wav</uri>
-                <text>(A/the) fire (is/was) very hot.</text>
-            </speechtoken>
-            <speechtoken id="sentence008">
-                <uri>english/HINT/sentence008.wav</uri>
-                <text>She's drinking from her own cup.</text>
-            </speechtoken>
-            <speechtoken id="sentence009">
-                <uri>english/HINT/sentence009.wav</uri>
-                <text>(A/the) picture came from (a/the) book.</text>
-            </speechtoken>
-            <speechtoken id="sentence010">
-                <uri>english/HINT/sentence010.wav</uri>
-                <text>(A/the) car (is/was) going to fast.</text>
-            </speechtoken>
-        </list>
-        <list id="02">
-            <speechtoken id="sentence011">
-                <uri>english/HINT/sentence011.wav</uri>
-                <text>(A/the) boy ran down (a/the) path.</text>
-            </speechtoken>
-            <speechtoken id="sentence012">
-                <uri>english/HINT/sentence012.wav</uri>
-                <text>Flowers grow in (a/the) garden.</text>
-            </speechtoken>
-            <speechtoken id="sentence013">
-                <uri>english/HINT/sentence013.wav</uri>
-                <text>Strawberry jam (is/was) sweet.</text>
-            </speechtoken>
-            <speechtoken id="sentence014">
-                <uri>english/HINT/sentence014.wav</uri>
-                <text>(A/the) shop closes for lunch.</text>
-            </speechtoken>
-            <speechtoken id="sentence015">
-                <uri>english/HINT/sentence015.wav</uri>
-                <text>The police helped (a/the) driver.</text>
-            </speechtoken>
-            <speechtoken id="sentence016">
-                <uri>english/HINT/sentence016.wav</uri>
-                <text>She looked in her mirror.</text>
-            </speechtoken>
-            <speechtoken id="sentence017">
-                <uri>english/HINT/sentence017.wav</uri>
-                <text>(A/the) match fell on (a/the) floor.</text>
-            </speechtoken>
-            <speechtoken id="sentence018">
-                <uri>english/HINT/sentence018.wav</uri>
-                <text>(A/the) fruit came in (a/the) box.</text>
-            </speechtoken>
-            <speechtoken id="sentence019">
-                <uri>english/HINT/sentence019.wav</uri>
-                <text>He really scared his sister.</text>
-            </speechtoken>
-            <speechtoken id="sentence020">
-                <uri>english/HINT/sentence020.wav</uri>
-                <text>(A/the) tub faucet (is/was) leaking.</text>
-            </speechtoken>
-        </list>
-        <list id="03">
-            <speechtoken id="sentence021">
-                <uri>english/HINT/sentence021.wav</uri>
-                <text>They heard (a/the) funny noise.</text>
-            </speechtoken>
-            <speechtoken id="sentence022">
-                <uri>english/HINT/sentence022.wav</uri>
-                <text>He found his brother hiding.</text>
-            </speechtoken>
-            <speechtoken id="sentence023">
-                <uri>english/HINT/sentence023.wav</uri>
-                <text>(A/the) dog played with (a/the) stick.</text>
-            </speechtoken>
-            <speechtoken id="sentence024">
-                <uri>english/HINT/sentence024.wav</uri>
-                <text>(A/the) book tells (a/the) story.</text>
-            </speechtoken>
-            <speechtoken id="sentence025">
-                <uri>english/HINT/sentence025.wav</uri>
-                <text>The matches (are/were) on (a/the) shelf.</text>
-            </speechtoken>
-            <speechtoken id="sentence026">
-                <uri>english/HINT/sentence026.wav</uri>
-                <text>The milk (is/was) by (a/the) front door.</text>
-            </speechtoken>
-            <speechtoken id="sentence027">
-                <uri>english/HINT/sentence027.wav</uri>
-                <text>(A/the) broom (is/was) in (a/the) corner.</text>
-            </speechtoken>
-            <speechtoken id="sentence028">
-                <uri>english/HINT/sentence028.wav</uri>
-                <text>(A/the) new road (is/was) on (a/the) map.</text>
-            </speechtoken>
-            <speechtoken id="sentence029">
-                <uri>english/HINT/sentence029.wav</uri>
-                <text>She lost her credit card.</text>
-            </speechtoken>
-            <speechtoken id="sentence030">
-                <uri>english/HINT/sentence030.wav</uri>
-                <text>(A/the) team (is/was) playing well.</text>
-            </speechtoken>
-        </list>
-        <list id="04">
-            <speechtoken id="sentence031">
-                <uri>english/HINT/sentence031.wav</uri>
-                <text>(A/the) little boy left home.</text>
-            </speechtoken>
-            <speechtoken id="sentence032">
-                <uri>english/HINT/sentence032.wav</uri>
-                <text>They're going out tonight.</text>
-            </speechtoken>
-            <speechtoken id="sentence033">
-                <uri>english/HINT/sentence033.wav</uri>
-                <text>(A/the) cat jumped over (a/the) fence.</text>
-            </speechtoken>
-            <speechtoken id="sentence034">
-                <uri>english/HINT/sentence034.wav</uri>
-                <text>He wore his yellow shirt.</text>
-            </speechtoken>
-            <speechtoken id="sentence035">
-                <uri>english/HINT/sentence035.wav</uri>
-                <text>(A/the) lady sits in her chair.</text>
-            </speechtoken>
-            <speechtoken id="sentence036">
-                <uri>english/HINT/sentence036.wav</uri>
-                <text>He needs his vacation.</text>
-            </speechtoken>
-            <speechtoken id="sentence037">
-                <uri>english/HINT/sentence037.wav</uri>
-                <text>She's washing her new silk dress.</text>
-            </speechtoken>
-            <speechtoken id="sentence038">
-                <uri>english/HINT/sentence038.wav</uri>
-                <text>(A/the) cat drank from (a/the) saucer.</text>
-            </speechtoken>
-            <speechtoken id="sentence039">
-                <uri>english/HINT/sentence039.wav</uri>
-                <text>Mother opened (a/the) drawer.</text>
-            </speechtoken>
-            <speechtoken id="sentence040">
-                <uri>english/HINT/sentence040.wav</uri>
-                <text>(A/the) lady packed her bag.</text>
-            </speechtoken>
-        </list>
-        <list id="05">
-            <speechtoken id="sentence041">
-                <uri>english/HINT/sentence041.wav</uri>
-                <text>(A/the) boy did (a/the) handstand.</text>
-            </speechtoken>
-            <speechtoken id="sentence042">
-                <uri>english/HINT/sentence042.wav</uri>
-                <text>They took some food outside.</text>
-            </speechtoken>
-            <speechtoken id="sentence043">
-                <uri>english/HINT/sentence043.wav</uri>
-                <text>The young people (are/were) dancing.</text>
-            </speechtoken>
-            <speechtoken id="sentence044">
-                <uri>english/HINT/sentence044.wav</uri>
-                <text>They waited for an hour.</text>
-            </speechtoken>
-            <speechtoken id="sentence045">
-                <uri>english/HINT/sentence045.wav</uri>
-                <text>The shirts (are/were) in (a/the) closet.</text>
-            </speechtoken>
-            <speechtoken id="sentence046">
-                <uri>english/HINT/sentence046.wav</uri>
-                <text>They watched (a/the) scary moving.</text>
-            </speechtoken>
-            <speechtoken id="sentence047">
-                <uri>english/HINT/sentence047.wav</uri>
-                <text>The milk (is/was) in (a/the) pitcher.</text>
-            </speechtoken>
-            <speechtoken id="sentence048">
-                <uri>english/HINT/sentence048.wav</uri>
-                <text>(A/the) truck drove up (a/the) road.</text>
-            </speechtoken>
-            <speechtoken id="sentence049">
-                <uri>english/HINT/sentence049.wav</uri>
-                <text>(A/the) tall man tied his shoes.</text>
-            </speechtoken>
-            <speechtoken id="sentence050">
-                <uri>english/HINT/sentence050.wav</uri>
-                <text>(A/the) letter fell on (a/the) floor.</text>
-            </speechtoken>
-        </list>
-        <list id="06">
-            <speechtoken id="sentence051">
-                <uri>english/HINT/sentence051.wav</uri>
-                <text>(A/the) silly boy (is/was) hiding.</text>
-            </speechtoken>
-            <speechtoken id="sentence052">
-                <uri>english/HINT/sentence052.wav</uri>
-                <text>(A/the) dog growled at the neighbors.</text>
-            </speechtoken>
-            <speechtoken id="sentence053">
-                <uri>english/HINT/sentence053.wav</uri>
-                <text>(A/the) tree fell on (a/the) house.</text>
-            </speechtoken>
-            <speechtoken id="sentence054">
-                <uri>english/HINT/sentence054.wav</uri>
-                <text>Her husband brought some flowers.</text>
-            </speechtoken>
-            <speechtoken id="sentence055">
-                <uri>english/HINT/sentence055.wav</uri>
-                <text>The children washed the plates.</text>
-            </speechtoken>
-            <speechtoken id="sentence056">
-                <uri>english/HINT/sentence056.wav</uri>
-                <text>They went on vacation.</text>
-            </speechtoken>
-            <speechtoken id="sentence057">
-                <uri>english/HINT/sentence057.wav</uri>
-                <text>Mother tied (a/the) string too tight.</text>
-            </speechtoken>
-            <speechtoken id="sentence058">
-                <uri>english/HINT/sentence058.wav</uri>
-                <text>(A/the) mailman shut (a/the) gate.</text>
-            </speechtoken>
-            <speechtoken id="sentence059">
-                <uri>english/HINT/sentence059.wav</uri>
-                <text>(A/the) grocer sells butter.</text>
-            </speechtoken>
-            <speechtoken id="sentence060">
-                <uri>english/HINT/sentence060.wav</uri>
-                <text>(A/the) baby broke his cup.</text>
-            </speechtoken>
-        </list>
-        <list id="07">
-            <speechtoken id="sentence061">
-                <uri>english/HINT/sentence061.wav</uri>
-                <text>The cows (are/were) in (a/the) pasture.</text>
-            </speechtoken>
-            <speechtoken id="sentence062">
-                <uri>english/HINT/sentence062.wav</uri>
-                <text>(A/the) dishcloth (is/was) soaking wet.</text>
-            </speechtoken>
-            <speechtoken id="sentence063">
-                <uri>english/HINT/sentence063.wav</uri>
-                <text>They (have/had) some chocolate pudding.</text>
-            </speechtoken>
-            <speechtoken id="sentence064">
-                <uri>english/HINT/sentence064.wav</uri>
-                <text>She spoke to her eldest son.</text>
-            </speechtoken>
-            <speechtoken id="sentence065">
-                <uri>english/HINT/sentence065.wav</uri>
-                <text>(An/the) oven door (is/was) open.</text>
-            </speechtoken>
-            <speechtoken id="sentence066">
-                <uri>english/HINT/sentence066.wav</uri>
-                <text>She's paying for her bread.</text>
-            </speechtoken>
-            <speechtoken id="sentence067">
-                <uri>english/HINT/sentence067.wav</uri>
-                <text>My mother stirred her tea.</text>
-            </speechtoken>
-            <speechtoken id="sentence068">
-                <uri>english/HINT/sentence068.wav</uri>
-                <text>He broke his leg again.</text>
-            </speechtoken>
-            <speechtoken id="sentence069">
-                <uri>english/HINT/sentence069.wav</uri>
-                <text>(A/the) lady wore (a/the) coat.</text>
-            </speechtoken>
-            <speechtoken id="sentence070">
-                <uri>english/HINT/sentence070.wav</uri>
-                <text>The cups (are/were) on (a/the) table.</text>
-            </speechtoken>
-        </list>
-        <list id="08">
-            <speechtoken id="sentence071">
-                <uri>english/HINT/sentence071.wav</uri>
-                <text>(A/the) ball bounced very high.</text>
-            </speechtoken>
-            <speechtoken id="sentence072">
-                <uri>english/HINT/sentence072.wav</uri>
-                <text>Mother cut (a/the) birthday cake.</text>
-            </speechtoken>
-            <speechtoken id="sentence073">
-                <uri>english/HINT/sentence073.wav</uri>
-                <text>(A/the) football game (is/was) over.</text>
-            </speechtoken>
-            <speechtoken id="sentence074">
-                <uri>english/HINT/sentence074.wav</uri>
-                <text>She stood near (a/the) window.</text>
-            </speechtoken>
-            <speechtoken id="sentence075">
-                <uri>english/HINT/sentence075.wav</uri>
-                <text>(A/the) kitchen clock (is/was) wrong.</text>
-            </speechtoken>
-            <speechtoken id="sentence076">
-                <uri>english/HINT/sentence076.wav</uri>
-                <text>The children helped their teacher.</text>
-            </speechtoken>
-            <speechtoken id="sentence077">
-                <uri>english/HINT/sentence077.wav</uri>
-                <text>They carried some shopping bags.</text>
-            </speechtoken>
-            <speechtoken id="sentence078">
-                <uri>english/HINT/sentence078.wav</uri>
-                <text>Someone (is/was) crossing (a/the) road.</text>
-            </speechtoken>
-            <speechtoken id="sentence079">
-                <uri>english/HINT/sentence079.wav</uri>
-                <text>She uses her spoon to eat.</text>
-            </speechtoken>
-            <speechtoken id="sentence080">
-                <uri>english/HINT/sentence080.wav</uri>
-                <text>(A/the) cat lay on (a/the) bed.</text>
-            </speechtoken>
-        </list>
-        <list id="09">
-            <speechtoken id="sentence081">
-                <uri>english/HINT/sentence081.wav</uri>
-                <text>School got out early today.</text>
-            </speechtoken>
-            <speechtoken id="sentence082">
-                <uri>english/HINT/sentence082.wav</uri>
-                <text>(A/the) football hit (a/the) goalpost.</text>
-            </speechtoken>
-            <speechtoken id="sentence083">
-                <uri>english/HINT/sentence083.wav</uri>
-                <text>(A/the) boy ran away from school.</text>
-            </speechtoken>
-            <speechtoken id="sentence084">
-                <uri>english/HINT/sentence084.wav</uri>
-                <text>Sugar (is/was) very sweet.</text>
-            </speechtoken>
-            <speechtoken id="sentence085">
-                <uri>english/HINT/sentence085.wav</uri>
-                <text>The two children (are/were) laughing.</text>
-            </speechtoken>
-            <speechtoken id="sentence086">
-                <uri>english/HINT/sentence086.wav</uri>
-                <text>(A/the) fire truck (is/was) coming.</text>
-            </speechtoken>
-            <speechtoken id="sentence087">
-                <uri>english/HINT/sentence087.wav</uri>
-                <text>Mother got (a/the) sauce pan.</text>
-            </speechtoken>
-            <speechtoken id="sentence088">
-                <uri>english/HINT/sentence088.wav</uri>
-                <text>(A/the) baby wants his bottle.</text>
-            </speechtoken>
-            <speechtoken id="sentence089">
-                <uri>english/HINT/sentence089.wav</uri>
-                <text>(A/the) ball broke (a/the) window.</text>
-            </speechtoken>
-            <speechtoken id="sentence090">
-                <uri>english/HINT/sentence090.wav</uri>
-                <text>There (is/was) a bad train wreck.</text>
-            </speechtoken>
-        </list>
-        <list id="10">
-            <speechtoken id="sentence091">
-                <uri>english/HINT/sentence091.wav</uri>
-                <text>(A/the) boy broke (a/the) wooden fence.</text>
-            </speechtoken>
-            <speechtoken id="sentence092">
-                <uri>english/HINT/sentence092.wav</uri>
-                <text>(An/the) angry man shouted.</text>
-            </speechtoken>
-            <speechtoken id="sentence093">
-                <uri>english/HINT/sentence093.wav</uri>
-                <text>Yesterday he lost his hat.</text>
-            </speechtoken>
-            <speechtoken id="sentence094">
-                <uri>english/HINT/sentence094.wav</uri>
-                <text>(A/the) nervous driver got lost.</text>
-            </speechtoken>
-            <speechtoken id="sentence095">
-                <uri>english/HINT/sentence095.wav</uri>
-                <text>(A/the) cook (is/was) baking (a/the) cake.</text>
-            </speechtoken>
-            <speechtoken id="sentence096">
-                <uri>english/HINT/sentence096.wav</uri>
-                <text>(A/the) chicken laid some eggs.</text>
-            </speechtoken>
-            <speechtoken id="sentence097">
-                <uri>english/HINT/sentence097.wav</uri>
-                <text>(A/the) fish swam in (a/the) pond.</text>
-            </speechtoken>
-            <speechtoken id="sentence098">
-                <uri>english/HINT/sentence098.wav</uri>
-                <text>They met some friends at dinner.</text>
-            </speechtoken>
-            <speechtoken id="sentence099">
-                <uri>english/HINT/sentence099.wav</uri>
-                <text>(A/the) man called the police.</text>
-            </speechtoken>
-            <speechtoken id="sentence100">
-                <uri>english/HINT/sentence100.wav</uri>
-                <text>(A/the) truck made it up (a/the) hill.</text>
-            </speechtoken>
-        </list>
-        <list id="11">
-            <speechtoken id="sentence101">
-                <uri>english/HINT/sentence101.wav</uri>
-                <text>(A/the) neighbor's boy (has/had) black hair.</text>
-            </speechtoken>
-            <speechtoken id="sentence102">
-                <uri>english/HINT/sentence102.wav</uri>
-                <text>The rain came pouring down.</text>
-            </speechtoken>
-            <speechtoken id="sentence103">
-                <uri>english/HINT/sentence103.wav</uri>
-                <text>(An/the) orange (is/was) very sweet.</text>
-            </speechtoken>
-            <speechtoken id="sentence104">
-                <uri>english/HINT/sentence104.wav</uri>
-                <text>He took the dogs for a walk.</text>
-            </speechtoken>
-            <speechtoken id="sentence105">
-                <uri>english/HINT/sentence105.wav</uri>
-                <text>Children like strawberries.</text>
-            </speechtoken>
-            <speechtoken id="sentence106">
-                <uri>english/HINT/sentence106.wav</uri>
-                <text>Her sister stayed for lunch.</text>
-            </speechtoken>
-            <speechtoken id="sentence107">
-                <uri>english/HINT/sentence107.wav</uri>
-                <text>(A/the) train (is/was) moving fast.</text>
-            </speechtoken>
-            <speechtoken id="sentence108">
-                <uri>english/HINT/sentence108.wav</uri>
-                <text>Mother shut (a/the) window.</text>
-            </speechtoken>
-            <speechtoken id="sentence109">
-                <uri>english/HINT/sentence109.wav</uri>
-                <text>(A/the) bakery (is/was) open.</text>
-            </speechtoken>
-            <speechtoken id="sentence110">
-                <uri>english/HINT/sentence110.wav</uri>
-                <text>Snow falls in the winter.</text>
-            </speechtoken>
-        </list>
-        <list id="12">
-            <speechtoken id="sentence111">
-                <uri>english/HINT/sentence111.wav</uri>
-                <text>(A/the) boy went to bed early.</text>
-            </speechtoken>
-            <speechtoken id="sentence112">
-                <uri>english/HINT/sentence112.wav</uri>
-                <text>(A/the) woman cleaned her house.</text>
-            </speechtoken>
-            <speechtoken id="sentence113">
-                <uri>english/HINT/sentence113.wav</uri>
-                <text>(A/the) sharp knife (is/was) dangerous.</text>
-            </speechtoken>
-            <speechtoken id="sentence114">
-                <uri>english/HINT/sentence114.wav</uri>
-                <text>(A/the) child ripped open (a/the) bag.</text>
-            </speechtoken>
-            <speechtoken id="sentence115">
-                <uri>english/HINT/sentence115.wav</uri>
-                <text>They had some cold cuts for lunch.</text>
-            </speechtoken>
-            <speechtoken id="sentence116">
-                <uri>english/HINT/sentence116.wav</uri>
-                <text>She's helping her friend move.</text>
-            </speechtoken>
-            <speechtoken id="sentence117">
-                <uri>english/HINT/sentence117.wav</uri>
-                <text>They ate (a/the) lemon pie.</text>
-            </speechtoken>
-            <speechtoken id="sentence118">
-                <uri>english/HINT/sentence118.wav</uri>
-                <text>They (are/were) crossing (a/the) street.</text>
-            </speechtoken>
-            <speechtoken id="sentence119">
-                <uri>english/HINT/sentence119.wav</uri>
-                <text>The sun melted the snow.</text>
-            </speechtoken>
-            <speechtoken id="sentence120">
-                <uri>english/HINT/sentence120.wav</uri>
-                <text>(A/the) little girl (is/was) happy.</text>
-            </speechtoken>
-        </list>
-        <list id="13">
-            <speechtoken id="sentence121">
-                <uri>english/HINT/sentence121.wav</uri>
-                <text>She found her purse in (a/the) trash.</text>
-            </speechtoken>
-            <speechtoken id="sentence122">
-                <uri>english/HINT/sentence122.wav</uri>
-                <text>(A/the) table (has/had) three legs.</text>
-            </speechtoken>
-            <speechtoken id="sentence123">
-                <uri>english/HINT/sentence123.wav</uri>
-                <text>The children waved at (a/the) train.</text>
-            </speechtoken>
-            <speechtoken id="sentence124">
-                <uri>english/HINT/sentence124.wav</uri>
-                <text>Her coat (is/was) on (a/the) chair.</text>
-            </speechtoken>
-            <speechtoken id="sentence125">
-                <uri>english/HINT/sentence125.wav</uri>
-                <text>(A/the) girl (is/was) fixing her dress.</text>
-            </speechtoken>
-            <speechtoken id="sentence126">
-                <uri>english/HINT/sentence126.wav</uri>
-                <text>It's time to go to bed.</text>
-            </speechtoken>
-            <speechtoken id="sentence127">
-                <uri>english/HINT/sentence127.wav</uri>
-                <text>Mother read the instructions.</text>
-            </speechtoken>
-            <speechtoken id="sentence128">
-                <uri>english/HINT/sentence128.wav</uri>
-                <text>(A/the) dog (is/was) eating some meat.</text>
-            </speechtoken>
-            <speechtoken id="sentence129">
-                <uri>english/HINT/sentence129.wav</uri>
-                <text>Father forgot the bread.</text>
-            </speechtoken>
-            <speechtoken id="sentence130">
-                <uri>english/HINT/sentence130.wav</uri>
-                <text>(A/the) road goes up (a/the) hill.</text>
-            </speechtoken>
-        </list>
-        <list id="14">
-            <speechtoken id="sentence131">
-                <uri>english/HINT/sentence131.wav</uri>
-                <text>The fruit (is/was) on the ground.</text>
-            </speechtoken>
-            <speechtoken id="sentence132">
-                <uri>english/HINT/sentence132.wav</uri>
-                <text>They followed (a/the) garden path.</text>
-            </speechtoken>
-            <speechtoken id="sentence133">
-                <uri>english/HINT/sentence133.wav</uri>
-                <text>They like orange marmalade.</text>
-            </speechtoken>
-            <speechtoken id="sentence134">
-                <uri>english/HINT/sentence134.wav</uri>
-                <text>There (are/were) branches everywhere.</text>
-            </speechtoken>
-            <speechtoken id="sentence135">
-                <uri>english/HINT/sentence135.wav</uri>
-                <text>(A/the) kitchen sink (is/was) empty.</text>
-            </speechtoken>
-            <speechtoken id="sentence136">
-                <uri>english/HINT/sentence136.wav</uri>
-                <text>The old gloves (are/were) dirty.</text>
-            </speechtoken>
-            <speechtoken id="sentence137">
-                <uri>english/HINT/sentence137.wav</uri>
-                <text>The scissors( are/were) very sharp.</text>
-            </speechtoken>
-            <speechtoken id="sentence138">
-                <uri>english/HINT/sentence138.wav</uri>
-                <text>(A/the) man cleaned his suede shoes.</text>
-            </speechtoken>
-            <speechtoken id="sentence139">
-                <uri>english/HINT/sentence139.wav</uri>
-                <text>(A/the) raincoat (is/was) dripping wet.</text>
-            </speechtoken>
-            <speechtoken id="sentence140">
-                <uri>english/HINT/sentence140.wav</uri>
-                <text>It's getting cold in here.</text>
-            </speechtoken>
-        </list>
-        <list id="15">
-            <speechtoken id="sentence141">
-                <uri>english/HINT/sentence141.wav</uri>
-                <text>(A/the) house (has/had) nine bedrooms.</text>
-            </speechtoken>
-            <speechtoken id="sentence142">
-                <uri>english/HINT/sentence142.wav</uri>
-                <text>They're shopping for school clothes.</text>
-            </speechtoken>
-            <speechtoken id="sentence143">
-                <uri>english/HINT/sentence143.wav</uri>
-                <text>They're playing in (a/the) park.</text>
-            </speechtoken>
-            <speechtoken id="sentence144">
-                <uri>english/HINT/sentence144.wav</uri>
-                <text>Rain (is/was) good for the trees.</text>
-            </speechtoken>
-            <speechtoken id="sentence145">
-                <uri>english/HINT/sentence145.wav</uri>
-                <text>They sat on (a/the) wooden bench.</text>
-            </speechtoken>
-            <speechtoken id="sentence146">
-                <uri>english/HINT/sentence146.wav</uri>
-                <text>(A/the) child drank some fresh milk.</text>
-            </speechtoken>
-            <speechtoken id="sentence147">
-                <uri>english/HINT/sentence147.wav</uri>
-                <text>(A/the) baby slept all night.</text>
-            </speechtoken>
-            <speechtoken id="sentence148">
-                <uri>english/HINT/sentence148.wav</uri>
-                <text>(A/the) salt shaker (is/was) empty.</text>
-            </speechtoken>
-            <speechtoken id="sentence149">
-                <uri>english/HINT/sentence149.wav</uri>
-                <text>(A/the) policeman knows the way.</text>
-            </speechtoken>
-            <speechtoken id="sentence150">
-                <uri>english/HINT/sentence150.wav</uri>
-                <text>The buckets fill up quickly.</text>
-            </speechtoken>
-        </list>
-        <list id="16">
-            <speechtoken id="sentence151">
-                <uri>english/HINT/sentence151.wav</uri>
-                <text>He played with his toy train.</text>
-            </speechtoken>
-            <speechtoken id="sentence152">
-                <uri>english/HINT/sentence152.wav</uri>
-                <text>They're watching (a/the) cuckoo clock.</text>
-            </speechtoken>
-            <speechtoken id="sentence153">
-                <uri>english/HINT/sentence153.wav</uri>
-                <text>Potatoes grow in the ground</text>
-            </speechtoken>
-            <speechtoken id="sentence154">
-                <uri>english/HINT/sentence154.wav</uri>
-                <text>(A/the) girl ran along (a/the) fence.</text>
-            </speechtoken>
-            <speechtoken id="sentence155">
-                <uri>english/HINT/sentence155.wav</uri>
-                <text>(A/the) dog jumped on (a/the) chair.</text>
-            </speechtoken>
-            <speechtoken id="sentence156">
-                <uri>english/HINT/sentence156.wav</uri>
-                <text>They finished dinner on time.</text>
-            </speechtoken>
-            <speechtoken id="sentence157">
-                <uri>english/HINT/sentence157.wav</uri>
-                <text>He got mud on his shoes.</text>
-            </speechtoken>
-            <speechtoken id="sentence158">
-                <uri>english/HINT/sentence158.wav</uri>
-                <text>They're clearing (a/the) table.</text>
-            </speechtoken>
-            <speechtoken id="sentence159">
-                <uri>english/HINT/sentence159.wav</uri>
-                <text>Some animals sleep on straw.</text>
-            </speechtoken>
-            <speechtoken id="sentence160">
-                <uri>english/HINT/sentence160.wav</uri>
-                <text>The police cleared (a/the) road.</text>
-            </speechtoken>
-        </list>
-        <list id="17">
-            <speechtoken id="sentence161">
-                <uri>english/HINT/sentence161.wav</uri>
-                <text>Mother picked some flowers.</text>
-            </speechtoken>
-            <speechtoken id="sentence162">
-                <uri>english/HINT/sentence162.wav</uri>
-                <text>(A/the) puppy played with (a/the) ball.</text>
-            </speechtoken>
-            <speechtoken id="sentence163">
-                <uri>english/HINT/sentence163.wav</uri>
-                <text>(An/the) engine (is/was) running.</text>
-            </speechtoken>
-            <speechtoken id="sentence164">
-                <uri>english/HINT/sentence164.wav</uri>
-                <text>(An/the) old woman (is/was) at home.</text>
-            </speechtoken>
-            <speechtoken id="sentence165">
-                <uri>english/HINT/sentence165.wav</uri>
-                <text>They're watching (a/the) train go by.</text>
-            </speechtoken>
-            <speechtoken id="sentence166">
-                <uri>english/HINT/sentence166.wav</uri>
-                <text>(An/the) oven (is/was) too hot.</text>
-            </speechtoken>
-            <speechtoken id="sentence167">
-                <uri>english/HINT/sentence167.wav</uri>
-                <text>They rode their bicycles.</text>
-            </speechtoken>
-            <speechtoken id="sentence168">
-                <uri>english/HINT/sentence168.wav</uri>
-                <text>(A/the) big fish got away.</text>
-            </speechtoken>
-            <speechtoken id="sentence169">
-                <uri>english/HINT/sentence169.wav</uri>
-                <text>They laughed at his story.</text>
-            </speechtoken>
-            <speechtoken id="sentence170">
-                <uri>english/HINT/sentence170.wav</uri>
-                <text>They walked across the grass.</text>
-            </speechtoken>
-        </list>
-        <list id="18">
-            <speechtoken id="sentence171">
-                <uri>english/HINT/sentence171.wav</uri>
-                <text>(A/the) boy (is/was) running away.</text>
-            </speechtoken>
-            <speechtoken id="sentence172">
-                <uri>english/HINT/sentence172.wav</uri>
-                <text>(A/the) towel (is/was) near (a/the) sink.</text>
-            </speechtoken>
-            <speechtoken id="sentence173">
-                <uri>english/HINT/sentence173.wav</uri>
-                <text>Flowers can grow in (a/the) pot.</text>
-            </speechtoken>
-            <speechtoken id="sentence174">
-                <uri>english/HINT/sentence174.wav</uri>
-                <text>He's skating with his friend.</text>
-            </speechtoken>
-            <speechtoken id="sentence175">
-                <uri>english/HINT/sentence175.wav</uri>
-                <text>(A/the) janitor swept (a/the) floor.</text>
-            </speechtoken>
-            <speechtoken id="sentence176">
-                <uri>english/HINT/sentence176.wav</uri>
-                <text>(A/the) lady washed (a/the) shirt.</text>
-            </speechtoken>
-            <speechtoken id="sentence177">
-                <uri>english/HINT/sentence177.wav</uri>
-                <text>She took off her fur coat.</text>
-            </speechtoken>
-            <speechtoken id="sentence178">
-                <uri>english/HINT/sentence178.wav</uri>
-                <text>The match boxes (are/were) empty.</text>
-            </speechtoken>
-            <speechtoken id="sentence179">
-                <uri>english/HINT/sentence179.wav</uri>
-                <text>(A/the) man (is/was) painting (a/the) sign.</text>
-            </speechtoken>
-            <speechtoken id="sentence180">
-                <uri>english/HINT/sentence180.wav</uri>
-                <text>(A/the) dog came home at last.</text>
-            </speechtoken>
-        </list>
-        <list id="19">
-            <speechtoken id="sentence181">
-                <uri>english/HINT/sentence181.wav</uri>
-                <text>(A/the) painter uses (a/the) brush.</text>
-            </speechtoken>
-            <speechtoken id="sentence182">
-                <uri>english/HINT/sentence182.wav</uri>
-                <text>(A/the) family bought (a/the) house.</text>
-            </speechtoken>
-            <speechtoken id="sentence183">
-                <uri>english/HINT/sentence183.wav</uri>
-                <text>Swimmers can hold their breath.</text>
-            </speechtoken>
-            <speechtoken id="sentence184">
-                <uri>english/HINT/sentence184.wav</uri>
-                <text>She cut (a/the) steak with her knife.</text>
-            </speechtoken>
-            <speechtoken id="sentence185">
-                <uri>english/HINT/sentence185.wav</uri>
-                <text>They're pushing an old car.</text>
-            </speechtoken>
-            <speechtoken id="sentence186">
-                <uri>english/HINT/sentence186.wav</uri>
-                <text>The food (is/was) expensive.</text>
-            </speechtoken>
-            <speechtoken id="sentence187">
-                <uri>english/HINT/sentence187.wav</uri>
-                <text>The children (are/were) walking home.</text>
-            </speechtoken>
-            <speechtoken id="sentence188">
-                <uri>english/HINT/sentence188.wav</uri>
-                <text>They (have/had) two empty bottles.</text>
-            </speechtoken>
-            <speechtoken id="sentence189">
-                <uri>english/HINT/sentence189.wav</uri>
-                <text>Milk comes in (a/the) carton.</text>
-            </speechtoken>
-            <speechtoken id="sentence190">
-                <uri>english/HINT/sentence190.wav</uri>
-                <text>(A/the) dog sleeps in (a/the) basket.</text>
-            </speechtoken>
-        </list>
-        <list id="20">
-            <speechtoken id="sentence191">
-                <uri>english/HINT/sentence191.wav</uri>
-                <text>(A/the) clown (has/had) (a/the) funny face.</text>
-            </speechtoken>
-            <speechtoken id="sentence192">
-                <uri>english/HINT/sentence192.wav</uri>
-                <text>The bath water (is/was) warm.</text>
-            </speechtoken>
-            <speechtoken id="sentence193">
-                <uri>english/HINT/sentence193.wav</uri>
-                <text>She injured four of her fingers.</text>
-            </speechtoken>
-            <speechtoken id="sentence194">
-                <uri>english/HINT/sentence194.wav</uri>
-                <text>He paid his bill in full.</text>
-            </speechtoken>
-            <speechtoken id="sentence195">
-                <uri>english/HINT/sentence195.wav</uri>
-                <text>They stared at (a/the) picture.</text>
-            </speechtoken>
-            <speechtoken id="sentence196">
-                <uri>english/HINT/sentence196.wav</uri>
-                <text>(A/the) driver started (a/the) car.</text>
-            </speechtoken>
-            <speechtoken id="sentence197">
-                <uri>english/HINT/sentence197.wav</uri>
-                <text>(A/the) truck carries fresh fruit.</text>
-            </speechtoken>
-            <speechtoken id="sentence198">
-                <uri>english/HINT/sentence198.wav</uri>
-                <text>(A/the) bottle (is/was) on (a/the) shelf.</text>
-            </speechtoken>
-            <speechtoken id="sentence199">
-                <uri>english/HINT/sentence199.wav</uri>
-                <text>The small tomatoes (are/were) green.</text>
-            </speechtoken>
-            <speechtoken id="sentence200">
-                <uri>english/HINT/sentence200.wav</uri>
-                <text>(A/the) dinner plate (is/was) hot.</text>
-            </speechtoken>
-        </list>
-        <list id="21">
-            <speechtoken id="sentence201">
-                <uri>english/HINT/sentence201.wav</uri>
-                <text>They're running past (a/the) house.</text>
-            </speechtoken>
-            <speechtoken id="sentence202">
-                <uri>english/HINT/sentence202.wav</uri>
-                <text>He's washing his face with soap.</text>
-            </speechtoken>
-            <speechtoken id="sentence203">
-                <uri>english/HINT/sentence203.wav</uri>
-                <text>(A/the) dog's chasing (a/the) cat.</text>
-            </speechtoken>
-            <speechtoken id="sentence204">
-                <uri>english/HINT/sentence204.wav</uri>
-                <text>(A/the) milkman drives (a/the) small truck.</text>
-            </speechtoken>
-            <speechtoken id="sentence205">
-                <uri>english/HINT/sentence205.wav</uri>
-                <text>(A/the) bus leaves before (a/the) train.</text>
-            </speechtoken>
-            <speechtoken id="sentence206">
-                <uri>english/HINT/sentence206.wav</uri>
-                <text>(A/the) baby (has/had) blue eyes.</text>
-            </speechtoken>
-            <speechtoken id="sentence207">
-                <uri>english/HINT/sentence207.wav</uri>
-                <text>(A/the) bag fell off (a/the) shelf.</text>
-            </speechtoken>
-            <speechtoken id="sentence208">
-                <uri>english/HINT/sentence208.wav</uri>
-                <text>They (are/were) coming for dinner.</text>
-            </speechtoken>
-            <speechtoken id="sentence209">
-                <uri>english/HINT/sentence209.wav</uri>
-                <text>They wanted some potatoes.</text>
-            </speechtoken>
-            <speechtoken id="sentence210">
-                <uri>english/HINT/sentence210.wav</uri>
-                <text>They knocked on (a/the) window.</text>
-            </speechtoken>
-        </list>
-        <list id="22">
-            <speechtoken id="sentence211">
-                <uri>english/HINT/sentence211.wav</uri>
-                <text>(A/the) girl came into (a/the) room.</text>
-            </speechtoken>
-            <speechtoken id="sentence212">
-                <uri>english/HINT/sentence212.wav</uri>
-                <text>(A/the) field mouse found (a/the) cheese.</text>
-            </speechtoken>
-            <speechtoken id="sentence213">
-                <uri>english/HINT/sentence213.wav</uri>
-                <text>They're buying some fresh bread.</text>
-            </speechtoken>
-            <speechtoken id="sentence214">
-                <uri>english/HINT/sentence214.wav</uri>
-                <text>(A/the) machine (is/was) noisy.</text>
-            </speechtoken>
-            <speechtoken id="sentence215">
-                <uri>english/HINT/sentence215.wav</uri>
-                <text>(A/the) rice pudding (is/was) ready.</text>
-            </speechtoken>
-            <speechtoken id="sentence216">
-                <uri>english/HINT/sentence216.wav</uri>
-                <text>They had a wonderful day.</text>
-            </speechtoken>
-            <speechtoken id="sentence217">
-                <uri>english/HINT/sentence217.wav</uri>
-                <text>(An/the) exit (is/was) well lit.</text>
-            </speechtoken>
-            <speechtoken id="sentence218">
-                <uri>english/HINT/sentence218.wav</uri>
-                <text>(A/the) train stops at (a/the) station.</text>
-            </speechtoken>
-            <speechtoken id="sentence219">
-                <uri>english/HINT/sentence219.wav</uri>
-                <text>He (is/was) sucking his thumb.</text>
-            </speechtoken>
-            <speechtoken id="sentence220">
-                <uri>english/HINT/sentence220.wav</uri>
-                <text>(A/the) big boy kicked the ball.</text>
-            </speechtoken>
-        </list>
-        <list id="23">
-            <speechtoken id="sentence221">
-                <uri>english/HINT/sentence221.wav</uri>
-                <text>The paint dripped on the ground.</text>
-            </speechtoken>
-            <speechtoken id="sentence222">
-                <uri>english/HINT/sentence222.wav</uri>
-                <text>(A/the) towel fell on (a/the) floor.</text>
-            </speechtoken>
-            <speechtoken id="sentence223">
-                <uri>english/HINT/sentence223.wav</uri>
-                <text>(A/the) family likes fish.</text>
-            </speechtoken>
-            <speechtoken id="sentence224">
-                <uri>english/HINT/sentence224.wav</uri>
-                <text>The bananas (are/were) too ripe.</text>
-            </speechtoken>
-            <speechtoken id="sentence225">
-                <uri>english/HINT/sentence225.wav</uri>
-                <text>He grew lots of vegetables.</text>
-            </speechtoken>
-            <speechtoken id="sentence226">
-                <uri>english/HINT/sentence226.wav</uri>
-                <text>She argues with her sister.</text>
-            </speechtoken>
-            <speechtoken id="sentence227">
-                <uri>english/HINT/sentence227.wav</uri>
-                <text>(A/the) kitchen window (is/was) clean.</text>
-            </speechtoken>
-            <speechtoken id="sentence228">
-                <uri>english/HINT/sentence228.wav</uri>
-                <text>He hung up his raincoat.</text>
-            </speechtoken>
-            <speechtoken id="sentence229">
-                <uri>english/HINT/sentence229.wav</uri>
-                <text>(A/the) mailman brought (a/the) letter.</text>
-            </speechtoken>
-            <speechtoken id="sentence230">
-                <uri>english/HINT/sentence230.wav</uri>
-                <text>(A/the) mother heard (a/the) baby.</text>
-            </speechtoken>
-        </list>
-        <list id="24">
-            <speechtoken id="sentence231">
-                <uri>english/HINT/sentence231.wav</uri>
-                <text>(A/the) waiter brought (a/the) cream.</text>
-            </speechtoken>
-            <speechtoken id="sentence232">
-                <uri>english/HINT/sentence232.wav</uri>
-                <text>(A/the) teapot( is/was) very hot.</text>
-            </speechtoken>
-            <speechtoken id="sentence233">
-                <uri>english/HINT/sentence233.wav</uri>
-                <text>(An/the) apple pie (is/was) good.</text>
-            </speechtoken>
-            <speechtoken id="sentence234">
-                <uri>english/HINT/sentence234.wav</uri>
-                <text>(A/the) jelly jar (is/was) full.</text>
-            </speechtoken>
-            <speechtoken id="sentence235">
-                <uri>english/HINT/sentence235.wav</uri>
-                <text>(A/the) girl (is/was) washing her hair.</text>
-            </speechtoken>
-            <speechtoken id="sentence236">
-                <uri>english/HINT/sentence236.wav</uri>
-                <text>(A/the) girl played with (a/the) baby.</text>
-            </speechtoken>
-            <speechtoken id="sentence237">
-                <uri>english/HINT/sentence237.wav</uri>
-                <text>(A/the) cow (is/was) milked every day.</text>
-            </speechtoken>
-            <speechtoken id="sentence238">
-                <uri>english/HINT/sentence238.wav</uri>
-                <text>They called an ambulance.</text>
-            </speechtoken>
-            <speechtoken id="sentence239">
-                <uri>english/HINT/sentence239.wav</uri>
-                <text>They (are/were) drinking coffee</text>
-            </speechtoken>
-            <speechtoken id="sentence240">
-                <uri>english/HINT/sentence240.wav</uri>
-                <text>He climbed up (a/the) ladder.</text>
-            </speechtoken>
-        </list>
-        <list id="25">
-            <speechtoken id="sentence241">
-                <uri>english/HINT/sentence241.wav</uri>
-                <text>(A/the) boy slipped on the stairs.</text>
-            </speechtoken>
-            <speechtoken id="sentence242">
-                <uri>english/HINT/sentence242.wav</uri>
-                <text>New neighbors (are/were) moving in.</text>
-            </speechtoken>
-            <speechtoken id="sentence243">
-                <uri>english/HINT/sentence243.wav</uri>
-                <text>(A/the) girl caught (a/the) head cold.</text>
-            </speechtoken>
-            <speechtoken id="sentence244">
-                <uri>english/HINT/sentence244.wav</uri>
-                <text>His father will come home soon.</text>
-            </speechtoken>
-            <speechtoken id="sentence245">
-                <uri>english/HINT/sentence245.wav</uri>
-                <text>(A/the) bus stopped suddenly.</text>
-            </speechtoken>
-            <speechtoken id="sentence246">
-                <uri>english/HINT/sentence246.wav</uri>
-                <text>He (is/was) washing his car.</text>
-            </speechtoken>
-            <speechtoken id="sentence247">
-                <uri>english/HINT/sentence247.wav</uri>
-                <text>(A/the) cat caught (a/the) little mouse.</text>
-            </speechtoken>
-            <speechtoken id="sentence248">
-                <uri>english/HINT/sentence248.wav</uri>
-                <text>They broke all the brown eggs.</text>
-            </speechtoken>
-            <speechtoken id="sentence249">
-                <uri>english/HINT/sentence249.wav</uri>
-                <text>(A/the) candy shop (is/was) empty.</text>
-            </speechtoken>
-            <speechtoken id="sentence250">
-                <uri>english/HINT/sentence250.wav</uri>
-                <text>(A/the) lady went to (a/the) store.</text>
-            </speechtoken>
-        </list>
-        <list id="practice list 1">
-            <speechtoken id="sentence251">
-                <uri>english/HINT/sentence251.wav</uri>
-                <text>(A/the) boy got into trouble.</text>
-            </speechtoken>
-            <speechtoken id="sentence252">
-                <uri>english/HINT/sentence252.wav</uri>
-                <text>The yellow pears taste good.</text>
-            </speechtoken>
-            <speechtoken id="sentence253">
-                <uri>english/HINT/sentence253.wav</uri>
-                <text>(A/the) front yard (is/was) pretty.</text>
-            </speechtoken>
-            <speechtoken id="sentence254">
-                <uri>english/HINT/sentence254.wav</uri>
-                <text>(An/the) old man (is/was) worried.</text>
-            </speechtoken>
-            <speechtoken id="sentence255">
-                <uri>english/HINT/sentence255.wav</uri>
-                <text>The pond water (is/was) dirty.</text>
-            </speechtoken>
-            <speechtoken id="sentence256">
-                <uri>english/HINT/sentence256.wav</uri>
-                <text>(A/the) rancher (has/had) (a/the) bull.</text>
-            </speechtoken>
-            <speechtoken id="sentence257">
-                <uri>english/HINT/sentence257.wav</uri>
-                <text>The ground (is/was) very hard.</text>
-            </speechtoken>
-            <speechtoken id="sentence258">
-                <uri>english/HINT/sentence258.wav</uri>
-                <text>They painted (a/the) wall white.</text>
-            </speechtoken>
-            <speechtoken id="sentence259">
-                <uri>english/HINT/sentence259.wav</uri>
-                <text>Dad stopped to pick some pears.</text>
-            </speechtoken>
-            <speechtoken id="sentence260">
-                <uri>english/HINT/sentence260.wav</uri>
-                <text>She made her bed and left.</text>
-            </speechtoken>
-        </list>
-        <list id="practice list 2">
-            <speechtoken id="sentence261">
-                <uri>english/HINT/sentence261.wav</uri>
-                <text>Men normally wear long pants.</text>
-            </speechtoken>
-            <speechtoken id="sentence262">
-                <uri>english/HINT/sentence262.wav</uri>
-                <text>(A/the) house (has/had) (a/the) nice garden.</text>
-            </speechtoken>
-            <speechtoken id="sentence263">
-                <uri>english/HINT/sentence263.wav</uri>
-                <text>(A/the) little girl (is/was) shouting.</text>
-            </speechtoken>
-            <speechtoken id="sentence264">
-                <uri>english/HINT/sentence264.wav</uri>
-                <text>(A/the) driver waited for me.</text>
-            </speechtoken>
-            <speechtoken id="sentence265">
-                <uri>english/HINT/sentence265.wav</uri>
-                <text>The three girls (are/were) listening.</text>
-            </speechtoken>
-            <speechtoken id="sentence266">
-                <uri>english/HINT/sentence266.wav</uri>
-                <text>(An/the) ice cream (is/was) melting.</text>
-            </speechtoken>
-            <speechtoken id="sentence267">
-                <uri>english/HINT/sentence267.wav</uri>
-                <text>She bumped here head on (a/the) door.</text>
-            </speechtoken>
-            <speechtoken id="sentence268">
-                <uri>english/HINT/sentence268.wav</uri>
-                <text>(An/the) apple pie (is/was) baking.</text>
-            </speechtoken>
-            <speechtoken id="sentence269">
-                <uri>english/HINT/sentence269.wav</uri>
-                <text>She's calling her daughter.</text>
-            </speechtoken>
-            <speechtoken id="sentence270">
-                <uri>english/HINT/sentence270.wav</uri>
-                <text>(A/the) park (is/was) near (a/the) road.</text>
-            </speechtoken>
-        </list>
-        <list id="practice list 3">
-            <speechtoken id="sentence271">
-                <uri>english/HINT/sentence271.wav</uri>
-                <text>(A/the) boy forgot his book.</text>
-            </speechtoken>
-            <speechtoken id="sentence272">
-                <uri>english/HINT/sentence272.wav</uri>
-                <text>(A/the) mouse ran into (a/the) hole.</text>
-            </speechtoken>
-            <speechtoken id="sentence273">
-                <uri>english/HINT/sentence273.wav</uri>
-                <text>The leaves turned brown and dry.</text>
-            </speechtoken>
-            <speechtoken id="sentence274">
-                <uri>english/HINT/sentence274.wav</uri>
-                <text>He closed his eyes and jumped.</text>
-            </speechtoken>
-            <speechtoken id="sentence275">
-                <uri>english/HINT/sentence275.wav</uri>
-                <text>(A/the) floor looks clean and shiny.</text>
-            </speechtoken>
-            <speechtoken id="sentence276">
-                <uri>english/HINT/sentence276.wav</uri>
-                <text>She writes to her friend daily.</text>
-            </speechtoken>
-            <speechtoken id="sentence277">
-                <uri>english/HINT/sentence277.wav</uri>
-                <text>The two farmers (are/were) talking.</text>
-            </speechtoken>
-            <speechtoken id="sentence278">
-                <uri>english/HINT/sentence278.wav</uri>
-                <text>Father paid at (a/the) gate.</text>
-            </speechtoken>
-            <speechtoken id="sentence279">
-                <uri>english/HINT/sentence279.wav</uri>
-                <text>They're climbing (an/the) old oak tree.</text>
-            </speechtoken>
-            <speechtoken id="sentence280">
-                <uri>english/HINT/sentence280.wav</uri>
-                <text>The sky (is/was) very blue.</text>
-            </speechtoken>
-        </list>
-    </speechmaterial>
+<apex:speechmaterialfile xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/spin.xsd">
+  <noises>
+    <noise id="HINT_ltass">
+      <description>Long term average speech spectrum noise for HINT</description>
+      <name>HINT</name>
+      <file>english/hint/hintnoise.wav</file>
+      <rms>-25</rms>
+      <speechmaterial>HINT</speechmaterial>
+    </noise>
+  </noises>
+  <speechmaterial id="HINT">
+    <rms>-25</rms>
+    <list id="01">
+      <speechtoken id="sentence001">
+        <file>english/HINT/sentence001.wav</file>
+        <text>(A/the) boy fell from (a/the) window.</text>
+      </speechtoken>
+      <speechtoken id="sentence002">
+        <file>english/HINT/sentence002.wav</file>
+        <text>(A/the) wife helped her husband.</text>
+      </speechtoken>
+      <speechtoken id="sentence003">
+        <file>english/HINT/sentence003.wav</file>
+        <text>Big dogs can be dangerous.</text>
+      </speechtoken>
+      <speechtoken id="sentence004">
+        <file>english/HINT/sentence004.wav</file>
+        <text>Her shoes (are/were) very dirty.</text>
+      </speechtoken>
+      <speechtoken id="sentence005">
+        <file>english/HINT/sentence005.wav</file>
+        <text>(A/the) player lost (a/the) shoe.</text>
+      </speechtoken>
+      <speechtoken id="sentence006">
+        <file>english/HINT/sentence006.wav</file>
+        <text>Somebody stole the money.</text>
+      </speechtoken>
+      <speechtoken id="sentence007">
+        <file>english/HINT/sentence007.wav</file>
+        <text>(A/the) fire (is/was) very hot.</text>
+      </speechtoken>
+      <speechtoken id="sentence008">
+        <file>english/HINT/sentence008.wav</file>
+        <text>She's drinking from her own cup.</text>
+      </speechtoken>
+      <speechtoken id="sentence009">
+        <file>english/HINT/sentence009.wav</file>
+        <text>(A/the) picture came from (a/the) book.</text>
+      </speechtoken>
+      <speechtoken id="sentence010">
+        <file>english/HINT/sentence010.wav</file>
+        <text>(A/the) car (is/was) going to fast.</text>
+      </speechtoken>
+    </list>
+    <list id="02">
+      <speechtoken id="sentence011">
+        <file>english/HINT/sentence011.wav</file>
+        <text>(A/the) boy ran down (a/the) path.</text>
+      </speechtoken>
+      <speechtoken id="sentence012">
+        <file>english/HINT/sentence012.wav</file>
+        <text>Flowers grow in (a/the) garden.</text>
+      </speechtoken>
+      <speechtoken id="sentence013">
+        <file>english/HINT/sentence013.wav</file>
+        <text>Strawberry jam (is/was) sweet.</text>
+      </speechtoken>
+      <speechtoken id="sentence014">
+        <file>english/HINT/sentence014.wav</file>
+        <text>(A/the) shop closes for lunch.</text>
+      </speechtoken>
+      <speechtoken id="sentence015">
+        <file>english/HINT/sentence015.wav</file>
+        <text>The police helped (a/the) driver.</text>
+      </speechtoken>
+      <speechtoken id="sentence016">
+        <file>english/HINT/sentence016.wav</file>
+        <text>She looked in her mirror.</text>
+      </speechtoken>
+      <speechtoken id="sentence017">
+        <file>english/HINT/sentence017.wav</file>
+        <text>(A/the) match fell on (a/the) floor.</text>
+      </speechtoken>
+      <speechtoken id="sentence018">
+        <file>english/HINT/sentence018.wav</file>
+        <text>(A/the) fruit came in (a/the) box.</text>
+      </speechtoken>
+      <speechtoken id="sentence019">
+        <file>english/HINT/sentence019.wav</file>
+        <text>He really scared his sister.</text>
+      </speechtoken>
+      <speechtoken id="sentence020">
+        <file>english/HINT/sentence020.wav</file>
+        <text>(A/the) tub faucet (is/was) leaking.</text>
+      </speechtoken>
+    </list>
+    <list id="03">
+      <speechtoken id="sentence021">
+        <file>english/HINT/sentence021.wav</file>
+        <text>They heard (a/the) funny noise.</text>
+      </speechtoken>
+      <speechtoken id="sentence022">
+        <file>english/HINT/sentence022.wav</file>
+        <text>He found his brother hiding.</text>
+      </speechtoken>
+      <speechtoken id="sentence023">
+        <file>english/HINT/sentence023.wav</file>
+        <text>(A/the) dog played with (a/the) stick.</text>
+      </speechtoken>
+      <speechtoken id="sentence024">
+        <file>english/HINT/sentence024.wav</file>
+        <text>(A/the) book tells (a/the) story.</text>
+      </speechtoken>
+      <speechtoken id="sentence025">
+        <file>english/HINT/sentence025.wav</file>
+        <text>The matches (are/were) on (a/the) shelf.</text>
+      </speechtoken>
+      <speechtoken id="sentence026">
+        <file>english/HINT/sentence026.wav</file>
+        <text>The milk (is/was) by (a/the) front door.</text>
+      </speechtoken>
+      <speechtoken id="sentence027">
+        <file>english/HINT/sentence027.wav</file>
+        <text>(A/the) broom (is/was) in (a/the) corner.</text>
+      </speechtoken>
+      <speechtoken id="sentence028">
+        <file>english/HINT/sentence028.wav</file>
+        <text>(A/the) new road (is/was) on (a/the) map.</text>
+      </speechtoken>
+      <speechtoken id="sentence029">
+        <file>english/HINT/sentence029.wav</file>
+        <text>She lost her credit card.</text>
+      </speechtoken>
+      <speechtoken id="sentence030">
+        <file>english/HINT/sentence030.wav</file>
+        <text>(A/the) team (is/was) playing well.</text>
+      </speechtoken>
+    </list>
+    <list id="04">
+      <speechtoken id="sentence031">
+        <file>english/HINT/sentence031.wav</file>
+        <text>(A/the) little boy left home.</text>
+      </speechtoken>
+      <speechtoken id="sentence032">
+        <file>english/HINT/sentence032.wav</file>
+        <text>They're going out tonight.</text>
+      </speechtoken>
+      <speechtoken id="sentence033">
+        <file>english/HINT/sentence033.wav</file>
+        <text>(A/the) cat jumped over (a/the) fence.</text>
+      </speechtoken>
+      <speechtoken id="sentence034">
+        <file>english/HINT/sentence034.wav</file>
+        <text>He wore his yellow shirt.</text>
+      </speechtoken>
+      <speechtoken id="sentence035">
+        <file>english/HINT/sentence035.wav</file>
+        <text>(A/the) lady sits in her chair.</text>
+      </speechtoken>
+      <speechtoken id="sentence036">
+        <file>english/HINT/sentence036.wav</file>
+        <text>He needs his vacation.</text>
+      </speechtoken>
+      <speechtoken id="sentence037">
+        <file>english/HINT/sentence037.wav</file>
+        <text>She's washing her new silk dress.</text>
+      </speechtoken>
+      <speechtoken id="sentence038">
+        <file>english/HINT/sentence038.wav</file>
+        <text>(A/the) cat drank from (a/the) saucer.</text>
+      </speechtoken>
+      <speechtoken id="sentence039">
+        <file>english/HINT/sentence039.wav</file>
+        <text>Mother opened (a/the) drawer.</text>
+      </speechtoken>
+      <speechtoken id="sentence040">
+        <file>english/HINT/sentence040.wav</file>
+        <text>(A/the) lady packed her bag.</text>
+      </speechtoken>
+    </list>
+    <list id="05">
+      <speechtoken id="sentence041">
+        <file>english/HINT/sentence041.wav</file>
+        <text>(A/the) boy did (a/the) handstand.</text>
+      </speechtoken>
+      <speechtoken id="sentence042">
+        <file>english/HINT/sentence042.wav</file>
+        <text>They took some food outside.</text>
+      </speechtoken>
+      <speechtoken id="sentence043">
+        <file>english/HINT/sentence043.wav</file>
+        <text>The young people (are/were) dancing.</text>
+      </speechtoken>
+      <speechtoken id="sentence044">
+        <file>english/HINT/sentence044.wav</file>
+        <text>They waited for an hour.</text>
+      </speechtoken>
+      <speechtoken id="sentence045">
+        <file>english/HINT/sentence045.wav</file>
+        <text>The shirts (are/were) in (a/the) closet.</text>
+      </speechtoken>
+      <speechtoken id="sentence046">
+        <file>english/HINT/sentence046.wav</file>
+        <text>They watched (a/the) scary moving.</text>
+      </speechtoken>
+      <speechtoken id="sentence047">
+        <file>english/HINT/sentence047.wav</file>
+        <text>The milk (is/was) in (a/the) pitcher.</text>
+      </speechtoken>
+      <speechtoken id="sentence048">
+        <file>english/HINT/sentence048.wav</file>
+        <text>(A/the) truck drove up (a/the) road.</text>
+      </speechtoken>
+      <speechtoken id="sentence049">
+        <file>english/HINT/sentence049.wav</file>
+        <text>(A/the) tall man tied his shoes.</text>
+      </speechtoken>
+      <speechtoken id="sentence050">
+        <file>english/HINT/sentence050.wav</file>
+        <text>(A/the) letter fell on (a/the) floor.</text>
+      </speechtoken>
+    </list>
+    <list id="06">
+      <speechtoken id="sentence051">
+        <file>english/HINT/sentence051.wav</file>
+        <text>(A/the) silly boy (is/was) hiding.</text>
+      </speechtoken>
+      <speechtoken id="sentence052">
+        <file>english/HINT/sentence052.wav</file>
+        <text>(A/the) dog growled at the neighbors.</text>
+      </speechtoken>
+      <speechtoken id="sentence053">
+        <file>english/HINT/sentence053.wav</file>
+        <text>(A/the) tree fell on (a/the) house.</text>
+      </speechtoken>
+      <speechtoken id="sentence054">
+        <file>english/HINT/sentence054.wav</file>
+        <text>Her husband brought some flowers.</text>
+      </speechtoken>
+      <speechtoken id="sentence055">
+        <file>english/HINT/sentence055.wav</file>
+        <text>The children washed the plates.</text>
+      </speechtoken>
+      <speechtoken id="sentence056">
+        <file>english/HINT/sentence056.wav</file>
+        <text>They went on vacation.</text>
+      </speechtoken>
+      <speechtoken id="sentence057">
+        <file>english/HINT/sentence057.wav</file>
+        <text>Mother tied (a/the) string too tight.</text>
+      </speechtoken>
+      <speechtoken id="sentence058">
+        <file>english/HINT/sentence058.wav</file>
+        <text>(A/the) mailman shut (a/the) gate.</text>
+      </speechtoken>
+      <speechtoken id="sentence059">
+        <file>english/HINT/sentence059.wav</file>
+        <text>(A/the) grocer sells butter.</text>
+      </speechtoken>
+      <speechtoken id="sentence060">
+        <file>english/HINT/sentence060.wav</file>
+        <text>(A/the) baby broke his cup.</text>
+      </speechtoken>
+    </list>
+    <list id="07">
+      <speechtoken id="sentence061">
+        <file>english/HINT/sentence061.wav</file>
+        <text>The cows (are/were) in (a/the) pasture.</text>
+      </speechtoken>
+      <speechtoken id="sentence062">
+        <file>english/HINT/sentence062.wav</file>
+        <text>(A/the) dishcloth (is/was) soaking wet.</text>
+      </speechtoken>
+      <speechtoken id="sentence063">
+        <file>english/HINT/sentence063.wav</file>
+        <text>They (have/had) some chocolate pudding.</text>
+      </speechtoken>
+      <speechtoken id="sentence064">
+        <file>english/HINT/sentence064.wav</file>
+        <text>She spoke to her eldest son.</text>
+      </speechtoken>
+      <speechtoken id="sentence065">
+        <file>english/HINT/sentence065.wav</file>
+        <text>(An/the) oven door (is/was) open.</text>
+      </speechtoken>
+      <speechtoken id="sentence066">
+        <file>english/HINT/sentence066.wav</file>
+        <text>She's paying for her bread.</text>
+      </speechtoken>
+      <speechtoken id="sentence067">
+        <file>english/HINT/sentence067.wav</file>
+        <text>My mother stirred her tea.</text>
+      </speechtoken>
+      <speechtoken id="sentence068">
+        <file>english/HINT/sentence068.wav</file>
+        <text>He broke his leg again.</text>
+      </speechtoken>
+      <speechtoken id="sentence069">
+        <file>english/HINT/sentence069.wav</file>
+        <text>(A/the) lady wore (a/the) coat.</text>
+      </speechtoken>
+      <speechtoken id="sentence070">
+        <file>english/HINT/sentence070.wav</file>
+        <text>The cups (are/were) on (a/the) table.</text>
+      </speechtoken>
+    </list>
+    <list id="08">
+      <speechtoken id="sentence071">
+        <file>english/HINT/sentence071.wav</file>
+        <text>(A/the) ball bounced very high.</text>
+      </speechtoken>
+      <speechtoken id="sentence072">
+        <file>english/HINT/sentence072.wav</file>
+        <text>Mother cut (a/the) birthday cake.</text>
+      </speechtoken>
+      <speechtoken id="sentence073">
+        <file>english/HINT/sentence073.wav</file>
+        <text>(A/the) football game (is/was) over.</text>
+      </speechtoken>
+      <speechtoken id="sentence074">
+        <file>english/HINT/sentence074.wav</file>
+        <text>She stood near (a/the) window.</text>
+      </speechtoken>
+      <speechtoken id="sentence075">
+        <file>english/HINT/sentence075.wav</file>
+        <text>(A/the) kitchen clock (is/was) wrong.</text>
+      </speechtoken>
+      <speechtoken id="sentence076">
+        <file>english/HINT/sentence076.wav</file>
+        <text>The children helped their teacher.</text>
+      </speechtoken>
+      <speechtoken id="sentence077">
+        <file>english/HINT/sentence077.wav</file>
+        <text>They carried some shopping bags.</text>
+      </speechtoken>
+      <speechtoken id="sentence078">
+        <file>english/HINT/sentence078.wav</file>
+        <text>Someone (is/was) crossing (a/the) road.</text>
+      </speechtoken>
+      <speechtoken id="sentence079">
+        <file>english/HINT/sentence079.wav</file>
+        <text>She uses her spoon to eat.</text>
+      </speechtoken>
+      <speechtoken id="sentence080">
+        <file>english/HINT/sentence080.wav</file>
+        <text>(A/the) cat lay on (a/the) bed.</text>
+      </speechtoken>
+    </list>
+    <list id="09">
+      <speechtoken id="sentence081">
+        <file>english/HINT/sentence081.wav</file>
+        <text>School got out early today.</text>
+      </speechtoken>
+      <speechtoken id="sentence082">
+        <file>english/HINT/sentence082.wav</file>
+        <text>(A/the) football hit (a/the) goalpost.</text>
+      </speechtoken>
+      <speechtoken id="sentence083">
+        <file>english/HINT/sentence083.wav</file>
+        <text>(A/the) boy ran away from school.</text>
+      </speechtoken>
+      <speechtoken id="sentence084">
+        <file>english/HINT/sentence084.wav</file>
+        <text>Sugar (is/was) very sweet.</text>
+      </speechtoken>
+      <speechtoken id="sentence085">
+        <file>english/HINT/sentence085.wav</file>
+        <text>The two children (are/were) laughing.</text>
+      </speechtoken>
+      <speechtoken id="sentence086">
+        <file>english/HINT/sentence086.wav</file>
+        <text>(A/the) fire truck (is/was) coming.</text>
+      </speechtoken>
+      <speechtoken id="sentence087">
+        <file>english/HINT/sentence087.wav</file>
+        <text>Mother got (a/the) sauce pan.</text>
+      </speechtoken>
+      <speechtoken id="sentence088">
+        <file>english/HINT/sentence088.wav</file>
+        <text>(A/the) baby wants his bottle.</text>
+      </speechtoken>
+      <speechtoken id="sentence089">
+        <file>english/HINT/sentence089.wav</file>
+        <text>(A/the) ball broke (a/the) window.</text>
+      </speechtoken>
+      <speechtoken id="sentence090">
+        <file>english/HINT/sentence090.wav</file>
+        <text>There (is/was) a bad train wreck.</text>
+      </speechtoken>
+    </list>
+    <list id="10">
+      <speechtoken id="sentence091">
+        <file>english/HINT/sentence091.wav</file>
+        <text>(A/the) boy broke (a/the) wooden fence.</text>
+      </speechtoken>
+      <speechtoken id="sentence092">
+        <file>english/HINT/sentence092.wav</file>
+        <text>(An/the) angry man shouted.</text>
+      </speechtoken>
+      <speechtoken id="sentence093">
+        <file>english/HINT/sentence093.wav</file>
+        <text>Yesterday he lost his hat.</text>
+      </speechtoken>
+      <speechtoken id="sentence094">
+        <file>english/HINT/sentence094.wav</file>
+        <text>(A/the) nervous driver got lost.</text>
+      </speechtoken>
+      <speechtoken id="sentence095">
+        <file>english/HINT/sentence095.wav</file>
+        <text>(A/the) cook (is/was) baking (a/the) cake.</text>
+      </speechtoken>
+      <speechtoken id="sentence096">
+        <file>english/HINT/sentence096.wav</file>
+        <text>(A/the) chicken laid some eggs.</text>
+      </speechtoken>
+      <speechtoken id="sentence097">
+        <file>english/HINT/sentence097.wav</file>
+        <text>(A/the) fish swam in (a/the) pond.</text>
+      </speechtoken>
+      <speechtoken id="sentence098">
+        <file>english/HINT/sentence098.wav</file>
+        <text>They met some friends at dinner.</text>
+      </speechtoken>
+      <speechtoken id="sentence099">
+        <file>english/HINT/sentence099.wav</file>
+        <text>(A/the) man called the police.</text>
+      </speechtoken>
+      <speechtoken id="sentence100">
+        <file>english/HINT/sentence100.wav</file>
+        <text>(A/the) truck made it up (a/the) hill.</text>
+      </speechtoken>
+    </list>
+    <list id="11">
+      <speechtoken id="sentence101">
+        <file>english/HINT/sentence101.wav</file>
+        <text>(A/the) neighbor's boy (has/had) black hair.</text>
+      </speechtoken>
+      <speechtoken id="sentence102">
+        <file>english/HINT/sentence102.wav</file>
+        <text>The rain came pouring down.</text>
+      </speechtoken>
+      <speechtoken id="sentence103">
+        <file>english/HINT/sentence103.wav</file>
+        <text>(An/the) orange (is/was) very sweet.</text>
+      </speechtoken>
+      <speechtoken id="sentence104">
+        <file>english/HINT/sentence104.wav</file>
+        <text>He took the dogs for a walk.</text>
+      </speechtoken>
+      <speechtoken id="sentence105">
+        <file>english/HINT/sentence105.wav</file>
+        <text>Children like strawberries.</text>
+      </speechtoken>
+      <speechtoken id="sentence106">
+        <file>english/HINT/sentence106.wav</file>
+        <text>Her sister stayed for lunch.</text>
+      </speechtoken>
+      <speechtoken id="sentence107">
+        <file>english/HINT/sentence107.wav</file>
+        <text>(A/the) train (is/was) moving fast.</text>
+      </speechtoken>
+      <speechtoken id="sentence108">
+        <file>english/HINT/sentence108.wav</file>
+        <text>Mother shut (a/the) window.</text>
+      </speechtoken>
+      <speechtoken id="sentence109">
+        <file>english/HINT/sentence109.wav</file>
+        <text>(A/the) bakery (is/was) open.</text>
+      </speechtoken>
+      <speechtoken id="sentence110">
+        <file>english/HINT/sentence110.wav</file>
+        <text>Snow falls in the winter.</text>
+      </speechtoken>
+    </list>
+    <list id="12">
+      <speechtoken id="sentence111">
+        <file>english/HINT/sentence111.wav</file>
+        <text>(A/the) boy went to bed early.</text>
+      </speechtoken>
+      <speechtoken id="sentence112">
+        <file>english/HINT/sentence112.wav</file>
+        <text>(A/the) woman cleaned her house.</text>
+      </speechtoken>
+      <speechtoken id="sentence113">
+        <file>english/HINT/sentence113.wav</file>
+        <text>(A/the) sharp knife (is/was) dangerous.</text>
+      </speechtoken>
+      <speechtoken id="sentence114">
+        <file>english/HINT/sentence114.wav</file>
+        <text>(A/the) child ripped open (a/the) bag.</text>
+      </speechtoken>
+      <speechtoken id="sentence115">
+        <file>english/HINT/sentence115.wav</file>
+        <text>They had some cold cuts for lunch.</text>
+      </speechtoken>
+      <speechtoken id="sentence116">
+        <file>english/HINT/sentence116.wav</file>
+        <text>She's helping her friend move.</text>
+      </speechtoken>
+      <speechtoken id="sentence117">
+        <file>english/HINT/sentence117.wav</file>
+        <text>They ate (a/the) lemon pie.</text>
+      </speechtoken>
+      <speechtoken id="sentence118">
+        <file>english/HINT/sentence118.wav</file>
+        <text>They (are/were) crossing (a/the) street.</text>
+      </speechtoken>
+      <speechtoken id="sentence119">
+        <file>english/HINT/sentence119.wav</file>
+        <text>The sun melted the snow.</text>
+      </speechtoken>
+      <speechtoken id="sentence120">
+        <file>english/HINT/sentence120.wav</file>
+        <text>(A/the) little girl (is/was) happy.</text>
+      </speechtoken>
+    </list>
+    <list id="13">
+      <speechtoken id="sentence121">
+        <file>english/HINT/sentence121.wav</file>
+        <text>She found her purse in (a/the) trash.</text>
+      </speechtoken>
+      <speechtoken id="sentence122">
+        <file>english/HINT/sentence122.wav</file>
+        <text>(A/the) table (has/had) three legs.</text>
+      </speechtoken>
+      <speechtoken id="sentence123">
+        <file>english/HINT/sentence123.wav</file>
+        <text>The children waved at (a/the) train.</text>
+      </speechtoken>
+      <speechtoken id="sentence124">
+        <file>english/HINT/sentence124.wav</file>
+        <text>Her coat (is/was) on (a/the) chair.</text>
+      </speechtoken>
+      <speechtoken id="sentence125">
+        <file>english/HINT/sentence125.wav</file>
+        <text>(A/the) girl (is/was) fixing her dress.</text>
+      </speechtoken>
+      <speechtoken id="sentence126">
+        <file>english/HINT/sentence126.wav</file>
+        <text>It's time to go to bed.</text>
+      </speechtoken>
+      <speechtoken id="sentence127">
+        <file>english/HINT/sentence127.wav</file>
+        <text>Mother read the instructions.</text>
+      </speechtoken>
+      <speechtoken id="sentence128">
+        <file>english/HINT/sentence128.wav</file>
+        <text>(A/the) dog (is/was) eating some meat.</text>
+      </speechtoken>
+      <speechtoken id="sentence129">
+        <file>english/HINT/sentence129.wav</file>
+        <text>Father forgot the bread.</text>
+      </speechtoken>
+      <speechtoken id="sentence130">
+        <file>english/HINT/sentence130.wav</file>
+        <text>(A/the) road goes up (a/the) hill.</text>
+      </speechtoken>
+    </list>
+    <list id="14">
+      <speechtoken id="sentence131">
+        <file>english/HINT/sentence131.wav</file>
+        <text>The fruit (is/was) on the ground.</text>
+      </speechtoken>
+      <speechtoken id="sentence132">
+        <file>english/HINT/sentence132.wav</file>
+        <text>They followed (a/the) garden path.</text>
+      </speechtoken>
+      <speechtoken id="sentence133">
+        <file>english/HINT/sentence133.wav</file>
+        <text>They like orange marmalade.</text>
+      </speechtoken>
+      <speechtoken id="sentence134">
+        <file>english/HINT/sentence134.wav</file>
+        <text>There (are/were) branches everywhere.</text>
+      </speechtoken>
+      <speechtoken id="sentence135">
+        <file>english/HINT/sentence135.wav</file>
+        <text>(A/the) kitchen sink (is/was) empty.</text>
+      </speechtoken>
+      <speechtoken id="sentence136">
+        <file>english/HINT/sentence136.wav</file>
+        <text>The old gloves (are/were) dirty.</text>
+      </speechtoken>
+      <speechtoken id="sentence137">
+        <file>english/HINT/sentence137.wav</file>
+        <text>The scissors( are/were) very sharp.</text>
+      </speechtoken>
+      <speechtoken id="sentence138">
+        <file>english/HINT/sentence138.wav</file>
+        <text>(A/the) man cleaned his suede shoes.</text>
+      </speechtoken>
+      <speechtoken id="sentence139">
+        <file>english/HINT/sentence139.wav</file>
+        <text>(A/the) raincoat (is/was) dripping wet.</text>
+      </speechtoken>
+      <speechtoken id="sentence140">
+        <file>english/HINT/sentence140.wav</file>
+        <text>It's getting cold in here.</text>
+      </speechtoken>
+    </list>
+    <list id="15">
+      <speechtoken id="sentence141">
+        <file>english/HINT/sentence141.wav</file>
+        <text>(A/the) house (has/had) nine bedrooms.</text>
+      </speechtoken>
+      <speechtoken id="sentence142">
+        <file>english/HINT/sentence142.wav</file>
+        <text>They're shopping for school clothes.</text>
+      </speechtoken>
+      <speechtoken id="sentence143">
+        <file>english/HINT/sentence143.wav</file>
+        <text>They're playing in (a/the) park.</text>
+      </speechtoken>
+      <speechtoken id="sentence144">
+        <file>english/HINT/sentence144.wav</file>
+        <text>Rain (is/was) good for the trees.</text>
+      </speechtoken>
+      <speechtoken id="sentence145">
+        <file>english/HINT/sentence145.wav</file>
+        <text>They sat on (a/the) wooden bench.</text>
+      </speechtoken>
+      <speechtoken id="sentence146">
+        <file>english/HINT/sentence146.wav</file>
+        <text>(A/the) child drank some fresh milk.</text>
+      </speechtoken>
+      <speechtoken id="sentence147">
+        <file>english/HINT/sentence147.wav</file>
+        <text>(A/the) baby slept all night.</text>
+      </speechtoken>
+      <speechtoken id="sentence148">
+        <file>english/HINT/sentence148.wav</file>
+        <text>(A/the) salt shaker (is/was) empty.</text>
+      </speechtoken>
+      <speechtoken id="sentence149">
+        <file>english/HINT/sentence149.wav</file>
+        <text>(A/the) policeman knows the way.</text>
+      </speechtoken>
+      <speechtoken id="sentence150">
+        <file>english/HINT/sentence150.wav</file>
+        <text>The buckets fill up quickly.</text>
+      </speechtoken>
+    </list>
+    <list id="16">
+      <speechtoken id="sentence151">
+        <file>english/HINT/sentence151.wav</file>
+        <text>He played with his toy train.</text>
+      </speechtoken>
+      <speechtoken id="sentence152">
+        <file>english/HINT/sentence152.wav</file>
+        <text>They're watching (a/the) cuckoo clock.</text>
+      </speechtoken>
+      <speechtoken id="sentence153">
+        <file>english/HINT/sentence153.wav</file>
+        <text>Potatoes grow in the ground</text>
+      </speechtoken>
+      <speechtoken id="sentence154">
+        <file>english/HINT/sentence154.wav</file>
+        <text>(A/the) girl ran along (a/the) fence.</text>
+      </speechtoken>
+      <speechtoken id="sentence155">
+        <file>english/HINT/sentence155.wav</file>
+        <text>(A/the) dog jumped on (a/the) chair.</text>
+      </speechtoken>
+      <speechtoken id="sentence156">
+        <file>english/HINT/sentence156.wav</file>
+        <text>They finished dinner on time.</text>
+      </speechtoken>
+      <speechtoken id="sentence157">
+        <file>english/HINT/sentence157.wav</file>
+        <text>He got mud on his shoes.</text>
+      </speechtoken>
+      <speechtoken id="sentence158">
+        <file>english/HINT/sentence158.wav</file>
+        <text>They're clearing (a/the) table.</text>
+      </speechtoken>
+      <speechtoken id="sentence159">
+        <file>english/HINT/sentence159.wav</file>
+        <text>Some animals sleep on straw.</text>
+      </speechtoken>
+      <speechtoken id="sentence160">
+        <file>english/HINT/sentence160.wav</file>
+        <text>The police cleared (a/the) road.</text>
+      </speechtoken>
+    </list>
+    <list id="17">
+      <speechtoken id="sentence161">
+        <file>english/HINT/sentence161.wav</file>
+        <text>Mother picked some flowers.</text>
+      </speechtoken>
+      <speechtoken id="sentence162">
+        <file>english/HINT/sentence162.wav</file>
+        <text>(A/the) puppy played with (a/the) ball.</text>
+      </speechtoken>
+      <speechtoken id="sentence163">
+        <file>english/HINT/sentence163.wav</file>
+        <text>(An/the) engine (is/was) running.</text>
+      </speechtoken>
+      <speechtoken id="sentence164">
+        <file>english/HINT/sentence164.wav</file>
+        <text>(An/the) old woman (is/was) at home.</text>
+      </speechtoken>
+      <speechtoken id="sentence165">
+        <file>english/HINT/sentence165.wav</file>
+        <text>They're watching (a/the) train go by.</text>
+      </speechtoken>
+      <speechtoken id="sentence166">
+        <file>english/HINT/sentence166.wav</file>
+        <text>(An/the) oven (is/was) too hot.</text>
+      </speechtoken>
+      <speechtoken id="sentence167">
+        <file>english/HINT/sentence167.wav</file>
+        <text>They rode their bicycles.</text>
+      </speechtoken>
+      <speechtoken id="sentence168">
+        <file>english/HINT/sentence168.wav</file>
+        <text>(A/the) big fish got away.</text>
+      </speechtoken>
+      <speechtoken id="sentence169">
+        <file>english/HINT/sentence169.wav</file>
+        <text>They laughed at his story.</text>
+      </speechtoken>
+      <speechtoken id="sentence170">
+        <file>english/HINT/sentence170.wav</file>
+        <text>They walked across the grass.</text>
+      </speechtoken>
+    </list>
+    <list id="18">
+      <speechtoken id="sentence171">
+        <file>english/HINT/sentence171.wav</file>
+        <text>(A/the) boy (is/was) running away.</text>
+      </speechtoken>
+      <speechtoken id="sentence172">
+        <file>english/HINT/sentence172.wav</file>
+        <text>(A/the) towel (is/was) near (a/the) sink.</text>
+      </speechtoken>
+      <speechtoken id="sentence173">
+        <file>english/HINT/sentence173.wav</file>
+        <text>Flowers can grow in (a/the) pot.</text>
+      </speechtoken>
+      <speechtoken id="sentence174">
+        <file>english/HINT/sentence174.wav</file>
+        <text>He's skating with his friend.</text>
+      </speechtoken>
+      <speechtoken id="sentence175">
+        <file>english/HINT/sentence175.wav</file>
+        <text>(A/the) janitor swept (a/the) floor.</text>
+      </speechtoken>
+      <speechtoken id="sentence176">
+        <file>english/HINT/sentence176.wav</file>
+        <text>(A/the) lady washed (a/the) shirt.</text>
+      </speechtoken>
+      <speechtoken id="sentence177">
+        <file>english/HINT/sentence177.wav</file>
+        <text>She took off her fur coat.</text>
+      </speechtoken>
+      <speechtoken id="sentence178">
+        <file>english/HINT/sentence178.wav</file>
+        <text>The match boxes (are/were) empty.</text>
+      </speechtoken>
+      <speechtoken id="sentence179">
+        <file>english/HINT/sentence179.wav</file>
+        <text>(A/the) man (is/was) painting (a/the) sign.</text>
+      </speechtoken>
+      <speechtoken id="sentence180">
+        <file>english/HINT/sentence180.wav</file>
+        <text>(A/the) dog came home at last.</text>
+      </speechtoken>
+    </list>
+    <list id="19">
+      <speechtoken id="sentence181">
+        <file>english/HINT/sentence181.wav</file>
+        <text>(A/the) painter uses (a/the) brush.</text>
+      </speechtoken>
+      <speechtoken id="sentence182">
+        <file>english/HINT/sentence182.wav</file>
+        <text>(A/the) family bought (a/the) house.</text>
+      </speechtoken>
+      <speechtoken id="sentence183">
+        <file>english/HINT/sentence183.wav</file>
+        <text>Swimmers can hold their breath.</text>
+      </speechtoken>
+      <speechtoken id="sentence184">
+        <file>english/HINT/sentence184.wav</file>
+        <text>She cut (a/the) steak with her knife.</text>
+      </speechtoken>
+      <speechtoken id="sentence185">
+        <file>english/HINT/sentence185.wav</file>
+        <text>They're pushing an old car.</text>
+      </speechtoken>
+      <speechtoken id="sentence186">
+        <file>english/HINT/sentence186.wav</file>
+        <text>The food (is/was) expensive.</text>
+      </speechtoken>
+      <speechtoken id="sentence187">
+        <file>english/HINT/sentence187.wav</file>
+        <text>The children (are/were) walking home.</text>
+      </speechtoken>
+      <speechtoken id="sentence188">
+        <file>english/HINT/sentence188.wav</file>
+        <text>They (have/had) two empty bottles.</text>
+      </speechtoken>
+      <speechtoken id="sentence189">
+        <file>english/HINT/sentence189.wav</file>
+        <text>Milk comes in (a/the) carton.</text>
+      </speechtoken>
+      <speechtoken id="sentence190">
+        <file>english/HINT/sentence190.wav</file>
+        <text>(A/the) dog sleeps in (a/the) basket.</text>
+      </speechtoken>
+    </list>
+    <list id="20">
+      <speechtoken id="sentence191">
+        <file>english/HINT/sentence191.wav</file>
+        <text>(A/the) clown (has/had) (a/the) funny face.</text>
+      </speechtoken>
+      <speechtoken id="sentence192">
+        <file>english/HINT/sentence192.wav</file>
+        <text>The bath water (is/was) warm.</text>
+      </speechtoken>
+      <speechtoken id="sentence193">
+        <file>english/HINT/sentence193.wav</file>
+        <text>She injured four of her fingers.</text>
+      </speechtoken>
+      <speechtoken id="sentence194">
+        <file>english/HINT/sentence194.wav</file>
+        <text>He paid his bill in full.</text>
+      </speechtoken>
+      <speechtoken id="sentence195">
+        <file>english/HINT/sentence195.wav</file>
+        <text>They stared at (a/the) picture.</text>
+      </speechtoken>
+      <speechtoken id="sentence196">
+        <file>english/HINT/sentence196.wav</file>
+        <text>(A/the) driver started (a/the) car.</text>
+      </speechtoken>
+      <speechtoken id="sentence197">
+        <file>english/HINT/sentence197.wav</file>
+        <text>(A/the) truck carries fresh fruit.</text>
+      </speechtoken>
+      <speechtoken id="sentence198">
+        <file>english/HINT/sentence198.wav</file>
+        <text>(A/the) bottle (is/was) on (a/the) shelf.</text>
+      </speechtoken>
+      <speechtoken id="sentence199">
+        <file>english/HINT/sentence199.wav</file>
+        <text>The small tomatoes (are/were) green.</text>
+      </speechtoken>
+      <speechtoken id="sentence200">
+        <file>english/HINT/sentence200.wav</file>
+        <text>(A/the) dinner plate (is/was) hot.</text>
+      </speechtoken>
+    </list>
+    <list id="21">
+      <speechtoken id="sentence201">
+        <file>english/HINT/sentence201.wav</file>
+        <text>They're running past (a/the) house.</text>
+      </speechtoken>
+      <speechtoken id="sentence202">
+        <file>english/HINT/sentence202.wav</file>
+        <text>He's washing his face with soap.</text>
+      </speechtoken>
+      <speechtoken id="sentence203">
+        <file>english/HINT/sentence203.wav</file>
+        <text>(A/the) dog's chasing (a/the) cat.</text>
+      </speechtoken>
+      <speechtoken id="sentence204">
+        <file>english/HINT/sentence204.wav</file>
+        <text>(A/the) milkman drives (a/the) small truck.</text>
+      </speechtoken>
+      <speechtoken id="sentence205">
+        <file>english/HINT/sentence205.wav</file>
+        <text>(A/the) bus leaves before (a/the) train.</text>
+      </speechtoken>
+      <speechtoken id="sentence206">
+        <file>english/HINT/sentence206.wav</file>
+        <text>(A/the) baby (has/had) blue eyes.</text>
+      </speechtoken>
+      <speechtoken id="sentence207">
+        <file>english/HINT/sentence207.wav</file>
+        <text>(A/the) bag fell off (a/the) shelf.</text>
+      </speechtoken>
+      <speechtoken id="sentence208">
+        <file>english/HINT/sentence208.wav</file>
+        <text>They (are/were) coming for dinner.</text>
+      </speechtoken>
+      <speechtoken id="sentence209">
+        <file>english/HINT/sentence209.wav</file>
+        <text>They wanted some potatoes.</text>
+      </speechtoken>
+      <speechtoken id="sentence210">
+        <file>english/HINT/sentence210.wav</file>
+        <text>They knocked on (a/the) window.</text>
+      </speechtoken>
+    </list>
+    <list id="22">
+      <speechtoken id="sentence211">
+        <file>english/HINT/sentence211.wav</file>
+        <text>(A/the) girl came into (a/the) room.</text>
+      </speechtoken>
+      <speechtoken id="sentence212">
+        <file>english/HINT/sentence212.wav</file>
+        <text>(A/the) field mouse found (a/the) cheese.</text>
+      </speechtoken>
+      <speechtoken id="sentence213">
+        <file>english/HINT/sentence213.wav</file>
+        <text>They're buying some fresh bread.</text>
+      </speechtoken>
+      <speechtoken id="sentence214">
+        <file>english/HINT/sentence214.wav</file>
+        <text>(A/the) machine (is/was) noisy.</text>
+      </speechtoken>
+      <speechtoken id="sentence215">
+        <file>english/HINT/sentence215.wav</file>
+        <text>(A/the) rice pudding (is/was) ready.</text>
+      </speechtoken>
+      <speechtoken id="sentence216">
+        <file>english/HINT/sentence216.wav</file>
+        <text>They had a wonderful day.</text>
+      </speechtoken>
+      <speechtoken id="sentence217">
+        <file>english/HINT/sentence217.wav</file>
+        <text>(An/the) exit (is/was) well lit.</text>
+      </speechtoken>
+      <speechtoken id="sentence218">
+        <file>english/HINT/sentence218.wav</file>
+        <text>(A/the) train stops at (a/the) station.</text>
+      </speechtoken>
+      <speechtoken id="sentence219">
+        <file>english/HINT/sentence219.wav</file>
+        <text>He (is/was) sucking his thumb.</text>
+      </speechtoken>
+      <speechtoken id="sentence220">
+        <file>english/HINT/sentence220.wav</file>
+        <text>(A/the) big boy kicked the ball.</text>
+      </speechtoken>
+    </list>
+    <list id="23">
+      <speechtoken id="sentence221">
+        <file>english/HINT/sentence221.wav</file>
+        <text>The paint dripped on the ground.</text>
+      </speechtoken>
+      <speechtoken id="sentence222">
+        <file>english/HINT/sentence222.wav</file>
+        <text>(A/the) towel fell on (a/the) floor.</text>
+      </speechtoken>
+      <speechtoken id="sentence223">
+        <file>english/HINT/sentence223.wav</file>
+        <text>(A/the) family likes fish.</text>
+      </speechtoken>
+      <speechtoken id="sentence224">
+        <file>english/HINT/sentence224.wav</file>
+        <text>The bananas (are/were) too ripe.</text>
+      </speechtoken>
+      <speechtoken id="sentence225">
+        <file>english/HINT/sentence225.wav</file>
+        <text>He grew lots of vegetables.</text>
+      </speechtoken>
+      <speechtoken id="sentence226">
+        <file>english/HINT/sentence226.wav</file>
+        <text>She argues with her sister.</text>
+      </speechtoken>
+      <speechtoken id="sentence227">
+        <file>english/HINT/sentence227.wav</file>
+        <text>(A/the) kitchen window (is/was) clean.</text>
+      </speechtoken>
+      <speechtoken id="sentence228">
+        <file>english/HINT/sentence228.wav</file>
+        <text>He hung up his raincoat.</text>
+      </speechtoken>
+      <speechtoken id="sentence229">
+        <file>english/HINT/sentence229.wav</file>
+        <text>(A/the) mailman brought (a/the) letter.</text>
+      </speechtoken>
+      <speechtoken id="sentence230">
+        <file>english/HINT/sentence230.wav</file>
+        <text>(A/the) mother heard (a/the) baby.</text>
+      </speechtoken>
+    </list>
+    <list id="24">
+      <speechtoken id="sentence231">
+        <file>english/HINT/sentence231.wav</file>
+        <text>(A/the) waiter brought (a/the) cream.</text>
+      </speechtoken>
+      <speechtoken id="sentence232">
+        <file>english/HINT/sentence232.wav</file>
+        <text>(A/the) teapot( is/was) very hot.</text>
+      </speechtoken>
+      <speechtoken id="sentence233">
+        <file>english/HINT/sentence233.wav</file>
+        <text>(An/the) apple pie (is/was) good.</text>
+      </speechtoken>
+      <speechtoken id="sentence234">
+        <file>english/HINT/sentence234.wav</file>
+        <text>(A/the) jelly jar (is/was) full.</text>
+      </speechtoken>
+      <speechtoken id="sentence235">
+        <file>english/HINT/sentence235.wav</file>
+        <text>(A/the) girl (is/was) washing her hair.</text>
+      </speechtoken>
+      <speechtoken id="sentence236">
+        <file>english/HINT/sentence236.wav</file>
+        <text>(A/the) girl played with (a/the) baby.</text>
+      </speechtoken>
+      <speechtoken id="sentence237">
+        <file>english/HINT/sentence237.wav</file>
+        <text>(A/the) cow (is/was) milked every day.</text>
+      </speechtoken>
+      <speechtoken id="sentence238">
+        <file>english/HINT/sentence238.wav</file>
+        <text>They called an ambulance.</text>
+      </speechtoken>
+      <speechtoken id="sentence239">
+        <file>english/HINT/sentence239.wav</file>
+        <text>They (are/were) drinking coffee</text>
+      </speechtoken>
+      <speechtoken id="sentence240">
+        <file>english/HINT/sentence240.wav</file>
+        <text>He climbed up (a/the) ladder.</text>
+      </speechtoken>
+    </list>
+    <list id="25">
+      <speechtoken id="sentence241">
+        <file>english/HINT/sentence241.wav</file>
+        <text>(A/the) boy slipped on the stairs.</text>
+      </speechtoken>
+      <speechtoken id="sentence242">
+        <file>english/HINT/sentence242.wav</file>
+        <text>New neighbors (are/were) moving in.</text>
+      </speechtoken>
+      <speechtoken id="sentence243">
+        <file>english/HINT/sentence243.wav</file>
+        <text>(A/the) girl caught (a/the) head cold.</text>
+      </speechtoken>
+      <speechtoken id="sentence244">
+        <file>english/HINT/sentence244.wav</file>
+        <text>His father will come home soon.</text>
+      </speechtoken>
+      <speechtoken id="sentence245">
+        <file>english/HINT/sentence245.wav</file>
+        <text>(A/the) bus stopped suddenly.</text>
+      </speechtoken>
+      <speechtoken id="sentence246">
+        <file>english/HINT/sentence246.wav</file>
+        <text>He (is/was) washing his car.</text>
+      </speechtoken>
+      <speechtoken id="sentence247">
+        <file>english/HINT/sentence247.wav</file>
+        <text>(A/the) cat caught (a/the) little mouse.</text>
+      </speechtoken>
+      <speechtoken id="sentence248">
+        <file>english/HINT/sentence248.wav</file>
+        <text>They broke all the brown eggs.</text>
+      </speechtoken>
+      <speechtoken id="sentence249">
+        <file>english/HINT/sentence249.wav</file>
+        <text>(A/the) candy shop (is/was) empty.</text>
+      </speechtoken>
+      <speechtoken id="sentence250">
+        <file>english/HINT/sentence250.wav</file>
+        <text>(A/the) lady went to (a/the) store.</text>
+      </speechtoken>
+    </list>
+    <list id="practice list 1">
+      <speechtoken id="sentence251">
+        <file>english/HINT/sentence251.wav</file>
+        <text>(A/the) boy got into trouble.</text>
+      </speechtoken>
+      <speechtoken id="sentence252">
+        <file>english/HINT/sentence252.wav</file>
+        <text>The yellow pears taste good.</text>
+      </speechtoken>
+      <speechtoken id="sentence253">
+        <file>english/HINT/sentence253.wav</file>
+        <text>(A/the) front yard (is/was) pretty.</text>
+      </speechtoken>
+      <speechtoken id="sentence254">
+        <file>english/HINT/sentence254.wav</file>
+        <text>(An/the) old man (is/was) worried.</text>
+      </speechtoken>
+      <speechtoken id="sentence255">
+        <file>english/HINT/sentence255.wav</file>
+        <text>The pond water (is/was) dirty.</text>
+      </speechtoken>
+      <speechtoken id="sentence256">
+        <file>english/HINT/sentence256.wav</file>
+        <text>(A/the) rancher (has/had) (a/the) bull.</text>
+      </speechtoken>
+      <speechtoken id="sentence257">
+        <file>english/HINT/sentence257.wav</file>
+        <text>The ground (is/was) very hard.</text>
+      </speechtoken>
+      <speechtoken id="sentence258">
+        <file>english/HINT/sentence258.wav</file>
+        <text>They painted (a/the) wall white.</text>
+      </speechtoken>
+      <speechtoken id="sentence259">
+        <file>english/HINT/sentence259.wav</file>
+        <text>Dad stopped to pick some pears.</text>
+      </speechtoken>
+      <speechtoken id="sentence260">
+        <file>english/HINT/sentence260.wav</file>
+        <text>She made her bed and left.</text>
+      </speechtoken>
+    </list>
+    <list id="practice list 2">
+      <speechtoken id="sentence261">
+        <file>english/HINT/sentence261.wav</file>
+        <text>Men normally wear long pants.</text>
+      </speechtoken>
+      <speechtoken id="sentence262">
+        <file>english/HINT/sentence262.wav</file>
+        <text>(A/the) house (has/had) (a/the) nice garden.</text>
+      </speechtoken>
+      <speechtoken id="sentence263">
+        <file>english/HINT/sentence263.wav</file>
+        <text>(A/the) little girl (is/was) shouting.</text>
+      </speechtoken>
+      <speechtoken id="sentence264">
+        <file>english/HINT/sentence264.wav</file>
+        <text>(A/the) driver waited for me.</text>
+      </speechtoken>
+      <speechtoken id="sentence265">
+        <file>english/HINT/sentence265.wav</file>
+        <text>The three girls (are/were) listening.</text>
+      </speechtoken>
+      <speechtoken id="sentence266">
+        <file>english/HINT/sentence266.wav</file>
+        <text>(An/the) ice cream (is/was) melting.</text>
+      </speechtoken>
+      <speechtoken id="sentence267">
+        <file>english/HINT/sentence267.wav</file>
+        <text>She bumped here head on (a/the) door.</text>
+      </speechtoken>
+      <speechtoken id="sentence268">
+        <file>english/HINT/sentence268.wav</file>
+        <text>(An/the) apple pie (is/was) baking.</text>
+      </speechtoken>
+      <speechtoken id="sentence269">
+        <file>english/HINT/sentence269.wav</file>
+        <text>She's calling her daughter.</text>
+      </speechtoken>
+      <speechtoken id="sentence270">
+        <file>english/HINT/sentence270.wav</file>
+        <text>(A/the) park (is/was) near (a/the) road.</text>
+      </speechtoken>
+    </list>
+    <list id="practice list 3">
+      <speechtoken id="sentence271">
+        <file>english/HINT/sentence271.wav</file>
+        <text>(A/the) boy forgot his book.</text>
+      </speechtoken>
+      <speechtoken id="sentence272">
+        <file>english/HINT/sentence272.wav</file>
+        <text>(A/the) mouse ran into (a/the) hole.</text>
+      </speechtoken>
+      <speechtoken id="sentence273">
+        <file>english/HINT/sentence273.wav</file>
+        <text>The leaves turned brown and dry.</text>
+      </speechtoken>
+      <speechtoken id="sentence274">
+        <file>english/HINT/sentence274.wav</file>
+        <text>He closed his eyes and jumped.</text>
+      </speechtoken>
+      <speechtoken id="sentence275">
+        <file>english/HINT/sentence275.wav</file>
+        <text>(A/the) floor looks clean and shiny.</text>
+      </speechtoken>
+      <speechtoken id="sentence276">
+        <file>english/HINT/sentence276.wav</file>
+        <text>She writes to her friend daily.</text>
+      </speechtoken>
+      <speechtoken id="sentence277">
+        <file>english/HINT/sentence277.wav</file>
+        <text>The two farmers (are/were) talking.</text>
+      </speechtoken>
+      <speechtoken id="sentence278">
+        <file>english/HINT/sentence278.wav</file>
+        <text>Father paid at (a/the) gate.</text>
+      </speechtoken>
+      <speechtoken id="sentence279">
+        <file>english/HINT/sentence279.wav</file>
+        <text>They're climbing (an/the) old oak tree.</text>
+      </speechtoken>
+      <speechtoken id="sentence280">
+        <file>english/HINT/sentence280.wav</file>
+        <text>The sky (is/was) very blue.</text>
+      </speechtoken>
+    </list>
+  </speechmaterial>
 </apex:speechmaterialfile>

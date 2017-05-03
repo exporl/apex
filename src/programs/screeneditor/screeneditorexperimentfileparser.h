@@ -17,22 +17,15 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_PROGRAMS_SCREENEDITOR_SCREENEDITOREXPERIMENTFILEPARSER_H_
-#define _EXPORL_SRC_PROGRAMS_SCREENEDITOR_SCREENEDITOREXPERIMENTFILEPARSER_H_
+#ifndef _APEX_SRC_PROGRAMS_SCREENEDITOR_SCREENEDITOREXPERIMENTFILEPARSER_H_
+#define _APEX_SRC_PROGRAMS_SCREENEDITOR_SCREENEDITOREXPERIMENTFILEPARSER_H_
 
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
 
 #include <QString>
 
 #include <map>
 #include <memory>
-
-namespace XERCES_CPP_NAMESPACE
-{
-  class DOMElement;
-  class DOMDocument;
-  class XercesDOMParser;
-};
 
 namespace apex
 {
@@ -49,10 +42,6 @@ class SEErrorHandler;
 using data::Screen;
 using data::ScreensData;
 
-using XERCES_CPP_NAMESPACE::DOMElement;
-using XERCES_CPP_NAMESPACE::DOMDocument;
-using XERCES_CPP_NAMESPACE::XercesDOMParser;
-
 /**
     * The ScreenEditorExperimentData class contains data about an
     * Experiment file, as it is used by the screeneditor application.
@@ -63,9 +52,9 @@ class ScreenEditorExperimentData
 {
     friend class ScreenEditorExperimentFileParser;
 
-    typedef std::map<const Screen*, DOMElement*> screenToElementMapT;
-    DOMDocument* expDocument;
-    DOMElement* screensElement;
+    typedef std::map<const Screen*, QDomElement > screenToElementMapT;
+    QDomDocument expDocument;
+    QDomElement screensElement;
 
     screenToElementMapT screenToElementMap;
 public:
@@ -93,8 +82,6 @@ public:
     */
 class ScreenEditorExperimentFileParser
 {
-    XercesDOMParser* parser;
-    SEErrorHandler* errorHandler;
 public:
     ScreenEditorExperimentFileParser();
     ~ScreenEditorExperimentFileParser();
@@ -106,7 +93,6 @@ public:
     */
     ScreenEditorExperimentData *parse(const QString &file);
     void save( const ScreenEditorExperimentData* d, const QString& file );
-    void print( const ScreenEditorExperimentData* d );
     static QString schemaLoc;
 };
 

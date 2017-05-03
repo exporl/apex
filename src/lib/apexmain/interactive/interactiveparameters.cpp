@@ -17,126 +17,90 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apextools/services/paths.h"
+#include "apextools/apexpaths.h"
 
 #include "apextools/version.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
-#include "apextools/xml/xmldocumentgetter.h"
+#include "apextools/xml/xmltools.h"
 #include "apextools/xml/xpathprocessor.h"
 
-#include "services/errorhandler.h"
+#include "common/global.h"
 
 #include "interactiveparameters.h"
 
 #include <QFileInfo>
 #include <QTemporaryFile>
 
-using namespace xercesc;
-using namespace apex::ApexXMLTools;
-
 namespace apex
 {
 
-InteractiveParameters::InteractiveParameters(DOMDocument* document, XMLDocumentGetter& documentGetter) :
-    document_(document),
-    documentGetter(documentGetter)
+InteractiveParameters::InteractiveParameters(const QDomDocument &document) :
+    document_(document)
 {
-    processXml();
-}
+    QDomElement base = document_.elementsByTagName(QSL("interactive")).item(0).toElement();
 
-void InteractiveParameters::processXml()
-{
-    const DOMElement * const base =
-        XMLutils::GetElementsByTagName(document_->getDocumentElement(),
-                QLatin1String("interactive"));
-
-    if (!base)
-        return;
-
-    for (DOMNode *currentNode = base->getFirstChild(); currentNode != NULL;
-            currentNode = currentNode->getNextSibling()) {
-        Q_ASSERT(currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
-
-        const QString tag = XMLutils::GetTagName(currentNode);
-        if (tag != QLatin1String("entry"))
+    for (QDomElement currentNode = base.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        const QString tag = currentNode.tagName();
+        if (tag != QL1S("entry"))
             qFatal("invalid tag: %s", qPrintable(tag));
 
-        const QString xpath = XMLutils::GetAttribute(currentNode,
-                QLatin1String("expression"));
-        const QString type = XMLutils::GetAttribute(currentNode,
-                QLatin1String("type"));
-        const QString description = XMLutils::GetAttribute(currentNode,
-                QLatin1String("description"));
-        const QString defaultValue = XMLutils::GetAttribute(currentNode,
-                QLatin1String("default"));
+        const QString xpath = currentNode.attribute(QSL("expression"));
+        const QString type = currentNode.attribute(QSL("type"));
+        const QString description = currentNode.attribute(QSL("description"));
+        const QString defaultValue = currentNode.attribute(QSL("default"));
 
         if (xpath.isEmpty() && description.isEmpty())
-            ErrorHandler::Get().addError(QObject::tr("Interactive"),
+            qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(QObject::tr("Interactive"),
                     QObject::tr("Interactive entries should contain an expression or "
-                        "a description"));
+                        "a description"))));
 
         ValueType valueType;
-        if (type == QLatin1String("int"))
+        if (type == QL1S("int"))
             valueType = IntValue;
-        else if (type == QLatin1String("double"))
+        else if (type == QL1S("double"))
             valueType = DoubleValue;
-        else if (type == QLatin1String("bool"))
+        else if (type == QL1S("bool"))
             valueType = BoolValue;
-        else if (type == QLatin1String("string"))
+        else if (type == QL1S("string"))
             valueType = StringValue;
-        else if (type == QLatin1String("combo"))
+        else if (type == QL1S("combo"))
             valueType = ComboValue;
         else
             qFatal("invalid type: %s", qPrintable(type));
 
-        mEntries.append(Entry(xpath, valueType, description,
-                    defaultValue));
+        mEntries.append(Entry(xpath, valueType, description, defaultValue));
     }
 }
 
-QString InteractiveParameters::createTmpFile() const {
-    // Apparently Windows can't handle files that are opened by two processes, so we create a seperate scope for the
-    //  file, store the name and delete it ourselves
-    QString tmpFilename;
-    {
-        QTemporaryFile tmpFile;
-        tmpFile.open();
-        QFileInfo tmpFileInfo(tmpFile);
-
-        tmpFilename = tmpFileInfo.absoluteFilePath();
-    }
-
-    return tmpFilename;
+QString InteractiveParameters::tempFileName() const
+{
+    QTemporaryFile tmpFile;
+    tmpFile.open();
+    return tmpFile.fileName();
 }
 
-void InteractiveParameters::deleteFile(QString tmpFilename) const {
-    // Deletion of the temporary file
-    QFile tmpFile(tmpFilename);
-    tmpFile.remove();
+XPathProcessor* InteractiveParameters::getXPathProcessor(QString *filename)
+{
+    *filename = tempFileName();
+    XmlUtils::writeDocument(document_, *filename);
+    return new XPathProcessor(*filename);
 }
 
-XPathProcessor* InteractiveParameters::getXPathProcessor(QString& filename) {
-    filename = createTmpFile();
-    XMLutils::WriteElement(document_->getDocumentElement(), filename);
-    return new XPathProcessor(filename);
-}
-
-void InteractiveParameters::finishXPathProcessor(XPathProcessor* xpathProcessor, QString filename) {
+void InteractiveParameters::finishXPathProcessor(XPathProcessor* xpathProcessor, const QString &filename)
+{
     xpathProcessor->save(filename);
-    apex::Paths paths;
+    apex::ApexPaths paths;
     QString fileschema = paths.GetExperimentSchemaPath();
-    document_ = documentGetter.GetXMLDocument(filename, fileschema, EXPERIMENT_NAMESPACE);
-
+    document_ = XmlUtils::parseDocument(filename, QUrl::fromLocalFile(fileschema));
     delete xpathProcessor;
-    deleteFile(filename);
+    QFile(filename).remove();
 }
 
-void InteractiveParameters::applyExpressions(QMap<QString, QString> expressions)
+void InteractiveParameters::applyExpressions(const QMap<QString, QString> &expressions)
 {
     QString filename;
-    XPathProcessor* xpathProcessor = getXPathProcessor(filename);
+    XPathProcessor* xpathProcessor = getXPathProcessor(&filename);
 
     QList<QString> keys = expressions.keys();
     for (unsigned i = 0; i < unsigned(keys.count()); ++i) {
@@ -156,10 +120,10 @@ void InteractiveParameters::applyExpressions(QMap<QString, QString> expressions)
     finishXPathProcessor(xpathProcessor, filename);
 }
 
-void InteractiveParameters::apply(QStringList entryResults, Callback* callback)
+void InteractiveParameters::apply(const QStringList &entryResults, Callback* callback)
 {
     QString filename;
-    XPathProcessor* xpathProcessor = getXPathProcessor(filename);
+    XPathProcessor* xpathProcessor = getXPathProcessor(&filename);
 
     for (unsigned i = 0; i < unsigned(mEntries.size()); ++i) {
         Entry *entry = &mEntries[i];
@@ -174,19 +138,21 @@ void InteractiveParameters::apply(QStringList entryResults, Callback* callback)
 
         try {
             entry->succeeded = xpathProcessor->transform(xpath, entry->result);
-        } catch(const XPathException& e) {
-            callback->warning(e.title, e.message);
+        } catch (const std::exception &e) {
+            callback->warning(QString::fromLocal8Bit(e.what()));
         }
     }
 
     finishXPathProcessor(xpathProcessor, filename);
 }
 
-DOMDocument* InteractiveParameters::document() const {
+QDomDocument InteractiveParameters::document() const
+{
     return document_;
 }
 
-const QList<InteractiveParameters::Entry>& InteractiveParameters::entries() const {
+QList<InteractiveParameters::Entry> InteractiveParameters::entries() const
+{
     return mEntries;
 }
 

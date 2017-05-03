@@ -8,7 +8,7 @@ children: two stimuli are presented to the listener in random
 order, a stationary noise and an interrupted noise. It is the same
 experiment as example 3, but pictures (movies) of cars replace
 buttons on the screen, and a smiley panel is
-shown(figure~\ref{fig:gapchild}). During the presentation of
+shown (figure~\ref{fig:gapchild}). During the presentation of
 stimuli the cars are animated. The child's task is to indicate the
 stimulus with the interruption. Feedback is provided by smileys
 and the minimal detectable gap is determined by means of an
@@ -84,7 +84,7 @@ to the movies in \element{screen}. There are 3 ways to specify a
 prefix: by directly specifying an absolute path, by directly
 specifying a path relative to the experiment file or by referring
 to a prefix stored in \filename{apexconfig.xml}. Please refer to
-section~\ref{sec:prefixes} for more information.
+section~\ref{sec:prefixes} for more information. \todo{just refer to section 3.3 again?}
 
 \item \element{general}
 
@@ -100,14 +100,14 @@ with smileys (see figure \textbf{presented above})
 \item \element{progressbar} If \xml {true} a progress bar will be
 displayed on the right hand side with smileys. The progress bar
 shows when a reversal occurs in an adaptive procedure (while the
-number of trials varies).
+number of trials varies). \todo{this description is not correct i believe. A smiley appears when a good answer was given, and disappears when a bad answer was given, not related to reversals. The progress bar below indicates the percentage of reversals that has been finished. If i ran the example, the feedback of the cars (goodcar/badcar) did not work}
 
 \item \element{feedback length} duration of the time after
 response (in msec) that \apex waits before presenting the next
 trial. During this interval feedback can be displayed
 
 \item \element{showcurrent} the interval is highlighted while a
-signal is presented
+signal is presented. In this childfriendly example, the car corresponding to the present interval is moving.
 
 \end{itemize}
 
@@ -118,7 +118,7 @@ background colour
 \begin{itemize}
 
 \item \element{panel} the name of the movie file, per frame
-(smileys and panel are a collection of frames)
+(smileys and panel are a collection of frames) \todo{some more explanation? wouldn't it be good to include intro and outro movies in the example?}
 
 \end{itemize}
 
@@ -131,7 +131,7 @@ displays two movies, each containing a car.
 \begin{itemize}
 \item \element{gridlayout} places elements in an irregular grid.
 The screen is divided into sections according to the values. In
-this example there are equal number of rows and columns.
+this example there are two columns and one row.
 
 \begin{itemize}
 \item \element{flash} replaces \element{button} of the standard
@@ -139,19 +139,21 @@ version
 
 \begin{itemize}
 \item \element{path} the name of the flash movie file on disk,
-when there is no animation.
+for the case without animation (still car).
 
 \item \element{feedback}
 
+\begin{itemize}
 
-\item \element{highlight}the name of the file while the car moves
+
+\item \element{highlight} the name of the movie file indicating the present interval is active (here the moving car)
 
 \item \element{positive} the name of the movie file following a
 correct response (here a monkey waving)
 
 \item \element{negative} the name of the movie file following an
 incorrect response  (the trunk of an elephant)
-
+\end{itemize}
 \end{itemize}
 
 \end{itemize}
@@ -166,7 +168,7 @@ that are clicked in order to respond, the example is further
 complicated by the fact that we cannot specify just one of the
 elements (buttons, pictures), but that the response rather comes
 from a group of elements. This is when a \element{buttongroup} can
-be used to group together different screen elements.
+be used to group together different screen elements. \todo{buttongroup is niet specifiek voor childmode, weglaten hier?}
 
 
 \end{itemize}

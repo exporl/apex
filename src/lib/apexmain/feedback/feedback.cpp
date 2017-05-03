@@ -1,6 +1,6 @@
 #include "apexdata/screen/screensdata.h"
 
-#include "services/pluginloader.h"
+#include "apextools/apexpluginloader.h"
 
 #include "feedback.h"
 #include "pluginfeedbackinterface.h"
@@ -40,8 +40,7 @@ Feedback::~Feedback()
 void Feedback::loadPlugin(const QString& name,
                           const data::FeedbackPluginParameters& params)
 {
-    PluginFeedbackCreator* creator = PluginLoader::Get().
-    createPluginCreator<PluginFeedbackCreator>(name);
+    PluginFeedbackCreator* creator = createPluginCreator<PluginFeedbackCreator>(name);
     d->plugins.push_back (creator->createPluginFeedback (name, params));
     QString err( d->plugins.last()->errorString() );
     if (! err.isEmpty()) {

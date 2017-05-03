@@ -1,192 +1,192 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!--@doc
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!--@doc
   @what: More complex processing, can be used for testing skips - 2 noise stimuli (sinus & wivineruis.wav) with different gains (filters)
   @description: When you click on 'wrong' you hear in both ears two noise stimuli and in the left ear 2 times a sentence, the same happens when you click on the 'wrong' button again
   @how: trainingProcedure, creating a sinus as noise-stimulus
 -->
- <procedure xsi:type="apex:trainingProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial3">
-    <answer>wrong</answer>
-    <screen id="screen1"/>
-    <stimulus id="sentence"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>false</progressbar>
-   <feedback>false</feedback>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout id="answer_layout" height="2" x="1" y="2" width="2">
-    <button id="correct" x="1" y="1">
-     <text>Correct</text>
-    </button>
-    <button id="wrong" x="2" y="1">
-     <text>Wrong</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="correct"/>
-    <button id="wrong"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>file:../stimuli</uri_prefix>
-  <datablock id="noisedata">
-   <device>soundcard1</device>
-   <uri>wivineruis.wav</uri>
-  </datablock>
-  <datablock id="silence">
-   <device>soundcard1</device>
-   <uri>silence:999</uri>
-   <channels>1</channels>
-  </datablock>
-  <datablock id="dbsentence">
-   <device>soundcard1</device>
-   <uri>sentence.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="soundcard1" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize_apex>0.0001</buffersize_apex>
-  </device>
- </devices>
- <filters>
-  <filter id="noisegen1" xsi:type="apex:dataloop">
-   <device>soundcard1</device>
-   <channels>1</channels>
-   <continuous>false</continuous>
-   <datablock>noisedata</datablock>
-   <basegain>-16</basegain>
-   <gain>0</gain>
-   <randomjump>true</randomjump>
-  </filter>
-  <filter id="noisegen2" xsi:type="apex:dataloop">
-   <device>soundcard1</device>
-   <channels>1</channels>
-   <continuous>false</continuous>
-   <datablock>noisedata</datablock>
-   <basegain>-16</basegain>
-   <gain>0</gain>
-   <randomjump>true</randomjump>
-  </filter>
-  <filter id="amplifier" xsi:type="apex:amplifier">
-   <device>soundcard1</device>
-   <channels>1</channels>
-   <basegain>-18.3818</basegain>
-   <gain>18</gain>
-   <gain id="gain">0</gain>
-  </filter>
-  <filter id="singen1" xsi:type="apex:generator">
-   <device>soundcard1</device>
-   <channels>1</channels>
-   <continuous>false</continuous>
-   <type>sinus</type>
-   <basegain>-14</basegain>
-   <gain>0</gain>
-   <frequency>440</frequency>
-   <phase>0</phase>
-  </filter>
-  <filter id="singen2" xsi:type="apex:generator">
-   <device>soundcard1</device>
-   <channels>1</channels>
-   <continuous>false</continuous>
-   <type>sinus</type>
-   <basegain>-15</basegain>
-   <gain>0</gain>
-   <frequency>440</frequency>
-   <phase>10</phase>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="sentence">
-   <datablocks>
-    <sequential>
-     <datablock id="dbsentence"/>
-     <datablock id="dbsentence"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard1</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>noisegen1</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard1</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>noisegen2</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard1</id>
-    <channel>1</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>singen1</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard1</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>singen2</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard1</id>
-    <channel>1</channel>
-   </to>
-  </connection>
- </connections>
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial3">
+        <answer>wrong</answer>
+        <screen id="screen1"/>
+        <stimulus id="sentence"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>false</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout x="1" y="2" height="2" width="2" id="answer_layout">
+        <button x="1" y="1" id="correct">
+          <text>Correct</text>
+        </button>
+        <button x="2" y="1" id="wrong">
+          <text>Wrong</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="correct"/>
+        <button id="wrong"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="noisedata">
+      <device>soundcard1</device>
+      <file>wivineruis.wav</file>
+    </datablock>
+    <datablock id="silence">
+      <device>soundcard1</device>
+      <file>silence:999</file>
+      <channels>1</channels>
+    </datablock>
+    <datablock id="dbsentence">
+      <device>soundcard1</device>
+      <file>sentence.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="soundcard1">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize_apex>0.0001</buffersize_apex>
+    </device>
+  </devices>
+  <filters>
+    <filter xsi:type="apex:dataloop" id="noisegen1">
+      <device>soundcard1</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <datablock>noisedata</datablock>
+      <basegain>-16</basegain>
+      <gain>0</gain>
+      <randomjump>true</randomjump>
+    </filter>
+    <filter xsi:type="apex:dataloop" id="noisegen2">
+      <device>soundcard1</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <datablock>noisedata</datablock>
+      <basegain>-16</basegain>
+      <gain>0</gain>
+      <randomjump>true</randomjump>
+    </filter>
+    <filter xsi:type="apex:amplifier" id="amplifier">
+      <device>soundcard1</device>
+      <channels>1</channels>
+      <basegain>-18.3818</basegain>
+      <gain>18</gain>
+      <gain id="gain">0</gain>
+    </filter>
+    <filter xsi:type="apex:generator" id="singen1">
+      <device>soundcard1</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <type>sinus</type>
+      <basegain>-14</basegain>
+      <gain>0</gain>
+      <frequency>440</frequency>
+      <phase>0</phase>
+    </filter>
+    <filter xsi:type="apex:generator" id="singen2">
+      <device>soundcard1</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <type>sinus</type>
+      <basegain>-15</basegain>
+      <gain>0</gain>
+      <frequency>440</frequency>
+      <phase>10</phase>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="sentence">
+      <datablocks>
+        <sequential>
+          <datablock id="dbsentence"/>
+          <datablock id="dbsentence"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard1</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>noisegen1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard1</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>noisegen2</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard1</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>singen1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard1</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>singen2</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard1</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+  </connections>
 </apex:apex>

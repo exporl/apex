@@ -21,4 +21,6 @@ switch version
         result=readfile_replace('header_v310.xml',t);
     case '3.1.1'
         result=readfile_replace('header_v311.xml',t);
+    case '3.1.4'
+        result=readfile_replace('header_v314.xml',t);
 end

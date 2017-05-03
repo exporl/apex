@@ -83,7 +83,7 @@ void SpinBoxRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
 
 void apex::rundelegates::SpinBoxRunDelegate::sendAnsweredSignal()
 {
-    emit answered( this );
+    Q_EMIT answered( this );
 }
 
 apex::rundelegates::SpinBoxRunDelegate::SpinBoxRunDelegate(

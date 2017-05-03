@@ -1,4 +1,4 @@
-CLEBS *= xerces +xml2 common subdirsources asciicast builddll
+CLEBS *= +xml2 common subdirsources asciicast builddll
 
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)
 

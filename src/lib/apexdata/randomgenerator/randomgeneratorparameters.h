@@ -24,6 +24,8 @@
 
 #include "apextools/global.h"
 
+#include "apextools/xml/xmltools.h"
+
 #include <QString>
 
 namespace apex
@@ -37,39 +39,36 @@ class ExperimentParser;
 
 namespace data
 {
-/**
-@author Tom Francart,,,
-*/
+
 class APEXDATA_EXPORT RandomGeneratorParameters : public data::ApexParameters
 {
-    public:
-        RandomGeneratorParameters();
+public:
+    RandomGeneratorParameters();
+    ~RandomGeneratorParameters();
 
-        ~RandomGeneratorParameters();
+    virtual bool Parse(const QDomElement &p_paramElement) Q_DECL_OVERRIDE;
 
-        virtual bool Parse(XERCES_CPP_NAMESPACE::DOMElement* p_paramElement=0);
+    enum {TYPE_UNIFORM, TYPE_GAUSSIAN};
+    enum {VALUE_INT, VALUE_DOUBLE};
 
-        enum {TYPE_UNIFORM, TYPE_GAUSSIAN};
-        enum {VALUE_INT, VALUE_DOUBLE};
+    bool operator==(const RandomGeneratorParameters& other) const;
 
-        bool operator==(const RandomGeneratorParameters& other) const;
-
-    protected:
-        virtual bool SetParameter(const QString& , const QString& , const QString& , XERCES_CPP_NAMESPACE::DOMElement*);
+protected:
+    virtual bool SetParameter(const QString& , const QString& , const QString& , const QDomElement &) Q_DECL_OVERRIDE;
 
 
-        friend class apex::RandomGenerator;
-        friend class apex::UniformRandomGenerator;
-        friend class apex::GaussianRandomGenerator;
-        friend class apex::RandomGeneratorFactory;
-        friend class apex::ExperimentParser;
+    friend class apex::RandomGenerator;
+    friend class apex::UniformRandomGenerator;
+    friend class apex::GaussianRandomGenerator;
+    friend class apex::RandomGeneratorFactory;
+    friend class apex::ExperimentParser;
 
-    protected:
-        double m_dMin;
-        double m_dMax;
-        QString m_sParam;           // parameter to be set by this generator
-        int m_nType;
-        int m_nValueType;
+protected:
+    double m_dMin;
+    double m_dMax;
+    QString m_sParam;           // parameter to be set by this generator
+    int m_nType;
+    int m_nValueType;
 
 };
 

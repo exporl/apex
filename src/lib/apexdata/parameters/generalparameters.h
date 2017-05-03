@@ -20,22 +20,22 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_GENERALPARAMETERS_H_
 #define _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_GENERALPARAMETERS_H_
 
+#include "apextools/xml/xmltools.h"
+
 #include "apexparameters.h"
 
-namespace apex {
+namespace apex
+{
 namespace data
 {
-/**
-@author Tom Francart,,,
-*/
+
 class APEXDATA_EXPORT GeneralParameters : public ApexParameters
 {
 public:
-    GeneralParameters(XERCES_CPP_NAMESPACE::DOMElement* p_paramElement=0);
-
+    GeneralParameters();
     ~GeneralParameters();
 
-    virtual bool SetParameter(const QString& p_name, const QString& p_id, const QString& p_value, XERCES_CPP_NAMESPACE::DOMElement*);
+    virtual bool SetParameter(const QString& p_name, const QString& p_id, const QString& p_value, const QDomElement &) Q_DECL_OVERRIDE;
 
     bool GetExitAfter() const { return m_bExitAfter; };
     void setExitAfter(bool exit) {m_bExitAfter = exit;};
@@ -65,15 +65,15 @@ public:
     bool operator==(const GeneralParameters& other) const;
 
 private:
-        bool m_bExitAfter;
-        bool m_bAutoSave;
+    bool m_bExitAfter;
+    bool m_bAutoSave;
 
-        bool m_bWaitForStart;
-        bool m_bAllowSkip;
-        bool m_bRunOutputTest;
-        QString m_sOutputTestInput;
-        QString m_scriptLibrary;
-        QVariantMap m_scriptParameters;
+    bool m_bWaitForStart;
+    bool m_bAllowSkip;
+    bool m_bRunOutputTest;
+    QString m_sOutputTestInput;
+    QString m_scriptLibrary;
+    QVariantMap m_scriptParameters;
 };
 
 }

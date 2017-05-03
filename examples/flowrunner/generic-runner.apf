@@ -1,0 +1,248 @@
+ <!-- @doc
+  @what: Comprehensive example HTML file for a generic flow runner
+  @description: The flow runner allows to chain multiple experiments together. When first started this HTML page will be shown, and after the experiment the user will be returned to this page.
+  @how: 
+    * The object main_experiment contains all experiment data. 
+    * The function setMainParameters can be used for parameters of the main experiment that rely on form input (e.g. subject name in description).
+    * The function setExperimentParameters can be used for generic experiment data (e.g. a result-file that depends on form input, or to select a random experiment from a predefined list).
+    
+    * An experiment object may contain:
+        - title
+        - description
+        - form: object to show a form in the beginning of an experiment (only for main_experiment)
+        - params: object with general parameters. Form input will also be loaded in this object
+        - parents: array with titles of parent-experiments (set automatically)
+        - ID: unique identifier based on title and titles of parents (set automatically)
+        - path: explicit reference to the object (e.g. main_experiment.experiments[1].experiments[0]) (set automatically)
+        - blind: boolean to hide experiment titles (only for the "deepest level" of experiments, i.e. experiments with file defined)
+        
+        If it is contains sub-experiments:
+        - experiments: array of sub-experiments (i.e. experiment objects)
+        - randomized: boolean to randomize order of sub-experiments
+            
+        If it refers to a single APEX-experiment (i.e. "deepest level" of experiments)
+        - file: path of the experiment file
+        - expressions: can be used to set parameters in .apx-file
+        - resultfile: path where the result-file will be saved
+        
+        If a certain parameter is not set explicitly for an experiment, it will be inherited from its parent.
+  -->
+<html>
+    <head>
+        <title>Generic flow runner</title>
+    <script type="text/JavaScript">
+var main_experiment = {
+    title : "Generic flow runner",
+    experiments : [
+        {   title : "calibration",
+            file : api.fromCurrentDir('../calibration/calibration.apx'),
+        },
+        {   title : "Some procedures",
+            experiments : [ 
+                { title : "Simple", file : api.fromCurrentDir('../procedure/simple.apx') } , 
+                { title : "Extra simple" , file : api.fromCurrentDir('../procedure/extrasimple.apx') }
+            ],
+            randomized : true
+        },
+        {   title : "A random, blind experiment",
+            description : "If you click <i>redo</i> after the experiment is done, a new random experiment will be selected. A blind experiment will not appear in the list of finished experiments.",
+            experiments : [ 
+                { type : "parameters" , blind : true } 
+            ],
+            randomized : true
+        }
+    ] ,
+    randomized : false,
+    blind : false ,
+    form : [
+        { tag_name : "input" , id : "subject", type : "text", placeholder: "Name subject" },
+        { tag_name : "select" , id: "retest", content : [ 
+                { tag_name : "option" , content : "test" , value : "false" } , 
+                { tag_name : "option" , content : "retest" , value : "true" } 
+            ] 
+        }, 
+        { tag_name : "select" , id: "save_results", content : [ 
+                { tag_name : "option" , content : "Save results?" , value : "false" , disabled : "true" , selected : "true" } , 
+                { tag_name : "option" , content : "YES" , value : "true" } , 
+                { tag_name : "option" , content : "NO" , value : "false" } 
+            ]
+        }
+    ] ,
+    params : {}
+};
+
+function setMainParameters(experiment) {
+    experiment.description = 'Hi, ' + experiment.params.subject + '. This is a generic flow-runner.';
+}
+
+function setExperimentParameters(experiment) {
+    if ( experiment.params.save_results === 'true' )
+        experiment.resultfile = experiment.params.subject + ( ( experiment.params.retest==="true" ) ? "_retest" : "") + '.apr';
+    if ( experiment.type === 'parameters' ) {
+        var options = ["connection-filter","connection-soundcard","device-allchannels","restore","spinbox"];
+        var optionID = randInt(0,options.length-1);
+        experiment.title = options[optionID];
+        experiment.file = api.fromCurrentDir('../parameters/parameters-' + options[optionID] + '.apx');
+    }
+}
+//======================================================================
+var parametersForm, experimentDiv, resultsDiv;
+function loadMain(showForm) {
+    parametersForm = document.getElementById('parameters-form');
+    experimentDiv = document.getElementById('experiment-div');
+    resultsDiv = document.getElementById('results-div');
+    
+    experimentDiv.innerHTML = '';
+    resultsDiv.innerHTML = '';
+    if ( showForm && main_experiment.form ) {
+        parametersForm.style.display = 'block';
+        parametersForm.innerHTML = makeForm(main_experiment.form);
+        parametersForm.innerHTML += '<input type="button" value="Go!" onclick="loadMain(0);" />';
+    } else {
+        parametersForm.style.display = 'none';
+        var form_response = parametersForm.elements;
+        for ( var elementID = 0 ; elementID < form_response.length ; elementID++ ) {
+            element = form_response[elementID];
+            if (element.type !== "button" && element.id)
+                main_experiment.params[element.id] = element.value;
+        }
+        setMainParameters(main_experiment);
+        loadExperiments(main_experiment);
+        if ( ! main_experiment.blind )
+            resultsDiv.innerHTML = '<h1>Finished experiments</h1><ul></ul>';
+    }
+}
+
+function makeForm(form) {
+    if ( typeof form === "string" ) {
+        return form;
+    } else {
+        var formHTML = "";
+        for ( tagID in form ) {
+            var tag = form[tagID];
+            formHTML += "<" + tag.tag_name;
+            for ( attribute in tag ) {
+                if ( attribute !== "content" && attribute !== "tag_name" )
+                    formHTML += " " + attribute + "='" + tag[attribute] + "'";
+            }
+            formHTML += ">";
+            if ( tag.content ) 
+                formHTML += makeForm(tag.content);
+            formHTML += "</" + tag.tag_name + "><br />";
+        }
+    }
+    return formHTML;
+}
+
+function loadExperiments(experiment) {
+    if ( !experiment.experiments ) {
+        setExperimentParameters(experiment);
+        makeButton(experiment);
+    } else {
+        if ( !experiment.parents ) {
+            experiment.parents = [];
+            experiment.path = "main_experiment";
+        }
+        experiment.layer = experiment.parents.length + 1;
+        
+        experimentDiv.innerHTML += '<h' + experiment.layer + '>' + experiment.title + '</h' + experiment.layer + '>';
+        if ( experiment.description )
+            experimentDiv.innerHTML += '<p>' + experiment.description + '</p>';
+            
+        if ( experiment.layer == 1 && experiment.params ) {
+            experimentDiv.innerHTML += '<input type="button" value="Reset experiment" onclick="loadMain(1);" />';
+            experimentDiv.innerHTML += '<ul></ul>';
+            for ( var param in experiment.params )
+                experimentDiv.getElementsByTagName('ul')[0].innerHTML += '<li>' + param + ': ' + experiment.params[param] + '</li>';
+        }
+        
+        if ( experiment.randomized ) 
+            shuffle(experiment.experiments);
+        
+        for ( var experimentKey in experiment.experiments ) {
+            for ( var paramKey in experiment ) {
+                if ( !experiment.experiments[experimentKey].hasOwnProperty(paramKey) && paramKey != 'experiments' && paramKey != 'description' )
+                    experiment.experiments[experimentKey][paramKey] = experiment[paramKey];                
+            }
+            
+            experiment.experiments[experimentKey].parents = experiment.parents.slice();
+            experiment.experiments[experimentKey].parents.push(experiment.title);
+            experiment.experiments[experimentKey].path += '.experiments[' + experimentKey + ']';
+            loadExperiments(experiment.experiments[experimentKey]);
+        }
+    }
+}
+
+function makeButton(experiment) {
+    experiment.ID = experiment.parents.join("_").split(" ").join("-") + '_' + experiment.title.split(" ").join("-");
+    var button;
+    if ( experiment.blind ) {
+        button = '<button onclick="doExperiment(' + experiment.path + ');" id="' + experiment.ID + '-button">Start experiment</button>';
+    } else {
+        button = '<button onclick="doExperiment(' + experiment.path + ');" id="' + experiment.ID + '-button">' + experiment.title + '</button>';
+    }
+    
+    experimentDiv.innerHTML += '<span id="' + experiment.ID + '-span">- '
+                            + button
+                            + '<span style="display: none;"> '
+                            + '(<a href="#" onclick="resetExperiment(' + experiment.path + ');">redo</a>)'
+                            + '</span>'
+                            + '</span><br />';
+}
+
+function doExperiment(experiment) {
+    document.getElementById(experiment.ID + '-button').disabled = true;
+    document.getElementById(experiment.ID + '-span').getElementsByTagName('span')[0].style.display = "inline";
+    if ( !experiment.blind )
+        resultsDiv.getElementsByTagName('ul')[0].innerHTML += '<li>' + experiment.file + '</li>';
+        
+    if ( experiment.expressions && experiment.resultfile ) {
+        api.runExperiment(experiment.file, experiment.expressions, experiment.resultfile);
+    } else if ( experiment.expressions ) {
+        api.runExperiment(experiment.file, experiment.expressions);
+    } else if ( experiment.resultfile ) {
+        api.runExperiment(experiment.file, {},experiment.resultfile);
+    } else {
+        api.runExperiment(experiment.file);
+    }
+}
+
+function resetExperiment(experiment) {
+    document.getElementById(experiment.ID + '-button').disabled = false;
+    document.getElementById(experiment.ID + '-span').getElementsByTagName('span')[0].style.display = "none";
+    setExperimentParameters(experiment);
+}
+
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+    while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+    return array;
+}
+
+function randInt(min,max) {
+    return  Math.floor((Math.random() * (max-min+1)) + min); ;
+}
+    </script>
+        <style type="text/css">
+        html,body {
+            background: #13a89e;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #parameters-form {
+          margin: 100px;
+        }
+        </style>
+    </head>
+    <body onload="loadMain(1);">
+        <form id="parameters-form"></form>
+        <div id="experiment-div"></div>
+        <div id="results-div">
+        </div>
+    </body>
+</html>

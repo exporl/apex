@@ -27,8 +27,6 @@
 
 #include "runner/experimentrundelegate.h"
 
-#include "services/mainconfigfileparser.h"
-
 #include "calibrationio.h"
 #include "soundlevelmeter.h"
 

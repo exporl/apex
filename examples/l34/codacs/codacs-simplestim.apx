@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.0/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.0/experiment.xsd">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1">
   <!-- Send simple XML file for Codacs stimulus to L34 device -->
   <procedure xsi:type="apex:trainingProcedure">
     <parameters>
@@ -18,7 +18,7 @@
   </procedure>
   <screens>
     <screen id="screen1">
-      <gridLayout width="3" height="2" id="main_layout">
+      <gridLayout id="main_layout" height="2" width="3">
         <button x="1" y="1" id="button1">
           <text>send</text>
         </button>
@@ -35,7 +35,7 @@
       <description>two second stimulus with 200us click</description>
       <data>
         <nre:stream xmlns:nre="http://www.cochlear.com/nre">
-          <nic:sequence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.0/experiment.xsd" xmlns:nic="http://www.cochlear.com/nic">
+          <nic:sequence xmlns:nic="http://www.cochlear.com/nic">
             <stimulus repeat="10000">
               <parameters>
                 <ae>0</ae>
@@ -1012,9 +1012,8 @@
     </datablock>
   </datablocks>
   <devices>
-    <device id="l34device" xsi:type="apex:L34DeviceType">
-      <device_id>1</device_id>
-      <implant>cic4</implant>
+    <device id="l34device" xsi:type="apex:CohDeviceType">
+      <device>L34-codacs-1</device>
       <trigger>none</trigger>
       <powerup_count>0</powerup_count>
       <defaultmap>

@@ -19,15 +19,12 @@
 
 #include "apextools/apextools.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
 
 #include "adaptiveproceduredata.h"
 
 #include <QStringList>
 
-using namespace xercesc;
-using namespace apex::ApexXMLTools;
 using namespace apex::data;
 
 AdaptiveProcedureData::AdaptiveProcedureData()
@@ -74,13 +71,11 @@ AdaptiveProcedureData::StopAfter AdaptiveProcedureData::stopAfterType() const
 
 QString AdaptiveProcedureData::stopAfterTypeString() const
 {
-    switch (m_bStopAfterType)
-    {
-        case StopAfterReversals:     return "reversals";
-        case StopAfterTrials:        return "trials";
-        case StopAfterPresentations: return "presentations";
-
-        default: qFatal("unknown stop-after type");
+    switch (m_bStopAfterType) {
+    case StopAfterReversals:     return "reversals";
+    case StopAfterTrials:        return "trials";
+    case StopAfterPresentations: return "presentations";
+    default: qFatal("unknown stop-after type");
     }
 
     return QString(); //keep compiler happy
@@ -213,194 +208,7 @@ void AdaptiveProcedureData::addAdaptingParameter(QString param)
     m_adapt_parameters.append(param);
 }
 
-/*bool ApexAdaptiveProcedureParameters::SetParameter(const  QString & p_name,const  QString & p_id,const  QString & p_value, DOMElement* p_base)
-{
-    if ( ProcedureParameters::SetParameter(p_name, p_id, p_value,p_base) == true)
-        return true;
-
-    if ( p_name == "nUp")
-    {
-        m_nUp = p_value.toInt();
-    }
-    else if ( p_name == "nDown")
-    {
-        m_nDown = p_value.toInt();
-    }
-    else if (p_name=="adapt_parameter")
-    {
-        //m_adapt_parameter = p_value;
-        m_adapt_parameters.push_back(p_value);
-    }
-    else if (p_name=="start_value")
-    {
-        m_startValue = p_value.toDouble();
-    }
-    else if (p_name=="min_value")
-    {
-        m_minValue = p_value.toDouble();
-        m_defMinValue=true;
-    }
-    else if (p_name=="max_value")
-    {
-        m_maxValue = p_value.toDouble();
-        m_defMaxValue=true;
-    }
-    else if (p_name=="stop_after")
-    {
-        m_nStop = p_value.toInt();
-    }
-    else if (p_name=="stop_after_type")
-    {
-        if (p_value=="reversals")
-            m_bStopAfterType = STOP_REVERSALS;
-        else if (p_value=="trials")
-            m_bStopAfterType = STOP_TRIALS;
-        else if (p_value=="presentations")
-            m_bStopAfterType = STOP_ABOVE;
-        else
-            Q_ASSERT("0");
-    }
-    else if (p_name=="larger_is_easier")
-    {
-        if (p_value=="true" || p_value=="1")
-            m_bLargerIsEasier=true;
-        else
-            m_bLargerIsEasier=false;
-    }
-    else if (p_name=="repeat_first_until_correct")
-    {
-        if (p_value=="true" || p_value=="1")
-            m_bFirstUntilCorrect=true;
-        else
-            m_bFirstUntilCorrect=false;
-    }
-    else if (p_name=="stepsizes")
-    {
-        ParseStepSizes(p_base);
-    }
-    else
-    {
-        std::cerr<< "ApexAdaptiveProcedureParameters::SetParameter: unknown tag " << p_name.toAscii().data()<< std::endl;
-        return false;
-    }
-    return true;
-}*/
-
-
-
-
-/*bool ApexAdaptiveProcedureParameters::ParseStepSizes(DOMElement* p_base)
-{
-
-    bool first=1;
-
-    for (DOMNode* currentNode=p_base->getFirstChild(); currentNode!=0; currentNode=currentNode->getNextSibling())
-    {
-        Q_ASSERT(currentNode);
-        Q_ASSERT(currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
-
-        const QString tag = XMLutils::GetTagName( currentNode );
-
-
-        if (tag == "stepsize")
-        {
-            int begin = XMLutils::GetAttribute(currentNode, "begin").toInt();
-            float size = XMLutils::GetAttribute(currentNode, "size").toFloat();
-            if (first)
-            {
-                if (begin!=0)
-                {
-                    qCDebug(APEX_RS, "Error: first stepsize begin attrib should be 0, setting to 0");
-                    begin=0;
-                }
-                first=false;
-            }
-
-            if (m_stepsizes.find(begin) != m_stepsizes.end())
-            {
-                qCDebug(APEX_RS, "Warning: duplicate stepsize found");
-                ErrorHandler::Get().Add(tError(tError::Warning, "AdaptiveProcedureParameters", "Warning: duplicate stepsize found"));
-                // FIXME: use generic error reporting mechanism
-            }
-
-            m_stepsizes[begin] = size;
-#ifdef PRINTPROCEDURE
-            qCDebug(APEX_RS, QString("Stepsize - from %1 value %2").arg(begin).arg(size));
-#endif
-        }
-        else if (tag == "change_after")
-        {
-            QString value = XMLutils::GetFirstChildText(currentNode);
-            if (value=="reversals")
-            {
-                m_changestepsize_type=AdaptiveProcedure::AFTER_REVERSALS;
-#ifdef PRINTPROCEDURE
-                qCDebug(APEX_RS, "Changing stepsize after reversals");
-#endif
-            }
-            else if (value=="trials")
-            {
-                m_changestepsize_type=AdaptiveProcedure::AFTER_TRIALS;
-#ifdef PRINTPROCEDURE
-                qCDebug(APEX_RS, "Changing stepsize after trials");
-#endif
-            }
-            else
-            {
-                Q_ASSERT("invalid boolean");
-                return false;
-            }
-
-
-        }
-        else
-        {
-            qCDebug(APEX_RS, "ApexAdaptiveProcedureParameters::ParseStepSizes: unknown tag");
-            throw 0;
-        }
-    }
-
-    return true;
-}*/
-
-
-/**
- * Add errors/warnings to errorHandler
- * @param errorHandler
- * @return true if no fatal errors
- */
-/*bool apex::ApexAdaptiveProcedureParameters::CheckParameters()
-{
-    bool result=true;
-
-    if (m_defMinValue && m_defMaxValue)
-        if (m_minValue > m_maxValue)
-        {
-            ErrorHandler::Get().AddError( "AdaptiveProcedureParameters", "min_value > max_value");
-            result = false;
-        }
-
-    if (m_defMaxValue && m_startValue > m_maxValue)
-    {
-        ErrorHandler::Get().AddError( "AdaptiveProcedureParameters", "start_value > min_value");
-        result = false;
-    }
-
-    if (m_defMinValue && m_startValue < m_minValue)
-    {
-        ErrorHandler::Get().AddError( "AdaptiveProcedureParameters", "start_value < min_value");
-        result = false;
-    }
-
-    if (m_bStopAfterType==STOP_ABOVE && (m_presentations != m_nStop)) {
-
-    }
-
-    return result;
-}*/
-
-bool AdaptiveProcedureData::
-        operator==(const AdaptiveProcedureData& other) const
+bool AdaptiveProcedureData::operator==(const AdaptiveProcedureData& other) const
 {
     if (m_defMinValue != other.m_defMinValue)
         return false;

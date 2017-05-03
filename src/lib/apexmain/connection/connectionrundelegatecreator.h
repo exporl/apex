@@ -22,77 +22,71 @@
 
 #include "apextools/apextypedefs.h"
 
-#include "apextools/status/errorlogger.h"
-
 #include "connection/connection.h"
 
 #include "streamapp/defines.h"
 
+#include <QCoreApplication>
+
 namespace apex
 {
-  namespace stimulus
-  {
+namespace stimulus
+{
 
-      /**
-        * ConnectionsFactory
-        *   parses and checks connections.
-        *   Not really a factory in the pattern sense of the word ;-
-        *   Logs all errors and warnings directly to the ErrorLogger.
-        ************************************************************* */
-    class ConnectionRunDelegateCreator : public ErrorLogger
-    {
-        Q_DECLARE_TR_FUNCTIONS( ConnectionRunDelegateCreator );
-    public:
-        /**
-          * Constructor.
-          * Sets up.
-          * @param a_VectorToFill the map to fill with parsed connections
-          * @param a_Devs the map with devices for the current experiment
-          * @param a_Filters the map with filters for the current experiment
-          * @param a_DBlocks the map with datablocks for the current experiment
-          */
-      ConnectionRunDelegateCreator ( tConnectionsMap& a_VectorToFill, const tDeviceMap& a_Devs, const tFilterMap& a_Filters, const tDataBlockMap& a_DBlocks );
+class ConnectionRunDelegateCreator
+{
+    Q_DECLARE_TR_FUNCTIONS(ConnectionRunDelegateCreator)
+public:
+    /**
+     * Constructor.
+     * Sets up.
+     * @param a_VectorToFill the map to fill with parsed connections
+     * @param a_Devs the map with devices for the current experiment
+     * @param a_Filters the map with filters for the current experiment
+     * @param a_DBlocks the map with datablocks for the current experiment
+     */
+    ConnectionRunDelegateCreator ( tConnectionsMap& a_VectorToFill, const tDeviceMap& a_Devs, const tFilterMap& a_Filters, const tDataBlockMap& a_DBlocks );
 
-      bool AddConnection (const data::ConnectionData& data);
+    bool AddConnection (const data::ConnectionData& data);
 
-        /**
-          * Try to make default connections.
-          * This only works if there are only datablocks and devices.
-          * All DataBlock channels are connected in order to the corresponding
-          * Device's channels.
-          * @return false if failed (eg if filters are present)
-          */
-      bool mp_bMakeDefaultConnections();
+    /**
+     * Try to make default connections.
+     * This only works if there are only datablocks and devices.
+     * All DataBlock channels are connected in order to the corresponding
+     * Device's channels.
+     * @return false if failed (eg if filters are present)
+     */
+    bool mp_bMakeDefaultConnections();
 
-        /**
-          * Report all unconnected and not completely conneted.
-          * Throw exception when datablock is not connected at all.
-          */
-      void mf_ReportUnconnectedItems();
+    /**
+     * Report all unconnected and not completely conneted.
+     * Throw exception when datablock is not connected at all.
+     */
+    void mf_ReportUnconnectedItems();
 
-    private:
-        /**
-          * Check if the connection is valid.
-          * Throws an error if not valid.
-          * @param ac_Connection connection to check.
-          * @return the same connection.
-          */
-      const tConnection& mf_IsValid( const tConnection& ac_Connection ) const;
+private:
+    /**
+     * Check if the connection is valid.
+     * Throws an error if not valid.
+     * @param ac_Connection connection to check.
+     * @return the same connection.
+     */
+    const tConnection& mf_IsValid( const tConnection& ac_Connection ) const;
 
-        /**
-          * Add a Connection to the map.
-          * Calls mf_IsValid().
-          * @param ac_Connection the connection to add.
-          */
-      void mp_AddConnection( const tConnection& ac_Connection );
+    /**
+     * Add a Connection to the map.
+     * Calls mf_IsValid().
+     * @param ac_Connection the connection to add.
+     */
+    void mp_AddConnection( const tConnection& ac_Connection );
 
-      const tDeviceMap&     m_Devices;
-      const tFilterMap&     m_Filters;
-      const tDataBlockMap&  m_DBlocks;
-      tConnectionsMap&      m_Connections;
-    };
+    const tDeviceMap&     m_Devices;
+    const tFilterMap&     m_Filters;
+    const tDataBlockMap&  m_DBlocks;
+    tConnectionsMap&      m_Connections;
+};
 
-  }
+}
 }
 
 #endif

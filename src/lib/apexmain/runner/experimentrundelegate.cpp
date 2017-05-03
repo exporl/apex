@@ -21,7 +21,7 @@
 
 #include "apexdata/corrector/correctordata.h"
 
-#include "apexdata/device/l34devicedata.h"
+#include "apexdata/device/cohdevicedata.h"
 #include "apexdata/device/plugincontrollerdata.h"
 #include "apexdata/device/wavdevicedata.h"
 
@@ -30,7 +30,7 @@
 #include "apexdata/filter/filterdata.h"
 #include "apexdata/filter/pluginfilterdata.h"
 
-#include "apexdata/mixerdevice/mixerparameters.h"
+#include "apexdata/map/apexmap.h"
 
 #include "apexdata/procedure/multiproceduredata.h"
 #include "apexdata/procedure/procedureinterface.h"
@@ -39,10 +39,17 @@
 
 #include "apexdata/stimulus/stimulidata.h"
 
+#include "apextools/apexpluginloader.h"
 #include "apextools/apextypedefs.h"
 
 #include "calibration/calibrationdatabase.h"
 #include "calibration/calibrator.h"
+
+#include "cohstimulus/cohdatablock.h"
+#include "cohstimulus/cohdevice.h"
+
+#include "common/exception.h"
+#include "common/pluginloader.h"
 
 #include "connection/connectionrundelegatecreator.h"
 
@@ -60,12 +67,6 @@
 
 #include "gui/mainwindow.h"
 
-#include "l34stimulus/l34device.h"
-
-#include "mixerdevice/streamappmixer.h"
-
-#include "pa5device/pa5device.h"
-
 #include "parameters/parametermanager.h"
 
 #include "randomgenerator/randomgeneratorfactory.h"
@@ -73,15 +74,8 @@
 
 #include "resultsink/apexresultsink.h"
 
-// TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
-#include "resultsink/rtresultsink.h"
-#endif
-
 #include "screen/apexscreen.h"
 #include "screen/screenrundelegate.h"
-
-#include "services/pluginloader.h"
 
 #include "stimulus/filter.h"
 #include "stimulus/filtertypes.h"
@@ -107,9 +101,15 @@
 #include <QMessageBox>
 #include <QWidget>
 
+// TODO ANDROID rtresultsink uses webkitwidgets
+#ifndef Q_OS_ANDROID
+#include "resultsink/rtresultsink.h"
+#endif
+
 using namespace apex;
 using namespace apex::data;
 using namespace apex::stimulus;
+using namespace cmn;
 
 #ifdef _MSC_VER
 #pragma warning ( disable : 4065 ) //switch statement without case labels
@@ -174,17 +174,14 @@ public:
     ModuleList modules;   // list of the modules above
 
 };
-}
 
 ExperimentRunDelegate::ExperimentRunDelegate (ExperimentData& experiment,
                                               const MainConfigFileData &p_maindata,
                                               QWidget* parent,
-                                              bool deterministic, StatusReporter *listener) :
+                                              bool deterministic) :
         experiment (experiment),
         d (new ExperimentRunDelegatePrivate (parent, p_maindata, deterministic))
 {
-    if (listener)
-        addErrorListener(listener);
     d->parameterManager.reset(new ParameterManager(*experiment.parameterManagerData()));
 
     MakeOutputDevices();
@@ -211,7 +208,6 @@ ExperimentRunDelegate::ExperimentRunDelegate (ExperimentData& experiment,
         connectionMaker.mp_bMakeDefaultConnections();
 
     connectionMaker.mf_ReportUnconnectedItems();
-    ErrorHandler::Get().addItems(connectionMaker.logger().items());
 
     FixStimuli();
 }
@@ -280,8 +276,8 @@ void ExperimentRunDelegate::makeModules()
 
         if (!d->mod_calibrator->calibrate())
         {
-            ErrorHandler::Get().addError(tr("Calibration"),
-                              tr("Not all parameters are calibrated. Please calibrate them first."));
+            qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(tr("Calibration"),
+                              tr("Not all parameters are calibrated. Please calibrate them first."))));
             return;
         }
 
@@ -320,7 +316,7 @@ gui::ScreenRunDelegate* ExperimentRunDelegate::GetScreen (const QString& id )
                                                        screens->defaultFontSize());
 
         QObject::connect(ret, SIGNAL(answered(ScreenElementRunDelegate*)),
-                         ApexControl::Get().GetMainWnd(),
+                         ApexControl::Get().mainWindow(),
                          SLOT(AnswerFromElement(ScreenElementRunDelegate*)));
 
         d->screenToDelegateMap[s] = ret;
@@ -333,67 +329,6 @@ stimulus::tConnectionsMap& ExperimentRunDelegate::GetConnections() const
 {
     return d->connections;
 }
-
-//!datablocks cannot be used more then once for playing simultaneously in playmatrix,
-//!so they must be duplicated together with their connections
-/*void ExperimentRunDelegate::FixStimuli()
-{
-    tStimuliMap& m_stimuli = experiment.GetStimuli();
-    tDataBlockMap& m_datablocks = priv->datablocks; //  experiment.GetDatablocks();
-
-    static QString sError;
-    tStimuliMapCIt itB = m_stimuli.begin();
-    tStimuliMapCIt itE = m_stimuli.end();
-    for ( ; itB != itE ; ++itB )
-    {
-        stimulus::PlayMatrix* pCur = (*itB).second->ModPlayMatrix();
-        if ( pCur )
-        {
-            stimulus::PlayMatrixCreator::sf_FixDuplicateIDs( pCur, m_datablocks, priv->connections );
-            //map is complete now, check whether it's valid
-            if ( !stimulus::PlayMatrixCreator::sf_bCheckMatrixValid( (*itB).second->GetPlayMatrix(), m_datablocks, sError ) )
-            {
-                ErrorHandler::Get().AddError ("Playmatrix", sError);
-                return;
-            }
-            stimulus::StimulusFactory::sf_ConstructDevDBlockMap( (*itB).second, priv->devices, m_datablocks );
-        }
-    }
-
-    qFatal("fixme");
-}*/
-
-/*ApexMultiProcedure* ExperimentRunDelegate::MakeMultiProcedure( data::ProcedureData* config )
-{
-    qCDebug(APEX_RS, "Making ApexMultiProcedure" );
-
-    Q_ASSERT( config != NULL );
-
-    ApexMultiProcedure* multiProc = new ApexMultiProcedure ( *this, config );
-    ApexMultiProcedureConfig* multiConf = dynamic_cast<ApexMultiProcedureConfig*>( config );
-    //qCDebug(APEX_RS, "pointer: %p", multiConf);
-    Q_ASSERT( multiConf != NULL );
-
-    const tProcConfigList& pl = multiConf->GetProcedures();
-    multiConf->ShowChildren();
-    qCDebug(APEX_RS, "%u child procedures", unsigned(pl.size()));
-    // add subprocedures
-
-    for ( tProcConfigList::const_iterator it =
-                multiConf->GetProcedures().begin();
-            it != multiConf->GetProcedures().end(); ++it )
-    {
-        Q_ASSERT( *it != NULL );
-        qCDebug(APEX_RS, "type: %i", (*it)->GetParameters()->GetType() );
-
-        ApexProcedure* newproc = MakeProcedure ( *it );
-        multiProc->AddProcedure ( newproc );
-
-        ApexControl::Get().ConnectProcedures ( newproc, multiProc );
-    }
-
-    return multiProc;
-}*/
 
 /**
 * Fill device map with devices based on the experimentdata
@@ -415,8 +350,8 @@ void ExperimentRunDelegate::MakeOutputDevices()
                 d->blockSize = (dynamic_cast<WavDevice*>(device))->GetBlockSize();
                 break;
 
-            case TYPE_L34:
-                device = MakeL34Device(dynamic_cast<data::L34DeviceData*>(devData));
+            case TYPE_COH:
+                device = MakeCohDevice(dynamic_cast<data::CohDeviceData*>(devData));
                 break;
 
             case TYPE_DUMMY:
@@ -443,16 +378,6 @@ void ExperimentRunDelegate::MakeControlDevices()
         device::ControlDevice* device = 0;
         switch (devData->deviceType())
         {
-#ifdef SETMIXER
-            case TYPE_MIXER:
-                device=MakeMixer(dynamic_cast<data::MixerParameters*>(devData));
-                break;
-#endif
-#ifdef PA5
-            case TYPE_PA5:
-                device=MakeMixer(dynamic_cast<data::MixerParameters*>(devData));
-                break;
-#endif
             case TYPE_PLUGINCONTROLLER:
                 device=new device::PluginController(dynamic_cast<PluginControllerData*>(devData));
                 break;
@@ -467,22 +392,26 @@ void ExperimentRunDelegate::MakeControlDevices()
     }
 }
 
-
+stimulus::OutputDevice* ExperimentRunDelegate::GetDevice(const QString& id) const
+{
+    RETURN_VAL_IF_FAIL(d->devices.contains(id), NULL);
+    return d->devices[id];
+}
 
 tDeviceMap& ExperimentRunDelegate::GetDevices() const
 {
     return d->devices;
 }
 
+device::ControlDevice* ExperimentRunDelegate::GetController(const QString &id) const
+{
+    RETURN_VAL_IF_FAIL(d->controldevices.contains(id), NULL);
+    return d->controldevices[id];
+}
+
 const device::tControllerMap& ExperimentRunDelegate::GetControllers() const
 {
     return d->controldevices;
-}
-
-stimulus::OutputDevice* ExperimentRunDelegate::GetDevice(const QString& id) const
-{
-
-    return d->devices[id];
 }
 
 
@@ -491,98 +420,34 @@ stimulus::OutputDevice* ExperimentRunDelegate::MakeDummyDevice(DeviceData* param
     return new DummyDevice(*params);
 }
 
-
-stimulus::L34Device* ExperimentRunDelegate::MakeL34Device(L34DeviceData* params)
+stimulus::CohDevice* ExperimentRunDelegate::MakeCohDevice(CohDeviceData* params)
 {
-    QString ac_sID = params->id();
+    QScopedPointer<CohDevice> dev;
 
-    QScopedPointer<L34Device> dev;
-    int trig = params->triggerType();
-    Q_UNUSED (trig);
+    if (!params->map()->isComplete())
+        qCCritical(APEX_RS, "CohDeviceFactory: Incomplete map");
 
-    bool retry;
-    do
-    {
-        retry = false;
-
-        try
-        {
-            dev.reset(new L34Device("0.0.0.0", params));
-        }
-        catch (PluginNotFoundException& e)
-        {
-            //FIXME no gui code here!!!
-            QMessageBox::critical(NULL,tr("L34 plugin not found"),
-                                "Could not find the L34 plugin\n"
-                                "By default this plugin is not included with Apex.\n"
-                                "Please contact us if you need it.");
-            throw ApexStringException("Error loading L34Device plugin: " + QString(e.what()));
-
-        }
-        catch (ApexStringException& /*e*/)
-        {
-            QString msg = tr("Could not connect to device %1-%2\n"
+    while (!dev) {
+        try {
+            dev.reset(new CohDevice(params));
+        } catch (const std::exception &) {
+            QString msg = tr("Could not connect to device %1\n"
                              "Check whether the USB connection is ok and the "
                              "L34 is switched on\n "
-                             "You can try to turn off and back on the L34\n"
-                             "Apex might have to be completely restarted")
-                                .arg(params->deviceType()).arg(params->id());
-
-            int result = QMessageBox::warning(0, "Apex - L34device", msg,
-                                              "Retry", "Cancel", 0, 0, 1);
-
-            if (result == 0)
-            {
-                // retry
-                retry = true;
-            }
-            else
-            {
-                log().addError("L34DeviceFactory", "Couldn't initialize L34device");
-                throw ApexStringException("Error initializing L34Device");
+                             "You can try to turn off and back on the L34")
+                             .arg(params->device());
+            if (QMessageBox::warning(NULL, "Apex - CohDevice", msg,
+                        QMessageBox::Retry, QMessageBox::Cancel) != QMessageBox::Retry) {
+                qCCritical(APEX_RS, "CohDeviceFactory: Couldn't initialize CohDevice");
+                throw;
             }
         }
-    }
-    while (retry);
-
-    if (!dev->HasError()) //[ stijn ] check or apex will crash later
-    {
-        if (!params->map()->isComplete())
-            log().addError("L34DeviceFactory", "Incomplete map");
-
-        dev->SetMap(params->map());
-    }
-    else
-    {
-        throw ApexStringException("Error initializing L34Device");
     }
 
     return dev.take();
 }
 
-#if defined(SETMIXER) || defined(PA5)
-apex::device::IMixer* ExperimentRunDelegate::MakeMixer( apex::data::MixerParameters* a_pParameters )
-{
-    QString ac_sID = a_pParameters->id();
-    try {
-        QScopedPointer<device::IMixer> pRet;
-        const MixerType eType = a_pParameters->type();
-        if ( eType == DEFAULT_MIXER || eType == RME_MIXER )
-            pRet.reset( new device::StreamAppMixer( a_pParameters ));
-#ifdef PA5
-        else if ( eType == PA5_MIXER )
-            pRet.reset( new device::Pa5Device( a_pParameters ) );
-#endif
-        return pRet.take();
-    } catch ( ApexStringException& e ) {
-        log().addError( "MixerFactory::mf_pCreateMixer", e.what() );
-        throw e;
-    }
-}
-#endif
-
-
-void apex::ExperimentRunDelegate::MakeDatablocks( )
+void ExperimentRunDelegate::MakeDatablocks( )
 {
     qCDebug(APEX_RS, "Making datablocks");
     const DatablocksData* data = experiment.datablocksData();
@@ -593,22 +458,9 @@ void apex::ExperimentRunDelegate::MakeDatablocks( )
         stimulus::DataBlock* db=0;
 
 
-        // add path to uri
-        QUrl filename = FilePrefixConvertor::addPrefix(dbData->prefix(),
-                                                       dbData->uri());
-
-        /*QUrl theUrl = d->uri();
-        if (theUrl.isRelative())
-        {
-            QString modprefix = FilePrefixConvertor::convert( d->m_prefix );
-            if (!modprefix.isEmpty() && !modprefix.endsWith('/'))
-                modprefix += '/';
-            filename = QUrl(modprefix + d->uri());
-        }
-        else
-            filename = QUrl(d->uri());*/
-
-//        qCDebug(APEX_RS, "Making datablock %s", qPrintable (d->GetID()));
+        // add path to file
+        QString filename = FilePrefixConvertor::addPrefix(dbData->prefix(),
+                                                       dbData->file());
 
         // lookup associated device type
         DeviceType devicetype = experiment.deviceById(dbData->device())->deviceType();
@@ -619,10 +471,10 @@ void apex::ExperimentRunDelegate::MakeDatablocks( )
             db = new WavDataBlock(*dbData, filename, this);
 
         }
-        else if ( devicetype == TYPE_L34)
+        else if ( devicetype == TYPE_COH)
         {
 
-            db = new L34DataBlock(*dbData, filename, this);
+            db = new CohDataBlock(*dbData, filename, this);
         }
         else if (  devicetype == TYPE_DUMMY)
         {
@@ -633,80 +485,38 @@ void apex::ExperimentRunDelegate::MakeDatablocks( )
             qFatal("Invalid device type");
         }
 
-
-        if (db != 0 && dbData->doChecksum())
-        {
-            log().addWarning("MakeDatablocks()", tr("Calculating checksum for datablock %1").arg(dbData->id()));
-            QString sum = db->GetMD5Sum();
-            if (sum.toLower() != dbData->checksum().toLower())
-            {
-                throw ApexStringException("Checksum does not match for datablock "
-                                            + dbData->id() + ". sum obtained was: '"
-                                            + sum + "', sum wanted was: '"
-                                            + dbData->checksum() +"'" );
-            }
-        }
-
         d->datablocks[dbData->id()] = db;
     }
 }
 
-void apex::ExperimentRunDelegate::MakeFeedback()
+void ExperimentRunDelegate::MakeFeedback()
 {
     d->mod_feedback.reset( new Feedback( experiment.screensData()) );
 }
 
 
-void apex::ExperimentRunDelegate::MakeStimuli( )
+void ExperimentRunDelegate::MakeStimuli( )
 {
     const StimuliData* data = experiment.stimuliData();
-    for (StimuliData::const_iterator it=data->begin(); it!=data->end(); ++it)
-    {
+    for (StimuliData::const_iterator it=data->begin(); it!=data->end(); ++it) {
         const data::StimulusData& data = it.value();
         stimulus::Stimulus* newStim = new Stimulus(data);
-
-        stimulus::PlayMatrixCreator::sf_FixDuplicateIDs( newStim->GetPlayMatrix(), d->datablocks, *experiment.connectionsData() );
-        /*QString sError;
-           //map is complete now, check whether it's valid
-           if ( !stimulus::PlayMatrixCreator::sf_bCheckMatrixValid( newStim->GetPlayMatrix(), priv->datablocks, sError ) )
-           {
-               ErrorHandler::Get().AddError ("Playmatrix", sError);
-               return;
-           }
-
-        newStim->ConstructDevDBlockMap( priv->devices,priv->datablocks );*/
-
-        d->stimuli[it.key()]=newStim;
+        stimulus::PlayMatrixCreator::sf_FixDuplicateIDs(
+                newStim->GetPlayMatrix(), d->datablocks,
+                *experiment.connectionsData() );
+        d->stimuli[it.key()] = newStim;
     }
 }
 
-ProcedureInterface* apex::ExperimentRunDelegate::makeProcedure(ProcedureApi* api,
+ProcedureInterface* ExperimentRunDelegate::makeProcedure(ProcedureApi* api,
                                                                const ProcedureData* data)
 {
-    //load procedure plugin
-    QList<ProcedureCreatorInterface*> creators =
-        PluginLoader::Get().availablePlugins<ProcedureCreatorInterface>();
-    QString procedureType =
-        data->name();
-
-    ProcedureCreatorInterface* creator = 0;
-    Q_FOREACH (ProcedureCreatorInterface* c, creators) {
-        if (c->availableProcedurePlugins().contains(procedureType)) {
-            creator = c;
-            break;
-        }
-    }
-
-    if (creator == 0) {
-        return NULL;
-    } else {
-        return creator->createProcedure(procedureType,
-                                                 api,
-                                                 data);
-    }
+    QString procedureType = data->name();
+    ProcedureCreatorInterface *creator = createPluginCreator<ProcedureCreatorInterface>(procedureType);
+    return creator->createProcedure(procedureType, api, data);
 }
 
-void apex::ExperimentRunDelegate::FixStimuli( )
+void ExperimentRunDelegate::FixStimuli( )
 {
 
     for (tStimulusMap::const_iterator it=d->stimuli.begin();
@@ -720,16 +530,13 @@ void apex::ExperimentRunDelegate::FixStimuli( )
         //map is complete now, check whether it's valid
         if ( !stimulus::PlayMatrixCreator::sf_bCheckMatrixValid( newStim->GetPlayMatrix(), d->datablocks, sError ) )
         {
-            ErrorHandler::Get().addError ("Playmatrix", sError);
+            qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("Playmatrix", sError)));
             return;
         }
         newStim->ConstructDevDBlockMap( d->devices,d->datablocks );
     }
 
 }
-
-namespace apex
-{
 
 void ExperimentRunDelegate::MakeFilters()
 {
@@ -757,7 +564,6 @@ Filter* ExperimentRunDelegate::MakeFilter( const QString& ac_sID,
         const QString& ac_sType,
         data::FilterData* const ac_pParams )
 {
-    //clearLog();
     Filter* filter = 0;
 
     DeviceData* devData = experiment.devicesData()->
@@ -765,7 +571,7 @@ Filter* ExperimentRunDelegate::MakeFilter( const QString& ac_sID,
     WavDeviceData* wavData;
 
 
-    if ( devData->deviceType() == apex::data::TYPE_WAVDEVICE )
+    if ( devData->deviceType() == data::TYPE_WAVDEVICE )
         wavData = dynamic_cast<WavDeviceData*>( devData );
     else
         throw ApexStringException("No filters supported for other device types than wavDevice");
@@ -800,13 +606,10 @@ Filter* ExperimentRunDelegate::MakeFilter( const QString& ac_sID,
         //get datablock if needed
         const QString sDataID( ac_pParams->valueByType( "datablock" ).toString() );
         stimulus::WavDataBlock* pSrc;
-        try
-        {
+        try {
             pSrc = (WavDataBlock*) GetDatablock(sDataID);
-        }
-        catch (ApexStringException& )
-        {
-            throw( ApexStringException( "dataloop: datablock " + sDataID + " not found" ) );
+        } catch (const std::exception &e) {
+            throw Exception(tr("dataloop: datablock %1 not found: %2").arg(sDataID, e.what()));
         }
 //            ac_pParams->mp_SetExtraData( pSrc );
 
@@ -825,7 +628,7 @@ Filter* ExperimentRunDelegate::MakeFilter( const QString& ac_sID,
     }
     else
     {
-        log().addError( "WavDeviceFactory::CreateFilter", "Unknown FilterType" );
+        qCCritical(APEX_RS, "WavDeviceFactory::CreateFilter: Unknown FilterType");
         return 0;
     }
 
@@ -869,25 +672,17 @@ stimulus::Filter* ExperimentRunDelegate::GetFilter(const QString& p_name) const
     return d->filters[p_name];
 }
 
-}
-
-
-gui::ApexMainWindow* ExperimentRunDelegate::GetMainWindow() const
-{
-    return ApexControl::Get().GetMainWnd();
-}
-
-bool apex::ExperimentRunDelegate::GetAutoAnswer( ) const
+bool ExperimentRunDelegate::GetAutoAnswer( ) const
 {
     return d->autoAnswer;
 }
 
-void apex::ExperimentRunDelegate::SetAutoAnswer( const bool p )
+void ExperimentRunDelegate::SetAutoAnswer( const bool p )
 {
     d->autoAnswer=p;
 }
 
-ParameterManager* apex::ExperimentRunDelegate::GetParameterManager() const
+ParameterManager* ExperimentRunDelegate::GetParameterManager() const
 {
     return d->parameterManager.data();
 }
@@ -897,12 +692,12 @@ const data::MainConfigFileData &ExperimentRunDelegate::mainData() const
     return d->mainData;
 }
 
-stimulus::StimulusOutput*  apex::ExperimentRunDelegate::GetModOutput() const
+stimulus::StimulusOutput*  ExperimentRunDelegate::GetModOutput() const
 {
     return modOutput();
 }
 
-stimulus::Stimulus* apex::ExperimentRunDelegate::GetStimulus(const QString& id) const
+stimulus::Stimulus* ExperimentRunDelegate::GetStimulus(const QString& id) const
 {
     if (! d->stimuli.contains(id))
         throw ApexStringException(QString("Stimulus not found: %1").arg(id));
@@ -915,70 +710,67 @@ QStringList ExperimentRunDelegate::stimuli() const
     return d->stimuli.keys();
 }
 
-
-namespace apex
+TrialStartTime* ExperimentRunDelegate::trialStartTime() const
 {
-    TrialStartTime* ExperimentRunDelegate::trialStartTime() const
-    {
-        return d->mod_trialStartTime.data();
-    }
-
-    ApexTimer* apex::ExperimentRunDelegate::modTimer() const
-
-    {
-        return d->mod_timer.data();
-    }
-
-    ApexScreen* apex::ExperimentRunDelegate::modScreen() const
-    {
-        return d->mod_screen.data();
-    }
-// TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
-    ApexResultSink* apex::ExperimentRunDelegate::modResultSink() const
-    {
-        return d->mod_resultsink.data();
-    }
-
-    RTResultSink* apex::ExperimentRunDelegate::modRTResultSink() const
-    {
-        return d->mod_rtresultsink.data();
-    }
-#endif
-    device::Controllers* apex::ExperimentRunDelegate::modControllers() const
-    {
-        return d->mod_controllers.data();
-    }
-
-    Calibrator*  apex::ExperimentRunDelegate::modCalibrator() const
-    {
-        return d->mod_calibrator.data();
-    }
-
-    Feedback* apex::ExperimentRunDelegate::modFeedback() const
-    {
-        return d->mod_feedback.data();
-    }
-
-    stimulus::StimulusOutput* apex::ExperimentRunDelegate::modOutput() const
-    {
-        return d->mod_output.data();
-    }
-
-    RandomGenerators* apex::ExperimentRunDelegate::modRandomGenerators() const
-    {
-        return d->mod_randomgenerators.data();
-    }
-
-    const ModuleList* apex::ExperimentRunDelegate::modules() const
-    {
-        return &d->modules;
-    }
-
-    QWidget* apex::ExperimentRunDelegate::parentWidget() const
-    {
-        return d->parent;
-    }
-
+    return d->mod_trialStartTime.data();
 }
 
+ApexTimer* ExperimentRunDelegate::modTimer() const
+
+{
+    return d->mod_timer.data();
+}
+
+ApexScreen* ExperimentRunDelegate::modScreen() const
+{
+    return d->mod_screen.data();
+}
+
+ApexResultSink* ExperimentRunDelegate::modResultSink() const
+{
+    return d->mod_resultsink.data();
+}
+
+// TODO ANDROID rtresultsink uses webkitwidgets
+#ifndef Q_OS_ANDROID
+RTResultSink* ExperimentRunDelegate::modRTResultSink() const
+{
+    return d->mod_rtresultsink.data();
+}
+#endif
+device::Controllers* ExperimentRunDelegate::modControllers() const
+{
+    return d->mod_controllers.data();
+}
+
+Calibrator*  ExperimentRunDelegate::modCalibrator() const
+{
+    return d->mod_calibrator.data();
+}
+
+Feedback* ExperimentRunDelegate::modFeedback() const
+{
+    return d->mod_feedback.data();
+}
+
+stimulus::StimulusOutput* ExperimentRunDelegate::modOutput() const
+{
+    return d->mod_output.data();
+}
+
+RandomGenerators* ExperimentRunDelegate::modRandomGenerators() const
+{
+    return d->mod_randomgenerators.data();
+}
+
+const ModuleList* ExperimentRunDelegate::modules() const
+{
+    return &d->modules;
+}
+
+QWidget* ExperimentRunDelegate::parentWidget() const
+{
+    return d->parent;
+}
+
+}

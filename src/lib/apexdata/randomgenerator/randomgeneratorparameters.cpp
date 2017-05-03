@@ -17,77 +17,69 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "randomgeneratorparameters.h"
 
-using namespace apex::ApexXMLTools;
 using namespace apex::data;
-using namespace xercesc;
 
 namespace apex {
 
-RandomGeneratorParameters::RandomGeneratorParameters()
- : ApexParameters(),
- m_dMin(0),
- m_dMax(0)
+RandomGeneratorParameters::RandomGeneratorParameters() :
+    ApexParameters(),
+    m_dMin(0),
+    m_dMax(0)
 {
 }
-
 
 RandomGeneratorParameters::~RandomGeneratorParameters()
 {
 }
 
-
-
-
-bool RandomGeneratorParameters::SetParameter(const QString& p_name, const QString& /*p_id*/, const QString& p_value, DOMElement*)
+bool RandomGeneratorParameters::SetParameter(const QString& p_name, const QString& /*p_id*/, const QString& p_value, const QDomElement &)
 {
-        if (p_name=="min") {
-                m_dMin=p_value.toDouble();
-        } else if (p_name=="max") {
-                m_dMax=p_value.toDouble();
-        } else if (p_name=="parameter") {
-                m_sParam=p_value;
-        } else if (p_name=="type") {
-                if (p_value=="int") {
-                        m_nValueType=VALUE_INT;
-                } else if (p_value=="double"){
-                        m_nValueType=VALUE_DOUBLE;
-                } else {
-                        Q_ASSERT(( "invalid value " + p_value, false ));
-                        return false;
-                }
+    if (p_name=="min") {
+        m_dMin=p_value.toDouble();
+    } else if (p_name=="max") {
+        m_dMax=p_value.toDouble();
+    } else if (p_name=="parameter") {
+        m_sParam=p_value;
+    } else if (p_name=="type") {
+        if (p_value=="int") {
+            m_nValueType=VALUE_INT;
+        } else if (p_value=="double"){
+            m_nValueType=VALUE_DOUBLE;
         } else {
-                return false;
+            Q_ASSERT(( "invalid value " + p_value, false ));
+            return false;
         }
+    } else {
+        return false;
+    }
 
-        return true;
-
-
-
+    return true;
 }
 
 
-bool RandomGeneratorParameters::Parse(DOMElement* p_paramElement) {
-        QString type = XMLutils::GetAttribute(p_paramElement, "xsi:type");
+bool RandomGeneratorParameters::Parse(const QDomElement &p_paramElement)
+{
+    QString type = p_paramElement.attribute(QSL("xsi:type"));
 
-        if (type=="apex:uniform") {
-                m_nType= TYPE_UNIFORM;
-        } else if (type=="apex:gaussian") {
-                m_nType = TYPE_GAUSSIAN;
-        } else {
-                Q_ASSERT(0 && "Unknown type");
-                return false;
-        }
+    if (type=="apex:uniform") {
+        m_nType= TYPE_UNIFORM;
+    } else if (type=="apex:gaussian") {
+        m_nType = TYPE_GAUSSIAN;
+    } else {
+        Q_ASSERT(0 && "Unknown type");
+        return false;
+    }
 
-        return ApexParameters::Parse(p_paramElement);
+    return ApexParameters::Parse(p_paramElement);
 }
 
-bool RandomGeneratorParameters::
-        operator==(const RandomGeneratorParameters& other) const
+bool RandomGeneratorParameters::operator==(const RandomGeneratorParameters& other) const
 {
     return  ApexParameters::operator==(other) &&
             m_dMin == other.m_dMin &&

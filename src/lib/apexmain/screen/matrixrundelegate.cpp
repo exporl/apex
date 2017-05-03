@@ -147,7 +147,8 @@ void MatrixRunDelegate::makeMatrix()
                 ++row) {
             QPushButton *b = new QPushButton(buttons[col][row].text, this);
             b->setCheckable(true);
-
+            // col_row as that makes the most sense for matrix tests
+            b->setObjectName(QSL("%1_%2_%3").arg(element->getID()).arg(col + 1).arg(row + 1));
             b->setStyleSheet(element->getStyle());
             setCommonProperties(b);
             QFont font(b->font());

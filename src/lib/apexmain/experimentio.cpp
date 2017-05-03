@@ -76,7 +76,7 @@ void ExperimentIo::showScreen(const QString& screen)
 {
     d->currentScreen = d->gui->setScreen(screen);
     d->gui->setAnswer(d->currentAnswer);
-    emit screenShown();
+    Q_EMIT screenShown();
 }
 
 /*void ExperimentIo::updateScreen(const QString &stimulus)
@@ -87,13 +87,13 @@ void ExperimentIo::showScreen(const QString& screen)
 
 void ExperimentIo::playStimulus(const QString& stimulus, double silenceBefore)
 {
-    emit newStimulus(stimulus, silenceBefore);
+    Q_EMIT newStimulus(stimulus, silenceBefore);
 }
 
 void ExperimentIo::onStimulusPlayed()
 {
     qCDebug(APEX_RS) << "stimulus played";
-    emit stimulusPlayed();
+    Q_EMIT stimulusPlayed();
 }
 
 void ExperimentIo::showFeedback(rundelegates::ScreenElementRunDelegate::FeedbackMode mode,
@@ -138,7 +138,7 @@ void ExperimentIo::start()
 
 void ExperimentIo::finish()
 {
-    emit finished();
+    Q_EMIT finished();
 }
 
 void ExperimentIo::disableStart()

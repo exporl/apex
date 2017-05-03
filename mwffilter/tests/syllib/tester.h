@@ -21,54 +21,6 @@
 
 #include <QtTest>
 
-#define FUZZCOMP(value, expected, delta)                                       \
-    fuzzComp (value, expected, delta, #value, #expected, __FILE__, __LINE__)
-
-template <typename A, typename B, typename C>
-void fuzzComp (A value, B expected, C delta, const char *valueText,
-        const char *expectedText, const char *file, int line)
-{
-    if (!(qAbs (value - expected) < delta))
-        QTest::qFail (qPrintable (QString
-                    ("Compared values differ more than %1.\n"
-                     "  Actual (%4): '%2'\n"
-                     "  Expected (%5): '%3'")
-                    .arg (delta).arg (value).arg (expected)
-                    .arg (valueText, expectedText)), file, line);
-}
-
-#define ARRAYCOMP(value, expected, size)                                       \
-    arrayComp (value, expected, size, __FILE__, __LINE__)
-
-template <typename A, typename B>
-void arrayComp (A value, B expected, unsigned size, const char *file, int line)
-{
-    for (unsigned i = 0; i < size; ++i)
-        if (value[i] != expected[i])
-            QTest::qFail (qPrintable (QString::fromLatin1
-                    ("Compared values differ at %1.\n"
-                     "  Actual: '%2'\n"
-                     "  Expected: '%3'")
-                    .arg (i).arg (value[i]).arg (expected[i])), file, line);
-}
-
-#define ARRAYFUZZCOMP(value, expected, delta, size)                            \
-    arrayFuzzComp (value, expected, delta, size, __FILE__, __LINE__)
-
-template <typename A, typename B, typename C>
-void arrayFuzzComp (A value, B expected, C delta, unsigned size,
-        const char *file, int line)
-{
-    for (unsigned i = 0; i < size; ++i)
-        if (!(qAbs (value[i] - expected[i]) < delta))
-            QTest::qFail (qPrintable (QString::fromLatin1
-                    ("Compared values differ more than %1 at %2.\n"
-                     "  Actual: '%3'\n"
-                     "  Expected: '%4'")
-                    .arg (delta).arg (i).arg (value[i])
-                    .arg (expected[i])), file, line);
-}
-
 class TestSyl: public QObject
 {
     Q_OBJECT

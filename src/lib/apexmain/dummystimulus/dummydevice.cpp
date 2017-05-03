@@ -56,12 +56,6 @@ bool DummyDevice::AllDone()
   return true;
 }
 
-bool DummyDevice::Done(const QString& ac_sDataBlockID)
-{
-  Say( ac_sDataBlockID + " done" );
-  return true;
-}
-
 void DummyDevice::AddFilter(Filter& ac_Filter)
 {
   Say("AddFilter: " + ac_Filter.GetID());
@@ -83,19 +77,9 @@ void DummyDevice::RemoveAll()
   Say("RemoveAll");
 }
 
-void DummyDevice::RemoveInput(const QString& ac_sDataBlockID)
-{
-  Say("RemoveInput " + ac_sDataBlockID);
-}
-
 void DummyDevice::StopAll()
 {
   Say("StopAll");
-}
-
-void DummyDevice::Stop(const QString& ac_sDataBlockID)
-{
-  Say("Stop " + ac_sDataBlockID);
 }
 
 void DummyDevice::Say( const QString & message ) const

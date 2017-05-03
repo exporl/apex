@@ -366,15 +366,25 @@ void parseGeneral(QDomElement general, Results* results)
     {
         QString tag = child.tagName();
 
-        if (tag == "startdate")
+        if (tag == "startdate") {
             results->startDate = QDateTime::fromString(child.text());
-        else if (tag == "enddate")
+        } else if (tag == "enddate") {
             results->endDate = QDateTime::fromString(child.text());
-        else if (tag == "duration")
+        } else if (tag == "duration") {
             results->duration = child.text().toInt();
-        else if (tag == "apex_version" || tag == "apex_version_git") {}
-        else
+        } else if (tag == "apex_version" || tag == "apex_version_git") {
+            // ignored
+        } else if (tag == "jscript") {
+            // ignored
+        } else if (tag == "hostname") {
+            // ignored
+        } else if (tag == "serial") {
+            // ignored
+        } else if (tag == "device_id") {
+            // ignored
+        } else {
             unknownTag(tag);
+        }
     }
 }
 

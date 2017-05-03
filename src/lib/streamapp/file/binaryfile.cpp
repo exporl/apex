@@ -26,279 +26,214 @@
 #include "binaryfile.h"
 
 #include <QtGlobal>
-
-#include <iostream>
+#include <QtAlgorithms>
+#include <QString>
 
 using namespace streamapp;
 using namespace appcore;
 
 namespace
 {
-  const std::string sc_sExtension( ".sbin" );
-  const std::string sc_sChannelPr( "_ch" );
+    const QString fileExtension(".sbin");
+    const QString channelPrefix("_ch");
 }
 
-BinaryOutputFile::BinaryOutputFile() :
-  m_pFiles( 0 )
+BinaryOutputFile::BinaryOutputFile()
 {
 }
 
 BinaryOutputFile::~BinaryOutputFile()
 {
-  mp_bClose();
+    mp_bClose();
 }
 
-bool BinaryOutputFile::mp_bOpen( const std::string& ac_sFileNamePrefix, const unsigned ac_nChannels )
+bool BinaryOutputFile::mp_bOpen(const QString& fileNamePrefix, const unsigned ac_nChannels)
 {
-  if( m_pFiles )
-    return false;
+    if (!files.isEmpty())
+        return false;
 
-  m_pFiles = new mt_Files( ac_nChannels );
+    for (unsigned i = 0 ; i < ac_nChannels ; ++ i) {
+        const QString fileName = fileNamePrefix + channelPrefix + i + fileExtension;
+        QScopedPointer<QFile> file(new QFile(fileName));
+        file->open(QIODevice::WriteOnly);
+        files.append(file.take());
+    }
 
-  for( unsigned i = 0 ; i < ac_nChannels ; ++ i )
-  {
-    const std::string sFileName = ac_sFileNamePrefix + sc_sChannelPr + toString( i ) + sc_sExtension;
-    m_pFiles->mp_Set( i, new std::ofstream( sFileName.data(), std::ios::out | std::ios::binary ) );
-  }
-
-  return true;
+    return true;
 }
 
 unsigned BinaryOutputFile::mf_nChannels() const
 {
-  if( m_pFiles )
-    return m_pFiles->mf_nGetBufferSize();
-  return 0;
+    return files.size();
 }
 
 bool BinaryOutputFile::mp_bClose()
 {
-  if( m_pFiles )
-  {
-    const unsigned c_nChan = mf_nChannels();
-    for( unsigned i = 0 ; i < c_nChan ; ++i )
-    {
-      std::ofstream* pCur = m_pFiles->mf_Get( i );
-      pCur->close();
-      delete pCur;
-    }
-    ZeroizingDeleter()( m_pFiles );
+    qDeleteAll(files.begin(), files.end());
+    files.clear();
     return true;
-  }
-  return false;
 }
 
-void BinaryOutputFile::Write( const Stream& ac_Data )
+void BinaryOutputFile::Write(const Stream& ac_Data)
 {
-  if( !m_pFiles )
-    return;
+    if (files.isEmpty())
+        return;
 
-  const unsigned c_nChan = mf_nChannels();
-  Q_ASSERT( ac_Data.mf_nGetChannelCount() >= c_nChan );
+    const unsigned channelCount = mf_nChannels();
+    Q_ASSERT(ac_Data.mf_nGetChannelCount() >= channelCount);
 
-  const unsigned c_nSize = ac_Data.mf_nGetBufferSize() * sizeof( StreamType );
+    const unsigned c_nSize = ac_Data.mf_nGetBufferSize() * sizeof(StreamType);
 
-  for( unsigned i = 0 ; i < c_nChan ; ++ i )
-  {
-    std::ofstream* pCur = m_pFiles->mf_Get( i );
-    pCur->write( (char*) ac_Data.mf_pGetArray()[ i ], c_nSize );
-  }
+    for(unsigned i = 0 ; i < channelCount ; ++ i)
+        files[i]->write((char*)ac_Data.mf_pGetArray()[i], c_nSize);
+
 }
 
-unsigned long BinaryOutputFile::Write( const void** a_pBuf, const unsigned ac_nSamples )
+unsigned long BinaryOutputFile::Write(const void** a_pBuf, const unsigned ac_nSamples)
 {
-  if( !m_pFiles )
-    return 0L;
+    if (files.isEmpty())
+        return 0L;
 
-  const unsigned c_nChan = mf_nChannels();
-  const unsigned c_nSize = ac_nSamples * sizeof( StreamType );
+    const unsigned channelCount = mf_nChannels();
+    const unsigned samplesInBytes = ac_nSamples * sizeof(StreamType);
 
-  for( unsigned i = 0 ; i < c_nChan ; ++ i )
-  {
-    std::ofstream* pCur = m_pFiles->mf_Get( i );
-    pCur->write( (char*) ( ( (StreamType**) a_pBuf )[ i ] ), c_nSize );
-  }
+    for(unsigned i = 0 ; i < channelCount ; ++ i)
+        files[i]->write((char*)(((StreamType**)a_pBuf)[i]), samplesInBytes );
 
-  return ac_nSamples;
+    return ac_nSamples;
 }
 
 /***************************************************************************************************************************/
 
 BinaryInputFile::BinaryInputFile() :
-  m_pFiles( 0 ),
-  mv_nSamples( 0 ),
-  mv_nReadOffset( 0 )
+    mv_nSamples(0),
+    mv_nReadOffset(0)
 {
 }
 
 BinaryInputFile::~BinaryInputFile()
 {
-  mp_bClose();
+    mp_bClose();
 }
 
-bool BinaryInputFile::mp_bOpen( const std::string& ac_sFileNamePrefix )
+bool BinaryInputFile::mp_bOpen(const QString& fileNamePrefix)
 {
-  if( m_pFiles )
-    return false;
+    if (!files.isEmpty())
+        return false;
 
     //search files
-  unsigned nChannels = 0;
-  std::string sFileName = ac_sFileNamePrefix + sc_sChannelPr + toString( nChannels ) + sc_sExtension;
-  while( systemutils::f_bFileExists( sFileName ) )
-  {
-    ++nChannels;
-    sFileName = ac_sFileNamePrefix + sc_sChannelPr + toString( nChannels ) + sc_sExtension;
-  }
-
-  if( !nChannels )
-    return false;
-
-  m_pFiles = new mt_Files( nChannels );
-
-  for( unsigned i = 0 ; i < nChannels ; ++ i )
-  {
-    const std::string sFileName = ac_sFileNamePrefix + sc_sChannelPr + toString( i ) + sc_sExtension;
-    std::ifstream* p = new std::ifstream( sFileName.data(), std::ios::in | std::ios::binary );
-
-      //get size
-    std::ifstream::pos_type begin = p->tellg();
-    p->seekg( 0, std::ios::end );
-    std::ifstream::pos_type end = p->tellg();
-    p->seekg( 0 );
-
-    if( i == 0 )
-    {
-      mv_nSamples = ( end - begin ) / sc_nSampleSize;
+    unsigned channelCount = 0;
+    QString fileName = fileNamePrefix + channelPrefix + channelCount + fileExtension;
+    while (QFile::exists(fileName)) {
+        ++channelCount;
+        fileName = fileNamePrefix + channelPrefix + channelCount + fileExtension;
     }
-    else
-    {
-        //check same size
-      if( ( (unsigned long) ( ( end - begin ) / sc_nSampleSize ) ) != mv_nSamples )
-      {
-          //mismatch; clean up and fail
-        for( unsigned j = 0 ; j < i - 1 ; ++j )
-        {
-          std::ifstream* pCur = m_pFiles->mf_Get( i );
-          pCur->close();
-          delete pCur;
-        }
-        ZeroizingDeleter()( m_pFiles );
+
+    if(!channelCount)
         return false;
-      }
+
+    for (unsigned i = 0 ; i < channelCount ; ++ i) {
+        const QString fileName = fileNamePrefix + channelPrefix + i + fileExtension;
+        QScopedPointer<QFile> file(new QFile(fileName));
+        file->open(QIODevice::ReadOnly);
+        if (i == 0) {
+            mv_nSamples = file->size() / sc_nSampleSize;
+        } else {
+            //check same size
+            if (((unsigned long)((file->size()) / sc_nSampleSize)) != mv_nSamples) {
+                //mismatch; clean up and fail
+                qDeleteAll(files.begin(), files.end());
+                files.clear();
+                return false;
+            }
+        }
+
+        files.append(file.take());
     }
 
-    m_pFiles->mp_Set( i, p );
-  }
+    mv_nReadOffset = 0;
 
-  mv_nReadOffset = 0;
-
-  return true;
+    return true;
 }
 
-bool BinaryInputFile::mp_bOpenAny( const std::string& ac_sFileName )
+bool BinaryInputFile::mp_bOpenAny(const QString& fileName)
 {
-  if( m_pFiles )
-    return false;
+    if (!files.isEmpty())
+        return false;
 
-  if( !systemutils::f_bFileExists( ac_sFileName ) )
-    return false;
+    if(!QFile::exists(fileName))
+        return false;
 
-  std::ifstream* p = new std::ifstream( ac_sFileName.data(), std::ios::in | std::ios::binary );
-  m_pFiles = new mt_Files( 1 );
-  m_pFiles->mp_Set( 0, p );
+    QScopedPointer<QFile> file(new QFile(fileName));
+    file->open(QIODevice::ReadOnly);
+    files.append(file.take());
 
-    //get size
-  std::ifstream::pos_type begin = p->tellg();
-  p->seekg( 0, std::ios::end );
-  std::ifstream::pos_type end = p->tellg();
-  p->seekg( 0 );
+    mv_nSamples = file->size() / sc_nSampleSize;
+    mv_nReadOffset = 0;
 
-  mv_nSamples = ( end - begin ) / sc_nSampleSize;
-  mv_nReadOffset = 0;
-
-  return true;
+    return true;
 }
 
 bool BinaryInputFile::mp_bClose()
 {
-  if( m_pFiles )
-  {
-    const unsigned c_nChan = mf_nChannels();
-    for( unsigned i = 0 ; i < c_nChan ; ++i )
-    {
-      std::ifstream* pCur = m_pFiles->mf_Get( i );
-      pCur->close();
-      delete pCur;
-    }
-    ZeroizingDeleter()( m_pFiles );
+    qDeleteAll(files.begin(), files.end());
+    files.clear();
     mv_nSamples = 0;
     return true;
-  }
-  return false;
 }
 
-unsigned long BinaryInputFile::Read( void** a_pBuf, const unsigned ac_nSamples )
+unsigned long BinaryInputFile::Read(void** a_pBuf, const unsigned ac_nSamples)
 {
-  if( !m_pFiles )
-    return 0L;
-  if( mv_nReadOffset >= mv_nSamples )
-    return 0L;
+    if(files.isEmpty())
+        return 0L;
+    if(mv_nReadOffset >= mv_nSamples)
+        return 0L;
 
-  StreamType** pBuf = (StreamType**) a_pBuf;
+    StreamType** buffer = (StreamType**) a_pBuf;
 
-  const unsigned nChan = mf_nChannels();
-  unsigned long nRead = 0;
+    const unsigned channelCount = mf_nChannels();
+    qint64 bytesRead = 0;
 
-  for( unsigned i = 0 ; i < nChan ; ++i )
-  {
-    std::istream* pCur = m_pFiles->mf_Get( i );
-    pCur->read( (char*) ( pBuf[ i ] ), ac_nSamples * sc_nSampleSize );
-    nRead = pCur->gcount() / sc_nSampleSize;
-  }
+    for (unsigned i = 0 ; i < channelCount ; ++i) {
+        bytesRead = files[i]->read((char*)buffer[i], ac_nSamples * sc_nSampleSize);
+    }
 
-  mv_nReadOffset += nRead;
+    mv_nReadOffset += bytesRead;
 
-  return nRead;
+    return bytesRead;
 }
 
 unsigned BinaryInputFile::mf_nChannels() const
 {
-  if( m_pFiles )
-    return m_pFiles->mf_nGetBufferSize();
-  return 0;
+    return files.size();
 }
 
 unsigned long BinaryInputFile::mf_lSamplesLeft() const
 {
-  return mv_nSamples - mv_nReadOffset;
+    return mv_nSamples - mv_nReadOffset;
 }
 
 unsigned long BinaryInputFile::mf_lTotalSamples() const
 {
-  return mv_nSamples;
+    return mv_nSamples;
 }
 
 unsigned long BinaryInputFile::mf_lCurrentPosition() const
 {
-  return mv_nReadOffset;
+    return mv_nReadOffset;
 }
 
-void BinaryInputFile::mp_SeekPosition( const unsigned long ac_nPosition )
+void BinaryInputFile::mp_SeekPosition(const unsigned long ac_nPosition)
 {
-  if( ac_nPosition >= mf_lTotalSamples() )
-    throw utils::StringException( "mp_SeekPosition got out of range!!" );
+    if(ac_nPosition >= mf_lTotalSamples())
+        throw utils::StringException("mp_SeekPosition got out of range!!");
 
     //convert nSamples to bytes
-  const unsigned long nToAdvance = ac_nPosition * sc_nSampleSize;
+    const unsigned long bytesToAdvance = ac_nPosition * sc_nSampleSize;
 
-  const unsigned c_nChan = mf_nChannels();
-  for( unsigned i = 0 ; i < c_nChan ; ++i )
-  {
-    std::ifstream* pCur = m_pFiles->mf_Get( i );
-    pCur->clear( std::ios::goodbit );
-    pCur->seekg( nToAdvance );
-  }
-
-    //update
-  mv_nReadOffset = ac_nPosition;
+    const unsigned channelCount = mf_nChannels();
+    for (unsigned i = 0 ; i < channelCount ; ++i) {
+        files[i]->seek(bytesToAdvance);
+    }
+    mv_nReadOffset = ac_nPosition;
 }

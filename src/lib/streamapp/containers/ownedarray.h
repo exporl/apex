@@ -75,15 +75,6 @@ namespace streamapp
     }
 
       /**
-        * Reimplementation of the DynamicArray method.
-        * Must never be used.
-        */
-    INLINE void mp_RemoveItemOcc( const tType* a_ItemToRemove )
-    {
-      throw( 0 );  //must never come here, no two pointers can point to the same location unless something's seriously wrong
-    }
-
-      /**
         * Remove the item at the specified position, shifting the other items down.
         * @param ac_nItemPos the position
         */

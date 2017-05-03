@@ -20,8 +20,6 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_PANELELEMENTS_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_GUI_PANELELEMENTS_H_
 
-#include "apextools/services/paths.h"
-
 #include "screen/screenelementrundelegate.h"
 
 #include "guidefines.h"

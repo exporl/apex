@@ -23,8 +23,7 @@
 
 #include "apextools/version.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
 
 #include "apexwriters/screenswriter.h"
 
@@ -32,127 +31,48 @@
 
 #include <QFile>
 
-#include <iostream>
-
-using namespace xercesc;
+using namespace apex::gui;
 
 namespace apex
 {
 namespace editor
 {
 
-class SEErrorHandler : public ErrorHandler
-{
-public:
-    void warning( const SAXParseException& exc );
-    void error( const SAXParseException& exc );
-    void fatalError( const SAXParseException& exc );
-    void resetErrors();
-    void output(const QString &category, const SAXParseException& exc );
-};
-void SEErrorHandler::resetErrors()
-{
-}
-void SEErrorHandler::warning( const SAXParseException& exc )
-{
-    output( "warning", exc );
-}
-void SEErrorHandler::error( const SAXParseException& exc )
-{
-    output( "error", exc );
-}
-void SEErrorHandler::fatalError( const SAXParseException& exc )
-{
-    output( "fatal error", exc );
-}
-void SEErrorHandler::output(const QString &category, const SAXParseException& exc )
-{
-    QString message;
-    if ( exc.getMessage() )
-        message = X2S(exc.getMessage());
-    QString systemId;
-    if ( exc.getSystemId() )
-        systemId = X2S(exc.getSystemId());
-    QString publicId;
-    if ( exc.getPublicId() )
-        publicId = X2S(exc.getPublicId());
-    QString out =
-        "ScreenEditorExperimentFileParser: " + category + ":"
-        "\n\tsystem id: " + systemId +
-        "\n\tpublic id: " + publicId +
-        "\n\tline number: " + QString::number( exc.getLineNumber() ) +
-        "\tcolumn number: " + QString::number( exc.getColumnNumber() ) +
-        "\n\tmessage: " + message;
-    std::cerr << out.toStdString() << std::endl;;
-}
-
-using ApexXMLTools::XMLutils;
-using gui::ScreenParser;
-
-using XERCES_CPP_NAMESPACE::DOMNode;
-using XERCES_CPP_NAMESPACE::StdOutFormatTarget;
-using XERCES_CPP_NAMESPACE::XMLPlatformUtils;
-
 ScreenEditorExperimentFileParser::ScreenEditorExperimentFileParser()
 {
-    XMLPlatformUtils::Initialize();
-    parser = new XercesDOMParser();
-    parser->setExternalSchemaLocation(QFile::encodeName(EXPERIMENT_NAMESPACE " " + schemaLoc));
-    parser->setValidationScheme(XercesDOMParser::Val_Always);
-    parser->setDoNamespaces(true);
-    parser->setDoSchema(true);
-    parser->setValidationSchemaFullChecking(true);
-    //    parser->setIncludeIgnorableWhitespace(false);   // ignore whitespace that can be ignored according to the xml specs
-    //    parser->setCreateCommentNodes(false);
-    parser->setValidateAnnotations(true);
-    errorHandler = new SEErrorHandler();
-    parser->setErrorHandler( errorHandler );
+}
+
+ScreenEditorExperimentFileParser::~ScreenEditorExperimentFileParser()
+{
 }
 
 ScreenEditorExperimentData *ScreenEditorExperimentFileParser::parse(const QString& file)
 {
+    QScopedPointer<ScreenEditorExperimentData> ret(new ScreenEditorExperimentData());
     try {
-        parser->parse(QFile::encodeName(file));
-        if (parser->getErrorCount() != 0)
-            return NULL;
+        ret->expDocument = XmlUtils::parseDocument(file);
     } catch( ... ) {
         return NULL;
     }
-    QScopedPointer<ScreenEditorExperimentData> ret(new ScreenEditorExperimentData());
-    DOMDocument* doc = parser->getDocument();
-    ret->expDocument = doc;
-    for ( DOMNode* currentNode = doc->getDocumentElement()->getFirstChild();
-            currentNode != 0; currentNode = currentNode->getNextSibling() )
-    {
-        Q_ASSERT( currentNode );
-        if(currentNode->getNodeType() != DOMNode::ELEMENT_NODE)
-            continue;
-
-        const QString tag = XMLutils::GetTagName( currentNode );
-        if ( tag == "screens" )
-        {
-            Q_ASSERT( dynamic_cast<DOMElement*>( currentNode ) );
-            DOMElement* screensEl = static_cast<DOMElement*>( currentNode );
-            ret->screensElement = screensEl;
+    for (QDomElement currentNode = ret->expDocument.documentElement().firstChildElement();
+            !currentNode.isNull(); currentNode = currentNode.nextSiblingElement() ) {
+        const QString tag = currentNode.tagName();
+        if ( tag == "screens" ) {
+            ret->screensElement = currentNode;
             ret->screens = new ScreensData;
 
-            for ( DOMNode* cn = screensEl->getFirstChild();
-                    cn != 0; cn = cn->getNextSibling() )
-            {
-                if ( cn->getNodeType() != DOMNode::ELEMENT_NODE )
-                    continue;
-                const QString ctag = XMLutils::GetTagName( cn );
+            for (QDomElement cn = currentNode.firstChildElement(); !cn.isNull();
+                    cn = cn.nextSiblingElement()) {
+                const QString ctag = cn.tagName();
                 if ( ctag == "screen" ) {
-                    Q_ASSERT( dynamic_cast<DOMElement*>( cn ) );
-                    DOMElement* ce = static_cast<DOMElement*>( cn );
-                    ScreenParser screenParser( ret->screens );
-                    Screen* s = screenParser.createScreen( ce );
-                    ret->screenToElementMap[s] = ce;
+                    ScreenParser screenParser(ret->screens);
+                    Screen* s = screenParser.createScreen(cn);
+                    ret->screenToElementMap[s] = cn;
                 } else if ( ctag == "defaultFont" ) {
-                    const QString font = XMLutils::GetFirstChildText( cn );
+                    const QString font = cn.text();
                     ret->screens->setDefaultFont( font );
                 } else if ( ctag == "defaultFontSize" ) {
-                    unsigned fs = XMLutils::GetFirstChildText( cn ).toUInt();
+                    unsigned fs = cn.text().toUInt();
                     ret->screens->setDefaultFontSize( fs );
                 } else continue;
             }
@@ -161,44 +81,38 @@ ScreenEditorExperimentData *ScreenEditorExperimentFileParser::parse(const QStrin
     return ret.take();
 }
 
-ScreenEditorExperimentFileParser::~ScreenEditorExperimentFileParser()
-{
-    delete parser;
-    XMLPlatformUtils::Terminate();
-    delete errorHandler;
-}
-
-void ScreenEditorExperimentFileParser::print( const ScreenEditorExperimentData* d )
-{
-    std::cout << qPrintable(XMLutils::elementToString(d->expDocument));
-}
-
 void ScreenEditorExperimentFileParser::save( const ScreenEditorExperimentData* d, const QString& file )
 {
-    XMLutils::WriteElement(d->expDocument, file);
+    XmlUtils::writeDocument(d->expDocument, file);
 }
 
 void ScreenEditorExperimentData::storeScreenChanges( const Screen* s )
 {
     screenToElementMapT::const_iterator i = screenToElementMap.find( s );
     Q_ASSERT( i != screenToElementMap.end() );
-    DOMElement* se = i->second;
-    Q_ASSERT( se->getParentNode() == screensElement );
+    QDomElement se = i->second;
+    Q_ASSERT( se.parentNode() == screensElement );
 
     writer::ScreensWriter writer;
-    DOMElement* ne = writer.addScreen( expDocument, *s );
-    screensElement->replaceChild( ne, se );
-    Q_ASSERT( ne->getParentNode() == screensElement );
-    screenToElementMap[s] = ne;
+    QDomDocument doc;
+    doc.appendChild(writer.addScreen(&doc, *s));
+    QDomElement ne2 = expDocument.importNode(XmlUtils::parseString(doc.toString())
+            .documentElement(), true).toElement();
+    screensElement.replaceChild( ne2, se );
+    Q_ASSERT( ne2.parentNode() == screensElement );
+    screenToElementMap[s] = ne2;
 }
 
 void ScreenEditorExperimentData::addScreen( Screen* s )
 {
     screens->manageScreen( s );
     writer::ScreensWriter writer;
-    DOMElement* se = writer.addScreen( expDocument, *s );
-    screensElement->appendChild( se );
-    screenToElementMap[s] = se;
+    QDomDocument doc;
+    doc.appendChild(writer.addScreen(&doc, *s));
+    QDomElement se2 = expDocument.importNode(XmlUtils::parseString(doc.toString())
+            .documentElement(), true).toElement();
+    screensElement.appendChild( se2 );
+    screenToElementMap[s] = se2;
 }
 
 ScreenEditorExperimentData::~ScreenEditorExperimentData()

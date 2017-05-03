@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
-#ifndef _EXPORL_SRC_LIB_APEXCALADMIN_CALIBRATIONDATABASE_H_
-#define _EXPORL_SRC_LIB_APEXCALADMIN_CALIBRATIONDATABASE_H_
+#ifndef _APEX_SRC_LIB_APEXCALADMIN_CALIBRATIONDATABASE_H_
+#define _APEX_SRC_LIB_APEXCALADMIN_CALIBRATIONDATABASE_H_
 
 #include "apextools/global.h"
 
@@ -96,4 +96,4 @@ private:
     void move(const QString& hardwareSetupName, QSettings* from, QSettings* to);
 };
 
-#endif // _EXPORL_SRC_LIB_APEXCALADMIN_CALIBRATIONDATABASE_H_
+#endif // _APEX_SRC_LIB_APEXCALADMIN_CALIBRATIONDATABASE_H_

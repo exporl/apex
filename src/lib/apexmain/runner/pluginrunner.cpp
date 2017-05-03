@@ -19,9 +19,9 @@
 
 #include "apexdata/experimentdata.h"
 
-#include "apextools/services/paths.h"
+#include "apextools/apexpaths.h"
 
-#include "services/pluginloader.h"
+#include "common/pluginloader.h"
 
 #include "experimentparser.h"
 #include "pluginrunner.h"
@@ -32,19 +32,20 @@
 #include <QPluginLoader>
 
 using namespace apex;
+using namespace cmn;
 
 void PluginRunner::selectFromDir(const QString& /*path*/)
 {
 
 }
 
-void PluginRunner::select(const QString& pname)
+bool PluginRunner::select(const QString& pname)
 {
     qCDebug(APEX_RS, "select");
     QMap<QString, PluginRunnerCreator*> allPlugins;
 
     Q_FOREACH (PluginRunnerCreator *plugin,
-            PluginLoader::Get().availablePlugins<PluginRunnerCreator>())
+            PluginLoader().availablePlugins<PluginRunnerCreator>())
         Q_FOREACH (const QString &name, plugin->availablePlugins())
             allPlugins.insert(name, plugin);
 
@@ -53,28 +54,28 @@ void PluginRunner::select(const QString& pname)
         PluginRunnerCreator *creator = pname.isEmpty() ?
             allPlugins.values().at(0) : allPlugins.value(pname);
         if (!creator) {
-            emit errorMessage("PluginRunner",
+            Q_EMIT errorMessage("PluginRunner",
                     tr("Cannot find a plugin named %1").arg(pname));
-            return;
+            return false;
         }
         qCDebug(APEX_RS, "stuff");
         PluginRunnerInterface* interface = creator->createRunner(pname.isEmpty() ?
-                allPlugins.keys().at(0) : pname, Paths::Get().GetBasePath());
+                allPlugins.keys().at(0) : pname);
         if (!interface) {
             qCDebug(APEX_RS, "blub");
-            emit errorMessage("PluginRunner",
+            Q_EMIT errorMessage("PluginRunner",
                     tr("Cannot creater plugin interface %1").arg(pname));
-            return;
+            return false;
         }
         qCDebug(APEX_RS, "stuff");
         const QString file = interface->getFileName();
         qCDebug(APEX_RS, "stuff");
         if (!file.isEmpty()) {
             ExperimentParser parser(file);
-            emit selected(parser.parse(true));
+            Q_EMIT selected(parser.parse(true));
         }
         qCDebug(APEX_RS, "stuff");
-        return;
+        return true;
     }
 
     // show button for each plugin on screen
@@ -92,8 +93,7 @@ void PluginRunner::select(const QString& pname)
     QMapIterator<QString, PluginRunnerCreator*> i(allPlugins);
     while (i.hasNext()) {
         i.next();
-        PluginRunnerInterface* interface = i.value()->createRunner(i.key(),
-                Paths::Get().GetBasePath());
+        PluginRunnerInterface* interface = i.value()->createRunner(i.key());
         if (!interface)
             continue;
         interfaces.insert(i.key(), interface);
@@ -107,6 +107,8 @@ void PluginRunner::select(const QString& pname)
     connect(bg, SIGNAL(buttonClicked(QAbstractButton*)),
             this, SLOT(pluginSelected(QAbstractButton*)));
     window->show();
+
+    return true;
 }
 
 void PluginRunner::pluginSelected(QAbstractButton* btn)
@@ -127,7 +129,7 @@ void PluginRunner::pluginSelected(QAbstractButton* btn)
         //NOTE [job] added this to load experiment file from spin into apex
         //@tom: please verify this is correct
         ExperimentParser parser(file);
-        emit selected(parser.parse(true));
+        Q_EMIT selected(parser.parse(true));
     }
 }
 

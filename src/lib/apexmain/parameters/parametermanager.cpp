@@ -18,7 +18,6 @@
  *****************************************************************************/
 
 #include "parametermanager.h"
-#include "services/errorhandler.h"
 
 #include <QDebug>
 
@@ -72,8 +71,8 @@ void ParameterManager::setParameter(const QString& id, const QVariant& value,
         qCDebug(APEX_RS) << "ParameterManager::SetParameter: cannot set parameter"
                  << id << "to value" << value.toString();
 
-        ErrorHandler::Get().addError("ParameterManager",
-                                     QObject::tr("unknown parameter: %1").arg(id));
+        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ParameterManager",
+                                     QObject::tr("unknown parameter: %1").arg(id))));
         showContents();
     }
     else
@@ -82,7 +81,7 @@ void ParameterManager::setParameter(const QString& id, const QVariant& value,
                  << id << "to value" << value.toString();
 
         paramValues.insert(name,data::ValueReset(value,canReset));
-        emit parameterChanged(id, value);
+        Q_EMIT parameterChanged(id, value);
     }
 }
 
@@ -90,7 +89,7 @@ void ParameterManager::registerParameter(const QString& id,
                                          const data::Parameter& name)
 {
     data.registerParameter(id, name);
-    emit parameterChanged(id, parameterValue(id));
+    Q_EMIT parameterChanged(id, parameterValue(id));
 }
 
 
@@ -127,7 +126,7 @@ void ParameterManager::reset()
     }
 
     Q_FOREACH (QString id, removedIds)
-        emit parameterChanged(id, parameterValue(id));
+        Q_EMIT parameterChanged(id, parameterValue(id));
 }
 
 void ParameterManager::forceReset()
@@ -136,7 +135,7 @@ void ParameterManager::forceReset()
     paramValues.clear();
 
     Q_FOREACH (data::Parameter parameter, parameters)
-        emit parameterChanged(parameter.id(), parameterValue(parameter.id()));
+        Q_EMIT parameterChanged(parameter.id(), parameterValue(parameter.id()));
 }
 
 void ParameterManager::setAllToDefaultValue(bool force)

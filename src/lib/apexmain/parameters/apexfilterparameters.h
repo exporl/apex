@@ -20,14 +20,14 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_PARAMETERS_APEXFILTERPARAMETERS_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_PARAMETERS_APEXFILTERPARAMETERS_H_
 
-#include "stimulus/idevicefactoryelement.h"
-//#include "apexextendedparameters.h"
+namespace apex
+{
+namespace stimulus
+{
 
-namespace apex {
-namespace stimulus {
-
-  class ApexFilterParameters : public ApexExtendedParameters, public IDeviceFactoryElement {
-  public:
+class ApexFilterParameters : public ApexExtendedParameters
+{
+public:
     ApexFilterParameters();
     virtual ~ApexFilterParameters();
 
@@ -36,16 +36,16 @@ namespace stimulus {
 
     unsigned mf_nChannels() const
     {
-      return m_nChannels;
+        return m_nChannels;
     }
 
-  protected:
+protected:
     unsigned m_nChannels;
-  };
+};
 
-  typedef ApexFilterParameters FilterParameters;
-  typedef ApexFilterParameters::const_iterator FilterParametersCIt;
-  typedef ApexFilterParameters::iterator FilterParametersIt;
+typedef ApexFilterParameters FilterParameters;
+typedef ApexFilterParameters::const_iterator FilterParametersCIt;
+typedef ApexFilterParameters::iterator FilterParametersIt;
 
 }
 }

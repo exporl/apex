@@ -38,7 +38,6 @@ WavDeviceData::WavDeviceData() : DeviceData(TYPE_WAVDEVICE)
     setValueByType("blocksize", 8192);      // Note: if set to -1, the sound card buffer size will be used by default
     setValueByType("buffersize_apex", 1);
     setValueByType("padzero", 0);
-    setValueByType("setcardmixer", false);
 }
 
 WavDeviceData::~WavDeviceData()

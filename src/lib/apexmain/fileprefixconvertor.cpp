@@ -23,50 +23,39 @@
 
 #include "parser/prefixparser.h"
 
-#include "services/errorhandler.h"
-#include "services/mainconfigfileparser.h"
-
 #include "fileprefixconvertor.h"
+#include "mainconfigfileparser.h"
+
+#include <QFileInfo>
+#include <QUrl>
 
 using apex::data::FilePrefix;
 
 QString apex::FilePrefixConvertor::convert(data::FilePrefix p)
 {
-    QString prefix;
-
     if (p.value().isEmpty())
         return QString();
 
-    if (p.type()==FilePrefix::PREFIX_INLINE) {
-        prefix = p.value().trimmed();
-    } else if (p.type()==FilePrefix::PREFIX_MAINCONFIG) {
-        const QString result (MainConfigFileParser::Get().data().
-                prefix (p.value()));
-        if (result.isEmpty())
-            ErrorHandler::Get().addItem( StatusItem(StatusItem::Warning, "PrefixParser",
-                              QString(tr("Prefix with ID %1 not found in main config file, trying with empty prefix")).arg(p.value())));
-        prefix = result;
-    } else {
-        Q_ASSERT (0 && "invalid attribute value");
+    if (p.type() == FilePrefix::PREFIX_INLINE)
+        return p.value().trimmed();
+
+    if (p.type() == FilePrefix::PREFIX_MAINCONFIG) {
+        QString result(MainConfigFileParser::Get().data().prefix(p.value()));
+        if (result.isEmpty()) {
+            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("PrefixParser", tr("Prefix "
+                "with ID %1 not found in main config file, trying with empty "
+                "prefix").arg(p.value()))));
+        }
+        return result;
     }
 
-    ApexTools::MakeDirEnd(prefix);
-    return prefix;
+    return QString();
 }
 
 
-QUrl apex::FilePrefixConvertor::addPrefix(data::FilePrefix p,
-                                          const QUrl& file)
+QString apex::FilePrefixConvertor::addPrefix(data::FilePrefix p,
+                                          const QString& file)
 {
-    if (file.isRelative()) {
-        QString modprefix = FilePrefixConvertor::convert( p );
-        if (!modprefix.isEmpty() && !modprefix.endsWith('/'))
-            modprefix += '/';
-
-        return( QUrl(modprefix + file.path()) );
-    }
-    else
-        return ( file );
-
+    return ApexTools::addPrefix(file, FilePrefixConvertor::convert(p));
 }
 

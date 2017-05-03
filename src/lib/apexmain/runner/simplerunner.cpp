@@ -17,23 +17,24 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "common/global.h"
 #include "apexdata/experimentdata.h"
 
 #include "apexdata/result/resultparameters.h"
 
-#include "apextools/services/paths.h"
+#include "apextools/apexpaths.h"
+
+#include "common/global.h"
 
 #include "gui/centralwidget.h"
 #include "gui/mainwindow.h"
+
+#include <QFileDialog>
+#include <QStandardPaths>
 
 // TODO ANDROID resultviewer uses webkitwidgets
 #ifndef Q_OS_ANDROID
 #include "result/resultviewer.h"
 #endif
-
-#include "services/errorhandler.h"
-#include "services/filedialog.h"
 
 #include "apexcontrol.h"
 #include "simplerunner.h"
@@ -42,8 +43,6 @@
 #ifndef Q_OS_ANDROID
 #include "flowrunner.h"
 #endif
-
-#include <QDebug>
 
 using namespace apex;
 
@@ -63,10 +62,20 @@ void SimpleRunner::selectFromDir (const QString& path)
             << "XML files (*.xml)"
             << "All files (*)";
 
-    select( FileDialog::Get().mf_sGetExistingFile( path, filters ) );
+    QFileDialog dlg(ApexControl::Get().mainWindow(),
+                    QString(), path, filters.join(QL1S(";;")));
+    QStringList docLocations =
+        QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
+    if (path.isEmpty() && !docLocations.isEmpty())
+        dlg.setDirectory(docLocations.first());
+#ifdef Q_OS_ANDROID
+    dlg.showMaximized();
+#endif
+    if (dlg.exec() == QDialog::Accepted)
+        select(dlg.selectedFiles().first());
 }
 
-void SimpleRunner::select (const QString& name)
+bool SimpleRunner::select (const QString& name)
 {
     qCDebug(APEX_RS, "Selecting File %s", qPrintable (name));
     if (name.endsWith(QL1S(".apr"))) { // show results
@@ -81,7 +90,10 @@ void SimpleRunner::select (const QString& name)
         QDir::setCurrent(QFileInfo(name).absolutePath());
         rv.show(false);
 #endif
-    } else if(name.endsWith(QLatin1String(".apf"))) {
+        return true;
+    }
+
+    if (name.endsWith(QLatin1String(".apf"))) {
         // TODO ANDROID rtresultsink uses webkitwidgets
 #ifndef Q_OS_ANDROID
         flowRunner = new FlowRunner();
@@ -92,12 +104,17 @@ void SimpleRunner::select (const QString& name)
         connect(this, SIGNAL(savedFile(QString)), flowRunner, SIGNAL(savedFile(QString)));
         flowRunner->select(name);
 #endif
-    } else if (!name.isEmpty()) {               // load experiment file
-        //apex::ExperimentParser* parser = new apex::ExperimentConfigFileParser( name );
-        data::ExperimentData* data = parseExperiment(name);
-        emit opened(name);
-        emit selected(data);
+        return true;
     }
+
+    if (!name.isEmpty()) {               // load experiment file
+        data::ExperimentData* data = parseExperiment(name);
+        Q_EMIT opened(name);
+        Q_EMIT selected(data);
+        return data != Q_NULLPTR;
+    }
+
+    return false;
 }
 
 void SimpleRunner::makeVisible() {

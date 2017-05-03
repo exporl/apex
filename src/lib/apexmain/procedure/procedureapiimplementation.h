@@ -69,8 +69,6 @@ class APEX_EXPORT ProcedureApiImplementation : public QObject, public ProcedureA
 
         virtual QString pluginScriptLibrary() const;
 
-        virtual QString nonBinaryPluginPath() const;
-
         virtual QVariant parameterValue(const QString& id) const;
 
         virtual void registerParameter(const QString& name);

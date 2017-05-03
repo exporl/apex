@@ -1,8 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/experiment ../../data/schemas/experiment.xsd"
- xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
- version="1">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!--  @doc
     @what: GUI to change some settings right before the experiment
     @description: GUI appears to set/change some settings
@@ -33,23 +30,23 @@
       <feedback length="300">true</feedback>
     </reinforcement>
     <screen id="screen1">
-      <gridLayout width="3" height="2" id="main_layout">
-        <button x="1" y="1" id="button1">
+      <gridLayout id="main_layout" height="2" width="3">
+        <button id="button1" x="1" y="1">
           <text>1</text>
         </button>
-        <button x="2" y="1" id="button2">
+        <button id="button2" x="2" y="1">
           <text>2</text>
         </button>
-        <button x="3" y="1" id="button3">
+        <button id="button3" x="3" y="1">
           <text>3</text>
         </button>
-        <button x="1" y="2" id="button4">
+        <button id="button4" x="1" y="2">
           <text>4</text>
         </button>
-        <button x="2" y="2" id="button5">
+        <button id="button5" x="2" y="2">
           <text>5</text>
         </button>
-        <button x="3" y="2" id="button6">
+        <button id="button6" x="3" y="2">
           <text>6</text>
         </button>
       </gridLayout>
@@ -65,34 +62,34 @@
     </screen>
   </screens>
   <datablocks>
-    <uri_prefix>../stimuli</uri_prefix>
+    <prefix>../stimuli</prefix>
     <datablock id="rawdata1">
       <device>wavdevice</device>
-      <uri>wd1.wav</uri>
+      <file>wd1.wav</file>
     </datablock>
     <datablock id="rawdata2">
       <device>wavdevice</device>
-      <uri>wd2.wav</uri>
+      <file>wd2.wav</file>
     </datablock>
     <datablock id="rawdata3">
       <device>wavdevice</device>
-      <uri>wd3.wav</uri>
+      <file>wd3.wav</file>
     </datablock>
     <datablock id="rawdata4">
       <device>wavdevice</device>
-      <uri>wd4.wav</uri>
+      <file>wd4.wav</file>
     </datablock>
     <datablock id="rawdata5">
       <device>wavdevice</device>
-      <uri>wd5.wav</uri>
+      <file>wd5.wav</file>
     </datablock>
     <datablock id="rawdata6">
       <device>wavdevice</device>
-      <uri>wd6.wav</uri>
+      <file>wd6.wav</file>
     </datablock>
   </datablocks>
   <devices>
-    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
       <driver>portaudio</driver>
       <card>interactive</card>
       <channels>2</channels>
@@ -155,13 +152,13 @@
   </stimuli>
   <connections/>
   <interactive>
-    <entry default="" description="subject ID" type="string"/>
-    <entry default="0" description="output gain" expression="apex:apex/devices/device/gain" type="int"/>
-    <entry default="2" description="presentations" expression="apex:apex/procedure/parameters/presentations" type="int"/>
-    <entry default="invalid" description="invalid" expression="invalid" type="string"/>
-    <entry default="" description="No Expression" type="string"/>
-    <entry default="300" description="feedback length" expression="apex:apex/screens/reinforcement/feedback/@length" type="int"/>
-    <entry default="knop 1" description="button 1 text" expression="apex:apex/screens/screen/gridLayout/button[1]/text" type="string"/>
-    <entry default="A|B|Etc" description="button 2 text" expression="apex:apex/screens/screen/gridLayout/button[2]/text" type="combo"/>
+    <entry type="string" default="" description="subject ID"/>
+    <entry type="int" expression="apex:apex/devices/device/gain" default="0" description="output gain"/>
+    <entry type="int" expression="apex:apex/procedure/parameters/presentations" default="2" description="presentations"/>
+    <entry type="string" expression="invalid" default="invalid" description="invalid"/>
+    <entry type="string" default="" description="No Expression"/>
+    <entry type="int" expression="apex:apex/screens/reinforcement/feedback/@length" default="300" description="feedback length"/>
+    <entry type="string" expression="apex:apex/screens/screen/gridLayout/button[1]/text" default="knop 1" description="button 1 text"/>
+    <entry type="combo" expression="apex:apex/screens/screen/gridLayout/button[2]/text" default="A|B|Etc" description="button 2 text"/>
   </interactive>
 </apex:apex>

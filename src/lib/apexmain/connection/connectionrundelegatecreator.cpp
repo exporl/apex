@@ -66,14 +66,14 @@ namespace apex { namespace stimulus { namespace details
     throw( ApexStringException( "Connection: default connections not possible when filter(s) present" ) );
   }
 
-  void f_ReportNotAllInputConnected( StatusReporter& a_Logger, const QString& ac_sID )
+  void f_ReportNotAllInputConnected(const QString& ac_sID)
   {
-    a_Logger.addWarning( "ConnectionsFactory", "not every inputchannel of " + ac_sID + " is connected" );
+    qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ConnectionsFactory", "not every inputchannel of " + ac_sID + " is connected" )));
   }
 
-  void f_ReportNotAllOutputConnected( StatusReporter& a_Logger, const QString& ac_sID )
+  void f_ReportNotAllOutputConnected(const QString& ac_sID)
   {
-    a_Logger.addWarning( "ConnectionsFactory", "not every outputchannel of " + ac_sID + " is connected" );
+    qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ConnectionsFactory", "not every outputchannel of " + ac_sID + " is connected" )));
   }
 
 
@@ -207,12 +207,12 @@ bool ConnectionRunDelegateCreator::AddConnection (const data::ConnectionData& da
                     temp.m_sFromID = it.key();
                     try {
                         mp_AddConnection (temp);
-                    } catch (ApexStringException &e) {
+                    } catch (const std::exception &e) {
                         if (first)
-                            log().addWarning("Connections",
-                                    tr("While connecting all datablocks:"));
+                            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("Connections",
+                                    tr("While connecting all datablocks:"))));
                         first=false;
-                        log().addWarning("Connections", e.what());
+                        qCWarning(APEX_RS, "Connections: %s", e.what());
                     }
                 }
             }
@@ -231,11 +231,11 @@ bool ConnectionRunDelegateCreator::AddConnection (const data::ConnectionData& da
 
                     try {
                         mp_AddConnection (temp);
-                    } catch (ApexStringException &e) {
-                        log().addWarning("Connections",
+                    } catch (const std::exception &e) {
+                        qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("Connections",
                             tr("While connecting datablock %1, matched by %2")
-                                            .arg(it.key()).arg(data.fromId()));
-                                            log().addWarning("Connections", e.what());
+                                            .arg(it.key()).arg(data.fromId()))));
+                                            qCWarning(APEX_RS, "Connections: %s", e.what());
                     }
 
                 }
@@ -246,8 +246,8 @@ bool ConnectionRunDelegateCreator::AddConnection (const data::ConnectionData& da
 
                 qFatal("Invalid match type");
         }
-    } catch (ApexStringException& e) {
-        log().addError ("ConnectionsFactory", e.what());
+    } catch (std::exception &e) {
+        qCCritical(APEX_RS, "ConnectionsFactory: %s", e.what());
         return false;
     }
     return true;
@@ -255,8 +255,7 @@ bool ConnectionRunDelegateCreator::AddConnection (const data::ConnectionData& da
 
 bool ConnectionRunDelegateCreator::mp_bMakeDefaultConnections()
 {
-  try
-  {
+  try {
     if( m_Filters.size() > 0 )
       details::f_ThrowNoDefaultPossible();
 
@@ -276,11 +275,9 @@ bool ConnectionRunDelegateCreator::mp_bMakeDefaultConnections()
         mp_AddConnection( Cur );
       }
     }
-  }
-  catch( ApexStringException& e )
-  {
-      log().addError( "ConnectionsFactory", e.what() );
-    return false;
+  } catch (std::exception &e) {
+      qCCritical(APEX_RS, "ConnectionsFactory: %s", e.what());
+      return false;
   }
   return true;
 }
@@ -374,7 +371,7 @@ void ConnectionRunDelegateCreator::mp_AddConnection( const tConnection& ac_Conne
     }
     catch( ApexConnectionBetweenDifferentDevicesException& e )
     {
-        log().addWarning( "ConnectionsFactory", e.what() );
+        qCWarning(APEX_RS, "ConnectionsFactory: %s", e.what());
     }
     return;
   }
@@ -389,7 +386,7 @@ void ConnectionRunDelegateCreator::mp_AddConnection( const tConnection& ac_Conne
     }
     catch( ApexConnectionBetweenDifferentDevicesException& e )
     {
-        log().addWarning( "ConnectionsFactory", e.what() );
+        qCWarning(APEX_RS, "ConnectionsFactory: %s", e.what());
     }
     return;
   }
@@ -407,7 +404,7 @@ void ConnectionRunDelegateCreator::mf_ReportUnconnectedItems()
     unsigned nToConnect = (m_Devices.find( mc_sDevice ).value()->GetParameters().numberOfChannels());
     m_Checker.mp_InitCheckMap( nToConnect );
     if( m_Checker.mp_eCheckTo( sToID ) != details::ConnectionChecker::mc_eAllConnected )
-      details::f_ReportNotAllInputConnected( log(), sToID );
+      details::f_ReportNotAllInputConnected(sToID);
 
       //to/from filter
     for( tFilterMapCIt it = m_Filters.begin() ; it != m_Filters.end() ; ++it )
@@ -418,10 +415,10 @@ void ConnectionRunDelegateCreator::mf_ReportUnconnectedItems()
       if( !it.value()->GetParameters().hasParameter( "generator" ) )
       {
         if( m_Checker.mp_eCheckTo( sToID ) != details::ConnectionChecker::mc_eAllConnected )
-          details::f_ReportNotAllInputConnected( log(), sToID );
+          details::f_ReportNotAllInputConnected(sToID);
       }
       if( m_Checker.mp_eCheckFrom( sToID ) != details::ConnectionChecker::mc_eAllConnected )
-        details::f_ReportNotAllOutputConnected( log(), sToID );
+        details::f_ReportNotAllOutputConnected(sToID);
     }
 
       //from datablock
@@ -434,7 +431,7 @@ void ConnectionRunDelegateCreator::mf_ReportUnconnectedItems()
       /*if( eRes == details::ConnectionChecker::mc_eNoneConnected )
         details::f_ThrowNoneConnected( sToID );
       else*/ if( eRes == details::ConnectionChecker::mc_eSomeConnected )
-        details::f_ReportNotAllOutputConnected( log(), sToID );
+        details::f_ReportNotAllOutputConnected(sToID);
     }
   }
 }

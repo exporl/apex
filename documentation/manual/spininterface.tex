@@ -20,16 +20,7 @@ configuration.
 
 When using custom speech materials, it is necessary to set the path
 where the speech materials can be found on disk. This can be done by
-editing the \texttt{apexconfig.xml} file. In this file, general options
-for APEX are specified. The file can be found in the path where APEX is
-installed (for example \texttt{c:/program files (x86)/apex/config/}, we will
-refer to this as the ``APEX path''). Note that changes to this file will
-apply for all users of the system. The \texttt{apexconfig.xml} file can
-also be placed in a user's own configuration folder, therefore only
-applying to one user, rather than all users of the system. The easiest
-way to achieve the latter is to start APEX, and select ``edit apexconfig
-file'' from the help menu.
-
+editing the \texttt{apexconfig.xml} file (see section ~\ref{sec:apexconfig}).
 At the bottom of the \texttt{apexconfig.xml} file, prefixes are defined.
 In an experiment file, one can refer to a prefix, which is then fetched
 from the apexconfig.xml file. APEX/SPIN uses the ``speechmaterials''
@@ -46,8 +37,8 @@ following lines would appear in \texttt{apexconfig.xml}:
 During the experiment, by default APEX uses the system default sound
 card. If multiple sound cards are present, make sure the desired one is
 set as default in the Windows control panel. Alternatively, the sound
-card to be used can be specified in \texttt{spin.xml} } (see
-section~\ref{sec:customising}). \hl{If the integrated sound card is used,
+card to be used can be specified in \texttt{spin.xml} (see
+section~\ref{sec:customising}). If the integrated sound card is used,
 system alerting sounds and sounds produced by other software such as an
 e-mail client should be disabled, as they would disturb the test and
 could be very loud.
@@ -72,7 +63,7 @@ the LIST speech material is selected, using the male speaker (category
 ``man''). The masker (noise) is in this example the
 long-term-average-speech-spectrum noise supplied with the LIST speech
 material. Any combination of speech material and noise can be freely
-selected. \hl{changed: Custom speech materials or noises can be added (see manual for the procedure)}. Below the speech material
+selected. Custom speech materials or noises can be added (see section ~\ref:{sec:Adding-speech-materials-and-noises}). Below the speech material
 selection elements, one has the possibility to save a set of SPIN
 settings for later use. For instance, if one often uses the LIST
 material in noise under headphones with an adaptive procedure, these
@@ -82,11 +73,11 @@ settings can be saved and loaded later on with a single click.
 \includegraphics[width=0.45\textwidth]{spin-speakers-ff}
 \includegraphics[width=0.45\textwidth]{spin-speakers-headphones}
 \caption{Loudspeaker selection: if "speaker type" is set to free field, the left dialog is shown. If "speaker type" is set to headphones, the right dialog is shown. For each loudspeaker or ear, speech and noise can be turned on or off using the check boxes. If the overall SNR or level is specified, the individual levels will be calculated automatically. The "random" link next to each loudspeaker can be used to indicate that the noise should be started at a random place in the provided wav file.}
-\label{fig:speaker}
+\label{fig:speakers}
 \end{figure}
 
 On the second page (Speakers), the loudspeakers or headphones to be used
-can be specified (see figure~\ref{fig:speaker}). First, free
+can be specified (see figure~\ref{fig:speakers}). First, free
 field or headphone stimulation has to be selected. For headphone or
 single-loudspeaker free field stimulation, the overall speech and noise
 level obviously correspond to the speech and noise level specified for
@@ -107,7 +98,7 @@ On the third page, procedural parameters can be entered (see
 figure~\ref{fig:procedure}). For constant procedures there are no
 parameters, but for adaptive procedures, the step size (in dB) can be
 specified, and there is an option to repeat the first token until a
-correct answer is given \citep{pm760724} in order not to use too many tokens at SNRs far from
+correct answer is given in order not to use too many tokens at SNRs far from
 the SRT. On the top right, the user can indicate whether the speech
 level should be adapted, in which case the noise level will be fixed
 throughout the experiment, or whether the noise level should be adapted,
@@ -166,25 +157,13 @@ with the results file, all experimental parameters can be retrieved later on.
 \caption{Calibration dialog. In this example there is only one loudspeaker and its level has been calibrated (indicated by the green message). }
 \label{fig:calibration} \end{figure} 
 
-For calibration, the APEX calibration infrastructure is used
-\citep{Francart2008}. In summary, during calibration the value of an
-APEX parameter (e.g., gain of the first channel of the sound card) is
-linked to a sound pressure level, measured with a sound level meter,
-entered by the user. Calibration values are stored in a database for
-each combination of \emph{hardware setup} and \emph{calibration
-profile}. The hardware setup is a string that describes the external
-hardware attached to the computer, for example, type of sound card or type of
-headphones. It is shown at the top of the calibration dialog (see
-figure~\ref{fig:calibration}). With APEX/SPIN, a different calibration
+See section ~\ref{sec:Calibration} for a general description of the \apex calibration infrastructure. With APEX/SPIN, a different calibration
 profile is generated for each combination of speech material and noise.
 The noise is used as the calibration stimulus. In most cases this will
 be the long term average speech spectrum noise accompanying the speech
-material. When no calibration value is found in the database for the
-current hardware setup and calibration profile, APEX will automatically
-present the calibration window. Thereafter, the user can recalibrate at
-any time using the calibration menu.
+material.
 
- From the calibration dialog, proceed as follows to calibrate:
+ From the calibration dialog, proceed as follows to calibrate: \todo{skip? not specific to spin}
 
 \begin{itemize}
 \itemsep1pt\parskip0pt\parsep0pt
@@ -239,10 +218,8 @@ noises}
 
 
 Our lab provides a number of speech materials in a format readily usable
-with APEX/SPIN, including LIST and LINT \citep{VanWieringen2008a},
-LIST-m \citep{Jansen2014}, FIST \citep{Luts2008} and FrMatrix
-\citep{Jansen2012}, NVA \citep{Wouters1994}, VU \citep{Versfeld2000}
-HINT \citep{pm8132902}.
+with APEX/SPIN, including LIST and LINT,
+LIST-m, FIST and FrMatrix, NVA, VU and HINT. \todo{refs needed?}
 
 Alternatively, users can easily add their own speech materials and
 noises. This involves creating an XML file with the required
@@ -289,8 +266,7 @@ dB~FS, and will be used to match noise and speech levels. For example, for the
 RMS levels in the example, and a desired SNR of 0~dB the noise would be
 attenuated relative to the speech by $-25+21.6=3.4$~dB.
 
-To add a noise that is not linked to a speech material, for example, ICRA noise
-\citep{Dreschler}, babble noise or competing talker \citep{flucnoise},
+To add a noise that is not linked to a speech material, for example, ICRA noise, babble noise or competing talker,
 it can be added to any speech material file or to the \texttt{spin.xml}
 file as illustrated above. In this case, the element
 \texttt{<speechmaterial>} needs to be omitted.

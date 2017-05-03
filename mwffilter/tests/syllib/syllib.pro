@@ -1,4 +1,4 @@
-CLEBS *= syllib sndfile fftw3
+CLEBS *= syllib common sndfile fftw3
 TARGET = syllibtest
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)
 

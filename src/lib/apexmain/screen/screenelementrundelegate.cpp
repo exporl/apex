@@ -173,10 +173,10 @@ void ScreenElementRunDelegate::setBgColor(QWidget* target, const QString& color)
     else {
         // this is already done at parse time
        /* if (!isValidColor(color)) {
-            ErrorHandler::Get().AddWarning("Setbackgroundcolor",
+            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("Setbackgroundcolor",
                        QString(tr("Cannot set the background color of element %1 to %2,\n"
                                "check whether it is a valid Qt color string"))
-                               .arg(getID()).arg(color));
+                               .arg(getID()).arg(color))));
         }*/
     }
 

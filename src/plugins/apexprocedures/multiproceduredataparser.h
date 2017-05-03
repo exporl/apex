@@ -17,19 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_PLUGINS_APEXPROCEDURES_MULTIPROCEDUREDATAPARSER_H_
-#define _EXPORL_SRC_PLUGINS_APEXPROCEDURES_MULTIPROCEDUREDATAPARSER_H_
-
-#include "apextools/xml/xercesinclude.h"
+#ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_MULTIPROCEDUREDATAPARSER_H_
+#define _APEX_SRC_PLUGINS_APEXPROCEDURES_MULTIPROCEDUREDATAPARSER_H_
 
 #include "proceduredataparser.h"
-
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMElement;
-};
-
-class QString;
 
 namespace apex
 {
@@ -37,41 +28,30 @@ namespace data
 {
 class MultiProcedureData;
 }
+
 namespace parser
 {
 
-class MultiProcedureDataParser:
-            public ProcedureDataParser
+class MultiProcedureDataParser: public ProcedureDataParser
 {
-    public:
+public:
+    MultiProcedureDataParser();
 
-        MultiProcedureDataParser();
+    virtual ~MultiProcedureDataParser() {};
 
-        virtual ~MultiProcedureDataParser() {};
+    /**
+     * Parse the given xml data structure into the given parameters structure
+     * does not take ownership of p_parameters
+     */
+    virtual void Parse(const QDomElement &p_base, data::MultiProcedureData* p_data);
 
-        /**
-        * Parse the given xml data structure into the given parameters structure
-        * does not take ownership of p_parameters
-         */
-        virtual void Parse(XERCES_CPP_NAMESPACE::DOMElement* p_base,
-                           data::MultiProcedureData* p_data);
-
-
-    protected:
-        virtual bool SetParameter(const QString tag,
-                                  const QString id, const QString value ,
-                                  XERCES_CPP_NAMESPACE::DOMElement* node,
-                                  data::ProcedureData* data);
-
-
-
-
+protected:
+    virtual bool SetParameter(const QString &tag, const QString &id,
+            const QString &value, const QDomElement &node,
+            data::ProcedureData* data) Q_DECL_OVERRIDE;
 };
 
-
 }
 }
-
-
 
 #endif

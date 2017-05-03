@@ -1,107 +1,107 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+  <!-- @doc
     @what: Randomgenerator: random gain of stimulus presented in 1 channel, only possible to use integer values, only small range is used
     @description: The stimulus "één" is heard in the left channel each time by pressing on the "1" button, and the gain of "één" has a random gain (small range in this case)
     @how: See <randomgenerators>, the id of the gain is set to be the parameter of the randomgenerator, minimum and maximum values are integers
   -->
- <procedure xsi:type="apex:trainingProcedure">
-  <parameters>
-   <presentations>50</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>button1</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">true</feedback>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout width="3" id="main_layout" height="2">
-    <button x="1" y="1" id="button1">
-     <text>1</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device xsi:type="apex:wavDeviceType" id="wavdevice">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>512</buffersize>
-  </device>
- </devices>
- <filters>
-  <filter xsi:type="apex:amplifier" id="ampli">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <basegain>-20</basegain>
-   <gain id="parameter">0</gain>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>ampli</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>ampli</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
- <randomgenerators>
-  <randomgenerator xsi:type="apex:uniform" id="random1">
-   <min>0</min>
-   <max>3</max>
-   <type>int</type>
-   <parameter>parameter</parameter>
-   <!-- gain of amplifier -->
-  </randomgenerator>
- </randomgenerators>
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>50</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>button1</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">true</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout id="main_layout" width="3" height="2">
+        <button id="button1" x="1" y="1">
+          <text>1</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>512</buffersize>
+    </device>
+  </devices>
+  <filters>
+    <filter id="ampli" xsi:type="apex:amplifier">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <basegain>-20</basegain>
+      <gain id="parameter">0</gain>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>ampli</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>ampli</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+  <randomgenerators>
+    <randomgenerator id="random1" xsi:type="apex:uniform">
+      <min>0</min>
+      <max>3</max>
+      <type>int</type>
+      <parameter>parameter</parameter>
+      <!-- gain of amplifier -->
+    </randomgenerator>
+  </randomgenerators>
 </apex:apex>

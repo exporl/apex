@@ -32,11 +32,6 @@
 
 #include "runner/experimentrundelegate.h"
 
-#include "services/errorhandler.h"
-
-#include "streamapp/appcore/events/events.h"
-#include "streamapp/appcore/events/qt_events.h"
-
 #include "streamapp/appcore/threads/criticalsection.h"
 #include "streamapp/appcore/threads/thread.h"
 #include "streamapp/appcore/threads/waitableobject.h"
@@ -92,9 +87,6 @@ namespace
         return true;
     return false;
   }
-
-    //the event type
-  const unsigned sc_nStimulusDoneEvent = 6969;
 }
 
 namespace apex
@@ -302,7 +294,7 @@ void StimulusOutput::PlayUntilDone()
 
 void StimulusOutput::PlayAndWaitInThread()
 {
-    //start playing all in order
+  //start playing all in order
   tDeviceMapCIt it = m_pDevices.begin();
   while( it != m_pDevices.end() )
   {
@@ -311,10 +303,13 @@ void StimulusOutput::PlayAndWaitInThread()
       p->PlayAll();
     ++it;
   }
+
+  qCDebug(APEX_RS, "Calling PlayAndWaitInThread at time: %s", qPrintable(QString::number(QDateTime::currentMSecsSinceEpoch())));
+
   if( m_pMaster )
     m_pMaster->PlayAll();
 
-    //signal thread to start checking
+  //signal thread to start checking
   mc_pWaitThread->mp_Reset();
   mc_pWaitThread->mp_StartCheck();
 }
@@ -329,7 +324,7 @@ void StimulusOutput::PlayStimulus()
   if( !m_pCurStim )
     return;
 
-  ErrorHandler::Get().addMessage( metaObject()->className(), "Playing Stimulus " + m_pCurStim->GetID() );
+  qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( metaObject()->className(), "Playing Stimulus " + m_pCurStim->GetID() )));
 
   const PlayMatrix* pCurMat = m_pCurStim->GetPlayMatrix();
   if( mc_eMode == normal && pCurMat )
@@ -353,7 +348,7 @@ void StimulusOutput::PlayStimulus()
   {
     PlayAndWaitInThread();
   }
-};
+}
 
 
 void StimulusOutput::LoadStimulus( const QString& ac_Stimulus, const bool p_restoreParams )
@@ -402,7 +397,7 @@ void StimulusOutput::LoadStimulus( Stimulus* ac_Stimulus, const bool p_restorePa
     QMessageBox::warning(0, "error", "StimulusOutput::LoadStimulus called before unloading!", "OK");
 //    throw( 0 ); //leave this here to enforce proper control behaviour!
   }
-};
+}
 
   //this will unload the whole
 void StimulusOutput::UnLoadStimulus()

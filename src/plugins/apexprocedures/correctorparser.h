@@ -17,25 +17,23 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_PLUGINS_APEXPROCEDURES_CORRECTORPARSER_H_
-#define _EXPORL_SRC_PLUGINS_APEXPROCEDURES_CORRECTORPARSER_H_
+#ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_CORRECTORPARSER_H_
+#define _APEX_SRC_PLUGINS_APEXPROCEDURES_CORRECTORPARSER_H_
 
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
 
-namespace XERCES_CPP_NAMESPACE
+namespace apex
 {
-  class DOMElement;
+namespace data
+{
+class CorrectorData;
+}
+
+class CorrectorParser
+{
+public:
+    data::CorrectorData *Parse(const QDomElement &dom);
 };
 
-namespace apex {
-    namespace data
-    {
-    class CorrectorData;
-    }
-
-    class CorrectorParser {
-    public:
-                data::CorrectorData *Parse (XERCES_CPP_NAMESPACE::DOMElement* dom);
-    };
 }
 #endif

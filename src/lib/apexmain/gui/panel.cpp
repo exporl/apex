@@ -121,10 +121,6 @@ bool Panel::mp_bSetConfig( const data::ScreensData& ac_Config )
 
     mp_Layout();
 
-    //widgetattributes::gf_SetBackGroundColor( this, sc_DefaultPanelColor );
-//  widgetattributes::gf_SetBackGroundColor( m_pFeedbackPicture, sc_DefaultPanelColor );
-//  widgetattributes::gf_SetBackGroundColor( m_pStatusWindow, sc_DefaultPanelColor );
-
     showProgress = ac_Config.hasProgressbarEnabled();
     showEmergency = ac_Config.hasStopButtonEnabled();
     showRepeat = ac_Config.hasRepeatButtonEnabled();
@@ -238,16 +234,6 @@ void Panel::setPaused(bool paused)
 
 void Panel::mp_Layout()
 {
-    /* m_Layout.mp_RemoveAll();
-     m_Layout.mp_AddItem( m_pStart           , new tItemLayout( 0.1, 0.05, 0.8, 0.1 ) );
-     m_Layout.mp_AddItem( m_pStop            , new tItemLayout( 0.1, 0.20, 0.8, 0.1 ) );
-     m_Layout.mp_AddItem( m_pPause           , new tItemLayout( 0.1, 0.35, 0.8, 0.1 ) );
-     m_Layout.mp_AddItem( m_pFeedbackPicture , new tItemLayout( 0.1, 0.50, 0.8, 0.2 ) );
-     m_Layout.mp_AddItem( m_pEmergency       , new tItemLayout( 0.1, 0.71, 0.8, 0.07 ) );
-     m_Layout.mp_AddItem( m_pRepeat          , new tItemLayout( 0.1, 0.71, 0.8, 0.07 ) );  // FIXME
-     m_Layout.mp_AddItem( m_pStatusWindow    , new tItemLayout( 0.05, 0.80, 0.9, 0.1 ) );
-     m_Layout.mp_AddItem( m_pProgressBar     , new tItemLayout( 0.05, 0.94, 0.9, 0.05 ) );*/
-
     int rowcount=0;
     m_pLayout->addWidget( m_pStart, rowcount++,0);
     m_pLayout->addWidget( m_pStop, rowcount++,0);
@@ -277,11 +263,6 @@ void Panel::mp_SetText( const QString& ac_sText )
     else
         m_pStatusWindow->mp_AddMessage( ac_sText );
 }
-
-/*QString Panel::mf_sGetText() const
-{
-  return m_pStatusWindow->text( 0 );
-}*/
 
 #ifdef FLASH
 
@@ -314,10 +295,6 @@ bool ChildModePanel::mp_bSetConfig( const data::ScreensData& ac_Config )
 {
     if ( ac_Config.panelMovie().isEmpty() )
         return false;
-
-    /*if ( !m_pMovie->mf_bCreated() && !m_pMovie->mf_bCreateFlashObject() )
-        throw ApexStringException( "ChildModePanel: cannot create flash" );*/
-
 
     QString moviePath(
             ApexTools::addPrefix(

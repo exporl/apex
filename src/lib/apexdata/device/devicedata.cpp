@@ -25,10 +25,12 @@ namespace apex
 namespace data
 {
 
-DeviceData::DeviceData(DeviceType type) : isControlDev(false), devType(type), silent(false)
+DeviceData::DeviceData(DeviceType type) :
+    isControlDev(false),
+    devType(type),
+    silent(false)
 {
 }
-
 
 DeviceData::~DeviceData()
 {

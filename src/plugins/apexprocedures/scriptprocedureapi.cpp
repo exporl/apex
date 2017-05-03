@@ -15,6 +15,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QObjectList>
+#include <QFileInfo>
 
 #include <vector>
 
@@ -32,10 +33,8 @@ ScriptProcedureApi::ScriptProcedureApi(ProcedureApi* p_api, ScriptProcedure* p):
     connect(this, SIGNAL(showMessageBox(QString,QString)), p_apiObject, SIGNAL(showMessageBox(QString,QString)));
 }
 
-
 QObjectList ScriptProcedureApi::trials() const
 {
-
     const data::tTrialList& temp = scriptProcedure->procedureData()->GetTrials();
 
     QObjectList o;
@@ -45,12 +44,10 @@ QObjectList ScriptProcedureApi::trials() const
     }
 
     return o;
-
 }
 
 QStringList ScriptProcedureApi::stimuli() const
 {
-
     return api->stimuli();
 }
 
@@ -66,35 +63,29 @@ QString ScriptProcedureApi::answerElement(const QString trialid)
     return api->answerElement(trialid, scriptProcedure->procedureData());
 }
 
+QVariantMap ScriptProcedureApi::parameterMap(const QString stimulusID) const
+{
+    return api->stimulus(stimulusID)->GetVariableParameters().map();
+}
 
+QStringList ScriptProcedureApi::parameterNames(const QString stimulusID) const
+{
+    return api->stimulus(stimulusID)->GetVariableParameters().names();
+}
 
 QVariant ScriptProcedureApi::parameterValue (const QString& parameter_id)
 {
     return api->parameterValue(parameter_id);
 }
 
-
 void ScriptProcedureApi::registerParameter(const QString& name)
 {
     api->registerParameter(name);
 }
 
-float ScriptProcedureApi::apexVersion() const {
-    return APEX_VERSION_FLOAT;
-}
-
-
-/*QString ScriptProcedureApi::screenElementText(const QString& screenId,
-                                              const QString& elementId) const
-{
-    return ApexControl::Get().GetCurrentExperiment().screensData()
-                                ->GetScreen(screenId).elementTextById(elementId);
-}*/
-
-
 void ScriptProcedureApi::messageBox(const QString message) const
 {
-    emit showMessageBox(QString("ScriptProcedure message"), message);
+    Q_EMIT showMessageBox(QString("ScriptProcedure message"), message);
 }
 
 void ScriptProcedureApi::showMessage(const QString& message) const
@@ -106,6 +97,11 @@ void ScriptProcedureApi::abort(const QString &message) const
 {
     throw ApexStringException(tr("ScriptProcedure aborted with message: ")
             + message);
+}
+
+QString ScriptProcedureApi::absoluteFilePath(const QString& path)
+{
+    return QFileInfo(path).absoluteFilePath();
 }
 
 }

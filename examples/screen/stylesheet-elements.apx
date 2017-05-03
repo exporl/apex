@@ -1,106 +1,119 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
-
- <!-- @doc
+<apex:apex version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- @doc
   @what: example of a different screenstyle
   @description: screen has an other background color, buttons changed color, highlighting changed, ...
   @how: <style_apex>
   -->
-
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <intervals count="3">
-    <interval number="1" element="button1"/>
-    <interval number="2" element="button2"/>
-    <interval number="3" element="button3"/>
-   </intervals>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>button</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-    <standard id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
-
- <screens>
-  <uri_prefix>../pictures</uri_prefix>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="500">true</feedback>
-   <showcurrent>true</showcurrent>
-  </reinforcement>
-  <style_apex>&#xd;
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <intervals count="3">
+        <interval element="button1" number="1"/>
+        <interval element="button2" number="2"/>
+        <interval element="button3" number="3"/>
+      </intervals>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>button</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+        <standard id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <prefix>../pictures</prefix>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="500">true</feedback>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <style_apex>&#xd;
       QWidget#background {background-color: green} &#xd;
     </style_apex>
-  <!--style>
+    <!--style>
       QPushButton{background-color: yellow}
     </style-->
-  <style>&#xd;
+    <style>&#xd;
       QPushButton[role="none"]{background-color: yellow}&#xd;
       QPushButton[role="highlight"]{background-color: black}&#xd;
       QPushButton[role="positive"]{background-color: blue}&#xd;
       QPushButton[role="negative"]{background-color: magenta}&#xd;
+      #matrix_1_1, #matrix_1_2 {
+          background-color: pink;
+      }
+      #matrix_2_1, #matrix_2_2 {
+          background-color: purple;
+      }
     </style>
-  <screen id="screen1">
-   <gridLayout width="4" height="3" id="main_layout">
-    <button x="1" id="button" y="1">
-     <style>Color: red</style>
-     <text>button 1</text>
-    </button>
-    <label x="1" id="label" y="2">
-     <text>label</text>
-    </label>
-    <textEdit x="1" id="textinput" y="3">
-     <text>textedit</text>
-    </textEdit>
-    <parameterlist x="2" id="paramlist" y="2">
-     <parameter>fixed</parameter>
-    </parameterlist>
-    <button row="3" col="1" id="button1">
-     <text>1</text>
-    </button>
-    <button row="3" col="2" id="button2">
-     <text>2</text>
-    </button>
-    <button row="3" col="3" id="button3">
-     <text>3</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup">
-    <button id="button"/>
-    <button id="textinput"/>
-    <button id="button1"/>
-    <button id="button2"/>
-    <button id="button3"/>
-   </buttongroup>
-   <default_answer_element>buttongroup</default_answer_element>
-  </screen>
- </screens>
-
- <datablocks/>
- <devices/>
- <filters/>
-
- <stimuli>
-  <fixed_parameters>
-   <parameter id="fixed"/>
-  </fixed_parameters>
-  <stimulus id="stimulus1">
-   <description/>
-   <datablocks/>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="fixed">0</parameter>
-   </fixedParameters>
-  </stimulus>
- </stimuli>
-
- <connections/>
-
+    <screen id="screen1">
+      <gridLayout height="3" width="4" id="main_layout">
+        <button x="1" y="1" id="button">
+          <style>Color: red</style>
+          <text>button 1</text>
+        </button>
+        <matrix x="2" y="1" id="matrix">
+          <element col="1" row="1">
+            <name>Element 1.1</name>
+          </element>
+          <element col="1" row="2">
+            <name>Element 1.2</name>
+          </element>
+          <element col="2" row="1">
+            <name>Element 2.1</name>
+          </element>
+          <element col="2" row="2">
+            <name>Element 2.2</name>
+          </element>
+        </matrix>
+        <label x="1" y="2" id="label">
+          <text>label</text>
+        </label>
+        <textEdit x="1" y="3" id="textinput">
+          <text>textedit</text>
+        </textEdit>
+        <parameterlist x="2" y="2" id="paramlist">
+          <parameter>fixed</parameter>
+        </parameterlist>
+        <button col="1" row="3" id="button1">
+          <text>1</text>
+        </button>
+        <button col="2" row="3" id="button2">
+          <text>2</text>
+        </button>
+        <button col="3" row="3" id="button3">
+          <text>3</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="button"/>
+        <button id="textinput"/>
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks/>
+  <devices/>
+  <filters/>
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="fixed"/>
+    </fixed_parameters>
+    <stimulus id="stimulus1">
+      <description/>
+      <datablocks/>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="fixed">0</parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

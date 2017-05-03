@@ -17,64 +17,21 @@
  ******************************************************************************/
 
 #include "apexmain/filter/pluginfilterinterface.h"
-#include "tester.h"
 
-#include <memory>
+#include "common/pluginloader.h"
+
+#include "tester.h"
 
 #include <sndfile.h>
 
-namespace
-{
+#include <memory>
 
-class Plugins
-{
-public:
-    Plugins()
-    {
-        Q_FOREACH (QObject *plugin, QPluginLoader::staticInstances())
-            plugins.append (plugin);
-
-        QDir pluginsDir (QCoreApplication::applicationDirPath());
-        Q_FOREACH (QString fileName, pluginsDir.entryList (QDir::Files)) {
-            QPluginLoader loader (pluginsDir.absoluteFilePath (fileName));
-            QObject *plugin = loader.instance();
-            if (plugin)
-                plugins.append (plugin);
-        }
-    }
-
-    QList<QObject*> get() const
-    {
-        return plugins;
-    }
-
-private:
-    QList<QObject*> plugins;
-};
-
-Q_GLOBAL_STATIC (Plugins, plugins)
-
-QList<QObject*> allAvailablePlugins()
-{
-    return plugins()->get();
-}
-
-template <typename T>
-QList<T*> availablePlugins()
-{
-    QList<T*> result;
-
-    Q_FOREACH (QObject * const plugin, allAvailablePlugins())
-        if (T * const casted = qobject_cast<T*> (plugin))
-            result.append (casted);
-
-    return result;
-}
-
-} // namespace
+using namespace cmn;
 
 void TestSyl::vocoder()
 {
+    TEST_EXCEPTIONS_TRY
+
     QFETCH(QString, format);
     QFETCH(int, intformat);
     QFETCH(double, delta);
@@ -86,7 +43,7 @@ void TestSyl::vocoder()
     // Load vocoder plugin
     PluginFilterCreator* vocoderCreator = NULL;
     Q_FOREACH (PluginFilterCreator *creator,
-            availablePlugins<PluginFilterCreator>()) {
+            PluginLoader().availablePlugins<PluginFilterCreator>()) {
         if (creator->availablePlugins().contains (QLatin1String("vocoder"))) {
             vocoderCreator = creator;
             break;
@@ -165,4 +122,6 @@ void TestSyl::vocoder()
 
     // Compare with reference signal asa_vocoded.wav
     ARRAYFUZZCOMP (asaData, asaVocodedData, delta, asaLength);
+
+    TEST_EXCEPTIONS_CATCH
 }

@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!-- @doc
   @what: Pure tone audiometry
   @description: Levels between -10 and 70 dB HL for pure tones between 0.125 and 8 kHz. Each level is a button.
   @how: plugintrials, wavfiles used from folder audiometer_stimuli, gains are implemented for HDA200 (ISO 389-8)
   -->
- <procedure xsi:type="apex:trainingProcedure">
-  <parameters>
-   <presentations>10000</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <plugintrials>
-    <script source="inline">&#xd;
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>10000</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <plugintrials>
+        <script source="inline">&#xd;
           function getTrials() {&#xd;
             misc.checkParams(Array("intensities", "frequencies"));&#xd;
             var result = "";&#xd;
@@ -34,14 +34,14 @@
             return result;&#xd;
           }&#xd;
         </script>
-    <parameter name="intensities">-10:5:70</parameter>
-    <parameter name="frequencies">125,250,500,750,1000,1500,2000,3000,4000,6000,8000</parameter>
-   </plugintrials>
-  </trials>
- </procedure>
- <screens>
-  <pluginscreens>
-   <script source="inline">&#xd;
+        <parameter name="intensities">-10:5:70</parameter>
+        <parameter name="frequencies">125,250,500,750,1000,1500,2000,3000,4000,6000,8000</parameter>
+      </plugintrials>
+    </trials>
+  </procedure>
+  <screens>
+    <pluginscreens>
+      <script source="inline">&#xd;
         function getScreens() {&#xd;
           misc.checkParams(Array("intensities", "frequencies"));&#xd;
           var result = "";&#xd;
@@ -86,267 +86,267 @@
         }&#xd;
 &#xd;
       </script>
-   <parameter name="intensities">-10:5:70</parameter>
-   <parameter name="frequencies">125,250,500,750,1000,1500,2000,3000,4000,6000,8000</parameter>
-  </pluginscreens>
- </screens>
- <datablocks>
-  <uri_prefix>audiometer_stimuli</uri_prefix>
-  <datablock id="datablock125">
-   <device>soundcard</device>
-   <uri>125_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock250">
-   <device>soundcard</device>
-   <uri>250_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock500">
-   <device>soundcard</device>
-   <uri>500_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock750">
-   <device>soundcard</device>
-   <uri>750_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock1000">
-   <device>soundcard</device>
-   <uri>1000_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock1500">
-   <device>soundcard</device>
-   <uri>1500_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock2000">
-   <device>soundcard</device>
-   <uri>2000_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock3000">
-   <device>soundcard</device>
-   <uri>3000_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock4000">
-   <device>soundcard</device>
-   <uri>4000_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock6000">
-   <device>soundcard</device>
-   <uri>6000_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock8000">
-   <device>soundcard</device>
-   <uri>8000_stimulus.wav</uri>
-  </datablock>
-  <datablock id="datablock125_10sec">
-   <device>soundcard</device>
-   <uri>125_10sec.wav</uri>
-  </datablock>
-  <datablock id="datablock250_10sec">
-   <device>soundcard</device>
-   <uri>250_10sec.wav</uri>
-  </datablock>
-  <datablock id="datablock500_10sec">
-   <device>soundcard</device>
-   <uri>500_10sec.wav</uri>
-  </datablock>
-  <datablock id="datablock750_10sec">
-   <device>soundcard</device>
-   <uri>750_10sec.wav</uri>
-  </datablock>
-  <datablock id="datablock1000_10sec">
-   <device>soundcard</device>
-   <uri>1000_10sec.wav</uri>
-  </datablock>
-  <datablock id="datablock1500_10sec">
-   <device>soundcard</device>
-   <uri>1500_10sec.wav</uri>
-  </datablock>
-  <datablock id="datablock2000_10sec">
-   <device>soundcard</device>
-   <uri>2000_10sec.wav</uri>
-  </datablock>
-  <datablock id="datablock3000_10sec">
-   <device>soundcard</device>
-   <uri>3000_10sec.wav</uri>
-  </datablock>
-  <datablock id="datablock4000_10sec">
-   <device>soundcard</device>
-   <uri>4000_10sec.wav</uri>
-  </datablock>
-  <datablock id="datablock6000_10sec">
-   <device>soundcard</device>
-   <uri>6000_10sec.wav</uri>
-  </datablock>
-  <datablock id="datablock8000_10sec">
-   <device>soundcard</device>
-   <uri>8000_10sec.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <master>soundcard</master>
-  <device id="soundcard" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>1</channels>
-   <gain id="overallgain">0</gain>
-   <samplerate>44100</samplerate>
-   <padzero>0</padzero>
-  </device>
- </devices>
- <filters>
-  <!--These gains are for HDA200 (ISO 389-8) -->
-  <filter id="hlamplifier125" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>30.5</gain>
-  </filter>
-  <filter id="hlamplifier250" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>18.0</gain>
-  </filter>
-  <filter id="hlamplifier500" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>11.0</gain>
-  </filter>
-  <filter id="hlamplifier750" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>6.0</gain>
-  </filter>
-  <filter id="hlamplifier1000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>5.5</gain>
-  </filter>
-  <filter id="hlamplifier1500" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>5.5</gain>
-  </filter>
-  <filter id="hlamplifier2000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>4.5</gain>
-  </filter>
-  <filter id="hlamplifier3000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>2.5</gain>
-  </filter>
-  <filter id="hlamplifier4000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>9.5</gain>
-  </filter>
-  <filter id="hlamplifier6000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>17.0</gain>
-  </filter>
-  <filter id="hlamplifier8000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain>17.5</gain>
-  </filter>
-  <filter id="amplifier125" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-0125-dBSPL">0</gain>
-  </filter>
-  <filter id="amplifier250" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-0250-dBSPL">0</gain>
-  </filter>
-  <filter id="amplifier500" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-0500-dBSPL">0</gain>
-  </filter>
-  <filter id="amplifier750" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-0750-dBSPL">0</gain>
-  </filter>
-  <filter id="amplifier1000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-1000-dBSPL">0</gain>
-  </filter>
-  <filter id="amplifier1500" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-1500-dBSPL">0</gain>
-  </filter>
-  <filter id="amplifier2000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-2000-dBSPL">0</gain>
-  </filter>
-  <filter id="amplifier3000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-3000-dBSPL">0</gain>
-  </filter>
-  <filter id="amplifier4000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-4000-dBSPL">0</gain>
-  </filter>
-  <filter id="amplifier6000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-6000-dBSPL">0</gain>
-  </filter>
-  <filter id="amplifier8000" xsi:type="apex:amplifier">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="g-8000-dBSPL">0</gain>
-  </filter>
- </filters>
- <stimuli>
-  <stimulus id="calibrationstimulus">
-   <datablocks>
-    <simultaneous>
-     <datablock id="datablock125_10sec"/>
-     <datablock id="datablock250_10sec"/>
-     <datablock id="datablock500_10sec"/>
-     <datablock id="datablock750_10sec"/>
-     <datablock id="datablock1000_10sec"/>
-     <datablock id="datablock1500_10sec"/>
-     <datablock id="datablock2000_10sec"/>
-     <datablock id="datablock3000_10sec"/>
-     <datablock id="datablock4000_10sec"/>
-     <datablock id="datablock6000_10sec"/>
-     <datablock id="datablock8000_10sec"/>
-    </simultaneous>
-   </datablocks>
-  </stimulus>
-  <pluginstimuli>
-   <script source="inline">&#xd;
+      <parameter name="intensities">-10:5:70</parameter>
+      <parameter name="frequencies">125,250,500,750,1000,1500,2000,3000,4000,6000,8000</parameter>
+    </pluginscreens>
+  </screens>
+  <datablocks>
+    <prefix>audiometer_stimuli</prefix>
+    <datablock id="datablock125">
+      <device>soundcard</device>
+      <file>125_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock250">
+      <device>soundcard</device>
+      <file>250_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock500">
+      <device>soundcard</device>
+      <file>500_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock750">
+      <device>soundcard</device>
+      <file>750_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock1000">
+      <device>soundcard</device>
+      <file>1000_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock1500">
+      <device>soundcard</device>
+      <file>1500_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock2000">
+      <device>soundcard</device>
+      <file>2000_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock3000">
+      <device>soundcard</device>
+      <file>3000_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock4000">
+      <device>soundcard</device>
+      <file>4000_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock6000">
+      <device>soundcard</device>
+      <file>6000_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock8000">
+      <device>soundcard</device>
+      <file>8000_stimulus.wav</file>
+    </datablock>
+    <datablock id="datablock125_10sec">
+      <device>soundcard</device>
+      <file>125_10sec.wav</file>
+    </datablock>
+    <datablock id="datablock250_10sec">
+      <device>soundcard</device>
+      <file>250_10sec.wav</file>
+    </datablock>
+    <datablock id="datablock500_10sec">
+      <device>soundcard</device>
+      <file>500_10sec.wav</file>
+    </datablock>
+    <datablock id="datablock750_10sec">
+      <device>soundcard</device>
+      <file>750_10sec.wav</file>
+    </datablock>
+    <datablock id="datablock1000_10sec">
+      <device>soundcard</device>
+      <file>1000_10sec.wav</file>
+    </datablock>
+    <datablock id="datablock1500_10sec">
+      <device>soundcard</device>
+      <file>1500_10sec.wav</file>
+    </datablock>
+    <datablock id="datablock2000_10sec">
+      <device>soundcard</device>
+      <file>2000_10sec.wav</file>
+    </datablock>
+    <datablock id="datablock3000_10sec">
+      <device>soundcard</device>
+      <file>3000_10sec.wav</file>
+    </datablock>
+    <datablock id="datablock4000_10sec">
+      <device>soundcard</device>
+      <file>4000_10sec.wav</file>
+    </datablock>
+    <datablock id="datablock6000_10sec">
+      <device>soundcard</device>
+      <file>6000_10sec.wav</file>
+    </datablock>
+    <datablock id="datablock8000_10sec">
+      <device>soundcard</device>
+      <file>8000_10sec.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <master>soundcard</master>
+    <device id="soundcard" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain id="overallgain">0</gain>
+      <samplerate>44100</samplerate>
+      <padzero>0</padzero>
+    </device>
+  </devices>
+  <filters>
+    <!--These gains are for HDA200 (ISO 389-8) -->
+    <filter id="hlamplifier125" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>30.5</gain>
+    </filter>
+    <filter id="hlamplifier250" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>18.0</gain>
+    </filter>
+    <filter id="hlamplifier500" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>11.0</gain>
+    </filter>
+    <filter id="hlamplifier750" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>6.0</gain>
+    </filter>
+    <filter id="hlamplifier1000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>5.5</gain>
+    </filter>
+    <filter id="hlamplifier1500" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>5.5</gain>
+    </filter>
+    <filter id="hlamplifier2000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>4.5</gain>
+    </filter>
+    <filter id="hlamplifier3000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>2.5</gain>
+    </filter>
+    <filter id="hlamplifier4000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>9.5</gain>
+    </filter>
+    <filter id="hlamplifier6000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>17.0</gain>
+    </filter>
+    <filter id="hlamplifier8000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain>17.5</gain>
+    </filter>
+    <filter id="amplifier125" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-0125-dBSPL">0</gain>
+    </filter>
+    <filter id="amplifier250" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-0250-dBSPL">0</gain>
+    </filter>
+    <filter id="amplifier500" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-0500-dBSPL">0</gain>
+    </filter>
+    <filter id="amplifier750" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-0750-dBSPL">0</gain>
+    </filter>
+    <filter id="amplifier1000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-1000-dBSPL">0</gain>
+    </filter>
+    <filter id="amplifier1500" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-1500-dBSPL">0</gain>
+    </filter>
+    <filter id="amplifier2000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-2000-dBSPL">0</gain>
+    </filter>
+    <filter id="amplifier3000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-3000-dBSPL">0</gain>
+    </filter>
+    <filter id="amplifier4000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-4000-dBSPL">0</gain>
+    </filter>
+    <filter id="amplifier6000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-6000-dBSPL">0</gain>
+    </filter>
+    <filter id="amplifier8000" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="g-8000-dBSPL">0</gain>
+    </filter>
+  </filters>
+  <stimuli>
+    <stimulus id="calibrationstimulus">
+      <datablocks>
+        <simultaneous>
+          <datablock id="datablock125_10sec"/>
+          <datablock id="datablock250_10sec"/>
+          <datablock id="datablock500_10sec"/>
+          <datablock id="datablock750_10sec"/>
+          <datablock id="datablock1000_10sec"/>
+          <datablock id="datablock1500_10sec"/>
+          <datablock id="datablock2000_10sec"/>
+          <datablock id="datablock3000_10sec"/>
+          <datablock id="datablock4000_10sec"/>
+          <datablock id="datablock6000_10sec"/>
+          <datablock id="datablock8000_10sec"/>
+        </simultaneous>
+      </datablocks>
+    </stimulus>
+    <pluginstimuli>
+      <script source="inline">&#xd;
         function getStimuli() {&#xd;
           misc.checkParams(Array("intensities", "frequencies"));&#xd;
           var result = "";&#xd;
@@ -367,534 +367,534 @@
           return result;&#xd;
         }&#xd;
       </script>
-   <parameter name="intensities">-10:5:70</parameter>
-   <parameter name="frequencies">125,250,500,750,1000,1500,2000,3000,4000,6000,8000</parameter>
-  </pluginstimuli>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>datablock125_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier125</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock250_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier250</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock500_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier500</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock750_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier750</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock1000_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier1000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock1500_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier1500</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock2000_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier2000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock3000_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier3000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock4000_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier4000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock6000_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier6000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock8000_10sec</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier8000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock125</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier125</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock250</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier250</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock500</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier500</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock750</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier750</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock1000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier1000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock1500</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier1500</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock2000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier2000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock3000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier3000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock4000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier4000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock6000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier6000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablock8000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>hlamplifier8000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier125</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier125</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier250</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier250</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier500</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier500</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier750</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier750</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier1000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier1000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier1500</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier1500</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier2000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier2000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier3000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier3000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier4000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier4000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier6000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier6000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>hlamplifier8000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier8000</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier125</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier250</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier500</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier750</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier1000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier1500</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier2000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier3000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier4000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier6000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier8000</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
- <calibration profile="pure-tone-screening-hda200">
-  <stimuli>
-   <stimulus id="calibrationstimulus"/>
+      <parameter name="intensities">-10:5:70</parameter>
+      <parameter name="frequencies">125,250,500,750,1000,1500,2000,3000,4000,6000,8000</parameter>
+    </pluginstimuli>
   </stimuli>
-  <parameters>
-   <parameter id="g-0125-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-   <parameter id="g-0250-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-   <parameter id="g-0500-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-   <parameter id="g-0750-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-   <parameter id="g-1000-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-   <parameter id="g-1500-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-   <parameter id="g-2000-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-   <parameter id="g-3000-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-   <parameter id="g-4000-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-   <parameter id="g-6000-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-   <parameter id="g-8000-dBSPL">
-    <targetamplitude>0</targetamplitude>
-    <calibrationamplitude>90</calibrationamplitude>
-    <mute>-150</mute>
-    <min>-50</min>
-    <max>0</max>
-   </parameter>
-  </parameters>
- </calibration>
+  <connections>
+    <connection>
+      <from>
+        <id>datablock125_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier125</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock250_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier250</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock500_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier500</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock750_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier750</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock1000_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier1000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock1500_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier1500</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock2000_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier2000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock3000_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier3000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock4000_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier4000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock6000_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier6000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock8000_10sec</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier8000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock125</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier125</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock250</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier250</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock500</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier500</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock750</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier750</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock1000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier1000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock1500</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier1500</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock2000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier2000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock3000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier3000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock4000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier4000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock6000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier6000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablock8000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>hlamplifier8000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier125</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier125</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier250</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier250</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier500</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier500</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier750</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier750</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier1000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier1000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier1500</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier1500</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier2000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier2000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier3000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier3000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier4000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier4000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier6000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier6000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>hlamplifier8000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier8000</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier125</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier250</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier500</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier750</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier1000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier1500</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier2000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier3000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier4000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier6000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier8000</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+  <calibration profile="pure-tone-screening-hda200">
+    <stimuli>
+      <stimulus id="calibrationstimulus"/>
+    </stimuli>
+    <parameters>
+      <parameter id="g-0125-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+      <parameter id="g-0250-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+      <parameter id="g-0500-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+      <parameter id="g-0750-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+      <parameter id="g-1000-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+      <parameter id="g-1500-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+      <parameter id="g-2000-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+      <parameter id="g-3000-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+      <parameter id="g-4000-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+      <parameter id="g-6000-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+      <parameter id="g-8000-dBSPL">
+        <targetamplitude>0</targetamplitude>
+        <calibrationamplitude>90</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>0</max>
+      </parameter>
+    </parameters>
+  </calibration>
 </apex:apex>

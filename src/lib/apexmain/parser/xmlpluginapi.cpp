@@ -17,11 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "xmlpluginapi.h"
-#include "services/errorhandler.h"
+#include "apextools/global.h"
 
-#include <QDir>
+#include "xmlpluginapi.h"
+
 #include <QDebug>
+#include <QDir>
 
 namespace apex {
 
@@ -30,7 +31,7 @@ QString XMLPluginAPI::version()
     return "This is a version string";
 }
 
-QStringList XMLPluginAPI::files(QString path)
+QStringList XMLPluginAPI::files(const QString& path)
 {
     QString p(path);
 
@@ -52,43 +53,51 @@ QStringList XMLPluginAPI::files(QString path)
 
         return d.entryList();
     }
-
-    /*QDir dir(path.toString(), wildcard.toString());
-
-    qCDebug(APEX_RS, "found %d files in path %s:",
-        dir.entryList().size(),
-                      qPrintable(path.toString()));
-    return dir.entryList();*/
 }
 
-
-
-
-QString XMLPluginAPI::stripPath(QString s)
+QString XMLPluginAPI::readAll(const QString& path)
 {
-    QDir d(s);
-    if (d.exists())
-        return s;
-
-    QStringList parts( QDir::fromNativeSeparators(s).split("/") );
-    QString wildcard( parts.at(parts.size()-1) );
-
-    return s.left( s.length()-wildcard.length());
-
+    QFile f(path);
+    if (!f.open (QFile::ReadOnly)) {
+        addError(tr("Could not open file %1").arg(path));
+        return QString();
+    }
+    return QTextStream(&f).readAll();
 }
 
-
-
-void XMLPluginAPI::addWarning(const QString & warning)
+double XMLPluginAPI::stimulusDuration(const QString& path)
 {
-    ErrorHandler::Get().addWarning( "XML Plugin script",
-                      warning);
+    streamapp::InputWaveFile p;
+    RETURN_VAL_IF_FAIL(p.mp_bOpen(path), 0.0);
+    return p.mf_lTotalSamples() / (double) p.mf_lSampleRate();
 }
 
-void XMLPluginAPI::addError(const QString & warning)
+QString XMLPluginAPI::path(const QString& s)
 {
-    ErrorHandler::Get().addError( "XML Plugin script",
-                      warning);
+    return QFileInfo(s).path();
+}
+
+QString XMLPluginAPI::stripPath(const QString& s)
+{
+    WARN_DEPRECATED("use path() instead of stripPath()");
+    return path(s) + QSL("/");
+}
+
+QString XMLPluginAPI::absoluteFilePath(const QString& path)
+{
+    return QFileInfo(path).absoluteFilePath();
+}
+
+void XMLPluginAPI::addWarning(const QString& warning)
+{
+    qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "XML Plugin script",
+                      warning)));
+}
+
+void XMLPluginAPI::addError(const QString& warning)
+{
+    qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "XML Plugin script",
+                      warning)));
 }
 
 }

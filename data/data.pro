@@ -1,4 +1,4 @@
-CLEBS_INSTALL *= xerces portaudio fftw3 iowkit sndfile xml2 zlib protobuf nic3 dot liblo
+CLEBS_INSTALL *= portaudio fftw3 fftw3f iowkit sndfile xml2 zlib protobuf dot liblo
 
 !isEmpty(_PRO_FILE_):include(../clebs/clebs.pri)
 
@@ -7,7 +7,7 @@ TEMPLATE = subdirs
 schemas.path = $$DATADIR/schemas
 schemas.files = schemas/*.xsd
 
-config.path = $$CONFDIR
+config.path = $$DATADIR/config
 config.files = config/*.xml
 
 plugins.path = $$DATADIR/pluginprocedures
@@ -19,13 +19,16 @@ scripts.files = resultsviewer/*
 xslt.path = $$DATADIR/xslt
 xslt.files = xslt/*.xsl
 
-data.path = $$DATADIR/bitmaps
-data.files = bitmaps/*.png bitmaps/*.ico bitmaps/*.xpm
+tests_libapex.path = $$DATADIR/tests/libapex
+tests_libapex.files = tests/libapex/*
 
-icons.files = icons/*
+tests_libwriters.path = $$DATADIR/tests/libwriters
+tests_libwriters.files = tests/libwriters/*
+
 icons.path = $$ICONDIR
+icons.files = icons/*.png icons/*.ico icons/*.xpm
 
-INSTALLS *= icons schemas config plugins scripts xslt data
+INSTALLS *= schemas config plugins scripts xslt tests_libapex tests_libwriters icons
 
 unix {
     desktopfile.files = exporl-apex.desktop

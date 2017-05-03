@@ -17,29 +17,22 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
     *****************************************************************************/
 
-#ifndef _EXPORL_SRC_TESTS_APEXWRITERS_APEXWRITERSTEST_H_
-#define _EXPORL_SRC_TESTS_APEXWRITERS_APEXWRITERSTEST_H_
+#ifndef _APEX_SRC_TESTS_APEXWRITERS_APEXWRITERSTEST_H_
+#define _APEX_SRC_TESTS_APEXWRITERS_APEXWRITERSTEST_H_
 
 #include "../testmacros.h"
 
-#include "apextools/xml/xercesinclude.h"
-
 #include <QtTest>
 
-class ApexWritersTest : public QObject
+class ApexWritersTest: public QObject
 {
-        Q_OBJECT
+    Q_OBJECT
+private Q_SLOTS:
+    void testExperiment_data();
+    void testExperiment();
 
-    private slots:
-
-        void initTestCase();
-        void testExperiment_data();
-        void testExperiment();
-        void cleanupTestCase();
-
-    private:
-
-        QString outfileName(const QString& infile);
+private:
+    QString outfileName(const QString& infile);
 };
 
 #endif

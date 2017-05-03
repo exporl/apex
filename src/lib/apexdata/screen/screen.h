@@ -20,8 +20,6 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREEN_H_
 #define _EXPORL_SRC_LIB_APEXDATA_SCREEN_SCREEN_H_
 
-#include "../factoryelement.h"
-
 #include "apextools/apextypedefs.h"
 #include "apextools/global.h"
 
@@ -55,7 +53,7 @@ using gui::ScreenElementMap;
  * contain a buttongroup ( list of id's grouped together ), and
  * knows about a default answer element.
  */
-class APEXDATA_EXPORT Screen : public FactoryElement
+class APEXDATA_EXPORT Screen
 {
     public:
         /**

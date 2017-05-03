@@ -49,7 +49,7 @@ class DummyWriter : public AudioFormatWriter
 
         mt_eBitMode mf_eBitMode() const {return MSBfloat32;}
         unsigned long mf_lSampleRate() const {return host->mf_lGetSampleRate();}
-        unsigned mf_nChannels() const {return host->mf_nGetIChan();}
+        unsigned mf_nChannels() const {return host->mf_nGetOChan();}
         unsigned long Write(const void**, const unsigned n) {return n;}
 
     private:
@@ -57,13 +57,14 @@ class DummyWriter : public AudioFormatWriter
         const DummySoundcard* const host;
 };
 
-DummySoundcard::DummySoundcard(const std::string& driverName) : state(Closed),
+DummySoundcard::DummySoundcard(const QString& driverName) : state(Closed),
                                                                 callback(0)
 {
     Q_UNUSED(driverName);
 
-    timer.setInterval(0);
+    timer.setInterval(10);
     connect(&timer, SIGNAL(timeout()), this, SLOT(doCallback()));
+    connect(this, SIGNAL(stopTimer()), &timer, SLOT(stop()));
 }
 
 DummySoundcard::~DummySoundcard()
@@ -118,7 +119,9 @@ bool DummySoundcard::mp_bStop()
     {
         state = Opened;
         callback = 0;
-        timer.stop();
+        // mp_bStop is called from a different thread,
+        // so a stop signal to the timer
+        Q_EMIT stopTimer();
         return true;
     }
 
@@ -153,7 +156,7 @@ unsigned long DummySoundcard::mf_lGetEstimatedLatency() const
 
 unsigned long DummySoundcard::mf_lGetSampleRate() const
 {
-    if (mf_bIsOpen())
+    if (mf_bIsOpen() || mf_bIsRunning())
         return sampleRate;
 
     return 0;
@@ -161,7 +164,7 @@ unsigned long DummySoundcard::mf_lGetSampleRate() const
 
 unsigned DummySoundcard::mf_nGetBufferSize() const
 {
-    if (mf_bIsOpen())
+    if (mf_bIsOpen() || mf_bIsRunning())
         return bufferSize;
 
     return 0;
@@ -169,7 +172,7 @@ unsigned DummySoundcard::mf_nGetBufferSize() const
 
 unsigned DummySoundcard::mf_nGetOChan() const
 {
-    if (mf_bIsOpen())
+    if (mf_bIsOpen() || mf_bIsRunning())
         return nOutChannels;
 
     return 0;
@@ -177,7 +180,7 @@ unsigned DummySoundcard::mf_nGetOChan() const
 
 unsigned DummySoundcard::mf_nGetIChan() const
 {
-    if (mf_bIsOpen())
+    if (mf_bIsOpen() || mf_bIsRunning())
         return nInChannels;
 
     return 0;

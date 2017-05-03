@@ -1,9 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
   <!-- @doc
   @what: Demonstrate the use of resultparameters
   @description: Resultparameters specified in <results>/<resultparameters> will be passed on to the resultviewer
-  @how: These parameters will be made available in a hash params. Additionaly, the javascript code in <resultscript> will be executed when the resultsviewer is loaded.
+  @how: These parameters will be made available in a hash params. 
+        If they follow proper notation, they will be parsed into the resultsviewer config object(see manual). 
+        Additionaly, the javascript code in <resultscript> will be executed when the resultsviewer is loaded.
  -->
   <procedure xsi:type="apex:adaptiveProcedure">
     <parameters>
@@ -36,11 +38,11 @@
       <feedback length="300">false</feedback>
     </reinforcement>
     <screen id="screen1">
-      <gridLayout width="3" height="1" id="main_layout">
-        <button x="1" y="1" id="up">
+      <gridLayout id="main_layout" width="3" height="1">
+        <button id="up" x="1" y="1">
           <text>louder</text>
         </button>
-        <button x="2" y="1" id="down">
+        <button id="down" x="2" y="1">
           <text>quieter</text>
         </button>
       </gridLayout>
@@ -52,10 +54,10 @@
     </screen>
   </screens>
   <datablocks>
-    <uri_prefix>../stimuli</uri_prefix>
+    <prefix>../stimuli</prefix>
     <datablock id="rawdata1">
       <device>wavdevice</device>
-      <uri>wd1.wav</uri>
+      <file>wd1.wav</file>
     </datablock>
   </datablocks>
   <devices>
@@ -82,16 +84,23 @@
   </stimuli>
   <connections/>
   <results>
-      <page>apex:resultsviewer.html</page>
+    <page>apex:resultsviewer.html</page>
     <resultparameters>
-      <parameter name="reversalsForMean">4</parameter>
-      <parameter name="extra">text</parameter>
+      <parameter name="line_reversalsformean">4</parameter>
+      <!-- see manual for full list of options -->
+      <parameter name="line_show">true</parameter>
+      <parameter name="customchartvalue">7</parameter>
+      <!-- will be passed to variable params[name] -->
     </resultparameters>
     <resultscript>
+      console.log(params.customchartvalue);
       test = "This variable is set through results/resultscript.";
+      config.line.parameterunit = "dB SPL";
+      config = { line:{ parametername: "Gain" },
+      matrix:{ show: false } 
+      };
     </resultscript>
-      <showduringexperiment>true</showduringexperiment>
-      <showafterexperiment>true</showafterexperiment>
+    <showduringexperiment>true</showduringexperiment>
+    <showafterexperiment>true</showafterexperiment>
   </results>
-
 </apex:apex>

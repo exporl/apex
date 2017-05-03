@@ -26,62 +26,67 @@
 
 #include <QString>
 
-namespace apex {
+namespace apex
+{
 
-  //class tError;
+namespace stimulus
+{
 
-namespace stimulus {
+/**
+ * BufferDropCallback
+ *   object to call when a buffer drops,
+ *   just keeps the number of drops.
+ *
+ *   [ stijn ] modified: send an event to
+ *   display this problem in the message window,
+ *   now it gets lost in the excess of other output, while this
+ *   is like the only output that's truly important since it
+ *   yields the entire experiment invalid.
+ ************************************************************** */
+class BufferDropCallback : public streamapp::Callback
+{
+public:
+    /**
+     * Constructor.
+     * @param ac_sDropSource describe what dropped (soundcard or buffer)
+     */
+    BufferDropCallback(const QString &dropSource);
 
-  /**
-    * BufferDropCallback
-    *   object to call when a buffer drops,
-    *   just keeps the number of drops.
-    *
-    *   [ stijn ] modified: send an event to
-    *   display this problem in the message window,
-    *   now it gets lost in the excess of other output, while this
-    *   is like the only output that's truly important since it
-    *   yields the entire experiment invalid.
-    ************************************************************** */
-    class BufferDropCallback : public streamapp::Callback {
-  public:
-      /**
-        * Constructor.
-        * @param ac_sDropSource describe what dropped (soundcard or buffer)
-        */
-      BufferDropCallback( const QString& ac_sDropSource );
+    /**
+     * Destructor.
+     */
+    ~BufferDropCallback();
 
-      /**
-        * Destructor.
-        */
-      ~BufferDropCallback();
+    /**
+     * Called when a drop occurs.
+     * Increments count and posts the event.
+     */
+    void mf_Callback();
 
-      /**
-        * Called when a drop occurs.
-        * Increments count and posts the event.
-        */
-      void mf_Callback();
+    /**
+     * Get the number of drops so far.
+     * @return the number
+     */
+    unsigned mf_nGetNumDrops() const
+    {
+        return mv_nDrops;
+    }
 
-      /**
-        * Get the number of drops so far.
-        * @return the number
-        */
-      const unsigned& mf_nGetNumDrops() const {
-          return mv_nDrops;
-      }
+    /**
+     * Reset number of drops.
+     */
+    void mp_ResetDrops()
+    {
+        mv_nDrops = 0;
+    }
 
-      /**
-        * Reset number of drops.
-        */
-      void mp_ResetDrops() {
-          mv_nDrops = 0;
-      }
+private:
+    unsigned mv_nDrops;
+    QString dropSource;
+};
 
-  private:
-    unsigned  mv_nDrops;
-    StatusItem   m_pError;
-  };
 }
+
 }
 
 

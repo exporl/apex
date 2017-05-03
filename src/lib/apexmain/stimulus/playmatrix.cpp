@@ -21,8 +21,6 @@
 
 #include "apexdata/stimulus/stimulusdata.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
 #include "apextools/xml/xmlkeys.h"
 
 #include "connection/connection.h"
@@ -34,12 +32,8 @@
 
 #include <QtGlobal>
 
-using namespace xercesc;
-
 using namespace apex;
 using namespace apex::stimulus;
-using namespace apex::XMLKeys;
-using namespace apex::ApexXMLTools;
 
 namespace
 {
@@ -58,7 +52,6 @@ PlayMatrixCreator::PlayMatrixCreator() :
   m_WorkHere( sc_nMaxNumItems, sc_nMaxNumItems ),
   m_nSeq    ( 0 ),
   m_nSim    ( 0 ),
-  m_nSeqRec ( 0 ),
   m_nSimRec ( 0 )
 {
 }
@@ -160,7 +153,6 @@ void PlayMatrixCreator::sf_FixDuplicateIDs( PlayMatrix* a_pMatrix,
           if( a_DataBlocks.value(sCopy) == 0 )   //check if no copy was made already for a previous stim
           {
               //copy datablock
-            //DataBlock* pCopy = fChooseFactory( pOrig->GetModule() )->DuplicateDataBlock( *pOrig, sCopy );
               qCDebug(APEX_RS, "Copying datablock %s to %s",
                      qPrintable( sCur),
                      qPrintable( sCopy));

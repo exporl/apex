@@ -19,65 +19,65 @@
 
 #include "apexdata/connection/connectiondata.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "connectionswriter.h"
 
 #include <QDebug>
 
-using namespace XERCES_CPP_NAMESPACE;
-using namespace apex::ApexXMLTools;
+using namespace apex;
 
 using apex::writer::ConnectionsWriter;
 using apex::data::ConnectionsData;
 using apex::data::ConnectionData;
 
-DOMElement* ConnectionsWriter::addElement(DOMDocument* doc,
+QDomElement ConnectionsWriter::addElement(QDomDocument *doc,
         const ConnectionsData& data)
 {
-    DOMElement* rootElement = doc->getDocumentElement();
-    DOMElement* connections = doc->createElement(X("connections"));
-    rootElement->appendChild(connections);
+    QDomElement rootElement = doc->documentElement();
+    QDomElement connections = doc->createElement(QSL("connections"));
+    rootElement.appendChild(connections);
 
     ConnectionsData::const_iterator it;
     for (it = data.begin(); it != data.end(); it++)
-        connections->appendChild(addConnection(doc, **it));
+        connections.appendChild(addConnection(doc, **it));
 
     return connections;
 }
 
-DOMElement* ConnectionsWriter::addConnection(DOMDocument* doc,
+QDomElement ConnectionsWriter::addConnection(QDomDocument *doc,
         const ConnectionData& data)
 {
-    DOMElement* connection = doc->createElement(X("connection"));
+    QDomElement connection = doc->createElement(QSL("connection"));
 
     //from
-    DOMElement* from = doc->createElement(X("from"));
-    from->appendChild(XMLutils::CreateTextElement(doc, "id", data.fromId()));
-    DOMElement* fromCh = XMLutils::CreateTextElement(doc, "channel",
+    QDomElement from = doc->createElement(QSL("from"));
+    from.appendChild(XmlUtils::createTextElement(doc, "id", data.fromId()));
+    QDomElement fromCh = XmlUtils::createTextElement(doc, "channel",
                          QString::number(data.fromChannel()));
     QString fromChId = data.fromChannelId();
 
     if (!fromChId.isEmpty())
-        fromCh->setAttribute(X("id"), S2X(fromChId));
+        fromCh.setAttribute(QSL("id"), fromChId);
 
-    from->appendChild(fromCh);
+    from.appendChild(fromCh);
 
     //to
-    DOMElement* to = doc->createElement(X("to"));
-    to->appendChild(XMLutils::CreateTextElement(doc, "id", data.toId()));
-    DOMElement* toCh = XMLutils::CreateTextElement(doc, "channel",
+    QDomElement to = doc->createElement(QSL("to"));
+    to.appendChild(XmlUtils::createTextElement(doc, "id", data.toId()));
+    QDomElement toCh = XmlUtils::createTextElement(doc, "channel",
                        QString::number(data.toChannel()));
     QString toChId = data.toChannelId();
 
     if (!toChId.isEmpty())
-        toCh->setAttribute(X("id"), S2X(toChId));
+        toCh.setAttribute(QSL("id"), toChId);
 
-    to->appendChild(toCh);
+    to.appendChild(toCh);
 
-    connection->appendChild(from);
-    connection->appendChild(to);
+    connection.appendChild(from);
+    connection.appendChild(to);
 
     return connection;
 }

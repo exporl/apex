@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!-- @doc
+  @what:
+  @description:
+  @how:
+    -->
+  <!--
+Try to add wav filter to L34Device : not correct documentation?
+    -->
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>100</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>button1</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <screen id="screen1">
+      <gridLayout id="main_layout" height="2" width="3">
+        <button id="button1" x="1" y="1">
+          <text>mapping.aseq</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli/</prefix>
+    <datablock id="rawdata1">
+      <device>l34device</device>
+      <file>mapping.aseq</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="l34device" xsi:type="apex:CohDeviceType">
+      <device>nic3-l34-cic4-mp12-1</device>
+      <!-- retrieved from apexconfig.xml, synonymous for:
+    <device>protoslave: slave=nic3slave; platform=L34,implant=CIC4,auto_pufs=off,go_live=on,min_pulse_width_us=25.0,flagged_electrodes=,latency_ms=1000,mode=MP1+2</device>
+    -->
+      <trigger>none</trigger>
+      <defaultmap>
+        <inline>
+          <number_electrodes>22</number_electrodes>
+          <mode>MP1+2</mode>
+          <pulsewidth>25</pulsewidth>
+          <pulsegap>25</pulsegap>
+          <period>150</period>
+          <channel comfort="254" electrode="22" number="1" threshold="2"/>
+          <channel comfort="253" electrode="21" number="2" threshold="3"/>
+          <channel comfort="252" electrode="20" number="3" threshold="4"/>
+          <channel comfort="251" electrode="19" number="4" threshold="5"/>
+          <channel comfort="250" electrode="18" number="5" threshold="6"/>
+          <channel comfort="249" electrode="17" number="6" threshold="7"/>
+          <channel comfort="248" electrode="16" number="7" threshold="8"/>
+          <channel comfort="247" electrode="15" number="8" threshold="9"/>
+          <channel comfort="246" electrode="14" number="9" threshold="10"/>
+          <channel comfort="245" electrode="13" number="10" threshold="11"/>
+          <channel comfort="244" electrode="12" number="11" threshold="12"/>
+          <channel comfort="243" electrode="11" number="12" threshold="13"/>
+          <channel comfort="242" electrode="10" number="13" threshold="14"/>
+          <channel comfort="241" electrode="9" number="14" threshold="15"/>
+          <channel comfort="240" electrode="8" number="15" threshold="16"/>
+          <channel comfort="239" electrode="7" number="16" threshold="17"/>
+          <channel comfort="238" electrode="6" number="17" threshold="18"/>
+          <channel comfort="237" electrode="5" number="18" threshold="19"/>
+          <channel comfort="236" electrode="4" number="19" threshold="20"/>
+          <channel comfort="235" electrode="3" number="20" threshold="21"/>
+          <channel comfort="234" electrode="2" number="21" threshold="22"/>
+          <channel comfort="233" electrode="1" number="22" threshold="23"/>
+        </inline>
+      </defaultmap>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+    </stimulus>
+  </stimuli>
+  <connections/>
+</apex:apex>

@@ -7,7 +7,7 @@
 #include "apexdata/screen/screen.h"
 #include "apexdata/screen/screenresult.h"
 
-#include "apextools/services/paths.h"
+#include "apextools/apexpaths.h"
 
 #include "corrector/corrector.h"
 #include "corrector/equalcorrector.h"
@@ -311,17 +311,12 @@ AnswerInfo ProcedureApiImplementation::processAnswer(const data::ProcedureData* 
 
 void ProcedureApiImplementation::showMessage(const QString& message) const
 {
-    emit showStatusMessage(message);
+    Q_EMIT showStatusMessage(message);
 }
 
 QString ProcedureApiImplementation::pluginScriptLibrary() const
 {
     return m_rd.mainData().pluginScriptLibrary();
-}
-
-QString ProcedureApiImplementation::nonBinaryPluginPath() const
-{
-    return Paths::Get().GetNonBinaryPluginPath();
 }
 
 QVariant ProcedureApiImplementation::parameterValue(const QString & id) const
@@ -356,7 +351,7 @@ const Corrector* ProcedureApiImplementation::corrector() const
 
 void ProcedureApiImplementation::stopWithError(const QString& source, const QString& message)
 {
-    emit stoppedWithError(source, message);
+    Q_EMIT stoppedWithError(source, message);
 }
 
 /*int ProcedureApiImplementation::answerToInterval(const QString& answer,

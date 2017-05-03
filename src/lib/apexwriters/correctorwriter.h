@@ -17,17 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXWRITERS_CORRECTORWRITER_H_
-#define _EXPORL_SRC_LIB_APEXWRITERS_CORRECTORWRITER_H_
+#ifndef _APEX_SRC_LIB_APEXWRITERS_CORRECTORWRITER_H_
+#define _APEX_SRC_LIB_APEXWRITERS_CORRECTORWRITER_H_
 
 #include "apextools/global.h"
 
-#include "apextools/xml/xercesinclude.h"
-
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMElement;
-}
+#include <QDomElement>
 
 namespace apex
 {
@@ -44,17 +39,16 @@ namespace writer
 */
 class APEXWRITERS_EXPORT CorrectorWriter
 {
-    public:
-        /**
-        * Adds a <corrector> element to the document.
-        *
-        * @param elem  the element to place the element in
-        * @param data the data to create the element with
-        *
-        * @return the created element
-        */
-        static XERCES_CPP_NAMESPACE::DOMElement* addElement(XERCES_CPP_NAMESPACE::DOMElement* elem, const data::CorrectorData& data);
-
+public:
+    /**
+     * Adds a <corrector> element to the document.
+     *
+     * @param elem  the element to place the element in
+     * @param data the data to create the element with
+     *
+     * @return the created element
+     */
+    static QDomElement addElement(QDomElement *elem, const data::CorrectorData& data);
 };
 
 }

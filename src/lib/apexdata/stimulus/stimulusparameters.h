@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QString>
 #include <QVariant>
+#include <QStringList>
 
 namespace apex
 {
@@ -24,6 +25,8 @@ class APEXDATA_EXPORT StimulusParameters
         bool isEmpty() const;
 
         bool operator==(const StimulusParameters& other) const;
+
+        const QStringList names() const;
 
     private:
         QMap<QString,QVariant> values;

@@ -19,14 +19,10 @@
 
 #include "apexdata/device/plugincontrollerdata.h"
 
-#include "services/mainconfigfileparser.h"
-#include "services/pluginloader.h"
+#include "apextools/apexpluginloader.h"
 
 #include "plugincontroller.h"
 #include "plugincontrollerinterface.h"
-
-#include <QPluginLoader>
-#include <QString>
 
 namespace apex {
 
@@ -37,13 +33,11 @@ PluginController::PluginController( data::PluginControllerData* p_parameters ):
         m_param(p_parameters)
 {
     MakePlugin();
-
-
 }
 
-
-
-
+PluginController::~PluginController()
+{
+}
 
 } // ns device
 
@@ -52,13 +46,12 @@ PluginController::PluginController( data::PluginControllerData* p_parameters ):
 
 void apex::device::PluginController::MakePlugin()
 {
-    PluginControllerCreator* creator = PluginLoader::Get().
-            createPluginCreator<PluginControllerCreator>(m_param->plugin());
+    PluginControllerCreator* creator = createPluginCreator<PluginControllerCreator>(m_param->plugin());
     m_plugin.reset (creator->createController (m_param->plugin()));
     return;
 }
 
-bool apex::device::PluginController::SetParameter(const QString & type, const int channel, const QVariant & value)
+bool apex::device::PluginController::SetParameter(const QString& type, const int channel, const QVariant& value)
 {
     Q_ASSERT(m_plugin);
     return m_plugin->setParameter(type, channel, value.toString());
@@ -76,4 +69,8 @@ void apex::device::PluginController::Prepare()
     m_plugin->prepare();
 }
 
-
+void apex::device::PluginController::syncControlDeviceOutput()
+{
+    RETURN_IF_FAIL(m_plugin);
+    m_plugin->playStimulus ();
+}

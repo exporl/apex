@@ -17,19 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apextools/xml/xercesinclude.h"
-
 #include "constantproceduredata.h"
 
-#include <iostream>
-
-using namespace xercesc;
 using namespace apex::data;
 
-ConstantProcedureData::ConstantProcedureData():
-        ProcedureData()
+ConstantProcedureData::ConstantProcedureData() :
+    ProcedureData()
 {
-
 }
 
 ConstantProcedureData::~ConstantProcedureData()
@@ -38,7 +32,7 @@ ConstantProcedureData::~ConstantProcedureData()
 
 ConstantProcedureData::Type ConstantProcedureData::type() const
 {
-        return ConstantType;
+    return ConstantType;
 }
 
 QString ConstantProcedureData::name() const

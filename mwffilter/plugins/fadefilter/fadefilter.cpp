@@ -28,19 +28,13 @@ class FadeFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "apex.fadefilter")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
     virtual PluginFilterInterface *createFilter (const QString &name,
             unsigned channels, unsigned blocksize, unsigned fs) const;
 };
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (amplifierfilter, FadeFilterCreator)
-#endif
 
 class FadeFilter:
     public QObject,

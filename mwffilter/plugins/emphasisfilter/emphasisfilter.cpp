@@ -32,19 +32,13 @@ class EmphasisFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "apex.emphasisfilter")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
     virtual PluginFilterInterface *createFilter (const QString &name,
             unsigned channels, unsigned blockSize, unsigned fs) const;
 };
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (emphasisfilter, EmphasisFilterCreator)
-#endif
 
 class EmphasisFilter:
     public QObject,
@@ -101,7 +95,7 @@ void EmphasisFilter::resetParameters()
 
 bool EmphasisFilter::isValidParameter (const QString &type, int channel) const
 {
-    if (type == QLatin1String("uri") && channel == -1)
+    if (type == QLatin1String("file") && channel == -1)
         return true;
     if (type == QLatin1String("limit") && channel == -1)
         return true;
@@ -120,7 +114,7 @@ bool EmphasisFilter::isValidParameter (const QString &type, int channel) const
 bool EmphasisFilter::setParameter (const QString &type, int channel,
         const QString &value)
 {
-    if (type == QLatin1String("uri") && channel == -1) {
+    if (type == QLatin1String("file") && channel == -1) {
         filePath = QUrl (value).path();
         return true;
     }

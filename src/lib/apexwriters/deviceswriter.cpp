@@ -19,7 +19,7 @@
 
 #include "apexdata/device/devicedata.h"
 #include "apexdata/device/devicesdata.h"
-#include "apexdata/device/l34devicedata.h"
+#include "apexdata/device/cohdevicedata.h"
 #include "apexdata/device/wavdevicedata.h"
 
 #include "apexdata/map/apexmap.h"
@@ -27,174 +27,145 @@
 
 #include "apexdata/parameters/parameter.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "deviceswriter.h"
 
 #include <QDebug>
 
-using namespace apex::ApexXMLTools;
-using namespace XERCES_CPP_NAMESPACE;
+using namespace apex;
 using apex::writer::DevicesWriter;
 using apex::data::Parameter;
 using apex::data::DeviceData;
 using apex::data::WavDeviceData;
-using apex::data::L34DeviceData;
+using apex::data::CohDeviceData;
 using apex::data::DevicesData;
 using apex::data::ApexMap;
 using apex::data::ChannelMap;
-using apex::ApexXMLTools::XMLutils;
 
-DOMElement* DevicesWriter::addElement(DOMDocument* doc, const DevicesData& data)
+QDomElement DevicesWriter::addElement(QDomDocument *doc, const DevicesData& data)
 {
-    DOMElement* rootElem = doc->getDocumentElement();
+    QDomElement rootElem = doc->documentElement();
 
-    DOMElement*  devices = doc->createElement(X("devices"));
-    rootElem->appendChild(devices);
+    QDomElement  devices = doc->createElement(QSL("devices"));
+    rootElem.appendChild(devices);
 
     QString master = data.masterDevice();
     //if there is a <master> tag
-    if (!master.isEmpty())
-    {
+    if (!master.isEmpty()) {
         qCDebug(APEX_RS, "WRITER: master device: %s", qPrintable(master));
-        devices->appendChild(XMLutils::CreateTextElement(doc, "master", master));
+        devices.appendChild(XmlUtils::createTextElement(doc, "master", master));
     }
 
-    for (DevicesData::const_iterator it = data.begin(); it != data.end(); it++)
-    {
-        DOMElement* device = doc->createElement(X("device"));
-        devices->appendChild(device);
+    for (DevicesData::const_iterator it = data.begin(); it != data.end(); it++) {
+        QDomElement device = doc->createElement(QSL("device"));
+        devices.appendChild(device);
 
         DeviceData* devData = it.value();
 
         //set the attributes common to all types of devices
-        device->setAttribute(X("id"), S2X(devData->id()));
+        device.setAttribute(QSL("id"), devData->id());
 
         //get data from the specific device type
         WavDeviceData* wavData;
-        L34DeviceData* l34Data;
+        CohDeviceData* cohData;
 
-        switch (devData->deviceType())
-        {
-            case data::TYPE_WAVDEVICE:
-
-                wavData = dynamic_cast<WavDeviceData*>(devData);
-                finishAsWav(device, *wavData);
-                break;
-
-            case data::TYPE_L34:
-
-                //qFatal("WRITER: l34 won't get handled");
-                l34Data = dynamic_cast<L34DeviceData*>(devData);
-                finishAsL34(device, *l34Data);
-                break;
-
-            default:
-                qCCritical(APEX_RS, "WRITER: unknown device type: %u", devData->deviceType());
-
-                break;
+        switch (devData->deviceType()) {
+        case data::TYPE_WAVDEVICE:
+            wavData = dynamic_cast<WavDeviceData*>(devData);
+            finishAsWav(&device, *wavData);
+            break;
+        case data::TYPE_COH:
+            cohData = dynamic_cast<CohDeviceData*>(devData);
+            finishAsCoh(&device, *cohData);
+            break;
+        default:
+            qCCritical(APEX_RS, "WRITER: unknown device type: %u", devData->deviceType());
+            break;
         }
     }
 
     return devices;
 }
 
-void DevicesWriter::finishAsWav(DOMElement* dev, const WavDeviceData& data)
+void DevicesWriter::finishAsWav(QDomElement *dev, const WavDeviceData& data)
 {
-    //get the DOMDocument from dev
-    DOMDocument* doc = dev->getOwnerDocument();
+    QDomDocument doc = dev->ownerDocument();
 
-    Q_ASSERT(doc != NULL);
+    dev->setAttribute(QSL("xsi:type"), QSL("apex:wavDeviceType"));
 
-    dev->setAttribute(X("xsi:type"), X("apex:wavDeviceType"));
-
-    dev->appendChild(XMLutils::CreateTextElement(doc, "driver", data.driverString()));
-    dev->appendChild(XMLutils::CreateTextElement(doc, "card", data.cardName()));
-    dev->appendChild(XMLutils::CreateTextElement(doc, "channels", data.numberOfChannels()));
+    dev->appendChild(XmlUtils::createTextElement(&doc, "driver", data.driverString()));
+    dev->appendChild(XmlUtils::createTextElement(&doc, "card", data.cardName()));
+    dev->appendChild(XmlUtils::createTextElement(&doc, "channels", data.numberOfChannels()));
 
     //get the gains from SimpleParameters
-    Q_FOREACH (Parameter param, data.parameters())
-    {
-        if (param.type() == "gain")
-        {
+    Q_FOREACH (Parameter param, data.parameters()) {
+        if (param.type() == "gain") {
             QVariant gainValue = param.defaultValue();
             Q_ASSERT(gainValue.canConvert(QVariant::Double));
 
-            DOMElement* gain = XMLutils::CreateTextElement(doc, "gain",
+            QDomElement gain = XmlUtils::createTextElement(&doc, "gain",
                     gainValue.toDouble());
 
             //check if the gain has an id
             if (param.hasId())
-                gain->setAttribute(X("id"), S2X(param.id()));
+                gain.setAttribute(QSL("id"), param.id());
 
             if (param.hasChannel())
-            {
-                gain->setAttribute(X("channel"),
-                                   S2X(QString::number(param.channel())));
-            }
-
+                gain.setAttribute(QSL("channel"), QString::number(param.channel()));
 
             dev->appendChild(gain);
         }
     }
 
-    dev->appendChild(XMLutils::CreateTextElement(doc, "samplerate", data.sampleRate()));
+    dev->appendChild(XmlUtils::createTextElement(&doc, "samplerate", data.sampleRate()));
     if ( data.bufferSize() != -1)
-        dev->appendChild(XMLutils::CreateTextElement(doc, "buffersize", data.bufferSize()));
+        dev->appendChild(XmlUtils::createTextElement(&doc, "buffersize", data.bufferSize()));
     if ( data.blockSize() != -1)
-        dev->appendChild(XMLutils::CreateTextElement(doc, "blocksize", data.blockSize()));
-    dev->appendChild(XMLutils::CreateTextElement(doc, "padzero", data.valueByType("padzero").toString()));
+        dev->appendChild(XmlUtils::createTextElement(&doc, "blocksize", data.blockSize()));
+    dev->appendChild(XmlUtils::createTextElement(&doc, "padzero", data.valueByType("padzero").toString()));
 }
 
-void DevicesWriter::finishAsL34(DOMElement* dev, const L34DeviceData& data)
+void DevicesWriter::finishAsCoh(QDomElement *dev, const CohDeviceData& data)
 {
     //get the DOMDocument from dev
-    DOMDocument* doc = dev->getOwnerDocument();
+    QDomDocument doc = dev->ownerDocument();
 
-    Q_ASSERT(doc != NULL);
+    dev->setAttribute(QSL("xsi:type"), QSL("apex:CohDeviceType"));
 
-    dev->setAttribute(X("xsi:type"), X("apex:L34DeviceType"));
-
-    dev->appendChild(XMLutils::CreateTextElement(doc, "device_id", data.deviceId()));
-    dev->appendChild(XMLutils::CreateTextElement(doc, "implant", data.implantType()));
+    dev->appendChild(XmlUtils::createTextElement(&doc, "device", data.device()));
 
     //get the trigger type and set "trigger" accordingly
     QString trigger;
 
-    switch (data.triggerType())
-    {
-        case data::TRIGGER_NONE:
-
-            trigger = "none";
-            break;
-
-        case data::TRIGGER_IN:
-
-            trigger = "in";
-            break;
-
-        case data::TRIGGER_OUT:
-
-            trigger = "out";
-            break;
-
-            //no need for a default label as GetTriggerType() assures
-            //to return a valid type or calls qFatal
+    switch (data.triggerType()) {
+    case data::TRIGGER_NONE:
+        trigger = "none";
+        break;
+    case data::TRIGGER_IN:
+        trigger = "in";
+        break;
+    case data::TRIGGER_OUT:
+        trigger = "out";
+        break;
+    //no need for a default label as GetTriggerType() assures
+    //to return a valid type or calls qFatal
     }
 
-    dev->appendChild(XMLutils::CreateTextElement(doc, "trigger", trigger));
-    dev->appendChild(XMLutils::CreateTextElement(doc, "volume", data.volume()));
+    dev->appendChild(XmlUtils::createTextElement(&doc, "trigger", trigger));
+    dev->appendChild(XmlUtils::createTextElement(&doc, "volume", data.volume()));
 
     //start creation of the <defaultmap> element
-    DOMElement* defaultmap = doc->createElement(X("defaultmap"));
+    QDomElement defaultmap = doc.createElement(QSL("defaultmap"));
     //<defaultmap> has everything inside an <inline> element
-    DOMElement* instripe = doc->createElement(X("inline"));       //inline is a keyword...
+    QDomElement instripe = doc.createElement(QSL("inline"));       //inline is a keyword...
     //get the map
     ApexMap* map = data.map();
     //<number_electrodes>
-    instripe->appendChild(XMLutils::CreateTextElement(doc, "number_electrodes",
-                                                      map->numberOfElectrodes()));
+    instripe.appendChild(XmlUtils::createTextElement(&doc, "number_electrodes",
+                map->numberOfElectrodes()));
 
     //TODO <mode>
     //TODO <pulsewidth>
@@ -204,31 +175,30 @@ void DevicesWriter::finishAsL34(DOMElement* dev, const L34DeviceData& data)
 
     //create all the <channel> elements
     //skip first element because it's the powerup stimulus
-    for (ApexMap::const_iterator it = map->begin() + 1; it != map->end(); it++)
-    {
+    for (ApexMap::const_iterator it = map->begin() + 1; it != map->end(); it++) {
         //NOTE ApexMap inherits from std::map<int,ChannelMap>
 
-        DOMElement* channel = doc->createElement(X("channel"));
-        channel->setAttribute(X("number"), S2X(QString::number(it.key())));
+        QDomElement channel = doc.createElement(QSL("channel"));
+        channel.setAttribute(QSL("number"), QString::number(it.key()));
 
         //get the channelmap for the other attributes
         ChannelMap chMap = it.value();
 
         //FIXME if the FIXME in channelmap.h gets fixed, this should be done
         //with the appropriate getters
-        channel->setAttribute(X("electrode"),
-                              S2X(QString::number(chMap.stimulationElectrode())));
-        channel->setAttribute(X("threshold"),
-                              S2X(QString::number(chMap.thresholdLevel())));
-        channel->setAttribute(X("comfort"),
-                              S2X(QString::number(chMap.comfortLevel())));
+        channel.setAttribute(QSL("electrode"),
+                              QString::number(chMap.stimulationElectrode()));
+        channel.setAttribute(QSL("threshold"),
+                              QString::number(chMap.thresholdLevel()));
+        channel.setAttribute(QSL("comfort"),
+                              QString::number(chMap.comfortLevel()));
 
         //put <channel> into <inline>
-        instripe->appendChild(channel);
+        instripe.appendChild(channel);
     }
 
     //<inline> is finished, put it into <defaultmap>
-    defaultmap->appendChild(instripe);
+    defaultmap.appendChild(instripe);
     //<defaultmap> is finished, put it into <device> (dev)
     dev->appendChild(defaultmap);
 }

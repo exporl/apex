@@ -46,7 +46,7 @@ public:
         * Constructor.
         */
     WavCompatibleDataBlock(const data::DatablockData& data,
-                           const QUrl& filename,
+                           const QString& filename,
                            const ExperimentRunDelegate* experiment);
 
     /**
@@ -69,12 +69,6 @@ public:
         * else calls DataBlock::SetParameter()
         */
     virtual void SetParameter( const QString& ac_sName, const QString& ac_sVal );
-
-    /**
-        * Implementation of the DataBlock method.
-        */
-    virtual const QString& GetModule() const
-    { return sc_sWavDevice; }
 };
 
 }

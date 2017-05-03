@@ -28,8 +28,7 @@
 #include "apextools/exceptions.h"
 #include "apextools/version.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
 
 #include "calibrationwriter.h"
 #include "connectionswriter.h"
@@ -46,98 +45,79 @@
 #include <QDebug>
 #include <QDir>
 
-using namespace XERCES_CPP_NAMESPACE;
+using namespace apex;
 using namespace apex::writer;
-using namespace apex::ApexXMLTools;
 using apex::data::ExperimentData;
 
-
 void ExperimentWriter::write(const ExperimentData& data, const QString& file,
-                             const QStringList& screens)
+        const QStringList& screens)
 {
-    // initialize XML engine
-    DOMImplementation* impl =
-        DOMImplementationRegistry::getDOMImplementation(X("Core"));
+    QDomDocument doc;
+    doc.appendChild(doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\""));
 
-    // create new DOM tree
-    DOMDocument* doc = impl->createDocument(X(EXPERIMENT_NAMESPACE), X("apex:apex"), 0);
+    QDomElement apex = doc.createElementNS(QL1S(APEX_NAMESPACE), QSL("apex:apex"));
+    apex.setAttribute(QSL("xmlns:xsi"), QSL("http://www.w3.org/2001/XMLSchema-instance"));
+    apex.setAttribute(QSL("xsi:schemaLocation"), QL1S(APEX_NAMESPACE " " EXPERIMENT_SCHEMA_URL));
+    doc.appendChild(apex);
 
-    //set the attributes of root apex element
-    DOMElement* apex = doc->getDocumentElement();
-    apex->setAttribute(X("xmlns:xsi"),
-                       X("http://www.w3.org/2001/XMLSchema-instance"));
-    apex->setAttribute(X("xsi:schemaLocation"), X(EXPERIMENT_NAMESPACE
-            " https://gilbert.med.kuleuven.be/apex/schemas/" SCHEMA_VERSION "/experiment.xsd"));
-//     apex->setAttribute(X("xmlns:apex"), X(EXPERIMENT_NAMESPACE));
-//     apex->setPrefix(X("apex"));
-
-    //start writing the data
-    //create a DOMElement to test each write
-    DOMElement* e;
+    QDomElement e;
 
     //description
     QString description = data.experimentDescription();
     if (!description.isEmpty())
-    {
-        doc->getDocumentElement()->appendChild(XMLutils::CreateTextElement(
-                                                   doc, "description", description));
-    }
+        apex.appendChild(XmlUtils::createTextElement(&doc, "description", description));
 
     //ProcedureConfig
-    e = ProceduresWriter::addElement(doc, *data.procedureData());
+    e = ProceduresWriter::addElement(&doc, *data.procedureData());
     throwIfNull(e, "procedures");
 
     //ScreensData
-    e = ScreensWriter::addElement(doc, *data.screensData(), screens);
+    e = ScreensWriter::addElement(&doc, *data.screensData(), screens);
     throwIfNull(e, "screens");
 
     //DatablocksData
-    e = DatablocksWriter::addElement(doc, *data.datablocksData());
+    e = DatablocksWriter::addElement(&doc, *data.datablocksData());
     throwIfNull(e, "datablocks");
 
     //DevicesData
-    e = DevicesWriter::addElement(doc, *data.devicesData());
+    e = DevicesWriter::addElement(&doc, *data.devicesData());
     throwIfNull(e, "devices");
 
     //FiltersData
     const data::FiltersData& filters = *data.filtersData();
-    if (filters.size() > 0)
-    {
-        e = FiltersWriter::addElement(doc, filters);
+    if (filters.size() > 0) {
+        e = FiltersWriter::addElement(&doc, filters);
         throwIfNull(e, "filters");
     }
 
     //StimuliData
-    e = StimuliWriter::addElement(doc, *data.stimuliData());
+    e = StimuliWriter::addElement(&doc, *data.stimuliData());
     throwIfNull(e, "stimuli");
 
     //ConnectionsData
     const data::ConnectionsData* connections = data.connectionsData();
-    if (connections->size() > 0)
-    {
-        e = ConnectionsWriter::addElement(doc, *connections);
+    if (connections->size() > 0) {
+        e = ConnectionsWriter::addElement(&doc, *connections);
         throwIfNull(e, "connections");
     }
 
     //CalibrationData
-    if (data.calibrationData() != 0)
-    {
-        e = CalibrationWriter::addElement(doc, *data.calibrationData());
+    if (data.calibrationData()) {
+        e = CalibrationWriter::addElement(&doc, *data.calibrationData());
         throwIfNull(e, "calibration");
     }
 
     //ResultParameters
-    e = ResultParametersWriter::addElement(doc, *data.resultParameters());
+    e = ResultParametersWriter::addElement(&doc, *data.resultParameters());
     throwIfNull(e, "resultparameters");
 
     //GeneralParameters
-    e = GeneralParametersWriter::addElement(doc, *data.generalParameters());
+    e = GeneralParametersWriter::addElement(&doc, *data.generalParameters());
     throwIfNull(e, "generalparameters");
 
     qCDebug(APEX_RS) << "curr path: " << QDir::currentPath();
 
-    if (!XMLutils::WriteElement(doc->getDocumentElement(), file))
-    {
+    if (!XmlUtils::writeDocument(doc, file)) {
         throw ApexStringException(QString("ExperimentWriter: error writing "
                                           "to file %1").arg(file));
     }
@@ -145,43 +125,8 @@ void ExperimentWriter::write(const ExperimentData& data, const QString& file,
     qCDebug(APEX_RS) << "done writing experiment";
 }
 
-void ExperimentWriter::throwIfNull(DOMElement* e, const QString& failingWrite)
+void ExperimentWriter::throwIfNull(const QDomElement &e, const QString &where)
 {
-    if (e == 0)
-    {
-        QString message("ExperimentWriter: failed to write %1data");
-        throw ApexStringException(message.arg(failingWrite));
-    }
-
-    e = 0;
+    if (e.isNull())
+        throw ApexStringException(tr("ExperimentWriter: failed to write %1data").arg(where));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

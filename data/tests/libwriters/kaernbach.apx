@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/experiment ../../data/schemas/experiment.xsd"
- xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment" version="1">
+ xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment ../../data/schemas/experiment.xsd"
+ xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1">
  <!-- @doc
   @what: 1up-1down Kaernbach procedure: Frequency of ups-downs is the same - Up stepsize is 1, down stepsize is 7 - Experiment stops after 6 reversals
   @description: When you click on the button 'correct or wrong', you hear a stimulus 'wd1.wav (een/one)' in both ears. When you click again, the gain of the stimulus decreases/increases according to the button (correct/false)

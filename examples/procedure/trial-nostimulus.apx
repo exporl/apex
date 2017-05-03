@@ -1,44 +1,44 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- @doc
   @what: Make a trial whithout a stimulus
   @description: when you click on stimulus => apex shuts down
   @how: no stimuli - datablock
   -->
- <procedure xsi:type="apex:trainingProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial">
-    <answer>button</answer>
-    <screen id="screen"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <screen id="screen">
-   <gridLayout width="1" height="1">
-    <button id="button">
-     <text>stimulus</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup">
-    <button id="button"/>
-   </buttongroup>
-   <default_answer_element>buttongroup</default_answer_element>
-  </screen>
- </screens>
- <datablocks/>
- <devices>
-  <device id="soundcard" xsi:type="apex:wavDeviceType">
-   <card>default</card>
-   <channels>1</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <stimuli/>
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>10</presentations>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial">
+        <answer>button</answer>
+        <screen id="screen"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <screen id="screen">
+      <gridLayout height="1" width="1">
+        <button id="button">
+          <text>stimulus</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="button"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks/>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="soundcard">
+      <card>default</card>
+      <channels>1</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <stimuli/>
 </apex:apex>

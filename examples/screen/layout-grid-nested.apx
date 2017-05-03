@@ -1,133 +1,122 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
-
- <!-- @doc
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!-- @doc
   @what: example of nested gridlayout
   @description: buttons are placed in nested grids
   @how: <gridLayout> in <gridLayout>
   -->
-
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>5</presentations>
-   <skip>0</skip>
-   <order>random</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>button2</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-   <trial id="trial2">
-    <answer>button5</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus2"/>
-   </trial>
-  </trials>
- </procedure>
-
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">true</feedback>
-   <showcurrent>true</showcurrent>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout width="2" height="1" id="main">
-    <gridLayout width="1" height="3" row="1" col="1" id="nest1">
-     <button x="1" id="button2" y="2">
-      <text>Button</text>
-     </button>
-     <button x="1" id="button3" y="3">
-      <text>Button</text>
-     </button>
-     <button x="1" id="button4" y="1">
-      <text>Button</text>
-     </button>
-    </gridLayout>
-    <gridLayout width="1" height="4" row="1" col="2" id="nest2">
-     <button x="1" id="button5" y="1">
-      <text>Button</text>
-     </button>
-     <button x="1" id="button6" y="2">
-      <text>Button</text>
-     </button>
-     <button x="1" id="button7" y="3">
-      <text>Button</text>
-     </button>
-     <button x="1" id="button8" y="4">
-      <text>Button</text>
-     </button>
-    </gridLayout>
-   </gridLayout>
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>5</presentations>
+      <skip>0</skip>
+      <order>random</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>button2</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+      <trial id="trial2">
+        <answer>button5</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus2"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">true</feedback>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout id="main" height="1" width="2">
+        <gridLayout id="nest1" col="1" height="3" width="1" row="1">
+          <button id="button2" x="1" y="2">
+            <text>Button</text>
+          </button>
+          <button id="button3" x="1" y="3">
+            <text>Button</text>
+          </button>
+          <button id="button4" x="1" y="1">
+            <text>Button</text>
+          </button>
+        </gridLayout>
+        <gridLayout id="nest2" col="2" height="4" width="1" row="1">
+          <button id="button5" x="1" y="1">
+            <text>Button</text>
+          </button>
+          <button id="button6" x="1" y="2">
+            <text>Button</text>
+          </button>
+          <button id="button7" x="1" y="3">
+            <text>Button</text>
+          </button>
+          <button id="button8" x="1" y="4">
+            <text>Button</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
       <buttongroup id="buttongroup90">
-    <button id="button2"/>
-    <button id="button3"/>
-    <button id="button4"/>
-    <button id="button5"/>
-    <button id="button6"/>
-    <button id="button7"/>
-    <button id="button8"/>
-   </buttongroup>
-   <default_answer_element>buttongroup90</default_answer_element>
-  </screen>
- </screens>
-
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
-  <datablock id="rawdata2">
-   <device>wavdevice</device>
-   <uri>wd2.wav</uri>
-  </datablock>
- </datablocks>
-
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>512</buffersize>
-  </device>
- </devices>
-
- <filters>
- </filters>
-
- <stimuli>
-  <fixed_parameters>
-   <parameter id="fixed"/>
-  </fixed_parameters>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="fixed">1</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="stimulus2">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata2"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="fixed">2</parameter>
-   </fixedParameters>
-  </stimulus>
- </stimuli>
-
- <connections>
- </connections>
-
+        <button id="button2"/>
+        <button id="button3"/>
+        <button id="button4"/>
+        <button id="button5"/>
+        <button id="button6"/>
+        <button id="button7"/>
+        <button id="button8"/>
+      </buttongroup>
+      <default_answer_element>buttongroup90</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="rawdata2">
+      <device>wavdevice</device>
+      <file>wd2.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>512</buffersize>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="fixed"/>
+    </fixed_parameters>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="fixed">1</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus2">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata2"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="fixed">2</parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

@@ -22,56 +22,41 @@
 
 #include "apexdata/fileprefix.h"
 
-#include "apextools/xml/xercesinclude.h"
-
-#include "parser/apexparser.h"
-
-namespace XERCES_CPP_NAMESPACE
-{
-    class DOMElement;
-    class DOMDocument;
-};
-
 class QWidget;
 
-namespace apex {
+namespace apex
+{
 
-    namespace data {
-        class DatablocksData;
-        class DatablockData;
-    }
+namespace data
+{
+class DatablocksData;
+class DatablockData;
+}
 
-namespace parser {
+namespace parser
+{
 
-/**
-Parses the <datablocks> element
-
-    @author Tom Francart,,, <tom.francart@med.kuleuven.be>
-*/
-class APEX_EXPORT DatablocksParser : public Parser
+class APEX_EXPORT DatablocksParser
 {
 public:
     /**
      * parent: parent widget for showing dialogs, if 0 no dialogs will be shown
      */
-    DatablocksParser(QWidget* parent=0);
-
+    DatablocksParser(QWidget* parent = NULL);
     ~DatablocksParser();
 
-    data::DatablocksData Parse(XERCES_CPP_NAMESPACE::DOMElement* dom,
-                               const QString& scriptLibraryFile, const QVariantMap& scriptParameters );
+    data::DatablocksData Parse(const QString &fileName, const QDomElement &dom,
+                               const QString &scriptLibraryFile,
+                               const QVariantMap &scriptParameters);
 
-    data::DatablockData* ParseDatablock(
-                                        XERCES_CPP_NAMESPACE::DOMElement* p_datablock,
-                                         const data::FilePrefix p_prefix );
+private:
+    data::DatablockData* ParseDatablock(const QDomElement &p_datablock,
+            const data::FilePrefix p_prefix);
 
-    private:
-        QWidget* m_parent;
-
+    QWidget* m_parent;
 };
 
 }
-
 }
 
 #endif

@@ -21,72 +21,69 @@
 
 #include "apextools/apextools.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "resultparameterswriter.h"
-
-using namespace XERCES_CPP_NAMESPACE;
-using namespace apex::ApexXMLTools;
 
 using apex::writer::ResultParametersWriter;
 using apex::data::ResultParameters;
 
-
-DOMElement* ResultParametersWriter::addElement(DOMDocument* doc,
+QDomElement ResultParametersWriter::addElement(QDomDocument *doc,
         const ResultParameters& data)
 {
-    DOMElement* rootElement = doc->getDocumentElement();
-    DOMElement* result = doc->createElement(X("results"));
-    rootElement->appendChild(result);
+    QDomElement rootElement = doc->documentElement();
+    QDomElement result = doc->createElement(QSL("results"));
+    rootElement.appendChild(result);
     qCDebug(APEX_RS) << "Started writing results";
 
     //htmlpage
     //QString htmlPage = data.GetHtml();
     QString htmlPage = data.resultPage().toString();
     if (!htmlPage.isEmpty()) {
-        result->appendChild(XMLutils::CreateTextElement(doc, "page",
+        result.appendChild(XmlUtils::createTextElement(doc, "page",
                                                         htmlPage));
     }
     else {
-        result->appendChild(XMLutils::CreateTextElement(doc, "page",
+        result.appendChild(XmlUtils::createTextElement(doc, "page",
                             ""));
     }
 
     //resultparameters
     QMap<QString,QString> xp = data.resultParameters();
     if (!xp.isEmpty()) {
-        DOMElement* xsp =doc->createElement(X("resultparameters")) ;
-        result->appendChild(xsp) ;
+        QDomElement xsp =doc->createElement(QSL("resultparameters")) ;
+        result.appendChild(xsp) ;
 
         QMapIterator<QString,QString> it(xp);
         while (it.hasNext()) {
             it.next();
             qCDebug(APEX_RS) << "Resultparameters parsed:" << it.key() << " with value " << it.value();
-            DOMElement* parameter = doc->createElement(X("parameter"));
-            parameter->setAttribute( X("name"), S2X(it.key()));
-            DOMNode* text = doc->createTextNode(S2X(it.value()));
-            parameter->appendChild(text);
-            xsp->appendChild(parameter);
+            QDomElement parameter = doc->createElement(QSL("parameter"));
+            parameter.setAttribute(QSL("name"), it.key());
+            QDomNode text = doc->createTextNode(it.value());
+            parameter.appendChild(text);
+            xsp.appendChild(parameter);
          }
     }
 
     //showresultsduring
     if(data.showRTResults()){
-        result->appendChild(XMLutils::CreateTextElement(doc, "showduringexperiment",
+        result.appendChild(XmlUtils::createTextElement(doc, "showduringexperiment",
                              ApexTools::boolToString(true)));
     }
 
     //showresultsafter
     if (data.showResultsAfter()) {
-        result->appendChild(XMLutils::CreateTextElement(doc, "showafterexperiment",
+        result.appendChild(XmlUtils::createTextElement(doc, "showafterexperiment",
                             ApexTools::boolToString(true)));
     }
 
     //saveprocessedresults
     if (data.saveResults())
     {
-        result->appendChild(XMLutils::CreateTextElement(doc,
+        result.appendChild(XmlUtils::createTextElement(doc,
                             "saveprocessedresults", ApexTools::boolToString(true)));
     }
 
@@ -94,7 +91,7 @@ DOMElement* ResultParametersWriter::addElement(DOMDocument* doc,
     QString matlabScript = data.matlabScript();
     if (!matlabScript.isEmpty())
     {
-        result->appendChild(XMLutils::CreateTextElement(doc, "matlabscript",
+        result.appendChild(XmlUtils::createTextElement(doc, "matlabscript",
                             matlabScript));
     }
 
@@ -102,7 +99,7 @@ DOMElement* ResultParametersWriter::addElement(DOMDocument* doc,
     QString subject = data.subject();
     if (!subject.isEmpty())
     {
-        result->appendChild(XMLutils::CreateTextElement(doc, "subject",
+        result.appendChild(XmlUtils::createTextElement(doc, "subject",
                             subject));
     }
 

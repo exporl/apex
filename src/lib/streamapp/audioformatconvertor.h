@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __AUDIOFORMATCONVERTOR_H__
-#define __AUDIOFORMATCONVERTOR_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_AUDIOFORMATCONVERTOR_H__
+#define _APEX_SRC_LIB_STREAMAPP_AUDIOFORMATCONVERTOR_H__
 
 #include "typedefs.h"
 #include "audioformat.h"
@@ -57,12 +57,11 @@ namespace streamapp
         * If the source is finished, the method returns less samples then ac_nSamples.
         * @param ac_pSource the AudioFormatReader to read samples from
         * @param ac_nSamples the number of samples to read, must be <= buffersize
-        * @param ac_bNormalize if true, converts all samples to -1.0 - 1.0 range
         * @param ac_nSourceOffset the offset to start reading samples , must be <= buffersize
         * @return the number of samples actually read
         */
     unsigned ReadFromSource(  AudioFormatReader* const ac_pSource, const unsigned ac_nSamples,
-                                    const bool ac_bNormalize = false, const unsigned ac_nSourceOffset = 0 );
+                                    const unsigned ac_nSourceOffset);
 
        /**
         * Write to a source.
@@ -70,12 +69,9 @@ namespace streamapp
         * then call this method to write the samples to the writer.
         * @param a_cpSink the AudioFormatWriter to write samples to
         * @param ac_nSamples the number of samples to write, must be <= buffersize
-        * @param ac_bNormalize if true, converts all samples from -1.0 - 1.0 range
-        * @param ac_bClipping if true, checks for clipped samples (and clips them to the maximum value)
         * @return the number of samples actually written
         */
-    unsigned WriteToSource(   AudioFormatWriter* const a_cpSink, const unsigned ac_nSamples,
-                                    const bool ac_bNormalize = false, const bool ac_bClipping = false  );
+    unsigned WriteToSource(   AudioFormatWriter* const a_cpSink, const unsigned ac_nSamples);
 
       /**
         * Get the clipped channels.
@@ -137,4 +133,4 @@ namespace streamapp
 
 }
 
-#endif //#ifndef __AUDIOFORMATCONVERTOR_H__
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_AUDIOFORMATCONVERTOR_H__

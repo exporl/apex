@@ -16,12 +16,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "apextools/services/paths.h"
+#include "apextools/apexpaths.h"
 
 #include "calibration/soundlevelmeter.h"
 
 #include "coh/cohclient.h"
 
+#include "common/paths.h"
+#include "common/pluginloader.h"
 #include "common/utils.h"
 
 #include "device/plugincontrollerinterface.h"
@@ -31,8 +33,6 @@
 #include "filter/pluginfilterinterface.h"
 
 #include "runner/pluginrunnerinterface.h"
-
-#include "services/pluginloader.h"
 
 #include "plugindialog.h"
 #include "ui_plugindialog.h"
@@ -92,7 +92,7 @@ void PluginDialogPrivate::add(const QObject *object, const QString &what,
         className = QString::fromLatin1(object->metaObject()->className());
         if (className.endsWith("Creator"))
             className.resize(className.size() - 7);
-        filePath = PluginLoader::Get().pluginPath(object);
+        filePath = PluginLoader().pluginPath(object);
     }
 
     QTreeWidgetItem * const item = new QTreeWidgetItem(parent, QStringList()
@@ -116,7 +116,7 @@ void PluginDialogPrivate::scanPlugins()
     parents.clear();
 
     Q_FOREACH (const QObject * const object,
-            PluginLoader::Get().allAvailablePlugins()) {
+            PluginLoader().allAvailablePlugins()) {
         bool added = false;
         if (const PluginFilterCreator * const creator =
             qobject_cast<PluginFilterCreator*>(object)) {
@@ -164,7 +164,7 @@ void PluginDialogPrivate::scanPlugins()
         }
     }
 
-    QMapIterator<QString, QString> i(PluginLoader::Get().pluginsWithErrors());
+    QMapIterator<QString, QString> i(PluginLoader().pluginsWithErrors());
     while (i.hasNext()) {
         i.next();
         add(NULL, PluginDialog::tr("Invalid plugins"),
@@ -180,23 +180,14 @@ void PluginDialogPrivate::on_refresh_clicked()
 {
     E_P(PluginDialog);
 
-    unsigned pluginCount = unsigned(PluginLoader().allAvailablePlugins().size());
-    QSettings settings(QL1S("Trolltech"));
-    Q_FOREACH (const auto &group, settings.childGroups())
-        if (group.startsWith(QL1S("Qt Plugin Cache ")))
-            settings.remove(group);
-    /* TODO needs the plugin loader from common
-    PluginLoader().reloadAllPlugins();
+    int pluginCount = PluginLoader().allAvailablePlugins().size();
+    PluginDialog::refreshPluginCache();
     scanPlugins();
-
-    if (pluginCount == unsigned(PluginLoader().allAvailablePlugins().size())) {
+    if (pluginCount == PluginLoader().allAvailablePlugins().size()) {
          QMessageBox::information(p, tr("Plugins"),
                  tr("No new plugins have been found.\n"
                      "Restarting RBA might help."));
     }
-    */
-    Q_UNUSED(p);
-    Q_UNUSED(pluginCount);
 }
 
 void PluginDialogPrivate::on_buttonBox_helpRequested()
@@ -211,7 +202,7 @@ void PluginDialogPrivate::on_buttonBox_helpRequested()
                             "second column. By holding the cursor above the "
                             "first column, eventual error messages during "
                             "loading of the plugin are shown.")
-                            .arg(Paths::Get().GetBinaryPluginPaths().join("\n")));
+                            .arg(Paths::pluginDirectories().join("\n")));
 }
 
 // PluginDialog ================================================================
@@ -235,12 +226,25 @@ PluginDialog::PluginDialog(QWidget *parent) :
     button->setObjectName(QL1S("refresh"));
     connectSlotsByNameToPrivate(this, d);
 
+#ifdef Q_OS_ANDROID
+    showMaximized();
+#endif
+
     d->scanPlugins();
 }
 
 PluginDialog::~PluginDialog()
 {
     delete dataPtr;
+}
+
+void PluginDialog::refreshPluginCache()
+{
+    QSettings settings(QL1S("Trolltech"));
+    Q_FOREACH (const auto &group, settings.childGroups())
+        if (group.startsWith(QL1S("Qt Plugin Cache ")))
+            settings.remove(group);
+    PluginLoader().reloadAllPlugins();
 }
 
 } // namespace apex

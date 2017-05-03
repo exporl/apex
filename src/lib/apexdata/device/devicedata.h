@@ -32,9 +32,7 @@ enum DeviceType
 {
     TYPE_NONE = -1,
     TYPE_WAVDEVICE,
-    TYPE_L34,
-    TYPE_MIXER,
-    TYPE_PA5,
+    TYPE_COH,
     TYPE_DUMMY,
     TYPE_PLUGINCONTROLLER
 };
@@ -46,34 +44,32 @@ enum DeviceType
  */
 class APEXDATA_EXPORT DeviceData: public SimpleParameters
 {
-    public:
+public:
 
-        virtual ~DeviceData();
+    virtual ~DeviceData();
 
-        //getters
+    //getters
 
-        DeviceType deviceType() const;
-        virtual bool isControlDevice() const;
-        virtual unsigned numberOfChannels() const;
+    DeviceType deviceType() const;
+    virtual bool isControlDevice() const;
+    virtual unsigned numberOfChannels() const;
 
-        //setters
+    //setters
 
-        virtual void setNumberOfChannels(unsigned n);
+    virtual void setNumberOfChannels(unsigned n);
 
-        bool operator==(const DeviceData& other) const;
-        void setSilent(bool newSilent = true);
-        bool isSilent() const;
+    bool operator==(const DeviceData& other) const;
+    void setSilent(bool newSilent = true);
+    bool isSilent() const;
 
-    protected:
+protected:
+    DeviceData(DeviceType type);
 
-        DeviceData(DeviceType type);
+    bool    isControlDev;
 
-        bool    isControlDev;
-
-    private:
-
-        DeviceType devType;
-        bool silent;
+private:
+    DeviceType devType;
+    bool silent;
 };
 
 }// ns data

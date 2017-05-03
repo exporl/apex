@@ -20,7 +20,7 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_SOUNDCARDDIALOG_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_SOUNDCARDDIALOG_H_
 
-#include "apextools/services/paths.h"
+#include "apextools/apexpaths.h"
 
 #include "ui_soundcarddialog.h"
 
@@ -40,7 +40,6 @@ public:
       QDialog(), Ui_SoundcardDialog()
   {
       setupUi( this );
-    setWindowIcon( QPixmap( Paths::Get().GetMainLogoPath() ) );
     textLabel2->setText( ac_sErroneousDriver );
     comboBox1->addItems( ac_sOtherDrivers );
   }

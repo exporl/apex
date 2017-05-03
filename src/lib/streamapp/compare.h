@@ -17,12 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __STR_COMPARE_H__
-#define __STR_COMPARE_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_COMPARE_H__
+#define _APEX_SRC_LIB_STREAMAPP_COMPARE_H__
 
 #include "audioformat.h"
 #include "containers/array.h"
-#include <string>
+
+#include <QString>
 
 namespace streamapp
 {
@@ -40,8 +41,8 @@ namespace streamapp
   struct Compare
   {
 
-    typedef ArrayAccess< std::string > mt_Files;
-    typedef ArrayAccess< AudioFormatReader* > mt_Readers;
+    typedef ArrayAccess<QString> mt_Files;
+    typedef ArrayAccess<AudioFormatReader*> mt_Readers;
 
     enum mt_eResult
     {
@@ -56,7 +57,7 @@ namespace streamapp
         * @param a_Input1 second input
         * @return true if identical
         */
-    static mt_eResult sf_eCompare( AudioFormatReader& a_Input0, AudioFormatReader& a_Input1 ) throw();
+    static mt_eResult sf_eCompare(AudioFormatReader& a_Input0, AudioFormatReader& a_Input1) throw();
 
       /**
         * Compare reader data;
@@ -66,7 +67,7 @@ namespace streamapp
         * @param a_Input1 second input
         * @return true if identical
         */
-    static mt_eResult sf_eCompare( mt_Readers& a_Input0, AudioFormatReader& a_Input1 ) throw();
+    static mt_eResult sf_eCompare(mt_Readers& a_Input0, AudioFormatReader& a_Input1) throw();
 
       /**
         * Compare two wavefiles.
@@ -74,7 +75,7 @@ namespace streamapp
         * @param ac_sFile1 second file
         * @return true if identical data (samplerate is ignored though)
         */
-    static mt_eResult sf_eCompareWave( const std::string& ac_sFile0, const std::string& ac_sFile1 ) throw();
+    static mt_eResult sf_eCompareWave(const QString &ac_sFile0, const QString &ac_sFile1) throw();
 
       /**
         * Compare wavefiles;
@@ -84,7 +85,7 @@ namespace streamapp
         * @param ac_sFile1 second file
         * @return true if identical data (samplerate is ignored though)
         */
-    static mt_eResult sf_eCompareWave( const mt_Files& ac_sFile0, const std::string& ac_sFile1 ) throw();
+    static mt_eResult sf_eCompareWave(const mt_Files& ac_sFile0, const QString &ac_sFile1) throw();
 
     static const unsigned sc_nReadSize = 8192;
 
@@ -92,4 +93,4 @@ namespace streamapp
 
 }
 
-#endif //#ifndef __STR_COMPARE_H__
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_COMPARE_H__

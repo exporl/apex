@@ -43,10 +43,10 @@ namespace apex
       Q_OBJECT
     public:
       ObjectPropertiesItemDelegate( ObjectPropertiesModel* model, QObject* parent );
-      QWidget* createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-      void setEditorData ( QWidget * editor, const QModelIndex & index ) const;
-      void setModelData( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const;
-      QSize sizeHint() const;
+      QWidget* createEditor ( QWidget * parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const Q_DECL_OVERRIDE;
+      void setEditorData ( QWidget * editor, const QModelIndex & index ) const Q_DECL_OVERRIDE;
+      void setModelData( QWidget * editor, QAbstractItemModel * model, const QModelIndex & index ) const Q_DECL_OVERRIDE;
+      QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
     public slots:
       void editingFinished();
       void valueChanged();
@@ -135,7 +135,7 @@ namespace apex
       if ( s.isEmpty() ) return;
       else {
         if ( selectFile( s ) )
-          emit valueChanged();
+          Q_EMIT valueChanged();
       }
     }
 
@@ -245,7 +245,7 @@ namespace apex
       invaluechanged = true;
       Q_ASSERT( dynamic_cast<QWidget*>( sender() ) );
       QWidget* editor = static_cast<QWidget*>( sender() );
-      emit commitData( editor );
+      Q_EMIT commitData( editor );
       setEditorData( editor, model->index( rowBeingEdited, 1 ) );
       editor->setFocus();
       invaluechanged = false;
@@ -267,7 +267,7 @@ namespace apex
         return;
       Q_ASSERT( dynamic_cast<QWidget*>( sender() ) );
       QWidget* editor = static_cast<QWidget*>( sender() );
-      emit closeEditor( editor );
+      Q_EMIT closeEditor( editor );
     }
 
     void ObjectPropertiesItemDelegate::setEditorData(
@@ -445,8 +445,8 @@ namespace apex
       default:
         break;
       }
-      emit model->dataChanged( index, index );
-      emit model->modified();
+      Q_EMIT model->dataChanged( index, index );
+      Q_EMIT model->modified();
     }
 
     QWidget* ObjectPropertiesItemDelegate::createEditor(
@@ -592,8 +592,8 @@ namespace apex
         bool t = rep->setProperty( index.row(), v );
         if ( t )
         {
-          emit dataChanged( index, index );
-          emit modified();
+          Q_EMIT dataChanged( index, index );
+          Q_EMIT modified();
           return true;
         }
         return false;
@@ -711,8 +711,10 @@ namespace apex
     {
     }
 
-    QSize ObjectPropertiesItemDelegate::sizeHint() const
+    QSize ObjectPropertiesItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
+      Q_UNUSED(option);
+      Q_UNUSED(index);
       return QSize( 180, 200 );
     }
 

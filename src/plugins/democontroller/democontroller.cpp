@@ -32,19 +32,13 @@ class DemoControllerCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginControllerCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA (IID "apex.democontroller")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
     virtual PluginControllerInterface *createController
             (const QString &name ) const;
 };
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (democontroller, DemoControllerCreator)
-#endif
 
 class DemoController:
     public QObject,
@@ -62,7 +56,6 @@ public:
             const QString &value);
 
     virtual bool prepare ();
-
 
 private:
     int myParam;

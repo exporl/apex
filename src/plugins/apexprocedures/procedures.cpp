@@ -43,12 +43,10 @@ class ProcedureCreator : public QObject, public ProcedureCreatorInterface
 {
         Q_OBJECT
         Q_INTERFACES(apex::ProcedureCreatorInterface)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "apex.procedurecreator")
-#endif
     public:
 
-        QStringList availableProcedurePlugins() const;
+        QStringList availablePlugins() const;
 
         ProcedureInterface* createProcedure(const QString& name,
                                             ProcedureApi* api,
@@ -57,11 +55,7 @@ class ProcedureCreator : public QObject, public ProcedureCreatorInterface
         ProcedureParserInterface* createProcedureParser(const QString& name);
 };
 
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (procedurecreator, ProcedureCreator)
-#endif
-
-QStringList ProcedureCreator::availableProcedurePlugins() const
+QStringList ProcedureCreator::availablePlugins() const
 {
     return QStringList()
         << STR_ADAPTIVE

@@ -1,4 +1,4 @@
-CLEBS *= xerces apextools apexdata asciicast subdirsources builddll
+CLEBS *= apextools apexdata asciicast builddll
 
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)
 

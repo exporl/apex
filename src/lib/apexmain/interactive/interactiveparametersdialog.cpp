@@ -29,6 +29,8 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QScroller>
+#include <QScrollBar>
 #include <QSpinBox>
 
 namespace apex
@@ -51,17 +53,24 @@ InteractiveParametersDialog::~InteractiveParametersDialog()
     widgets.clear();
 }
 
-void InteractiveParametersDialog::warning(QString title, QString message) {
-    QMessageBox::warning(this, title, message);
+void InteractiveParametersDialog::warning(const QString &message)
+{
+    QMessageBox::warning(this, tr("Warning"), message);
 }
 
 void InteractiveParametersDialog::buildWidgets()
 {
     ui->setupUi(this);
 
-    QGridLayout *gridLayout = new QGridLayout(ui->parameters);
-    gridLayout->setContentsMargins(0, 0, 0, 0);
+#ifdef Q_OS_ANDROID
+    QScrollArea *area = qobject_cast<QScrollArea *>(ui->scrollArea);
+    QScroller::grabGesture(area->viewport(), QScroller::LeftMouseButtonGesture);
+    area->horizontalScrollBar()->setEnabled(false);
+    area->verticalScrollBar()->hide();
+    showMaximized();
+#endif
 
+    QGridLayout *gridLayout = new QGridLayout(ui->parameters);
     Q_FOREACH (const InteractiveParameters::Entry &entry, data->entries()) {
         const unsigned line = gridLayout->rowCount();
         const QString description = entry.description;

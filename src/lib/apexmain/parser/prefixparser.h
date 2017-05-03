@@ -22,44 +22,32 @@
 
 #include "apexdata/fileprefix.h"
 
-#include "apextools/xml/xercesinclude.h"
-
-#include "parser/apexparser.h"
-
 #include <QCoreApplication>
 
-namespace XERCES_CPP_NAMESPACE
+class QDomElement;
+
+namespace apex
 {
-    class DOMElement;
-};
 
-namespace apex {
+namespace data
+{
+class FilePrefix;
+}
 
-    namespace data {
-        class FilePrefix;
-    }
+namespace parser
+{
 
-namespace parser {
-
-/**
-        @author Tom Francart,,, <tom.francart@med.kuleuven.be>
-*/
-class PrefixParser : public Parser
+class PrefixParser
 {
     Q_DECLARE_TR_FUNCTIONS(PrefixParser)
 public:
     PrefixParser();
-
     ~PrefixParser();
 
-//    static const QString Parse(XERCES_CPP_NAMESPACE::DOMElement* currentNode);
-
-    static data::FilePrefix Parse(XERCES_CPP_NAMESPACE::DOMElement* currentNode);
-
+    static data::FilePrefix Parse(const QDomElement &currentNode);
 };
 
 }
-
 }
 
 #endif

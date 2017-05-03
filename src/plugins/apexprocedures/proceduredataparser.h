@@ -17,18 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_PLUGINS_APEXPROCEDURES_PROCEDUREDATAPARSER_H_
-#define _EXPORL_SRC_PLUGINS_APEXPROCEDURES_PROCEDUREDATAPARSER_H_
+#ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_PROCEDUREDATAPARSER_H_
+#define _APEX_SRC_PLUGINS_APEXPROCEDURES_PROCEDUREDATAPARSER_H_
 
-#include "apextools/xml/xercesinclude.h"
+
+#include "apextools/xml/xmltools.h"
 
 #include <QCoreApplication>
-
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMElement;
-};
-
 
 namespace apex
 {
@@ -43,27 +38,19 @@ namespace parser
 class ProcedureDataParser
 {
     Q_DECLARE_TR_FUNCTIONS(ProcedureDataParser)
-    public:
+public:
+    /**
+     * Parse the given xml data structure into the given data structure
+     * does not take ownership of p_data
+     */
+    void Parse(const QDomElement &p_base, data::ProcedureData* p_data);
 
-        /**
-        * Parse the given xml data structure into the given data structure
-        * does not take ownership of p_data
-         */
-        virtual void Parse(XERCES_CPP_NAMESPACE::DOMElement* p_base,
-                   data::ProcedureData* p_data);
-
-
-    protected:
-        virtual bool SetParameter(const QString tag,
-                                  const QString id, const QString value ,
-                                  XERCES_CPP_NAMESPACE::DOMElement* node,
-                                  data::ProcedureData* data);
+protected:
+    virtual bool SetParameter(const QString &tag, const QString &id, const QString &value,
+                                const QDomElement &node, data::ProcedureData* data);
 };
 
-
 }
 }
-
-
 
 #endif

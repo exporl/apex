@@ -18,35 +18,20 @@
  *****************************************************************************/
 
 #include "datablock.h"
-#include "md5/md5.h"
 
 #include <QString>
-#include <QFileInfo>
 
 namespace apex
 {
 namespace stimulus
 {
 
-DataBlock::DataBlock(const apex::data::DatablockData& data, const QUrl& filename,
+DataBlock::DataBlock(const apex::data::DatablockData& data, const QString& filename,
                       const ExperimentRunDelegate* experiment) :
                         filename(filename),
                         data(data),
                         experiment(experiment)
 {}
-
-const QString DataBlock::GetMD5Sum() const
-{
-    std::ifstream file(QFile::encodeName(GetUrl().path()));
-    if (!file)
-        throw ApexStringException("Can't open file for MD5 sum");
-    MD5 context(file);
-    char* hd = context.hex_digest();
-    QString ret( hd );
-    // avoid memory leak..
-    delete[] hd;
-    return ret;
-}
 
 DataBlock* DataBlock::GetCopy(QString id)
 {

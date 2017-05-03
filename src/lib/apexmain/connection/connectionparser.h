@@ -20,27 +20,29 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_CONNECTION_CONNECTIONPARSER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_CONNECTION_CONNECTIONPARSER_H_
 
-#include "apextools/xml/xercesinclude.h"
+class QDomElement;
 
-#include "parser/apexparser.h"
+namespace apex
+{
+namespace data
+{
+class ConnectionData;
+class ParameterManagerData;
+}
 
-namespace apex {
-    namespace data {
-        class ConnectionData;
-        class ParameterManagerData;
-    }
+namespace parser
+{
 
-    namespace parser {
+class ConnectionParser
+{
+public:
+    data::ConnectionData* Parse(const QDomElement &node);
 
-    class ConnectionParser: public Parser {
-    public:
-        data::ConnectionData* Parse (xercesc::DOMNode* node );
+private:
+    QString GenerateType(QString parameterid);
+};
 
-    private:
-        QString GenerateType(QString parameterid);
-    };
-
-    }   // ns parser
+}
 }
 
 #endif

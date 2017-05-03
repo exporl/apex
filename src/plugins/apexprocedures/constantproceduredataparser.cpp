@@ -19,6 +19,8 @@
 
 #include "apexdata/procedure/constantproceduredata.h"
 
+#include "apextools/xml/xmltools.h"
+
 #include "constantproceduredataparser.h"
 
 #include <QString>
@@ -29,31 +31,22 @@ namespace apex
 namespace parser
 {
 
-
 ConstantProcedureDataParser::ConstantProcedureDataParser()
 {
 }
 
-void ConstantProcedureDataParser::Parse(XERCES_CPP_NAMESPACE::DOMElement* p_base,
-           data::ConstantProcedureData* p_data)
+void ConstantProcedureDataParser::Parse(const QDomElement &p_base,
+        data::ConstantProcedureData* p_data)
 {
     ProcedureDataParser::Parse(p_base, p_data);
 }
 
-bool ConstantProcedureDataParser::SetParameter(const QString p_name,
-        const QString id, const QString p_value ,
-        XERCES_CPP_NAMESPACE::DOMElement* node, data::ProcedureData *data)
+bool ConstantProcedureDataParser::SetParameter(const QString &p_name,
+        const QString &id, const QString &p_value,
+        const QDomElement &node, data::ProcedureData *data)
 {
-    Q_ASSERT(data);
-
     return ProcedureDataParser::SetParameter(p_name,id, p_value, node, data);
-
-
-}
-
-
 }
 
 }
-
-
+}

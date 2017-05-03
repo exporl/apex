@@ -24,21 +24,16 @@
 
 #include "apextools/global.h"
 
-#include "apextools/xml/xercesinclude.h"
-#include "apextools/xml/xmldocumentgetter.h"
+#include "apextools/xml/xmltools.h"
 
-namespace XERCES_CPP_NAMESPACE
+namespace apex
 {
-class DOMDocument;
-}
-
-namespace apex {
-    class XPathProcessor;
+class XPathProcessor;
 
 class APEX_EXPORT InteractiveParameters
 {
 public:
-    InteractiveParameters(xercesc::DOMDocument *document, ApexXMLTools::XMLDocumentGetter& documentGetter);
+    InteractiveParameters(const QDomDocument &document);
 
     enum ValueType {
         IntValue,
@@ -69,28 +64,27 @@ public:
         bool succeeded;
     };
 
-    struct Callback {
-        virtual void warning(QString title, QString message) = 0;
+    struct Callback
+    {
+        virtual void warning(const QString &message) = 0;
     };
 
-    void apply(QStringList entryResults, Callback* callback = 0);
-    void applyExpressions(QMap<QString, QString> expressions);
+    void apply(const QStringList &entryResults, Callback* callback = 0);
+    void applyExpressions(const QMap<QString, QString> &expressions);
     data::ParameterDialogResults* results() const;
-    const QList<Entry>& entries() const;
+    QList<Entry> entries() const;
+    QDomDocument document() const;
 
-    xercesc::DOMDocument* document() const;
 private:
     QList<Entry> mEntries;
 
-    xercesc::DOMDocument * document_;
-    ApexXMLTools::XMLDocumentGetter& documentGetter;
+    QDomDocument document_;
 
-    void processXml();
-    QString createTmpFile() const;
-    void deleteFile(QString tmpFilename) const;
-    XPathProcessor* getXPathProcessor(QString& filename);
-    void finishXPathProcessor(XPathProcessor* xpathProcessor, QString filename);
+    QString tempFileName() const;
+    XPathProcessor* getXPathProcessor(QString *filename);
+    void finishXPathProcessor(XPathProcessor* xpathProcessor, const QString &filename);
 };
+
 }
 
 #endif // _EXPORL_SRC_LIB_APEXMAIN_INTERACTIVE_INTERACTIVEPARAMETERS_H_

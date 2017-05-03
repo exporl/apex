@@ -16,13 +16,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
+#include "common/testutils.h"
+
 #include "syllib/arfilter.h"
+
 #include "tester.h"
 
 using namespace syl;
 
 void TestSyl::arFilter()
 {
+    TEST_EXCEPTIONS_TRY
+
     const double input[] = {-1.07159e-08, 4.40756e-08, -3.64765e-08,
         -9.13221e-08, 3.95817e-07, -7.26875e-07, -8.48536e-07, 1.31107e-06,
         9.32937e-07, -7.63544e-07, -7.95249e-07, 1.19425e-06, -2.41517e-06,
@@ -123,76 +128,73 @@ void TestSyl::arFilter()
 
     QByteArray array (reinterpret_cast<const char*> (dump), sizeof (dump));
 
-    try {
-        { // Basic loading
-            QBuffer buffer (&array);
-            ArFilter filter (ArFilter::load (&buffer));
-            QCOMPARE (filter.length(), 21u);
-            ARRAYCOMP (filter.taps(), taps, 21);
-        }
-
-        { // Invalid number of channels
-            QByteArray copy (array);
-            copy[6] = char (0xf0);
-            copy[7] = char (0x3f);
-            QBuffer buffer (&copy);
-            try {
-                ArFilter filter (ArFilter::load (&buffer));
-                QFAIL ("No std::exception for invalid channel number");
-            } catch (const std::exception &) {
-                // expected
-            }
-        }
-
-        { // Invalid coefficients, b_0 != 1
-            QByteArray copy (array);
-            copy[23] = 0x40;
-            QBuffer buffer (&copy);
-            try {
-                ArFilter filter (ArFilter::load (&buffer));
-                QFAIL ("No std::exception for invalid coefficients");
-            } catch (const std::exception &) {
-                // expected
-            }
-        }
-
-        { // Invalid coefficients, b_i != 0 | i > 0
-            QByteArray copy (array);
-            copy[31] = 0x40;
-            QBuffer buffer (&copy);
-            try {
-                ArFilter filter (ArFilter::load (&buffer));
-                QFAIL ("No std::exception for invalid coefficients");
-            } catch (const std::exception &) {
-                // expected
-            }
-        }
-
-        { // Invalid coefficients, a_0 != 1
-            QByteArray copy (array);
-            copy[191] = 0x40;
-            QBuffer buffer (&copy);
-            try {
-                ArFilter filter (ArFilter::load (&buffer));
-                QFAIL ("No std::exception for invalid coefficients");
-            } catch (const std::exception &) {
-                // expected
-            }
-        }
-
-        { // Output
-            double copy[128];
-            memcpy (copy, input, sizeof (copy));
-
-            QBuffer buffer (&array);
-            ArFilter filter (ArFilter::load (&buffer));
-            QCOMPARE (filter.position(), 0u);
-            filter.process (copy, 128);
-            ARRAYFUZZCOMP (copy, output, 1e-7, 128);
-            QCOMPARE (filter.position(), 128u);
-        }
-
-    } catch (std::exception &e) {
-        QFAIL (qPrintable (QString::fromLatin1("Exception thrown: %1").arg (QString::fromLocal8Bit(e.what()))));
+    { // Basic loading
+        QBuffer buffer (&array);
+        ArFilter filter (ArFilter::load (&buffer));
+        QCOMPARE (filter.length(), 21u);
+        ARRAYCOMP (filter.taps(), taps, 21);
     }
+
+    { // Invalid number of channels
+        QByteArray copy (array);
+        copy[6] = char (0xf0);
+        copy[7] = char (0x3f);
+        QBuffer buffer (&copy);
+        try {
+            ArFilter filter (ArFilter::load (&buffer));
+            QFAIL ("No std::exception for invalid channel number");
+        } catch (const std::exception &) {
+            // expected
+        }
+    }
+
+    { // Invalid coefficients, b_0 != 1
+        QByteArray copy (array);
+        copy[23] = 0x40;
+        QBuffer buffer (&copy);
+        try {
+            ArFilter filter (ArFilter::load (&buffer));
+            QFAIL ("No std::exception for invalid coefficients");
+        } catch (const std::exception &) {
+            // expected
+        }
+    }
+
+    { // Invalid coefficients, b_i != 0 | i > 0
+        QByteArray copy (array);
+        copy[31] = 0x40;
+        QBuffer buffer (&copy);
+        try {
+            ArFilter filter (ArFilter::load (&buffer));
+            QFAIL ("No std::exception for invalid coefficients");
+        } catch (const std::exception &) {
+            // expected
+        }
+    }
+
+    { // Invalid coefficients, a_0 != 1
+        QByteArray copy (array);
+        copy[191] = 0x40;
+        QBuffer buffer (&copy);
+        try {
+            ArFilter filter (ArFilter::load (&buffer));
+            QFAIL ("No std::exception for invalid coefficients");
+        } catch (const std::exception &) {
+            // expected
+        }
+    }
+
+    { // Output
+        double copy[128];
+        memcpy (copy, input, sizeof (copy));
+
+        QBuffer buffer (&array);
+        ArFilter filter (ArFilter::load (&buffer));
+        QCOMPARE (filter.position(), 0u);
+        filter.process (copy, 128);
+        ARRAYFUZZCOMP (copy, output, 1e-7, 128);
+        QCOMPARE (filter.position(), 128u);
+    }
+
+    TEST_EXCEPTIONS_CATCH
 }

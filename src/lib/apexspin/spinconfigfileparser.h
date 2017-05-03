@@ -17,21 +17,17 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXSPIN_SPINCONFIGFILEPARSER_H_
-#define _EXPORL_SRC_LIB_APEXSPIN_SPINCONFIGFILEPARSER_H_
+#ifndef _APEX_SRC_LIB_APEXSPIN_SPINCONFIGFILEPARSER_H_
+#define _APEX_SRC_LIB_APEXSPIN_SPINCONFIGFILEPARSER_H_
+
+#include "apexmain/upgradablexmlparser.h"
 
 #include "apextools/global.h"
 
-#include "apextools/xml/xercesinclude.h"
-
 #include <QString>
 
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMElement;
-class DOMNode;
-class DOMNodeList;
-}
+class QDomElement;
+class QDomNodeList;
 
 namespace spin
 {
@@ -45,44 +41,38 @@ struct CategoryMap;
 namespace parser
 {
 
-class APEXSPIN_EXPORT SpinConfigFileParser
+class APEXSPIN_EXPORT SpinConfigFileParser :
+    public apex::UpgradableXmlParser
 {
-    public:
+    Q_OBJECT
+public:
+    SpinConfigFileParser();
+    SpinConfigFileParser(const QString &file);
 
-        static data::SpinConfig parse(QString file, QString schema);
+    data::SpinConfig parse();
 
-    private:
+private Q_SLOTS:
+    void upgrade3_1_3();
 
-        static void parsePrefix(XERCES_CPP_NAMESPACE::DOMNode* prefix,
-                                data::SpinConfig* into);
-        static void parseSpeakers(XERCES_CPP_NAMESPACE::DOMNode* speakers,
-                                  data::SpinConfig* into);
-        static void parseNoises(XERCES_CPP_NAMESPACE::DOMNode* noises,
-                                data::SpinConfig* into);
-        static void parseSpeech(XERCES_CPP_NAMESPACE::DOMNode* speechmat,
-                                data::SpinConfig* into);
-        static void parseSpeechFiles(XERCES_CPP_NAMESPACE::DOMNode* speechfiles,
-                                data::SpinConfig* into, QString path, QString schema);
-        static void parseSubjectScreen(XERCES_CPP_NAMESPACE::DOMNode* screen,
-                                data::SpinConfig* into);
-        static void parseExperimenterScreenQuiet(XERCES_CPP_NAMESPACE::DOMNode* screen,
-                                       data::SpinConfig* into);
-        static void parseExperimenterScreenNoise(XERCES_CPP_NAMESPACE::DOMNode* screen,
-                                       data::SpinConfig* into);
-        static void parseCustomScreens(XERCES_CPP_NAMESPACE::DOMNode* screens,
-                                            data::SpinConfig* into);
-        static void parseIds(XERCES_CPP_NAMESPACE::DOMNode* ids,
-                             data::SpinConfig* into);
-        static void parseGeneralData(XERCES_CPP_NAMESPACE::DOMNode* data,
-                                     data::SpinConfig* into);
-        static void parseSoundcardSetup(XERCES_CPP_NAMESPACE::DOMNode* data,
-                                     data::SpinConfig* into);
-        static void addLists(XERCES_CPP_NAMESPACE::DOMNodeList* lists,
-                             data::CategoryMap* into, QString category = "");
-        static QStringList expandWildcards(QString directory, QString fileIdentifier);
+private:
+    void parsePrefix(const QDomElement &prefix, data::SpinConfig* into);
+    void parseSpeakers(const QDomElement &speakers, data::SpinConfig* into);
+    void parseNoises(const QDomElement &noises, data::SpinConfig* into);
+    void parseSpeech(const QDomElement &speechmat, data::SpinConfig* into);
+    void parseSpeechFiles(const QDomElement &speechfiles, data::SpinConfig* into,
+            const QString &path);
+    void parseSubjectScreen(const QDomElement &screen, data::SpinConfig* into);
+    void parseExperimenterScreenQuiet(const QDomElement &screen, data::SpinConfig* into);
+    void parseExperimenterScreenNoise(const QDomElement &screen, data::SpinConfig* into);
+    void parseCustomScreens(const QDomElement &screens, data::SpinConfig* into);
+    void parseIds(const QDomElement &ids, data::SpinConfig* into);
+    void parseGeneralData(const QDomElement &data, data::SpinConfig* into);
+    void parseSoundcardSetup(const QDomElement &data, data::SpinConfig* into);
+    void addLists(const QDomNodeList &lists, data::CategoryMap* into, const QString &category = QString());
+    QStringList expandWildcards(const QString &directory, const QString &fileIdentifier);
 };
 
-} //ns parser
-} //ns spin
+}
+}
 
 #endif

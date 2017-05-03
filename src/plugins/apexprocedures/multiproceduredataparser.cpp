@@ -29,32 +29,21 @@ namespace apex
 namespace parser
 {
 
-
 MultiProcedureDataParser::MultiProcedureDataParser()
 {
 }
 
-void MultiProcedureDataParser::Parse(
-        XERCES_CPP_NAMESPACE::DOMElement* p_base,
-        data::MultiProcedureData* p_data)
+void MultiProcedureDataParser::Parse(const QDomElement &p_base, data::MultiProcedureData* p_data)
 {
-   ProcedureDataParser::Parse(p_base, p_data);
+    ProcedureDataParser::Parse(p_base, p_data);
 }
 
-bool MultiProcedureDataParser::SetParameter(const QString p_name,
-        const QString id, const QString p_value ,
-        XERCES_CPP_NAMESPACE::DOMElement* node, data::ProcedureData *data)
+bool MultiProcedureDataParser::SetParameter(const QString &p_name,
+        const QString &id, const QString &p_value,
+        const QDomElement &node, data::ProcedureData *data)
 {
-    Q_ASSERT(data);
-
     return ProcedureDataParser::SetParameter(p_name,id, p_value, node, data);
-
-
-}
-
-
 }
 
 }
-
-
+}

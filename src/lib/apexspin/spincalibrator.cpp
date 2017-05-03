@@ -7,7 +7,7 @@
 
 #include "apexmain/runner/experimentrundelegate.h"
 
-#include "apexmain/services/mainconfigfileparser.h"
+#include "apexmain/mainconfigfileparser.h"
 
 #include "spincalibrator.h"
 #include "spinexperimentconstants.h"

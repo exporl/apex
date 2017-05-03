@@ -38,20 +38,13 @@ class HrtfFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "apex.hrtffilter")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
     virtual PluginFilterInterface *createFilter (const QString &name,
             unsigned channels, unsigned blockSize, unsigned fs) const;
 };
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (hrtffilter, HrtfFilterCreator)
-#endif
-
 
 class HrtfFilter:
     public QObject,
@@ -112,7 +105,7 @@ void HrtfFilter::resetParameters()
 
 bool HrtfFilter::isValidParameter (const QString &type, int channel) const
 {
-    if (type == QLatin1String("uri") && channel == -1)
+    if (type == QLatin1String("file") && channel == -1)
         return true;
     if (type == QLatin1String("limit") && channel == -1)
         return true;
@@ -133,7 +126,7 @@ bool HrtfFilter::isValidParameter (const QString &type, int channel) const
 bool HrtfFilter::setParameter (const QString &type, int channel,
         const QString &value)
 {
-    if (type == QLatin1String("uri") && channel == -1) {
+    if (type == QLatin1String("file") && channel == -1) {
         newFilePath = QUrl (value).path();
         return true;
     }

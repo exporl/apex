@@ -1,69 +1,67 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
-
- <!-- @doc
+<apex:apex version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
+  <!-- @doc
   @what: example of a multitude of screenelements
   @description:
   @how:
   -->
-
- <procedure xsi:type="apex:trainingProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>button</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <uri_prefix>../movies</uri_prefix>
-  <screen id="screen1">
-   <gridLayout width="4" height="3" id="main_layout">
-    <button x="1" id="button" y="2">
-     <text>button</text>
-    </button>
-    <label x="2" id="label" y="2">
-     <text>label</text>
-    </label>
-    <textEdit x="3" id="textinput" y="2"/>
-    <flash x="4" id="flash" y="1">
-     <uri>dragon/stillegg.swf</uri>
-     <feedback>
-      <highlight>dragon/shakeegg.swf</highlight>
-      <positive>dragon/goodegg.swf</positive>
-      <negative>dragon/badegg2.swf</negative>
-     </feedback>
-    </flash>
-    <picture x="4" id="picture" y="2">
-     <uri>../pictures/1.jpg</uri>
-    </picture>
-   </gridLayout>
-   <buttongroup id="buttongroup">
-    <button id="button"/>
-    <button id="textinput"/>
-    <button id="picture"/>
-   </buttongroup>
-   <default_answer_element>textinput</default_answer_element>
-  </screen>
- </screens>
- <datablocks/>
- <devices/>
- <filters/>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description/>
-   <datablocks/>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections/>
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>button</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <prefix>../movies</prefix>
+    <screen id="screen1">
+      <gridLayout height="3" width="4" id="main_layout">
+        <button x="1" y="2" id="button">
+          <text>button</text>
+        </button>
+        <label x="2" y="2" id="label">
+          <text>label</text>
+        </label>
+        <textEdit x="3" y="2" id="textinput"/>
+        <flash x="4" y="1" id="flash">
+          <file>dragon/stillegg.swf</file>
+          <feedback>
+            <highlight>dragon/shakeegg.swf</highlight>
+            <positive>dragon/goodegg.swf</positive>
+            <negative>dragon/badegg2.swf</negative>
+          </feedback>
+        </flash>
+        <picture x="4" y="2" id="picture">
+          <file>../pictures/1.jpg</file>
+        </picture>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="button"/>
+        <button id="textinput"/>
+        <button id="picture"/>
+      </buttongroup>
+      <default_answer_element>textinput</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks/>
+  <devices/>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description/>
+      <datablocks/>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

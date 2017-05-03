@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>4</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>false</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout width="2" height="2" x="1" y="2" id="answer_layout">
+        <button x="1" y="1" id="correct">
+          <text>OK</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="correct"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="wd1">
+      <device>soundcard</device>
+      <file>wd1.wav</file>
+      <loop>10</loop>
+    </datablock>
+    <datablock id="sentence">
+      <device>soundcard</device>
+      <file>wivineruis.wav</file>
+      <loop>1</loop>
+    </datablock>
+  </datablocks>
+  <devices>
+    <master>soundcard</master>
+    <device xsi:type="apex:wavDeviceType" id="soundcard">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters>
+    <filter xsi:type="apex:dataloop" id="noisegen">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <datablock>sentence</datablock>
+      <basegain>0</basegain>
+      <gain id="noisegain">5</gain>
+      <randomjump>false</randomjump>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="wd1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>noisegen</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+</apex:apex>

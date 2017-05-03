@@ -17,12 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apextools/apexpluginloader.h"
 #include "apextools/exceptions.h"
 
 #include "filter/pluginfilterinterface.h"
-
-#include "services/mainconfigfileparser.h"
-#include "services/pluginloader.h"
 
 #include "pluginfilterprocessor.h"
 
@@ -50,9 +48,7 @@ namespace stimulus {
     {
         qCDebug(APEX_RS, "Looking for %s plugin", qPrintable (name));
 
-
-        PluginFilterCreator* creator = PluginLoader::Get().
-            createPluginCreator<PluginFilterCreator>(name);
+        PluginFilterCreator* creator = createPluginCreator<PluginFilterCreator>(name);
         m_plugin.reset (creator->createFilter (name, channels, size, fs));
         return;
     }

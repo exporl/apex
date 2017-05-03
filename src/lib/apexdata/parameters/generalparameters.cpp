@@ -19,23 +19,21 @@
 
 #include "apextools/apextools.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "generalparameters.h"
 
-using namespace apex::ApexXMLTools;
-
-using namespace xercesc;
 using namespace apex::data;
 
-GeneralParameters::GeneralParameters(DOMElement* p_paramElement)
- : ApexParameters(p_paramElement),
+GeneralParameters::GeneralParameters() :
+    ApexParameters(),
     m_bExitAfter(false),
     m_bAutoSave(false),
     m_bWaitForStart( false ),
     m_bAllowSkip( true ),
-    m_bRunOutputTest( false )
+    m_bRunOutputTest(false)
 {
 }
 
@@ -43,7 +41,7 @@ GeneralParameters::~GeneralParameters()
 {
 }
 
-bool GeneralParameters::SetParameter(const QString& p_name, const QString& /*p_id*/, const QString& p_value, DOMElement* p_element)
+bool GeneralParameters::SetParameter(const QString& p_name, const QString& /*p_id*/, const QString& p_value, const QDomElement &p_element)
 {
   if (p_name == "exitafter") {
     m_bExitAfter = ApexTools::bQStringToBoolean( p_value );
@@ -60,21 +58,11 @@ bool GeneralParameters::SetParameter(const QString& p_name, const QString& /*p_i
   } else if (p_name =="scriptlibrary") {
       m_scriptLibrary = p_value;
   } else if (p_name =="scriptparameters") {
-
-      for ( DOMNode* it = p_element->getFirstChild() ; it != 0 ;
-              it = it->getNextSibling() )
-      {
-          if ( it->getNodeType() != DOMNode::ELEMENT_NODE )
-              continue;
-
-          DOMElement* currentNode = (DOMElement*) it;
-
-          const QString tag( XMLutils::GetTagName( it ) );
-
-          if (tag=="parameter")
-          {
-              QString name = XMLutils::GetAttribute( currentNode, "name" );
-              QVariant value = XMLutils::GetFirstChildText(currentNode);
+      for (QDomElement it = p_element.firstChildElement(); !it.isNull(); it = it.nextSiblingElement()) {
+          const QString tag(it.tagName());
+          if (tag=="parameter") {
+              QString name = it.attribute(QSL("name"));
+              QVariant value = it.text();
               m_scriptParameters[name]=value;
           } else {
               Q_ASSERT("Unknown tag");
@@ -82,8 +70,8 @@ bool GeneralParameters::SetParameter(const QString& p_name, const QString& /*p_i
       }
 
   } else {
-    Q_ASSERT(0 && "invalid tag");
-    return false;
+      Q_ASSERT(0 && "invalid tag");
+      return false;
   }
   return true;
 }
@@ -95,13 +83,13 @@ const QVariantMap &GeneralParameters::scriptParameters() const
 
 bool GeneralParameters::operator==(const GeneralParameters& other) const
 {
-    return  ApexParameters::operator==(other) &&
-            m_bExitAfter == other.m_bExitAfter &&
-            m_bAutoSave == other.m_bAutoSave &&
-            m_bWaitForStart == other.m_bWaitForStart &&
-            m_bAllowSkip == other.m_bAllowSkip &&
-            m_bRunOutputTest == other.m_bRunOutputTest &&
-            m_sOutputTestInput == other.m_sOutputTestInput &&
-            m_scriptLibrary == other.m_scriptLibrary;
+    return ApexParameters::operator==(other) &&
+           m_bExitAfter == other.m_bExitAfter &&
+           m_bAutoSave == other.m_bAutoSave &&
+           m_bWaitForStart == other.m_bWaitForStart &&
+           m_bAllowSkip == other.m_bAllowSkip &&
+           m_bRunOutputTest == other.m_bRunOutputTest &&
+           m_sOutputTestInput == other.m_sOutputTestInput &&
+           m_scriptLibrary == other.m_scriptLibrary;
 }
 

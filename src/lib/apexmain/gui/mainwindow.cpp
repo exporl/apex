@@ -28,9 +28,6 @@
 #include "apextools/apextools.h"
 #include "apextools/exceptions.h"
 
-#include "apextools/services/application.h"
-
-#include "apextools/status/consolestatusreporter.h"
 #include "apextools/status/screenstatusreporter.h"
 
 #include "feedback/feedback.h"
@@ -42,19 +39,20 @@
 #include "screen/screenelementrundelegate.h"
 #include "screen/screenrundelegate.h"
 
-#include "services/errorhandler.h"
-
 #include "apexcontrol.h"
 #include "centralwidget.h"
+#include "errorhandler.h"
 #include "mainwindow.h"
 #include "mru.h"
 #include "panel.h"
+#include "plugindialog.h"
 
 #include <QApplication>
 #include <QCloseEvent>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QScreen>
 #include <QStatusBar>
 
 using namespace apex;
@@ -93,14 +91,19 @@ ApexMainWindow::ApexMainWindow( QWidget* /*a_pParent*/ ) :
 
     //setup status reporting
     //FIXME I don't think this should be here
-    consoleStatus.reset( new ConsoleStatusReporter() );
-    screenStatus.reset( new ScreenStatusReporter() );
-    showScreenStatusAction->setChecked(true);
-    showMessageWindowAction->setChecked(true);
-    showConsoleStatusAction->setChecked(false);
-    updateStatusReporting();
+    screenStatus = new ScreenStatusReporter();
+    connect(ErrorHandler::instance(), SIGNAL(itemAdded(apex::StatusItem)),
+            screenStatus, SLOT(addItem(apex::StatusItem)));
     connect(this, SIGNAL(statusReportingChanged()),
             this, SLOT(updateStatusReporting()));
+#ifdef Q_OS_ANDROID
+    screenStatus->showMaximized();
+
+    QFont appFont = QApplication::font();
+    appFont.setPixelSize(appFont.pixelSize() *
+                         QApplication::primaryScreen()->devicePixelRatio());
+    QApplication::setFont(appFont);
+#endif
 
     //ready
     Initted();
@@ -114,10 +117,7 @@ void ApexMainWindow::setExperimentRunDelegate(ExperimentRunDelegate* p_rd) {
 ApexMainWindow::~ApexMainWindow()
 {
     m_pPanel.reset();
-    ErrorHandler::Get().removeReporter(screenStatus.data());
-    ErrorHandler::Get().removeReporter(consoleStatus.data());
-    screenStatus.reset();
-    consoleStatus.reset();
+    delete screenStatus;
 }
 
 void ApexMainWindow::SetIcon( const QString& ac_sIcon )
@@ -127,7 +127,7 @@ void ApexMainWindow::SetIcon( const QString& ac_sIcon )
 
 void ApexMainWindow::ApplyConfig(const data::ScreensData* c)
 {
-    Application::Get().GetApplication()->setStyleSheet(c->apexStyle());
+    qApp->setStyleSheet(c->apexStyle());
 
     m_config=c;
     const data::ScreensData& config = *c;
@@ -280,7 +280,7 @@ void ApexMainWindow::EnableScreen( const bool ac_bEnable /*= true*/ )
 
             //QMetaObject::invokeMethod (this, "Answered", Qt::QueuedConnection, Q_ARG (const ScreenResult*, &result));
 
-            emit Answered( &result );
+            Q_EMIT Answered( &result );
 
         }
 
@@ -299,7 +299,6 @@ bool ApexMainWindow::screenEnabled() const
 
 void ApexMainWindow::ReclaimFocus()
 {
-    //if ( ApexControl::Get().GetCurrentExperiment().GetMainWindowConfig().m_eMode == gc_eChild )
     if (QApplication::focusWidget()==0)
         MenuBar->setFocus();
 }
@@ -313,7 +312,7 @@ void ApexMainWindow::feedback(ScreenElementRunDelegate::FeedbackMode mode,
     if (runningScreen != 0)
     {
         runningScreen->feedback(mode, elementId);
-        //m_rd->modFeedback()->highLight(elementId);//TODO is this used?
+        m_rd->modFeedback()->highLight(elementId);      // TODO: implement positive and negative feedback
         m_pCurFeedback = runningScreen->getFeedBackElement();
     }
 
@@ -367,7 +366,7 @@ void ApexMainWindow::AnswerFromElement( ScreenElementRunDelegate* ac_Element )
     result.setLastClickPosition(ac_Element->getClickPosition());
 
     qCDebug(APEX_RS) << "***Answered" << result;
-    emit Answered( &result );
+    Q_EMIT Answered( &result );
 }
 
 /******************************************** STATE ***************************************************************************/
@@ -442,7 +441,10 @@ void ApexMainWindow::Finished()
     EnableScreen( false );
     m_sSavefileName = "";
     setWindowState(windowState() &~ Qt::WindowFullScreen);
+#ifndef Q_OS_ANDROID // the menuBar()->isHidden check would be cleaner but
+                     // QMenuBar is always hidden on android
     menuBar()->show();
+#endif
 }
 
 void ApexMainWindow::ClearScreen()
@@ -631,7 +633,7 @@ void ApexMainWindow::helpContents()
 
 void ApexMainWindow::helpDeletePluginCache()
 {
-    ApexControl::Get().deletePluginCache();
+    PluginDialog::refreshPluginCache();
 }
 
 void ApexMainWindow::helpShowPluginDialog()
@@ -647,10 +649,20 @@ void ApexMainWindow::helpEditApexconfig()
 
 /******************************************** MISC ***************************************************************************/
 
-void ApexMainWindow::closeEvent( QCloseEvent* evt )
+void ApexMainWindow::closeEvent(QCloseEvent *evt)
 {
-    evt->accept();
-    emit( fileExit() );
+    QMessageBox confirmBox;
+    confirmBox.setText("Experiment in progress, are you sure?");
+    confirmBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
+    confirmBox.setDefaultButton(QMessageBox::Cancel);
+
+    if (ApexControl::Get().isExperimentRunning() &&
+        confirmBox.exec() == QMessageBox::Cancel) {
+        evt->ignore();
+    } else {
+        evt->accept();
+        Q_EMIT fileExit();
+    }
 }
 
 QWidget* apex::gui::ApexMainWindow::centralWidget()
@@ -661,27 +673,6 @@ QWidget* apex::gui::ApexMainWindow::centralWidget()
 //FIXME I think ApexControl should handle status reporting
 void ApexMainWindow::updateStatusReporting()
 {
-    if (showScreenStatusAction->isChecked())
-    {
-        showMessageWindowAction->setEnabled(true);
-        ErrorHandler::Get().addReporter(screenStatus.data(), false);
-
-        if (showMessageWindowAction->isChecked())
-            screenStatus->showWindow();
-        else
-            screenStatus->hideWindow();
-    }
-    else
-    {
-        showMessageWindowAction->setEnabled(false);
-        ErrorHandler::Get().removeReporter(screenStatus.data());
-        screenStatus->hideWindow();
-    }
-
-    if (showConsoleStatusAction->isChecked())
-        ErrorHandler::Get().addReporter(consoleStatus.data(), false);
-    else
-        ErrorHandler::Get().removeReporter(consoleStatus.data());
+    screenStatus->show();
+    screenStatus->raise();
 }
-
-

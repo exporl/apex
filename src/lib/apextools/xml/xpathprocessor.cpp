@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
-#include "services/paths.h"
+#include "apexpaths.h"
 
 #include "version.h"
 #include "xpathprocessor.h"
@@ -25,6 +25,8 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
+
+#include <QFile>
 
 #include <QtGlobal>
 
@@ -77,7 +79,7 @@ xmlNodeSetPtr XPathProcessor::getNodes(xmlDocPtr doc, QString xpath)
     if(xpathContext == NULL)
         throw XPathException("XPath error", QObject::tr("Could not create a new XPath context."));
 
-    registerNamespaces(xpathContext, "apex", EXPERIMENT_NAMESPACE);
+    registerNamespaces(xpathContext, "apex", APEX_NAMESPACE);
 
     xmlXPathObjectPtr xpathObject = xmlXPathEvalExpression(xpathExpr, xpathContext);
     if(xpathObject == NULL) {

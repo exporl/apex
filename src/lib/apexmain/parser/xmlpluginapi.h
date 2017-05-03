@@ -20,6 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_PARSER_XMLPLUGINAPI_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_PARSER_XMLPLUGINAPI_H_
 
+#include "streamapp/file/wavefile.h"
+
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -31,28 +33,48 @@ namespace apex {
  * API for XML plugins expanded by scriptexpander
  */
 class XMLPluginAPI: public QObject {
-    Q_OBJECT
+Q_OBJECT
 
-    public slots:
-        QString version();
-        /**
-         * Get all files in the filesystem matching wildcard
-         */
-        QStringList files(QString path);
+public slots:
+    QString version();
 
-        /**
-         * Remove wildcard from the end of s
-         */
-        QString stripPath(QString s);
+    /**
+     * Get all files in the filesystem matching wildcard
+     */
+    QStringList files(const QString& path);
 
-        /**
-         * Add warning message to message window
-         */
-        void addWarning(const QString& warning);
-        /**
-         * Add error message to message window
-         */
-        void addError(const QString& warning);
+    /**
+      * Read file content into string
+      */
+    QString readAll(const QString& path);
+
+    /**
+      * Get the duration of a WAV file in seconds
+      */
+    double stimulusDuration(const QString& path);
+
+    /**
+     * Get path without filename for relative path
+     */
+    QString path(const QString &s);
+
+    // Deprecated: do not use!
+    QString stripPath(const QString &s);
+
+    /**
+      * Returns full filepath for relative path
+      */
+    QString absoluteFilePath(const QString& path);
+
+    /**
+     * Add warning message to message window
+     */
+    void addWarning(const QString& warning);
+
+    /**
+     * Add error message to message window
+     */
+    void addError(const QString& warning);
 };
 
 }

@@ -24,14 +24,14 @@
 
 #include "apextools/apextools.h"
 
-#include "apextools/xml/apexxmltools.h"
+#include "common/xmlutils.h"
 
 #include "constantprocedure.h"
 
-using apex::ApexXMLTools::XMLutils;
-
-#include <QVariant>
 #include <QMap>
+#include <QVariant>
+
+using namespace cmn;
 
 namespace apex
 {
@@ -92,35 +92,27 @@ QString ConstantProcedure::resultXml() const
         result.append(QString("<procedure type=\"apex:constantProcedure\" id=\"%1\">").arg(data->GetID()));
     }
 
-    result.append(XMLutils::wrapTag("answer", lastAnswer));
-    result.append(XMLutils::wrapTag("correct_answer", lastCorrectAnswer));
+    result.append(QSL("<%1>%2</%1>").arg(QSL("answer"), xmlEscapedText(lastAnswer)));
+    result.append(QSL("<%1>%2</%1>").arg(QSL("correct_answer"), xmlEscapedText(lastCorrectAnswer)));
 
     if (data->choices().hasMultipleIntervals()) {
-        result.append(XMLutils::wrapTag("correct_interval", stimulusPosition+1));
-        result.append(XMLutils::wrapTag("answer_interval",
-                                        data->choices().interval(lastAnswer)+1 ));
+        result.append(QSL("<%1>%2</%1>").arg(QSL("correct_interval")).arg(stimulusPosition + 1));
+        result.append(QSL("<%1>%2</%1>").arg(QSL("answer_interval")).arg(data->choices().interval(lastAnswer) + 1));
     }
 
     if (currentTrial < data->skip())
         result.append("<skip/>");
 
     if (!data->choices().hasMultipleIntervals()) {
-        QString tag = "stimulus";
-        result.append(XMLutils::wrapTag(tag, lastTrial.stimulus(0, 0)));
+        result.append(QSL("<%1>%2</%1>").arg(QSL("stimulus"), xmlEscapedText(lastTrial.stimulus(0, 0))));
     } else {
         for (int i = 0; i < lastTrial.stimulusCount(0); ++i) {
-            QString tag;
-            if (i == stimulusPosition)
-                tag = "stimulus";
-            else
-                tag = "standard";
-
-            result.append(XMLutils::wrapTag(tag, lastTrial.stimulus(0, i)));
+            result.append(QSL("<%1>%2</%1>").arg(i == stimulusPosition ? QSL("stimulus") : QSL("standard"),
+                    xmlEscapedText(lastTrial.stimulus(0, i))));
         }
     }
 
-    result.append(XMLutils::wrapTag("correct",
-                                    ApexTools::boolToString(lastResult)));
+    result.append(QSL("<%1>%2</%1>").arg(QSL("correct")).arg(ApexTools::boolToString(lastResult)));
 
     result.append(QLatin1String("</procedure>"));
 

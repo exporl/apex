@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXSPIN_SPINUSERSETTINGS_H_
-#define _EXPORL_SRC_LIB_APEXSPIN_SPINUSERSETTINGS_H_
+#ifndef _APEX_SRC_LIB_APEXSPIN_SPINUSERSETTINGS_H_
+#define _APEX_SRC_LIB_APEXSPIN_SPINUSERSETTINGS_H_
 
 #include "apextools/global.h"
 
@@ -283,7 +283,7 @@ private:
     Speakers speakers;
     Procedure procedure;
     Options options;
-    Calibration calibration;
+    //Calibration calibration; TODO
 };
 
 } //ns data

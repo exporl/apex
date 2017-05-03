@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
-    
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+
     <xs:include schemaLocation="datablocks.xsd"/>
     <xs:include schemaLocation="procedure.xsd"/>
     <xs:include schemaLocation="screens.xsd"/>
     <xs:include schemaLocation="devices.xsd"/>
     <xs:include schemaLocation="connections.xsd"/>
     <xs:include schemaLocation="stimuli.xsd"/>
-    
+
     <xs:annotation>
         <xs:documentation xml:lang="en-US"> Apex experiment file schema. Describes an entire APEX 3
             experiment. An experiment consists of a series of trials. </xs:documentation>
@@ -36,7 +36,7 @@
                             is what is visible on the computer screen at a certain instant of
                         time.</xs:documentation>
                     </xs:annotation>
-                    
+
                     <xs:key name="screensKey">
                         <xs:selector xpath="apex:screen"> </xs:selector>
                         <xs:field xpath="@apex:id"> </xs:field>
@@ -52,7 +52,7 @@
                         <xs:selector xpath="apex:datablock"> </xs:selector>
                         <xs:field xpath="@apex:id"> </xs:field>
                     </xs:key>
-                    
+
                 </xs:element>
                 <xs:element name="devices" type="apex:devicesType">
                     <xs:annotation>
@@ -67,7 +67,7 @@
                             IDs.
                         </xs:documentation>
                     </xs:annotation>
-                    
+
                     <xs:key name="devicesKey">
                         <xs:selector xpath="apex:device"> </xs:selector>
                         <xs:field xpath="@apex:id"> </xs:field>
@@ -79,7 +79,7 @@
                             can be real filters, ie blocks that process data, or generators, ie
                             blocks that generate data without any input data.</xs:documentation>
                     </xs:annotation>
-                    
+
                     <xs:key name="filterKey">
                         <xs:selector xpath="apex:filter"> </xs:selector>
                         <xs:field xpath="@apex:id"> </xs:field>
@@ -91,7 +91,7 @@
                             devices) and parameters (fixed and variable) that is presented to the
                             user at a certain instant of time.</xs:documentation>
                     </xs:annotation>
-                    
+
                     <xs:key name="stimulusKey">
                         <xs:selector xpath="apex:stimulus"> </xs:selector>
                         <xs:field xpath="@apex:id"> </xs:field>
@@ -109,7 +109,7 @@
                             Default connections are not made when filters are present.
                         </xs:documentation>
                     </xs:annotation>
-                    
+
                 </xs:element>
                 <xs:element name="randomgenerators" minOccurs="0" type="apex:randomgeneratorsType">
                     <xs:annotation>
@@ -119,7 +119,7 @@
                             corresponding parameters right before a stimulus is
                         output.</xs:documentation>
                     </xs:annotation>
-                    
+
                 </xs:element>
                 <xs:element name="calibration" minOccurs="0" maxOccurs="1"
                     type="apex:calibrationType">
@@ -138,7 +138,7 @@
                         <xs:documentation>Parameters related to the presentation/analysis of the
                             result of this experiment are defined here.</xs:documentation>
                     </xs:annotation>
-                    
+
                 </xs:element>
                 <xs:element name="interactive" minOccurs="0" type="apex:interactiveType">
                     <xs:annotation>
@@ -146,29 +146,29 @@
                             element in this experiment file will be changed to the value set by the
                             user in a GUI window.</xs:documentation>
                     </xs:annotation>
-                    
+
                 </xs:element>
                 <xs:element name="general" minOccurs="0" type="apex:generalType">
                     <xs:annotation>
                         <xs:documentation>Some general experiment parameters are defined
                         here.</xs:documentation>
                     </xs:annotation>
-                    
-                    </xs:element>
-                  </xs:sequence>
-                  <xs:attribute name="version" use="optional" type="xs:positiveInteger">
-                    <xs:annotation>
-                      <xs:documentation>
+
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="version" use="optional" type="xs:positiveInteger">
+                <xs:annotation>
+                    <xs:documentation>
                         Apex will only load experiment files with the correct version
                         attribute. Conversion scripts will be provided to convert to newer
                         versions.
                       </xs:documentation>
-                    </xs:annotation>
-                  </xs:attribute>
-                </xs:complexType>
-              </xs:element>
-              
-    
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+
     <xs:complexType name="calibstimType">
         <xs:sequence>
             <xs:element name="parameter" minOccurs="1" maxOccurs="unbounded">
@@ -194,13 +194,13 @@
         </xs:sequence>
         <xs:attribute name="id" type="xs:IDREF" use="required"/>
     </xs:complexType>
-    
+
     <xs:simpleType name="nonEmptyString">
         <xs:restriction base="xs:token">
             <xs:minLength value="1"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:complexType name="randomgenerator" abstract="true">
         <xs:annotation>
             <xs:documentation>Base class for all randomgenerators</xs:documentation>
@@ -259,7 +259,7 @@
             <xs:extension base="apex:randomgenerator"> </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="calibrationType">
         <xs:annotation>
             <xs:documentation>Calibration settings are stored in a calibration profile. Every
@@ -332,7 +332,7 @@
                         <xs:element name="time" type="xs:double" minOccurs="0">
                             <xs:annotation>
                                 <xs:documentation>
-                                    Measurement time in seconds. If percentile is defined, time should be >0
+                                    Measurement time in seconds. If percentile is defined, time should be &gt;0
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
@@ -341,7 +341,8 @@
                                 <xs:documentation>Automatic calibration is repeated until the measured value is within the accuracy defined here of the target value</xs:documentation>
                             </xs:annotation>
                         </xs:element>
-                        <xs:element name="maxiterations" type="xs:positiveInteger" default="3" minOccurs="0">
+                        <xs:element name="maxiterations" type="xs:positiveInteger" default="3"
+                            minOccurs="0">
                             <xs:annotation>
                                 <xs:documentation>
                                     Maximal number of iterations that can be done to reach the requested accuracy. If the requested accuracy is not reached after this number of iterations, the calibration fails
@@ -385,7 +386,8 @@
                                             dBSPL.</xs:documentation>
                                         </xs:annotation>
                                     </xs:element>
-                                    <xs:element name="calibrationamplitude" type="xs:double" minOccurs="0">
+                                    <xs:element name="calibrationamplitude" type="xs:double"
+                                        minOccurs="0">
                                         <xs:annotation>
                                             <xs:documentation>Value to calibrate at. Generally in
                                                 dBSPL and higher than targetamplitude. Can be changed during calibration.</xs:documentation>
@@ -400,12 +402,14 @@
                                             headphone.</xs:documentation>
                                         </xs:annotation>
                                     </xs:element>
-                                    <xs:element name="min" type="xs:double" default="-50" minOccurs="0">
+                                    <xs:element name="min" type="xs:double" default="-50"
+                                        minOccurs="0">
                                         <xs:annotation>
                                             <xs:documentation>Minimum parameter value that can be set by the calibrator.</xs:documentation>
                                         </xs:annotation>
                                     </xs:element>
-                                    <xs:element name="max" type="xs:double" default="10" minOccurs="0">
+                                    <xs:element name="max" type="xs:double" default="10"
+                                        minOccurs="0">
                                         <xs:annotation>
                                             <xs:documentation>Maximum parameter value that can be set by the calibrator.</xs:documentation>
                                         </xs:annotation>
@@ -420,11 +424,11 @@
         </xs:sequence>
         <xs:attribute name="profile" type="xs:Name" use="required"/>
     </xs:complexType>
-    
+
     <xs:complexType name="randomgeneratorsType">
         <xs:sequence>
-            <xs:element name="randomgenerator" type="apex:randomgenerator"
-                minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="randomgenerator" type="apex:randomgenerator" minOccurs="0"
+                maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -443,7 +447,7 @@
                         only present the user with a messagebox asking wheter to save the results yes or no</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            
+
             <xs:element name="waitforstart" type="xs:boolean" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>
@@ -460,7 +464,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            
+
             <xs:element name="runoutputtest" type="xs:boolean" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
@@ -511,7 +515,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            
+
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="interactiveType">
@@ -588,7 +592,7 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="resultsType">
         <xs:sequence>
             <xs:element name="page" type="xs:anyURI" minOccurs="1" default="apexresults.html">
@@ -643,7 +647,7 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-           
+
             <xs:element name="saveprocessedresults" type="xs:boolean" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>Save a summary of the results in an easily readable format at the end of the results xml file. This
@@ -666,6 +670,6 @@
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
-        
+
     </xs:complexType>
 </xs:schema>

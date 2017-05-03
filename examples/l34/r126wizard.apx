@@ -1,90 +1,89 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!-- @doc
   @what: R126 is the clinical fitting software
   @description:
   @how: Use <defaultmap> <from_r126/>
     -->
- <!--
+  <!--
         See if Mapwizard works ;-]
     -->
- <procedure xsi:type="apex:trainingProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>button1</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-   <trial id="trial2">
-    <answer>button2</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus2"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <screen id="screen1">
-   <gridLayout height="2" width="3" id="main_layout">
-    <button x="1" id="button1" y="1">
-     <text>fadein.qic</text>
-    </button>
-    <button x="2" id="button2" y="1">
-     <text>fadechan-single.qic</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-    <button id="button2"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli/</uri_prefix>
-  <datablock id="rawdata1">
-   <device>l34device</device>
-   <uri>fadein.qic</uri>
-  </datablock>
-  <datablock id="rawdata2">
-   <device>l34device</device>
-   <uri>fadechan-single.qic</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device xsi:type="apex:L34DeviceType" id="l34device">
-   <device_id>0</device_id>
-   <implant>cic3</implant>
-   <trigger>none</trigger>
-   <defaultmap>
-    <from_r126/>
-   </defaultmap>
-  </device>
- </devices>
- <filters/>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
-  <stimulus id="stimulus2">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata2"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections/>
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>button1</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+      <trial id="trial2">
+        <answer>button2</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus2"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <screen id="screen1">
+      <gridLayout id="main_layout" height="2" width="3">
+        <button id="button1" x="1" y="1">
+          <text>fadein.aseq</text>
+        </button>
+        <button id="button2" x="2" y="1">
+          <text>fadechan-single.aseq</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+        <button id="button2"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli/</prefix>
+    <datablock id="rawdata1">
+      <device>l34device</device>
+      <file>fadein.aseq</file>
+    </datablock>
+    <datablock id="rawdata2">
+      <device>l34device</device>
+      <file>fadechan-single.aseq</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:CohDeviceType" id="l34device">
+      <device>L34-cic3-0</device>
+      <trigger>none</trigger>
+      <defaultmap>
+        <from_r126/>
+      </defaultmap>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stimulus2">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata2"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

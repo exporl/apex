@@ -1,4 +1,4 @@
-CLEBS *= apextools apexmain asciicast
+CLEBS *= apextools apexmain common asciicast
 
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)
 

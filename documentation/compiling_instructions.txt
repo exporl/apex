@@ -9,10 +9,10 @@
 2.1.1. Required development packages on ubuntu
 
 You should install the required packages with the following command (works on Ubuntu 14.04):
-    sudo aptitude install qtbase5-dev-tools qt5-default qt5-qmake libjack-dev portaudio19-dev \
-        libxml2-dev chrpath libxerces-c-dev libqt5scripttools5 libqt5xmlpatterns5 \
+    sudo aptitude install qtbase5-dev-tools qt5-default qt5-qmake portaudio19-dev \
+        libxml2-dev chrpath libqt5scripttools5 libqt5xmlpatterns5 \
         libqt5xmlpatterns5-dev qtscript5-dev libqt5svg5-dev libqt5webkit5 libqt5webkit5-dev \
-        qtmultimedia5-dev python-protobuf protobuf-compiler libprotobuf-dev xvfb liblo-dev
+        qtmultimedia5-dev python-protobuf protobuf-compiler libprotobuf-dev xvfb liblo-dev libsndfile1-dev
 
 2.1.2. Required development packages on fedora
 
@@ -22,7 +22,6 @@ TBD
 
 You need at least:
 - portaudio >= 0.19
-- xerces >= 3.1
 - qt >= 5.0
 
 2.1.4. Compilation (after required packages are installed!)
@@ -41,7 +40,6 @@ If you take the path of least resistance, define a directory layout like the fol
   /apex3
   /api
     /qt4
-    /xerces
     /portaudio
     /asio (optional)
     /nucleus (optional)
@@ -55,16 +53,6 @@ in the path:
     file if necessary
 - run qconfigure
 - wait :-)
-
-Get, compile and install the xerces-c library
-(http://xml.apache.org/xerces-c/download.cgi). Put it into the /api/xerces
-directory or define the path in localconfig.pri (see below):
-- Make sure you compile with /Zc:wchar_t-. To make this a bit easier, use the
-  following with Cygwin:
-  sed -i 's/PreprocessorDefinitions/TreatWChar_tAsBuiltInType="false" &/' \
-      $(grep -Rl PreprocessorDefinitions path/to/xerces/Projects/Win32/VC...)
-- If you use VS 2008 Express, go to C:\Program Files\Microsoft
-  SDKs\Windows\v6.0A\Include and copy WinResrc.h to winres.h
 
 Get, compile and install the portaudio library version v19,
 (http://www.portaudio.com/). Put it into the /api/portaudio directory or define
@@ -144,7 +132,7 @@ defined in a file in /apex/clebs/. They consist of two blocks:
 A qmake .pro file that uses the build system need to look a bit like this:
 
   # Needed modules
-  CLEBS *= xerces portaudio jack streamapp pch
+  CLEBS *= portaudio jack streamapp pch
   # Include the build system configurations
   !isEmpty(_PRO_FILE_):include(../../clebs/clebs.pri)
 

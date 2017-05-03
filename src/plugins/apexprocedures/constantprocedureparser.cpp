@@ -29,12 +29,12 @@ namespace apex
 namespace parser
 {
 
-ConstantProcedureParser::ConstantProcedureParser() : ProcedureParsersParent()
+ConstantProcedureParser::ConstantProcedureParser() :
+    ProcedureParsersParent()
 {
-
 }
 
-data::ProcedureData * ConstantProcedureParser::parse(xercesc::DOMElement *base)
+data::ProcedureData * ConstantProcedureParser::parse(const QDomElement &base)
 {
     data::ConstantProcedureData* c = new data::ConstantProcedureData();
     ProcedureParsersParent::Parse(base, c);
@@ -46,8 +46,7 @@ bool ConstantProcedureParser::trialsValid()
     return !currentConfig->GetTrials().isEmpty();
 }
 
-void ConstantProcedureParser::SetProcedureParameters(
-    XERCES_CPP_NAMESPACE::DOMElement* p_base)
+void ConstantProcedureParser::SetProcedureParameters(const QDomElement &p_base)
 {
     data::ConstantProcedureData* param
             = dynamic_cast<data::ConstantProcedureData*>(currentConfig);

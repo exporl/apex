@@ -63,9 +63,9 @@ QString PictureElement::getDisabled() const
     return disabledPath;
 }
 
-QString PictureElement::getUriId() const
+QString PictureElement::getFileId() const
 {
-       return uriId;
+       return fileId;
 }
 
 void PictureElement::setDefault(const QString& p)
@@ -73,9 +73,9 @@ void PictureElement::setDefault(const QString& p)
     defaultPath = p;
 }
 
-void PictureElement::setUriId(const QString &p)
+void PictureElement::setFileId(const QString &p)
 {
-    uriId = p;
+    fileId = p;
 }
 
 void PictureElement::setPositive(const QString& p)

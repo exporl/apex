@@ -1,166 +1,165 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
+  <!-- @doc
   @what:
   @description:
   @how:
     -->
-<!--
+  <!--
         Shows synchronisation for L34 using a soundcard pulse
         2 channels of stereo file are mixed into output ch 0
         the pulse goes to ch 1
 -->
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>1000</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>button1</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <screen id="screen1">
-   <gridLayout height="1" width="2">
-    <button id="button1" x="2" y="1">
-     <text>Send</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli/</uri_prefix>
-  <datablock id="rawdata1">
-   <device>soundcard</device>
-   <uri>click.wav</uri>
-  </datablock>
-  <datablock id="l34data">
-   <device>l34</device>
-   <uri>10pulses-ch1.qic</uri>
-  </datablock>
-  <datablock id="waitforl34">
-   <device>soundcard</device>
-   <uri>silence:566.4</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <master>soundcard</master>
-  <device id="soundcard" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>2048</buffersize>
-   <padzero>4</padzero>
-  </device>
-  <device id="l34" xsi:type="apex:L34DeviceType">
-   <device_id>1</device_id>
-   <implant>cic3</implant>
-   <trigger>in</trigger>
-   <defaultmap>
-    <inline>
-     <number_electrodes>3</number_electrodes>
-     <mode>MP1+2</mode>
-     <pulsewidth>25</pulsewidth>
-     <pulsegap>8</pulsegap>
-     <period>138</period>
-     <channel electrode="1" threshold="1" comfort="255" number="1"/>
-     <channel electrode="2" threshold="1" comfort="255" number="2"/>
-     <channel electrode="3" threshold="1" comfort="255" number="3"/>
-     <channel electrode="4" threshold="1" comfort="255" number="4"/>
-     <channel electrode="5" threshold="1" comfort="255" number="5"/>
-     <channel electrode="6" threshold="1" comfort="255" number="6"/>
-     <channel electrode="7" threshold="1" comfort="255" number="7"/>
-     <channel electrode="8" threshold="1" comfort="255" number="8"/>
-     <channel electrode="9" threshold="1" comfort="255" number="9"/>
-     <channel electrode="10" threshold="1" comfort="255" number="10"/>
-     <channel electrode="11" threshold="1" comfort="255" number="11"/>
-     <channel electrode="12" threshold="1" comfort="255" number="12"/>
-     <channel electrode="13" threshold="1" comfort="255" number="13"/>
-     <channel electrode="14" threshold="1" comfort="255" number="14"/>
-     <channel electrode="15" threshold="1" comfort="255" number="15"/>
-     <channel electrode="16" threshold="1" comfort="255" number="16"/>
-     <channel electrode="17" threshold="1" comfort="255" number="17"/>
-     <channel electrode="18" threshold="1" comfort="255" number="18"/>
-     <channel electrode="19" threshold="1" comfort="255" number="19"/>
-     <channel electrode="20" threshold="1" comfort="255" number="20"/>
-     <channel electrode="21" threshold="1" comfort="255" number="21"/>
-     <channel electrode="22" threshold="1" comfort="255" number="22"/>
-    </inline>
-   </defaultmap>
-  </device>
- </devices>
- <filters>
-  <filter id="pulsegen" xsi:type="apex:generator">
-   <device>soundcard</device>
-   <channels>1</channels>
-   <continuous>false</continuous>
-   <type>singlepulse</type>
-   <basegain>0</basegain>
-   <gain>0</gain>
-   <frequency>0</frequency>
-   <phase>0</phase>
-   <pulsewidth>10</pulsewidth>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <simultaneous>
-     <sequential>
-      <datablock id="waitforl34"/>
-      <datablock id="rawdata1"/>
-     </sequential>
-     <datablock id="l34data"/>
-    </simultaneous>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>pulsegen</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>1</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>rawdata1</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>waitforl34</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard</id>
-    <channel>1</channel>
-   </to>
-  </connection>
- </connections>
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>1000</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>button1</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <screen id="screen1">
+      <gridLayout width="2" height="1">
+        <button y="1" id="button1" x="2">
+          <text>Send</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli/</prefix>
+    <datablock id="rawdata1">
+      <device>soundcard</device>
+      <file>click.wav</file>
+    </datablock>
+    <datablock id="l34data">
+      <device>l34</device>
+      <file>10pulses-ch1.aseq</file>
+    </datablock>
+    <datablock id="waitforl34">
+      <device>soundcard</device>
+      <file>silence:566.4</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <master>soundcard</master>
+    <device id="soundcard" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>2048</buffersize>
+      <padzero>4</padzero>
+    </device>
+    <device id="l34" xsi:type="apex:CohDeviceType">
+      <device>L34-cic3-1</device>
+      <trigger>in</trigger>
+      <defaultmap>
+        <inline>
+          <number_electrodes>3</number_electrodes>
+          <mode>MP1+2</mode>
+          <pulsewidth>25</pulsewidth>
+          <pulsegap>8</pulsegap>
+          <period>138</period>
+          <channel electrode="1" number="1" threshold="1" comfort="255"/>
+          <channel electrode="2" number="2" threshold="1" comfort="255"/>
+          <channel electrode="3" number="3" threshold="1" comfort="255"/>
+          <channel electrode="4" number="4" threshold="1" comfort="255"/>
+          <channel electrode="5" number="5" threshold="1" comfort="255"/>
+          <channel electrode="6" number="6" threshold="1" comfort="255"/>
+          <channel electrode="7" number="7" threshold="1" comfort="255"/>
+          <channel electrode="8" number="8" threshold="1" comfort="255"/>
+          <channel electrode="9" number="9" threshold="1" comfort="255"/>
+          <channel electrode="10" number="10" threshold="1" comfort="255"/>
+          <channel electrode="11" number="11" threshold="1" comfort="255"/>
+          <channel electrode="12" number="12" threshold="1" comfort="255"/>
+          <channel electrode="13" number="13" threshold="1" comfort="255"/>
+          <channel electrode="14" number="14" threshold="1" comfort="255"/>
+          <channel electrode="15" number="15" threshold="1" comfort="255"/>
+          <channel electrode="16" number="16" threshold="1" comfort="255"/>
+          <channel electrode="17" number="17" threshold="1" comfort="255"/>
+          <channel electrode="18" number="18" threshold="1" comfort="255"/>
+          <channel electrode="19" number="19" threshold="1" comfort="255"/>
+          <channel electrode="20" number="20" threshold="1" comfort="255"/>
+          <channel electrode="21" number="21" threshold="1" comfort="255"/>
+          <channel electrode="22" number="22" threshold="1" comfort="255"/>
+        </inline>
+      </defaultmap>
+    </device>
+  </devices>
+  <filters>
+    <filter id="pulsegen" xsi:type="apex:generator">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <type>singlepulse</type>
+      <basegain>0</basegain>
+      <gain>0</gain>
+      <frequency>0</frequency>
+      <phase>0</phase>
+      <pulsewidth>10</pulsewidth>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <simultaneous>
+          <sequential>
+            <datablock id="waitforl34"/>
+            <datablock id="rawdata1"/>
+          </sequential>
+          <datablock id="l34data"/>
+        </simultaneous>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>pulsegen</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>rawdata1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>waitforl34</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+  </connections>
 </apex:apex>

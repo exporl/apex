@@ -20,6 +20,8 @@
 
 #include "apextools/global.h"
 
+#include "common/pluginloader.h"
+
 #include <QCoreApplication>
 #include <QDir>
 #include <QLoggingCategory>
@@ -60,50 +62,7 @@ Q_LOGGING_CATEGORY(APEX_PROFILE, "apex.profile")
 const char hrtfFile[] =
     "data/profile/freedome_hrtf_GHB_0_5s_16000Hz_right.bin";
 
-class Plugins
-{
-public:
-    Plugins()
-    {
-        Q_FOREACH (QObject *plugin, QPluginLoader::staticInstances())
-            plugins.append (plugin);
-
-        QDir pluginsDir (QCoreApplication::applicationDirPath());
-        Q_FOREACH (QString fileName, pluginsDir.entryList (QDir::Files)) {
-            QPluginLoader loader (pluginsDir.absoluteFilePath (fileName));
-            QObject *plugin = loader.instance();
-            if (plugin)
-                plugins.append (plugin);
-        }
-    }
-
-    QList<QObject*> get() const
-    {
-        return plugins;
-    }
-
-private:
-    QList<QObject*> plugins;
-};
-
-Q_GLOBAL_STATIC (Plugins, plugins)
-
-QList<QObject*> allAvailablePlugins()
-{
-    return plugins()->get();
-}
-
-template <typename T>
-QList<T*> availablePlugins()
-{
-    QList<T*> result;
-
-    Q_FOREACH (QObject * const plugin, allAvailablePlugins())
-        if (T * const casted = qobject_cast<T*> (plugin))
-            result.append (casted);
-
-    return result;
-}
+using namespace cmn;
 
 void test (const QString &hrtf, unsigned threads)
 {
@@ -116,7 +75,7 @@ void test (const QString &hrtf, unsigned threads)
     // Setup HRTF modules
     PluginFilterCreator* hrtfCreator = NULL;
     Q_FOREACH (PluginFilterCreator *creator,
-            availablePlugins<PluginFilterCreator>()) {
+            PluginLoader().availablePlugins<PluginFilterCreator>()) {
         if (creator->availablePlugins().contains (hrtf)) {
             hrtfCreator = creator;
             break;
@@ -130,7 +89,7 @@ void test (const QString &hrtf, unsigned threads)
     if (!hrtfFilter)
         qFatal ("Unable to instantiate HRTF filter instance.");
     hrtfFilter->resetParameters();
-    if (!hrtfFilter->setParameter (QLatin1String("uri"), -1, QLatin1String(hrtfFile)))
+    if (!hrtfFilter->setParameter (QLatin1String("file"), -1, QLatin1String(hrtfFile)))
         qFatal ("%s", qPrintable (hrtfFilter->errorMessage()));
     hrtfFilter->setParameter (QLatin1String("threads"), -1, QString::number (threads));
     if (!hrtfFilter->prepare (0))

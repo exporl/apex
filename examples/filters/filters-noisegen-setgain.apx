@@ -1,118 +1,120 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+<apex:apex version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!-- @doc
   @what: Basegain of noise: 0 - Aapting device parameters - gain of device varies according to user input
   @description: Noise and a stimulus (one-een) are presented simultaneously in the left ear, when you click on 'higher/lower', you hear again the noise and stimulus in the left ear but the gain of the noise is adjusted with +2/-2 (=stepsize, see output box)
   @how: adaptiveProcedure - stepsize of gain - adapt_parameter (Procedure) - continuous:true
 -->
- <procedure xsi:type="apex:adaptiveProcedure">
-  <parameters>
-   <presentations>100</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-   <nUp>1</nUp>
-   <nDown>1</nDown>
-   <adapt_parameter>gain</adapt_parameter>
-   <start_value>0</start_value>
-   <stop_after_type>presentations</stop_after_type>
-   <stop_after>100</stop_after>
-   <larger_is_easier>false</larger_is_easier>
-   <stepsizes>
-    <stepsize begin="0" size="2"/>
-   </stepsizes>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>up</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">false</feedback>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout height="1" width="3" id="main_layout">
-    <button id="up" x="1" y="1">
-     <text>higher</text>
-    </button>
-    <button id="down" x="2" y="1">
-     <text>lower</text>
-    </button>
-    <parameterlist id="pl" x="3" y="1">
-     <parameter>gain</parameter>
-    </parameterlist>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="up"/>
-    <button id="down"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <filters>
-  <filter id="generator" xsi:type="apex:generator">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <continuous>true</continuous> <!-- continous: true -->
-   <type>noise</type>
-   <basegain>0</basegain>
-   <gain id="gain">0</gain> <!-- id:gain = gain of noise -->
-   <frequency>0</frequency>
-   <phase>0</phase>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>generator</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>100</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>gain</adapt_parameter>
+      <start_value>0</start_value>
+      <stop_after_type>presentations</stop_after_type>
+      <stop_after>100</stop_after>
+      <larger_is_easier>false</larger_is_easier>
+      <stepsizes>
+        <stepsize begin="0" size="2"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>up</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout id="main_layout" width="3" height="1">
+        <button id="up" x="1" y="1">
+          <text>higher</text>
+        </button>
+        <button id="down" x="2" y="1">
+          <text>lower</text>
+        </button>
+        <parameterlist id="pl" x="3" y="1">
+          <parameter>gain</parameter>
+        </parameterlist>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="up"/>
+        <button id="down"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters>
+    <filter id="generator" xsi:type="apex:generator">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <continuous>true</continuous>
+      <!-- continous: true -->
+      <type>noise</type>
+      <basegain>0</basegain>
+      <gain id="gain">0</gain>
+      <!-- id:gain = gain of noise -->
+      <frequency>0</frequency>
+      <phase>0</phase>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>generator</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
 </apex:apex>

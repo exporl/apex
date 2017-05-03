@@ -20,13 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_GUIDEFINES_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_GUI_GUIDEFINES_H_
 
-#if QT_VERSION < 0x040000
-#include <qcolor.h>
-#include <qstring.h>
-#else
 #include <QColor>
 #include <QString>
-#endif
 
 namespace apex
 {

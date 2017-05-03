@@ -22,8 +22,8 @@
     * Contains main platform specific defined macros.
     */
 
-#ifndef __DEFINEZ_H__
-#define __DEFINEZ_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_DEFINES_H__
+#define _APEX_SRC_LIB_STREAMAPP_DEFINES_H__
 
   //v3 setup
 #include "_fromv3/core/platformsetup.h"
@@ -117,4 +117,4 @@ namespace streamapp
 
 }
 
-#endif  //#ifndef __DEFINEZ_H__
+#endif  //#ifndef _APEX_SRC_LIB_STREAMAPP_DEFINES_H__

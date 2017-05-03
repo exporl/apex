@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!-- @doc
   @what: Adjustment of stimuli with a pluginprocedure
   @description: There are 6 buttons:
                  Repeat: Repeating of the stimuli
@@ -11,142 +11,126 @@
                  ++ = gain of sinus + 5 dB
   @how: adaptiveProcedure - stop_after_type: trials - adapt_parameter (gain: gain of stimulus)
  -->
- <procedure xsi:type="apex:pluginProcedure">
-        <parameters>
-            <presentations>1</presentations>
-            <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-            <script>adjustmentprocedure.js</script>
-            <parameter name="screen">screen</parameter>
-            <parameter name="startvalue">-5</parameter>
-            <parameter name="parameter">gain_ac</parameter>
-            <parameter name="maxvalue">10</parameter>
-        </parameters>
-        <trials>
-            <trial id="trial">
-                <screen id="screen"/>
-                <stimulus id="stimulus"/>
-            </trial>
-        </trials>
-    </procedure>
-    
-    <screens>
-        <reinforcement>
-            <progressbar>false</progressbar>
-            <feedback length="0">false</feedback>
-        </reinforcement>
-            
-        <screen id="screen">
-            <gridLayout width="1" height="2">
-                <label id="instruction" row="1" col="1">
-                    <text>Adjust the signal</text>
-                </label>
-    <gridLayout width="7" row="2" height="2" col="1">
-                    <button id="button_-5" row="1" col="1">
-                        <text>--</text>
-                    </button>
-                    <button id="button_-2" row="1" col="2">
-                        <text>-</text>
-                    </button>
-                    
-                    <button id="button_2" row="1" col="6">
-                        <text>+</text>
-                    </button>
-                    <button id="button_5" row="1" col="7">
-                        <text>++</text>
-                    </button>
-                    
-                    <button id="button_repeat" row="2" col="4">
-                        <text>Repeat</text>
-                    </button>
-                    <button id="button_done" row="2" col="5">
-                        <text>End</text>
-                    </button>
-                </gridLayout>
-            </gridLayout>
-            <buttongroup id="buttongroup">
-                <button id="button_-5"/>
-                <button id="button_-2"/>
-                <button id="button_2"/>
-                <button id="button_5"/>
-                
-                <button id="button_repeat"/>
-                <button id="button_done"/>
-            </buttongroup>
-        </screen>
-    </screens>
-    
-    <datablocks>
-        <uri_prefix>../stimuli</uri_prefix>
-        <datablock id="datablock">
-            <device>soundcard</device>
-            <uri>sine.wav</uri>
-        </datablock>
-    </datablocks>
-    
-    <devices>
-        <device id="soundcard" xsi:type="apex:wavDeviceType">
-            <card>default</card>
-            <channels>2</channels>
-   <gain id="soundcardgainL" channel="0">0</gain>
-            <samplerate>44100</samplerate>
-        </device>
-    </devices>
-    
-    <filters>
-        <filter id="acfilter" xsi:type="apex:amplifier">
-            <device>soundcard</device>
-            <channels>1</channels>
-            <continuous>false</continuous>
-            <gain id="gain_ac">0</gain>
-        </filter>
-    </filters>
-    
-    <stimuli>
-        <stimulus id="stimulus">
-            <datablocks>
-                    <datablock id="datablock"/>
-            </datablocks>
-        </stimulus>
-    </stimuli>
-    
-    <connections>
-        <connection>
-            <from>
-                <id>datablock</id>
-                <channel>0</channel>
-            </from>
-            <to>
-                <id>acfilter</id>
-                <channel>0</channel>
-            </to>
-        </connection>
-        <connection>
-            <from>
-                <id>acfilter</id>
-                <channel>0</channel>
-            </from>
-            <to>
-                <id>soundcard</id>
-                <channel>0</channel>
-            </to>
-        </connection>
-        
-    </connections>
-    
-
-    <results>
-  <page>apex:resultsviewer.html</page>
-  <resultparameters>
-   <parameter name="showextra">gain_ac</parameter>
-   <parameter name="reference">$$reference_stimulus$$</parameter>
-   <parameter name="sones">$$target_sones$$</parameter>
-  </resultparameters>
-  <showduringexperiment>false</showduringexperiment>
-  <showafterexperiment>false</showafterexperiment>
-  <saveprocessedresults>true</saveprocessedresults>
-    </results>
-</apex:apex>
-    
-    
+  <procedure xsi:type="apex:pluginProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+      <script>adjustmentprocedure.js</script>
+      <parameter name="screen">screen</parameter>
+      <parameter name="startvalue">-5</parameter>
+      <parameter name="parameter">gain_ac</parameter>
+      <parameter name="maxvalue">10</parameter>
+    </parameters>
+    <trials>
+      <trial id="trial">
+        <screen id="screen"/>
+        <stimulus id="stimulus"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>false</progressbar>
+      <feedback length="0">false</feedback>
+    </reinforcement>
+    <screen id="screen">
+      <gridLayout width="1" height="2">
+        <label id="instruction" row="1" col="1">
+          <text>Adjust the signal</text>
+        </label>
+        <gridLayout width="7" height="2" row="2" col="1">
+          <button id="button_-5" row="1" col="1">
+            <text>--</text>
+          </button>
+          <button id="button_-2" row="1" col="2">
+            <text>-</text>
+          </button>
+          <button id="button_2" row="1" col="6">
+            <text>+</text>
+          </button>
+          <button id="button_5" row="1" col="7">
+            <text>++</text>
+          </button>
+          <button id="button_repeat" row="2" col="4">
+            <text>Repeat</text>
+          </button>
+          <button id="button_done" row="2" col="5">
+            <text>End</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="button_-5"/>
+        <button id="button_-2"/>
+        <button id="button_2"/>
+        <button id="button_5"/>
+        <button id="button_repeat"/>
+        <button id="button_done"/>
+      </buttongroup>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="datablock">
+      <device>soundcard</device>
+      <file>sine.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="soundcard" xsi:type="apex:wavDeviceType">
+      <card>default</card>
+      <channels>2</channels>
+      <gain channel="0" id="soundcardgainL">0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters>
+    <filter id="acfilter" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <gain id="gain_ac">0</gain>
+    </filter>
+  </filters>
+  <stimuli>
+    <stimulus id="stimulus">
+      <datablocks>
+        <datablock id="datablock"/>
+      </datablocks>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>datablock</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>acfilter</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>acfilter</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+  <results>
+    <page>apex:resultsviewer.html</page>
+    <resultparameters>
+      <parameter name="showextra">gain_ac</parameter>
+      <parameter name="reference">$$reference_stimulus$$</parameter>
+      <parameter name="sones">$$target_sones$$</parameter>
+    </resultparameters>
+    <showduringexperiment>false</showduringexperiment>
+    <showafterexperiment>false</showafterexperiment>
+    <saveprocessedresults>true</saveprocessedresults>
+  </results>
 </apex:apex>

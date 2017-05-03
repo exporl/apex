@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __EOFCHECK_H__
-#define __EOFCHECK_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_EOFCHECK_H__
+#define _APEX_SRC_LIB_STREAMAPP_EOFCHECK_H__
 
 #include "callback/callback.h"
 
@@ -336,4 +336,4 @@ namespace streamapp
 
 }
 
-#endif //#ifndef __EOFCHECK_H__
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_EOFCHECK_H__

@@ -1,143 +1,143 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!-- @doc
     @what: Adaptation of multiple parameters: GainL & GainR
     @description: 2 buttons: louder - quieter - when you click on louder/quieter the gain in right and left channel is increased/decreased with 2 dB (stepsize) - see output box
     @how: Adapt_parameter => gainL(adapt) & gainR(adapt)
   -->
- <procedure xsi:type="apex:adaptiveProcedure">
-  <parameters>
-   <presentations>100</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-   <nUp>1</nUp>
-   <nDown>1</nDown>
-   <adapt_parameter>gainL</adapt_parameter>
-   <adapt_parameter>gainR</adapt_parameter>
-   <start_value>0</start_value>
-   <stop_after_type>presentations</stop_after_type>
-   <stop_after>100</stop_after>
-   <larger_is_easier>false</larger_is_easier>
-   <stepsizes>
-    <stepsize size="2" begin="0"/>
-   </stepsizes>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>up</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">false</feedback>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout width="3" height="1" id="main_layout">
-    <button x="1" y="1" id="up">
-     <text>louder</text>
-    </button>
-    <button x="2" y="1" id="down">
-     <text>quieter</text>
-    </button>
-    <parameterlist x="3" y="1" id="pl">
-     <parameter>gainL</parameter>
-     <parameter>gainR</parameter>
-    </parameterlist>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="up"/>
-    <button id="down"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>4096</buffersize>
-  </device>
- </devices>
- <filters>
-  <filter id="amplifierL" xsi:type="apex:amplifier">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="gainL">0</gain>
-  </filter>
-  <filter id="amplifierR" xsi:type="apex:amplifier">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="gainR">0</gain>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifierL</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>1</channel>
-   </from>
-   <to>
-    <id>amplifierR</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifierL</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifierR</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>1</channel>
-   </to>
-  </connection>
- </connections>
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>100</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>gainL</adapt_parameter>
+      <adapt_parameter>gainR</adapt_parameter>
+      <start_value>0</start_value>
+      <stop_after_type>presentations</stop_after_type>
+      <stop_after>100</stop_after>
+      <larger_is_easier>false</larger_is_easier>
+      <stepsizes>
+        <stepsize begin="0" size="2"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>up</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout id="main_layout" width="3" height="1">
+        <button id="up" x="1" y="1">
+          <text>louder</text>
+        </button>
+        <button id="down" x="2" y="1">
+          <text>quieter</text>
+        </button>
+        <parameterlist id="pl" x="3" y="1">
+          <parameter>gainL</parameter>
+          <parameter>gainR</parameter>
+        </parameterlist>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="up"/>
+        <button id="down"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>4096</buffersize>
+    </device>
+  </devices>
+  <filters>
+    <filter id="amplifierL" xsi:type="apex:amplifier">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="gainL">0</gain>
+    </filter>
+    <filter id="amplifierR" xsi:type="apex:amplifier">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="gainR">0</gain>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifierL</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>1</channel>
+      </from>
+      <to>
+        <id>amplifierR</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifierL</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifierR</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+  </connections>
 </apex:apex>

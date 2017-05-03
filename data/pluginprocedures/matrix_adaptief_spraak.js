@@ -24,7 +24,9 @@ function SPIN() {
     this.trialdatas = api.trials();
     this.trialcount = this.trialdatas.length;
     this.currenttrial = 0;
-
+    
+    this.wordtypes = ["name", "verb", "number", "color", "object"];
+    
     this.previousscore = null;
     this.reversals = 0;
 
@@ -108,11 +110,27 @@ SPIN.prototype.setupNextTrial = function() {
 }
 
 SPIN.prototype.parseMatrixResult = function(screenresult)  {
-    var re = /<answer>(\d+)</g,
+    var re = /<answer>(\w*)</g,
         count = 0,
-        matches;
-    while (matches = re.exec(screenresult.matrix))
-        count += Number(matches[1]);
+        wordID = 0,
+        input,
+        trial,
+        correct;
+     if (screenresult.matrix_subject) {
+        while (input = re.exec(screenresult.matrix_subject)) {
+            trial = this.trialdatas[this.trialindices[this.currenttrial]];
+            correct = api.fixedParameterValue(trial.GetStimulus(),this.wordtypes[wordID]);
+            count += Number(input[1] == correct);
+            wordID += 1;        
+        }
+     } else if (screenresult.matrix_experimenter) {
+        while (input = re.exec(screenresult.matrix_experimenter))
+            count += Number(input[1]);
+     } else {
+        while (input = re.exec(screenresult.matrix))
+            count += Number(input[1]);
+     }
+
     return count.toString();
 }
 

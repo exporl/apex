@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License          *
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
-#ifndef _EXPORL_SRC_PROGRAMS_CALIBRATIONADMIN_MAINWINDOW_H_
-#define _EXPORL_SRC_PROGRAMS_CALIBRATIONADMIN_MAINWINDOW_H_
+#ifndef _APEX_SRC_PROGRAMS_CALIBRATIONADMIN_MAINWINDOW_H_
+#define _APEX_SRC_PROGRAMS_CALIBRATIONADMIN_MAINWINDOW_H_
 
 #include <QMainWindow>
 
@@ -42,4 +42,4 @@ private:
     void fillGlobalSetups();
 };
 
-#endif // _EXPORL_SRC_PROGRAMS_CALIBRATIONADMIN_MAINWINDOW_H_
+#endif // _APEX_SRC_PROGRAMS_CALIBRATIONADMIN_MAINWINDOW_H_

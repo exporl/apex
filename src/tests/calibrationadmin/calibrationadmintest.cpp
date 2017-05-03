@@ -23,9 +23,12 @@
 
 #include "apextools/global.h"
 
+#include "common/testutils.h"
+
 #include "calibrationadmintest.h"
 
-void CalibrationAdminTest::init() {
+void CalibrationAdminTest::init()
+{
     CalibrationDatabase cd;
     HardwareSetups locals = cd.localHardwareSetups();
     HardwareSetups globals = cd.globalHardwareSetups();
@@ -51,7 +54,8 @@ void CalibrationAdminTest::init() {
     addSetup(globalSetup);
 }
 
-void CalibrationAdminTest::addSetup(Setup& s) {
+void CalibrationAdminTest::addSetup(Setup& s)
+{
     QSettings* settings = NULL;
 
     if(s.location == Setup::LOCAL) {
@@ -69,7 +73,8 @@ void CalibrationAdminTest::addSetup(Setup& s) {
     settings->sync();
 }
 
-void CalibrationAdminTest::removeSetup(Setup& s) {
+void CalibrationAdminTest::removeSetup(Setup& s)
+{
     QSettings* settings = NULL;
 
     if(s.location == Setup::LOCAL) {
@@ -93,12 +98,16 @@ void CalibrationAdminTest::removeSetup(Setup& s) {
     settings->sync();
 }
 
-void CalibrationAdminTest::cleanup() {
+void CalibrationAdminTest::cleanup()
+{
     removeSetup(localSetup);
     removeSetup(globalSetup);
 }
 
-void CalibrationAdminTest::testMakeGlobalLocal() {
+void CalibrationAdminTest::testMakeGlobalLocal()
+{
+    TEST_EXCEPTIONS_TRY
+
 #ifdef Q_OS_UNIX
     QSKIP("Unable to access global calib profiles on unix");
 #endif
@@ -129,9 +138,14 @@ void CalibrationAdminTest::testMakeGlobalLocal() {
     globalSettings->beginGroup(DatabaseNames::data(globalSetup.name));
     QCOMPARE(globalSettings->childGroups().count(), 0);
     globalSettings->endGroup();
+
+    TEST_EXCEPTIONS_CATCH
 }
 
-void CalibrationAdminTest::testMakeLocalLocal() {
+void CalibrationAdminTest::testMakeLocalLocal()
+{
+    TEST_EXCEPTIONS_TRY
+
     CalibrationDatabase cd;
     try {
         cd.makeLocal(cd.setup(localSetup.name));
@@ -141,9 +155,14 @@ void CalibrationAdminTest::testMakeLocalLocal() {
     } catch(...) {
         QFAIL("makeLocal throws the wrong error.");
     }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
-void CalibrationAdminTest::testMakeInvalidLocal() {
+void CalibrationAdminTest::testMakeInvalidLocal()
+{
+    TEST_EXCEPTIONS_TRY
+
     CalibrationDatabase cd;
     try {
         cd.makeLocal(cd.setup(invalidSetup.name));
@@ -153,9 +172,14 @@ void CalibrationAdminTest::testMakeInvalidLocal() {
     } catch(...) {
         QFAIL("makeLocal throws the wrong error.");
     }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
-void CalibrationAdminTest::testMakeLocalGlobal() {
+void CalibrationAdminTest::testMakeLocalGlobal()
+{
+    TEST_EXCEPTIONS_TRY
+
 #ifdef Q_OS_UNIX
     QSKIP("Unable to access global calib profiles on unix");
 #endif
@@ -186,9 +210,14 @@ void CalibrationAdminTest::testMakeLocalGlobal() {
     globalSettings->beginGroup(DatabaseNames::data(globalSetup.name));
     QCOMPARE(globalSettings->childGroups().count(), 1);
     globalSettings->endGroup();
+
+    TEST_EXCEPTIONS_CATCH
 }
 
-void CalibrationAdminTest::testMakeGlobalGlobal() {
+void CalibrationAdminTest::testMakeGlobalGlobal()
+{
+    TEST_EXCEPTIONS_TRY
+
     CalibrationDatabase cd;
     try {
         cd.makeGlobal(cd.setup(globalSetup.name));
@@ -198,9 +227,14 @@ void CalibrationAdminTest::testMakeGlobalGlobal() {
     } catch(...) {
         QFAIL("makeLocal throws the wrong error.");
     }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
-void CalibrationAdminTest::testMakeInvalidGlobal() {
+void CalibrationAdminTest::testMakeInvalidGlobal()
+{
+    TEST_EXCEPTIONS_TRY
+
     CalibrationDatabase cd;
     try {
         cd.makeGlobal(cd.setup(invalidSetup.name));
@@ -210,9 +244,14 @@ void CalibrationAdminTest::testMakeInvalidGlobal() {
     } catch(...) {
         QFAIL("makeLocal throws the wrong error.");
     }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
-void CalibrationAdminTest::testHardwareSetup() {
+void CalibrationAdminTest::testHardwareSetup()
+{
+    TEST_EXCEPTIONS_TRY
+
     CalibrationDatabase cd;
     {
         QCOMPARE(cd.setup(localSetup.name).name(), localSetup.name);
@@ -234,6 +273,8 @@ void CalibrationAdminTest::testHardwareSetup() {
 
     QVERIFY((cd.setup(localSetup.name) == cd.setup(localSetup.name)));
     QVERIFY(!(cd.setup(localSetup.name) == cd.setup(globalSetup.name)));
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 int main(int argc, char *argv[])

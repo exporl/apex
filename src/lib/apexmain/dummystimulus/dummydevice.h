@@ -33,8 +33,10 @@ Dummy device, only prints debugging output
 
 using namespace apex::XMLKeys;
 
-namespace apex{
-  namespace stimulus{
+namespace apex
+{
+namespace stimulus
+{
 
 /**
 @author Tom Francart,,,
@@ -47,35 +49,29 @@ public:
     ~DummyDevice();
 
     virtual bool AllDone();
-    virtual bool Done(const QString& ac_sDataBlockID);
     virtual void AddFilter(Filter& ac_Filter);
     virtual void AddInput(const DataBlock& ac_DataBlock);
     virtual void PlayAll();
     virtual void RemoveAll();
-    virtual void RemoveInput(const QString& ac_sDataBlockID);
     virtual void StopAll();
-    virtual void Stop(const QString& ac_sDataBlockID);
-        virtual bool SetParameter ( const QString& type, const int channel, const QVariant& value );
+    virtual bool SetParameter ( const QString& type, int channel, const QVariant& value );
 
 
-                /**
-                * Reset the filter to its initial state and set all internal parameters to built in
-                * default values
-                * throw exception if problem
-                 */
-                                        virtual void Reset() {};
+    /**
+     * Reset the filter to its initial state and set all internal parameters to built in
+     * default values
+     * throw exception if problem
+     */
+    virtual void Reset() {};
 
-                /**
-                   * Prepare filter for processing
-                   * throw exception if problem
-                 */
-                                        virtual void Prepare() {};
+    /**
+     * Prepare filter for processing
+     * throw exception if problem
+     */
+    virtual void Prepare() {};
 
     virtual bool HasError() const;
     virtual const QString& GetID() const;
-
-    virtual const QString& GetModule() const
-    { return sc_sDummyDevice; }
 
     virtual bool CanSequence() const
     { return true; }
@@ -86,12 +82,11 @@ public:
 
     virtual void SetSilenceBefore(double) { qCDebug(APEX_RS, "DummyDevice: SetSilenceBefore not implemented");};
 
-        private:
-                void Say(const QString& message) const;
-
+private:
+    void Say(const QString& message) const;
 };
 
-  }
+}
 }
 
 #endif

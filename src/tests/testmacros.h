@@ -1,5 +1,5 @@
-#ifndef __EXPORL_SRC_TESTS_TESTMACROS_H_
-#define __EXPORL_SRC_TESTS_TESTMACROS_H_
+#ifndef _APEX_SRC_TESTS_TESTMACROS_H_
+#define _APEX_SRC_TESTS_TESTMACROS_H_
 
 #include <QTest>
 
@@ -57,4 +57,4 @@
     }                                                                   \
     while (false)
 
-#endif // __EXPORL_SRC_TESTS_TESTMACROS_H_
+#endif // _APEX_SRC_TESTS_TESTMACROS_H_

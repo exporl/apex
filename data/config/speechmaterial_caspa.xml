@@ -1,859 +1,854 @@
-<apex:speechmaterialfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.3/experiment.xsd"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
-    
-    <noises>
-        <noise id="CASPAnoise">
-            <description>Stationary noise for CASPA words</description>
-            <name>CASPA LTASS</name>
-            <uri>english/CASPA/T1E/Noise/44k/mono.wav</uri>
-            <rms>-37.3229</rms>
-            <speechmaterial>CASPA</speechmaterial>
-        </noise>
-    </noises>
-    
-    <speechmaterial id="CASPA">
-        <rms>-37.3229</rms>
-        <list id="1">
-            <speechtoken id="ship">
-                <uri>CASPA/english/T1E/List%2001/44k/44k/qt010170.wav</uri>
-                <text>ship</text>
-            </speechtoken>
-            <speechtoken id="rug">
-                <uri>CASPA/english/T1E/List%2001/44k/qt010270.wav</uri>
-                <text>rug</text>
-            </speechtoken>
-            <speechtoken id="fan">
-                <uri>english/CASPA/T1E/List%2001/44k/qt010370.wav</uri>
-                <text>fan</text>
-            </speechtoken>
-            <speechtoken id="cheek">
-                <uri>english/CASPA/T1E/List%2001/44k/qt010470.wav</uri>
-                <text>cheek</text>
-            </speechtoken>
-            <speechtoken id="haze">
-                <uri>english/CASPA/T1E/List%2001/44k/qt010570.wav</uri>
-                <text>haze</text>
-            </speechtoken>
-            <speechtoken id="dice">
-                <uri>english/CASPA/T1E/List%2001/44k/qt010670.wav</uri>
-                <text>dice</text>
-            </speechtoken>
-            <speechtoken id="both">
-                <uri>english/CASPA/T1E/List%2001/44k/qt010770.wav</uri>
-                <text>both</text>
-            </speechtoken>
-            <speechtoken id="well">
-                <uri>english/CASPA/T1E/List%2001/44k/qt010870.wav</uri>
-                <text>well</text>
-            </speechtoken>
-            <speechtoken id="jot">
-                <uri>english/CASPA/T1E/List%2001/44k/qt010970.wav</uri>
-                <text>jot</text>
-            </speechtoken>
-            <speechtoken id="move">
-                <uri>english/CASPA/T1E/List%2001/44k/qt011070.wav</uri>
-                <text>move</text>
-            </speechtoken>
-        </list>
-        <list id="2">
-            <speechtoken id="fish">
-                <uri>english/CASPA/T1E/List%2002/44k/qt020170.wav</uri>
-                <text>fish</text>
-            </speechtoken>
-            <speechtoken id="duck">
-                <uri>english/CASPA/T1E/List%2002/44k/qt020270.wav</uri>
-                <text>duck</text>
-            </speechtoken>
-            <speechtoken id="path">
-                <uri>english/CASPA/T1E/List%2002/44k/qt020370.wav</uri>
-                <text>path</text>
-            </speechtoken>
-            <speechtoken id="cheese">
-                <uri>english/CASPA/T1E/List%2002/44k/qt020470.wav</uri>
-                <text>cheese</text>
-            </speechtoken>
-            <speechtoken id="race">
-                <uri>english/CASPA/T1E/List%2002/44k/qt020570.wav</uri>
-                <text>race</text>
-            </speechtoken>
-            <speechtoken id="hive">
-                <uri>english/CASPA/T1E/List%2002/44k/qt020670.wav</uri>
-                <text>hive</text>
-            </speechtoken>
-            <speechtoken id="bone">
-                <uri>english/CASPA/T1E/List%2002/44k/qt020770.wav</uri>
-                <text>bone</text>
-            </speechtoken>
-            <speechtoken id="wedge">
-                <uri>english/CASPA/T1E/List%2002/44k/qt020870.wav</uri>
-                <text>wedge</text>
-            </speechtoken>
-            <speechtoken id="log">
-                <uri>english/CASPA/T1E/List%2002/44k/qt020970.wav</uri>
-                <text>log</text>
-            </speechtoken>
-            <speechtoken id="tomb">
-                <uri>english/CASPA/T1E/List%2002/44k/qt021070.wav</uri>
-                <text>tomb</text>
-            </speechtoken>
-        </list>
-        <list id="3">
-            <speechtoken id="thug">
-                <uri>english/CASPA/T1E/List%2003/44k/qt030170.wav</uri>
-                <text>thug</text>
-            </speechtoken>
-            <speechtoken id="witch">
-                <uri>english/CASPA/T1E/List%2003/44k/qt030270.wav</uri>
-                <text>witch</text>
-            </speechtoken>
-            <speechtoken id="teak">
-                <uri>english/CASPA/T1E/List%2003/44k/qt030370.wav</uri>
-                <text>teak</text>
-            </speechtoken>
-            <speechtoken id="wrap">
-                <uri>english/CASPA/T1E/List%2003/44k/qt030470.wav</uri>
-                <text>wrap</text>
-            </speechtoken>
-            <speechtoken id="vice">
-                <uri>english/CASPA/T1E/List%2003/44k/qt030570.wav</uri>
-                <text>vice</text>
-            </speechtoken>
-            <speechtoken id="jail">
-                <uri>english/CASPA/T1E/List%2003/44k/qt030670.wav</uri>
-                <text>jail</text>
-            </speechtoken>
-            <speechtoken id="hen">
-                <uri>english/CASPA/T1E/List%2003/44k/qt030770.wav</uri>
-                <text>hen</text>
-            </speechtoken>
-            <speechtoken id="shows">
-                <uri>english/CASPA/T1E/List%2003/44k/qt030870.wav</uri>
-                <text>shows</text>
-            </speechtoken>
-            <speechtoken id="food">
-                <uri>english/CASPA/T1E/List%2003/44k/qt030970.wav</uri>
-                <text>food</text>
-            </speechtoken>
-            <speechtoken id="bomb">
-                <uri>english/CASPA/T1E/List%2003/44k/qt031070.wav</uri>
-                <text>bomb</text>
-            </speechtoken>
-        </list>
-        <list id="4">
-            <speechtoken id="fun">
-                <uri>english/CASPA/T1E/List%2004/44k/qt040170.wav</uri>
-                <text>fun</text>
-            </speechtoken>
-            <speechtoken id="will">
-                <uri>english/CASPA/T1E/List%2004/44k/qt040270.wav</uri>
-                <text>will</text>
-            </speechtoken>
-            <speechtoken id="vat">
-                <uri>english/CASPA/T1E/List%2004/44k/qt040370.wav</uri>
-                <text>vat</text>
-            </speechtoken>
-            <speechtoken id="shape">
-                <uri>english/CASPA/T1E/List%2004/44k/qt040470.wav</uri>
-                <text>shape</text>
-            </speechtoken>
-            <speechtoken id="wreath">
-                <uri>english/CASPA/T1E/List%2004/44k/qt040570.wav</uri>
-                <text>wreath</text>
-            </speechtoken>
-            <speechtoken id="hide">
-                <uri>english/CASPA/T1E/List%2004/44k/qt040670.wav</uri>
-                <text>hide</text>
-            </speechtoken>
-            <speechtoken id="guess">
-                <uri>english/CASPA/T1E/List%2004/44k/qt040770.wav</uri>
-                <text>guess</text>
-            </speechtoken>
-            <speechtoken id="comb">
-                <uri>english/CASPA/T1E/List%2004/44k/qt040870.wav</uri>
-                <text>comb</text>
-            </speechtoken>
-            <speechtoken id="choose">
-                <uri>english/CASPA/T1E/List%2004/44k/qt040970.wav</uri>
-                <text>choose</text>
-            </speechtoken>
-            <speechtoken id="job">
-                <uri>english/CASPA/T1E/List%2004/44k/qt041070.wav</uri>
-                <text>job</text>
-            </speechtoken>
-        </list>
-        <list id="5">
-            <speechtoken id="fib">
-                <uri>english/CASPA/T1E/List%2005/44k/qt050170.wav</uri>
-                <text>fib</text>
-            </speechtoken>
-            <speechtoken id="thatch">
-                <uri>english/CASPA/T1E/List%2005/44k/qt050270.wav</uri>
-                <text>thatch</text>
-            </speechtoken>
-            <speechtoken id="sum">
-                <uri>english/CASPA/T1E/List%2005/44k/qt050370.wav</uri>
-                <text>sum</text>
-            </speechtoken>
-            <speechtoken id="heel">
-                <uri>english/CASPA/T1E/List%2005/44k/qt050470.wav</uri>
-                <text>heel</text>
-            </speechtoken>
-            <speechtoken id="wide">
-                <uri>english/CASPA/T1E/List%2005/44k/qt050570.wav</uri>
-                <text>wide</text>
-            </speechtoken>
-            <speechtoken id="rake">
-                <uri>english/CASPA/T1E/List%2005/44k/qt050670.wav</uri>
-                <text>rake</text>
-            </speechtoken>
-            <speechtoken id="goes">
-                <uri>english/CASPA/T1E/List%2005/44k/qt050770.wav</uri>
-                <text>goes</text>
-            </speechtoken>
-            <speechtoken id="shop">
-                <uri>english/CASPA/T1E/List%2005/44k/qt050870.wav</uri>
-                <text>shop</text>
-            </speechtoken>
-            <speechtoken id="vet">
-                <uri>english/CASPA/T1E/List%2005/44k/qt050970.wav</uri>
-                <text>vet</text>
-            </speechtoken>
-            <speechtoken id="june">
-                <uri>english/CASPA/T1E/List%2005/44k/qt051070.wav</uri>
-                <text>june</text>
-            </speechtoken>
-        </list>
-        <list id="6">
-            <speechtoken id="fill">
-                <uri>english/CASPA/T1E/List%2006/44k/qt060170.wav</uri>
-                <text>fill</text>
-            </speechtoken>
-            <speechtoken id="catch">
-                <uri>english/CASPA/T1E/List%2006/44k/qt060270.wav</uri>
-                <text>catch</text>
-            </speechtoken>
-            <speechtoken id="thumb">
-                <uri>english/CASPA/T1E/List%2006/44k/qt060370.wav</uri>
-                <text>thumb</text>
-            </speechtoken>
-            <speechtoken id="heap">
-                <uri>english/CASPA/T1E/List%2006/44k/qt060470.wav</uri>
-                <text>heap</text>
-            </speechtoken>
-            <speechtoken id="wise">
-                <uri>english/CASPA/T1E/List%2006/44k/qt060570.wav</uri>
-                <text>wise</text>
-            </speechtoken>
-            <speechtoken id="rave">
-                <uri>english/CASPA/T1E/List%2006/44k/qt060670.wav</uri>
-                <text>rave</text>
-            </speechtoken>
-            <speechtoken id="got">
-                <uri>english/CASPA/T1E/List%2006/44k/qt060770.wav</uri>
-                <text>got</text>
-            </speechtoken>
-            <speechtoken id="shown">
-                <uri>english/CASPA/T1E/List%2006/44k/qt060870.wav</uri>
-                <text>shown</text>
-            </speechtoken>
-            <speechtoken id="bed">
-                <uri>english/CASPA/T1E/List%2006/44k/qt060970.wav</uri>
-                <text>bed</text>
-            </speechtoken>
-            <speechtoken id="juice">
-                <uri>english/CASPA/T1E/List%2006/44k/qt061070.wav</uri>
-                <text>juice</text>
-            </speechtoken>
-        </list>
-        <list id="7">
-            <speechtoken id="badge">
-                <uri>english/CASPA/T1E/List%2007/44k/qt070170.wav</uri>
-                <text>badge</text>
-            </speechtoken>
-            <speechtoken id="hutch">
-                <uri>english/CASPA/T1E/List%2007/44k/qt070270.wav</uri>
-                <text>hutch</text>
-            </speechtoken>
-            <speechtoken id="kill">
-                <uri>english/CASPA/T1E/List%2007/44k/qt070370.wav</uri>
-                <text>kill</text>
-            </speechtoken>
-            <speechtoken id="thighs">
-                <uri>english/CASPA/T1E/List%2007/44k/qt070470.wav</uri>
-                <text>thighs</text>
-            </speechtoken>
-            <speechtoken id="wave">
-                <uri>english/CASPA/T1E/List%2007/44k/qt070570.wav</uri>
-                <text>wave</text>
-            </speechtoken>
-            <speechtoken id="reap">
-                <uri>english/CASPA/T1E/List%2007/44k/qt070670.wav</uri>
-                <text>reap</text>
-            </speechtoken>
-            <speechtoken id="foam">
-                <uri>english/CASPA/T1E/List%2007/44k/qt070770.wav</uri>
-                <text>foam</text>
-            </speechtoken>
-            <speechtoken id="goose">
-                <uri>english/CASPA/T1E/List%2007/44k/qt070870.wav</uri>
-                <text>goose</text>
-            </speechtoken>
-            <speechtoken id="not">
-                <uri>english/CASPA/T1E/List%2007/44k/qt070970.wav</uri>
-                <text>not</text>
-            </speechtoken>
-            <speechtoken id="shed">
-                <uri>english/CASPA/T1E/List%2007/44k/qt071070.wav</uri>
-                <text>shed</text>
-            </speechtoken>
-        </list>
-        <list id="8">
-            <speechtoken id="bath">
-                <uri>english/CASPA/T1E/List%2008/44k/qt080170.wav</uri>
-                <text>bath</text>
-            </speechtoken>
-            <speechtoken id="hum">
-                <uri>english/CASPA/T1E/List%2008/44k/qt080270.wav</uri>
-                <text>hum</text>
-            </speechtoken>
-            <speechtoken id="dig">
-                <uri>english/CASPA/T1E/List%2008/44k/qt080370.wav</uri>
-                <text>dig</text>
-            </speechtoken>
-            <speechtoken id="five">
-                <uri>english/CASPA/T1E/List%2008/44k/qt080470.wav</uri>
-                <text>five</text>
-            </speechtoken>
-            <speechtoken id="ways">
-                <uri>english/CASPA/T1E/List%2008/44k/qt080570.wav</uri>
-                <text>ways</text>
-            </speechtoken>
-            <speechtoken id="reach">
-                <uri>english/CASPA/T1E/List%2008/44k/qt080670.wav</uri>
-                <text>reach</text>
-            </speechtoken>
-            <speechtoken id="joke">
-                <uri>english/CASPA/T1E/List%2008/44k/qt080770.wav</uri>
-                <text>joke</text>
-            </speechtoken>
-            <speechtoken id="noose">
-                <uri>english/CASPA/T1E/List%2008/44k/qt080870.wav</uri>
-                <text>noose</text>
-            </speechtoken>
-            <speechtoken id="pot">
-                <uri>english/CASPA/T1E/List%2008/44k/qt080970.wav</uri>
-                <text>pot</text>
-            </speechtoken>
-            <speechtoken id="shell">
-                <uri>english/CASPA/T1E/List%2008/44k/qt081070.wav</uri>
-                <text>shell</text>
-            </speechtoken>
-        </list>
-        <list id="9">
-            <speechtoken id="hush">
-                <uri>english/CASPA/T1E/List%2009/44k/qt090170.wav</uri>
-                <text>hush</text>
-            </speechtoken>
-            <speechtoken id="gas">
-                <uri>english/CASPA/T1E/List%2009/44k/qt090270.wav</uri>
-                <text>gas</text>
-            </speechtoken>
-            <speechtoken id="thin">
-                <uri>english/CASPA/T1E/List%2009/44k/qt090370.wav</uri>
-                <text>thin</text>
-            </speechtoken>
-            <speechtoken id="fake">
-                <uri>english/CASPA/T1E/List%2009/44k/qt090470.wav</uri>
-                <text>fake</text>
-            </speechtoken>
-            <speechtoken id="chime">
-                <uri>english/CASPA/T1E/List%2009/44k/qt090570.wav</uri>
-                <text>chime</text>
-            </speechtoken>
-            <speechtoken id="weave">
-                <uri>english/CASPA/T1E/List%2009/44k/qt090670.wav</uri>
-                <text>weave</text>
-            </speechtoken>
-            <speechtoken id="jet">
-                <uri>english/CASPA/T1E/List%2009/44k/qt090770.wav</uri>
-                <text>jet</text>
-            </speechtoken>
-            <speechtoken id="rob">
-                <uri>english/CASPA/T1E/List%2009/44k/qt090870.wav</uri>
-                <text>rob</text>
-            </speechtoken>
-            <speechtoken id="dope">
-                <uri>english/CASPA/T1E/List%2009/44k/qt090970.wav</uri>
-                <text>dope</text>
-            </speechtoken>
-            <speechtoken id="lose">
-                <uri>english/CASPA/T1E/List%2009/44k/qt091070.wav</uri>
-                <text>lose</text>
-            </speechtoken>
-        </list>
-        <list id="10">
-            <speechtoken id="jug">
-                <uri>english/CASPA/T1E/List%2010/44k/qt100170.wav</uri>
-                <text>jug</text>
-            </speechtoken>
-            <speechtoken id="latch">
-                <uri>english/CASPA/T1E/List%2010/44k/qt100270.wav</uri>
-                <text>latch</text>
-            </speechtoken>
-            <speechtoken id="wick">
-                <uri>english/CASPA/T1E/List%2010/44k/qt100370.wav</uri>
-                <text>wick</text>
-            </speechtoken>
-            <speechtoken id="faith">
-                <uri>english/CASPA/T1E/List%2010/44k/qt100470.wav</uri>
-                <text>faith</text>
-            </speechtoken>
-            <speechtoken id="sign">
-                <uri>english/CASPA/T1E/List%2010/44k/qt100570.wav</uri>
-                <text>sign</text>
-            </speechtoken>
-            <speechtoken id="beep">
-                <uri>english/CASPA/T1E/List%2010/44k/qt100670.wav</uri>
-                <text>beep</text>
-            </speechtoken>
-            <speechtoken id="hem">
-                <uri>english/CASPA/T1E/List%2010/44k/qt100770.wav</uri>
-                <text>hem</text>
-            </speechtoken>
-            <speechtoken id="rod">
-                <uri>english/CASPA/T1E/List%2010/44k/qt100870.wav</uri>
-                <text>rod</text>
-            </speechtoken>
-            <speechtoken id="vote">
-                <uri>english/CASPA/T1E/List%2010/44k/qt100970.wav</uri>
-                <text>vote</text>
-            </speechtoken>
-            <speechtoken id="shoes">
-                <uri>english/CASPA/T1E/List%2010/44k/qt101070.wav</uri>
-                <text>shoes</text>
-            </speechtoken>
-        </list>
-        <list id="11">
-            <speechtoken id="math">
-                <uri>english/CASPA/T1E/List%2011/44k/qt110170.wav</uri>
-                <text>math</text>
-            </speechtoken>
-            <speechtoken id="hip">
-                <uri>english/CASPA/T1E/List%2011/44k/qt110270.wav</uri>
-                <text>hip</text>
-            </speechtoken>
-            <speechtoken id="gun">
-                <uri>english/CASPA/T1E/List%2011/44k/qt110370.wav</uri>
-                <text>gun</text>
-            </speechtoken>
-            <speechtoken id="ride">
-                <uri>english/CASPA/T1E/List%2011/44k/qt110470.wav</uri>
-                <text>ride</text>
-            </speechtoken>
-            <speechtoken id="siege">
-                <uri>english/CASPA/T1E/List%2011/44k/qt110570.wav</uri>
-                <text>siege</text>
-            </speechtoken>
-            <speechtoken id="veil">
-                <uri>english/CASPA/T1E/List%2011/44k/qt110670.wav</uri>
-                <text>veil</text>
-            </speechtoken>
-            <speechtoken id="chose">
-                <uri>english/CASPA/T1E/List%2011/44k/qt110770.wav</uri>
-                <text>chose</text>
-            </speechtoken>
-            <speechtoken id="shoot">
-                <uri>english/CASPA/T1E/List%2011/44k/qt110870.wav</uri>
-                <text>shoot</text>
-            </speechtoken>
-            <speechtoken id="web">
-                <uri>english/CASPA/T1E/List%2011/44k/qt110970.wav</uri>
-                <text>web</text>
-            </speechtoken>
-            <speechtoken id="cough">
-                <uri>english/CASPA/T1E/List%2011/44k/qt111070.wav</uri>
-                <text>cough</text>
-            </speechtoken>
-        </list>
-        <list id="12">
-            <speechtoken id="have">
-                <uri>english/CASPA/T1E/List%2012/44k/qt120170.wav</uri>
-                <text>have</text>
-            </speechtoken>
-            <speechtoken id="wig">
-                <uri>english/CASPA/T1E/List%2012/44k/qt120270.wav</uri>
-                <text>wig</text>
-            </speechtoken>
-            <speechtoken id="buff">
-                <uri>english/CASPA/T1E/List%2012/44k/qt120370.wav</uri>
-                <text>buff</text>
-            </speechtoken>
-            <speechtoken id="mice">
-                <uri>english/CASPA/T1E/List%2012/44k/qt120470.wav</uri>
-                <text>mice</text>
-            </speechtoken>
-            <speechtoken id="teeth">
-                <uri>english/CASPA/T1E/List%2012/44k/qt120570.wav</uri>
-                <text>teeth</text>
-            </speechtoken>
-            <speechtoken id="jays">
-                <uri>english/CASPA/T1E/List%2012/44k/qt120670.wav</uri>
-                <text>jays</text>
-            </speechtoken>
-            <speechtoken id="poach">
-                <uri>english/CASPA/T1E/List%2012/44k/qt120770.wav</uri>
-                <text>poach</text>
-            </speechtoken>
-            <speechtoken id="rule">
-                <uri>english/CASPA/T1E/List%2012/44k/qt120870.wav</uri>
-                <text>rule</text>
-            </speechtoken>
-            <speechtoken id="den">
-                <uri>english/CASPA/T1E/List%2012/44k/qt120970.wav</uri>
-                <text>den</text>
-            </speechtoken>
-            <speechtoken id="shock">
-                <uri>english/CASPA/T1E/List%2012/44k/qt121070.wav</uri>
-                <text>shock</text>
-            </speechtoken>
-        </list>
-        <list id="13">
-            <speechtoken id="kiss">
-                <uri>english/CASPA/T1E/List%2013/44k/qt130170.wav</uri>
-                <text>kiss</text>
-            </speechtoken>
-            <speechtoken id="buzz">
-                <uri>english/CASPA/T1E/List%2013/44k/qt130270.wav</uri>
-                <text>buzz</text>
-            </speechtoken>
-            <speechtoken id="hash">
-                <uri>english/CASPA/T1E/List%2013/44k/qt130370.wav</uri>
-                <text>hash</text>
-            </speechtoken>
-            <speechtoken id="thieve">
-                <uri>english/CASPA/T1E/List%2013/44k/qt130470.wav</uri>
-                <text>thieve</text>
-            </speechtoken>
-            <speechtoken id="gate">
-                <uri>english/CASPA/T1E/List%2013/44k/qt130570.wav</uri>
-                <text>gate</text>
-            </speechtoken>
-            <speechtoken id="wife">
-                <uri>english/CASPA/T1E/List%2013/44k/qt130670.wav</uri>
-                <text>wife</text>
-            </speechtoken>
-            <speechtoken id="pole">
-                <uri>english/CASPA/T1E/List%2013/44k/qt130770.wav</uri>
-                <text>pole</text>
-            </speechtoken>
-            <speechtoken id="wretch">
-                <uri>english/CASPA/T1E/List%2013/44k/qt130870.wav</uri>
-                <text>wretch</text>
-            </speechtoken>
-            <speechtoken id="dodge">
-                <uri>english/CASPA/T1E/List%2013/44k/qt130970.wav</uri>
-                <text>dodge</text>
-            </speechtoken>
-            <speechtoken id="moon">
-                <uri>english/CASPA/T1E/List%2013/44k/qt131070.wav</uri>
-                <text>moon</text>
-            </speechtoken>
-        </list>
-        <list id="14">
-            <speechtoken id="wish">
-                <uri>english/CASPA/T1E/List%2014/44k/qt140170.wav</uri>
-                <text>wish</text>
-            </speechtoken>
-            <speechtoken id="dutch">
-                <uri>english/CASPA/T1E/List%2014/44k/qt140270.wav</uri>
-                <text>dutch</text>
-            </speechtoken>
-            <speechtoken id="jam">
-                <uri>english/CASPA/T1E/List%2014/44k/qt140370.wav</uri>
-                <text>jam</text>
-            </speechtoken>
-            <speechtoken id="heath">
-                <uri>english/CASPA/T1E/List%2014/44k/qt140470.wav</uri>
-                <text>heath</text>
-            </speechtoken>
-            <speechtoken id="laze">
-                <uri>english/CASPA/T1E/List%2014/44k/qt140570.wav</uri>
-                <text>laze</text>
-            </speechtoken>
-            <speechtoken id="bike">
-                <uri>english/CASPA/T1E/List%2014/44k/qt140670.wav</uri>
-                <text>bike</text>
-            </speechtoken>
-            <speechtoken id="rove">
-                <uri>english/CASPA/T1E/List%2014/44k/qt140770.wav</uri>
-                <text>rove</text>
-            </speechtoken>
-            <speechtoken id="pet">
-                <uri>english/CASPA/T1E/List%2014/44k/qt140870.wav</uri>
-                <text>pet</text>
-            </speechtoken>
-            <speechtoken id="fog">
-                <uri>english/CASPA/T1E/List%2014/44k/qt140970.wav</uri>
-                <text>fog</text>
-            </speechtoken>
-            <speechtoken id="soon">
-                <uri>english/CASPA/T1E/List%2014/44k/qt141070.wav</uri>
-                <text>soon</text>
-            </speechtoken>
-        </list>
-        <list id="15">
-            <speechtoken id="hug">
-                <uri>english/CASPA/T1E/List%2015/44k/qt150170.wav</uri>
-                <text>hug</text>
-            </speechtoken>
-            <speechtoken id="dish">
-                <uri>english/CASPA/T1E/List%2015/44k/qt150270.wav</uri>
-                <text>dish</text>
-            </speechtoken>
-            <speechtoken id="ban">
-                <uri>english/CASPA/T1E/List%2015/44k/qt150370.wav</uri>
-                <text>ban</text>
-            </speechtoken>
-            <speechtoken id="rage">
-                <uri>english/CASPA/T1E/List%2015/44k/qt150470.wav</uri>
-                <text>rage</text>
-            </speechtoken>
-            <speechtoken id="chief">
-                <uri>english/CASPA/T1E/List%2015/44k/qt150570.wav</uri>
-                <text>chief</text>
-            </speechtoken>
-            <speechtoken id="pies">
-                <uri>english/CASPA/T1E/List%2015/44k/qt150670.wav</uri>
-                <text>pies</text>
-            </speechtoken>
-            <speechtoken id="wet">
-                <uri>english/CASPA/T1E/List%2015/44k/qt150770.wav</uri>
-                <text>wet</text>
-            </speechtoken>
-            <speechtoken id="cove">
-                <uri>english/CASPA/T1E/List%2015/44k/qt150870.wav</uri>
-                <text>cove</text>
-            </speechtoken>
-            <speechtoken id="loose">
-                <uri>english/CASPA/T1E/List%2015/44k/qt150970.wav</uri>
-                <text>loose</text>
-            </speechtoken>
-            <speechtoken id="moth">
-                <uri>english/CASPA/T1E/List%2015/44k/qt151070.wav</uri>
-                <text>moth</text>
-            </speechtoken>
-        </list>
-        <list id="16">
-            <speechtoken id="wage">
-                <uri>english/CASPA/T1E/List%2016/44k/qt160170.wav</uri>
-                <text>wage</text>
-            </speechtoken>
-            <speechtoken id="rag">
-                <uri>english/CASPA/T1E/List%2016/44k/qt160270.wav</uri>
-                <text>rag</text>
-            </speechtoken>
-            <speechtoken id="beach">
-                <uri>english/CASPA/T1E/List%2016/44k/qt160370.wav</uri>
-                <text>beach</text>
-            </speechtoken>
-            <speechtoken id="chef">
-                <uri>english/CASPA/T1E/List%2016/44k/qt160470.wav</uri>
-                <text>chef</text>
-            </speechtoken>
-            <speechtoken id="dime">
-                <uri>english/CASPA/T1E/List%2016/44k/qt160570.wav</uri>
-                <text>dime</text>
-            </speechtoken>
-            <speechtoken id="thick">
-                <uri>english/CASPA/T1E/List%2016/44k/qt160670.wav</uri>
-                <text>thick</text>
-            </speechtoken>
-            <speechtoken id="love">
-                <uri>english/CASPA/T1E/List%2016/44k/qt160770.wav</uri>
-                <text>love</text>
-            </speechtoken>
-            <speechtoken id="zone">
-                <uri>english/CASPA/T1E/List%2016/44k/qt160870.wav</uri>
-                <text>zone</text>
-            </speechtoken>
-            <speechtoken id="hop">
-                <uri>english/CASPA/T1E/List%2016/44k/qt160970.wav</uri>
-                <text>hop</text>
-            </speechtoken>
-            <speechtoken id="suit">
-                <uri>english/CASPA/T1E/List%2016/44k/qt161070.wav</uri>
-                <text>suit</text>
-            </speechtoken>
-        </list>
-        <list id="17">
-            <speechtoken id="jade">
-                <uri>english/CASPA/T1E/List%2017/44k/qt170170.wav</uri>
-                <text>jade</text>
-            </speechtoken>
-            <speechtoken id="cash">
-                <uri>english/CASPA/T1E/List%2017/44k/qt170270.wav</uri>
-                <text>cash</text>
-            </speechtoken>
-            <speechtoken id="thief">
-                <uri>english/CASPA/T1E/List%2017/44k/qt170370.wav</uri>
-                <text>thief</text>
-            </speechtoken>
-            <speechtoken id="set">
-                <uri>english/CASPA/T1E/List%2017/44k/qt170470.wav</uri>
-                <text>set</text>
-            </speechtoken>
-            <speechtoken id="wine">
-                <uri>english/CASPA/T1E/List%2017/44k/qt170570.wav</uri>
-                <text>wine</text>
-            </speechtoken>
-            <speechtoken id="give">
-                <uri>english/CASPA/T1E/List%2017/44k/qt170670.wav</uri>
-                <text>give</text>
-            </speechtoken>
-            <speechtoken id="rub">
-                <uri>english/CASPA/T1E/List%2017/44k/qt170770.wav</uri>
-                <text>rub</text>
-            </speechtoken>
-            <speechtoken id="hole">
-                <uri>english/CASPA/T1E/List%2017/44k/qt170870.wav</uri>
-                <text>hole</text>
-            </speechtoken>
-            <speechtoken id="chop">
-                <uri>english/CASPA/T1E/List%2017/44k/qt170970.wav</uri>
-                <text>chop</text>
-            </speechtoken>
-            <speechtoken id="zoom">
-                <uri>english/CASPA/T1E/List%2017/44k/qt171070.wav</uri>
-                <text>zoom</text>
-            </speechtoken>
-        </list>
-        <list id="18">
-            <speechtoken id="shave">
-                <uri>english/CASPA/T1E/List%2018/44k/qt180170.wav</uri>
-                <text>shave</text>
-            </speechtoken>
-            <speechtoken id="jazz">
-                <uri>english/CASPA/T1E/List%2018/44k/qt180270.wav</uri>
-                <text>jazz</text>
-            </speechtoken>
-            <speechtoken id="theme">
-                <uri>english/CASPA/T1E/List%2018/44k/qt180370.wav</uri>
-                <text>theme</text>
-            </speechtoken>
-            <speechtoken id="fetch">
-                <uri>english/CASPA/T1E/List%2018/44k/qt180470.wav</uri>
-                <text>fetch</text>
-            </speechtoken>
-            <speechtoken id="height">
-                <uri>english/CASPA/T1E/List%2018/44k/qt180570.wav</uri>
-                <text>height</text>
-            </speechtoken>
-            <speechtoken id="win">
-                <uri>english/CASPA/T1E/List%2018/44k/qt180670.wav</uri>
-                <text>win</text>
-            </speechtoken>
-            <speechtoken id="suck">
-                <uri>english/CASPA/T1E/List%2018/44k/qt180770.wav</uri>
-                <text>suck</text>
-            </speechtoken>
-            <speechtoken id="robe">
-                <uri>english/CASPA/T1E/List%2018/44k/qt180870.wav</uri>
-                <text>robe</text>
-            </speechtoken>
-            <speechtoken id="dog">
-                <uri>english/CASPA/T1E/List%2018/44k/qt180970.wav</uri>
-                <text>dog</text>
-            </speechtoken>
-            <speechtoken id="pool">
-                <uri>english/CASPA/T1E/List%2018/44k/qt181070.wav</uri>
-                <text>pool</text>
-            </speechtoken>
-        </list>
-        <list id="19">
-            <speechtoken id="vase">
-                <uri>english/CASPA/T1E/List%2019/44k/qt190170.wav</uri>
-                <text>vase</text>
-            </speechtoken>
-            <speechtoken id="cab">
-                <uri>english/CASPA/T1E/List%2019/44k/qt190270.wav</uri>
-                <text>cab</text>
-            </speechtoken>
-            <speechtoken id="teach">
-                <uri>english/CASPA/T1E/List%2019/44k/qt190370.wav</uri>
-                <text>teach</text>
-            </speechtoken>
-            <speechtoken id="death">
-                <uri>english/CASPA/T1E/List%2019/44k/qt190470.wav</uri>
-                <text>death</text>
-            </speechtoken>
-            <speechtoken id="nice">
-                <uri>english/CASPA/T1E/List%2019/44k/qt190570.wav</uri>
-                <text>nice</text>
-            </speechtoken>
-            <speechtoken id="fig">
-                <uri>english/CASPA/T1E/List%2019/44k/qt190670.wav</uri>
-                <text>fig</text>
-            </speechtoken>
-            <speechtoken id="rush">
-                <uri>english/CASPA/T1E/List%2019/44k/qt190770.wav</uri>
-                <text>rush</text>
-            </speechtoken>
-            <speechtoken id="hope">
-                <uri>english/CASPA/T1E/List%2019/44k/qt190870.wav</uri>
-                <text>hope</text>
-            </speechtoken>
-            <speechtoken id="lodge">
-                <uri>english/CASPA/T1E/List%2019/44k/qt190970.wav</uri>
-                <text>lodge</text>
-            </speechtoken>
-            <speechtoken id="womb">
-                <uri>english/CASPA/T1E/List%2019/44k/qt191070.wav</uri>
-                <text>womb</text>
-            </speechtoken>
-        </list>
-        <list id="20">
-            <speechtoken id="cave">
-                <uri>english/CASPA/T1E/List%2020/44k/qt200170.wav</uri>
-                <text>cave</text>
-            </speechtoken>
-            <speechtoken id="rash">
-                <uri>english/CASPA/T1E/List%2020/44k/qt200270.wav</uri>
-                <text>rash</text>
-            </speechtoken>
-            <speechtoken id="tease">
-                <uri>english/CASPA/T1E/List%2020/44k/qt200370.wav</uri>
-                <text>tease</text>
-            </speechtoken>
-            <speechtoken id="jell">
-                <uri>english/CASPA/T1E/List%2020/44k/qt200470.wav</uri>
-                <text>jell</text>
-            </speechtoken>
-            <speechtoken id="guide">
-                <uri>english/CASPA/T1E/List%2020/44k/qt200570.wav</uri>
-                <text>guide</text>
-            </speechtoken>
-            <speechtoken id="pin">
-                <uri>english/CASPA/T1E/List%2020/44k/qt200670.wav</uri>
-                <text>pin</text>
-            </speechtoken>
-            <speechtoken id="fuss">
-                <uri>english/CASPA/T1E/List%2020/44k/qt200770.wav</uri>
-                <text>fuss</text>
-            </speechtoken>
-            <speechtoken id="home">
-                <uri>english/CASPA/T1E/List%2020/44k/qt200870.wav</uri>
-                <text>home</text>
-            </speechtoken>
-            <speechtoken id="watch">
-                <uri>english/CASPA/T1E/List%2020/44k/qt200970.wav</uri>
-                <text>watch</text>
-            </speechtoken>
-            <speechtoken id="booth">
-                <uri>english/CASPA/T1E/List%2020/44k/qt201070.wav</uri>
-                <text>booth</text>
-            </speechtoken>
-        </list>
-    </speechmaterial>
-    
+<apex:speechmaterialfile xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/spin.xsd">
+  <noises>
+    <noise id="CASPAnoise">
+      <description>Stationary noise for CASPA words</description>
+      <name>CASPA LTASS</name>
+      <file>english/CASPA/T1E/Noise/44k/mono.wav</file>
+      <rms>-37.3229</rms>
+      <speechmaterial>CASPA</speechmaterial>
+    </noise>
+  </noises>
+  <speechmaterial id="CASPA">
+    <rms>-37.3229</rms>
+    <list id="1">
+      <speechtoken id="ship">
+        <file>CASPA/english/T1E/List 01/44k/44k/qt010170.wav</file>
+        <text>ship</text>
+      </speechtoken>
+      <speechtoken id="rug">
+        <file>CASPA/english/T1E/List 01/44k/qt010270.wav</file>
+        <text>rug</text>
+      </speechtoken>
+      <speechtoken id="fan">
+        <file>english/CASPA/T1E/List 01/44k/qt010370.wav</file>
+        <text>fan</text>
+      </speechtoken>
+      <speechtoken id="cheek">
+        <file>english/CASPA/T1E/List 01/44k/qt010470.wav</file>
+        <text>cheek</text>
+      </speechtoken>
+      <speechtoken id="haze">
+        <file>english/CASPA/T1E/List 01/44k/qt010570.wav</file>
+        <text>haze</text>
+      </speechtoken>
+      <speechtoken id="dice">
+        <file>english/CASPA/T1E/List 01/44k/qt010670.wav</file>
+        <text>dice</text>
+      </speechtoken>
+      <speechtoken id="both">
+        <file>english/CASPA/T1E/List 01/44k/qt010770.wav</file>
+        <text>both</text>
+      </speechtoken>
+      <speechtoken id="well">
+        <file>english/CASPA/T1E/List 01/44k/qt010870.wav</file>
+        <text>well</text>
+      </speechtoken>
+      <speechtoken id="jot">
+        <file>english/CASPA/T1E/List 01/44k/qt010970.wav</file>
+        <text>jot</text>
+      </speechtoken>
+      <speechtoken id="move">
+        <file>english/CASPA/T1E/List 01/44k/qt011070.wav</file>
+        <text>move</text>
+      </speechtoken>
+    </list>
+    <list id="2">
+      <speechtoken id="fish">
+        <file>english/CASPA/T1E/List 02/44k/qt020170.wav</file>
+        <text>fish</text>
+      </speechtoken>
+      <speechtoken id="duck">
+        <file>english/CASPA/T1E/List 02/44k/qt020270.wav</file>
+        <text>duck</text>
+      </speechtoken>
+      <speechtoken id="path">
+        <file>english/CASPA/T1E/List 02/44k/qt020370.wav</file>
+        <text>path</text>
+      </speechtoken>
+      <speechtoken id="cheese">
+        <file>english/CASPA/T1E/List 02/44k/qt020470.wav</file>
+        <text>cheese</text>
+      </speechtoken>
+      <speechtoken id="race">
+        <file>english/CASPA/T1E/List 02/44k/qt020570.wav</file>
+        <text>race</text>
+      </speechtoken>
+      <speechtoken id="hive">
+        <file>english/CASPA/T1E/List 02/44k/qt020670.wav</file>
+        <text>hive</text>
+      </speechtoken>
+      <speechtoken id="bone">
+        <file>english/CASPA/T1E/List 02/44k/qt020770.wav</file>
+        <text>bone</text>
+      </speechtoken>
+      <speechtoken id="wedge">
+        <file>english/CASPA/T1E/List 02/44k/qt020870.wav</file>
+        <text>wedge</text>
+      </speechtoken>
+      <speechtoken id="log">
+        <file>english/CASPA/T1E/List 02/44k/qt020970.wav</file>
+        <text>log</text>
+      </speechtoken>
+      <speechtoken id="tomb">
+        <file>english/CASPA/T1E/List 02/44k/qt021070.wav</file>
+        <text>tomb</text>
+      </speechtoken>
+    </list>
+    <list id="3">
+      <speechtoken id="thug">
+        <file>english/CASPA/T1E/List 03/44k/qt030170.wav</file>
+        <text>thug</text>
+      </speechtoken>
+      <speechtoken id="witch">
+        <file>english/CASPA/T1E/List 03/44k/qt030270.wav</file>
+        <text>witch</text>
+      </speechtoken>
+      <speechtoken id="teak">
+        <file>english/CASPA/T1E/List 03/44k/qt030370.wav</file>
+        <text>teak</text>
+      </speechtoken>
+      <speechtoken id="wrap">
+        <file>english/CASPA/T1E/List 03/44k/qt030470.wav</file>
+        <text>wrap</text>
+      </speechtoken>
+      <speechtoken id="vice">
+        <file>english/CASPA/T1E/List 03/44k/qt030570.wav</file>
+        <text>vice</text>
+      </speechtoken>
+      <speechtoken id="jail">
+        <file>english/CASPA/T1E/List 03/44k/qt030670.wav</file>
+        <text>jail</text>
+      </speechtoken>
+      <speechtoken id="hen">
+        <file>english/CASPA/T1E/List 03/44k/qt030770.wav</file>
+        <text>hen</text>
+      </speechtoken>
+      <speechtoken id="shows">
+        <file>english/CASPA/T1E/List 03/44k/qt030870.wav</file>
+        <text>shows</text>
+      </speechtoken>
+      <speechtoken id="food">
+        <file>english/CASPA/T1E/List 03/44k/qt030970.wav</file>
+        <text>food</text>
+      </speechtoken>
+      <speechtoken id="bomb">
+        <file>english/CASPA/T1E/List 03/44k/qt031070.wav</file>
+        <text>bomb</text>
+      </speechtoken>
+    </list>
+    <list id="4">
+      <speechtoken id="fun">
+        <file>english/CASPA/T1E/List 04/44k/qt040170.wav</file>
+        <text>fun</text>
+      </speechtoken>
+      <speechtoken id="will">
+        <file>english/CASPA/T1E/List 04/44k/qt040270.wav</file>
+        <text>will</text>
+      </speechtoken>
+      <speechtoken id="vat">
+        <file>english/CASPA/T1E/List 04/44k/qt040370.wav</file>
+        <text>vat</text>
+      </speechtoken>
+      <speechtoken id="shape">
+        <file>english/CASPA/T1E/List 04/44k/qt040470.wav</file>
+        <text>shape</text>
+      </speechtoken>
+      <speechtoken id="wreath">
+        <file>english/CASPA/T1E/List 04/44k/qt040570.wav</file>
+        <text>wreath</text>
+      </speechtoken>
+      <speechtoken id="hide">
+        <file>english/CASPA/T1E/List 04/44k/qt040670.wav</file>
+        <text>hide</text>
+      </speechtoken>
+      <speechtoken id="guess">
+        <file>english/CASPA/T1E/List 04/44k/qt040770.wav</file>
+        <text>guess</text>
+      </speechtoken>
+      <speechtoken id="comb">
+        <file>english/CASPA/T1E/List 04/44k/qt040870.wav</file>
+        <text>comb</text>
+      </speechtoken>
+      <speechtoken id="choose">
+        <file>english/CASPA/T1E/List 04/44k/qt040970.wav</file>
+        <text>choose</text>
+      </speechtoken>
+      <speechtoken id="job">
+        <file>english/CASPA/T1E/List 04/44k/qt041070.wav</file>
+        <text>job</text>
+      </speechtoken>
+    </list>
+    <list id="5">
+      <speechtoken id="fib">
+        <file>english/CASPA/T1E/List 05/44k/qt050170.wav</file>
+        <text>fib</text>
+      </speechtoken>
+      <speechtoken id="thatch">
+        <file>english/CASPA/T1E/List 05/44k/qt050270.wav</file>
+        <text>thatch</text>
+      </speechtoken>
+      <speechtoken id="sum">
+        <file>english/CASPA/T1E/List 05/44k/qt050370.wav</file>
+        <text>sum</text>
+      </speechtoken>
+      <speechtoken id="heel">
+        <file>english/CASPA/T1E/List 05/44k/qt050470.wav</file>
+        <text>heel</text>
+      </speechtoken>
+      <speechtoken id="wide">
+        <file>english/CASPA/T1E/List 05/44k/qt050570.wav</file>
+        <text>wide</text>
+      </speechtoken>
+      <speechtoken id="rake">
+        <file>english/CASPA/T1E/List 05/44k/qt050670.wav</file>
+        <text>rake</text>
+      </speechtoken>
+      <speechtoken id="goes">
+        <file>english/CASPA/T1E/List 05/44k/qt050770.wav</file>
+        <text>goes</text>
+      </speechtoken>
+      <speechtoken id="shop">
+        <file>english/CASPA/T1E/List 05/44k/qt050870.wav</file>
+        <text>shop</text>
+      </speechtoken>
+      <speechtoken id="vet">
+        <file>english/CASPA/T1E/List 05/44k/qt050970.wav</file>
+        <text>vet</text>
+      </speechtoken>
+      <speechtoken id="june">
+        <file>english/CASPA/T1E/List 05/44k/qt051070.wav</file>
+        <text>june</text>
+      </speechtoken>
+    </list>
+    <list id="6">
+      <speechtoken id="fill">
+        <file>english/CASPA/T1E/List 06/44k/qt060170.wav</file>
+        <text>fill</text>
+      </speechtoken>
+      <speechtoken id="catch">
+        <file>english/CASPA/T1E/List 06/44k/qt060270.wav</file>
+        <text>catch</text>
+      </speechtoken>
+      <speechtoken id="thumb">
+        <file>english/CASPA/T1E/List 06/44k/qt060370.wav</file>
+        <text>thumb</text>
+      </speechtoken>
+      <speechtoken id="heap">
+        <file>english/CASPA/T1E/List 06/44k/qt060470.wav</file>
+        <text>heap</text>
+      </speechtoken>
+      <speechtoken id="wise">
+        <file>english/CASPA/T1E/List 06/44k/qt060570.wav</file>
+        <text>wise</text>
+      </speechtoken>
+      <speechtoken id="rave">
+        <file>english/CASPA/T1E/List 06/44k/qt060670.wav</file>
+        <text>rave</text>
+      </speechtoken>
+      <speechtoken id="got">
+        <file>english/CASPA/T1E/List 06/44k/qt060770.wav</file>
+        <text>got</text>
+      </speechtoken>
+      <speechtoken id="shown">
+        <file>english/CASPA/T1E/List 06/44k/qt060870.wav</file>
+        <text>shown</text>
+      </speechtoken>
+      <speechtoken id="bed">
+        <file>english/CASPA/T1E/List 06/44k/qt060970.wav</file>
+        <text>bed</text>
+      </speechtoken>
+      <speechtoken id="juice">
+        <file>english/CASPA/T1E/List 06/44k/qt061070.wav</file>
+        <text>juice</text>
+      </speechtoken>
+    </list>
+    <list id="7">
+      <speechtoken id="badge">
+        <file>english/CASPA/T1E/List 07/44k/qt070170.wav</file>
+        <text>badge</text>
+      </speechtoken>
+      <speechtoken id="hutch">
+        <file>english/CASPA/T1E/List 07/44k/qt070270.wav</file>
+        <text>hutch</text>
+      </speechtoken>
+      <speechtoken id="kill">
+        <file>english/CASPA/T1E/List 07/44k/qt070370.wav</file>
+        <text>kill</text>
+      </speechtoken>
+      <speechtoken id="thighs">
+        <file>english/CASPA/T1E/List 07/44k/qt070470.wav</file>
+        <text>thighs</text>
+      </speechtoken>
+      <speechtoken id="wave">
+        <file>english/CASPA/T1E/List 07/44k/qt070570.wav</file>
+        <text>wave</text>
+      </speechtoken>
+      <speechtoken id="reap">
+        <file>english/CASPA/T1E/List 07/44k/qt070670.wav</file>
+        <text>reap</text>
+      </speechtoken>
+      <speechtoken id="foam">
+        <file>english/CASPA/T1E/List 07/44k/qt070770.wav</file>
+        <text>foam</text>
+      </speechtoken>
+      <speechtoken id="goose">
+        <file>english/CASPA/T1E/List 07/44k/qt070870.wav</file>
+        <text>goose</text>
+      </speechtoken>
+      <speechtoken id="not">
+        <file>english/CASPA/T1E/List 07/44k/qt070970.wav</file>
+        <text>not</text>
+      </speechtoken>
+      <speechtoken id="shed">
+        <file>english/CASPA/T1E/List 07/44k/qt071070.wav</file>
+        <text>shed</text>
+      </speechtoken>
+    </list>
+    <list id="8">
+      <speechtoken id="bath">
+        <file>english/CASPA/T1E/List 08/44k/qt080170.wav</file>
+        <text>bath</text>
+      </speechtoken>
+      <speechtoken id="hum">
+        <file>english/CASPA/T1E/List 08/44k/qt080270.wav</file>
+        <text>hum</text>
+      </speechtoken>
+      <speechtoken id="dig">
+        <file>english/CASPA/T1E/List 08/44k/qt080370.wav</file>
+        <text>dig</text>
+      </speechtoken>
+      <speechtoken id="five">
+        <file>english/CASPA/T1E/List 08/44k/qt080470.wav</file>
+        <text>five</text>
+      </speechtoken>
+      <speechtoken id="ways">
+        <file>english/CASPA/T1E/List 08/44k/qt080570.wav</file>
+        <text>ways</text>
+      </speechtoken>
+      <speechtoken id="reach">
+        <file>english/CASPA/T1E/List 08/44k/qt080670.wav</file>
+        <text>reach</text>
+      </speechtoken>
+      <speechtoken id="joke">
+        <file>english/CASPA/T1E/List 08/44k/qt080770.wav</file>
+        <text>joke</text>
+      </speechtoken>
+      <speechtoken id="noose">
+        <file>english/CASPA/T1E/List 08/44k/qt080870.wav</file>
+        <text>noose</text>
+      </speechtoken>
+      <speechtoken id="pot">
+        <file>english/CASPA/T1E/List 08/44k/qt080970.wav</file>
+        <text>pot</text>
+      </speechtoken>
+      <speechtoken id="shell">
+        <file>english/CASPA/T1E/List 08/44k/qt081070.wav</file>
+        <text>shell</text>
+      </speechtoken>
+    </list>
+    <list id="9">
+      <speechtoken id="hush">
+        <file>english/CASPA/T1E/List 09/44k/qt090170.wav</file>
+        <text>hush</text>
+      </speechtoken>
+      <speechtoken id="gas">
+        <file>english/CASPA/T1E/List 09/44k/qt090270.wav</file>
+        <text>gas</text>
+      </speechtoken>
+      <speechtoken id="thin">
+        <file>english/CASPA/T1E/List 09/44k/qt090370.wav</file>
+        <text>thin</text>
+      </speechtoken>
+      <speechtoken id="fake">
+        <file>english/CASPA/T1E/List 09/44k/qt090470.wav</file>
+        <text>fake</text>
+      </speechtoken>
+      <speechtoken id="chime">
+        <file>english/CASPA/T1E/List 09/44k/qt090570.wav</file>
+        <text>chime</text>
+      </speechtoken>
+      <speechtoken id="weave">
+        <file>english/CASPA/T1E/List 09/44k/qt090670.wav</file>
+        <text>weave</text>
+      </speechtoken>
+      <speechtoken id="jet">
+        <file>english/CASPA/T1E/List 09/44k/qt090770.wav</file>
+        <text>jet</text>
+      </speechtoken>
+      <speechtoken id="rob">
+        <file>english/CASPA/T1E/List 09/44k/qt090870.wav</file>
+        <text>rob</text>
+      </speechtoken>
+      <speechtoken id="dope">
+        <file>english/CASPA/T1E/List 09/44k/qt090970.wav</file>
+        <text>dope</text>
+      </speechtoken>
+      <speechtoken id="lose">
+        <file>english/CASPA/T1E/List 09/44k/qt091070.wav</file>
+        <text>lose</text>
+      </speechtoken>
+    </list>
+    <list id="10">
+      <speechtoken id="jug">
+        <file>english/CASPA/T1E/List 10/44k/qt100170.wav</file>
+        <text>jug</text>
+      </speechtoken>
+      <speechtoken id="latch">
+        <file>english/CASPA/T1E/List 10/44k/qt100270.wav</file>
+        <text>latch</text>
+      </speechtoken>
+      <speechtoken id="wick">
+        <file>english/CASPA/T1E/List 10/44k/qt100370.wav</file>
+        <text>wick</text>
+      </speechtoken>
+      <speechtoken id="faith">
+        <file>english/CASPA/T1E/List 10/44k/qt100470.wav</file>
+        <text>faith</text>
+      </speechtoken>
+      <speechtoken id="sign">
+        <file>english/CASPA/T1E/List 10/44k/qt100570.wav</file>
+        <text>sign</text>
+      </speechtoken>
+      <speechtoken id="beep">
+        <file>english/CASPA/T1E/List 10/44k/qt100670.wav</file>
+        <text>beep</text>
+      </speechtoken>
+      <speechtoken id="hem">
+        <file>english/CASPA/T1E/List 10/44k/qt100770.wav</file>
+        <text>hem</text>
+      </speechtoken>
+      <speechtoken id="rod">
+        <file>english/CASPA/T1E/List 10/44k/qt100870.wav</file>
+        <text>rod</text>
+      </speechtoken>
+      <speechtoken id="vote">
+        <file>english/CASPA/T1E/List 10/44k/qt100970.wav</file>
+        <text>vote</text>
+      </speechtoken>
+      <speechtoken id="shoes">
+        <file>english/CASPA/T1E/List 10/44k/qt101070.wav</file>
+        <text>shoes</text>
+      </speechtoken>
+    </list>
+    <list id="11">
+      <speechtoken id="math">
+        <file>english/CASPA/T1E/List 11/44k/qt110170.wav</file>
+        <text>math</text>
+      </speechtoken>
+      <speechtoken id="hip">
+        <file>english/CASPA/T1E/List 11/44k/qt110270.wav</file>
+        <text>hip</text>
+      </speechtoken>
+      <speechtoken id="gun">
+        <file>english/CASPA/T1E/List 11/44k/qt110370.wav</file>
+        <text>gun</text>
+      </speechtoken>
+      <speechtoken id="ride">
+        <file>english/CASPA/T1E/List 11/44k/qt110470.wav</file>
+        <text>ride</text>
+      </speechtoken>
+      <speechtoken id="siege">
+        <file>english/CASPA/T1E/List 11/44k/qt110570.wav</file>
+        <text>siege</text>
+      </speechtoken>
+      <speechtoken id="veil">
+        <file>english/CASPA/T1E/List 11/44k/qt110670.wav</file>
+        <text>veil</text>
+      </speechtoken>
+      <speechtoken id="chose">
+        <file>english/CASPA/T1E/List 11/44k/qt110770.wav</file>
+        <text>chose</text>
+      </speechtoken>
+      <speechtoken id="shoot">
+        <file>english/CASPA/T1E/List 11/44k/qt110870.wav</file>
+        <text>shoot</text>
+      </speechtoken>
+      <speechtoken id="web">
+        <file>english/CASPA/T1E/List 11/44k/qt110970.wav</file>
+        <text>web</text>
+      </speechtoken>
+      <speechtoken id="cough">
+        <file>english/CASPA/T1E/List 11/44k/qt111070.wav</file>
+        <text>cough</text>
+      </speechtoken>
+    </list>
+    <list id="12">
+      <speechtoken id="have">
+        <file>english/CASPA/T1E/List 12/44k/qt120170.wav</file>
+        <text>have</text>
+      </speechtoken>
+      <speechtoken id="wig">
+        <file>english/CASPA/T1E/List 12/44k/qt120270.wav</file>
+        <text>wig</text>
+      </speechtoken>
+      <speechtoken id="buff">
+        <file>english/CASPA/T1E/List 12/44k/qt120370.wav</file>
+        <text>buff</text>
+      </speechtoken>
+      <speechtoken id="mice">
+        <file>english/CASPA/T1E/List 12/44k/qt120470.wav</file>
+        <text>mice</text>
+      </speechtoken>
+      <speechtoken id="teeth">
+        <file>english/CASPA/T1E/List 12/44k/qt120570.wav</file>
+        <text>teeth</text>
+      </speechtoken>
+      <speechtoken id="jays">
+        <file>english/CASPA/T1E/List 12/44k/qt120670.wav</file>
+        <text>jays</text>
+      </speechtoken>
+      <speechtoken id="poach">
+        <file>english/CASPA/T1E/List 12/44k/qt120770.wav</file>
+        <text>poach</text>
+      </speechtoken>
+      <speechtoken id="rule">
+        <file>english/CASPA/T1E/List 12/44k/qt120870.wav</file>
+        <text>rule</text>
+      </speechtoken>
+      <speechtoken id="den">
+        <file>english/CASPA/T1E/List 12/44k/qt120970.wav</file>
+        <text>den</text>
+      </speechtoken>
+      <speechtoken id="shock">
+        <file>english/CASPA/T1E/List 12/44k/qt121070.wav</file>
+        <text>shock</text>
+      </speechtoken>
+    </list>
+    <list id="13">
+      <speechtoken id="kiss">
+        <file>english/CASPA/T1E/List 13/44k/qt130170.wav</file>
+        <text>kiss</text>
+      </speechtoken>
+      <speechtoken id="buzz">
+        <file>english/CASPA/T1E/List 13/44k/qt130270.wav</file>
+        <text>buzz</text>
+      </speechtoken>
+      <speechtoken id="hash">
+        <file>english/CASPA/T1E/List 13/44k/qt130370.wav</file>
+        <text>hash</text>
+      </speechtoken>
+      <speechtoken id="thieve">
+        <file>english/CASPA/T1E/List 13/44k/qt130470.wav</file>
+        <text>thieve</text>
+      </speechtoken>
+      <speechtoken id="gate">
+        <file>english/CASPA/T1E/List 13/44k/qt130570.wav</file>
+        <text>gate</text>
+      </speechtoken>
+      <speechtoken id="wife">
+        <file>english/CASPA/T1E/List 13/44k/qt130670.wav</file>
+        <text>wife</text>
+      </speechtoken>
+      <speechtoken id="pole">
+        <file>english/CASPA/T1E/List 13/44k/qt130770.wav</file>
+        <text>pole</text>
+      </speechtoken>
+      <speechtoken id="wretch">
+        <file>english/CASPA/T1E/List 13/44k/qt130870.wav</file>
+        <text>wretch</text>
+      </speechtoken>
+      <speechtoken id="dodge">
+        <file>english/CASPA/T1E/List 13/44k/qt130970.wav</file>
+        <text>dodge</text>
+      </speechtoken>
+      <speechtoken id="moon">
+        <file>english/CASPA/T1E/List 13/44k/qt131070.wav</file>
+        <text>moon</text>
+      </speechtoken>
+    </list>
+    <list id="14">
+      <speechtoken id="wish">
+        <file>english/CASPA/T1E/List 14/44k/qt140170.wav</file>
+        <text>wish</text>
+      </speechtoken>
+      <speechtoken id="dutch">
+        <file>english/CASPA/T1E/List 14/44k/qt140270.wav</file>
+        <text>dutch</text>
+      </speechtoken>
+      <speechtoken id="jam">
+        <file>english/CASPA/T1E/List 14/44k/qt140370.wav</file>
+        <text>jam</text>
+      </speechtoken>
+      <speechtoken id="heath">
+        <file>english/CASPA/T1E/List 14/44k/qt140470.wav</file>
+        <text>heath</text>
+      </speechtoken>
+      <speechtoken id="laze">
+        <file>english/CASPA/T1E/List 14/44k/qt140570.wav</file>
+        <text>laze</text>
+      </speechtoken>
+      <speechtoken id="bike">
+        <file>english/CASPA/T1E/List 14/44k/qt140670.wav</file>
+        <text>bike</text>
+      </speechtoken>
+      <speechtoken id="rove">
+        <file>english/CASPA/T1E/List 14/44k/qt140770.wav</file>
+        <text>rove</text>
+      </speechtoken>
+      <speechtoken id="pet">
+        <file>english/CASPA/T1E/List 14/44k/qt140870.wav</file>
+        <text>pet</text>
+      </speechtoken>
+      <speechtoken id="fog">
+        <file>english/CASPA/T1E/List 14/44k/qt140970.wav</file>
+        <text>fog</text>
+      </speechtoken>
+      <speechtoken id="soon">
+        <file>english/CASPA/T1E/List 14/44k/qt141070.wav</file>
+        <text>soon</text>
+      </speechtoken>
+    </list>
+    <list id="15">
+      <speechtoken id="hug">
+        <file>english/CASPA/T1E/List 15/44k/qt150170.wav</file>
+        <text>hug</text>
+      </speechtoken>
+      <speechtoken id="dish">
+        <file>english/CASPA/T1E/List 15/44k/qt150270.wav</file>
+        <text>dish</text>
+      </speechtoken>
+      <speechtoken id="ban">
+        <file>english/CASPA/T1E/List 15/44k/qt150370.wav</file>
+        <text>ban</text>
+      </speechtoken>
+      <speechtoken id="rage">
+        <file>english/CASPA/T1E/List 15/44k/qt150470.wav</file>
+        <text>rage</text>
+      </speechtoken>
+      <speechtoken id="chief">
+        <file>english/CASPA/T1E/List 15/44k/qt150570.wav</file>
+        <text>chief</text>
+      </speechtoken>
+      <speechtoken id="pies">
+        <file>english/CASPA/T1E/List 15/44k/qt150670.wav</file>
+        <text>pies</text>
+      </speechtoken>
+      <speechtoken id="wet">
+        <file>english/CASPA/T1E/List 15/44k/qt150770.wav</file>
+        <text>wet</text>
+      </speechtoken>
+      <speechtoken id="cove">
+        <file>english/CASPA/T1E/List 15/44k/qt150870.wav</file>
+        <text>cove</text>
+      </speechtoken>
+      <speechtoken id="loose">
+        <file>english/CASPA/T1E/List 15/44k/qt150970.wav</file>
+        <text>loose</text>
+      </speechtoken>
+      <speechtoken id="moth">
+        <file>english/CASPA/T1E/List 15/44k/qt151070.wav</file>
+        <text>moth</text>
+      </speechtoken>
+    </list>
+    <list id="16">
+      <speechtoken id="wage">
+        <file>english/CASPA/T1E/List 16/44k/qt160170.wav</file>
+        <text>wage</text>
+      </speechtoken>
+      <speechtoken id="rag">
+        <file>english/CASPA/T1E/List 16/44k/qt160270.wav</file>
+        <text>rag</text>
+      </speechtoken>
+      <speechtoken id="beach">
+        <file>english/CASPA/T1E/List 16/44k/qt160370.wav</file>
+        <text>beach</text>
+      </speechtoken>
+      <speechtoken id="chef">
+        <file>english/CASPA/T1E/List 16/44k/qt160470.wav</file>
+        <text>chef</text>
+      </speechtoken>
+      <speechtoken id="dime">
+        <file>english/CASPA/T1E/List 16/44k/qt160570.wav</file>
+        <text>dime</text>
+      </speechtoken>
+      <speechtoken id="thick">
+        <file>english/CASPA/T1E/List 16/44k/qt160670.wav</file>
+        <text>thick</text>
+      </speechtoken>
+      <speechtoken id="love">
+        <file>english/CASPA/T1E/List 16/44k/qt160770.wav</file>
+        <text>love</text>
+      </speechtoken>
+      <speechtoken id="zone">
+        <file>english/CASPA/T1E/List 16/44k/qt160870.wav</file>
+        <text>zone</text>
+      </speechtoken>
+      <speechtoken id="hop">
+        <file>english/CASPA/T1E/List 16/44k/qt160970.wav</file>
+        <text>hop</text>
+      </speechtoken>
+      <speechtoken id="suit">
+        <file>english/CASPA/T1E/List 16/44k/qt161070.wav</file>
+        <text>suit</text>
+      </speechtoken>
+    </list>
+    <list id="17">
+      <speechtoken id="jade">
+        <file>english/CASPA/T1E/List 17/44k/qt170170.wav</file>
+        <text>jade</text>
+      </speechtoken>
+      <speechtoken id="cash">
+        <file>english/CASPA/T1E/List 17/44k/qt170270.wav</file>
+        <text>cash</text>
+      </speechtoken>
+      <speechtoken id="thief">
+        <file>english/CASPA/T1E/List 17/44k/qt170370.wav</file>
+        <text>thief</text>
+      </speechtoken>
+      <speechtoken id="set">
+        <file>english/CASPA/T1E/List 17/44k/qt170470.wav</file>
+        <text>set</text>
+      </speechtoken>
+      <speechtoken id="wine">
+        <file>english/CASPA/T1E/List 17/44k/qt170570.wav</file>
+        <text>wine</text>
+      </speechtoken>
+      <speechtoken id="give">
+        <file>english/CASPA/T1E/List 17/44k/qt170670.wav</file>
+        <text>give</text>
+      </speechtoken>
+      <speechtoken id="rub">
+        <file>english/CASPA/T1E/List 17/44k/qt170770.wav</file>
+        <text>rub</text>
+      </speechtoken>
+      <speechtoken id="hole">
+        <file>english/CASPA/T1E/List 17/44k/qt170870.wav</file>
+        <text>hole</text>
+      </speechtoken>
+      <speechtoken id="chop">
+        <file>english/CASPA/T1E/List 17/44k/qt170970.wav</file>
+        <text>chop</text>
+      </speechtoken>
+      <speechtoken id="zoom">
+        <file>english/CASPA/T1E/List 17/44k/qt171070.wav</file>
+        <text>zoom</text>
+      </speechtoken>
+    </list>
+    <list id="18">
+      <speechtoken id="shave">
+        <file>english/CASPA/T1E/List 18/44k/qt180170.wav</file>
+        <text>shave</text>
+      </speechtoken>
+      <speechtoken id="jazz">
+        <file>english/CASPA/T1E/List 18/44k/qt180270.wav</file>
+        <text>jazz</text>
+      </speechtoken>
+      <speechtoken id="theme">
+        <file>english/CASPA/T1E/List 18/44k/qt180370.wav</file>
+        <text>theme</text>
+      </speechtoken>
+      <speechtoken id="fetch">
+        <file>english/CASPA/T1E/List 18/44k/qt180470.wav</file>
+        <text>fetch</text>
+      </speechtoken>
+      <speechtoken id="height">
+        <file>english/CASPA/T1E/List 18/44k/qt180570.wav</file>
+        <text>height</text>
+      </speechtoken>
+      <speechtoken id="win">
+        <file>english/CASPA/T1E/List 18/44k/qt180670.wav</file>
+        <text>win</text>
+      </speechtoken>
+      <speechtoken id="suck">
+        <file>english/CASPA/T1E/List 18/44k/qt180770.wav</file>
+        <text>suck</text>
+      </speechtoken>
+      <speechtoken id="robe">
+        <file>english/CASPA/T1E/List 18/44k/qt180870.wav</file>
+        <text>robe</text>
+      </speechtoken>
+      <speechtoken id="dog">
+        <file>english/CASPA/T1E/List 18/44k/qt180970.wav</file>
+        <text>dog</text>
+      </speechtoken>
+      <speechtoken id="pool">
+        <file>english/CASPA/T1E/List 18/44k/qt181070.wav</file>
+        <text>pool</text>
+      </speechtoken>
+    </list>
+    <list id="19">
+      <speechtoken id="vase">
+        <file>english/CASPA/T1E/List 19/44k/qt190170.wav</file>
+        <text>vase</text>
+      </speechtoken>
+      <speechtoken id="cab">
+        <file>english/CASPA/T1E/List 19/44k/qt190270.wav</file>
+        <text>cab</text>
+      </speechtoken>
+      <speechtoken id="teach">
+        <file>english/CASPA/T1E/List 19/44k/qt190370.wav</file>
+        <text>teach</text>
+      </speechtoken>
+      <speechtoken id="death">
+        <file>english/CASPA/T1E/List 19/44k/qt190470.wav</file>
+        <text>death</text>
+      </speechtoken>
+      <speechtoken id="nice">
+        <file>english/CASPA/T1E/List 19/44k/qt190570.wav</file>
+        <text>nice</text>
+      </speechtoken>
+      <speechtoken id="fig">
+        <file>english/CASPA/T1E/List 19/44k/qt190670.wav</file>
+        <text>fig</text>
+      </speechtoken>
+      <speechtoken id="rush">
+        <file>english/CASPA/T1E/List 19/44k/qt190770.wav</file>
+        <text>rush</text>
+      </speechtoken>
+      <speechtoken id="hope">
+        <file>english/CASPA/T1E/List 19/44k/qt190870.wav</file>
+        <text>hope</text>
+      </speechtoken>
+      <speechtoken id="lodge">
+        <file>english/CASPA/T1E/List 19/44k/qt190970.wav</file>
+        <text>lodge</text>
+      </speechtoken>
+      <speechtoken id="womb">
+        <file>english/CASPA/T1E/List 19/44k/qt191070.wav</file>
+        <text>womb</text>
+      </speechtoken>
+    </list>
+    <list id="20">
+      <speechtoken id="cave">
+        <file>english/CASPA/T1E/List 20/44k/qt200170.wav</file>
+        <text>cave</text>
+      </speechtoken>
+      <speechtoken id="rash">
+        <file>english/CASPA/T1E/List 20/44k/qt200270.wav</file>
+        <text>rash</text>
+      </speechtoken>
+      <speechtoken id="tease">
+        <file>english/CASPA/T1E/List 20/44k/qt200370.wav</file>
+        <text>tease</text>
+      </speechtoken>
+      <speechtoken id="jell">
+        <file>english/CASPA/T1E/List 20/44k/qt200470.wav</file>
+        <text>jell</text>
+      </speechtoken>
+      <speechtoken id="guide">
+        <file>english/CASPA/T1E/List 20/44k/qt200570.wav</file>
+        <text>guide</text>
+      </speechtoken>
+      <speechtoken id="pin">
+        <file>english/CASPA/T1E/List 20/44k/qt200670.wav</file>
+        <text>pin</text>
+      </speechtoken>
+      <speechtoken id="fuss">
+        <file>english/CASPA/T1E/List 20/44k/qt200770.wav</file>
+        <text>fuss</text>
+      </speechtoken>
+      <speechtoken id="home">
+        <file>english/CASPA/T1E/List 20/44k/qt200870.wav</file>
+        <text>home</text>
+      </speechtoken>
+      <speechtoken id="watch">
+        <file>english/CASPA/T1E/List 20/44k/qt200970.wav</file>
+        <text>watch</text>
+      </speechtoken>
+      <speechtoken id="booth">
+        <file>english/CASPA/T1E/List 20/44k/qt201070.wav</file>
+        <text>booth</text>
+      </speechtoken>
+    </list>
+  </speechmaterial>
 </apex:speechmaterialfile>

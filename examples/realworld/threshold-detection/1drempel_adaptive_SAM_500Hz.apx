@@ -1,196 +1,196 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment file:///C:/maaike/Apex_110116/schemas/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
- <!-- @doc
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- @doc
   @what: Threshold determination using an adaptive procedure
   @description: Each of the three buttons are lighted up consecutively, but only one contains the stimulus. The intensity of the stimulus is changed per trial depending on the correct/wrong answers, using an adaptive procedure with different stepsizes after the first and third reversal.
   @how: AdaptiveProcedure, startvalue can be interactively changed, random presentation order
   -->
-<procedure xsi:type="apex:adaptiveProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <order>random</order>
-   <intervals count="3">
-    <interval element="button1" number="1"/>
-    <interval element="button2" number="2"/>
-    <interval element="button3" number="3"/>
-   </intervals>
-   <nUp>1</nUp>
-   <nDown>2</nDown>
-   <adapt_parameter>gain</adapt_parameter>
-   <start_value>30</start_value>
-   <stop_after_type>reversals</stop_after_type>
-   <stop_after>6</stop_after>
-   <min_value>-100</min_value>
-   <max_value>110</max_value>
-   <larger_is_easier>true</larger_is_easier>
-   <stepsizes>
-    <change_after>reversals</change_after>
-    <stepsize begin="0" size="10"/>
-    <stepsize begin="1" size="5"/>
-    <stepsize begin="2" size="5"/>
-    <stepsize begin="3" size="2"/>
-   </stepsizes>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <screen id="screen"/>
-    <stimulus id="stimulusSAM500Hz1s"/>
-    <standard id="stimulussilence"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback>false</feedback>
-   <showcurrent>true</showcurrent>
-  </reinforcement>
-  <screen id="screen">
-   <gridLayout height="2" width="1">
-    <label id="uitleg">
-     <text>Tijdens welke aanbieding hoort u het geluid?</text>
-    </label>
-    <gridLayout row="2" height="1" width="3">
-     <button col="1" id="button1">
-      <shortcut>1</shortcut>
-      <text>1</text>
-     </button>
-     <button col="2" id="button2">
-      <shortcut>2</shortcut>
-      <text>2</text>
-     </button>
-     <button col="3" id="button3">
-      <shortcut>3</shortcut>
-      <text>3</text>
-     </button>
-    </gridLayout>
-   </gridLayout>
-   <buttongroup id="buttongroup">
-    <button id="button1"/>
-    <button id="button2"/>
-    <button id="button3"/>
-   </buttongroup>
-   <default_answer_element>buttongroup</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <datablock id="datablocksilence">
-   <device>wavdevice</device>
-   <uri>silence:1000</uri>
-  </datablock>
-  <datablock id="datablockSAM500Hz1s">
-   <device>wavdevice</device>
-   <uri>SAM500Hz1s.wav</uri>
-  </datablock>
-  <datablock id="datablockSAM500Hz5min">
-   <device>wavdevice</device>
-   <uri>SAM500Hz5min.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device xsi:type="apex:wavDeviceType" id="wavdevice">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain id="Lgain" channel="0">0</gain>
-   <gain id="Rgain" channel="1">0</gain>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <filters>
-  <filter xsi:type="apex:amplifier" id="amplifier">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <basegain>-65</basegain>
-   <gain id="gain">65</gain>
-  </filter>
- </filters>
- <stimuli>
-  <stimulus id="stimulussilence">
-   <datablocks>
-    <datablock id="datablocksilence"/>
-   </datablocks>
-  </stimulus>
-  <stimulus id="stimulusSAM500Hz1s">
-   <datablocks>
-    <datablock id="datablockSAM500Hz1s"/>
-   </datablocks>
-  </stimulus>
-  <stimulus id="stimulusSAM500Hz5min">
-   <datablocks>
-    <datablock id="datablockSAM500Hz5min"/>
-   </datablocks>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>datablockSAM500Hz1s</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablocksilence</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>datablockSAM500Hz5min</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
- <calibration profile="CalibrationSAM500">
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <order>random</order>
+      <intervals count="3">
+        <interval element="button1" number="1"/>
+        <interval element="button2" number="2"/>
+        <interval element="button3" number="3"/>
+      </intervals>
+      <nUp>1</nUp>
+      <nDown>2</nDown>
+      <adapt_parameter>gain</adapt_parameter>
+      <start_value>30</start_value>
+      <stop_after_type>reversals</stop_after_type>
+      <stop_after>6</stop_after>
+      <min_value>-100</min_value>
+      <max_value>110</max_value>
+      <larger_is_easier>true</larger_is_easier>
+      <stepsizes>
+        <change_after>reversals</change_after>
+        <stepsize size="10" begin="0"/>
+        <stepsize size="5" begin="1"/>
+        <stepsize size="5" begin="2"/>
+        <stepsize size="2" begin="3"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <screen id="screen"/>
+        <stimulus id="stimulusSAM500Hz1s"/>
+        <standard id="stimulussilence"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback>false</feedback>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <screen id="screen">
+      <gridLayout height="2" width="1">
+        <label id="uitleg">
+          <text>Tijdens welke aanbieding hoort u het geluid?</text>
+        </label>
+        <gridLayout height="1" row="2" width="3">
+          <button id="button1" col="1">
+            <shortcut>1</shortcut>
+            <text>1</text>
+          </button>
+          <button id="button2" col="2">
+            <shortcut>2</shortcut>
+            <text>2</text>
+          </button>
+          <button id="button3" col="3">
+            <shortcut>3</shortcut>
+            <text>3</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <datablock id="datablocksilence">
+      <device>wavdevice</device>
+      <file>silence:1000</file>
+    </datablock>
+    <datablock id="datablockSAM500Hz1s">
+      <device>wavdevice</device>
+      <file>SAM500Hz1s.wav</file>
+    </datablock>
+    <datablock id="datablockSAM500Hz5min">
+      <device>wavdevice</device>
+      <file>SAM500Hz5min.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain id="Lgain" channel="0">0</gain>
+      <gain id="Rgain" channel="1">0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters>
+    <filter id="amplifier" xsi:type="apex:amplifier">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <basegain>-65</basegain>
+      <gain id="gain">65</gain>
+    </filter>
+  </filters>
   <stimuli>
-   <stimulus id="stimulusSAM500Hz5min"/>
+    <stimulus id="stimulussilence">
+      <datablocks>
+        <datablock id="datablocksilence"/>
+      </datablocks>
+    </stimulus>
+    <stimulus id="stimulusSAM500Hz1s">
+      <datablocks>
+        <datablock id="datablockSAM500Hz1s"/>
+      </datablocks>
+    </stimulus>
+    <stimulus id="stimulusSAM500Hz5min">
+      <datablocks>
+        <datablock id="datablockSAM500Hz5min"/>
+      </datablocks>
+    </stimulus>
   </stimuli>
-  <parameters>
-   <parameter id="Lgain">
-    <targetamplitude>65</targetamplitude>
-    <calibrationamplitude>80</calibrationamplitude>
-    <mute>-150.0</mute>
-    <max>100</max>
-   </parameter>
-  </parameters>
- </calibration>
- <results>
-  <page>apex:resultviewer.html</page>
-  <resultparameters>
-   <parameter name="reversals for mean">4</parameter>
-  </resultparameters>
-  <showduringexperiment>false</showduringexperiment>
-  <showafterexperiment>true</showafterexperiment>
- </results>
- <interactive>
-  <entry type="string" default="" description="Subject"/>
-  <entry type="int" expression="/apex:apex/procedure[1]/parameters[1]/start_value[1]" default="30" description="Start value"/>
- </interactive>
- <general>
-  <exitafter>false</exitafter>
-  <autosave>true</autosave>
- </general>
+  <connections>
+    <connection>
+      <from>
+        <id>datablockSAM500Hz1s</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablocksilence</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>datablockSAM500Hz5min</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+  <calibration profile="CalibrationSAM500">
+    <stimuli>
+      <stimulus id="stimulusSAM500Hz5min"/>
+    </stimuli>
+    <parameters>
+      <parameter id="Lgain">
+        <targetamplitude>65</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150.0</mute>
+        <max>100</max>
+      </parameter>
+    </parameters>
+  </calibration>
+  <results>
+    <page>apex:resultviewer.html</page>
+    <resultparameters>
+      <parameter name="reversals for mean">4</parameter>
+    </resultparameters>
+    <showduringexperiment>false</showduringexperiment>
+    <showafterexperiment>true</showafterexperiment>
+  </results>
+  <interactive>
+    <entry default="" description="Subject" type="string"/>
+    <entry default="30" description="Start value" type="int" expression="/apex:apex/procedure[1]/parameters[1]/start_value[1]"/>
+  </interactive>
+  <general>
+    <exitafter>false</exitafter>
+    <autosave>true</autosave>
+  </general>
 </apex:apex>

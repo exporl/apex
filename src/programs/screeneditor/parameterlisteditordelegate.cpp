@@ -43,7 +43,6 @@ namespace apex
       Q_OBJECT
 
       ParameterListElement* element;
-      ParameterListEditorDelegate* delegate;
     public:
       ParameterListModel( ParameterListEditorDelegate* del, ParameterListElement* el );
       int rowCount ( const QModelIndex & parent ) const;
@@ -184,7 +183,7 @@ namespace apex
 
     ParameterListModel::ParameterListModel(
       ParameterListEditorDelegate* del, ParameterListElement* el )
-      : QAbstractTableModel( del ), element( el ), delegate( del )
+      : QAbstractTableModel( del ), element( el )
     {
     }
 

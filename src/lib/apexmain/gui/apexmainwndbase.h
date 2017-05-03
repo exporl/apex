@@ -68,9 +68,8 @@ public:
     QAction* startPluginRunnerAction;
     QAction* saveExperimentAction;
     QAction* showMessageWindowAction;
-    QAction* showScreenStatusAction;
-    QAction* showConsoleStatusAction;
     QAction* selectSoundcardAction;
+    QAction* createShortcutToFileAction;
 
 Q_SIGNALS:
     void fileOpen();
@@ -88,6 +87,7 @@ Q_SIGNALS:
     void repeatTrial();
     void saveExperiment();
     void statusReportingChanged();
+    void createShortcut();
 
 public Q_SLOTS:
     virtual void helpContents();

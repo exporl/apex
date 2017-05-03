@@ -31,11 +31,9 @@ namespace parser
 
 TrainingProcedureParser::TrainingProcedureParser()
 {
-
 }
 
-
-data::ProcedureData* TrainingProcedureParser::parse(XERCES_CPP_NAMESPACE::DOMElement* base)
+data::ProcedureData* TrainingProcedureParser::parse(const QDomElement &base)
 {
     data::TrainingProcedureData* data = new data::TrainingProcedureData();
     ProcedureParsersParent::Parse(base, data);
@@ -47,11 +45,9 @@ bool TrainingProcedureParser::trialsValid()
     return !currentConfig->GetTrials().isEmpty();
 }
 
-void TrainingProcedureParser::SetProcedureParameters(
-    XERCES_CPP_NAMESPACE::DOMElement* p_base)
+void TrainingProcedureParser::SetProcedureParameters(const QDomElement &p_base)
 {
-    data::TrainingProcedureData* param
-            = dynamic_cast<data::TrainingProcedureData*>(currentConfig);
+    data::TrainingProcedureData* param = dynamic_cast<data::TrainingProcedureData*>(currentConfig);
     parser::TrainingProcedureDataParser parser;
     parser.Parse(p_base, param);
 

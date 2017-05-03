@@ -36,7 +36,7 @@ using namespace stimulus;
 using namespace streamapp;
 
 WavCompatibleDataBlock::WavCompatibleDataBlock(const data::DatablockData& data,
-                                               const QUrl& filename,
+                                               const QString& filename,
                                                const ExperimentRunDelegate* experiment) :
     DataBlock(data, filename, experiment)
 {

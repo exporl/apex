@@ -41,9 +41,7 @@ class DelayFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA  (IID "apex.delayfilter")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
@@ -51,17 +49,13 @@ public:
             unsigned channels, unsigned blocksize, unsigned fs) const;
 };
 
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (delayfilter, DelayFilterCreator)
-#endif
-
 class DelayFilter:
     public QObject,
     public PluginFilterInterface
 {
     Q_OBJECT
 public:
-    DelayFilter (unsigned channels, unsigned blockSize);
+    DelayFilter();
     ~DelayFilter();
 
     virtual void resetParameters();
@@ -73,18 +67,13 @@ public:
     virtual void process (double * const *data);
 
 private:
-    unsigned channels;
-    unsigned blockSize;
-
     int delay;          // delay in ms
 };
 
 
 // DelayFilter =================================================================
 
-DelayFilter::DelayFilter (unsigned channels, unsigned blockSize) :
-    channels (channels),
-    blockSize (blockSize),
+DelayFilter::DelayFilter() :
     delay(0)
 {
     resetParameters();
@@ -147,10 +136,12 @@ PluginFilterInterface *DelayFilterCreator::createFilter
        (const QString &name, unsigned channels, unsigned size,
         unsigned sampleRate) const
 {
+    Q_UNUSED (channels);
+    Q_UNUSED (size);
     Q_UNUSED (sampleRate);
 
     if (name == "delayfilter")
-        return new DelayFilter (channels, size);
+        return new DelayFilter();
 
     return NULL;
 }

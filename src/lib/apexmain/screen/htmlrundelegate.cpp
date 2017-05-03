@@ -25,7 +25,7 @@
 
 #include "screen/screenrundelegate.h"
 
-#include "services/accessmanager.h"
+#include "accessmanager.h"
 
 #include "htmlapi.h"
 #include "htmlrundelegate.h"
@@ -116,7 +116,7 @@ void HtmlRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
 void apex::rundelegates::HtmlRunDelegate::sendAnsweredSignal()
 {
 //    qCDebug(APEX_RS, "HtmlRunDelegate::sendAnsweredSignal()");
-    emit answered( this );
+    Q_EMIT answered( this );
 }
 
 apex::rundelegates::HtmlRunDelegate::HtmlRunDelegate(

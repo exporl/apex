@@ -66,11 +66,8 @@ ApexMainWndBase::ApexMainWndBase( QWidget* parent, const char* name )
     stimulusRepeatAction = new QAction("stimulusRepeatAction", this);
     saveExperimentAction = new QAction("saveExperimentAction", this);
     showMessageWindowAction = new QAction("showMessageWindowAction", this);
-    showMessageWindowAction->setCheckable(true);
-    showConsoleStatusAction = new QAction("showConsoleStatusAction", this);
-    showConsoleStatusAction->setCheckable(true);
-    showScreenStatusAction = new QAction("showScreenStatusAction", this);
-    showScreenStatusAction->setCheckable(true);
+    createShortcutToFileAction =
+        new QAction("createShortcutToFileAction", this);
 
     // menubar
     MenuBar = menuBar();
@@ -81,6 +78,8 @@ ApexMainWndBase::ApexMainWndBase( QWidget* parent, const char* name )
     fileMenu->addAction (startPluginRunnerAction);
     fileMenu->addAction (selectSoundcardAction);
     fileMenu->addAction (fileSaveAsAction);
+    fileMenu->addAction (createShortcutToFileAction);
+    fileMenu->addAction(showMessageWindowAction);
     fileMenu->addSeparator();
     fileMenu->addAction (fileExitAction);
 
@@ -103,13 +102,6 @@ ApexMainWndBase::ApexMainWndBase( QWidget* parent, const char* name )
 
     hardwareSetupMenu = new QMenu (tr ("&Hardware setup"),
             calibrateMenu);
-
-    viewMenu = new QMenu(tr("&View"), this);
-    MenuBar->addMenu(viewMenu);
-    viewMenu->addAction(showMessageWindowAction);
-    viewMenu->addSeparator();
-    viewMenu->addAction(showScreenStatusAction);
-    viewMenu->addAction(showConsoleStatusAction);
 
     helpMenu = new QMenu (tr("&Help"), this);
     MenuBar->addMenu (helpMenu);
@@ -167,12 +159,14 @@ ApexMainWndBase::ApexMainWndBase( QWidget* parent, const char* name )
             this, SLOT (helpShowPluginDialog()));
     connect (helpAboutAction, SIGNAL (triggered()),
             this, SLOT (helpAbout()));
-    connect(showMessageWindowAction, SIGNAL(triggered(bool)),
+    connect(showMessageWindowAction, SIGNAL(triggered()),
             this, SIGNAL(statusReportingChanged()));
-    connect(showConsoleStatusAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(statusReportingChanged()));
-    connect(showScreenStatusAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(statusReportingChanged()));
+    connect(createShortcutToFileAction, SIGNAL(triggered()),
+            this, SIGNAL(createShortcut()));
+
+#ifndef Q_OS_ANDROID
+    createShortcutToFileAction->setVisible(false);
+#endif
 }
 
 /*
@@ -235,8 +229,8 @@ void ApexMainWndBase::languageChange()
     experimentSkipAction->setShortcut (Qt::Key_F7);
 
     showMessageWindowAction->setText(tr("Show message window"));
-    showConsoleStatusAction->setText(tr("Show status in console"));
-    showScreenStatusAction->setText(tr("Show status in a window"));
+
+    createShortcutToFileAction->setText(tr("Create Shortcut"));
 }
 
 void ApexMainWndBase::helpContents()

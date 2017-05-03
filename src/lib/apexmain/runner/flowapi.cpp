@@ -18,8 +18,8 @@
  *****************************************************************************/
 
 #include "flowapi.h"
-#include "apextools/services/paths.h"
-#include "services/accessmanager.h"
+#include "apextools/apexpaths.h"
+#include "accessmanager.h"
 
 #include <QFile>
 
@@ -41,7 +41,7 @@ FlowApi::FlowApi(FlowRunner *fr, const QDir& baseDir)
 
 void FlowApi::runExperiment(const QString& filePath, const QVariantMap& expressions, const QString& results) {
     if(!results.isEmpty()) {
-        emit setResultsFilePath(results);
+        Q_EMIT setResultsFilePath(results);
     }
     if(!expressions.isEmpty()) {
         QMap<QString, QString> m;

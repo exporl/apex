@@ -26,11 +26,8 @@
 
 #include "apextools/xml/xmlkeys.h"
 
-#include "idevicefactoryelement.h"
-
 #include <QDateTime>
 #include <QString>
-#include <QUrl>
 
 using namespace apex::XMLKeys;
 
@@ -43,7 +40,7 @@ namespace stimulus
 {
 
 /** Base class representing a single stimulus file on disk */
-class APEX_EXPORT DataBlock : public IDeviceFactoryElement
+class APEX_EXPORT DataBlock
 {
     //FIXME [job refactory] move all implementations to cpp
 public:
@@ -56,7 +53,7 @@ public:
      * @param ac_sBirt ??
      * @param ac_Params the parameters
      */
-    DataBlock(const apex::data::DatablockData& data, const QUrl& filename,
+    DataBlock(const apex::data::DatablockData& data, const QString& filename,
               const ExperimentRunDelegate* experiment);
 
     /**
@@ -79,13 +76,6 @@ public:
     virtual ~DataBlock()
     {
     }
-
-    /**
-     * Get the module (= factory name) used to create this datablock.
-     * @return string reference
-     */
-    virtual const QString& GetModule  () const
-    { return sc_sDummyDevice; }
 
     /**
      * Get the id.
@@ -113,7 +103,7 @@ public:
      * Get the url.
      * @return string reference
      */
-    const QUrl&       GetUrl          () const
+    const QString&       GetUrl          () const
     { return filename; }
 
     /**
@@ -122,8 +112,6 @@ public:
      */
     const apex::data::DatablockData& GetParameters() const
     { return data; }
-
-    const QString GetMD5Sum() const;
 
     /**
      * Set a parameter.
@@ -139,7 +127,7 @@ public:
     virtual DataBlock* GetCopy(QString id);
 
 protected:
-    const QUrl filename;
+    const QString filename;
     data::DatablockData data;
     const ExperimentRunDelegate* const experiment;
     /*DataBlock( const DataBlock& ac_Rh );

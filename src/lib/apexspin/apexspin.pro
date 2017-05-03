@@ -1,4 +1,4 @@
-CLEBS *= apexmain apextools apexwriters apexdata asciicast builddll
+CLEBS *= apexmain apextools apexwriters apexdata common asciicast builddll
 
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)
 

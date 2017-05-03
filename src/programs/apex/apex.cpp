@@ -17,11 +17,44 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apexmain/apexloader.h"
+#include "apexmain/apexcontrol.h"
 
-int main( int argc, char *argv[] )
+#include "apexmain/errorhandler.h"
+
+#include "apextools/global.h"
+
+#include "common/debug.h"
+
+#include <QApplication>
+
+#ifdef WIN32
+#include <windows.h>
+#endif
+
+using namespace apex;
+using namespace cmn;
+
+int main(int argc, char *argv[])
 {
-    ApexLoader l;
-    return l.Load(argc, argv);
-}
+    QApplication app(argc, argv);
+    app.setApplicationName(applicationName);
+    app.setOrganizationName(organizationName);
+    app.setOrganizationDomain(organizationDomain);
 
+    enableCoreDumps(QCoreApplication::applicationFilePath());
+
+    // make sure apex does not crash if the user tries to close the console window
+    // disabled until we can make sure that apex is still closable if not
+    // responding/crashing
+#if defined(Q_OS_WIN32) && 0
+    HWND console = GetConsoleWindow();
+    if (console) {
+        SetConsoleCtrlHandler(NULL, true);
+        HMENU menu = GetSystemMenu(console, false);
+        DeleteMenu(menu, SC_CLOSE, MF_BYCOMMAND);
+    }
+#endif
+
+    ErrorHandler handler;
+    return ApexControl().exec();
+}

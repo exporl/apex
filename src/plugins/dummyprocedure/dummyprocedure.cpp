@@ -1,6 +1,7 @@
 #include "apexdata/procedure/proceduredata.h"
 #include "apexdata/procedure/procedureinterface.h"
 
+#include <QDomElement>
 #include <QStringList>
 #include <QVariant>
 
@@ -8,18 +9,16 @@ using namespace apex;
 
 class DummyProcedure : public ProcedureInterface
 {
-    public:
+public:
+    DummyProcedure( ProcedureApi* api, const data::ProcedureData* data);
 
-        DummyProcedure ( ProcedureApi* api, const data::ProcedureData* data);
+    data::Trial setupNextTrial();
+    double progress() const;
+    ResultHighlight processResult(const ScreenResult *screenResult);
+    QString firstScreen();
 
-        data::Trial setupNextTrial();
-        double progress() const;
-        ResultHighlight processResult(const ScreenResult *screenResult);
-        QString firstScreen();
-
-        QString resultXml() const;
-        QString finalResultXml() const;
-
+    QString resultXml() const;
+    QString finalResultXml() const;
 };
 
 
@@ -29,7 +28,7 @@ class DummyProcedureParser:
 {
     Q_OBJECT
 public:
-    virtual data::ProcedureData *parse(xercesc::DOMElement *base);
+    virtual data::ProcedureData *parse(const QDomElement &base);
 };
 
 class DummyProcedureData : public data::ProcedureData
@@ -38,7 +37,6 @@ class DummyProcedureData : public data::ProcedureData
     {
         return ConstantType; //A dummy shouldn't use this
     }
-
 
     QString name() const
     {
@@ -53,10 +51,8 @@ class DummyProcedureCreator:
 {
     Q_OBJECT
     Q_INTERFACES(apex::ProcedureCreatorInterface)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "apex.dummyprocedure")
-#endif
-    QStringList availableProcedurePlugins() const;
+    QStringList availablePlugins() const;
 
     ProcedureInterface* createProcedure(const QString& name,
                                         ProcedureApi* api,
@@ -65,10 +61,6 @@ class DummyProcedureCreator:
     ProcedureParserInterface* createProcedureParser(const QString& name);
 
 };
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2( dummyprocedure, DummyProcedureCreator)
-#endif
 
 /////////////// DummyProcedure
 
@@ -124,15 +116,15 @@ QString DummyProcedure::finalResultXml() const
 
 /////////////// DummyProcedureParser
 
-data::ProcedureData *DummyProcedureParser::parse(xercesc::DOMElement *base)
+data::ProcedureData *DummyProcedureParser::parse(const QDomElement &base)
 {
-    Q_UNUSED ( base );
+    Q_UNUSED(base);
     return new DummyProcedureData();
 }
 
 
 ////////////// DummyProcedureCreator
-QStringList DummyProcedureCreator::availableProcedurePlugins() const
+QStringList DummyProcedureCreator::availablePlugins() const
 {
      return QStringList() << QLatin1String("dummyprocedure");
 }

@@ -1,1 +1,1 @@
-CLEBS *= apextools
+CLEBS *= coh streamapp apextools apexdata apexwriters

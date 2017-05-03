@@ -18,16 +18,16 @@
 
 #include "apextools/apextools.h"
 
-#include "apextools/services/paths.h"
+#include "common/pluginloader.h"
 
 #include "runner/pluginrunnerinterface.h"
-
-#include "services/pluginloader.h"
 
 #include "startupdialog.h"
 #include "ui_startupdialog.h"
 
 #include <QPushButton>
+
+using namespace cmn;
 
 namespace apex
 {
@@ -94,10 +94,9 @@ StartupDialog::StartupDialog(const QStringList &recent, QWidget *parent) :
             QDialogButtonBox::ActionRole)->setObjectName("open");
 
     Q_FOREACH (PluginRunnerCreator *plugin,
-            PluginLoader::Get().availablePlugins<PluginRunnerCreator>()) {
+            PluginLoader().availablePlugins<PluginRunnerCreator>()) {
         Q_FOREACH (const QString &name, plugin->availablePlugins()) {
-            PluginRunnerInterface *interface =
-                plugin->createRunner(name, Paths::Get().GetBasePath());
+            PluginRunnerInterface *interface = plugin->createRunner(name);
             if (!interface)
                 continue;
             QPushButton *button = d->ui.buttonBox->addButton
@@ -109,6 +108,10 @@ StartupDialog::StartupDialog(const QStringList &recent, QWidget *parent) :
 
     Q_FOREACH (const QString &fileName, recent)
         d->ui.recentFiles->insertItem(0, fileName);
+
+#ifdef Q_OS_ANDROID
+    showMaximized();
+#endif
 
     ApexTools::connectSlotsByNameToPrivate(this, d);
 }

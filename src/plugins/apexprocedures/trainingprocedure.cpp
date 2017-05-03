@@ -19,12 +19,12 @@
 
 #include "apextools/apextools.h"
 
-#include "apextools/xml/apexxmltools.h"
+#include "common/xmlutils.h"
 
 #include "trainingprocedure.h"
 
 using namespace apex;
-using ApexXMLTools::XMLutils;
+using namespace cmn;
 
 TrainingProcedure::TrainingProcedure(ProcedureApi* a,
                                      const data::ProcedureData* d,
@@ -136,11 +136,11 @@ QString TrainingProcedure::resultXml() const
         }
 
         for (int i = 0; i < lastTrial.stimulusCount(0); ++i)
-            result.append(XMLutils::wrapTag("stimulus", lastTrial.stimulus(0, i)));
+            result.append(QSL("<%1>%2</%1>").arg(QSL("stimulus"), xmlEscapedText(lastTrial.stimulus(0, i))));
 
-        result.append(XMLutils::wrapTag("correct", lastTrial.answer() == previousAnswer));
-        result.append(XMLutils::wrapTag("answer", previousAnswer));
-        result.append(XMLutils::wrapTag("correct_answer", lastTrial.answer()));
+        result.append(QSL("<%1>%2</%1>").arg(QSL("correct")).arg(ApexTools::boolToString(lastTrial.answer() == previousAnswer)));
+        result.append(QSL("<%1>%2</%1>").arg(QSL("answer"), xmlEscapedText(previousAnswer)));
+        result.append(QSL("<%1>%2</%1>").arg(QSL("correct_answer"), xmlEscapedText(lastTrial.answer())));
 
         result.append(QLatin1String("</procedure>"));
     }

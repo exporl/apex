@@ -1,4 +1,4 @@
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
   <!--  @doc
    @what: Calibration file needed for experiment NVA word list nr. 30 level 65 dB
    @description: To calibrate the noise for the experiment with NVA word list nr. 30 level 65 dB
@@ -77,7 +77,6 @@
       </trial>
     </trials>
   </procedure>
-
   <screens>
     <general>
       <repeatbutton>true</repeatbutton>
@@ -89,104 +88,99 @@
       <feedback>false</feedback>
     </reinforcement>
     <screen id="experimenter_screen">
-
       <gridLayout height="2" id="main_layout" rowstretch="1,2" width="1">
-        <gridLayout col="1" columnstretch="1,4" height="4" id="parameter_layout" row="1" rowstretch="1,1,2,2" width="2">
+        <gridLayout columnstretch="1,4" col="1" height="4" id="parameter_layout" rowstretch="1,1,2,2" row="1" width="2">
           <label col="1" id="snrlabel" row="1">
             <text>snr</text>
-      </label>
+          </label>
           <parameterlabel col="2" id="snr" row="1">
             <parameter>gain</parameter>
-      </parameterlabel>
+          </parameterlabel>
           <label col="1" id="sentence" row="2">
             <text>zin</text>
-      </label>
+          </label>
           <parameterlabel col="2" id="sentence" row="2">
             <parameter>sentence</parameter>
-      </parameterlabel>
-    </gridLayout>
+          </parameterlabel>
+        </gridLayout>
         <gridLayout col="1" height="1" id="answer_layout" row="2" width="2">
-          <button id="correct" x="1" y="1">
+          <button y="1" id="correct" x="1">
             <text>Correct</text>
-      </button>
-          <button id="wrong" x="2" y="1">
+          </button>
+          <button y="1" id="wrong" x="2">
             <text>Wrong</text>
-      </button>
-    </gridLayout>
-  </gridLayout>
-
+          </button>
+        </gridLayout>
+      </gridLayout>
       <buttongroup id="buttongroup">
         <button id="correct"/>
         <button id="wrong"/>
-  </buttongroup>
-
+      </buttongroup>
       <default_answer_element>buttongroup</default_answer_element>
-
-</screen>  </screens>
-
+    </screen>
+  </screens>
   <datablocks>
-    <uri_prefix source="apexconfig">speechmaterials</uri_prefix>
+    <prefix source="apexconfig">speechmaterials</prefix>
     <datablock id="datablock_NVA_bijl">
       <device>soundcard</device>
-      <uri>dutch/nva/1/bijl.wav</uri>
+      <file>dutch/nva/1/bijl.wav</file>
     </datablock>
     <datablock id="datablock_NVA_bus">
       <device>soundcard</device>
-      <uri>dutch/nva/1/bus.wav</uri>
+      <file>dutch/nva/1/bus.wav</file>
     </datablock>
     <datablock id="datablock_NVA_dief">
       <device>soundcard</device>
-      <uri>dutch/nva/1/dief.wav</uri>
+      <file>dutch/nva/1/dief.wav</file>
     </datablock>
     <datablock id="datablock_NVA_hoed">
       <device>soundcard</device>
-      <uri>dutch/nva/1/hoed.wav</uri>
+      <file>dutch/nva/1/hoed.wav</file>
     </datablock>
     <datablock id="datablock_NVA_kous">
       <device>soundcard</device>
-      <uri>dutch/nva/1/kous.wav</uri>
+      <file>dutch/nva/1/kous.wav</file>
     </datablock>
     <datablock id="datablock_NVA_leeg">
       <device>soundcard</device>
-      <uri>dutch/nva/1/leeg.wav</uri>
+      <file>dutch/nva/1/leeg.wav</file>
     </datablock>
     <datablock id="datablock_NVA_mooi">
       <device>soundcard</device>
-      <uri>dutch/nva/1/mooi.wav</uri>
+      <file>dutch/nva/1/mooi.wav</file>
     </datablock>
     <datablock id="datablock_NVA_pen">
       <device>soundcard</device>
-      <uri>dutch/nva/1/pen.wav</uri>
+      <file>dutch/nva/1/pen.wav</file>
     </datablock>
     <datablock id="datablock_NVA_som">
       <device>soundcard</device>
-      <uri>dutch/nva/1/som.wav</uri>
+      <file>dutch/nva/1/som.wav</file>
     </datablock>
     <datablock id="datablock_NVA_vaak">
       <device>soundcard</device>
-      <uri>dutch/nva/1/vaak.wav</uri>
+      <file>dutch/nva/1/vaak.wav</file>
     </datablock>
     <datablock id="datablock_NVA_wip">
       <device>soundcard</device>
-      <uri>dutch/nva/1/wip.wav</uri>
+      <file>dutch/nva/1/wip.wav</file>
     </datablock>
     <datablock id="datablock_NVA_zang">
       <device>soundcard</device>
-      <uri>dutch/nva/1/zang.wav</uri>
+      <file>dutch/nva/1/zang.wav</file>
     </datablock>
     <datablock id="datablock_noise">
       <device>soundcard</device>
-      <uri>dutch/nva/nvanoise.wav</uri>
+      <file>dutch/nva/nvanoise.wav</file>
     </datablock>
     <datablock id="datablock_silence">
       <device>soundcard</device>
-      <uri>silence:1000</uri>
+      <file>silence:1000</file>
     </datablock>
   </datablocks>
-
   <devices>
     <master>soundcard</master>
-    <device id="soundcard" xsi:type="apex:wavDeviceType">
+    <device xsi:type="apex:wavDeviceType" id="soundcard">
       <driver>asio</driver>
       <card>default</card>
       <channels>4</channels>
@@ -199,23 +193,22 @@
       <padzero>1</padzero>
     </device>
   </devices>
-
   <filters>
-    <filter id="amplifier" xsi:type="apex:amplifier">
+    <filter xsi:type="apex:amplifier" id="amplifier">
       <device>soundcard</device>
       <channels>1</channels>
       <basegain>-4.0314</basegain>
       <invertgain>false</invertgain>
       <gain id="gain">0</gain>
     </filter>
-    <filter id="amplifier_channel0" xsi:type="apex:amplifier">
+    <filter xsi:type="apex:amplifier" id="amplifier_channel0">
       <device>soundcard</device>
       <channels>1</channels>
       <basegain>0</basegain>
       <invertgain>false</invertgain>
       <gain>0</gain>
     </filter>
-    <filter id="dataloop_channel0" xsi:type="apex:dataloop">
+    <filter xsi:type="apex:dataloop" id="dataloop_channel0">
       <device>soundcard</device>
       <channels>1</channels>
       <continuous>true</continuous>
@@ -227,7 +220,6 @@
       <jump>0</jump>
     </filter>
   </filters>
-
   <stimuli>
     <fixed_parameters>
       <parameter id="sentence"/>
@@ -393,7 +385,6 @@
       </fixedParameters>
     </stimulus>
   </stimuli>
-
   <connections>
     <connection>
       <from>
@@ -436,7 +427,6 @@
       </to>
     </connection>
   </connections>
-
   <calibration profile="spin-NVA_ltass">
     <stimuli>
       <stimulus id="calibrationstimulus"/>
@@ -452,16 +442,13 @@
       </parameter>
     </parameters>
   </calibration>
-
   <results>
     <page>apex:resultviewer.html</page>
     <resultparameters>
       <parameter name="snr">0</parameter>
     </resultparameters>
   </results>
-
   <general>
     <allowskip>true</allowskip>
   </general>
-
 </apex:apex>

@@ -17,6 +17,7 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 #include "apextools/apextools.h"
+#include "apextools/exceptions.h"
 
 #include "apextools/xml/xmlkeys.h"
 
@@ -50,9 +51,6 @@
 #include "stimulus/stimulusdata.h"
 
 #include "experimentdata.h"
-#include "experimentdata.h"
-
-#include <memory>
 
 using namespace apex::XMLKeys;
 

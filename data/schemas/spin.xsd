@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
 
     <xs:include schemaLocation="prefix.xsd"/>
     <xs:include schemaLocation="screens.xsd"/>
@@ -18,7 +18,7 @@
     <xs:element name="spin">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="uri_prefix" type="apex:prefixType">
+                <xs:element name="prefix" type="apex:prefixType">
                     <xs:annotation>
                         <xs:documentation>
                             This prefix will be used for all speechmaterials and noises. All files specified in the remainder of this file, are relative to this prefix.
@@ -170,9 +170,9 @@
             <xs:element name="speechtoken" maxOccurs="unbounded">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="uri" type="xs:anyURI">
+                        <xs:element name="file" type="xs:string">
                             <xs:annotation>
-                                <xs:documentation>Location of wav file associated with this token. Relative to uri_prefix above</xs:documentation>
+                                <xs:documentation>Location of wav file associated with this token. Relative to prefix above</xs:documentation>
                             </xs:annotation>
                         </xs:element>
                         <xs:element name="text">
@@ -331,7 +331,7 @@
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
-                        <xs:element name="uri" type="xs:anyURI"/>
+                        <xs:element name="file" type="xs:string"/>
                         <xs:element name="rms" type="xs:double">
                             <xs:annotation>
                                 <xs:documentation>

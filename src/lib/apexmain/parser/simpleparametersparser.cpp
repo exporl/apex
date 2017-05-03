@@ -20,16 +20,14 @@
 #include "apexdata/parameters/parametermanagerdata.h"
 #include "apexdata/parameters/simpleparameters.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
 #include "apextools/xml/xmlkeys.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "simpleparametersparser.h"
 
 #include <QDebug>
-
-using namespace apex::ApexXMLTools;
-using namespace XERCES_CPP_NAMESPACE;
 
 namespace apex
 {
@@ -46,42 +44,33 @@ SimpleParametersParser::SimpleParametersParser(data::ParameterManagerData* d) :
 {
 }
 
-void SimpleParametersParser::Parse(XERCES_CPP_NAMESPACE::DOMElement* base,
-                                   data::SimpleParameters* p)
+void SimpleParametersParser::Parse(const QDomElement &base, data::SimpleParameters* p)
 {
-    QString owner = ApexXMLTools::XMLutils::GetAttribute(base, "id");
+    QString owner = base.attribute(QSL("id"));
     p->setId(owner);
 
-    QString xsitype = ApexXMLTools::XMLutils::GetAttribute(base, "xsi:type");
+    QString xsitype = base.attribute(QSL("xsi:type"));
     p->setXsiType(xsitype);
 
-    for (DOMNode* currentNode = base->getFirstChild(); currentNode != 0;
-         currentNode=currentNode->getNextSibling())
-    {
-        Q_ASSERT(currentNode);
-        Q_ASSERT(currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
+    for (QDomElement currentNode = base.firstChildElement(); !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
+        QString type = currentNode.tagName();
+        QString name = currentNode.attribute(QSL("name"));
+        if (type == "parameter" && !name.isEmpty())
+            type = name;
 
-        QString type = ApexXMLTools::XMLutils::GetTagName( currentNode );
-        QString name = ApexXMLTools::XMLutils::GetAttribute(currentNode, "name");
-        if (type=="parameter" && !name.isEmpty())
-            type=name;
-
-        QVariant value( ApexXMLTools::XMLutils::GetFirstChildText( currentNode ) );
-        QString id( ApexXMLTools::XMLutils::GetAttribute(currentNode, "id"));
+        QVariant value(currentNode.text());
+        QString id(currentNode.attribute(QSL("id")));
         int channel;
-        QString sChannel(ApexXMLTools::XMLutils::GetAttribute(currentNode, "channel"));
+        QString sChannel(currentNode.attribute(QSL("channel")));
 
         if (sChannel.isEmpty())
             channel=-1;
         else
             channel=sChannel.toInt();
 
-
-        AddParameter(p, (DOMElement*) currentNode, owner, type, id, value, channel);
-
+        AddParameter(p, currentNode, owner, type, id, value, channel);
     }
-
-    //[job setDefault] p->setDefaultParameterValues();
 
     return;
 }
@@ -89,7 +78,7 @@ void SimpleParametersParser::Parse(XERCES_CPP_NAMESPACE::DOMElement* base,
 
 
 void SimpleParametersParser::AddParameter(data::SimpleParameters* p,
-                                          XERCES_CPP_NAMESPACE::DOMElement* e,
+                                          const QDomElement &e,
                                           const QString& owner,
                                           const QString& type,
                                           const QString& id,

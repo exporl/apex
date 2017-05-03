@@ -1,5 +1,5 @@
-#ifndef _EXPORL_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDURE_H_
-#define _EXPORL_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDURE_H_
+#ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDURE_H_
+#define _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDURE_H_
 
 
 #include "apexdata/procedure/procedureinterface.h"
@@ -28,8 +28,8 @@ class ScriptProcedureData;
 
 class ScriptProcedure : public ProcedureInterface
 {
+    Q_DECLARE_TR_FUNCTIONS(ScriptProcedure)
 public:
-
     ScriptProcedure(ProcedureApi* api, const data::ProcedureData *data);
     ~ScriptProcedure();
 
@@ -53,7 +53,6 @@ private:
     QScriptValue m_classname;
 
     const data::ScriptProcedureData* data;
-    int stimulusPosition;       //! current stimulus position
     QString lastAnswer;
     QString lastCorrectAnswer;
     data::Trial lastTrial;
@@ -63,4 +62,4 @@ private:
 
 }
 
-#endif // _EXPORL_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDURE_H_
+#endif // _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDURE_H_

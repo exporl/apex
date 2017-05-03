@@ -20,165 +20,138 @@
 #include "apexdata/calibration/calibrationdata.h"
 #include "apexdata/calibration/soundlevelmeterdata.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "calibrationwriter.h"
 
 #include <QStringList>
 
-using namespace XERCES_CPP_NAMESPACE;
-using namespace apex::ApexXMLTools;
+using namespace apex;
 
 using apex::writer::CalibrationWriter;
 using apex::data::CalibrationData;
 using apex::data::SoundLevelMeterData;
 using apex::data::CalibrationParameterData;
 
-
-DOMElement* CalibrationWriter::addElement(DOMDocument* doc,
-                                          const CalibrationData& data)
+QDomElement CalibrationWriter::addElement(QDomDocument *doc,
+        const CalibrationData& data)
 {
-    DOMElement* rootElement = doc->getDocumentElement();
-    DOMElement* calibration = doc->createElement(X("calibration"));
-    rootElement->appendChild(calibration);
+    QDomElement rootElement = doc->documentElement();
+    QDomElement calibration = doc->createElement(QSL("calibration"));
+    rootElement.appendChild(calibration);
 
     //profile attribute
     QString profile = data.calibrationProfile();
     if (!profile.isEmpty())
-        calibration->setAttribute(X("profile"), S2X(profile));
+        calibration.setAttribute(QSL("profile"), profile);
 
-    if (data.soundLevelMeterData() != 0)
-    {
-        calibration->appendChild(addSoundLevelMeter(doc,
-                                 *data.soundLevelMeterData()));
+    if (data.soundLevelMeterData() != 0) {
+        calibration.appendChild(addSoundLevelMeter(doc,
+                    *data.soundLevelMeterData()));
     }
 
-    calibration->appendChild(addStimuli(doc, data.availableStimuli()));
-    calibration->appendChild(addParameters(doc, data.parameters()));
+    calibration.appendChild(addStimuli(doc, data.availableStimuli()));
+    calibration.appendChild(addParameters(doc, data.parameters()));
 
     return calibration;
 }
 
-DOMElement* CalibrationWriter::addSoundLevelMeter(DOMDocument* doc,
+QDomElement CalibrationWriter::addSoundLevelMeter(QDomDocument *doc,
         const SoundLevelMeterData& data)
 {
     Q_ASSERT(data.containsSupportedData());
 
-    DOMElement* slm = doc->createElement(X("soundlevelmeter"));
+    QDomElement slm = doc->createElement(QSL("soundlevelmeter"));
 
     //plugin
     Q_ASSERT(data.hasParameter("plugin"));
-    slm->appendChild(XMLutils::CreateTextElement(doc, "plugin",
-                                        data.valueByType("plugin").toString()));
+    slm.appendChild(XmlUtils::createTextElement(doc, "plugin",
+                data.valueByType("plugin").toString()));
 
     //transducer
-    appendParameterTo(slm, doc, "transducer", data);
+    appendParameterTo(doc, &slm, "transducer", data);
 
     //frequence_weighting
     QString fw = data.frequencyWeightingType();
     Q_ASSERT(!fw.isEmpty());
-    slm->appendChild(XMLutils::CreateTextElement(doc, "frequency_weighting", fw));
+    slm.appendChild(XmlUtils::createTextElement(doc, "frequency_weighting", fw));
 
     //time_weighting
     QString tw = data.timeWeightingType();
     Q_ASSERT(!tw.isEmpty());
-    slm->appendChild(XMLutils::CreateTextElement(doc, "time_weighting", tw));
+    slm.appendChild(XmlUtils::createTextElement(doc, "time_weighting", tw));
 
     //type
     QString mt = data.measurementType();
     Q_ASSERT(!mt.isEmpty());
-    slm->appendChild(XMLutils::CreateTextElement(doc, "type", mt));
+    slm.appendChild(XmlUtils::createTextElement(doc, "type", mt));
 
     //percentile
-    appendParameterTo(slm, doc, "percentile", data);
+    appendParameterTo(doc, &slm, "percentile", data);
     //time
-    appendParameterTo(slm, doc, "time", data);
+    appendParameterTo(doc, &slm, "time", data);
     //accuracy
-    appendParameterTo(slm, doc, "accuracy", data);
+    appendParameterTo(doc, &slm, "accuracy", data);
     //maxiterations
-    appendParameterTo(slm, doc, "maxiterations", data);
+    appendParameterTo(doc, &slm, "maxiterations", data);
 
     return slm;
 }
 
-void CalibrationWriter::appendParameterTo(DOMElement* slm, DOMDocument* doc,
-                                 QString param, const SoundLevelMeterData& data)
+void CalibrationWriter::appendParameterTo(QDomDocument *doc,
+        QDomElement *slm, const QString &param, const SoundLevelMeterData& data)
 {
-    if (data.hasParameter(param))
-    {
-        slm->appendChild(XMLutils::CreateTextElement(doc, param,
-                         data.valueByType(param).toString()));
+    if (data.hasParameter(param)) {
+        slm->appendChild(XmlUtils::createTextElement(doc, param,
+                    data.valueByType(param).toString()));
     }
 }
 
-DOMElement* CalibrationWriter::addParameters(DOMDocument* doc,
-                           const QMap<QString, CalibrationParameterData>& data)
+QDomElement CalibrationWriter::addParameters(QDomDocument *doc,
+        const QMap<QString, CalibrationParameterData>& data)
 {
     Q_ASSERT(data.size() >= 1);
 
-    DOMElement* parameters = doc->createElement(X("parameters"));
+    QDomElement parameters = doc->createElement(QSL("parameters"));
 
     QMap<QString, CalibrationParameterData>::const_iterator it;
     for (it = data.begin(); it != data.end(); it++)
     {
         CalibrationParameterData param = it.value();
-        DOMElement* parameter = doc->createElement(X("parameter"));
-        parameter->setAttribute(X("id"), S2X(it.key()));
+        QDomElement parameter = doc->createElement(QSL("parameter"));
+        parameter.setAttribute(QSL("id"), it.key());
 
-        parameter->appendChild(XMLutils::CreateTextElement(doc,
-                              "targetamplitude", param.finalTargetAmplitude()));
-        parameter->appendChild(XMLutils::CreateTextElement(doc,
-                       "calibrationamplitude", param.defaultTargetAmplitude()));
-        parameter->appendChild(XMLutils::CreateTextElement(doc,
-                               "mute", param.muteParameter()));
-        parameter->appendChild(XMLutils::CreateTextElement(doc,
-                               "min", param.minimumParameter()));
-        parameter->appendChild(XMLutils::CreateTextElement(doc,
-                               "max", param.maximumParameter()));
+        parameter.appendChild(XmlUtils::createTextElement(doc,
+                    "targetamplitude", param.finalTargetAmplitude()));
+        parameter.appendChild(XmlUtils::createTextElement(doc,
+                    "calibrationamplitude", param.defaultTargetAmplitude()));
+        parameter.appendChild(XmlUtils::createTextElement(doc,
+                    "mute", param.muteParameter()));
+        parameter.appendChild(XmlUtils::createTextElement(doc,
+                    "min", param.minimumParameter()));
+        parameter.appendChild(XmlUtils::createTextElement(doc,
+                    "max", param.maximumParameter()));
 
-        parameters->appendChild(parameter);
+        parameters.appendChild(parameter);
     }
 
     return parameters;
 }
 
-DOMElement* CalibrationWriter::addStimuli(DOMDocument* doc,
-                                          const QStringList& data)
+QDomElement CalibrationWriter::addStimuli(QDomDocument *doc,
+        const QStringList& data)
 {
     Q_ASSERT(data.count() >= 1);
 
-    DOMElement* stimuli = doc->createElement(X("stimuli"));
+    QDomElement stimuli = doc->createElement(QSL("stimuli"));
 
-    Q_FOREACH(QString stimulusId, data)
-    {
-        DOMElement* stimulus = doc->createElement(X("stimulus"));
-        stimulus->setAttribute(X("id"), S2X(stimulusId));
-        stimuli->appendChild(stimulus);
+    Q_FOREACH (QString stimulusId, data) {
+        QDomElement stimulus = doc->createElement(QSL("stimulus"));
+        stimulus.setAttribute(QSL("id"), stimulusId);
+        stimuli.appendChild(stimulus);
     }
 
     return stimuli;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

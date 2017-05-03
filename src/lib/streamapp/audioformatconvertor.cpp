@@ -72,7 +72,7 @@ AudioFormatConvertor::~AudioFormatConvertor()
   delete [] Stream::mc_pSamplesArray;
 }
 
-unsigned AudioFormatConvertor::ReadFromSource( AudioFormatReader* const a_cpSource, const unsigned ac_nSamples, const bool ac_bNorm, const unsigned ac_nSourceOffset )
+unsigned AudioFormatConvertor::ReadFromSource( AudioFormatReader* const a_cpSource, const unsigned ac_nSamples, const unsigned ac_nSourceOffset )
 {
   unsigned nRead                          = 0;
   const unsigned nChannels                = a_cpSource->mf_nChannels();
@@ -114,64 +114,30 @@ unsigned AudioFormatConvertor::ReadFromSource( AudioFormatReader* const a_cpSour
       //convert
     if( bFloating )   //src is 32bit float
     {
-      if( ac_bNorm )
+      if( mv_dGain == 1.0 )
       {
-        if( mv_dGain == 1.0 )
+        for( unsigned i = 0 ; i < nChannels ; ++i )
         {
-          for( unsigned i = 0 ; i < nChannels ; ++i )
-          {
-            for( unsigned j = ac_nSourceOffset ; j < nToDo ; ++j )
-              dest[ i ][ j ] = ToDouble( *(float*)(&src[ i ][ j - ac_nSourceOffset ]) );
-          }
-        }
-        else
-        {
-          for( unsigned i = 0 ; i < nChannels ; ++i )
-          {
-            for( unsigned j = ac_nSourceOffset ; j < nToDo ; ++j )
-              dest[ i ][ j ] = mv_dGain * ToDouble( *(float*)(&src[ i ][ j - ac_nSourceOffset ]) );
-          }
+          for( unsigned j = ac_nSourceOffset ; j < nToDo ; ++j )
+            dest[ i ][ j ] = ToDouble( *(float*)(&src[ i ][ j - ac_nSourceOffset ]) );
         }
       }
       else
       {
-        const StreamType dMult = sc_d32BitMinMax * mv_dGain;  //denormalize to 32bitint
         for( unsigned i = 0 ; i < nChannels ; ++i )
         {
           for( unsigned j = ac_nSourceOffset ; j < nToDo ; ++j )
-            dest[ i ][ j ] = ToDouble( *(float*)(&src[ i ][ j - ac_nSourceOffset ]) ) * dMult;
+            dest[ i ][ j ] = mv_dGain * ToDouble( *(float*)(&src[ i ][ j - ac_nSourceOffset ]) );
         }
       }
     }
     else   //src is 32bit int
     {
-      if( ac_bNorm )
+      const StreamType dMult = mv_dGain / sc_d32BitMinMax;
+      for( unsigned i = 0 ; i < nChannels ; ++i )
       {
-        const StreamType dMult = mv_dGain / sc_d32BitMinMax;
-        for( unsigned i = 0 ; i < nChannels ; ++i )
-        {
-          for( unsigned j = ac_nSourceOffset ; j < nToDo ; ++j )
-            dest[ i ][ j ] = ToDouble( src[ i ][ j - ac_nSourceOffset ] ) * dMult;
-        }
-      }
-      else
-      {
-        if( mv_dGain == 1.0 )
-        {
-          for( unsigned i = 0 ; i < nChannels ; ++i )
-          {
-            for( unsigned j = ac_nSourceOffset ; j < nToDo ; ++j )
-              dest[ i ][ j ] = ToDouble( src[ i ][ j - ac_nSourceOffset] );
-          }
-        }
-        else
-        {
-          for( unsigned i = 0 ; i < nChannels ; ++i )
-          {
-            for( unsigned j = ac_nSourceOffset ; j < nToDo ; ++j )
-              dest[ i ][ j ] = mv_dGain * ToDouble( src[ i ][ j - ac_nSourceOffset] );
-          }
-        }
+        for( unsigned j = ac_nSourceOffset ; j < nToDo ; ++j )
+          dest[ i ][ j ] = ToDouble( src[ i ][ j - ac_nSourceOffset ] ) * dMult;
       }
     }
 
@@ -186,7 +152,7 @@ unsigned AudioFormatConvertor::ReadFromSource( AudioFormatReader* const a_cpSour
   return nRead;
 }
 
-unsigned AudioFormatConvertor::WriteToSource( AudioFormatWriter* const a_cpSource, const unsigned ac_nSamples, const bool ac_bNorm, const bool ac_bClipping )
+unsigned AudioFormatConvertor::WriteToSource( AudioFormatWriter* const a_cpSource, const unsigned ac_nSamples )
 {
   const unsigned nChannels = a_cpSource->mf_nChannels();
   Q_ASSERT( nChannels <= Stream::mf_nGetChannelCount() );
@@ -195,89 +161,23 @@ unsigned AudioFormatConvertor::WriteToSource( AudioFormatWriter* const a_cpSourc
   StreamType**   src       = Stream::mf_pGetArray();
   int**          dest      = m_WorkHere.mf_pGetArray();
 
-    //convert
-  if( bFloating )   //src is 32bit float
+  //convert
+  for( unsigned i = 0 ; i < nChannels ; ++i )
   {
-    if( ac_bNorm )                                   //FIXME how do you clip this??
+    for( unsigned j = 0 ; j < ac_nSamples ; ++j )
     {
-      for( unsigned i = 0 ; i < nChannels ; ++i )
+      mv_bCalledBack = false;
+      if( f_dClipNormalized( src[ i ][ j ] ) )
       {
-        for( unsigned j = 0 ; j < ac_nSamples ; ++j )
-          *(float*)(&dest[ i ][ j ]) = ToFloat( src[ i ][ j ] );
+        m_Clipped[ i ] = true;
+        if( mv_pCallback && !mv_bCalledBack )
+          mv_pCallback->mf_Callback();
+        mv_bCalledBack = true;
       }
-    }
-    else
-    {
-      for( unsigned i = 0 ; i < nChannels ; ++i )
-      {
-        for( unsigned j = 0 ; j < ac_nSamples ; ++j )
-          *(float*)(&dest[ i ][ j ]) = ToFloat( src[ i ][ j ] / sc_d32BitMinMax );  //denormalize
-      }
-    }
-  }
-  else   //src is 32bit int
-  {
-    if( ac_bNorm )
-    {
-      if( ac_bClipping )
-      {
-        mv_bCalledBack = false;
-        for( unsigned i = 0 ; i < nChannels ; ++i )
-        {
-          for( unsigned j = 0 ; j < ac_nSamples ; ++j )
-          {
-            StreamType& dVal = src[ i ][ j ];                                 //
-            if( f_dClipNormalized( dVal ) )                                   //FIXME this can [and must;-] be optimized
-            {
-              m_Clipped[ i ] = true;
-              if( mv_pCallback && !mv_bCalledBack )
-                mv_pCallback->mf_Callback();
-              mv_bCalledBack = true;
-            }
-            dest[ i ][ j ] = roundDoubleToInt( dVal * sc_d32BitMinMax );
-          }
-        }
-      }
+      if( bFloating )
+          *(float*)(&dest[ i ][ j ]) =  src[ i ][ j ] * sc_f32BitMinMax;
       else
-      {
-        for( unsigned i = 0 ; i < nChannels ; ++i )
-        {
-          for( unsigned j = 0 ; j < ac_nSamples ; ++j )
-          {
-            dest[ i ][ j ] = roundDoubleToInt( src[ i ][ j ] * sc_d32BitMinMax );
-          }
-        }
-      }
-    }
-    else
-    {
-      if( ac_bClipping )
-      {
-        for( unsigned i = 0 ; i < nChannels ; ++i )
-        {
-          for( unsigned j = 0 ; j < ac_nSamples ; ++j )
-          {
-            if( f_dClip32bit( &src[ i ][ j ] ) )
-            {
-              m_Clipped[ i ] = true;
-              if( mv_pCallback && !mv_bCalledBack )
-                mv_pCallback->mf_Callback();
-              mv_bCalledBack = true;
-            }
-            dest[ i ][ j ] = roundDoubleToInt( src[ i ][ j ] );   //FIXME wrong for 24bit eej!    ?????
-          }
-        }
-      }
-      else
-      {
-        for( unsigned i = 0 ; i < nChannels ; ++i )
-        {
-          for( unsigned j = 0 ; j < ac_nSamples ; ++j )
-          {
-            dest[ i ][ j ] = roundDoubleToInt( src[ i ][ j ] );   //FIXME wrong for 24bit eej!
-          }
-        }
-      }
+          dest[ i ][ j ] = roundDoubleToInt( src[ i ][ j ] * sc_d32BitMinMax );
     }
   }
 

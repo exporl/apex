@@ -21,7 +21,7 @@
 
 #include "apexmapwizard.h"
 #include "r126settingsdialog.h"
-#include "services/paths.h"
+#include "apexpaths.h"
 
 #include "map/r126database.h"
 #include "map/r126dbasesetting.h"
@@ -38,7 +38,6 @@ namespace apex{
       MapWizardBase( 0, 0, TRUE ), //modal
     m_pDataBase( new R126DataBase() )
   {
-    MapWizardBase::setIcon( Paths::Get().mf_sMainLogoPath() );
       //FIXME get default values from a config file
     m_pDataBase->mf_SetDataBaseSettings( r126::R126VERSION_2_1, "TERPY" );
     setNextEnabled( WizardPage, false );

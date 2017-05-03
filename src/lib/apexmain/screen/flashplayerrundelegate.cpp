@@ -78,7 +78,7 @@ const ScreenElement* FlashPlayerRunDelegate::getScreenElement() const
 
 void FlashPlayerRunDelegate::sendAnsweredSignal()
 {
-    emit answered( this );
+    Q_EMIT answered( this );
 }
 
 void FlashPlayerRunDelegate::connectSlots( ScreenRunDelegate* d )

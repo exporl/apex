@@ -28,11 +28,11 @@ using namespace spin::data;
 
 // List ========================================================================
 
-void List::addToken(QString id, QString uri, QString text)
+void List::addToken(QString id, QString file, QString text)
 {
     Speechtoken token;
     token.id = id;
-    token.uri = QUrl(uri);
+    token.file = file;
     token.text = text;
 
     append(token);
@@ -143,9 +143,9 @@ SpinConfig::SpinConfig():
 }
 
 
-const apex::data::FilePrefix& SpinConfig::uri_prefix() const
+const apex::data::FilePrefix& SpinConfig::prefix() const
 {
-    return prefix;
+    return filePrefix;
 }
 
 const QVector<Speaker>& SpinConfig::speaker_setup() const
@@ -330,7 +330,7 @@ QList<uint> SpinConfig::channelList(SpeakerType which) const
 
 void SpinConfig::setPrefix(const apex::data::FilePrefix& prefix)
 {
-    this->prefix = prefix;
+    this->filePrefix = prefix;
 }
 
 void SpinConfig::addSpeaker(unsigned channel, unsigned angle)
@@ -342,7 +342,7 @@ void SpinConfig::addSpeaker(unsigned channel, unsigned angle)
     speakers.append(spkr);
 }
 
-void SpinConfig::addNoise(QString id, QString uri, double rms, QString name,
+void SpinConfig::addNoise(QString id, QString file, double rms, QString name,
                           QString description, QString speechmaterial,
                           QString speechcategory)
 {
@@ -350,7 +350,7 @@ void SpinConfig::addNoise(QString id, QString uri, double rms, QString name,
 
     Noise noise;
     noise.id = id;
-    noise.uri = QUrl(uri);
+    noise.file = file;
     noise.rms = rms;
     noise.name = name;
     noise.description = description;
@@ -451,7 +451,7 @@ void SpinConfig::showContent()
     //QMessageBox box;
 
     QString content = "Content of SpinConfig:\n";
-    content += QString("\nURI prefix: %1\n").arg(prefix.value());
+    content += QString("\nPrefix: %1\n").arg(filePrefix.value());
     content += "\nSpeakers:\n";
 
     QVector<Speaker>::const_iterator itSpkr;
@@ -471,7 +471,7 @@ void SpinConfig::showContent()
         content += QString("description: %1\n")
                    .arg(itNoise->description);
         content += QString("name: %1\n").arg(itNoise->name);
-        content += QString("uri: %1\n").arg(itNoise->uri.toString());
+        content += QString("file: %1\n").arg(itNoise->file);
         content += QString("rms: %1\n").arg(itNoise->rms);
         content += QString("speechmaterial: %1\n")
                    .arg(itNoise->speechmaterial);
@@ -504,8 +504,8 @@ void SpinConfig::showContent()
                 {
                     content += QString("speechtoken %1:\n")
                                .arg(itTokens->id);
-                    content += QString("uri: %1\n")
-                               .arg(itTokens->uri.toString());
+                    content += QString("file: %1\n")
+                               .arg(itTokens->file);
                     content += QString("text: %1\n")
                                .arg(itTokens->text);
                 }

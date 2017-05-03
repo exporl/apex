@@ -79,7 +79,7 @@ class IApexDevice
          * Set parameters by querying the given parametermanager object
          */
         virtual void SetParameters(const ParameterManager& pm);
-        virtual bool SetParameter(const QString& type, const int channel,
+        virtual bool SetParameter(const QString& type, int channel,
                                   const QVariant& value) = 0;
         virtual bool SetParameter(const data::Parameter& name,
                                   const QVariant& value);

@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __SILENTREADER_H__
-#define __SILENTREADER_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_SILENTREADER_H__
+#define _APEX_SRC_LIB_STREAMAPP_SILENTREADER_H__
 
 #include "defines.h"
 #include "audioformat.h"
@@ -116,4 +116,4 @@ namespace streamapp
 
 }
 
-#endif //#ifndef __SILENTREADER_H__
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_SILENTREADER_H__

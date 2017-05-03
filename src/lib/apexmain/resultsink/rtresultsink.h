@@ -70,6 +70,10 @@ public slots:
     //! Add a whole results file to the results <apex:results>
     void newResults ( QString xml );
 
+    void trialStarted();
+    void stimulusStarted();
+    void newStimulusParameters ( const QVariantMap& params );
+
 protected:
     //ExperimentRunDelegate& m_rd;
     RTResultSinkPrivate* d;

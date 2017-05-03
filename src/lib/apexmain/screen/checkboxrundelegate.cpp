@@ -75,7 +75,7 @@ void CheckBoxRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
 
 void CheckBoxRunDelegate::sendAnsweredSignal()
 {
-    emit answered( this );
+    Q_EMIT answered( this );
 }
 
 CheckBoxRunDelegate::CheckBoxRunDelegate(ExperimentRunDelegate* p_exprd,

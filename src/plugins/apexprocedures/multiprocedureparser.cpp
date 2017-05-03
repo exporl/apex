@@ -25,9 +25,8 @@
 
 #include "apextools/exceptions.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
 #include "apextools/xml/xmlkeys.h"
+#include "apextools/xml/xmltools.h"
 
 #include "adaptiveprocedureparser.h"
 #include "constantprocedureparser.h"
@@ -36,9 +35,7 @@
 #include "scriptprocedureparser.h"
 #include "trainingprocedureparser.h"
 
-using namespace xercesc;
 using namespace apex::XMLKeys;
-using namespace apex::ApexXMLTools;
 
 namespace apex
 {
@@ -48,36 +45,25 @@ namespace parser
 
 MultiProcedureParser::MultiProcedureParser()
 {
-
 }
 
-
-data::MultiProcedureData* MultiProcedureParser::parse(XERCES_CPP_NAMESPACE::DOMElement* base)
+data::MultiProcedureData* MultiProcedureParser::parse(const QDomElement &base)
 {
     data::MultiProcedureData* config = new data::MultiProcedureData();
     currentConfig = config;
-    currentConfig->SetID( XMLutils::GetAttribute(base,gc_sID) );
-
+    currentConfig->SetID( base.attribute(gc_sID) );
 
     Q_CHECK_PTR(currentConfig);
 
     // parse different procedures and add to config
-    for (DOMNode* currentNode=base->getFirstChild(); currentNode!=0; currentNode=currentNode->getNextSibling())
-    {
-        Q_ASSERT(currentNode);
-        Q_ASSERT(currentNode->getNodeType() == DOMNode::ELEMENT_NODE);
-        const QString tag = XMLutils::GetTagName( currentNode );
-
-        if (tag=="parameters")
-        {
-            SetProcedureParameters((DOMElement*)currentNode);
-        }
-        else if (tag=="procedure")
-        {
-            const QString type = XMLutils::GetAttribute(currentNode, "xsi:type");
+    for (QDomElement currentNode = base.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        const QString tag = currentNode.tagName();
+        if (tag=="parameters") {
+            SetProcedureParameters((QDomElement )currentNode);
+        } else if (tag=="procedure") {
+            const QString type = currentNode.attribute(QSL("xsi:type"));
             data::ProcedureData* data;
-
-            DOMElement* currentElement = dynamic_cast<DOMElement*>(currentNode);
 
             //FIXME This code only works for 5 types of procedures. If a user
             // defines a new plugin with new procedures, this code will fail
@@ -113,32 +99,12 @@ data::MultiProcedureData* MultiProcedureParser::parse(XERCES_CPP_NAMESPACE::DOME
                 qFatal("Unknown procedure type");
             }
 
-            parser->Parse(currentElement, data);
+            parser->Parse(currentNode, data);
             config->addProcedure(data);
-
-
-
-
-            /*
-            const QString type = XMLutils::GetAttribute(currentNode, "xsi:type");
-            const QString id = XMLutils::GetAttribute(currentNode, gc_sID);
-            if (id.isEmpty())
-                throw ApexStringException("Procedure has no ID");
-
-            ProcedureParser parser;
-            data::ProcedureData* newconfig = parser.Parse( (DOMElement*)currentNode );
-            Q_CHECK_PTR(newconfig);
-            newconfig->SetID(id);
-            //newconfig->SetProcedureFactory(fact);
-            config->AddProcedureConfig(newconfig);
-            qCDebug(APEX_RS, "Adding procedureconfig to multiprocedure with pointer %p",
-                   newconfig);
-                   */
-//            qFatal("FIXME: MultiProcedureParser::Parse");
         }
     }
 
-    currentConfig=0;
+    currentConfig = 0;
     return config;
 }
 
@@ -148,9 +114,7 @@ bool MultiProcedureParser::trialsValid()
     return true;
 }
 
-
-void MultiProcedureParser::SetProcedureParameters(
-    XERCES_CPP_NAMESPACE::DOMElement* p_base)
+void MultiProcedureParser::SetProcedureParameters(const QDomElement &p_base)
 {
     data::MultiProcedureData* param
             = dynamic_cast<data::MultiProcedureData*>(currentConfig);

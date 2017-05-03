@@ -1,123 +1,123 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment file:///C:/maaike/Apex_110116/schemas/experiment.xsd">
- <!-- @doc
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- @doc
   @what: Simple loudness adaptation experiment
   @description: Participants have to judge each 20s the loudness of the stimuli by typing a number. Each 20s the screen becomes red as a visual cue. Physically, it is actually the same stimulus (the same dB) for 5 minutes.
   @how: constantProcedure, htmlelement is used for the screen, intensity of the stimulus can be interactively changed. The time to wait (s) before asking the first response, the time to wait after each following response and the maximum amount of responses can be changed in the htmlelement.
   -->
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <order>sequential</order>
-   <input_during_stimulus>true</input_during_stimulus>
-  </parameters>
-  <trials>
-   <trial id="trialMM500">
-    <answer>answer</answer>
-    <screen id="screen"/>
-    <stimulus id="stimulusMM500"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>false</progressbar>
-   <feedback length="600">false</feedback>
-  </reinforcement>
-  <screen id="screen">
-   <gridLayout id="main_layout" width="1" height="2">
-    <html row="1" id="htmlelement" col="1">
-     <page>htmlelement.html</page>
-    </html>
-   </gridLayout>
-   <default_answer_element>htmlelement</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <datablock id="datablockMM500Hz5min">
-   <device>wavdevice</device>
-   <uri>MM500Hz5min.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain id="Lgain" channel="0">0</gain>
-   <gain id="Rgain" channel="1">0</gain>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <filters>
-  <filter id="amplifier" xsi:type="apex:amplifier">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <basegain>-65</basegain>
-   <gain id="gain">65</gain>
-  </filter>
- </filters>
- <stimuli>
-  <stimulus id="stimulusMM500">
-   <datablocks>
-    <sequential>
-     <datablock id="datablockMM500Hz5min"/>
-    </sequential>
-   </datablocks>
-   <variableParameters>
-    <parameter id="gain">65</parameter>
-   </variableParameters>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
- <calibration profile="CalibrationMM500">
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <order>sequential</order>
+      <input_during_stimulus>true</input_during_stimulus>
+    </parameters>
+    <trials>
+      <trial id="trialMM500">
+        <answer>answer</answer>
+        <screen id="screen"/>
+        <stimulus id="stimulusMM500"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>false</progressbar>
+      <feedback length="600">false</feedback>
+    </reinforcement>
+    <screen id="screen">
+      <gridLayout height="2" id="main_layout" width="1">
+        <html col="1" id="htmlelement" row="1">
+          <page>htmlelement.html</page>
+        </html>
+      </gridLayout>
+      <default_answer_element>htmlelement</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <datablock id="datablockMM500Hz5min">
+      <device>wavdevice</device>
+      <file>MM500Hz5min.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain channel="0" id="Lgain">0</gain>
+      <gain channel="1" id="Rgain">0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters>
+    <filter id="amplifier" xsi:type="apex:amplifier">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <basegain>-65</basegain>
+      <gain id="gain">65</gain>
+    </filter>
+  </filters>
   <stimuli>
-   <stimulus id="stimulusMM500"/>
+    <stimulus id="stimulusMM500">
+      <datablocks>
+        <sequential>
+          <datablock id="datablockMM500Hz5min"/>
+        </sequential>
+      </datablocks>
+      <variableParameters>
+        <parameter id="gain">65</parameter>
+      </variableParameters>
+    </stimulus>
   </stimuli>
-  <parameters>
-   <parameter id="Lgain">
-    <targetamplitude>65</targetamplitude>
-    <calibrationamplitude>80</calibrationamplitude>
-    <mute>-150.0</mute>
-    <max>100</max>
-   </parameter>
-  </parameters>
- </calibration>
- <results>
-  <page>apex:resultviewer.html</page>
-  <resultparameters/>
-  <showduringexperiment>false</showduringexperiment>
-  <showafterexperiment>false</showafterexperiment>
-  <saveprocessedresults>true</saveprocessedresults>
-  <subject/>
- </results>
- <interactive>
-  <entry type="string" description="Naam" expression="/apex:apex/results[1]/subject[1]" default=""/>
-  <entry type="int" description="Intensiteit (dB SPL) voor 30 dB SL" expression="/apex:apex/stimuli[1]/stimulus[1]/variableParameters[1]/parameter[1]" default="30"/>
- </interactive>
- <general>
-  <exitafter>false</exitafter>
-  <autosave>false</autosave>
- </general>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+  <calibration profile="CalibrationMM500">
+    <stimuli>
+      <stimulus id="stimulusMM500"/>
+    </stimuli>
+    <parameters>
+      <parameter id="Lgain">
+        <targetamplitude>65</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150.0</mute>
+        <max>100</max>
+      </parameter>
+    </parameters>
+  </calibration>
+  <results>
+    <page>apex:resultviewer.html</page>
+    <resultparameters/>
+    <showduringexperiment>false</showduringexperiment>
+    <showafterexperiment>false</showafterexperiment>
+    <saveprocessedresults>true</saveprocessedresults>
+    <subject/>
+  </results>
+  <interactive>
+    <entry default="" expression="/apex:apex/results[1]/subject[1]" type="string" description="Naam"/>
+    <entry default="30" expression="/apex:apex/stimuli[1]/stimulus[1]/variableParameters[1]/parameter[1]" type="int" description="Intensiteit (dB SPL) voor 30 dB SL"/>
+  </interactive>
+  <general>
+    <exitafter>false</exitafter>
+    <autosave>false</autosave>
+  </general>
 </apex:apex>

@@ -17,18 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXWRITERS_DATABLOCKSWRITER_H_
-#define _EXPORL_SRC_LIB_APEXWRITERS_DATABLOCKSWRITER_H_
+#ifndef _APEX_SRC_LIB_APEXWRITERS_DATABLOCKSWRITER_H_
+#define _APEX_SRC_LIB_APEXWRITERS_DATABLOCKSWRITER_H_
 
 #include "apextools/global.h"
-
-#include "apextools/xml/xercesinclude.h"
-
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMDocument;
-class DOMElement;
-};
 
 namespace apex
 {
@@ -42,19 +34,16 @@ namespace writer
 {
 class APEXWRITERS_EXPORT DatablocksWriter
 {
-    public:
-        /**
-        * Return a domelement containing a DOM tree corresponding
-        * to the given data structure
-         */
-        static XERCES_CPP_NAMESPACE::DOMElement* addElement (
-            XERCES_CPP_NAMESPACE::DOMDocument* doc,
-            const data::DatablocksData& d );
-
+public:
+    /**
+     * Return a domelement containing a DOM tree corresponding
+     * to the given data structure
+     */
+    static QDomElement addElement(QDomDocument *doc,
+            const data::DatablocksData& d);
 };
+
 }
 }
-
-
 
 #endif

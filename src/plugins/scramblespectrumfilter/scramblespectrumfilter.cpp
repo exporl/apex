@@ -25,7 +25,6 @@
 
 #include <QMap>
 #include <QStringList>
-#include <QUrl>
 
 #include <cmath>
 
@@ -35,20 +34,13 @@ class ScrambleSpectrumFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "apex.scramblespectrumfilter")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
     virtual PluginFilterInterface *createFilter (const QString &name,
             unsigned channels, unsigned blockSize, unsigned fs) const;
 };
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (scramblespectrumfilter, ScrambleSpectrumFilterCreator)
-#endif
-
 
 class ScrambleSpectrumFilter:
     public QObject,

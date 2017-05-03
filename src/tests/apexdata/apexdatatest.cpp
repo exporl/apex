@@ -31,18 +31,17 @@
 #include "apextools/apextools.h"
 #include "apextools/random.h"
 
+#include "common/testutils.h"
+
 #include "apexdatatest.h"
 
 using namespace apex;
 using namespace apex::data;
 
-void ApexDataTest::initTestCase()
-{
-    xercesc::XMLPlatformUtils::Initialize();
-}
-
 void ApexDataTest::testSimpleParameters()
 {
+    TEST_EXCEPTIONS_TRY
+
     TEST_COPY(SimpleParameters);
 
     {
@@ -73,11 +72,17 @@ void ApexDataTest::testSimpleParameters()
     params.addParameter(param2); //and this should replace param1
     QCOMPARE(params.valueByType("foo").toInt(), 2);
     }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexDataTest::testDatablockData()
 {
+    TEST_EXCEPTIONS_TRY
+
     TEST_COPY_INIT(DatablockData, initDatablockData);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexDataTest::initDatablockData(DatablockData* data)
@@ -89,10 +94,15 @@ void ApexDataTest::initDatablockData(DatablockData* data)
 
 void ApexDataTest::testCalibrationData()
 {
+    TEST_EXCEPTIONS_TRY
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexDataTest::testCalibrationParameterData()
 {
+    TEST_EXCEPTIONS_TRY
+
     TEST_COPY(CalibrationParameterData);
 
     Random rand;
@@ -118,11 +128,17 @@ void ApexDataTest::testCalibrationParameterData()
     QCOMPARE(data.muteParameter(), muteParameter);
     QCOMPARE(data.defaultTargetAmplitude(), defaultTargetAmplitude);
     QCOMPARE(data.finalTargetAmplitude(), finalTargetAmplitude);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexDataTest::testConnectionData()
 {
+    TEST_EXCEPTIONS_TRY
+
     TEST_COPY_INIT(ConnectionData, initConnectionData);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexDataTest::initConnectionData(ConnectionData* data)
@@ -135,7 +151,11 @@ void ApexDataTest::initConnectionData(ConnectionData* data)
 
 void ApexDataTest::testCorrectorData()
 {
+    TEST_EXCEPTIONS_TRY
+
     TEST_COPY_INIT(CorrectorData, initCorrectorData);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexDataTest::initCorrectorData(apex::data::CorrectorData* data)
@@ -145,6 +165,8 @@ void ApexDataTest::initCorrectorData(apex::data::CorrectorData* data)
 
 void ApexDataTest::testApexMap()
 {
+    TEST_EXCEPTIONS_TRY
+
     TEST_COPY(ApexMap);
 
     //test for isComplete. should return true if electrodes 1..22 are mapped
@@ -159,20 +181,32 @@ void ApexDataTest::testApexMap()
     //insert the last electrode to make the map complete
     map.insert(22, ChannelMap());
     QVERIFY(map.isComplete());
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexDataTest::testChannelMap()
 {
+    TEST_EXCEPTIONS_TRY
+
     TEST_COPY(ChannelMap);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexDataTest::testSoundLevelMeterDataCopy()
 {
+    TEST_EXCEPTIONS_TRY
+
     TEST_COPY(SoundLevelMeterData);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexDataTest::testSoundLevelMeterDataSupported()
 {
+    TEST_EXCEPTIONS_TRY
+
     QFETCH(QString, frequency_weighting);
     QFETCH(QString, time_weighting);
     QFETCH(QString, type);
@@ -187,6 +221,8 @@ void ApexDataTest::testSoundLevelMeterDataSupported()
     data.setValueByType("time", time);
 
     QVERIFY2(data.containsSupportedData(), data.errorString().toLatin1());
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexDataTest::testSoundLevelMeterDataSupported_data()
@@ -205,6 +241,8 @@ void ApexDataTest::testSoundLevelMeterDataSupported_data()
 
 void ApexDataTest::testSoundLevelMeterDataUnsupported()
 {
+    TEST_EXCEPTIONS_TRY
+
     QFETCH(QString, frequency_weighting);
     QFETCH(QString, time_weighting);
     QFETCH(QString, type);
@@ -219,6 +257,8 @@ void ApexDataTest::testSoundLevelMeterDataUnsupported()
     data.setValueByType("time", time);
 
     QVERIFY2(!data.containsSupportedData(), data.errorString().toLatin1());
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 
@@ -237,11 +277,6 @@ void ApexDataTest::testSoundLevelMeterDataUnsupported_data()
     QTest::newRow("bad perc2") << "z" << "s" << "rms"  << -0.9 << 1;
     QTest::newRow("bad time")  << "z" << "s" << "rms"  << 0.0  << -1;
     QTest::newRow("bad time2") << "z" << "s" << "rms"  << 0.0  << 0;
-}
-
-void ApexDataTest::cleanupTestCase()
-{
-    xercesc::XMLPlatformUtils::Terminate();
 }
 
 //generate standalone binary for the test

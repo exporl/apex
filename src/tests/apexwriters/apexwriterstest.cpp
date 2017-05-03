@@ -23,137 +23,45 @@
 
 #include "apextools/exceptions.h"
 
-#include "apextools/services/paths.h"
-
-#include "apextools/xml/xercesinclude.h"
-
 #include "apexwriters/experimentwriter.h"
+
+#include "common/paths.h"
+#include "common/temporarydirectory.h"
+#include "common/testutils.h"
 
 #include "apexwriterstest.h"
 
-#include <QDebug>
-
-#include <iostream>
-
-void ApexWritersTest::initTestCase()
-{
-    xercesc::XMLPlatformUtils::Initialize();
-}
-
-QString ApexWritersTest::outfileName(const QString& infile)
-{
-    return "__out__" + infile;
-}
+using namespace apex;
+using namespace apex::data;
+using namespace apex::writer;
+using namespace cmn;
 
 void ApexWritersTest::testExperiment_data()
 {
-   QTest::addColumn<QString>("testFile");
-   QTest::addColumn<QString>("outFile");
+    QTest::addColumn<QString>("testFile");
 
-    apex::Paths paths;
-    QDir testDir(paths.GetBasePath());
-
-    if (!testDir.cd("data/tests") || !testDir.cd("libwriters"))
-    {
-        qCDebug(APEX_RS) << "cannot find data for the writers test";
-        return;
-    }
-
-    QDir outDir = testDir;
-
-    if (!outDir.exists("out"))
-        outDir.mkdir("out");
-
-    outDir.cd("out");
-
+    QDir testDir(Paths::searchDirectory(QL1S("tests/libwriters"), Paths::dataDirectories()));
     testDir.setNameFilters(QStringList() << "*.xml" << "*.apx");
     Q_FOREACH (QString testFile, testDir.entryList(QDir::AllEntries))
-    {
-        QString outFile = outfileName(testFile);
-        QTest::newRow(qPrintable(testFile)) << testDir.absoluteFilePath(testFile)
-                                            << outDir.absoluteFilePath(outFile);
-    }
+        QTest::newRow(qPrintable(testFile)) << testDir.absoluteFilePath(testFile);
 }
 
 void ApexWritersTest::testExperiment()
 {
+    TEST_EXCEPTIONS_TRY
+
     QFETCH(QString, testFile);
-    QFETCH(QString, outFile);
 
-    if (!QFile::exists(testFile))
-        QFAIL(qPrintable(QString("Could not open test file: %1").arg(testFile)));
+    TemporaryDirectory dir;
+    QString outFile = dir.addFile(QSL("out.apx"));
 
-    qCDebug(APEX_RS) << "** Testing " << testFile;
+    QScopedPointer<ExperimentData> data(ExperimentParser(testFile).parse(false));
+    ExperimentWriter::write(*data, outFile);
+    QScopedPointer<ExperimentData> data2(ExperimentParser(outFile).parse(false));
 
-    //parse the test file
-    apex::data::ExperimentData* data;
-    try
-    {
-//        std::cout<<"exception in the constructor"<<std::endl;
-        apex::ExperimentParser parser(testFile);
-//        std::cout<<"exception in the parse function"<<std::endl;
-
-        data = parser.parse(false);
-//        std::cout<<"jump"<<endl;
-    }
-    catch (const std::exception& e)
-    {
-        QFAIL(qPrintable(QString("Could not parse test file: %1").arg(e.what())));
-    }
-    catch (...)
-    {
-        QFAIL(qPrintable(QString("Unknown exception while parsing %1").arg(testFile)));
-    }
-
-    qCDebug(APEX_RS) << "parsed initial experiment file";
-
-    //write the parsed data
-    try
-    {
-        apex::writer::ExperimentWriter::write(*data, outFile);
-    }
-    catch (const xercesc::DOMException& e)
-    {
-        qCDebug(APEX_RS) << "dom exception: " << X2S(e.getMessage()) << " code: " << e.code;
-        QFAIL("DOM exception during write");
-    }
-    catch (const std::exception& e)
-    {
-        qCDebug(APEX_RS) << "exception: " << e.what();
-        qCDebug(APEX_RS) <<"Output file: "<< outFile;
-        QFAIL("Exception during write");
-    }
-
-    qCDebug(APEX_RS) << "written parsed data";
-
-    //parse the written file
-    apex::data::ExperimentData* data2;
-    try
-    {
-        apex::ExperimentParser parser2(outFile);
-        data2 = parser2.parse(false);
-    }
-    catch (const std::exception& e)
-    {
-        qCDebug(APEX_RS) << "exception: " << e.what();
-        qCDebug(APEX_RS) << "output file: "<< outFile;
-        QFAIL("written xml file could not be validated");
-    }
-    catch (...)
-    {
-        QFAIL(qPrintable(QString("Unknown exception while parsing %1").arg(outFile)));
-    }
-
-    qCDebug(APEX_RS) << "parsed written data2";
-
-    //and verify data
     QVERIFY(*data == *data2);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
-void ApexWritersTest::cleanupTestCase()
-{
-    xercesc::XMLPlatformUtils::Terminate();
-}
-
-//generate standalone binary for the test case
 QTEST_MAIN(ApexWritersTest)

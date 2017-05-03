@@ -39,7 +39,6 @@
 //from libtools
 using namespace apex::stimulus;
 using namespace utils;
-using namespace appcore;
 
 namespace apex
 {
@@ -77,14 +76,14 @@ private Q_SLOTS:
                 continue;
             Q_FOREACH (tUnsignedBoolMap::value_type clipping, clippings) {
                 if (clipping.second) {
-                    emit clippingOccured (true);
+                    Q_EMIT clippingOccured (true);
                     clipped = true;
                     return;
                 }
             }
         }
         if (clipped) {
-            emit clippingOccured (false);
+            Q_EMIT clippingOccured (false);
             clipped = false;
         }
     }
@@ -209,7 +208,7 @@ void CalibrationIO::startOutput()
         d->stimulusOutput->ResumeDevices();
 
         // TODO CALIB this should be a real notification
-        emit playingChanged (true);
+        Q_EMIT playingChanged (true);
     } catch (std::exception &e) {
         QMessageBox::critical (NULL, tr ("Calibration Error"),
                 tr ("Unable to start calibration:\n%1").arg (e.what()));
@@ -224,7 +223,7 @@ void CalibrationIO::stopOutput()
 
 
         // TODO CALIB this should be a real notification
-        emit playingChanged (false);
+        Q_EMIT playingChanged (false);
     } catch (std::exception &e) {
         QMessageBox::critical (NULL, tr ("Calibration Error"),
                 tr ("Unable to stop calibration:\n%1").arg (e.what()));

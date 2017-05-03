@@ -17,18 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXWRITERS_RESULTPARAMETERSWRITER_H_
-#define _EXPORL_SRC_LIB_APEXWRITERS_RESULTPARAMETERSWRITER_H_
+#ifndef _APEX_SRC_LIB_APEXWRITERS_RESULTPARAMETERSWRITER_H_
+#define _APEX_SRC_LIB_APEXWRITERS_RESULTPARAMETERSWRITER_H_
 
 #include "apextools/global.h"
-
-#include "apextools/xml/xercesinclude.h"
-
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMDocument;
-class DOMElement;
-}
 
 namespace apex
 {
@@ -45,21 +37,20 @@ namespace writer
 */
 class APEXWRITERS_EXPORT ResultParametersWriter
 {
-    public:
-        /**
-        *Adds a <result> element to the document.
-        *
-        *@param doc  the document to place the element in
-        *@param data the data to create the element with
-        *
-        *@return the created element
-         */
-        static XERCES_CPP_NAMESPACE::DOMElement* addElement(XERCES_CPP_NAMESPACE::DOMDocument* doc,
-                                      const data::ResultParameters& data);
+public:
+    /**
+     *Adds a <result> element to the document.
+     *
+     *@param doc  the document to place the element in
+     *@param data the data to create the element with
+     *
+     *@return the created element
+     */
+    static QDomElement addElement(QDomDocument *doc,
+            const data::ResultParameters& data);
 };
 
 }
-
 }
 
 #endif

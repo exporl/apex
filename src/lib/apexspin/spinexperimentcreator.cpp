@@ -51,16 +51,7 @@
 
 #include "apextools/apextools.h"
 
-#include "apexwriters/calibrationwriter.h"
-#include "apexwriters/connectionswriter.h"
-#include "apexwriters/correctorwriter.h"
-#include "apexwriters/deviceswriter.h"
 #include "apexwriters/experimentwriter.h"
-#include "apexwriters/filterswriter.h"
-#include "apexwriters/generalparameterswriter.h"
-#include "apexwriters/procedureswriter.h"
-#include "apexwriters/resultparameterswriter.h"
-#include "apexwriters/screenswriter.h"
 
 #include "spinexperimentconstants.h"
 #include "spinexperimentcreator.h"
@@ -140,12 +131,12 @@ apex::data::ExperimentData SpinExperimentCreator::createExperimentData() const
 apex::data::DatablocksData* SpinExperimentCreator::createDatablocksData() const
 {
     apex::data::DatablocksData* data = new apex::data::DatablocksData();
-    data->setPrefix(config.uri_prefix());
+    data->setPrefix(config.prefix());
 
     if (needSilentDatablocks()) {
         apex::data::DatablockData* silent = new apex::data::DatablockData();
         silent->setId(constants::SILENT_DATABLOCK_ID);
-        silent->setUri(constants::SILENT_DATABLOCK_URI);
+        silent->setFile(constants::SILENT_DATABLOCK_FILE);
         silent->setDevice(constants::DEVICE_ID);
 
         data->insert(constants::SILENT_DATABLOCK_ID, silent);
@@ -156,7 +147,7 @@ apex::data::DatablocksData* SpinExperimentCreator::createDatablocksData() const
         apex::data::DatablockData* datablock = new apex::data::DatablockData();
         QString id = datablockId(token.id);
         datablock->setId(id);
-        datablock->setUri(token.uri);
+        datablock->setFile(token.file);
         datablock->setDevice(constants::DEVICE_ID);
 
         data->insert(id, datablock);
@@ -165,7 +156,7 @@ apex::data::DatablocksData* SpinExperimentCreator::createDatablocksData() const
     //create noise datablock
     apex::data::DatablockData* noise = new apex::data::DatablockData();
     noise->setId(constants::NOISE_DATABLOCK_ID);
-    noise->setUri(config.noise(settings.noisematerial()).uri);
+    noise->setFile(config.noise(settings.noisematerial()).file);
     noise->setDevice(constants::DEVICE_ID);
 
     data->insert(constants::NOISE_DATABLOCK_ID, noise);
@@ -755,7 +746,7 @@ apex::data::GeneralParameters* SpinExperimentCreator::createGeneralParameters() 
 
 apex::data::ResultParameters* SpinExperimentCreator::createResultParameters() const
 {
-    apex::data::ResultParameters* data = new apex::data::ResultParameters(0);
+    apex::data::ResultParameters* data = new apex::data::ResultParameters();
     data->setSubject(settings.subjectName());
     data->setShowResultsAfter(settings.showResults());
     data->setResultPage(constants::HTML_PAGE);
@@ -1058,93 +1049,3 @@ unsigned SpinExperimentCreator::numberOfChannels() const
 
     return channels;
 }
-
-
-#if 0
-#ifdef CLEBS_DEBUG
-#include "datablockswriter.h"
-#include "stimuliwriter.h"
-#include <QProcess>
-void SpinExperimentCreator::showResults() const
-{
-    using apex::ApexXMLTools::XMLutils;
-    using namespace xercesc;
-
-    XMLPlatformUtils::Initialize();
-
-    // initialize XML engine
-    DOMImplementation* impl =
-            DOMImplementationRegistry::getDOMImplementation(X("Core"));
-
-    // create new DOM tree
-    DOMDocument* doc = impl->createDocument(X(EXPERIMENT_NAMESPACE), X("apex:apex"), 0);
-
-    QString file = "tmp_result.xml";
-#if 0
-    apex::data::DatablocksData* datablocks = createDatablocksData();
-    apex::data::StimuliData* stimuli = createStimuliData();
-    apex::data::ScreensData* screens = createScreensData();
-    apex::data::ProcedureData* procedure = createProcedureConfig();
-    apex::data::DevicesData* devices = createDevicesData();
-    apex::data::FiltersData* filters = createFiltersData();
-    apex::data::ConnectionsData* connections = createConnectionsData();
-    apex::data::CorrectorData* corrector = createCorrectorData();
-    apex::data::CalibrationData* calibration = createCalibrationData();
-    apex::data::GeneralParameters* genParams = createGeneralParameters();
-    apex::data::ResultParameters* resParams = createResultParameters();
-
-    apex::writer::DatablocksWriter::addElement(doc, *datablocks);
-    apex::writer::StimuliWriter::addElement(doc, *stimuli);
-    apex::writer::ScreensWriter::addElement(doc, *screens, QStringList() << screen());
-    apex::writer::ProceduresWriter::addElement(doc, *procedure);
-    apex::writer::DevicesWriter::addElement(doc, *devices);
-    apex::writer::FiltersWriter::addElement(doc, *filters);
-    apex::writer::ConnectionsWriter::addElement(doc, *connections);
-    apex::writer::CorrectorWriter::addElement(doc, *corrector);
-    apex::writer::CalibrationWriter::addElement(doc, *calibration);
-    apex::writer::GeneralParametersWriter::addElement(doc, *genParams);
-    apex::writer::ResultParametersWriter::addElement(doc, *resParams);
-
-    apex::data::DatablocksData::const_iterator it1;
-    for (it1 = datablocks->begin(); it1 != datablocks->end(); it1++)
-        delete it1.value();
-    delete datablocks;
-
-    delete stimuli;
-
-    std::map<QString, apex::data::Screen*>::const_iterator it2;
-    for (it2 = screens->getScreens().begin(); it2 != screens->getScreens().end(); it2++)
-        delete it2->second;
-    delete screens;
-
-    delete procedure;
-
-    std::map<QString, apex::data::DeviceData*>::const_iterator it3;
-    for (it3 = devices->begin(); it3 != devices->end(); it3++)
-        delete it3->second;
-    delete devices;
-
-    std::map<QString, apex::data::FilterData*>::const_iterator it4;
-    for (it4 = filters->begin(); it4 != filters->end(); it4++)
-        delete it4->second;
-    delete filters;
-
-    delete connections;
-    delete corrector;
-    delete calibration;
-    delete genParams;
-    delete resParams;
-
-    XMLutils::WriteElement(doc->getDocumentElement(), file);
-#endif
-#if 1
-    apex::data::ExperimentData data = createExperimentData();
-    apex::writer::ExperimentWriter::write(data, file, QStringList() << screen());
-#endif
-    QProcess::execute("/usr/bin/kate", QStringList() << file);
-
-    XMLPlatformUtils::Terminate();
-}
-#endif
-#endif
-

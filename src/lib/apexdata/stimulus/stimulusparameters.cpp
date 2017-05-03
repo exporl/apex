@@ -35,3 +35,7 @@ const QMap<QString,QVariant>& StimulusParameters::map() const
     return values;
 }
 
+const QStringList StimulusParameters::names() const
+{
+    return values.keys();
+}

@@ -20,83 +20,65 @@
 #include "apexdata/datablock/datablockdata.h"
 #include "apexdata/datablock/datablocksdata.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "datablockswriter.h"
 #include "fileprefixwriter.h"
 
-#include <QUrl>
-
-using namespace XERCES_CPP_NAMESPACE;
 using namespace apex;
-using namespace apex::ApexXMLTools;
 
 using apex::data::DatablockData;
 using apex::data::DatablocksData;
 using apex::writer::DatablocksWriter;
 
-DOMElement* DatablocksWriter::addElement(DOMDocument* doc, const data::DatablocksData& d)
+QDomElement DatablocksWriter::addElement(QDomDocument *doc,
+        const data::DatablocksData& d)
 {
+    QDomElement rootElem = doc->documentElement();
 
-    DOMElement* rootElem = doc->getDocumentElement();
+    QDomElement datablocks = doc->createElement(QSL("datablocks"));
+    rootElem.appendChild(datablocks);
 
-    DOMElement*  datablocks = doc->createElement(X("datablocks"));
-    rootElem->appendChild(datablocks);
+    QDomElement prefix = FilePrefixWriter().addElement(doc, d.prefix());
 
-    DOMElement* uri_prefix = FilePrefixWriter().addElement(doc, d.prefix());
+    datablocks.appendChild(prefix);
 
-    datablocks->appendChild(uri_prefix);
-
-    for (DatablocksData::const_iterator it = d.begin(); it != d.end(); ++it)
-    {
-        //qCDebug(APEX_RS, "Creating datablock node");
-
-        DOMElement* datablock = doc->createElement(X("datablock"));
-        datablocks->appendChild(datablock);
+    for (DatablocksData::const_iterator it = d.begin(); it != d.end(); ++it) {
+        QDomElement datablock = doc->createElement(QSL("datablock"));
+        datablocks.appendChild(datablock);
 
         DatablockData* d = it.value();
 
-        datablock->setAttribute(X("id"), S2X(d->id()));
+        datablock.setAttribute(QSL("id"), d->id());
 
-        if (!d->device().isEmpty())
-        {
-            datablock->appendChild(
-                XMLutils::CreateTextElement(doc, "device" , d->device()));
+        if (!d->device().isEmpty()) {
+            datablock.appendChild(
+                    XmlUtils::createTextElement(doc, QSL("device"), d->device()));
         }
 
-        if (!d->description().isEmpty())
-        {
-            datablock->appendChild(
-                XMLutils::CreateTextElement(doc, "description" , d->description()));
+        if (!d->description().isEmpty()) {
+            datablock.appendChild(
+                    XmlUtils::createTextElement(doc, QSL("description"), d->description()));
         }
 
-        if (!d->checksum().isEmpty())
-            datablock->appendChild(
-                XMLutils::CreateTextElement(doc, "checksum" , d->checksum()));
+        if (!d->file().isEmpty())
+            datablock.appendChild(
+                    XmlUtils::createTextElement(doc, QSL("file"), d->file()));
 
-         if (!d->uri().isEmpty())
-            datablock->appendChild(
-                        XMLutils::CreateTextElement(doc, "uri" , d->uri().toString().replace(' ', "%20") ));
-
-         if (!d->directData().isEmpty())
-            datablock->appendChild(
-                        doc->importNode(XMLutils::parseString(d->directData()),
-                                        true) );
+        if (!d->directData().isEmpty())
+            datablock.appendChild(
+                    doc->importNode(XmlUtils::parseString(d->directData()).documentElement(), true));
 
         if (d->nbChannels())
-            datablock->appendChild(
-                XMLutils::CreateTextElement(doc, "channels" , d->nbChannels()));
+            datablock.appendChild(
+                    XmlUtils::createTextElement(doc, QSL("channels"), d->nbChannels()));
 
         if (d->nbLoops() != 1)
-            datablock->appendChild(
-                XMLutils::CreateTextElement(doc, "loop" , d->nbLoops()));
-
-
+            datablock.appendChild(
+                    XmlUtils::createTextElement(doc, QSL("loop"), d->nbLoops()));
     }
-
-
 
     return datablocks;
 }
-

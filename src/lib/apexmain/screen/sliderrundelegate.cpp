@@ -85,7 +85,7 @@ void SliderRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
 
 void apex::rundelegates::SliderRunDelegate::sendAnsweredSignal()
 {
-    emit answered( this );
+    Q_EMIT answered( this );
 }
 
 apex::rundelegates::SliderRunDelegate::SliderRunDelegate(

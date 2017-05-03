@@ -1,5 +1,7 @@
-		<screen id="screen" >
-			<gridLayout height="2" width="1" id="main_layout">
-				<!--answerlabel x="1" y="1" id="helplabel"/-->
-
-                <parameterlist x="1" y="1" id="parameterlist">
+		<screen id="screen">
+			<gridLayout height="2" id="main_layout" rowstretch="1,2" width="1">
+				<gridLayout col="1" columnstretch="1,4" height="4" id="parameter_layout" row="1" rowstretch="1,1,2,2" width="2">
+					<label col="1" id="snrlabel" row="1">
+						<text>snr</text>
+					</label>
+					<parameterlabel col="2" id="snr" row="1">

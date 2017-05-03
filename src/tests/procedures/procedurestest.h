@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_TESTS_PROCEDURES_PROCEDURESTEST_H_
-#define _EXPORL_SRC_TESTS_PROCEDURES_PROCEDURESTEST_H_
+#ifndef _APEX_SRC_TESTS_PROCEDURES_PROCEDURESTEST_H_
+#define _APEX_SRC_TESTS_PROCEDURES_PROCEDURESTEST_H_
 
 #include "apexdata/procedure/procedureinterface.h"
 #include "apexdata/procedure/trial.h"

@@ -49,12 +49,12 @@ ScreenElement::~ScreenElement()
 
 const FilePrefix& ScreenElement::prefix() const
 {
-    return uriPrefix;
+    return filePrefix;
 }
 
 void ScreenElement::setPrefix(const FilePrefix& prefix)
 {
-    uriPrefix = prefix;
+    filePrefix = prefix;
 }
 
 ScreenElement* ScreenElement::getParent()
@@ -166,7 +166,7 @@ bool ScreenElement::operator==(const ScreenElement& other) const
             bgcolor == other.bgcolor &&
             style == other.style &&
             disabled == other.disabled &&
-            uriPrefix == other.uriPrefix &&
+            filePrefix == other.filePrefix &&
             shortcuts == other.shortcuts;
     return true;
 }

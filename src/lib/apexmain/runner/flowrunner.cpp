@@ -20,7 +20,7 @@
 #include "flowrunner.h"
 #include "apexdata/experimentdata.h"
 #include "flowapi.h"
-#include "services/accessmanager.h"
+#include "accessmanager.h"
 
 #include <QDebug>
 #include <QWebFrame>
@@ -30,9 +30,9 @@
 
 using namespace apex;
 
-void FlowRunner::select(const QString &path)
+bool FlowRunner::select(const QString &path)
 {
-    emit opened(path);
+    Q_EMIT opened(path);
 
     QTemporaryFile tmpFile;
     QTextStream tmpStream(&tmpFile);
@@ -58,6 +58,8 @@ void FlowRunner::select(const QString &path)
     view->page()->mainFrame()->load(QUrl::fromLocalFile(tmpFile.fileName()));
 
     view->showMaximized();
+
+    return true;
 }
 
 void FlowRunner::selectFromDir(const QString &path)
@@ -68,7 +70,7 @@ void FlowRunner::selectFromDir(const QString &path)
 void FlowRunner::select(data::ExperimentData *data)
 {
     makeInvisible();
-    emit selected(data);
+    Q_EMIT selected(data);
 }
 
 void FlowRunner::makeInvisible()

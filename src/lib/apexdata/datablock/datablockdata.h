@@ -23,7 +23,6 @@
 #include "apextools/global.h"
 
 class QDateTime;
-class QUrl;
 
 namespace apex
 {
@@ -48,12 +47,10 @@ class APEXDATA_EXPORT DatablockData
         //getters
         const QString& id() const;
         const QString& device() const;
-        const QUrl& uri() const;
+        const QString& file() const;
         const QString& description() const;
         const FilePrefix& prefix() const;
         const QString& directData() const;
-        bool doChecksum() const;
-        const QString& checksum() const;
         unsigned nbChannels() const;
         unsigned nbLoops() const;
         double gain() const;
@@ -61,12 +58,10 @@ class APEXDATA_EXPORT DatablockData
         //setters
         void setId(const QString& id);
         void setDevice(const QString& device);
-        void setUri(QUrl url);
+        void setFile(const QString &url);
         void setDescription(const QString& description);
         void setPrefix(const FilePrefix& prefix);
         void setDirectData(const QString& data);
-        void setDoChecksum(bool doChecksum);
-        void setChecksum(const QString& checksum);
         void setNbChannels(unsigned nb);
         void setNbLoops(unsigned nb);
         void setGain(double gain);

@@ -17,6 +17,10 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "common/global.h"
+
+#include "apextools/apexpaths.h"
+
 #include "spincalibrator.h"
 #include "spinconfigfileparser.h"
 #include "spindataenums.h"
@@ -35,13 +39,12 @@
 using namespace spin;
 using namespace spin::gui;
 
-SpinDialog::SpinDialog(QString conf, QString schema) : QWizard(),
-        widgets(new Ui::SpinMainWizard),
-        configFile(conf),
-        schemaFile(schema),
-        dBVal(this),
-        posdBVal(0, 1000, 2, this),
-        uintVal(1, 1000, this)
+SpinDialog::SpinDialog() :
+    QWizard(),
+    widgets(new Ui::SpinMainWizard),
+    dBVal(this),
+    posdBVal(0, 1000, 2, this),
+    uintVal(1, 1000, this)
 {
     readConfig();
     setupUi();
@@ -243,8 +246,7 @@ void SpinDialog::setupDefaults()
 
 void SpinDialog::readConfig()
 {
-        configuration = parser::SpinConfigFileParser::parse(configFile,
-                                                            schemaFile);
+    configuration = parser::SpinConfigFileParser().parse();
 }
 
 void SpinDialog::clearWidgets()

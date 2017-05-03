@@ -1,4 +1,4 @@
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://gilbert.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!--  @doc
    @what: Calibration file needed for experiment SPIN-LIST-vrouw_01-koen-nederlands
    @description: To calibrate the noise for the experiment SPIN-LIST-vrouw_01-koen-nederlands
@@ -67,7 +67,6 @@
       </trial>
     </trials>
   </procedure>
-
   <screens>
     <general>
       <repeatbutton>true</repeatbutton>
@@ -79,109 +78,103 @@
       <feedback>false</feedback>
     </reinforcement>
     <screen id="experimenter_screen">
-
-      <gridLayout height="2" id="main_layout" rowstretch="1,2" width="1">
-        <gridLayout col="1" columnstretch="1,4" height="4" id="parameter_layout" row="1" rowstretch="1,1,2,2" width="2">
-          <label col="1" id="snrlabel" row="1">
+      <gridLayout width="1" height="2" rowstretch="1,2" id="main_layout">
+        <gridLayout width="2" height="4" rowstretch="1,1,2,2" row="1" id="parameter_layout" col="1" columnstretch="1,4">
+          <label row="1" id="snrlabel" col="1">
             <text>snr</text>
-      </label>
-          <parameterlabel col="2" id="snr" row="1">
+          </label>
+          <parameterlabel row="1" id="snr" col="2">
             <parameter>gain</parameter>
-      </parameterlabel>
-          <label col="1" id="sentence" row="2">
+          </parameterlabel>
+          <label row="2" id="sentence" col="1">
             <text>zin</text>
-      </label>
-          <parameterlabel col="2" id="sentence" row="2">
+          </label>
+          <parameterlabel row="2" id="sentence" col="2">
             <parameter>sentence</parameter>
-      </parameterlabel>
-    </gridLayout>
-        <gridLayout col="1" height="1" id="answer_layout" row="2" width="2">
-          <button id="correct" x="1" y="1">
+          </parameterlabel>
+        </gridLayout>
+        <gridLayout width="2" height="1" row="2" id="answer_layout" col="1">
+          <button y="1" id="correct" x="1">
             <text>Correct</text>
-      </button>
-          <button id="wrong" x="2" y="1">
+          </button>
+          <button y="1" id="wrong" x="2">
             <text>Wrong</text>
-      </button>
-    </gridLayout>
-  </gridLayout>
-
+          </button>
+        </gridLayout>
+      </gridLayout>
       <buttongroup id="buttongroup">
         <button id="correct"/>
         <button id="wrong"/>
-  </buttongroup>
-
+      </buttongroup>
       <default_answer_element>buttongroup</default_answer_element>
-
-</screen>  </screens>
-
+    </screen>
+  </screens>
   <datablocks>
-    <uri_prefix source="apexconfig">speechmaterials</uri_prefix>
+    <prefix source="apexconfig">speechmaterials</prefix>
     <datablock id="datablock_LIST_man_jwz10">
       <device>soundcard</device>
-      <uri>dutch/LISTman/jwz10.wav</uri>
+      <file>dutch/LISTman/jwz10.wav</file>
     </datablock>
     <datablock id="datablock_LIST_man_jwz11">
       <device>soundcard</device>
-      <uri>dutch/LISTman/jwz11.wav</uri>
+      <file>dutch/LISTman/jwz11.wav</file>
     </datablock>
     <datablock id="datablock_LIST_man_jwz16">
       <device>soundcard</device>
-      <uri>dutch/LISTman/jwz16.wav</uri>
+      <file>dutch/LISTman/jwz16.wav</file>
     </datablock>
     <datablock id="datablock_LIST_man_jwz17">
       <device>soundcard</device>
-      <uri>dutch/LISTman/jwz17.wav</uri>
+      <file>dutch/LISTman/jwz17.wav</file>
     </datablock>
     <datablock id="datablock_LIST_man_jwz21">
       <device>soundcard</device>
-      <uri>dutch/LISTman/jwz21.wav</uri>
+      <file>dutch/LISTman/jwz21.wav</file>
     </datablock>
     <datablock id="datablock_LIST_man_jwz29">
       <device>soundcard</device>
-      <uri>dutch/LISTman/jwz29.wav</uri>
+      <file>dutch/LISTman/jwz29.wav</file>
     </datablock>
     <datablock id="datablock_LIST_man_jwz320">
       <device>soundcard</device>
-      <uri>dutch/LISTman/jwz320.wav</uri>
+      <file>dutch/LISTman/jwz320.wav</file>
     </datablock>
     <datablock id="datablock_LIST_man_jwz49">
       <device>soundcard</device>
-      <uri>dutch/LISTman/jwz49.wav</uri>
+      <file>dutch/LISTman/jwz49.wav</file>
     </datablock>
     <datablock id="datablock_LIST_man_jwz711">
       <device>soundcard</device>
-      <uri>dutch/LISTman/jwz711.wav</uri>
+      <file>dutch/LISTman/jwz711.wav</file>
     </datablock>
     <datablock id="datablock_LIST_man_jwz88">
       <device>soundcard</device>
-      <uri>dutch/LISTman/jwz88.wav</uri>
+      <file>dutch/LISTman/jwz88.wav</file>
     </datablock>
     <datablock id="datablock_noise">
       <device>soundcard</device>
-      <uri>dutch/LISTman/noise/jwruis.wav</uri>
+      <file>dutch/LISTman/noise/jwruis.wav</file>
     </datablock>
     <datablock id="datablock_silence">
       <device>soundcard</device>
-      <uri>silence:1000</uri>
+      <file>silence:1000</file>
     </datablock>
   </datablocks>
-
   <devices>
     <master>soundcard</master>
     <device id="soundcard" xsi:type="apex:wavDeviceType">
       <driver>asio</driver>
       <card>default</card>
       <channels>4</channels>
-      <gain channel="0" id="gain0">0</gain>
-      <gain channel="1" id="gain1">0</gain>
-      <gain channel="2" id="gain2">0</gain>
-      <gain channel="3" id="gain3">0</gain>
+      <gain id="gain0" channel="0">0</gain>
+      <gain id="gain1" channel="1">0</gain>
+      <gain id="gain2" channel="2">0</gain>
+      <gain id="gain3" channel="3">0</gain>
       <samplerate>44100</samplerate>
       <blocksize>8192</blocksize>
       <padzero>1</padzero>
     </device>
   </devices>
-
   <filters>
     <filter id="amplifier" xsi:type="apex:amplifier">
       <device>soundcard</device>
@@ -224,7 +217,6 @@
       <jump>0</jump>
     </filter>
   </filters>
-
   <stimuli>
     <fixed_parameters>
       <parameter id="sentence"/>
@@ -254,7 +246,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">Hij heeft zijn &lt;b&gt;been&lt;/b&gt; &lt;b&gt;gebroken&lt;/b&gt;</parameter>
+        <parameter id="sentence">Hij heeft zijn &lt;b>been&lt;/b> &lt;b>gebroken&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_man_jwz11">
@@ -266,7 +258,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">Zij &lt;b&gt;droeg&lt;/b&gt; een &lt;b&gt;nieuwe&lt;/b&gt; &lt;b&gt;jas&lt;/b&gt;</parameter>
+        <parameter id="sentence">Zij &lt;b>droeg&lt;/b> een &lt;b>nieuwe&lt;/b> &lt;b>jas&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_man_jwz16">
@@ -278,7 +270,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">&lt;b&gt;Vorig&lt;/b&gt; &lt;b&gt;jaar&lt;/b&gt; heb ik een &lt;b&gt;huis&lt;/b&gt; &lt;b&gt;gekocht&lt;/b&gt;</parameter>
+        <parameter id="sentence">&lt;b>Vorig&lt;/b> &lt;b>jaar&lt;/b> heb ik een &lt;b>huis&lt;/b> &lt;b>gekocht&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_man_jwz17">
@@ -290,7 +282,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">De &lt;b&gt;politie&lt;/b&gt; &lt;u&gt;hield&lt;/u&gt; de &lt;b&gt;automobilist&lt;/b&gt; &lt;u&gt;aan&lt;/u&gt;</parameter>
+        <parameter id="sentence">De &lt;b>politie&lt;/b> &lt;u>hield&lt;/u> de &lt;b>automobilist&lt;/b> &lt;u>aan&lt;/u></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_man_jwz21">
@@ -302,7 +294,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">Het heeft de &lt;b&gt;hele&lt;/b&gt; &lt;b&gt;nacht&lt;/b&gt; &lt;b&gt;gesneeuwd&lt;/b&gt;</parameter>
+        <parameter id="sentence">Het heeft de &lt;b>hele&lt;/b> &lt;b>nacht&lt;/b> &lt;b>gesneeuwd&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_man_jwz29">
@@ -314,7 +306,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">Deze &lt;b&gt;bibliotheek&lt;/b&gt; &lt;b&gt;verhuurt&lt;/b&gt; &lt;b&gt;boeken&lt;/b&gt; en &lt;b&gt;muziek&lt;/b&gt;</parameter>
+        <parameter id="sentence">Deze &lt;b>bibliotheek&lt;/b> &lt;b>verhuurt&lt;/b> &lt;b>boeken&lt;/b> en &lt;b>muziek&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_man_jwz320">
@@ -326,7 +318,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">De &lt;b&gt;buit&lt;/b&gt; is &lt;b&gt;verdeeld&lt;/b&gt;</parameter>
+        <parameter id="sentence">De &lt;b>buit&lt;/b> is &lt;b>verdeeld&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_man_jwz49">
@@ -338,7 +330,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">Hij &lt;b&gt;ligt&lt;/b&gt; &lt;b&gt;zeven&lt;/b&gt; &lt;b&gt;dagen&lt;/b&gt; in het &lt;b&gt;ziekenhuis&lt;/b&gt;</parameter>
+        <parameter id="sentence">Hij &lt;b>ligt&lt;/b> &lt;b>zeven&lt;/b> &lt;b>dagen&lt;/b> in het &lt;b>ziekenhuis&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_man_jwz711">
@@ -350,7 +342,7 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">&lt;b&gt;Melk&lt;/b&gt; is &lt;b&gt;gezond&lt;/b&gt;</parameter>
+        <parameter id="sentence">&lt;b>Melk&lt;/b> is &lt;b>gezond&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
     <stimulus id="stimulus_LIST_man_jwz88">
@@ -362,11 +354,10 @@
         </sequential>
       </datablocks>
       <fixedParameters>
-        <parameter id="sentence">&lt;b&gt;Tijdens&lt;/b&gt; het &lt;b&gt;ongeval&lt;/b&gt; &lt;b&gt;kwamen&lt;/b&gt; &lt;b&gt;drie&lt;/b&gt; &lt;b&gt;mensen&lt;/b&gt; om het &lt;b&gt;leven&lt;/b&gt;</parameter>
+        <parameter id="sentence">&lt;b>Tijdens&lt;/b> het &lt;b>ongeval&lt;/b> &lt;b>kwamen&lt;/b> &lt;b>drie&lt;/b> &lt;b>mensen&lt;/b> om het &lt;b>leven&lt;/b></parameter>
       </fixedParameters>
     </stimulus>
   </stimuli>
-
   <connections>
     <connection>
       <from>
@@ -409,7 +400,6 @@
       </to>
     </connection>
   </connections>
-
   <calibration profile="spin-LISTman_ltass">
     <stimuli>
       <stimulus id="calibrationstimulus"/>
@@ -439,13 +429,10 @@
       </parameter>
     </parameters>
   </calibration>
-
   <results>
     <page>apex:resultviewer.html</page>
   </results>
-
   <general>
     <allowskip>true</allowskip>
   </general>
-
 </apex:apex>

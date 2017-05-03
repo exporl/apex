@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXTOOLS_APEXTOOLS_H_
-#define _EXPORL_SRC_LIB_APEXTOOLS_APEXTOOLS_H_
+#ifndef _APEX_SRC_LIB_APEXTOOLS_APEXTOOLS_H_
+#define _APEX_SRC_LIB_APEXTOOLS_APEXTOOLS_H_
 
 #include "global.h"
 
@@ -27,6 +27,7 @@
 #include <QMap>
 #include <QBitArray>
 #include <QDebug>
+#include <QUuid>
 
 class QString;
 class QWidget;
@@ -58,21 +59,17 @@ class APEXTOOLS_EXPORT ApexTools
         static void connectSlotsByNameToPrivate(QObject *publicObject,
                 QObject *privateObject);
 
+        static QUuid getApexGUID();
         static QString MakeDirEnd(QString);
         static QString addPrefix(const QString& base, const QString& prefix);
         static QString absolutePath(const QString& path);
         static QString boolToString(bool b);
-        /*static int RandomRange(int lowest_number, int highest_number=0);
-        static float RandomRange(double lowest_number, double highest_number=0);
-        static double Randn();*/
         static void InitRand(long seed=-1);
-        //static std::string Q2StdString(const QString& p);
         static bool bQStringToBoolean( const QString& ac_sBoolean );
         static QString removeXmlTags(const QString& str);
         static void milliSleep (unsigned millis);
 
         static void ReplaceCharInString( QString& a_StringToSearch, const QChar& ac_ToReplace, const QString& ac_ReplaceWith );
-        static void ReplaceWhiteSpaceWithNBSP( QString& a_StringToSearch );
         static QString escapeJavascriptString(const QString& s);
 
         /** Returns the maximum font size possible for fitting the string into
@@ -83,22 +80,6 @@ class APEXTOOLS_EXPORT ApexTools
 
         static void shrinkTillItFits (QWidget *widget, const QString &text,
                 const QSize &border);
-
-          /** Find a file with a certain number of possible prefixes and extensions in
-         * different directories. If no existing readable file is found, an empty
-         * string is returned. The current directory as well as the empty prefix and
-         * extension are always included.
-         *
-         * @param baseName base file name that you want to look for
-         * @param directories directories to search
-         * @param extensions possible extensions of the file, the dot before the
-         * extension has to be included, e.g., ".js"
-         * @param prefixes possible prefixes to try
-           */
-        static QString findReadableFile (const QString &baseName,
-                                         const QStringList &directories, const QStringList &extensions = QStringList(),
-                                                 const QStringList &prefixes = QStringList());
-
 
         /*
          * Remove doubles from QStringList
@@ -206,21 +187,6 @@ class APEXTOOLS_EXPORT ApexTools
         {
             return first == second;
         }
-};
-
-
-class APEXTOOLS_EXPORT RandomNumber
-{
-    public:
-
-        RandomNumber()
-        {
-            ApexTools::InitRand();
-        }
-
-        unsigned int operator() (int count);
-
-
 };
 
 }

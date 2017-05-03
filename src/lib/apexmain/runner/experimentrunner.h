@@ -44,8 +44,10 @@ class ExperimentRunner: public QObject
          * Bring the Runner in a usable state. The provided path is the
          * project file/experiment/whatever to open. If called again, it will
          * reset the instance to a virgin internal state.
+         *
+         * Returns false if the experiment could not be loaded successfully.
          */
-        virtual void select(const QString& name) = 0;
+        virtual bool select(const QString& name) = 0;
         /**
          * Bring the Runner in a usable state. The provided path is a suggestion
          * for the runner to use. If called again, it will reset the instance to

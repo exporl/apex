@@ -21,7 +21,6 @@
 
 #include <QMap>
 #include <QStringList>
-#include <QUrl>
 
 #include <cmath>
 #include <sndfile.h>
@@ -35,9 +34,7 @@ class VocoderFilterCreator :
 {
     Q_OBJECT
     Q_INTERFACES (PluginFilterCreator)
-#if QT_VERSION >= 0x050000
     Q_PLUGIN_METADATA(IID "apex.vocoderfilter")
-#endif
 public:
     virtual QStringList availablePlugins() const;
 
@@ -45,18 +42,13 @@ public:
             unsigned channels, unsigned blockSize, unsigned fs) const;
 };
 
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2 (vocoderfilter, VocoderFilterCreator)
-#endif
-
-
 class VocoderFilter:
     public QObject,
     public PluginFilterInterface
 {
     Q_OBJECT
 public:
-    VocoderFilter (unsigned channels, unsigned blockSize, unsigned sampleRate);
+    VocoderFilter(unsigned blockSize, unsigned sampleRate);
     ~VocoderFilter();
 
     virtual void resetParameters();
@@ -70,7 +62,6 @@ public:
     virtual void process (double * const *data);
 
 private:
-    const unsigned channels; // number of channels (mono or stereo)
     int vocoderChannels; // number of channels in vocoder filterbank
     const unsigned blockSize;
     const unsigned sampleRate;
@@ -97,8 +88,7 @@ private:
 
 // VocoderFilter ======================================================
 
-VocoderFilter::VocoderFilter (unsigned channels, unsigned blockSize, unsigned sampleRate) :
-    channels (channels),
+VocoderFilter::VocoderFilter(unsigned blockSize, unsigned sampleRate) :
     blockSize (blockSize),
     sampleRate (sampleRate),
     disabled (false),
@@ -150,17 +140,17 @@ bool VocoderFilter::setParameter (const QString &type, int channel,
         return true;
     }
     if (type == QLatin1String("filterbank") && channel == -1) {
-        filterBankFilename = QUrl (value).path();
+        filterBankFilename = value;
         newParameters = true;
         return true;
     }
     if (type == QLatin1String("lowpass") && channel == -1) {
-        lowpassFilterFilename = QUrl (value).path();
+        lowpassFilterFilename = value;
         newParameters = true;
         return true;
     }
     if (type == QLatin1String("carriers") && channel == -1) {
-        carriersFilename = QUrl (value).path();
+        carriersFilename = value;
         newParameters = true;
         return true;
     }
@@ -292,9 +282,11 @@ PluginFilterInterface *VocoderFilterCreator::createFilter
        (const QString &name, unsigned channels, unsigned size,
         unsigned sampleRate) const
 {
+    Q_UNUSED(channels);
+
     try {
         if (name == "vocoder")
-            return new VocoderFilter (channels, size, sampleRate);
+            return new VocoderFilter (size, sampleRate);
     } catch (...) {
         // Exceptions silently ignored
     }

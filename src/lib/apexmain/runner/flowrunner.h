@@ -29,18 +29,21 @@ namespace apex {
 class FlowRunner : public ExperimentRunner {
     Q_OBJECT
 public:
-    virtual void select(const QString& path);
-    virtual void selectFromDir(const QString& path);
+    virtual bool select(const QString& path) Q_DECL_OVERRIDE;
+    virtual void selectFromDir(const QString& path) Q_DECL_OVERRIDE;
 
-    virtual void makeVisible();
-    virtual void makeInvisible();
+    virtual void makeVisible() Q_DECL_OVERRIDE;
+    virtual void makeInvisible() Q_DECL_OVERRIDE;
+
 public slots:
     virtual void select(data::ExperimentData* data);
+
 signals:
     void errorMessage(const QString& source, const QString& message);
     void setResultsFilePath(const QString& filepath);
     void foundExpressions(const QMap<QString, QString>& expressions);
     void savedFile(const QString& filePath);
+
 private:
     QString path;
     QWebView *view;

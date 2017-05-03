@@ -39,8 +39,10 @@
 #include "apexspin/spinexperimentcreator.h"
 #include "apexspin/spinusersettings.h"
 
-#include "apextools/pathtools.h"
+#include "apextools/apexpaths.h"
 #include "apextools/random.h"
+
+#include "common/testutils.h"
 
 #include "spintest.h"
 
@@ -77,62 +79,55 @@ QString createTempDirectory (const QString prefix=QString())
 #endif
 }
 
-void SpinTest::initTestCase()
-{
-    xercesc::XMLPlatformUtils::Initialize();         // setup XML environment
-}
-
-void SpinTest::cleanupTestCase()
-{
-    xercesc::XMLPlatformUtils::Terminate();
-}
-
 void SpinTest::testSnrDefined()
 {
-    {       // headphones
-    SpinUserSettings s;
-    s.setSpeakerType(HEADPHONE);
-    SpeakerLevels left;
-    left.speech=50;
-    left.hasSpeech=true;
-    left.hasNoise=false;
-    s.addLevels(left, Headphone::LEFT);
-    QCOMPARE(s.snrDefined(), false);
+    TEST_EXCEPTIONS_TRY
 
-    SpeakerLevels right;
-    right.speech=50;
-    right.hasSpeech=true;
-    right.noise=50;
-    right.hasNoise=true;
-    s.addLevels(right, Headphone::RIGHT);
-    QCOMPARE(s.snrDefined(), true);
-    QCOMPARE(s.snr(), 0.0);
+    {       // headphones
+        SpinUserSettings s;
+        s.setSpeakerType(HEADPHONE);
+        SpeakerLevels left;
+        left.speech=50;
+        left.hasSpeech=true;
+        left.hasNoise=false;
+        s.addLevels(left, Headphone::LEFT);
+        QCOMPARE(s.snrDefined(), false);
+
+        SpeakerLevels right;
+        right.speech=50;
+        right.hasSpeech=true;
+        right.noise=50;
+        right.hasNoise=true;
+        s.addLevels(right, Headphone::RIGHT);
+        QCOMPARE(s.snrDefined(), true);
+        QCOMPARE(s.snr(), 0.0);
 
     }
 
     {       // free field
-    SpinUserSettings s;
-    s.setSpeakerType(FREE_FIELD);
+        SpinUserSettings s;
+        s.setSpeakerType(FREE_FIELD);
 
-    SpeakerLevels l;
-    l.hasSpeech=true;
-    l.speech=50;
-    l.hasNoise=false;
-    s.addLevels(l,-90);
-    s.addLevels(l,0);
+        SpeakerLevels l;
+        l.hasSpeech=true;
+        l.speech=50;
+        l.hasNoise=false;
+        s.addLevels(l,-90);
+        s.addLevels(l,0);
 
-    l.hasNoise=true;
-    l.noise=60;
-    s.addLevels(l,90);
-    QCOMPARE(s.snrDefined(), true);
-    QCOMPARE(s.snr(), -5.2287874528);
+        l.hasNoise=true;
+        l.noise=60;
+        s.addLevels(l,90);
+        QCOMPARE(s.snrDefined(), true);
+        QCOMPARE(s.snr(), -5.2287874528);
 
-    l.noise=50;
-    s.addLevels(l,270);
-    QCOMPARE(s.snrDefined(), false);
+        l.noise=50;
+        s.addLevels(l,270);
+        QCOMPARE(s.snrDefined(), false);
 
     }
 
+    TEST_EXCEPTIONS_CATCH
 }
 
 double totalNoiseGain(ExperimentData& d)
@@ -178,16 +173,10 @@ double totalNoiseGain(ExperimentData& d)
 
  void SpinTest::testTotalGain()
  {
-     QDir d( qApp->applicationDirPath() );
-     d.cdUp();
-     d.cdUp();
-     QString basepath(d.path());
-     QString configFile( apex::PathTools::GetConfigFilePath(basepath, "spin.xml"));
-     QString schemaFile(basepath + "/data/schemas/spin.xsd");
+     TEST_EXCEPTIONS_TRY
 
      SpinUserSettings s;
-     SpinConfig configuration =
-         spin::parser::SpinConfigFileParser::parse(configFile, schemaFile);
+     SpinConfig configuration = spin::parser::SpinConfigFileParser().parse();
 
 
      // print available speech materials:
@@ -279,18 +268,15 @@ double totalNoiseGain(ExperimentData& d)
      theDir.remove(expfile);
      QDir::root().rmdir(dir);
 
+     TEST_EXCEPTIONS_CATCH
  }
 
 void SpinTest::testCalibration()
 {
-#if QT_VERSION < 0x050000
-    QSKIP("Skipping calibration test - calibration not implemented", SkipAll);
-#else
-    QSKIP("Skipping calibration test - calibration not implemented");
-#endif
+    TEST_EXCEPTIONS_TRY
 
-    try
-    {
+    QSKIP("Skipping calibration test - calibration not implemented");
+
     apex::CalibrationDatabase db;
 
     //remove everything from the calibration database
@@ -322,16 +308,7 @@ void SpinTest::testCalibration()
     //and a non-spin calibration
     db.calibrate(hwSetup1, profile1, "gain0", target1, output1);
 
-    //get the xml and schema files for spin
-    QDir d(qApp->applicationDirPath());
-    d.cdUp();
-    d.cdUp();
-    QString basepath(d.path());
-    QString configFile(apex::PathTools::GetConfigFilePath(basepath, "spin.xml"));
-    QString schemaFile(basepath + "/data/schemas/spin.xsd");
-
-    SpinConfig config = spin::parser::SpinConfigFileParser::parse(configFile,
-                                                                  schemaFile);
+    SpinConfig config = spin::parser::SpinConfigFileParser().parse();
     SpinUserSettings settings;
     settings.setSpeechmaterial("FrMatrix");
     settings.setNoisematerial("lint_ltass");
@@ -349,36 +326,16 @@ void SpinTest::testCalibration()
 
     bool changesMade;
     calibrator.calibrate(&changesMade);
-    }
-    catch (/*ApexException*/std::exception& e)
-    {
-        qFatal("std::exception: %s", e.what());
-    }
-    catch (int e)
-    {
-        qFatal("Stop throwing ints: %i", e);
-    }
-    catch (const char* e)
-    {
-        qFatal("Please, no chars either: %s", e);
-    }
-    catch (...)
-    {
-        qFatal("something else thrown???");
-    }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void SpinTest::testAdaptiveWithoutNoise()
 {
-    QDir d(qApp->applicationDirPath());
-    d.cdUp(); d.cdUp();
-    QString basepath(d.path());
-    QString configFile(apex::PathTools::GetConfigFilePath(basepath, "spin.xml"));
-    QString schemaFile(basepath + "/data/schemas/spin.xsd");
+    TEST_EXCEPTIONS_TRY
 
     SpinUserSettings s;
-    SpinConfig configuration =
-        spin::parser::SpinConfigFileParser::parse(configFile, schemaFile);
+    SpinConfig configuration = spin::parser::SpinConfigFileParser().parse();
     QString targetSpeechmaterial("LIST");
     QString targetCategory("vrouw");
     QString targetList(configuration.speechmaterials()[targetSpeechmaterial]
@@ -433,19 +390,16 @@ void SpinTest::testAdaptiveWithoutNoise()
     // remove temporary file
     QDir(dir).remove(expfile);
     QDir::root().rmdir(dir);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void SpinTest::testAdaptiveWithNoise()
 {
-    QDir d(qApp->applicationDirPath());
-    d.cdUp(); d.cdUp();
-    QString basepath(d.path());
-    QString configFile(apex::PathTools::GetConfigFilePath(basepath, "spin.xml"));
-    QString schemaFile(basepath + "/data/schemas/spin.xsd");
+    TEST_EXCEPTIONS_TRY
 
     SpinUserSettings s;
-    SpinConfig configuration =
-        spin::parser::SpinConfigFileParser::parse(configFile, schemaFile);
+    SpinConfig configuration = spin::parser::SpinConfigFileParser().parse();
     QString targetSpeechmaterial("LIST");
     QString targetCategory("vrouw");
     QString targetList(configuration.speechmaterials()[targetSpeechmaterial]
@@ -501,19 +455,16 @@ void SpinTest::testAdaptiveWithNoise()
     // remove temporary file
     QDir(dir).remove(expfile);
     QDir::root().rmdir(dir);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void SpinTest::testAdaptiveWithNoiseAdaption()
 {
-    QDir d(qApp->applicationDirPath());
-    d.cdUp(); d.cdUp();
-    QString basepath(d.path());
-    QString configFile(apex::PathTools::GetConfigFilePath(basepath, "spin.xml"));
-    QString schemaFile(basepath + "/data/schemas/spin.xsd");
+    TEST_EXCEPTIONS_TRY
 
     SpinUserSettings s;
-    SpinConfig configuration =
-        spin::parser::SpinConfigFileParser::parse(configFile, schemaFile);
+    SpinConfig configuration = spin::parser::SpinConfigFileParser().parse();
     QString targetSpeechmaterial("LIST");
     QString targetCategory("vrouw");
     QString targetList(configuration.speechmaterials()[targetSpeechmaterial]
@@ -566,6 +517,8 @@ void SpinTest::testAdaptiveWithNoiseAdaption()
     // remove temporary file
     QDir(dir).remove(expfile);
     QDir::root().rmdir(dir);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void SpinTest::testAudioDriver_data()
@@ -591,19 +544,14 @@ void SpinTest::testAudioDriver_data()
 
 void SpinTest::testAudioDriver()
 {
+    TEST_EXCEPTIONS_TRY
+
     QFETCH(unsigned, setting);
     QFETCH(QString, driver);
     QFETCH(unsigned, padzero);
 
-    QDir d(qApp->applicationDirPath());
-    d.cdUp(); d.cdUp();
-    QString basepath(d.path());
-    QString configFile(apex::PathTools::GetConfigFilePath(basepath, "spin.xml"));
-    QString schemaFile(basepath + "/data/schemas/spin.xsd");
-
     SpinUserSettings s;
-    SpinConfig configuration =
-        spin::parser::SpinConfigFileParser::parse(configFile, schemaFile);
+    SpinConfig configuration = spin::parser::SpinConfigFileParser().parse();
     QString targetSpeechmaterial("LIST");
     QString targetCategory("vrouw");
     QString targetList(configuration.speechmaterials()[targetSpeechmaterial]
@@ -655,6 +603,8 @@ void SpinTest::testAudioDriver()
     // remove temporary file
     QDir(dir).remove(expfile);
     QDir::root().rmdir(dir);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 //generate the stand alone test binary

@@ -1,115 +1,115 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1">
+  <!-- @doc
   @what: Interval - select element ok, number 2
   @description:
   @how:
   -->
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <skip>0</skip>
-   <order>random</order>
-   <defaultstandard>standard</defaultstandard>
-   <intervals count="2" select="2">
-    <interval element="ok" number="1"/>
-    <interval element="ok" number="2"/>
-   </intervals>
-   <pause_between_stimuli>500</pause_between_stimuli>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <screen id="screen"/>
-    <stimulus id="stim1"/>
-   </trial>
-   <trial id="trial2">
-    <screen id="screen"/>
-    <stimulus id="stim2"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <general>
-   <repeatbutton>true</repeatbutton>
-  </general>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback>false</feedback>
-  </reinforcement>
-  <screen id="screen">
-   <gridLayout width="1" height="3" id="main_layout">
-    <gridLayout width="4" row="1" height="1" col="1">
-     <label row="1" id="l1" col="1">
-      <text>bad</text>
-     </label>
-     <label row="1" id="l2" col="2">
-      <text>avg</text>
-     </label>
-     <label row="1" id="l3" col="3">
-      <text>good</text>
-     </label>
-    </gridLayout>
-    <slider row="2" id="slider" col="1">
-     <orientation>horizontal</orientation>
-     <min>1</min>
-     <max>10</max>
-    </slider>
-    <gridLayout width="2" row="3" height="1" col="1">
-     <label row="1" id="info" col="1">
-      <text>click if ok</text>
-     </label>
-     <button row="1" id="ok" col="2">
-      <text>OK</text>
-     </button>
-    </gridLayout>
-   </gridLayout>
-   <buttongroup id="buttongroup">
-    <button id="ok"/>
-   </buttongroup>
-   <default_answer_element>buttongroup</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="dbstandard">
-   <device>soundcard</device>
-   <uri>wd1.wav</uri>
-  </datablock>
-  <datablock id="db1">
-   <device>soundcard</device>
-   <uri>wd2.wav</uri>
-  </datablock>
-  <datablock id="db2">
-   <device>soundcard</device>
-   <uri>wd3.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="soundcard" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <filters/>
- <stimuli>
-  <stimulus id="standard">
-   <datablocks>
-    <datablock id="dbstandard"/>
-   </datablocks>
-  </stimulus>
-  <stimulus id="stim1">
-   <datablocks>
-    <datablock id="db1"/>
-   </datablocks>
-  </stimulus>
-  <stimulus id="stim2">
-   <datablocks>
-    <datablock id="db2"/>
-   </datablocks>
-  </stimulus>
- </stimuli>
- <connections/>
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>random</order>
+      <defaultstandard>standard</defaultstandard>
+      <intervals select="2" count="2">
+        <interval element="ok" number="1"/>
+        <interval element="ok" number="2"/>
+      </intervals>
+      <pause_between_stimuli>500</pause_between_stimuli>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <screen id="screen"/>
+        <stimulus id="stim1"/>
+      </trial>
+      <trial id="trial2">
+        <screen id="screen"/>
+        <stimulus id="stim2"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <general>
+      <repeatbutton>true</repeatbutton>
+    </general>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+    <screen id="screen">
+      <gridLayout id="main_layout" height="3" width="1">
+        <gridLayout row="1" height="1" col="1" width="4">
+          <label row="1" id="l1" col="1">
+            <text>bad</text>
+          </label>
+          <label row="1" id="l2" col="2">
+            <text>avg</text>
+          </label>
+          <label row="1" id="l3" col="3">
+            <text>good</text>
+          </label>
+        </gridLayout>
+        <slider row="2" id="slider" col="1">
+          <orientation>horizontal</orientation>
+          <min>1</min>
+          <max>10</max>
+        </slider>
+        <gridLayout row="3" height="1" col="1" width="2">
+          <label row="1" id="info" col="1">
+            <text>click if ok</text>
+          </label>
+          <button row="1" id="ok" col="2">
+            <text>OK</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="ok"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="dbstandard">
+      <device>soundcard</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="db1">
+      <device>soundcard</device>
+      <file>wd2.wav</file>
+    </datablock>
+    <datablock id="db2">
+      <device>soundcard</device>
+      <file>wd3.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="soundcard">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <stimulus id="standard">
+      <datablocks>
+        <datablock id="dbstandard"/>
+      </datablocks>
+    </stimulus>
+    <stimulus id="stim1">
+      <datablocks>
+        <datablock id="db1"/>
+      </datablocks>
+    </stimulus>
+    <stimulus id="stim2">
+      <datablocks>
+        <datablock id="db2"/>
+      </datablocks>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

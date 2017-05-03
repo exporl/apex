@@ -17,25 +17,16 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
 #include "apextools/xml/xmlkeys.h"
+#include "apextools/xml/xmltools.h"
 
 #include "apexparameters.h"
 
 #include <QMap>
 #include <QString>
 
-#ifdef CLEBS_DEBUG
-#include <iostream>
-#endif
-
 using namespace apex::XMLKeys;
-using namespace apex::ApexXMLTools;
 using namespace apex::data;
-using namespace xercesc;
-
-//namespace apex {
 
 ApexParameters::const_iterator::const_iterator(
         const QMap<QString,QString>::const_iterator& it)
@@ -95,50 +86,30 @@ QMap<QString,QString>::const_iterator ApexParameters::end() const
 }
 
 
-ApexParameters::ApexParameters(DOMElement* p_paramElement): m_paramElement(p_paramElement)
+ApexParameters::ApexParameters()
 {
-        //Q_ASSERT(p_paramElement);
 }
-
-bool ApexParameters::Parse(DOMElement* p_paramElement) {
-        if (p_paramElement!=0)
-                m_paramElement=p_paramElement;
-
-        if (m_paramElement==0) {
-                qCDebug(APEX_RS, "ApexParameters::Parse: m_paramElement == NULL");
-                return true;
-        }
-
-        for (DOMNode* currentNode=m_paramElement->getFirstChild(); currentNode!=0; currentNode=currentNode->getNextSibling()) {
-                Q_ASSERT(currentNode);
-                if (currentNode->getNodeType() == DOMNode::ELEMENT_NODE) {
-//                      DOMElement* el = (DOMElement*) currentNode;
-
-                        QString tag   = XMLutils::GetTagName( currentNode );
-                        QString id    = XMLutils::GetAttribute( currentNode, gc_sID );
-                        QString value = XMLutils::GetFirstChildText( currentNode );
-
-                        SetParameter(tag, id, value, (DOMElement*) currentNode);
-                        //insert( tParamMapPair(tag,value) );           // insert in map [ stijn ] removed this, quite redundant
-
-                } else {
-                        Q_ASSERT(0);            // TODO
-                }
-        }
-
-        return true;
-}
-
 
 ApexParameters::~ApexParameters()
 {
-
 }
 
+bool ApexParameters::Parse(const QDomElement &p_paramElement)
+{
+    m_paramElement = p_paramElement;
 
-/*bool ApexParameters::SetParameter(QString& p_name, QString& p_id, QString& p_value) {
-        return true;
-}*/
+    for (QDomElement currentNode = m_paramElement.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        QString tag   = currentNode.tagName();
+        QString id    = currentNode.attribute(gc_sID);
+        QString value = currentNode.text();
+
+        SetParameter(tag, id, value, currentNode);
+    }
+
+    return true;
+}
+
 
 QString ApexParameters::GetParameter( const QString& p_name ) const
 {
@@ -164,5 +135,3 @@ bool ApexParameters::operator==(const ApexParameters& other) const
 {
     return parameters == other.parameters;
 }
-
-//}

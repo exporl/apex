@@ -1,681 +1,681 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment file:///C:/maaike/Apex_110116/schemas/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1">
- <!--  @doc
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!--  @doc
    @what: AM detection
    @description: 3AFC, with feedback, 2-down 1-up procedure, modulation depth is adaptively changed depending on correct/wrong answers. Subjects need to pick one out of three buttons for which a different stimulus was heard.
    @how: adaptiveProcedure, different modulation depths are implemented in different wav-files
   -->
- <procedure xsi:type="apex:adaptiveProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <uniquestandard>false</uniquestandard>
-   <intervals count="3" select="1,2,3">
-    <interval element="button1" number="1"/>
-    <interval element="button2" number="2"/>
-    <interval element="button3" number="3"/>
-   </intervals>
-   <pause_between_stimuli>500</pause_between_stimuli>
-   <nUp>1</nUp>
-   <nDown>2</nDown>
-   <adapt_parameter>freqlabel</adapt_parameter>
-   <start_value>5</start_value>
-   <stop_after_type>reversals</stop_after_type>
-   <stop_after>8</stop_after>
-   <larger_is_easier>false</larger_is_easier>
-   <repeat_first_until_correct>false</repeat_first_until_correct>
-   <stepsizes>
-    <change_after>reversals</change_after>
-    <stepsize begin="0" size="1"/>
-   </stepsizes>
-  </parameters>
-  <trials>
-   <trial id="trial_1">
-    <screen id="screen1"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.794"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.631"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.501"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.398"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.316"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.251"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.2"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.158"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.126"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.1"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0794"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0631"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0501"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0398"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0316"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0251"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.02"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0158"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0126"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.01"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00794"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00631"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00501"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00398"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00316"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00251"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.002"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00158"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00126"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.001"/>
-    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min"/>
-    <standard id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="1000">true</feedback>
-   <feedback_on>clicked</feedback_on>
-   <feedback_picture_positive>juist.PNG</feedback_picture_positive>
-   <feedback_picture_negative>fout.PNG</feedback_picture_negative>
-   <showcurrent>true</showcurrent>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout height="1" id="main_layout" width="3">
-    <button id="button1" x="1" y="1">
-     <text>1</text>
-    </button>
-    <button id="button2" x="2" y="1">
-     <text>2</text>
-    </button>
-    <button id="button3" x="3" y="1">
-     <text>3</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-    <button id="button2"/>
-    <button id="button3"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>AGING_stimuliAM</uri_prefix>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth1">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.794">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.794.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.631">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.631.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.501">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.501.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.398">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.398.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.316">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.316.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.251">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.251.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.2">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.2.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.158">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.158.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.126">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.126.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.1">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.1.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0794">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0794.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0631">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0631.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0501">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0501.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0398">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0398.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0316">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0316.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0251">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0251.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.02">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.02.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0158">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0158.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0126">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0126.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.01">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.01.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00794">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00794.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00631">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00631.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00501">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00501.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00398">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00398.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00316">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00316.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00251">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00251.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.002">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.002.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00158">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00158.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00126">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00126.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.001">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.001.wav</uri>
-  </datablock>
-  <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min">
-   <device>wavdevice</device>
-   <uri>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>asio</driver>
-   <card>default</card>
-   <channels>2</channels>
-   <gain id="cardgain0" channel="0">0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>4096</buffersize>
-   <padzero>1</padzero>
-  </device>
- </devices>
- <filters>
-  <filter id="chan0" xsi:type="apex:amplifier">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <basegain>0</basegain>
-   <gain id="calibchan0">0</gain>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters>
-   <parameter id="freqlabel"/>
-  </fixed_parameters>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth1"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">1</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.794">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.794"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">2</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.631">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.631"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">3</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.501">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.501"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">4</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.398">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.398"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">5</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.316">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.316"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">6</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.251">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.251"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">7</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.2">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.2"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">8</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.158">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.158"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">9</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.126">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.126"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">10</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.1">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.1"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">11</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0794">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0794"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">12</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0631">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0631"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">13</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0501">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0501"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">14</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0398">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0398"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">15</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0316">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0316"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">16</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0251">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0251"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">17</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.02">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.02"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">18</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0158">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0158"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">19</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0126">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0126"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">20</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.01">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.01"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">21</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00794">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00794"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">22</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00631">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00631"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">23</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00501">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00501"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">24</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00398">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00398"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">25</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00316">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00316"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">26</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00251">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00251"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">27</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.002">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.002"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">28</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00158">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00158"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">29</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00126">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00126"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">30</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.001">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.001"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">31</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">0</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">0</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="calibrationstimulus">
-   <datablocks>
-    <sequential>
-     <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="freqlabel">calibration</parameter>
-   </fixedParameters>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>chan0</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>chan0</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
- <calibration profile="calib_AMdetection">
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <uniquestandard>false</uniquestandard>
+      <intervals select="1,2,3" count="3">
+        <interval number="1" element="button1"/>
+        <interval number="2" element="button2"/>
+        <interval number="3" element="button3"/>
+      </intervals>
+      <pause_between_stimuli>500</pause_between_stimuli>
+      <nUp>1</nUp>
+      <nDown>2</nDown>
+      <adapt_parameter>freqlabel</adapt_parameter>
+      <start_value>5</start_value>
+      <stop_after_type>reversals</stop_after_type>
+      <stop_after>8</stop_after>
+      <larger_is_easier>false</larger_is_easier>
+      <repeat_first_until_correct>false</repeat_first_until_correct>
+      <stepsizes>
+        <change_after>reversals</change_after>
+        <stepsize begin="0" size="1"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial_1">
+        <screen id="screen1"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.794"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.631"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.501"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.398"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.316"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.251"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.2"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.158"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.126"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.1"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0794"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0631"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0501"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0398"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0316"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0251"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.02"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0158"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0126"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.01"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00794"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00631"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00501"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00398"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00316"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00251"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.002"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00158"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00126"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.001"/>
+        <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min"/>
+        <standard id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="1000">true</feedback>
+      <feedback_on>clicked</feedback_on>
+      <feedback_picture_positive>juist.PNG</feedback_picture_positive>
+      <feedback_picture_negative>fout.PNG</feedback_picture_negative>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout id="main_layout" height="1" width="3">
+        <button x="1" y="1" id="button1">
+          <text>1</text>
+        </button>
+        <button x="2" y="1" id="button2">
+          <text>2</text>
+        </button>
+        <button x="3" y="1" id="button3">
+          <text>3</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>AGING_stimuliAM</prefix>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth1">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.794">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.794.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.631">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.631.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.501">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.501.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.398">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.398.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.316">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.316.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.251">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.251.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.2">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.2.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.158">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.158.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.126">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.126.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.1">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.1.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0794">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0794.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0631">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0631.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0501">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0501.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0398">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0398.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0316">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0316.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0251">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0251.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.02">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.02.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0158">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0158.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0126">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0126.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.01">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.01.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00794">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00794.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00631">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00631.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00501">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00501.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00398">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00398.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00316">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00316.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00251">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00251.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.002">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.002.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00158">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00158.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00126">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00126.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.001">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.001.wav</file>
+    </datablock>
+    <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min">
+      <device>wavdevice</device>
+      <file>Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>asio</driver>
+      <card>default</card>
+      <channels>2</channels>
+      <gain channel="0" id="cardgain0">0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>4096</buffersize>
+      <padzero>1</padzero>
+    </device>
+  </devices>
+  <filters>
+    <filter id="chan0" xsi:type="apex:amplifier">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <gain id="calibchan0">0</gain>
+    </filter>
+  </filters>
   <stimuli>
-   <stimulus id="calibrationstimulus"/>
+    <fixed_parameters>
+      <parameter id="freqlabel"/>
+    </fixed_parameters>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth1"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">1</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.794">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.794"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">2</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.631">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.631"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">3</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.501">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.501"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">4</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.398">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.398"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">5</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.316">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.316"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">6</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.251">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.251"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">7</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.2">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.2"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">8</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.158">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.158"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">9</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.126">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.126"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">10</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.1">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.1"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">11</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0794">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0794"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">12</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0631">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0631"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">13</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0501">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0501"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">14</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0398">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0398"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">15</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0316">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0316"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">16</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0251">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0251"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">17</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.02">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.02"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">18</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0158">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0158"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">19</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0126">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.0126"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">20</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.01">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.01"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">21</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00794">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00794"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">22</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00631">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00631"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">23</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00501">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00501"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">24</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00398">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00398"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">25</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00316">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00316"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">26</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00251">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00251"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">27</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.002">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.002"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">28</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00158">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00158"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">29</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00126">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.00126"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">30</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.001">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0.001"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">31</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth0">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth0"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">0</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="Nband_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">0</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="calibrationstimulus">
+      <datablocks>
+        <sequential>
+          <datablock id="datablock_1oct_Fc1000Hz_Fmod4Hz_Moddepth1_10min"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="freqlabel">calibration</parameter>
+      </fixedParameters>
+    </stimulus>
   </stimuli>
-  <parameters>
-   <parameter id="calibchan0">
-    <targetamplitude>70</targetamplitude>
-    <mute>-150</mute>
-   </parameter>
-  </parameters>
- </calibration>
- <results>
-  <page>apex:resultviewer.html</page>
-  <resultparameters>
-   <parameter name="reversals for mean">4</parameter>
-  </resultparameters>
-  <showduringexperiment>false</showduringexperiment>
-  <showafterexperiment>true</showafterexperiment>
-  <saveprocessedresults>true</saveprocessedresults>
- </results>
- <general>
-  <exitafter>true</exitafter>
-  <waitforstart>false</waitforstart>
-  <allowskip>true</allowskip>
- </general>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>chan0</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>chan0</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+  <calibration profile="calib_AMdetection">
+    <stimuli>
+      <stimulus id="calibrationstimulus"/>
+    </stimuli>
+    <parameters>
+      <parameter id="calibchan0">
+        <targetamplitude>70</targetamplitude>
+        <mute>-150</mute>
+      </parameter>
+    </parameters>
+  </calibration>
+  <results>
+    <page>apex:resultviewer.html</page>
+    <resultparameters>
+      <parameter name="reversals for mean">4</parameter>
+    </resultparameters>
+    <showduringexperiment>false</showduringexperiment>
+    <showafterexperiment>true</showafterexperiment>
+    <saveprocessedresults>true</saveprocessedresults>
+  </results>
+  <general>
+    <exitafter>true</exitafter>
+    <waitforstart>false</waitforstart>
+    <allowskip>true</allowskip>
+  </general>
 </apex:apex>

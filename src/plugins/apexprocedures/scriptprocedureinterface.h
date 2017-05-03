@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREINTERFACE_H_
-#define _EXPORL_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREINTERFACE_H_
+#ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREINTERFACE_H_
+#define _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDUREINTERFACE_H_
 
 #include "apexdata/procedure/procedureinterface.h"
 #include "apexdata/procedure/trial.h"
@@ -67,11 +67,6 @@ class ScriptProcedureInterface: public QObject, public QScriptable {
         virtual const QString resultXml() const  {
             ShowError("Error: resultXml should be implemented in Script procedure");
              return QString();
-        }
-
-        virtual const QString progress() const  {
-            ShowError("Error: progress should be implemented in Script procedure");
-            return QString();
         }
 
         virtual apex::ResultHighlight processResult (const apex::ScreenResult*) const {

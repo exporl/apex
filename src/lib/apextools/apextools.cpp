@@ -17,11 +17,14 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "common/paths.h"
+
+#include "apexpaths.h"
 #include "apexrandom.h"
 #include "apextools.h"
 #include "exceptions.h"
-#include "services/paths.h"
 
+#include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
 #include <QFileInfo>
@@ -29,12 +32,13 @@
 #include <QFontMetrics>
 #include <QMetaMethod>
 #include <QScriptEngine>
+#include <QSettings>
 #include <QSize>
 #include <QString>
+#include <QThread>
 #include <QUrl>
 #include <QVariant>
 #include <QWidget>
-#include <QThread>
 
 #include <algorithm>
 #include <cmath>
@@ -48,6 +52,8 @@
 #include <unistd.h>
 #endif
 
+using namespace cmn;
+
 namespace apex {
 
 // copied and modified from qobject.cpp
@@ -59,11 +65,7 @@ void ApexTools::connectSlotsByNameToPrivate(QObject *publicObject, QObject *priv
     Q_ASSERT(mo);
     const QObjectList list = publicObject->findChildren<QObject*>(QString());
     for (int i = 0; i < mo->methodCount(); ++i) {
-#if QT_VERSION < 0x050000
-        const char *slot = mo->method(i).signature();
-#else
         const char *slot = mo->method(i).methodSignature();
-#endif
         Q_ASSERT(slot);
         if (slot[0] != 'o' || slot[1] != 'n' || slot[2] != '_')
             continue;
@@ -82,11 +84,7 @@ void ApexTools::connectSlotsByNameToPrivate(QObject *publicObject, QObject *priv
                 for (int k = 0; k < co->metaObject()->methodCount(); ++k) {
                     if (smo->method(k).methodType() != QMetaMethod::Signal)
                         continue;
-#if QT_VERSION < 0x050000
-                    const char *smoSignature = smo->method(k).signature();
-#else
                     const char *smoSignature = smo->method(k).methodSignature();
-#endif
                     if (!qstrncmp(smoSignature, slot + len + 4,
                                 slotlen)) {
                         sigIndex = k;
@@ -128,20 +126,12 @@ QString ApexTools::MakeDirEnd(QString p_path) {
 
 }
 
-QString ApexTools::addPrefix(const QString& base, const QString& prefix)
+QString ApexTools::addPrefix(const QString& file, const QString& prefix)
 {
-    QString result;
-
-        if (prefix.isEmpty())
-                return base;
-
-    QUrl theUrl(base);
-    if (theUrl.isRelative())
-        result = ApexTools::MakeDirEnd(prefix) + base;
-    else
-        result = base;
-
-    return result;
+    // assets: and silence: are possible schemes
+    if (!QUrl(file).scheme().isEmpty())
+        return file;
+    return QFileInfo(prefix, file).filePath();
 }
 
 
@@ -173,91 +163,6 @@ void ApexTools::milliSleep (unsigned millis)
 #endif
 }
 
-/**
- * Generate a random number between lowest_number and highest_number.
- *
- * Generate a random number between lowest_number and highest_number using the standard random() function. srand is performed once automatically
- * @param lowest_number
- * @param highest_number
- * @return lowest_number<=int<=highest_number
- */
-/*int ApexTools::RandomRange(int lowest_number, int highest_number)
-{
-        InitRand();
-
-        if(lowest_number > highest_number){
-                std::swap(lowest_number, highest_number);
-        }
-
-        int range = highest_number - lowest_number;
-        //return lowest_number + int(range * rand()/(RAND_MAX + 1.0));
-
-        int result=(int) (ran1()*(range+1) + lowest_number);
-        Q_ASSERT(result>=lowest_number);
-        Q_ASSERT(result<=highest_number);
-
-        return result;
-}*/
-
-/**
- * Generate a uniform float random number between lowest_number and highest_number.
- *
- * Generate a random number between lowest_number and highest_number using the standard random() function. srand is performed once automatically
- * @param lowest_number
- * @param highest_number
- * @return
- */
-/*float ApexTools::RandomRange(double lowest_number, double highest_number) {
-        // FIXME: meer bits gebruiken?
-
-        InitRand();
-
-        if(lowest_number > highest_number){
-                std::swap(lowest_number, highest_number);
-        }
-
-        float result, rand_zero_to_one;
-
-        //rand_zero_to_one = (double) rand()/RAND_MAX; //random number between zero and one
-        rand_zero_to_one=ran1();
-
-        result = (highest_number - lowest_number)*rand_zero_to_one + lowest_number;
-
-        return result;
-}*/
-
-
-/**
- * Generate a gaussian double random number with sigma and mu
- *
- * Generate a random number between lowest_number and highest_number using the standard random() function. srand is performed once automatically
- * @param lowest_number
- * @param highest_number
- * @return
- */
-/*double ApexTools::GaussRandomRange(double mu, double sigma) {
-        // FIXME: meer bits gebruiken?
-
-        if (!srandDone) {
-                InitRand();
-        }
-
-        if(lowest_number > highest_number){
-                std::swap(lowest_number, highest_number);               // FIXME geen pointers->kan dit werken?
-        }
-
-        double result, rand_zero_to_one;
-
-        rand_zero_to_one = (double) rand()/RAND_MAX; //random number between zero and one
-
-        result = (highest_number - lowest_number)*rand_zero_to_one + lowest_number;
-
-        return result;
-} */
-
-
-//bool ApexTools::srandDone = false;
-
 void ApexTools::InitRand(long seed) {
     static bool srandDone=false;
     if (!srandDone) {
@@ -271,45 +176,6 @@ void ApexTools::InitRand(long seed) {
 }
 
 
-unsigned int RandomNumber::operator() (int count)
-{
-        return unsigned(count*(rand()/(RAND_MAX + 1.0)));
-}
-
-/**
- * Return random number, normally distributed
- * Numbers are generated in pairs, but returned one by one
- * Cfr Numerical Recipes in C
- * @return
- */
-/*double ApexTools::Randn( )
-{
-    static int iset=0;
-    static double gset;
-    double fac,rsq,v1,v2;
-
-    if (iset==0) {
-        do {
-            v1=2.0*ran1()-1.0;
-            v2=2.0*ran1()-1.0;
-            rsq=v1*v1+v2*v2;
-        } while (rsq>=1.0 || rsq ==0.0);
-        fac=sqrt(-2.0*log(rsq)/rsq);
-        gset=v1*fac;
-        iset=1;
-        return v2*fac;
-    } else {
-        iset=0;
-        return gset;
-    }
-}*/
-
-
-/*std::string ApexTools::Q2StdString(const QString & p )
-{
-  return p.toStdString();
-}*/
-
 void ApexTools::ReplaceCharInString( QString& a_StringToSearch, const QChar& ac_ToReplace, const QString& ac_ReplaceWith )
 {
   const unsigned nLen = a_StringToSearch.length();
@@ -322,16 +188,6 @@ void ApexTools::ReplaceCharInString( QString& a_StringToSearch, const QChar& ac_
       i += ac_ReplaceWith.length();
     }
   }
-}
-
-void ApexTools::ReplaceWhiteSpaceWithNBSP( QString& a_StringToSearch )
-{
-//  const unsigned nLen = a_StringToSearch.length();
-  const QString s( " " );
-  const QChar p( *s.toLatin1() );
-  const QString sNBSP( "%20" );
-
-  ReplaceCharInString( a_StringToSearch, p, sNBSP );
 }
 
 QString ApexTools::escapeJavascriptString (const QString &text)
@@ -388,31 +244,6 @@ void ApexTools::shrinkTillItFits (QWidget *widget, const QString &text,
         font.setPointSize (fontSize);
         widget->setFont (font);
     }
-}
-
-
-QString ApexTools::findReadableFile (const QString &baseName,
-                                     const QStringList &directories, const QStringList &extensions,
-                                     const QStringList &prefixes)
-{
-    QFileInfo fileInfo;
-    Q_FOREACH (const QString &directory,
-               QStringList (directories) << QString()) {
-        Q_FOREACH (const QString &extension,
-                   QStringList (extensions) << QString()) {
-            Q_FOREACH (const QString &prefix,
-                       QStringList (prefixes) << QString()) {
-                fileInfo.setFile (QDir (directory
-                                       ), prefix + baseName + extension);
-                /*qCDebug(APEX_RS, "Trying %s",
-                                                 qPrintable(directory+"/"+prefix + baseName + extension));*/
-                if (fileInfo.exists() && fileInfo.isFile() &&
-                        fileInfo.isReadable())
-                    return fileInfo.filePath();
-            }
-        }
-    }
-    return QString();
 }
 
 QScriptValue ApexTools::QVariant2ScriptValue(QScriptEngine *e, QVariant var)
@@ -473,7 +304,7 @@ QStringList ApexTools::toStringList(const QList<int> intList)
 }
 
 QString ApexTools::fetchVersion() {
-    QFile commitFile(Paths::Get().GetDocPath() + QLatin1String("commit.txt"));
+    QFile commitFile(Paths::searchFile(QL1S("doc/commit.txt"), Paths::dataDirectories()));
     QString version;
     if (commitFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QString diffstat = QString::fromLocal8Bit(commitFile.readAll());
@@ -489,7 +320,7 @@ QString ApexTools::fetchVersion() {
 }
 
 QString ApexTools::fetchDiffstat() {
-    QFile commitFile(Paths::Get().GetDocPath() + QLatin1String("commit.txt"));
+    QFile commitFile(Paths::searchFile(QL1S("doc/commit.txt"), Paths::dataDirectories()));
     QString diffstat;
     if (commitFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         diffstat = QString::fromLocal8Bit(commitFile.readAll());
@@ -498,4 +329,19 @@ QString ApexTools::fetchDiffstat() {
     return diffstat;
 }
 
+QUuid ApexTools::getApexGUID()
+{
+    QCoreApplication::setApplicationName(applicationName);
+    QCoreApplication::setOrganizationName(organizationName);
+    QCoreApplication::setOrganizationDomain(organizationDomain);
+
+    QSettings settings;
+    if (settings.contains(QSL("GUID"))) {
+        return settings.value(QSL("GUID")).toUuid();
+    } else {
+        QUuid guid = QUuid::createUuid();
+        settings.setValue(QSL("GUID"), guid);
+        return guid;
+    }
+}
 }

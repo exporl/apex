@@ -49,7 +49,7 @@ signals:
 
 private slots:
     virtual void Activated()
-    { emit Activated( QAction::text() ); }
+    { Q_EMIT Activated( QAction::text() ); }
 };
 
 /**

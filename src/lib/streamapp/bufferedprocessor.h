@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __STR_BUFFEREDPROCESSOR_H__
-#define __STR_BUFFEREDPROCESSOR_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_BUFFEREDPROCESSOR_H__
+#define _APEX_SRC_LIB_STREAMAPP_BUFFEREDPROCESSOR_H__
 
 #include "stream.h"
 #include "appcore/threads/criticalsection.h"
@@ -181,4 +181,4 @@ namespace streamapp
 
 }
 
-#endif //#ifndef __STR_BUFFEREDPROCESSOR_H__
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_BUFFEREDPROCESSOR_H__

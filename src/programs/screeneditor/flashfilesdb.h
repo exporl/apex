@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_PROGRAMS_SCREENEDITOR_FLASHFILESDB_H_
-#define _EXPORL_SRC_PROGRAMS_SCREENEDITOR_FLASHFILESDB_H_
+#ifndef _APEX_SRC_PROGRAMS_SCREENEDITOR_FLASHFILESDB_H_
+#define _APEX_SRC_PROGRAMS_SCREENEDITOR_FLASHFILESDB_H_
 
 #include <vector>
 #include <QString>

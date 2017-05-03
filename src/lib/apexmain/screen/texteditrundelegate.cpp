@@ -89,7 +89,7 @@ const QString TextEditRunDelegate::getText() const
 
 void TextEditRunDelegate::sendAnsweredSignal()
 {
-    emit answered( this );
+    Q_EMIT answered( this );
 }
 
 void TextEditRunDelegate::setText( const QString& t )

@@ -31,8 +31,8 @@ using namespace apex::gui;
 void ApexScreen::iAnswered(const ScreenResult* result) {
     qCDebug(APEX_RS, "***iAnswered");
     m_lastResult = *result;
-    ApexControl::Get().GetMainWnd()->EnableScreen(false);
-    emit( Answered(result));
+    ApexControl::Get().mainWindow()->EnableScreen(false);
+    Q_EMIT( Answered(result));
 }
 
 QString apex::ApexScreen::GetResultXML( ) const

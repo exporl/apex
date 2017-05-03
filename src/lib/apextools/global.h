@@ -16,90 +16,69 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXTOOLS_GLOBAL_H_
-#define _EXPORL_SRC_LIB_APEXTOOLS_GLOBAL_H_
+#ifndef _APEX_SRC_LIB_APEXTOOLS_GLOBAL_H_
+#define _APEX_SRC_LIB_APEXTOOLS_GLOBAL_H_
+
+#include "common/global.h"
 
 #include <QLoggingCategory>
 #include <QString>
 
 #include <QtGlobal>
 
-namespace apex {
-    const QString applicationName(QLatin1String("APEX"));
-    const QString organizationName(QLatin1String("ExpORL"));
-    const QString organizationDomain(QLatin1String("exporl.med.kuleuven.be"));
+namespace apex
+{
+const QString applicationName = QSL("APEX");
+const QString organizationName = QSL("ExpORL");
+const QString organizationDomain = QSL("exporl.med.kuleuven.be");
 }
 
-#define GCC_VERSION (__GNUC__ * 100                                         \
-                   + __GNUC_MINOR__ * 10                                    \
-                   + __GNUC_PATCHLEVEL)
-
-#if defined (Q_CC_MSVC) || defined (Q_OS_WIN32)
-    #define APEX_EXPORT_DECL __declspec (dllexport)
-    #define APEX_IMPORT_DECL __declspec (dllimport)
-#else
-    // Test for GCC >= 4.0.0
-    #if GCC_VERSION >= 400
-        #define APEX_EXPORT_DECL __attribute__ ((visibility ("default")))
-        #define APEX_IMPORT_DECL
-    #else
-        #define APEX_EXPORT_DECL
-        #define APEX_IMPORT_DECL
-    #endif
-#endif
-
-#if defined (Q_CC_MSVC)
-    #define DECLARE_DEPRECATED __declspec (deprecated)
-#else
-    #define DECLARE_DEPRECATED __attribute__ ((__deprecated__))
-#endif
-
 #ifdef APEX_MAKEDLL
-    #define APEX_EXPORT APEX_EXPORT_DECL
+    #define APEX_EXPORT Q_DECL_EXPORT
 #else
-    #define APEX_EXPORT APEX_IMPORT_DECL
+    #define APEX_EXPORT Q_DECL_IMPORT
 #endif
 
 #ifdef APEXWRITERS_MAKEDLL
-#define APEXWRITERS_EXPORT APEX_EXPORT_DECL
+#define APEXWRITERS_EXPORT Q_DECL_EXPORT
 #else
-#define APEXWRITERS_EXPORT APEX_IMPORT_DECL
+#define APEXWRITERS_EXPORT Q_DECL_IMPORT
 #endif
 
 #ifdef APEXDATA_MAKEDLL
-#define APEXDATA_EXPORT APEX_EXPORT_DECL
+#define APEXDATA_EXPORT Q_DECL_EXPORT
 #else
-#define APEXDATA_EXPORT APEX_IMPORT_DECL
+#define APEXDATA_EXPORT Q_DECL_IMPORT
 #endif
 
 #ifdef APEXPARSERS_MAKEDLL
-#define APEXPARSERS_EXPORT APEX_EXPORT_DECL
+#define APEXPARSERS_EXPORT Q_DECL_EXPORT
 #else
-#define APEXPARSERS_EXPORT APEX_IMPORT_DECL
+#define APEXPARSERS_EXPORT Q_DECL_IMPORT
 #endif
 
 #ifdef APEXTOOLS_MAKEDLL
-#define APEXTOOLS_EXPORT APEX_EXPORT_DECL
+#define APEXTOOLS_EXPORT Q_DECL_EXPORT
 #else
-#define APEXTOOLS_EXPORT APEX_IMPORT_DECL
+#define APEXTOOLS_EXPORT Q_DECL_IMPORT
 #endif
 
 #ifdef APEXSPIN_MAKEDLL
-#define APEXSPIN_EXPORT APEX_EXPORT_DECL
+#define APEXSPIN_EXPORT Q_DECL_EXPORT
 #else
-#define APEXSPIN_EXPORT APEX_IMPORT_DECL
+#define APEXSPIN_EXPORT Q_DECL_IMPORT
 #endif
 
 #ifdef PSIGNIFIT_MAKEDLL
-#define PSIGNIFIT_EXPORT APEX_EXPORT_DECL
+#define PSIGNIFIT_EXPORT Q_DECL_EXPORT
 #else
-#define PSIGNIFIT_EXPORT APEX_IMPORT_DECL
+#define PSIGNIFIT_EXPORT Q_DECL_IMPORT
 #endif
 
 #ifdef CALIBRATIONADMIN_MAKEDLL
-#define CALIBRATIONADMIN_EXPORT APEX_EXPORT_DECL
+#define CALIBRATIONADMIN_EXPORT Q_DECL_EXPORT
 #else
-#define CALIBRATIONADMIN_EXPORT APEX_IMPORT_DECL
+#define CALIBRATIONADMIN_EXPORT Q_DECL_IMPORT
 #endif
 
 /**
@@ -169,22 +148,6 @@ namespace apex {
 
 // Q_DECLARE_LOGGING_CATEGORY
 extern APEXTOOLS_EXPORT const QLoggingCategory &APEX_RS();
-
-// TODO: workaround for missing defines on Qt 5.2, remove after switch to 16.04 LTS
-#if QT_VERSION < 0x050300
-#undef qCDebug
-#define qCDebug(category, ...) \
-    for (bool qt_category_enabled = category().isDebugEnabled(); qt_category_enabled; qt_category_enabled = false) \
-        QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO, category().categoryName()).debug(__VA_ARGS__)
-#undef qCWarning
-#define qCWarning(category, ...) \
-    for (bool qt_category_enabled = category().isWarningEnabled(); qt_category_enabled; qt_category_enabled = false) \
-        QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO, category().categoryName()).warning(__VA_ARGS__)
-#undef qCCritical
-#define qCCritical(category, ...) \
-    for (bool qt_category_enabled = category().isCriticalEnabled(); qt_category_enabled; qt_category_enabled = false) \
-        QMessageLogger(__FILE__, __LINE__, Q_FUNC_INFO, category().categoryName()).critical(__VA_ARGS__)
-#endif
 
 #endif
 

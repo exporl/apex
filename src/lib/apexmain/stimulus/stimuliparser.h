@@ -20,9 +20,6 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_STIMULIPARSER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_STIMULUS_STIMULIPARSER_H_
 
-#include "parser/apexparser.h"
-
-
 class QWidget;
 
 namespace apex
@@ -35,44 +32,28 @@ struct StimulusDatablocksContainer;
 class StimulusParameters;
 }
 
-
-
 namespace parser
 {
 
-
-class APEX_EXPORT StimuliParser:
-            public Parser
+class APEX_EXPORT StimuliParser
 {
-    public:
-        StimuliParser(QWidget* parent = 0);
+public:
+    StimuliParser(QWidget* parent = 0);
 
+    void Parse(const QString &fileName, const QDomElement &p_base,
+               data::StimuliData *c, const QString &scriptLibraryFile,
+               const QVariantMap &scriptParameters);
 
-        void Parse(XERCES_CPP_NAMESPACE::DOMElement* p_base,
-                   data::StimuliData* c,
-                   QString scriptLibraryFile,
-                   const QVariantMap& scriptParameters);
+private:
+    void ParseStimulus(const QDomElement &p_base);
+    data::StimulusParameters CreateStimulusParameters(const QDomElement &a_pBase);
+    data::StimulusDatablocksContainer CreateDatablocksContainer(const QDomElement &data);
 
-
-    private:
-        void ParseStimulus(XERCES_CPP_NAMESPACE::DOMElement* p_base);
-        data::StimulusParameters CreateStimulusParameters(
-            XERCES_CPP_NAMESPACE::DOMElement * a_pBase);
-        data::StimulusDatablocksContainer CreateDatablocksContainer(
-                XERCES_CPP_NAMESPACE::DOMElement* data);
-
-
-        data::StimuliData* currentData;
-        QWidget* m_parent;
-
+    data::StimuliData* currentData;
+    QWidget* m_parent;
 };
 
-
 }
 }
-
-
-
-
 
 #endif

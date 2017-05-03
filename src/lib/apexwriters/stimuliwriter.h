@@ -17,20 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXWRITERS_STIMULIWRITER_H_
-#define _EXPORL_SRC_LIB_APEXWRITERS_STIMULIWRITER_H_
+#ifndef _APEX_SRC_LIB_APEXWRITERS_STIMULIWRITER_H_
+#define _APEX_SRC_LIB_APEXWRITERS_STIMULIWRITER_H_
 
 #include "apextools/global.h"
 
-#include "apextools/xml/xercesinclude.h"
-
 class QStringList;
-
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMDocument;
-class DOMElement;
-}
 
 namespace apex
 {
@@ -50,23 +42,19 @@ namespace writer
  */
 class APEXWRITERS_EXPORT StimuliWriter
 {
-    public:
+public:
+    static QDomElement addElement(QDomDocument *doc, const data::StimuliData &data);
 
-        static XERCES_CPP_NAMESPACE::DOMElement *addElement(XERCES_CPP_NAMESPACE::DOMDocument *doc, const data::StimuliData &data);
-
-    private:
-
-        static XERCES_CPP_NAMESPACE::DOMElement *addFixedParameters(XERCES_CPP_NAMESPACE::DOMDocument *doc, const QStringList& params);
-        static XERCES_CPP_NAMESPACE::DOMElement *addStimulus(XERCES_CPP_NAMESPACE::DOMDocument *doc, const data::StimulusData& data);
-        static XERCES_CPP_NAMESPACE::DOMElement *addDatablocks(XERCES_CPP_NAMESPACE::DOMDocument *doc,
-                                  const data::StimulusDatablocksContainer& data);
-        static XERCES_CPP_NAMESPACE::DOMElement *addParameters(XERCES_CPP_NAMESPACE::DOMDocument *doc,
-                                  const data::StimulusParameters& params,
-                                  const QString& name);
+private:
+    static QDomElement addFixedParameters(QDomDocument *doc, const QStringList& params);
+    static QDomElement addStimulus(QDomDocument *doc, const data::StimulusData& data);
+    static QDomElement addDatablocks(QDomDocument *doc,
+            const data::StimulusDatablocksContainer& data);
+    static QDomElement addParameters(QDomDocument *doc,
+            const data::StimulusParameters& params, const QString& name);
 };
 
-}// ns writer
-
-}// ns apex
+}
+}
 
 #endif

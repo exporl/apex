@@ -17,11 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_PLUGINS_APEXPROCEDURES_ADAPTIVEPROCEDUREPARSER_H_
-#define _EXPORL_SRC_PLUGINS_APEXPROCEDURES_ADAPTIVEPROCEDUREPARSER_H_
+#ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_ADAPTIVEPROCEDUREPARSER_H_
+#define _APEX_SRC_PLUGINS_APEXPROCEDURES_ADAPTIVEPROCEDUREPARSER_H_
+
+#include "apextools/xml/xmltools.h"
 
 #include "procedureparsersparent.h"
-
 
 namespace apex
 {
@@ -31,28 +32,19 @@ class ProcedureData;
 namespace parser
 {
 
-
 class AdaptiveProcedureParser : public ProcedureParsersParent
 {
-    public:
-        AdaptiveProcedureParser();
+public:
+    AdaptiveProcedureParser();
 
+    virtual data::ProcedureData* parse(const QDomElement &base) Q_DECL_OVERRIDE;
 
-        data::ProcedureData* parse(XERCES_CPP_NAMESPACE::DOMElement* base);
-
-
-
-    protected:
-        virtual bool trialsValid();
-
-        virtual void SetProcedureParameters(
-            XERCES_CPP_NAMESPACE::DOMElement* p_base);
-
+protected:
+    virtual bool trialsValid() Q_DECL_OVERRIDE;
+    virtual void SetProcedureParameters(const QDomElement &p_base) Q_DECL_OVERRIDE;
 };
 
-
 }
 }
-
 
 #endif

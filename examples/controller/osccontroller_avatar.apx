@@ -1,0 +1,334 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!--
+  Regression test for osc controller
+
+  Result: parameters are sent to osc, they can be inspected with
+    oscdump osc.udp://:9000
+
+    -->
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>100</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>gain</adapt_parameter>
+      <start_value>0</start_value>
+      <stop_after_type>presentations</stop_after_type>
+      <stop_after>100</stop_after>
+      <larger_is_easier>false</larger_is_easier>
+      <stepsizes>
+        <stepsize begin="0" size="2"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1_1"/>
+        <stimulus id="stimulus1_2"/>
+      </trial>
+      <trial id="trial2">
+        <answer>correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus2"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout height="1" id="main_layout" width="3">
+        <button x="1" y="1" id="up">
+          <text>louder</text>
+        </button>
+        <button x="2" y="1" id="down">
+          <text>quieter</text>
+        </button>
+        <parameterlist x="3" y="1" id="pl">
+          <parameter>gain</parameter>
+        </parameterlist>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="up"/>
+        <button id="down"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli/osctest</prefix>
+    <datablock id="oscdelay">
+      <device>wavdevice</device>
+      <file>silence:30</file>
+    </datablock>
+    <datablock id="wavdata1">
+      <device>wavdevice</device>
+      <file>melk_is_gezond.wav</file>
+    </datablock>
+    <datablock id="wavdata2">
+      <device>wavdevice</device>
+      <file>click.wav</file>
+    </datablock>
+    <datablock id="wavdata3">
+      <device>wavdevice</device>
+      <file>melk_is_gezond.wav</file>
+    </datablock>
+    <!--
+      this doesn't work for the moment, since plugincontrollers can't receive datablocks
+      instead, annodata is defined inline in <stimuli>
+    <datablock id="annodata1">
+      <device>controller</device>
+      <uri>melk_is_gezond.anno</uri>
+    </datablock>
+    -->
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
+      <driver>asio</driver>
+      <card>default</card>
+      <channels>2</channels>
+      <gain id="gain">0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>1024</buffersize>
+    </device>
+    <device xsi:type="apex:pluginController" id="controller">
+      <plugin>osccontroller</plugin>
+      <parameter name="prefix" id="prefix">Avatar/Unity</parameter>
+      <parameter name="oscoutputtrigger" id="oscoutputtrigger">SPIN</parameter>
+      <!-- decides which stimulustype triggers the synchronized controller output -->
+      <parameter name="stimulustype" id="stimulustype">none</parameter>
+      <!-- SPIN / LOC / DYN / VIS -->
+      <parameter name="prepare-AnnoData" id="annodata">
+        version 1.2
+        audio 0.wav
+        text_file 1jwz711.txt
+        phn_env 0 1666 x 25 33 1 100 1 133 0.447166 166 0.00133216 366 0.00133216 400 0.0013007 433 0.001026 466 0.000853481 499 0.000680699 533 0.00023404 566 0.000444055 1133 0.000444055 1166 0.00046029 1200 0.000760299 1233 0.00113678 1266 0.00113678 1300 0.00094871 1333 0.000818334 1366 0.000610926 1400 0.000497341 1500 0.000497341 1533 0.00999999 1600 0.00999999 1633 0.0370899 1666 0
+        phn_vis 0 33 1 x 1
+        phn 5 135 17 x
+        phn_vis 33 66 1 x 1
+        phn_env 66 433 m 6 100 0 133 0.552834 166 0.998668 366 0.998668 400 0.318913 433 0
+        phn_vis 66 100 1 x 1
+        phn_vis 100 133 2 m 0.552834 x 0.447166
+        phn_vis 133 166 2 m 0.998668 x 0.00133216
+        word 135 835 Melk
+        phn 135 355 104 m
+        phn_vis 166 200 2 m 0.998668 x 0.00133216
+        phn_vis 200 233 2 m 0.998668 x 0.00133216
+        phn_vis 233 266 2 m 0.998668 x 0.00133216
+        phn_vis 266 300 2 m 0.998668 x 0.00133216
+        phn_vis 300 333 2 m 0.998668 x 0.00133216
+        phn_env 332 566 EH 7 366 0 400 0.507163 433 0.594491 466 0.494529 499 0.394415 533 0.1107 566 0
+        phn_env 332 566 l 7 366 0 400 0.172623 433 0.404483 466 0.504617 499 0.604905 533 0.792299 566 0
+        phn_vis 333 366 2 m 0.998668 x 0.00133216
+        phn 355 475 104 EH
+        phn_vis 366 400 4 EH 0.507163 m 0.318913 l 0.172623 x 0.0013007
+        phn_vis 400 433 3 EH 0.594491 l 0.404483 x 0.001026
+        phn_vis 433 466 3 l 0.504617 EH 0.494529 x 0.000853481
+        phn_env 465 1233 k 7 499 0 533 0.0967668 566 0.999556 1133 0.999556 1166 0.976129 1200 0.543237 1233 0
+        phn_vis 466 499 3 l 0.604905 EH 0.394415 x 0.000680699
+        phn 475 555 104 l
+        phn_vis 499 533 4 l 0.792299 EH 0.1107 k 0.0967668 x 0.00023404
+        phn_vis 533 566 2 k 0.999556 x 0.000444055
+        phn 555 1198 104 k
+        phn_vis 566 600 2 k 0.999556 x 0.000444055
+        phn_vis 600 633 2 k 0.999556 x 0.000444055
+        phn_vis 633 666 2 k 0.999556 x 0.000444055
+        phn_vis 666 700 2 k 0.999556 x 0.000444055
+        phn_vis 700 733 2 k 0.999556 x 0.000444055
+        phn_vis 733 766 2 k 0.999556 x 0.000444055
+        phn_vis 766 800 2 k 0.999556 x 0.000444055
+        phn_vis 800 833 2 k 0.999556 x 0.000444055
+        phn_vis 833 866 2 k 0.999556 x 0.000444055
+        phn_vis 866 899 2 k 0.999556 x 0.000444055
+        phn_vis 899 933 2 k 0.999556 x 0.000444055
+        phn_vis 933 966 2 k 0.999556 x 0.000444055
+        phn_vis 966 999 2 k 0.999556 x 0.000444055
+        phn_vis 999 1033 2 k 0.999556 x 0.000444055
+        phn_vis 1033 1066 2 k 0.999556 x 0.000444055
+        phn_vis 1066 1100 2 k 0.999556 x 0.000444055
+        phn_env 1100 1400 IH 9 1133 0 1166 0.0234109 1200 0.456003 1233 0.998863 1266 0.998863 1300 0.70508 1333 0.501421 1366 0.17743 1400 0
+        phn_vis 1100 1133 2 k 0.999556 x 0.000444055
+        phn_vis 1133 1166 3 k 0.976129 IH 0.0234109 x 0.00046029
+        phn_vis 1166 1200 3 k 0.543237 IH 0.456003 x 0.000760299
+        phn 1198 1308 104 IH
+        phn_vis 1200 1233 2 IH 0.998863 x 0.00113678
+        word 1205 1525 is
+        phn_env 1233 1666 z 10 1266 0 1300 0.293971 1333 0.49776 1366 0.821959 1400 0.999503 1500 0.999503 1533 0.99 1600 0.99 1633 0.654762 1666 0
+        phn_vis 1233 1266 2 IH 0.998863 x 0.00113678
+        phn_vis 1266 1300 3 IH 0.70508 z 0.293971 x 0.00094871
+        phn_vis 1300 1333 3 IH 0.501421 z 0.49776 x 0.000818334
+        phn 1308 1634 104 z
+        phn_vis 1333 1366 3 z 0.821959 IH 0.17743 x 0.000610926
+        phn_vis 1366 1400 2 z 0.999503 x 0.000497341
+        phn_vis 1400 1433 2 z 0.999503 x 0.000497341
+        phn_vis 1433 1466 2 z 0.999503 x 0.000497341
+        phn_vis 1466 1500 2 z 0.999503 x 0.000497341
+        phn_vis 1500 1533 2 z 0.99 x 0.00999999
+        phn_vis 1533 1566 2 z 0.99 x 0.00999999
+        phn_vis 1566 1600 2 z 0.99 x 0.00999999
+        phn_env 1567 1899 g 10 1600 0 1633 0.308148 1666 1 1699 0.473328 1733 0.420085 1766 0.377609 1799 0.341982 1833 0.2869 1866 0.109183 1899 0
+        phn_vis 1600 1633 3 z 0.654762 g 0.308148 x 0.0370899
+        phn_env 1632 2066 UH 13 1666 0 1699 0.526672 1733 0.579915 1766 0.622391 1799 0.658018 1833 0.7131 1866 0.890817 1899 1 1933 0.727392 1966 0.600638 1999 0.448439 2033 0.164367 2066 0
+        phn_vis 1633 1666 1 g 1
+        phn 1634 1808 104 g
+        phn_vis 1666 1699 2 UH 0.526672 g 0.473328
+        phn_vis 1699 1733 2 UH 0.579915 g 0.420085
+        phn_vis 1733 1766 2 UH 0.622391 g 0.377609
+        phn_vis 1766 1799 2 UH 0.658018 g 0.341982
+        word 1775 2675 gezond
+        phn_vis 1799 1833 2 UH 0.7131 g 0.2869
+        phn 1808 1935 104 UH
+        phn_vis 1833 1866 2 UH 0.890817 g 0.109183
+        phn_env 1866 2100 z 7 1899 0 1933 0.272608 1966 0.399362 1999 0.476485 2033 0.416285 2066 0.316061 2100 0
+        phn_vis 1866 1899 1 UH 1
+        phn_vis 1899 1933 2 UH 0.727392 z 0.272608
+        phn_env 1933 2266 AO 10 1966 0 1999 0.0750758 2033 0.419348 2066 0.683939 2100 1 2133 1 2166 0.819623 2200 0.634891 2233 0.41106 2266 0
+        phn_vis 1933 1966 2 UH 0.600638 z 0.399362
+        phn 1935 2030 104 z
+        phn_vis 1966 1999 3 z 0.476485 UH 0.448439 AO 0.0750758
+        phn_vis 1999 2033 3 z 0.416285 AO 0.419348 UH 0.164367
+        phn 2030 2185 104 AO
+        phn_vis 2033 2066 2 AO 0.683939 z 0.316061
+        phn_vis 2066 2100 1 AO 1
+        phn_env 2099 2733 n 9 2133 0 2166 0.180377 2200 0.365109 2233 0.58894 2266 1 2633 1 2666 0.956865 2700 0.559005 2733 0
+        phn_vis 2100 2133 1 AO 1
+        phn_vis 2133 2166 2 AO 0.819623 n 0.180377
+        phn_vis 2166 2200 2 AO 0.634891 n 0.365109
+        phn 2185 2698 104 n
+        phn_vis 2200 2233 2 n 0.58894 AO 0.41106
+        phn_vis 2233 2266 1 n 1
+        phn_vis 2266 2300 1 n 1
+        phn_vis 2300 2333 1 n 1
+        phn_vis 2333 2366 1 n 1
+        phn_vis 2366 2400 1 n 1
+        phn_vis 2400 2433 1 n 1
+        phn_vis 2433 2466 1 n 1
+        phn_vis 2466 2500 1 n 1
+        phn_vis 2500 2533 1 n 1
+        phn_vis 2533 2566 1 n 1
+        phn_vis 2566 2600 1 n 1
+        phn_env 2600 2899 x 6 2633 0 2666 0.0431351 2700 0.440995 2733 1 2866 1 2899 0
+        phn_vis 2600 2633 1 n 1
+        phn_vis 2633 2666 2 n 0.956865 x 0.0431351
+        phn_vis 2666 2700 2 n 0.559005 x 0.440995
+        phn 2698 2815 0 x
+        phn_vis 2700 2733 1 x 1
+        phn_vis 2733 2766 1 x 1
+        phn_vis 2766 2800 1 x 1
+        phn_vis 2800 2833 1 x 1
+        phn_vis 2833 2866 1 x 1
+        %%-begin-anno-text-%% Melk is gezond
+        
+        
+        
+        %%-end-anno-text-%%
+        end_markers
+        
+      </parameter>
+      <parameter name="prepare-LookAtPlayer" id="lookat"/>
+      <parameter name="Play-Model" id="model">2</parameter>
+    </device>
+  </devices>
+  <filters>
+    <filter xsi:type="apex:amplifier" id="amplifier">
+      <device>wavdevice</device>
+      <channels>2</channels>
+      <basegain>0</basegain>
+      <gain>0</gain>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1_1">
+      <description>Eerste stimulus, model A</description>
+      <datablocks>
+        <sequential>
+          <datablock id="oscdelay"/>
+          <!-- allows finetuning the audio & osc message sync -->
+          <datablock id="wavdata1"/>
+        </sequential>
+      </datablocks>
+      <variableParameters>
+        <parameter id="stimulustype">SPIN</parameter>
+        <parameter id="annodata">filler annodata 1</parameter>
+        <parameter id="lookat">0</parameter>
+        <parameter id="model">0</parameter>
+      </variableParameters>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stimulus1_2">
+      <description>Stimulus 2 </description>
+      <datablocks>
+        <datablock id="wavdata2"/>
+      </datablocks>
+      <variableParameters>
+        <parameter id="stimulustype">LOC</parameter>
+      </variableParameters>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stimulus2">
+      <description>Stimulus 3, model B</description>
+      <datablocks>
+        <sequential>
+          <datablock id="oscdelay"/>
+          <datablock id="wavdata3"/>
+        </sequential>
+      </datablocks>
+      <variableParameters>
+        <parameter id="stimulustype">SPIN</parameter>
+        <parameter id="annodata">filler annodata 3</parameter>
+        <parameter id="lookat">1</parameter>
+        <parameter id="model">1</parameter>
+      </variableParameters>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>1</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+  </connections>
+</apex:apex>

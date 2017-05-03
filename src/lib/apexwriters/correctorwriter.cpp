@@ -19,39 +19,32 @@
 
 #include "apexdata/corrector/correctordata.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "common/global.h"
 
 #include "correctorwriter.h"
 
-using namespace XERCES_CPP_NAMESPACE;
-using namespace apex::ApexXMLTools;
+using namespace apex;
 
 using apex::writer::CorrectorWriter;
 using apex::data::CorrectorData;
 
-DOMElement* CorrectorWriter::addElement(DOMElement* elem,
-                                        const CorrectorData& data)
+QDomElement CorrectorWriter::addElement(QDomElement *elem,
+        const CorrectorData& data)
 {
-    DOMDocument* doc = elem->getOwnerDocument();
-    DOMElement* corrector = doc->createElement(X("corrector"));
+    QDomDocument doc = elem->ownerDocument();
+    QDomElement corrector = doc.createElement(QSL("corrector"));
     elem->appendChild(corrector);
 
     QString type;
-    switch (data.type())
-    {
-        case CorrectorData::EQUAL:
-        {
-            type = "apex:isequal";
-            break;
-        }
-        default:
-        {
-             qFatal("Invalid corrector type");
-        }
+    switch (data.type()) {
+    case CorrectorData::EQUAL:
+        type = "apex:isequal";
+        break;
+    default:
+        qFatal("Invalid corrector type");
     }
 
-    corrector->setAttribute(X("xsi:type"), S2X(type));
+    corrector.setAttribute(QSL("xsi:type"), type);
     return corrector;
 }
 

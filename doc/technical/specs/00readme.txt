@@ -1,1 +1,0 @@
-Apex design specifications (UML)

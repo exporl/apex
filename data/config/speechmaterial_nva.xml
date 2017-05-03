@@ -1,766 +1,762 @@
-<apex:speechmaterialfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.3/experiment.xsd"
-  xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
-  
+<apex:speechmaterialfile xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/spin.xsd">
   <noises>
     <noise id="NVA_ltass">
       <description>Long term average speech spectrum noise for NVA words</description>
       <name>NVA</name>
-      <uri>dutch/nva/nvanoise.wav</uri>
+      <file>dutch/nva/nvanoise.wav</file>
       <rms>-25.3396</rms>
       <speechmaterial>NVA</speechmaterial>
     </noise>
   </noises>
-  
   <speechmaterial id="NVA">
     <rms>-25.968600</rms>
     <list id="16">
       <speechtoken id="bus">
-        <uri>dutch/nva/1/bus.wav</uri>
+        <file>dutch/nva/1/bus.wav</file>
         <text>bus</text>
       </speechtoken>
       <speechtoken id="vaak">
-        <uri>dutch/nva/1/vaak.wav</uri>
+        <file>dutch/nva/1/vaak.wav</file>
         <text>vaak</text>
       </speechtoken>
       <speechtoken id="pen">
-        <uri>dutch/nva/1/pen.wav</uri>
+        <file>dutch/nva/1/pen.wav</file>
         <text>pen</text>
       </speechtoken>
       <speechtoken id="leeg">
-        <uri>dutch/nva/1/leeg.wav</uri>
+        <file>dutch/nva/1/leeg.wav</file>
         <text>leeg</text>
       </speechtoken>
       <speechtoken id="dief">
-        <uri>dutch/nva/1/dief.wav</uri>
+        <file>dutch/nva/1/dief.wav</file>
         <text>dief</text>
       </speechtoken>
       <speechtoken id="hoed">
-        <uri>dutch/nva/1/hoed.wav</uri>
+        <file>dutch/nva/1/hoed.wav</file>
         <text>hoed</text>
       </speechtoken>
       <speechtoken id="wip">
-        <uri>dutch/nva/1/wip.wav</uri>
+        <file>dutch/nva/1/wip.wav</file>
         <text>wip</text>
       </speechtoken>
       <speechtoken id="mooi">
-        <uri>dutch/nva/1/mooi.wav</uri>
+        <file>dutch/nva/1/mooi.wav</file>
         <text>mooi</text>
       </speechtoken>
       <speechtoken id="kous">
-        <uri>dutch/nva/1/kous.wav</uri>
+        <file>dutch/nva/1/kous.wav</file>
         <text>kous</text>
       </speechtoken>
       <speechtoken id="som">
-        <uri>dutch/nva/1/som.wav</uri>
+        <file>dutch/nva/1/som.wav</file>
         <text>som</text>
       </speechtoken>
       <speechtoken id="zang">
-        <uri>dutch/nva/1/zang.wav</uri>
+        <file>dutch/nva/1/zang.wav</file>
         <text>zang</text>
       </speechtoken>
       <speechtoken id="bijl">
-        <uri>dutch/nva/1/bijl.wav</uri>
+        <file>dutch/nva/1/bijl.wav</file>
         <text>bijl</text>
       </speechtoken>
     </list>
     <list id="17">
       <speechtoken id="rood">
-        <uri>dutch/nva/2/rood.wav</uri>
+        <file>dutch/nva/2/rood.wav</file>
         <text>rood</text>
       </speechtoken>
       <speechtoken id="hoek">
-        <uri>dutch/nva/2/hoek.wav</uri>
+        <file>dutch/nva/2/hoek.wav</file>
         <text>hoek</text>
       </speechtoken>
       <speechtoken id="loop">
-        <uri>dutch/nva/2/loop.wav</uri>
+        <file>dutch/nva/2/loop.wav</file>
         <text>loop</text>
       </speechtoken>
       <speechtoken id="dam">
-        <uri>dutch/nva/2/dam.wav</uri>
+        <file>dutch/nva/2/dam.wav</file>
         <text>dam</text>
       </speechtoken>
       <speechtoken id="huis">
-        <uri>dutch/nva/2/huis.wav</uri>
+        <file>dutch/nva/2/huis.wav</file>
         <text>huis</text>
       </speechtoken>
       <speechtoken id="maai">
-        <uri>dutch/nva/2/maai.wav</uri>
+        <file>dutch/nva/2/maai.wav</file>
         <text>maai</text>
       </speechtoken>
       <speechtoken id="kok">
-        <uri>dutch/nva/2/kok.wav</uri>
+        <file>dutch/nva/2/kok.wav</file>
         <text>kok</text>
       </speechtoken>
       <speechtoken id="fout">
-        <uri>dutch/nva/2/fout.wav</uri>
+        <file>dutch/nva/2/fout.wav</file>
         <text>fout</text>
       </speechtoken>
       <speechtoken id="geeuw">
-        <uri>dutch/nva/2/geeuw.wav</uri>
+        <file>dutch/nva/2/geeuw.wav</file>
         <text>geeuw</text>
       </speechtoken>
       <speechtoken id="bel">
-        <uri>dutch/nva/2/bel.wav</uri>
+        <file>dutch/nva/2/bel.wav</file>
         <text>bel</text>
       </speechtoken>
       <speechtoken id="zich">
-        <uri>dutch/nva/2/zich.wav</uri>
+        <file>dutch/nva/2/zich.wav</file>
         <text>zich</text>
       </speechtoken>
       <speechtoken id="tien">
-        <uri>dutch/nva/2/tien.wav</uri>
+        <file>dutch/nva/2/tien.wav</file>
         <text>tien</text>
       </speechtoken>
     </list>
     <list id="18">
       <speechtoken id="dun">
-        <uri>dutch/nva/3/dun.wav</uri>
+        <file>dutch/nva/3/dun.wav</file>
         <text>dun</text>
       </speechtoken>
       <speechtoken id="tol">
-        <uri>dutch/nva/3/tol.wav</uri>
+        <file>dutch/nva/3/tol.wav</file>
         <text>tol</text>
       </speechtoken>
       <speechtoken id="geit">
-        <uri>dutch/nva/3/geit.wav</uri>
+        <file>dutch/nva/3/geit.wav</file>
         <text>geit</text>
       </speechtoken>
       <speechtoken id="lach">
-        <uri>dutch/nva/3/lach.wav</uri>
+        <file>dutch/nva/3/lach.wav</file>
         <text>lach</text>
       </speechtoken>
       <speechtoken id="nieuw">
-        <uri>dutch/nva/3/nieuw.wav</uri>
+        <file>dutch/nva/3/nieuw.wav</file>
         <text>nieuw</text>
       </speechtoken>
       <speechtoken id="men">
-        <uri>dutch/nva/3/men.wav</uri>
+        <file>dutch/nva/3/men.wav</file>
         <text>men</text>
       </speechtoken>
       <speechtoken id="geef">
-        <uri>dutch/nva/3/geef.wav</uri>
+        <file>dutch/nva/3/geef.wav</file>
         <text>geef</text>
       </speechtoken>
       <speechtoken id="boek">
-        <uri>dutch/nva/3/boek.wav</uri>
+        <file>dutch/nva/3/boek.wav</file>
         <text>boek</text>
       </speechtoken>
       <speechtoken id="zing">
-        <uri>dutch/nva/3/zing.wav</uri>
+        <file>dutch/nva/3/zing.wav</file>
         <text>zing</text>
       </speechtoken>
       <speechtoken id="hoop">
-        <uri>dutch/nva/3/hoop.wav</uri>
+        <file>dutch/nva/3/hoop.wav</file>
         <text>hoop</text>
       </speechtoken>
       <speechtoken id="duim">
-        <uri>dutch/nva/3/duim.wav</uri>
+        <file>dutch/nva/3/duim.wav</file>
         <text>duim</text>
       </speechtoken>
       <speechtoken id="kaas">
-        <uri>dutch/nva/3/kaas.wav</uri>
+        <file>dutch/nva/3/kaas.wav</file>
         <text>kaas</text>
       </speechtoken>
     </list>
     <list id="19">
       <speechtoken id="door">
-        <uri>dutch/nva/4/door.wav</uri>
+        <file>dutch/nva/4/door.wav</file>
         <text>door</text>
       </speechtoken>
       <speechtoken id="jong">
-        <uri>dutch/nva/4/jong.wav</uri>
+        <file>dutch/nva/4/jong.wav</file>
         <text>jong</text>
       </speechtoken>
       <speechtoken id="doek">
-        <uri>dutch/nva/4/doek.wav</uri>
+        <file>dutch/nva/4/doek.wav</file>
         <text>doek</text>
       </speechtoken>
       <speechtoken id="goud">
-        <uri>dutch/nva/4/goud.wav</uri>
+        <file>dutch/nva/4/goud.wav</file>
         <text>goud</text>
       </speechtoken>
       <speechtoken id="kieuw">
-        <uri>dutch/nva/4/kieuw.wav</uri>
+        <file>dutch/nva/4/kieuw.wav</file>
         <text>kieuw</text>
       </speechtoken>
       <speechtoken id="zin">
-        <uri>dutch/nva/4/zin.wav</uri>
+        <file>dutch/nva/4/zin.wav</file>
         <text>zin</text>
       </speechtoken>
       <speechtoken id="hooi">
-        <uri>dutch/nva/4/hooi.wav</uri>
+        <file>dutch/nva/4/hooi.wav</file>
         <text>hooi</text>
       </speechtoken>
       <speechtoken id="pijl">
-        <uri>dutch/nva/4/pijl.wav</uri>
+        <file>dutch/nva/4/pijl.wav</file>
         <text>pijl</text>
       </speechtoken>
       <speechtoken id="sap">
-        <uri>dutch/nva/4/sap.wav</uri>
+        <file>dutch/nva/4/sap.wav</file>
         <text>sap</text>
       </speechtoken>
       <speechtoken id="bes">
-        <uri>dutch/nva/4/bes.wav</uri>
+        <file>dutch/nva/4/bes.wav</file>
         <text>bes</text>
       </speechtoken>
       <speechtoken id="laag">
-        <uri>dutch/nva/4/laag.wav</uri>
+        <file>dutch/nva/4/laag.wav</file>
         <text>laag</text>
       </speechtoken>
       <speechtoken id="neef">
-        <uri>dutch/nva/4/neef.wav</uri>
+        <file>dutch/nva/4/neef.wav</file>
         <text>neef</text>
       </speechtoken>
     </list>
     <list id="20">
       <speechtoken id="roos">
-        <uri>dutch/nva/5/roos.wav</uri>
+        <file>dutch/nva/5/roos.wav</file>
         <text>roos</text>
       </speechtoken>
       <speechtoken id="nep">
-        <uri>dutch/nva/5/nep.wav</uri>
+        <file>dutch/nva/5/nep.wav</file>
         <text>nep</text>
       </speechtoken>
       <speechtoken id="boeg">
-        <uri>dutch/nva/5/boeg.wav</uri>
+        <file>dutch/nva/5/boeg.wav</file>
         <text>boeg</text>
       </speechtoken>
       <speechtoken id="kom">
-        <uri>dutch/nva/5/kom.wav</uri>
+        <file>dutch/nva/5/kom.wav</file>
         <text>kom</text>
       </speechtoken>
       <speechtoken id="wees">
-        <uri>dutch/nva/5/wees.wav</uri>
+        <file>dutch/nva/5/wees.wav</file>
         <text>wees</text>
       </speechtoken>
       <speechtoken id="vuil">
-        <uri>dutch/nva/5/vuil.wav</uri>
+        <file>dutch/nva/5/vuil.wav</file>
         <text>vuil</text>
       </speechtoken>
       <speechtoken id="hang">
-        <uri>dutch/nva/5/hang.wav</uri>
+        <file>dutch/nva/5/hang.wav</file>
         <text>hang</text>
       </speechtoken>
       <speechtoken id="toon">
-        <uri>dutch/nva/5/toon.wav</uri>
+        <file>dutch/nva/5/toon.wav</file>
         <text>toon</text>
       </speechtoken>
       <speechtoken id="lied">
-        <uri>dutch/nva/5/lied.wav</uri>
+        <file>dutch/nva/5/lied.wav</file>
         <text>lied</text>
       </speechtoken>
       <speechtoken id="gif">
-        <uri>dutch/nva/5/gif.wav</uri>
+        <file>dutch/nva/5/gif.wav</file>
         <text>gif</text>
       </speechtoken>
       <speechtoken id="dijk">
-        <uri>dutch/nva/5/dijk.wav</uri>
+        <file>dutch/nva/5/dijk.wav</file>
         <text>dijk</text>
       </speechtoken>
       <speechtoken id="zaai">
-        <uri>dutch/nva/5/zaai.wav</uri>
+        <file>dutch/nva/5/zaai.wav</file>
         <text>zaai</text>
       </speechtoken>
     </list>
     <list id="21">
       <speechtoken id="put">
-        <uri>dutch/nva/6/put.wav</uri>
+        <file>dutch/nva/6/put.wav</file>
         <text>put</text>
       </speechtoken>
       <speechtoken id="buik">
-        <uri>dutch/nva/6/buik.wav</uri>
+        <file>dutch/nva/6/buik.wav</file>
         <text>buik</text>
       </speechtoken>
       <speechtoken id="zeep">
-        <uri>dutch/nva/6/zeep.wav</uri>
+        <file>dutch/nva/6/zeep.wav</file>
         <text>zeep</text>
       </speechtoken>
       <speechtoken id="mijn">
-        <uri>dutch/nva/6/mijn.wav</uri>
+        <file>dutch/nva/6/mijn.wav</file>
         <text>mijn</text>
       </speechtoken>
       <speechtoken id="poot">
-        <uri>dutch/nva/6/poot.wav</uri>
+        <file>dutch/nva/6/poot.wav</file>
         <text>poot</text>
       </speechtoken>
       <speechtoken id="dom">
-        <uri>dutch/nva/6/dom.wav</uri>
+        <file>dutch/nva/6/dom.wav</file>
         <text>dom</text>
       </speechtoken>
       <speechtoken id="wig">
-        <uri>dutch/nva/6/wig.wav</uri>
+        <file>dutch/nva/6/wig.wav</file>
         <text>wig</text>
       </speechtoken>
       <speechtoken id="niet">
-        <uri>dutch/nva/6/niet.wav</uri>
+        <file>dutch/nva/6/niet.wav</file>
         <text>niet</text>
       </speechtoken>
       <speechtoken id="lef">
-        <uri>dutch/nva/6/lef.wav</uri>
+        <file>dutch/nva/6/lef.wav</file>
         <text>lef</text>
       </speechtoken>
       <speechtoken id="koel">
-        <uri>dutch/nva/6/koel.wav</uri>
+        <file>dutch/nva/6/koel.wav</file>
         <text>koel</text>
       </speechtoken>
       <speechtoken id="taai">
-        <uri>dutch/nva/6/taai.wav</uri>
+        <file>dutch/nva/6/taai.wav</file>
         <text>taai</text>
       </speechtoken>
       <speechtoken id="gang">
-        <uri>dutch/nva/6/gang.wav</uri>
+        <file>dutch/nva/6/gang.wav</file>
         <text>gang</text>
       </speechtoken>
     </list>
     <list id="22">
       <speechtoken id="vuur">
-        <uri>dutch/nva/7/vuur.wav</uri>
+        <file>dutch/nva/7/vuur.wav</file>
         <text>vuur</text>
       </speechtoken>
       <speechtoken id="feit">
-        <uri>dutch/nva/7/feit.wav</uri>
+        <file>dutch/nva/7/feit.wav</file>
         <text>feit</text>
       </speechtoken>
       <speechtoken id="bof">
-        <uri>dutch/nva/7/bof.wav</uri>
+        <file>dutch/nva/7/bof.wav</file>
         <text>bof</text>
       </speechtoken>
       <speechtoken id="luis">
-        <uri>dutch/nva/7/luis.wav</uri>
+        <file>dutch/nva/7/luis.wav</file>
         <text>luis</text>
       </speechtoken>
       <speechtoken id="ziek">
-        <uri>dutch/nva/7/ziek.wav</uri>
+        <file>dutch/nva/7/ziek.wav</file>
         <text>ziek</text>
       </speechtoken>
       <speechtoken id="ging">
-        <uri>dutch/nva/7/ging.wav</uri>
+        <file>dutch/nva/7/ging.wav</file>
         <text>ging</text>
       </speechtoken>
       <speechtoken id="map">
-        <uri>dutch/nva/7/map.wav</uri>
+        <file>dutch/nva/7/map.wav</file>
         <text>map</text>
       </speechtoken>
       <speechtoken id="teen">
-        <uri>dutch/nva/7/teen.wav</uri>
+        <file>dutch/nva/7/teen.wav</file>
         <text>teen</text>
       </speechtoken>
       <speechtoken id="kooi">
-        <uri>dutch/nva/7/kooi.wav</uri>
+        <file>dutch/nva/7/kooi.wav</file>
         <text>kooi</text>
       </speechtoken>
       <speechtoken id="heg">
-        <uri>dutch/nva/7/heg.wav</uri>
+        <file>dutch/nva/7/heg.wav</file>
         <text>heg</text>
       </speechtoken>
       <speechtoken id="doel">
-        <uri>dutch/nva/7/doel.wav</uri>
+        <file>dutch/nva/7/doel.wav</file>
         <text>doel</text>
       </speechtoken>
       <speechtoken id="naam">
-        <uri>dutch/nva/7/naam.wav</uri>
+        <file>dutch/nva/7/naam.wav</file>
         <text>naam</text>
       </speechtoken>
     </list>
     <list id="23">
       <speechtoken id="beer">
-        <uri>dutch/nva/8/beer.wav</uri>
+        <file>dutch/nva/8/beer.wav</file>
         <text>beer</text>
       </speechtoken>
       <speechtoken id="zeef">
-        <uri>dutch/nva/8/zeef.wav</uri>
+        <file>dutch/nva/8/zeef.wav</file>
         <text>zeef</text>
       </speechtoken>
       <speechtoken id="boei">
-        <uri>dutch/nva/8/boei.wav</uri>
+        <file>dutch/nva/8/boei.wav</file>
         <text>boei</text>
       </speechtoken>
       <speechtoken id="kam">
-        <uri>dutch/nva/8/kam.wav</uri>
+        <file>dutch/nva/8/kam.wav</file>
         <text>kam</text>
       </speechtoken>
       <speechtoken id="wiel">
-        <uri>dutch/nva/8/wiel.wav</uri>
+        <file>dutch/nva/8/wiel.wav</file>
         <text>wiel</text>
       </speechtoken>
       <speechtoken id="fijn">
-        <uri>dutch/nva/8/fijn.wav</uri>
+        <file>dutch/nva/8/fijn.wav</file>
         <text>fijn</text>
       </speechtoken>
       <speechtoken id="lek">
-        <uri>dutch/nva/8/lek.wav</uri>
+        <file>dutch/nva/8/lek.wav</file>
         <text>lek</text>
       </speechtoken>
       <speechtoken id="hout">
-        <uri>dutch/nva/8/hout.wav</uri>
+        <file>dutch/nva/8/hout.wav</file>
         <text>hout</text>
       </speechtoken>
       <speechtoken id="doos">
-        <uri>dutch/nva/8/doos.wav</uri>
+        <file>dutch/nva/8/doos.wav</file>
         <text>doos</text>
       </speechtoken>
       <speechtoken id="gong">
-        <uri>dutch/nva/8/gong.wav</uri>
+        <file>dutch/nva/8/gong.wav</file>
         <text>gong</text>
       </speechtoken>
       <speechtoken id="tip">
-        <uri>dutch/nva/8/tip.wav</uri>
+        <file>dutch/nva/8/tip.wav</file>
         <text>tip</text>
       </speechtoken>
       <speechtoken id="maag">
-        <uri>dutch/nva/8/maag.wav</uri>
+        <file>dutch/nva/8/maag.wav</file>
         <text>maag</text>
       </speechtoken>
     </list>
     <list id="24">
       <speechtoken id="zus">
-        <uri>dutch/nva/9/zus.wav</uri>
+        <file>dutch/nva/9/zus.wav</file>
         <text>zus</text>
       </speechtoken>
       <speechtoken id="hof">
-        <uri>dutch/nva/9/hof.wav</uri>
+        <file>dutch/nva/9/hof.wav</file>
         <text>hof</text>
       </speechtoken>
       <speechtoken id="pijn">
-        <uri>dutch/nva/9/pijn.wav</uri>
+        <file>dutch/nva/9/pijn.wav</file>
         <text>pijn</text>
       </speechtoken>
       <speechtoken id="vang">
-        <uri>dutch/nva/9/vang.wav</uri>
+        <file>dutch/nva/9/vang.wav</file>
         <text>vang</text>
       </speechtoken>
       <speechtoken id="diep">
-        <uri>dutch/nva/9/diep.wav</uri>
+        <file>dutch/nva/9/diep.wav</file>
         <text>diep</text>
       </speechtoken>
       <speechtoken id="leeuw">
-        <uri>dutch/nva/9/leeuw.wav</uri>
+        <file>dutch/nva/9/leeuw.wav</file>
         <text>leeuw</text>
       </speechtoken>
       <speechtoken id="taal">
-        <uri>dutch/nva/9/taal.wav</uri>
+        <file>dutch/nva/9/taal.wav</file>
         <text>taal</text>
       </speechtoken>
       <speechtoken id="kooi">
-        <uri>dutch/nva/9/kooi.wav</uri>
+        <file>dutch/nva/9/kooi.wav</file>
         <text>kooi</text>
       </speechtoken>
       <speechtoken id="boek">
-        <uri>dutch/nva/9/boek.wav</uri>
+        <file>dutch/nva/9/boek.wav</file>
         <text>boek</text>
       </speechtoken>
       <speechtoken id="weg">
-        <uri>dutch/nva/9/weg.wav</uri>
+        <file>dutch/nva/9/weg.wav</file>
         <text>weg</text>
       </speechtoken>
       <speechtoken id="mis">
-        <uri>dutch/nva/9/mis.wav</uri>
+        <file>dutch/nva/9/mis.wav</file>
         <text>mis</text>
       </speechtoken>
       <speechtoken id="zuid">
-        <uri>dutch/nva/9/zuid.wav</uri>
+        <file>dutch/nva/9/zuid.wav</file>
         <text>zuid</text>
       </speechtoken>
     </list>
     <list id="25">
       <speechtoken id="rat">
-        <uri>dutch/nva/10/rat.wav</uri>
+        <file>dutch/nva/10/rat.wav</file>
         <text>rat</text>
       </speechtoken>
       <speechtoken id="veel">
-        <uri>dutch/nva/10/veel.wav</uri>
+        <file>dutch/nva/10/veel.wav</file>
         <text>veel</text>
       </speechtoken>
       <speechtoken id="kop">
-        <uri>dutch/nva/10/kop.wav</uri>
+        <file>dutch/nva/10/kop.wav</file>
         <text>kop</text>
       </speechtoken>
       <speechtoken id="dooi">
-        <uri>dutch/nva/10/dooi.wav</uri>
+        <file>dutch/nva/10/dooi.wav</file>
         <text>dooi</text>
       </speechtoken>
       <speechtoken id="muis">
-        <uri>dutch/nva/10/muis.wav</uri>
+        <file>dutch/nva/10/muis.wav</file>
         <text>muis</text>
       </speechtoken>
       <speechtoken id="wijn">
-        <uri>dutch/nva/10/wijn.wav</uri>
+        <file>dutch/nva/10/wijn.wav</file>
         <text>wijn</text>
       </speechtoken>
       <speechtoken id="hem">
-        <uri>dutch/nva/10/hem.wav</uri>
+        <file>dutch/nva/10/hem.wav</file>
         <text>hem</text>
       </speechtoken>
       <speechtoken id="zoet">
-        <uri>dutch/nva/10/zoet.wav</uri>
+        <file>dutch/nva/10/zoet.wav</file>
         <text>zoet</text>
       </speechtoken>
       <speechtoken id="gaaf">
-        <uri>dutch/nva/10/gaaf.wav</uri>
+        <file>dutch/nva/10/gaaf.wav</file>
         <text>gaaf</text>
       </speechtoken>
       <speechtoken id="big">
-        <uri>dutch/nva/10/big.wav</uri>
+        <file>dutch/nva/10/big.wav</file>
         <text>big</text>
       </speechtoken>
       <speechtoken id="lang">
-        <uri>dutch/nva/10/lang.wav</uri>
+        <file>dutch/nva/10/lang.wav</file>
         <text>lang</text>
       </speechtoken>
       <speechtoken id="piek">
-        <uri>dutch/nva/10/piek.wav</uri>
+        <file>dutch/nva/10/piek.wav</file>
         <text>piek</text>
       </speechtoken>
     </list>
     <list id="26">
       <speechtoken id="daar">
-        <uri>dutch/nva/11/daar.wav</uri>
+        <file>dutch/nva/11/daar.wav</file>
         <text>daar</text>
       </speechtoken>
       <speechtoken id="meeuw">
-        <uri>dutch/nva/11/meeuw.wav</uri>
+        <file>dutch/nva/11/meeuw.wav</file>
         <text>meeuw</text>
       </speechtoken>
       <speechtoken id="lijm">
-        <uri>dutch/nva/11/lijm.wav</uri>
+        <file>dutch/nva/11/lijm.wav</file>
         <text>lijm</text>
       </speechtoken>
       <speechtoken id="net">
-        <uri>dutch/nva/11/net.wav</uri>
+        <file>dutch/nva/11/net.wav</file>
         <text>net</text>
       </speechtoken>
       <speechtoken id="dof">
-        <uri>dutch/nva/11/dof.wav</uri>
+        <file>dutch/nva/11/dof.wav</file>
         <text>dof</text>
       </speechtoken>
       <speechtoken id="haak">
-        <uri>dutch/nva/11/haak.wav</uri>
+        <file>dutch/nva/11/haak.wav</file>
         <text>haak</text>
       </speechtoken>
       <speechtoken id="boog">
-        <uri>dutch/nva/11/boog.wav</uri>
+        <file>dutch/nva/11/boog.wav</file>
         <text>boog</text>
       </speechtoken>
       <speechtoken id="kuil">
-        <uri>dutch/nva/11/kuil.wav</uri>
+        <file>dutch/nva/11/kuil.wav</file>
         <text>kuil</text>
       </speechtoken>
       <speechtoken id="poes">
-        <uri>dutch/nva/11/poes.wav</uri>
+        <file>dutch/nva/11/poes.wav</file>
         <text>poes</text>
       </speechtoken>
       <speechtoken id="wang">
-        <uri>dutch/nva/11/wang.wav</uri>
+        <file>dutch/nva/11/wang.wav</file>
         <text>wang</text>
       </speechtoken>
       <speechtoken id="zien">
-        <uri>dutch/nva/11/zien.wav</uri>
+        <file>dutch/nva/11/zien.wav</file>
         <text>zien</text>
       </speechtoken>
       <speechtoken id="sip">
-        <uri>dutch/nva/11/sip.wav</uri>
+        <file>dutch/nva/11/sip.wav</file>
         <text>sip</text>
       </speechtoken>
     </list>
     <list id="27">
       <speechtoken id="kar">
-        <uri>dutch/nva/12/kar.wav</uri>
+        <file>dutch/nva/12/kar.wav</file>
         <text>kar</text>
       </speechtoken>
       <speechtoken id="lip">
-        <uri>dutch/nva/12/lip.wav</uri>
+        <file>dutch/nva/12/lip.wav</file>
         <text>lip</text>
       </speechtoken>
       <speechtoken id="kuif">
-        <uri>dutch/nva/12/kuif.wav</uri>
+        <file>dutch/nva/12/kuif.wav</file>
         <text>kuif</text>
       </speechtoken>
       <speechtoken id="doen">
-        <uri>dutch/nva/12/doen.wav</uri>
+        <file>dutch/nva/12/doen.wav</file>
         <text>doen</text>
       </speechtoken>
       <speechtoken id="geel">
-        <uri>dutch/nva/12/geel.wav</uri>
+        <file>dutch/nva/12/geel.wav</file>
         <text>geel</text>
       </speechtoken>
       <speechtoken id="nek">
-        <uri>dutch/nva/12/nek.wav</uri>
+        <file>dutch/nva/12/nek.wav</file>
         <text>nek</text>
       </speechtoken>
       <speechtoken id="boos">
-        <uri>dutch/nva/12/boos.wav</uri>
+        <file>dutch/nva/12/boos.wav</file>
         <text>boos</text>
       </speechtoken>
       <speechtoken id="zout">
-        <uri>dutch/nva/12/zout.wav</uri>
+        <file>dutch/nva/12/zout.wav</file>
         <text>zout</text>
       </speechtoken>
       <speechtoken id="saai">
-        <uri>dutch/nva/12/saai.wav</uri>
+        <file>dutch/nva/12/saai.wav</file>
         <text>saai</text>
       </speechtoken>
       <speechtoken id="wieg">
-        <uri>dutch/nva/12/wieg.wav</uri>
+        <file>dutch/nva/12/wieg.wav</file>
         <text>wieg</text>
       </speechtoken>
       <speechtoken id="tong">
-        <uri>dutch/nva/12/tong.wav</uri>
+        <file>dutch/nva/12/tong.wav</file>
         <text>tong</text>
       </speechtoken>
       <speechtoken id="ham">
-        <uri>dutch/nva/12/ham.wav</uri>
+        <file>dutch/nva/12/ham.wav</file>
         <text>ham</text>
       </speechtoken>
     </list>
     <list id="28">
       <speechtoken id="raam">
-        <uri>dutch/nva/13/raam.wav</uri>
+        <file>dutch/nva/13/raam.wav</file>
         <text>raam</text>
       </speechtoken>
       <speechtoken id="buit">
-        <uri>dutch/nva/13/buit.wav</uri>
+        <file>dutch/nva/13/buit.wav</file>
         <text>buit</text>
       </speechtoken>
       <speechtoken id="pech">
-        <uri>dutch/nva/13/pech.wav</uri>
+        <file>dutch/nva/13/pech.wav</file>
         <text>pech</text>
       </speechtoken>
       <speechtoken id="long">
-        <uri>dutch/nva/13/long.wav</uri>
+        <file>dutch/nva/13/long.wav</file>
         <text>long</text>
       </speechtoken>
       <speechtoken id="vies">
-        <uri>dutch/nva/13/vies.wav</uri>
+        <file>dutch/nva/13/vies.wav</file>
         <text>vies</text>
       </speechtoken>
       <speechtoken id="haai">
-        <uri>dutch/nva/13/haai.wav</uri>
+        <file>dutch/nva/13/haai.wav</file>
         <text>haai</text>
       </speechtoken>
       <speechtoken id="meel">
-        <uri>dutch/nva/13/meel.wav</uri>
+        <file>dutch/nva/13/meel.wav</file>
         <text>meel</text>
       </speechtoken>
       <speechtoken id="zijn">
-        <uri>dutch/nva/13/zijn.wav</uri>
+        <file>dutch/nva/13/zijn.wav</file>
         <text>zijn</text>
       </speechtoken>
       <speechtoken id="goed">
-        <uri>dutch/nva/13/goed.wav</uri>
+        <file>dutch/nva/13/goed.wav</file>
         <text>goed</text>
       </speechtoken>
       <speechtoken id="boom">
-        <uri>dutch/nva/13/boom.wav</uri>
+        <file>dutch/nva/13/boom.wav</file>
         <text>boom</text>
       </speechtoken>
       <speechtoken id="kip">
-        <uri>dutch/nva/13/kip.wav</uri>
+        <file>dutch/nva/13/kip.wav</file>
         <text>kip</text>
       </speechtoken>
       <speechtoken id="tak">
-        <uri>dutch/nva/13/tak.wav</uri>
+        <file>dutch/nva/13/tak.wav</file>
         <text>tak</text>
       </speechtoken>
     </list>
     <list id="29">
       <speechtoken id="rem">
-        <uri>dutch/nva/14/rem.wav</uri>
+        <file>dutch/nva/14/rem.wav</file>
         <text>rem</text>
       </speechtoken>
       <speechtoken id="zoek">
-        <uri>dutch/nva/14/zoek.wav</uri>
+        <file>dutch/nva/14/zoek.wav</file>
         <text>zoek</text>
       </speechtoken>
       <speechtoken id="vijf">
-        <uri>dutch/nva/14/vijf.wav</uri>
+        <file>dutch/nva/14/vijf.wav</file>
         <text>vijf</text>
       </speechtoken>
       <speechtoken id="tam">
-        <uri>dutch/nva/14/tam.wav</uri>
+        <file>dutch/nva/14/tam.wav</file>
         <text>tam</text>
       </speechtoken>
       <speechtoken id="geen">
-        <uri>dutch/nva/14/geen.wav</uri>
+        <file>dutch/nva/14/geen.wav</file>
         <text>geen</text>
       </speechtoken>
       <speechtoken id="ding">
-        <uri>dutch/nva/14/ding.wav</uri>
+        <file>dutch/nva/14/ding.wav</file>
         <text>ding</text>
       </speechtoken>
       <speechtoken id="luid">
-        <uri>dutch/nva/14/luid.wav</uri>
+        <file>dutch/nva/14/luid.wav</file>
         <text>luid</text>
       </speechtoken>
       <speechtoken id="wel">
-        <uri>dutch/nva/14/wel.wav</uri>
+        <file>dutch/nva/14/wel.wav</file>
         <text>wel</text>
       </speechtoken>
       <speechtoken id="pop">
-        <uri>dutch/nva/14/pop.wav</uri>
+        <file>dutch/nva/14/pop.wav</file>
         <text>pop</text>
       </speechtoken>
       <speechtoken id="kies">
-        <uri>dutch/nva/14/kies.wav</uri>
+        <file>dutch/nva/14/kies.wav</file>
         <text>kies</text>
       </speechtoken>
       <speechtoken id="baai">
-        <uri>dutch/nva/14/baai.wav</uri>
+        <file>dutch/nva/14/baai.wav</file>
         <text>baai</text>
       </speechtoken>
       <speechtoken id="hoog">
-        <uri>dutch/nva/14/hoog.wav</uri>
+        <file>dutch/nva/14/hoog.wav</file>
         <text>hoog</text>
       </speechtoken>
     </list>
     <list id="30">
       <speechtoken id="boot">
-        <uri>dutch/nva/15/boot.wav</uri>
+        <file>dutch/nva/15/boot.wav</file>
         <text>boot</text>
       </speechtoken>
       <speechtoken id="meeuw">
-        <uri>dutch/nva/15/meeuw.wav</uri>
+        <file>dutch/nva/15/meeuw.wav</file>
         <text>meeuw</text>
       </speechtoken>
       <speechtoken id="kiem">
-        <uri>dutch/nva/15/kiem.wav</uri>
+        <file>dutch/nva/15/kiem.wav</file>
         <text>kiem</text>
       </speechtoken>
       <speechtoken id="val">
-        <uri>dutch/nva/15/val.wav</uri>
+        <file>dutch/nva/15/val.wav</file>
         <text>val</text>
       </speechtoken>
       <speechtoken id="zaag">
-        <uri>dutch/nva/15/zaag.wav</uri>
+        <file>dutch/nva/15/zaag.wav</file>
         <text>zaag</text>
       </speechtoken>
       <speechtoken id="hen">
-        <uri>dutch/nva/15/hen.wav</uri>
+        <file>dutch/nva/15/hen.wav</file>
         <text>hen</text>
       </speechtoken>
       <speechtoken id="gooi">
-        <uri>dutch/nva/15/gooi.wav</uri>
+        <file>dutch/nva/15/gooi.wav</file>
         <text>gooi</text>
       </speechtoken>
       <speechtoken id="buis">
-        <uri>dutch/nva/15/buis.wav</uri>
+        <file>dutch/nva/15/buis.wav</file>
         <text>buis</text>
       </speechtoken>
       <speechtoken id="tijd">
-        <uri>dutch/nva/15/tijd.wav</uri>
+        <file>dutch/nva/15/tijd.wav</file>
         <text>tijd</text>
       </speechtoken>
       <speechtoken id="lof">
-        <uri>dutch/nva/15/lof.wav</uri>
+        <file>dutch/nva/15/lof.wav</file>
         <text>lof</text>
       </speechtoken>
       <speechtoken id="dik">
-        <uri>dutch/nva/15/dik.wav</uri>
+        <file>dutch/nva/15/dik.wav</file>
         <text>dik</text>
       </speechtoken>
       <speechtoken id="soep">
-        <uri>dutch/nva/15/soep.wav</uri>
+        <file>dutch/nva/15/soep.wav</file>
         <text>soep</text>
       </speechtoken>
     </list>

@@ -21,66 +21,60 @@
 
 #include "apexdata/parameters/parametermanagerdata.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
 #include "apextools/xml/xmlkeys.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "connectionparser.h"
 
 #include <memory>
 
-using namespace xercesc;
 using namespace apex;
 using namespace apex::data;
 using namespace apex::XMLKeys;
-using namespace apex::ApexXMLTools;
 using namespace apex::parser;
 
-ConnectionData* ConnectionParser::Parse (xercesc::DOMNode* node)
+ConnectionData* ConnectionParser::Parse(const QDomElement &node)
 {
     QScopedPointer<ConnectionData> data(new ConnectionData());
 
-    for (DOMNode* connNode = node->getFirstChild(); connNode != NULL; connNode = connNode->getNextSibling()) {
-        Q_ASSERT (connNode->getNodeType() == DOMNode::ELEMENT_NODE);
-        const QString tag (XMLutils::GetTagName (connNode));
+    for (QDomElement connNode = node.firstChildElement(); !connNode.isNull();
+            connNode = connNode.nextSiblingElement()) {
+        const QString tag(connNode.tagName());
 
         if (tag == "from") {
-            for (DOMNode* fromNode = connNode->getFirstChild(); fromNode != 0; fromNode = fromNode->getNextSibling()) {
-                const QString fromTag (XMLutils::GetTagName (fromNode));
+            for (QDomElement fromNode = connNode.firstChildElement(); !fromNode.isNull();
+                    fromNode = fromNode.nextSiblingElement()) {
+                const QString fromTag(fromNode.tagName());
                 if (fromTag == gc_sID) {
-                    data->setFromId (XMLutils::GetFirstChildText (fromNode));
-                    QString matchType =
-                            XMLutils::GetAttribute(fromNode, "mode");
+                    data->setFromId(fromNode.text());
+                    QString matchType = fromNode.attribute(QSL("mode"));
                     if (matchType == "wildcard")
                         data->setMatchType(MATCH_WILDCARD);
                     else if (matchType == "name")
                         data->setMatchType(MATCH_NAME);
                     else if (matchType == "regexp")
                         data->setMatchType(MATCH_REGEXP);
-                    else if (! matchType.isEmpty())
+                    else if (!matchType.isEmpty())
                         qFatal("Invalid match type");
-                } else if (fromTag == gc_sChannel)
-                    data->setFromChannel (XMLutils::GetFirstChildText (fromNode).toInt(),
-                        XMLutils::GetAttribute (fromNode, gc_sID));
+                } else if (fromTag == gc_sChannel) {
+                    data->setFromChannel(fromNode.text().toInt(), fromNode.attribute(gc_sID));
+                }
             }
         } else if (tag == "to") {
-            for (DOMNode* toNode = connNode->getFirstChild(); toNode != 0; toNode = toNode->getNextSibling()) {
-                const QString toTag (XMLutils::GetTagName (toNode));
+            for (QDomElement toNode = connNode.firstChildElement(); !toNode.isNull();
+                    toNode = toNode.nextSiblingElement()) {
+                const QString toTag(toNode.tagName());
                 if (toTag == gc_sID)
-                    data->setToId (XMLutils::GetFirstChildText (toNode));
+                    data->setToId(toNode.text());
                 else if (toTag == gc_sChannel) {
-                    QString chanid(XMLutils::GetAttribute (toNode, gc_sID));
-                    int value = XMLutils::GetFirstChildText (toNode).toInt();
-                    data->setToChannel (value, chanid);
+                    data->setToChannel(toNode.text().toInt(), toNode.attribute(gc_sID));
                 }
             }
         } else
-            qFatal ("Unknown node name in connection: %s", qPrintable (tag));
+            qFatal("Unknown node name in connection: %s", qPrintable(tag));
     }
-
-
 
     return data.take();
 }
-
-

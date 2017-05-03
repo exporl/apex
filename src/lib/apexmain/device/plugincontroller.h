@@ -22,44 +22,44 @@
 
 #include "controldevice.h"
 
+#include <QObject>
 
 class PluginControllerInterface;
 
 namespace apex {
 
+namespace data {
+class PluginControllerData;
+}
 
-    namespace data {
-        class PluginControllerData;
-    }
+namespace device {
 
-    namespace device {
+class PluginController: public ControlDevice
+{
+Q_OBJECT
+public:
 
+    PluginController(  data::PluginControllerData* a_pParameters );
+    virtual ~PluginController();
 
-class PluginController: public ControlDevice {
-    public:
+    virtual bool SetParameter(const QString& type, const int channel, const QVariant& value);
 
-        PluginController(  data::PluginControllerData* a_pParameters );
+    virtual void Reset();
+    virtual void Prepare();
 
-        virtual bool SetParameter ( const QString& type, const int channel, const QVariant& value ) ;
+    virtual void syncControlDeviceOutput();
 
-        virtual void Reset();
-        virtual void Prepare();
+private:
+    void MakePlugin();
 
+private:
+    data::PluginControllerData* m_param;
+    QScopedPointer<PluginControllerInterface>  m_plugin;
 
-    private:
-        void MakePlugin();
+};
 
-    private:
-        data::PluginControllerData* m_param;
-        QScopedPointer<PluginControllerInterface>  m_plugin;
-
-
-    };
-
-
-
-}       // ns apex
 }       // ns device
+}       // ns apex
 
 #endif
 

@@ -1,184 +1,184 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment file:///C:/maaike/Apex_110116/schemas/experiment.xsd">
- <!-- shows use of outputtest; run the experiment, press OK twice, and check the message window for the result.
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!-- shows use of outputtest; run the experiment, press OK twice, and check the message window for the result.
        The test will compare the file specified by <outputtestinput> with the recorded _ApexOutput.wav, which
        contains the same samples as were sent to the soundcard.
        This allows to check if the entire input/processing/routing/buffering works properly.
        The file wavoutputtest-dataloop.wav was simple created with a wavefile editor: first loop wd1.wav,
        then mix it with wivineruis.wav on both channels, then mix wd2.wav -->
- <procedure xsi:type="apex:trainingProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>correct</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>false</progressbar>
-   <feedback>false</feedback>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout id="answer_layout" width="2" x="1" y="2" height="2">
-    <button id="correct" x="1" y="1">
-     <text>Correct</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="correct"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>file:../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>soundcard1</device>
-   <uri>wd1.wav</uri>
-  </datablock>
-  <datablock id="rawdata2">
-   <device>soundcard1</device>
-   <uri>wd2.wav</uri>
-  </datablock>
-  <datablock id="noisedata">
-   <device>soundcard1</device>
-   <uri>wivineruis.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="soundcard1" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>1024</buffersize>
-   <buffersize_apex>0.5</buffersize_apex>
-  </device>
- </devices>
- <filters>
-  <filter id="rawdata1l" xsi:type="apex:dataloop">
-   <device>soundcard1</device>
-   <channels>2</channels>
-   <continuous>false</continuous>
-   <datablock>rawdata1</datablock>
-   <basegain>0</basegain>
-   <gain>0</gain>
-   <randomjump>false</randomjump>
-  </filter>
-  <filter id="amplifier" xsi:type="apex:amplifier">
-   <device>soundcard1</device>
-   <channels>2</channels>
-   <basegain>0</basegain>
-   <gain id="gain">0</gain>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <sequential>
-     <datablock id="noisedata"/>
-     <datablock id="rawdata2"/>
-    </sequential>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>rawdata1l</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>rawdata1l</id>
-    <channel>1</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>1</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>rawdata2</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>rawdata2</id>
-    <channel>1</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>1</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard1</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier</id>
-    <channel>1</channel>
-   </from>
-   <to>
-    <id>soundcard1</id>
-    <channel>1</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>noisedata</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard1</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>noisedata</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>soundcard1</id>
-    <channel>1</channel>
-   </to>
-  </connection>
- </connections>
- <general>
-  <runoutputtest>true</runoutputtest>
-  <outputtestinput>../stimuli/wavoutputtest-dataloop.wav</outputtestinput>
- </general>
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>false</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout height="2" id="answer_layout" x="1" width="2" y="2">
+        <button id="correct" x="1" y="1">
+          <text>Correct</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="correct"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>soundcard1</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="rawdata2">
+      <device>soundcard1</device>
+      <file>wd2.wav</file>
+    </datablock>
+    <datablock id="noisedata">
+      <device>soundcard1</device>
+      <file>wivineruis.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="soundcard1">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>1024</buffersize>
+      <buffersize_apex>0.5</buffersize_apex>
+    </device>
+  </devices>
+  <filters>
+    <filter xsi:type="apex:dataloop" id="rawdata1l">
+      <device>soundcard1</device>
+      <channels>2</channels>
+      <continuous>false</continuous>
+      <datablock>rawdata1</datablock>
+      <basegain>0</basegain>
+      <gain>0</gain>
+      <randomjump>false</randomjump>
+    </filter>
+    <filter xsi:type="apex:amplifier" id="amplifier">
+      <device>soundcard1</device>
+      <channels>2</channels>
+      <basegain>0</basegain>
+      <gain id="gain">0</gain>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <sequential>
+          <datablock id="noisedata"/>
+          <datablock id="rawdata2"/>
+        </sequential>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>rawdata1l</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>rawdata1l</id>
+        <channel>1</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>rawdata2</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>rawdata2</id>
+        <channel>1</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard1</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>1</channel>
+      </from>
+      <to>
+        <id>soundcard1</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>noisedata</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard1</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>noisedata</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard1</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+  </connections>
+  <general>
+    <runoutputtest>true</runoutputtest>
+    <outputtestinput>../stimuli/wavoutputtest-dataloop.wav</outputtestinput>
+  </general>
 </apex:apex>

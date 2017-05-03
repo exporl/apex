@@ -33,8 +33,8 @@
     * also the reason why I have never seen it in real life.
     */
 
-#ifndef __STREAM_H_
-#define __STREAM_H_
+#ifndef _APEX_SRC_LIB_STREAMAPP_STREAM_H_
+#define _APEX_SRC_LIB_STREAMAPP_STREAM_H_
 
 #include "streamappdefines.h"
 
@@ -520,4 +520,4 @@ namespace streamapp
 
 }
 
-#endif //#ifndef __STREAM_H_
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_STREAM_H_

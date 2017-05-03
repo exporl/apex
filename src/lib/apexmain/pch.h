@@ -95,7 +95,4 @@
 #include <string>
 #include <vector>
 
-// Never ever use xerces includes directly
-#include "apextools/xml/xercesinclude.h"
-
 #endif      // C++

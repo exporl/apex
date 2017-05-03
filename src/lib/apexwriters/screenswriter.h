@@ -17,20 +17,13 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXWRITERS_SCREENSWRITER_H_
-#define _EXPORL_SRC_LIB_APEXWRITERS_SCREENSWRITER_H_
+#ifndef _APEX_SRC_LIB_APEXWRITERS_SCREENSWRITER_H_
+#define _APEX_SRC_LIB_APEXWRITERS_SCREENSWRITER_H_
 
 #include "apextools/global.h"
 
-#include "apextools/xml/xercesinclude.h"
-
+#include <QDomElement>
 #include <QStringList>
-
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMDocument;
-class DOMElement;
-}
 
 namespace apex
 {
@@ -42,7 +35,6 @@ class ButtonGroup;
 class ScreensData;
 }
 
-
 namespace writer
 {
 
@@ -51,39 +43,36 @@ namespace writer
  */
 class APEXWRITERS_EXPORT ScreensWriter
 {
-    public:
+public:
+    /**
+     * If the given stringlist is not empty, this method will extract
+     * general data (like reinforcement) from the ScreensData but the
+     * screens themselves will be extracted from the QStringList. Every
+     * string in this list must be an xml tree.
+     * Otherwise, everything will be extracted from the data.
+     *
+     * @note    No validations is done on the given strings so you better
+     *          be sure they are valid!
+     */
+    static QDomElement addElement(QDomDocument *doc,
+            const data::ScreensData &data, const QStringList& screens = QStringList());
+    static QDomElement addScreen(QDomDocument *doc, const data::Screen &data);
 
-        /**
-         * If the given stringlist is not empty, this method will extract
-         * general data (like reinforcement) from the ScreensData but the
-         * screens themselves will be extracted from the QStringList. Every
-         * string in this list must be an xml tree.
-         * Otherwise, everything will be extracted from the data.
-         *
-         * @note    No validations is done on the given strings so you better
-         *          be sure they are valid!
-         */
-        static XERCES_CPP_NAMESPACE::DOMElement *addElement(XERCES_CPP_NAMESPACE::DOMDocument *doc,
-                                      const data::ScreensData &data,
-                                      const QStringList& screens = QStringList());
-        static XERCES_CPP_NAMESPACE::DOMElement *addScreen(XERCES_CPP_NAMESPACE::DOMDocument *doc, const data::Screen &data);
+private:
 
-    private:
-
-        static XERCES_CPP_NAMESPACE::DOMElement *screenElementToXml(XERCES_CPP_NAMESPACE::DOMDocument *doc,
-                                       const data::ScreenElement &e);
-        static XERCES_CPP_NAMESPACE::DOMElement *buttonGroupToXml(XERCES_CPP_NAMESPACE::DOMDocument *doc,
-                                     const data::ButtonGroup &g);
-        static XERCES_CPP_NAMESPACE::DOMElement *addReinforcement(XERCES_CPP_NAMESPACE::DOMDocument *doc,
-                                     const data::ScreensData &data);
-        static XERCES_CPP_NAMESPACE::DOMElement* addGeneral(XERCES_CPP_NAMESPACE::DOMDocument *doc,
-                              const data::ScreensData &data);
-        static XERCES_CPP_NAMESPACE::DOMElement* addChildmode(XERCES_CPP_NAMESPACE::DOMDocument *doc,
-                               const data::ScreensData &data);
+    static QDomElement screenElementToXml(QDomDocument *doc,
+            const data::ScreenElement &e);
+    static QDomElement buttonGroupToXml(QDomDocument *doc,
+            const data::ButtonGroup &g);
+    static QDomElement addReinforcement(QDomDocument *doc,
+            const data::ScreensData &data);
+    static QDomElement addGeneral(QDomDocument *doc,
+            const data::ScreensData &data);
+    static QDomElement addChildmode(QDomDocument *doc,
+            const data::ScreensData &data);
 };
 
-}// ns writer
-
-}// ns apex
+}
+}
 
 #endif

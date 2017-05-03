@@ -1,27 +1,7 @@
-#!/bin/sh -e
+#!/bin/bash -e
+cd "$(dirname ${BASH_SOURCE[0]})/.."
 
-cp tools/jenkins-linux-localconfig.pri localconfig.pri
+git submodule update --force --init --remote common
+common/tools/jenkins-linux-git-setup.sh
 
-rm -f *test-results.xml
-
-if [ "$1" = "clean" ]; then
-    rm -rf bin .build
-fi
-
-export QT_SELECT=qt5
-qmake -v
-
-if [ "$releasetype" = "release" ]; then
-    qmake RELEASE=1
-else
-    qmake RELEASE=
-fi
-make qmake_all
-make
-
-mkdir -p bin/$releasetype/doc
-git show --stat > bin/$releasetype/doc/commit.txt
-
-make testxml
-
-tools/jenkins-linux-check.sh
+exec common/tools/jenkins-linux-build.sh "$@"

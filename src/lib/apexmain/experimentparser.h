@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_LIB_APEXMAIN_EXPERIMENTPARSER_H_
-#define _EXPORL_SRC_LIB_APEXMAIN_EXPERIMENTPARSER_H_
+#ifndef _APEX_SRC_LIB_APEXMAIN_EXPERIMENTPARSER_H_
+#define _APEX_SRC_LIB_APEXMAIN_EXPERIMENTPARSER_H_
 
 #include "apexdata/calibration/calibrationdata.h"
 
@@ -39,54 +39,29 @@
 #include "apextools/apextypedefs.h"
 #include "apextools/version.h"
 
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/xml/xmltools.h"
 
-#include "services/errorhandler.h"
+#include "common/global.h"
 
-#include "configfileparser.h"
+#include "upgradablexmlparser.h"
 
 #include <QMap>
 #include <QString>
 
-#include <vector>
-
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMElement;
-}
-
-using namespace apex::gui;
-using namespace apex::stimulus;
-
 namespace apex
 {
 
-class ApexProcedure;
-class ConfigFileParser;
-class MainConfigFileParser;
-class ApexErrorHandler;
-
 namespace device
 {
-class IMixer;
 class IApexDevice;
-}
-
-namespace gui
-{
-class ScreenParser;
 }
 
 namespace data
 {
-//class ConnectionData;
-//class ConnectionsData;
-class DevicesData;
 class ParameterManagerData;
 class StimuliData;
 struct StimulusDatablocksContainer;
 class ScreensData;
-class ApexMapParameters;
 class ApexTrial;
 class RandomGeneratorParameters;
 class ResultParameters;
@@ -95,11 +70,6 @@ class ParameterDialogResults;
 class ProcedureData;
 class ExperimentData;
 class FilePrefix;
-}//ns apex::data
-
-namespace stimulus
-{
-class OutputDevice;
 }
 
 /**
@@ -107,50 +77,47 @@ class OutputDevice;
  *
  * @author Tom Francart,,,
  */
-class APEX_EXPORT ExperimentParser: public ConfigFileParser
+class APEX_EXPORT ExperimentParser: public UpgradableXmlParser
 {
+    Q_OBJECT
 public:
 
     // FIXME: this should (together with interactive) probably be moved to a separate class
-    ExperimentParser(const QString& configFilename, QMap<QString, QString> expressions = QMap<QString, QString>());
+    ExperimentParser(const QString& configFilename,
+            const QMap<QString, QString> &expressions = QMap<QString, QString>());
     ~ExperimentParser();
 
     // if interactive==true, the parse will interact with the user via a GUI
     data::ExperimentData* parse(bool interactive);
-    QString getUpgradedConfigFile(); //Needed by the standalone experiment upgrader.
 
-protected:
-    virtual bool upgradeFrom(QDomDocument& doc, const QVector<int>& v);
+private Q_SLOTS:
+    void upgrade3_0_2();
+    void upgrade3_1_0();
+    void upgrade3_1_1();
+    void upgrade3_1_3();
 
 private:
-    void upgradeTo3_1_0( QDomDocument& doc );
-    void upgradeTo3_1_1( QDomDocument& doc );
-    //currently at 3.1.3
-
     bool ApplyXpathModifications();
 
     bool Parsefile ();
-    bool ParseDescription( XERCES_CPP_NAMESPACE::DOMElement* p_base );
-    bool ParseFilters( XERCES_CPP_NAMESPACE::DOMElement* p_filters );
-    bool ParseFilter( XERCES_CPP_NAMESPACE::DOMElement* p_filter );
-    bool ParseDatablocks(XERCES_CPP_NAMESPACE::DOMElement* p_datablocks);
-    bool ParseDevices(XERCES_CPP_NAMESPACE::DOMElement* p_base);
-    device::IApexDevice* ParseExtDevice( XERCES_CPP_NAMESPACE::DOMElement* a_pDdevice );
-    bool ParseScreens(XERCES_CPP_NAMESPACE::DOMElement* p_base );
-    bool ParseProcedure(XERCES_CPP_NAMESPACE::DOMElement* p_base);
-    bool ParseStimuli(XERCES_CPP_NAMESPACE::DOMElement* p_base);
-    bool ParseConnections(XERCES_CPP_NAMESPACE::DOMElement* p_connections);
+    bool ParseDescription(const QDomElement &p_base);
+    bool ParseFilters(const QDomElement &p_filters);
+    bool ParseFilter(const QDomElement &p_filter);
+    bool ParseDatablocks(const QDomElement &p_datablocks);
+    bool ParseDevices(const QDomElement &p_base);
+    device::IApexDevice* ParseExtDevice(const QDomElement &a_pDdevice);
+    bool ParseScreens(const QDomElement &p_base);
+    bool ParseProcedure(const QDomElement &p_base);
+    bool ParseStimuli(const QDomElement &p_base);
+    bool ParseConnections(const QDomElement &p_connections);
     QString GetDeviceForConnection(data::ConnectionData* cd);
 
-    bool ParseRandomGenerators(XERCES_CPP_NAMESPACE::DOMElement* p_base );
-    bool ParseRandomGenerator(XERCES_CPP_NAMESPACE::DOMElement* p_base);
+    bool ParseRandomGenerators(const QDomElement &p_base);
+    bool ParseRandomGenerator(const QDomElement &p_base);
 
-    bool ParseResults(XERCES_CPP_NAMESPACE::DOMElement* p_base );
-    bool ParseCalibration( XERCES_CPP_NAMESPACE::DOMElement* p_base );
-    bool ParseGeneral(XERCES_CPP_NAMESPACE::DOMElement* p_base );
-
-    //QString AddPrefix(const QString& p_base, const QString& prefix);
-
+    bool ParseResults(const QDomElement &p_base);
+    bool ParseCalibration( const QDomElement &p_base);
+    bool ParseGeneral(const QDomElement &p_base);
 
     bool DoExtraValidation();
     bool CheckProcedure();
@@ -168,12 +135,7 @@ private:
 
     bool FixStimuli();
 
-    virtual const QString getConfigfileNamespace()
-    {
-        return EXPERIMENT_NAMESPACE;
-    }
-
-    void expandTrials(DOMElement* p_base);
+    void expandTrials(const QDomElement &p_base);
 
     void AddStatusMessage(QString p_message);
     void StatusMessageDone();
@@ -185,8 +147,6 @@ private:
     //has to be kept since StimulusOutput is not constructed at the time of parsing it
     //would be nicer to have a struct with filters, devices, xtra info
     QString m_sMasterDevice;
-
-    StatusReporter &m_progress;
 
     //FIXME should all be QScopedPointer
     QScopedPointer<data::ScreensData> screens;
@@ -204,7 +164,6 @@ private:
     QScopedPointer<data::StimuliData> m_stimuli;
     QScopedPointer<data::ParameterManagerData> parameterManagerData;
 
-    QString upgradedDoc; //Needed for the standalone experiment upgrader.
     QMap<QString, QString> expressions;
 };
 

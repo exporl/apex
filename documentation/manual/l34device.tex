@@ -20,6 +20,30 @@ device with device number 0 (the simulated device).
 
 Before starting an \apex experiment that uses the L34device, make sure the appropriate devices are connected to the computer and the NIC environment is setup correctly.
 
+\subsection{Debugging}
+
+When using the L34 device, \apex starts a helper program (nic3slave.py). \apex
+communicates with the helper program (using domain sockets for linux and named
+pipes for windows), and sends commands to the helper program. In turn the
+helper program communicates with the L34 device and executes those commands.
+Because \apex doesn't communicate directly with the L34 device, the L34 debug
+output needs to be piped from the helper program to \apex. When you enable
+verbose in the device section of your experiment file, this debug output will
+be printed in the apex message window.\\
+
+You will need to use the long notation when defining your device with verbose, for example:
+
+\begin{lstlisting}
+
+  <device>
+      protoslave: slave=nic3slave,verbose;
+      platform=L34,implant=CIC4,auto_pufs=off,go_live=on,
+      min_pulse_width_us=25.0,flagged_electrodes=,
+      latency_ms=1000,mode=MP1+2
+  </device>
+
+\end{lstlisting}
+
 
 \section{Electrical stimulation files}
 
@@ -51,14 +75,12 @@ As the period is constant for an entire qic file, powerup frames have to be inse
 
 \section{Parameters of the L34 device}
 
-To use the L34 device, define a \element{device} under \element{devices}, use the \attribute{xsi:type="apex:L34DeviceType"} attribute.
+To use the L34 device, define a \element{device} under \element{devices}, use the \attribute{xsi:type="apex:CohDeviceType"} attribute.
 
 The L34 device has some main parameters:
 \begin{description}
-\item[device\_id] The device number to be used, as defined by Cochlear. E.g., the first L34 connected to the computer has id 1. There is a simulated device with id 0, which allows to debug experiments without having an L34 connected. Note that triggering does not work properly with the simulated device.
-\item[implant] The implant can be either \xml{cic3} (Esprit3G or Sprint or
-Freedom with old internal part) or \xml{cic4} (Freedom with new internal
-part).
+\item[device] Device identifier. For NIC 2, this identifier consists of three parts: the device type, the implant type and the device number. The device type should be L34. The implant can be either \xml{cic3} (Esprit3G or Sprint or Freedom with old internal part) or \xml{cic4} (Freedom with new internal part).
+    The device number corresponds to the order of the COM ports as defined in the Windows device manager, e.g. the first L34 connected to the computer has id 1. There is a simulated device with id 0, which allows to debug experiments without having an L34 connected. Note that triggering does not work properly with the simulated device.
 \end{description}
 
 When using \filename{.qic} or \filename{.qicext} files, \apex calculates the number of current units on the basis of the
@@ -71,9 +93,8 @@ T's for the different channels.
 Example:
 \begin{lstlisting}
 <devices>
- <device id="l34"  xsi:type="apex:L34DeviceType">
-    <device_id>1</device_id>
-    <implant>cic3</implant>
+ <device id="l34"  xsi:type="apex:CohDeviceType">
+    <device>l34-cic3-1</device>
 
     <defaultmap>
     <inline>
@@ -118,13 +139,13 @@ The \element{trigger} element can be used to specify trigger signals to be sent 
 Example:
 \begin{lstlisting}
 <master>l34-1</master>
-<device id="l34-1"  xsi:type="apex:L34DeviceType">
-	<device_id>1</device_id>
+<device id="l34-1"  xsi:type="apex:CohDeviceType">
+	<device>l34-cic3-1</device>
 	<trigger>out</trigger>
 	...
 </device>
-<device id="l34-2"  xsi:type="apex:L34DeviceType">
-	<device_id>2</device_id>
+<device id="l34-2"  xsi:type="apex:CohDeviceType">
+	<device>l34-cic3-2</device>
 	<trigger>in</trigger>
 	...
 </device>

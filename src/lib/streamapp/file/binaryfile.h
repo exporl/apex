@@ -20,9 +20,12 @@
 #ifndef __BINARYFILE_H__
 #define __BINARYFILE_H__
 
-#include <fstream>
-#include "stream.h"
-#include "audioformat.h"
+#include "../stream.h"
+#include "../audioformat.h"
+
+#include <QList>
+#include <QFile>
+#include <QString>
 
 namespace streamapp
 {
@@ -54,12 +57,12 @@ namespace streamapp
 
       /**
         * Open output file(s) for writing.
-        * Filenames are ac_sFileNamePrefix + "_chxxx" with xxx the channel number.
-        * @param ac_sFileNamePrefix the prefix (must include path)
+        * Filenames are fileNamePrefix + "_chxxx" with xxx the channel number.
+        * @param fileNamePrefix the prefix (must include path)
         * @param ac_nChannels number of channels (==files) to write
         * @return false if the file(s) could not be opened
         */
-    bool mp_bOpen( const std::string& ac_sFileNamePrefix, const unsigned ac_nChannels );
+    bool mp_bOpen( const QString& fileNamePrefix, const unsigned ac_nChannels );
 
       /**
         * Close the file(s).
@@ -103,8 +106,7 @@ namespace streamapp
     void Write( const Stream& ac_Data );
 
   private:
-    typedef ArrayStorage<std::ofstream*> mt_Files;
-    mt_Files* m_pFiles;
+    QList<QFile*> files;
   };
 
     /**
@@ -130,21 +132,21 @@ namespace streamapp
 
       /**
         * Open input file(s) for reading.
-        * Filenames are ac_sFileNamePrefix + "_chxxx" with xxx the channel number.
+        * Filenames are fileNamePrefix + "_chxxx" with xxx the channel number.
         * The number of channels used will be the number of matching filenames found.
-        * @param ac_sFileNamePrefix the file prefix
+        * @param fileNamePrefix the file prefix
         * @return false if the file could not be opened
         */
-    bool mp_bOpen( const std::string& ac_sFileNamePrefix );
+    bool mp_bOpen( const QString& fileNamePrefix );
 
       /**
         * Open a single input for writing.
         * The syntax of the filename doesn't matter, nor does the extension.
         * The number of channels used is one.
-        * @param ac_sFileName the filename
+        * @param fileName the filename
         * @return false if the file could not be opened
         */
-    bool mp_bOpenAny( const std::string& ac_sFileName );
+    bool mp_bOpenAny( const QString& fileName );
 
       /**
         * Close the file(s).
@@ -204,8 +206,7 @@ namespace streamapp
     static const unsigned sc_nSampleSize = sizeof( StreamType );
 
   private:
-    typedef ArrayStorage<std::ifstream*> mt_Files;
-    mt_Files* m_pFiles;
+    QList<QFile*> files;
     unsigned long mv_nSamples;
     unsigned long mv_nReadOffset;
   };

@@ -22,6 +22,8 @@
 
 #include "apextools/exceptions.h"
 
+#include "apextools/xml/xmltools.h"
+
 #include "adaptiveproceduredataparser.h"
 #include "adaptiveprocedureparser.h"
 
@@ -30,28 +32,23 @@ using namespace apex::parser;
 
 AdaptiveProcedureParser::AdaptiveProcedureParser()
 {
-
 }
 
-
-data::ProcedureData* AdaptiveProcedureParser::parse(XERCES_CPP_NAMESPACE::DOMElement* base)
+data::ProcedureData* AdaptiveProcedureParser::parse(const QDomElement &base)
 {
     data::AdaptiveProcedureData* data = new data::AdaptiveProcedureData();
     ProcedureParsersParent::Parse(base, data);
     return data;
 }
 
-
 bool AdaptiveProcedureParser::trialsValid()
 {
     return !currentConfig->GetTrials().isEmpty();
 }
 
-void AdaptiveProcedureParser::SetProcedureParameters(
-    XERCES_CPP_NAMESPACE::DOMElement* p_base)
+void AdaptiveProcedureParser::SetProcedureParameters(const QDomElement &p_base)
 {
-    data::AdaptiveProcedureData* param
-            = dynamic_cast<data::AdaptiveProcedureData*>(currentConfig);
+    data::AdaptiveProcedureData* param = dynamic_cast<data::AdaptiveProcedureData*>(currentConfig);
     parser::AdaptiveProcedureDataParser parser;
     parser.Parse(p_base, param);
 

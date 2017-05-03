@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __AUDIOFORMAT_H_
-#define __AUDIOFORMAT_H_
+#ifndef _APEX_SRC_LIB_STREAMAPP_AUDIOFORMAT_H_
+#define _APEX_SRC_LIB_STREAMAPP_AUDIOFORMAT_H_
 
 #include <string>
 
@@ -266,4 +266,4 @@ namespace streamapp
 
 }
 
-#endif //#ifndef __AUDIOFORMAT_H_
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_AUDIOFORMAT_H_

@@ -230,7 +230,7 @@ void CalibrationDialogPrivate::on_outputSlider_valueChanged (int value)
 
 void CalibrationDialogPrivate::on_output_textChanged()
 {
-    emit p->outputParameterChanged (outputParameter());
+    Q_EMIT p->outputParameterChanged (outputParameter());
     ui.outputDisplay->setText (ui.output->text());
 
     if (ignoreInput)
@@ -241,12 +241,12 @@ void CalibrationDialogPrivate::on_output_textChanged()
 
 void CalibrationDialogPrivate::on_target_textChanged()
 {
-    emit p->targetAmplitudeChanged (targetAmplitude());
+    Q_EMIT p->targetAmplitudeChanged (targetAmplitude());
 }
 
 void CalibrationDialogPrivate::on_loop_stateChanged (int state)
 {
-    emit p->loopingChanged (state == Qt::Checked);
+    Q_EMIT p->loopingChanged (state == Qt::Checked);
 }
 
 void CalibrationDialogPrivate::on_measured_textChanged()
@@ -258,12 +258,12 @@ void CalibrationDialogPrivate::on_correct_clicked()
 {
     const QString measured = measuredAmplitude();
     if (!measured.isEmpty())
-        emit p->correctOutputParameter (measured.toDouble());
+        Q_EMIT p->correctOutputParameter (measured.toDouble());
 }
 
 
 void CalibrationDialogPrivate::on_autoCalibrateSingle_clicked() {
-    emit p->autoCalibrateSingle ( p->parameterName() );
+    Q_EMIT p->autoCalibrateSingle ( p->parameterName() );
 }
 
 
@@ -277,11 +277,11 @@ void CalibrationDialogPrivate::on_hardware_currentIndexChanged
         ++ignoreHardware;
         p->setHardwareSetup (oldHardwareSetup);
         --ignoreHardware;
-        emit p->manageHardwareSetups();
+        Q_EMIT p->manageHardwareSetups();
     } else {
         const QString value = ui.hardware->itemText(index);
         if (oldHardwareSetup != value) {
-            emit p->hardwareSetupChanged (value);
+            Q_EMIT p->hardwareSetupChanged (value);
             oldHardwareSetup = value;
             // We reload the whole dialog, this should do the trick
             setParameterNames (p->parameterNames());
@@ -299,9 +299,9 @@ void CalibrationDialogPrivate::on_muted_itemSelectionChanged()
 
     if (!ignoreMuted) {
         Q_FOREACH (const QString &name, toMute)
-            emit p->mutingChanged (name, true);
+            Q_EMIT p->mutingChanged (name, true);
         Q_FOREACH (const QString &name, toUnmute)
-            emit p->mutingChanged (name, false);
+            Q_EMIT p->mutingChanged (name, false);
     }
 
     oldMuted = muted;
@@ -311,7 +311,7 @@ void CalibrationDialogPrivate::on_stimulus_currentIndexChanged
     (const QString &value)
 {
     if (oldStimulus != value && !ignoreStimulus) {
-        emit p->stimulusChanged (value);
+        Q_EMIT p->stimulusChanged (value);
         oldStimulus = value;
     }
 }
@@ -321,7 +321,7 @@ void CalibrationDialogPrivate::on_parameter_currentIndexChanged
 {
     const QString value (item ? item->text() : QString());
     if (oldParameter != value && !ignoreParameter) {
-        emit p->parameterNameChanged (value);
+        Q_EMIT p->parameterNameChanged (value);
         oldParameter = value;
         setDefaultMutedParameters();
     }
@@ -394,7 +394,7 @@ void CalibrationDialogPrivate::setHardwareSetups (QStringList value)
     ui.hardware->addItem (tr ("<Manage setups...>"), true);
     p->setHardwareSetup (current);
     --ignoreHardware;
-    // The handler will only emit if the old and the new setup are different
+    // The handler will only Q_EMIT if the old and the new setup are different
     on_hardware_currentIndexChanged (ui.hardware->currentIndex());
 }
 
@@ -406,7 +406,7 @@ void CalibrationDialogPrivate::setStimuli (QStringList value)
     ui.stimulus->addItems (value);
     p->setStimulus (current);
     --ignoreStimulus;
-    // The handler will only emit if the old and the new setup are different
+    // The handler will only Q_EMIT if the old and the new setup are different
     on_stimulus_currentIndexChanged (p->stimulus());
 }
 
@@ -422,13 +422,13 @@ void CalibrationDialogPrivate::setParameterNames (QStringList value)
     ++ignoreMuted;
     ui.muted->clear();
     ui.muted->addItems (value);
-    // The handler will only emit if the old and the new setup are different
+    // The handler will only Q_EMIT if the old and the new setup are different
     on_parameter_currentIndexChanged (ui.parameter->currentItem());
     setDefaultMutedParameters();
     --ignoreMuted;
     for (unsigned i = 0; i < unsigned (ui.muted->count()); ++i) {
         const QListWidgetItem * const item = ui.muted->item (i);
-        emit p->mutingChanged (item->text(), item->isSelected());
+        Q_EMIT p->mutingChanged (item->text(), item->isSelected());
     }
 }
 
@@ -487,6 +487,9 @@ CalibrationDialog::CalibrationDialog (QWidget *parent) :
     QDialog (parent),
     d (new CalibrationDialogPrivate (this))
 {
+#ifdef Q_OS_ANDROID
+    showMaximized();
+#endif
 }
 
 CalibrationDialog::~CalibrationDialog()

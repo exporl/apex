@@ -1,44 +1,56 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/config https://exporl.med.kuleuven.be/apex/schemas/3.1.3/apexconfig.xsd"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/config" version="1">
-    <paths>
-        <perl>/usr/bin/perl</perl>
-        <pluginScriptLibrary>pluginscriptlibrary.js</pluginScriptLibrary>
-    </paths>
-    <soundcards>
-        <card id="RME">
-            <drivername driver="asio">ASIO Hammerfall DSP</drivername>
-            <drivername driver="portaudio">HDSP Analog Out (1+2)(1)</drivername>
-        </card>
-        <card id="LynxONE">
-            <drivername driver="asio">LynxONE</drivername>
-            <drivername driver="portaudio">LynxONE FIXME</drivername>
-        </card>
-        <card id="Audiophile">
-            <drivername driver="asio">M-Audio Audiophile</drivername>
-            <drivername driver="portaudio">M-Audio Audiophile USB</drivername>
-            </card>
-        <card id="SoundMax">
-            <drivername driver="asio">NULL</drivername>
-            <drivername driver="portaudio">SoundMAX Digital Audio</drivername>
-        </card>
-        <card id="default">
-            <drivername driver="asio">default</drivername>
-            <drivername driver="portaudio">default</drivername>
-            <drivername driver="jack">default</drivername>
-              <drivername driver="qtaudio">default</drivername>
-            <drivername driver="dummy">default</drivername>
-        </card>
-        <card id="macdefaultout">
-            <drivername driver="asio">NULL</drivername>
-            <drivername driver="portaudio">Built-in Output</drivername>
-            <drivername driver="jack">NULL</drivername>
-          </card>
-    </soundcards>
-    <prefixes>
-        <prefix id="regression">file:../stimuli</prefix>
-        <prefix id="speechmaterials">file:l:/speechmaterials</prefix>
-        <prefix id="pictures">../../pictures</prefix>
-    </prefixes>
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/apexconfig.xsd">
+  <paths>
+    <pluginScriptLibrary>pluginscriptlibrary.js</pluginScriptLibrary>
+  </paths>
+  <soundcards>
+    <card id="RME">
+      <drivername driver="asio">ASIO Hammerfall DSP</drivername>
+      <drivername driver="portaudio">HDSP Analog Out (1+2)(1)</drivername>
+    </card>
+    <card id="LynxONE">
+      <drivername driver="asio">LynxONE</drivername>
+      <drivername driver="portaudio">LynxONE FIXME</drivername>
+    </card>
+    <card id="Audiophile">
+      <drivername driver="asio">M-Audio Audiophile</drivername>
+      <drivername driver="portaudio">M-Audio Audiophile USB</drivername>
+    </card>
+    <card id="SoundMax">
+      <drivername driver="asio">NULL</drivername>
+      <drivername driver="portaudio">SoundMAX Digital Audio</drivername>
+    </card>
+    <card id="default">
+      <drivername driver="asio">default</drivername>
+      <drivername driver="portaudio">default</drivername>
+      <drivername driver="jack">default</drivername>
+      <drivername driver="qtaudio">default</drivername>
+      <drivername driver="dummy">default</drivername>
+    </card>
+    <card id="macdefaultout">
+      <drivername driver="asio">NULL</drivername>
+      <drivername driver="portaudio">Built-in Output</drivername>
+      <drivername driver="jack">NULL</drivername>
+    </card>
+  </soundcards>
+  <cohdrivers>
+    <cohdriver id="l34-cic3-0">protoslave: nic: l34-cic3-0</cohdriver>
+    <cohdriver id="l34-cic3-1">protoslave: nic: l34-cic3-1</cohdriver>
+    <cohdriver id="l34-cic3-2">protoslave: nic: l34-cic3-2</cohdriver>
+    <cohdriver id="l34-cic4-0">protoslave: nic: l34-cic4-0</cohdriver>
+    <cohdriver id="l34-cic4-1">protoslave: nic: l34-cic4-1</cohdriver>
+    <cohdriver id="l34-cic4-2">protoslave: nic: l34-cic4-2</cohdriver>
+    <cohdriver id="nic3-l34-codacs-0">protoslave: slave=nic3slave,verbose=true,args=extendedamplituderange allowimplantcommands; platform=L34,implant=CIC4,auto_pufs=off,go_live=off,min_pulse_width_us=12.0,flagged_electrodes=</cohdriver>
+    <cohdriver id="nic3-l34-codacs-1">protoslave: slave=nic3slave,verbose=true,args=extendedamplituderange allowimplantcommands; platform=L34,implant=CIC4,auto_pufs=off,go_live=on,min_pulse_width_us=12.0,flagged_electrodes=</cohdriver>
+    <cohdriver id="nic3-rfgenxs-cic4-mp12-0">protoslave: slave=nic3slave,verbose; platform=RFGenXS,implant=CIC4,auto_pufs=off,go_live=off,min_pulse_width_us=25.0,flagged_electrodes=,latency_ms=1000,mode=MP1+2</cohdriver>
+    <cohdriver id="nic3-rfgenxs-cic4-mp12-1">protoslave: slave=nic3slave,verbose; platform=RFGenXS,implant=CIC4,auto_pufs=off,go_live=on,min_pulse_width_us=25.0,flagged_electrodes=,latency_ms=1000,mode=MP1+2,signal_path=left</cohdriver>
+    <cohdriver id="nic3-rfgenxs-cic4-mp12-2">protoslave: slave=nic3slave,verbose; platform=RFGenXS,implant=CIC4,auto_pufs=off,go_live=on,min_pulse_width_us=25.0,flagged_electrodes=,latency_ms=1000,mode=MP1+2,signal_path=right</cohdriver>
+    <cohdriver id="nic3-l34-cic4-mp12-0">protoslave: slave=nic3slave,verbose; platform=L34,implant=CIC4,auto_pufs=off,go_live=off,min_pulse_width_us=25.0,flagged_electrodes=,latency_ms=1000,mode=MP1+2</cohdriver>
+    <cohdriver id="nic3-l34-cic4-mp12-1">protoslave: slave=nic3slave,verbose; platform=L34,implant=CIC4,auto_pufs=off,go_live=on,min_pulse_width_us=25.0,flagged_electrodes=,latency_ms=1000,mode=MP1+2</cohdriver>
+  </cohdrivers>
+  <prefixes>
+    <prefix id="regression">file:../stimuli</prefix>
+    <prefix id="speechmaterials">file:j:/speechmaterials</prefix>
+    <prefix id="pictures">../../pictures</prefix>
+  </prefixes>
 </apex:apex>

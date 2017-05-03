@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
 
     <xs:include schemaLocation="prefix.xsd"/>
     <xs:include schemaLocation="xmlgeneratingplugin.xsd"/>
 
     <xs:complexType name="datablockstype">
         <xs:sequence>
-            <xs:element name="uri_prefix" type="apex:prefixType" minOccurs="0">
+            <xs:element name="prefix" type="apex:prefixType" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>The prefix for every filename used below.
                         Only used if a filename is a relative path. This prefix
@@ -49,27 +49,12 @@
                     reference</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="checksum" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>MD5 checksum of the datablock. If
-                        check==true, apex will check whether the checksum
-                        matches and issue a warning if it doesn't. Is useful to
-                        ensure data integrity.</xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="xs:hexBinary">
-                            <xs:attribute name="check" type="xs:boolean" use="optional"/>
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
             <xs:choice>
-                <xs:element name="uri" type="xs:anyURI">
+                <xs:element name="file" type="xs:string">
                     <xs:annotation>
                         <xs:documentation>Filename of the corresponding
                             datafile. If it is a relative path, it will be
-                            prefixed with the uri_prefix defined
+                            prefixed with the prefix defined
                         above.</xs:documentation>
                     </xs:annotation>
                 </xs:element>

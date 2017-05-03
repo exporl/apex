@@ -16,25 +16,27 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
+#include "../apexcontrol.h"
+
+#include "../connection/connection.h"
+
+#include "../parameters/parametermanager.h"
+
+#include "../runner/experimentrundelegate.h"
+
 #include "apextools/exceptions.h"
 
-#include "connection/connection.h"
-
-#include "parameters/parametermanager.h"
-
-#include "runner/experimentrundelegate.h"
-
-#include "services/filedialog.h"
-
 #include "connectiondialog.h"
+#include "mainwindow.h"
 #include "ui_connectiondialog.h"
 
-#include <QStandardPaths>
+#include <QFileDialog>
 #include <QGraphicsSvgItem>
 #include <QMessageBox>
 #include <QProcess>
 #include <QPushButton>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QSvgRenderer>
 #include <QWheelEvent>
 
@@ -87,22 +89,22 @@ ConnectionDialogPrivate::ConnectionDialogPrivate (QDialog *pub) :
     // Looks for dot.exe in the standard program files locations
     dotPath = QStandardPaths::findExecutable(QLatin1String("dot"));
 
-    if(!dotPath.contains(QLatin1String("Graphviz"))){
+    if (!QFile::exists(dotPath)) {
         // Apparently this registry key is no longer in use with more recent versions of graphviz
         // QStandardPaths offers an easier solution that won't break with newer versions
-        if (!QFile::exists(dotPath)){
+        if (!QFile::exists(dotPath)) {
             QSettings settings ("HKEY_LOCAL_MACHINE\\SOFTWARE\\ATT\\Graphviz", QSettings::NativeFormat);
             if (settings.contains ("InstallPath")){
                 dotPath = QDir (settings.value ("InstallPath").toString()).absoluteFilePath ("/bin/dot.exe");
             }
         }
-        if (!QFile::exists(dotPath)){
+        if (!QFile::exists(dotPath)) {
             QSettings settings ("HKEY_LOCAL_MACHINE\\SOFTWARE\\AT&T Research Labs\\Graphviz", QSettings::NativeFormat);
             if (settings.contains ("InstallPath")){
                 dotPath = QDir (settings.value ("InstallPath").toString()).absoluteFilePath ("/bin/dot.exe");
             }
         }
-        if (!QFile::exists(dotPath)){
+        if (!QFile::exists(dotPath)) {
             QSettings settings ("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\AT&T Research Labs\\Graphviz 2.28", QSettings::NativeFormat);
             if (settings.contains ("InstallPath")){
                 dotPath = QDir (settings.value ("InstallPath").toString()).absoluteFilePath ("/bin/dot.exe");
@@ -110,9 +112,7 @@ ConnectionDialogPrivate::ConnectionDialogPrivate (QDialog *pub) :
         }
     }
 
-    if (!QFile::exists(dotPath))
-    {
-        // dot.exe is shipped with APEX
+    if (!QFile::exists(dotPath)) {
         dotPath = QCoreApplication::applicationDirPath() + "/dot/dot.exe";
     }
 
@@ -163,8 +163,8 @@ void ConnectionDialogPrivate::fit()
 
 void ConnectionDialogPrivate::save()
 {
-    const QString filePath = FileDialog::Get().mf_sGetAnyFile("*.svg",
-            tr("SVG graphics files (*.svg)"));
+    const QString filePath = QFileDialog::getSaveFileName(ApexControl::Get().mainWindow(),
+            QString(), QSL("*.svg"), tr("SVG graphics files (*.svg)"));
     if (!filePath.isEmpty()) {
         QFile file (filePath);
         if (!file.open (QIODevice::WriteOnly) ||
@@ -228,6 +228,10 @@ ConnectionDialog::ConnectionDialog (QWidget *parent) :
     d->ui.graphicsView->setScene (scene);
     d->svgItem = new QGraphicsSvgItem;
     scene->addItem (d->svgItem);
+
+#ifdef Q_OS_ANDROID
+    showMaximized();
+#endif
 }
 
 void ConnectionDialog::setDelegate (const ExperimentRunDelegate &delegate)

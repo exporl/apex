@@ -28,8 +28,9 @@
 #include "../utils/stringutils.h"
 #include "../utils/tracer.h"
 
-#include <cstring>
-#include <iostream>
+#include <QString>
+
+Q_LOGGING_CATEGORY(wavefile, "apex.wavefile")
 
 using namespace std;
 using namespace dataconversion;
@@ -37,562 +38,464 @@ using namespace dataconversion;
 using namespace streamapp;
 
 InputWaveFile::InputWaveFile() :
-  m_lTotalSamples( 0l ),
-  m_pif( 0 ),
-  m_pLoop( new mt_LoopLogic( m_lTotalSamples, mv_lLoopStart, mv_lLoopEnd, m_nReadOffset ) )
+    totalSampleCount(0l),
+    loopLogic(new mt_LoopLogic(totalSampleCount, mv_lLoopStart, mv_lLoopEnd, readOffset))
 {
 }
 
 InputWaveFile::~InputWaveFile()
 {
-  mp_bClose();
-  delete m_pLoop;
+    mp_bClose();
+    delete loopLogic;
 }
 
-bool InputWaveFile::mp_bOpen( const std::string& ac_sFileName )
+bool InputWaveFile::mp_bOpen(const QString& fileName)
 {
     //do not allow open more than once
-  if( !m_pif )
-  {
-    m_pif = new ifstream( ac_sFileName.data(), ios::in|ios::binary );
-    if( !m_pif->is_open() )
-    {
-      delete m_pif;
-      m_pif = 0;
-      return false;
-    }
+    if(inputFile.isNull()) {
+        inputFile.reset(new QFile(fileName));
+        if(!inputFile->open(QIODevice::ReadOnly)) {
+            inputFile.reset(0);
+            return false;
+        }
+        ReadRIFF();
+        ReadFMT();
+        ReadDATA();
 
-    try
-    {
-      ReadRIFF();
-      ReadFMT();
-      ReadDATA();
-    }
-    catch( ... )
-    {
-      throw( utils::StringException( "bad wavefile header" ) );
-    }
+        dataLeft = dataHeader->dataSIZE;
 
-    m_nDataLeft         = m_pDATA->dataSIZE;
+        const short wFormat = fmtHeader->fmtFORMAT.wFormatTag;
+        const short wBitsPS = fmtHeader->fmtFORMAT.wBitsPerSample;
 
-    const short wFormat = m_pFMT->fmtFORMAT.wFormatTag;
-    const short wBitsPS = m_pFMT->fmtFORMAT.wBitsPerSample;
-
-    if( wBitsPS == 16 && wFormat == 1 )
-    {
-      m_eBitMode = AudioFormat::MSBint16;
-      m_nBytesPerSample = 2;
-    }
-    else if( wBitsPS == 32 && wFormat == 1 )
-    {
-      m_eBitMode = AudioFormat::MSBint32;
-      m_nBytesPerSample = 4;
-    }
-    else if( wBitsPS == 32 && wFormat == 3 )
-    {
-      m_eBitMode = AudioFormat::MSBfloat32;
-      m_nBytesPerSample = 4;
-    }
-    else if( wBitsPS == 24 && wFormat == 1 )
-    {
-      m_eBitMode = AudioFormat::MSBint24;
-      m_nBytesPerSample = 3;
-    }
-    else
-    {
-      throw( utils::StringException( "unknown wave format" ) );
-    }
-    m_nBytesPerFrame  = mf_nChannels() * m_nBytesPerSample;
-    m_lTotalSamples   = m_pDATA->dataSIZE / m_nBytesPerFrame;
+        if(wBitsPS == 16 && wFormat == 1) {
+            m_eBitMode = AudioFormat::MSBint16;
+            bytesPerSample = 2;
+        } else if(wBitsPS == 32 && wFormat == 1) {
+            m_eBitMode = AudioFormat::MSBint32;
+            bytesPerSample = 4;
+        } else if(wBitsPS == 32 && wFormat == 3) {
+            m_eBitMode = AudioFormat::MSBfloat32;
+            bytesPerSample = 4;
+        } else if(wBitsPS == 24 && wFormat == 1) {
+            m_eBitMode = AudioFormat::MSBint24;
+            bytesPerSample = 3;
+        } else {
+            throw(utils::StringException("unknown wave format"));
+        }
+        bytesPerFrame  = mf_nChannels() * bytesPerSample;
+        totalSampleCount   = dataHeader->dataSIZE / bytesPerFrame;
 
 
-      //some wave editors append extra bytes after the samples,
-      //we have to check this here since we count up instead of down
-      //new: just force correct file format instead of checking it every time
-    std::ifstream::pos_type cur = m_pif->tellg();   //code from gf_nStreamLength in stl/fileutils.h
-    m_pif->seekg( 0 );
-    std::ifstream::pos_type begin = m_pif->tellg();
-    m_pif->seekg( 0, std::ios::end );
-    std::ifstream::pos_type end = m_pif->tellg();
-    m_pif->seekg( cur );
-    long len = end - begin;
-    long dsize = len - WaveFileData::sf_lHeaderSize;
-    if( (unsigned long ) dsize > m_lTotalSamples * m_nBytesPerFrame ) {
-      DBGPF( "InputWaveFile: file has %d bytes too many",
-              dsize - m_lTotalSamples * m_nBytesPerFrame);
-    }
+        //some wave editors append extra bytes after the samples,
+        //we have to check this here since we count up instead of down
+        //new: just force correct file format instead of checking it every time
+        qint64 cur, begin, end;
+        cur = inputFile->pos();
+        inputFile->seek(0);
+        begin = inputFile->pos();
+        inputFile->seek(inputFile->size());
+        end = inputFile->pos();
+        inputFile->seek(cur);
 
-    return true;
-  }
-  return false;
+        long len = end - begin;
+        long dsize = len - WaveFileData::waveHeaderSize;
+        if((unsigned long ) dsize > totalSampleCount * bytesPerFrame) {
+            qCDebug(wavefile) << "InputWaveFile: file has " << dsize - totalSampleCount * bytesPerFrame << " bytes too many";
+        }
+
+        return true;
+    }
+    return false;
 }
 
 bool InputWaveFile::mp_bClose()
 {
-  if( m_pif && m_pif->is_open() )
-  {
-    m_pif->close();
-    delete m_pif;
-    m_pif = 0;
-    return true;
-  }
-  return false;
+    if(!inputFile.isNull() && inputFile->isOpen()) {
+        inputFile.reset(0);
+        return true;
+    }
+    return false;
 }
 
-unsigned long InputWaveFile::Read( void** a_pBuf, const unsigned ac_nSamples )
+unsigned long InputWaveFile::Read(void** a_pBuf, const unsigned ac_nSamples)
 {
-  if( !m_pif->is_open() )
-    throw( 0 );  //should never come here
-
-  const bool bLoop = mf_bIsLooping();
-  if( !bLoop && m_nReadOffset >= m_lTotalSamples )
-    return 0l;    //eof
-
-  unsigned nSamples  = ac_nSamples;
-  unsigned nRead     = 0;
-
-  int* dest0 = ( (int**) a_pBuf )[ 0 ];
-  int* dest1 = mf_nChannels() < 2 ? NULL : ( (int**) a_pBuf )[ 1 ];
-  //int* dest1 = ( (int**) a_pBuf )[ 1 ];
-
-  while( nSamples > 0 )
-  {
-    const unsigned nThisTime  = s_min( tempBufSize / m_nBytesPerFrame, nSamples );
-    unsigned nBytesToRead     = nThisTime * m_nBytesPerFrame;
-    unsigned nSamplesRead     = 0;
-
-    if( !bLoop )
-    {
-      m_pif->read( tempBuffer,
-              qMin(mf_lSamplesLeft() * m_nBytesPerFrame, (unsigned long)nBytesToRead));
-      nSamplesRead = m_pif->gcount() / m_nBytesPerFrame;
-      m_nReadOffset += nSamplesRead;
-    }
-    else
-    {
-      unsigned nLeft = nThisTime - nSamplesRead;
-      while( nLeft )
-      {
-        unsigned nLoopRead = m_pLoop->mf_nGetPiece( nLeft );
-
-        m_pif->read( tempBuffer + ( nSamplesRead * m_nBytesPerFrame ),
-              qMin(mf_lSamplesLeft() * m_nBytesPerFrame, nLoopRead * m_nBytesPerFrame));
-
-        unsigned nReadLoop = m_pif->gcount() / m_nBytesPerFrame;
-        nSamplesRead += nReadLoop;
-        nLeft = nThisTime - nSamplesRead;
-
-        mp_SeekPosition( m_pLoop->mf_nGetNewPos( nReadLoop ) );
-      }
+    if(!inputFile->isOpen()) {
+        qCWarning(wavefile, "Attempt to read from closed wave file");
+        throw(0);
     }
 
-    nRead += nSamplesRead;
+    const bool bLoop = mf_bIsLooping();
+    if(!bLoop && readOffset >= totalSampleCount)
+        return 0l;    //eof
 
-      //convert all nSamplesRead
-    mf_Convert( dest0, dest1, nSamplesRead );
+    unsigned nSamples  = ac_nSamples;
+    unsigned nRead     = 0;
 
-      //no need to try further
-    if( nSamplesRead != nThisTime )
-    {
-      m_pif->clear();
-      return nRead;
+    int* dest0 = ((int**) a_pBuf)[ 0 ];
+    int* dest1 = mf_nChannels() < 2 ? NULL : ((int**) a_pBuf)[ 1 ];
+
+    while(nSamples > 0) {
+        const unsigned nThisTime  = s_min(tempBufSize / bytesPerFrame, nSamples);
+        unsigned nBytesToRead     = nThisTime * bytesPerFrame;
+        unsigned nBytesRead       = 0;
+        unsigned nSamplesRead     = 0;
+
+        if(!bLoop) {
+            nBytesRead = inputFile->read( tempBuffer,
+                         qMin(mf_lSamplesLeft() * bytesPerFrame, (unsigned long)nBytesToRead));
+            nSamplesRead = nBytesRead / bytesPerFrame;
+            readOffset += nSamplesRead;
+        } else {
+            unsigned nLeft = nThisTime - nSamplesRead;
+            while(nLeft) {
+                unsigned nLoopRead = loopLogic->mf_nGetPiece(nLeft);
+
+                nBytesRead = inputFile->read(tempBuffer + ( nSamplesRead * bytesPerFrame),
+                             qMin(mf_lSamplesLeft() * bytesPerFrame, nLoopRead * bytesPerFrame));
+
+                unsigned nReadLoop = nBytesRead / bytesPerFrame;
+                nSamplesRead += nReadLoop;
+                nLeft = nThisTime - nSamplesRead;
+
+                mp_SeekPosition(loopLogic->mf_nGetNewPos(nReadLoop));
+            }
+        }
+
+        nRead += nSamplesRead;
+
+        //convert all nSamplesRead
+        mf_Convert(dest0, dest1, nSamplesRead);
+
+        //no need to try further
+        if(nSamplesRead != nThisTime) {
+            return nRead;
+        }
+
+        nSamples -= nThisTime;
     }
-
-    nSamples -= nThisTime;
-  }
-  return nRead;
+    return nRead;
 }
 
-void InputWaveFile::mf_Convert( int*& dest0, int*& dest1, const unsigned nSamplesRead )
+void InputWaveFile::mf_Convert(int*& dest0, int*& dest1, const unsigned nSamplesRead)
 {
-  const unsigned nChannels = mf_nChannels();
+    const unsigned channelCount = mf_nChannels();
 
-  if( m_eBitMode == AudioFormat::MSBint16 )
-  {
-    const short* src = (const short*) tempBuffer;
+    if(m_eBitMode == AudioFormat::MSBint16) {
+        const short* src = (const short*) tempBuffer;
 
-    if( nChannels == 1 )
-    {
-      for( unsigned i = 0 ; i < nSamplesRead ; ++ i )
-        *dest0++ = *src++ << 16;
+        if(channelCount == 1) {
+            for(unsigned i = 0 ; i < nSamplesRead ; ++ i)
+                *dest0++ = *src++ << 16;
+        } else {
+            for(unsigned i = 0 ; i < nSamplesRead ; ++ i) {
+                *dest0++ = *src++ << 16;
+                *dest1++ = *src++ << 16;
+            }
+        }
+    } else if(m_eBitMode == AudioFormat::MSBint24) {
+        const char* src = (const char*)tempBuffer;
+        if(channelCount == 1) {
+            for(unsigned i = 0 ; i < nSamplesRead ; ++ i) {
+                *dest0++ = littleEndian24Bit(src) << 8;
+                src += 3;
+            }
+        } else {
+            for(unsigned i = 0 ; i < nSamplesRead ; ++ i) {
+                *dest0++ = littleEndian24Bit(src) << 8;
+                src += 3;
+                *dest1++ = littleEndian24Bit(src) << 8;
+                src += 3;
+            }
+        }
+    } else if(m_eBitMode == AudioFormat::MSBint32) {
+        const int* src = (const int*)tempBuffer;
+        if(channelCount == 1) {
+            for(unsigned i = 0 ; i < nSamplesRead ; ++i)
+                *dest0++ = *src++;
+        } else {
+            for(unsigned i = 0 ; i < nSamplesRead ; ++i) {
+                *dest0++ = *src++;
+                *dest1++ = *src++;
+            }
+        }
+    } else if(m_eBitMode == AudioFormat::MSBfloat32) {
+        const int* src = (const int*)tempBuffer;
+        if(channelCount == 1) {
+            for(unsigned i = 0 ; i < nSamplesRead ; ++i)
+                *dest0++ = *src++;
+        } else {
+            for(unsigned i = 0 ; i < nSamplesRead ; ++i) {
+                *dest0++ = *src++;
+                *dest1++ = *src++;
+            }
+        }
     }
-    else
-    {
-      for( unsigned i = 0 ; i < nSamplesRead ; ++ i )
-      {
-        *dest0++ = *src++ << 16;
-        *dest1++ = *src++ << 16;
-      }
-    }
-  }
-  else if( m_eBitMode == AudioFormat::MSBint24 )
-  {
-    const char* src = (const char*)tempBuffer;
-    if( nChannels == 1 )
-    {
-      for( unsigned i = 0 ; i < nSamplesRead ; ++ i )
-      {
-        *dest0++ = littleEndian24Bit( src ) << 8;
-        src += 3;
-      }
-    }
-    else
-    {
-      for( unsigned i = 0 ; i < nSamplesRead ; ++ i )
-      {
-        *dest0++ = littleEndian24Bit( src ) << 8;
-        src += 3;
-        *dest1++ = littleEndian24Bit( src ) << 8;
-        src += 3;
-      }
-    }
-  }
-  else if( m_eBitMode == AudioFormat::MSBint32 )
-  {
-    const int* src = (const int*)tempBuffer;
-    if( nChannels == 1 )
-    {
-      for( unsigned i = 0 ; i < nSamplesRead ; ++i )
-        *dest0++ = *src++;
-    }
-    else
-    {
-      for( unsigned i = 0 ; i < nSamplesRead ; ++i )
-      {
-        *dest0++ = *src++;
-        *dest1++ = *src++;
-      }
-    }
-  }
-  else if( m_eBitMode == AudioFormat::MSBfloat32 )
-  {
-    const int* src = (const int*)tempBuffer;
-    if( nChannels == 1 )
-    {
-      for( unsigned i = 0 ; i < nSamplesRead ; ++i )
-        *dest0++ = *src++;
-    }
-    else
-    {
-      for( unsigned i = 0 ; i < nSamplesRead ; ++i )
-      {
-        *dest0++ = *src++;
-        *dest1++ = *src++;
-      }
-    }
-  }
 }
 
-INLINE unsigned long InputWaveFile::mf_lSamplesLeft() const
+unsigned long InputWaveFile::mf_lSamplesLeft() const
 {
-  return m_lTotalSamples - m_nReadOffset;
+    return totalSampleCount - readOffset;
 }
 
-INLINE unsigned long InputWaveFile::mf_lTotalSamples() const
+unsigned long InputWaveFile::mf_lTotalSamples() const
 {
-  return m_lTotalSamples;
+    return totalSampleCount;
 }
 
-INLINE unsigned long InputWaveFile::mf_lCurrentPosition() const
+unsigned long InputWaveFile::mf_lCurrentPosition() const
 {
-  return m_nReadOffset;
+    return readOffset;
 }
 
-void InputWaveFile::mp_SeekPosition( const unsigned long ac_nPosition )
+void InputWaveFile::mp_SeekPosition(const unsigned long ac_nPosition)
 {
-  if( ac_nPosition >= mf_lTotalSamples() )
-    throw utils::StringException( "mp_SeekPosition got out of range!!" );
+    if(ac_nPosition >= mf_lTotalSamples())
+        throw utils::StringException("mp_SeekPosition got out of range!!");
     //convert nSamples to bytes
-  const unsigned long nToAdvance = ac_nPosition * m_nBytesPerFrame;
+    const unsigned long nToAdvance = ac_nPosition * bytesPerFrame;
     //seek pos, don't forget to jump over header
-  m_pif->clear();
-  m_pif->seekg( nToAdvance + WaveFileData::sf_lHeaderSize );
+    inputFile->seek(nToAdvance + WaveFileData::waveHeaderSize);
     //update
-  m_nReadOffset = ac_nPosition;
+    readOffset = ac_nPosition;
 }
 void InputWaveFile::ReadRIFF()
 {
-  m_pif->read((char*)m_pRIFF, sizeof(RIFF));
-  if( !CheckID( m_pRIFF->riffID, 'R', 'I', 'F', 'F') ) {
-    throw( 0 );
-  }
-  if( !CheckID( m_pRIFF->riffFORMAT, 'W', 'A', 'V', 'E') ) {
-    throw( 0 );
-  }
+    inputFile->read((char*)riffHeader, sizeof(RIFF));
+    if(!CheckID( riffHeader->riffID, 'R', 'I', 'F', 'F')) {
+        throw(0);
+    }
+    if(!CheckID( riffHeader->riffFORMAT, 'W', 'A', 'V', 'E')) {
+        throw(0);
+    }
 }
 void InputWaveFile::ReadFMT()
 {
-  m_pif->read((char*)m_pFMT, sizeof(FMT));
-  if( !CheckID( m_pFMT->fmtID, 'f', 'm', 't', ' ') ) {
-    throw( 0 );
-  }
+    inputFile->read((char*)fmtHeader, sizeof(FMT));
+    if(!CheckID( fmtHeader->fmtID, 'f', 'm', 't', ' ')) {
+        throw(0);
+    }
 }
 void InputWaveFile::ReadDATA()
 {
-  try
-  {
-    m_pif->read( (char*) m_pDATA, sizeof( DATA ) );
-    if( !CheckID( m_pDATA->dataID, 'd', 'a', 't', 'a') )
-      throw( 0 );
-  }
-  catch( ... )
-  {
-      //something stange! In wave files the DATA identifier
-      //can be offseted (maybe because of address aligment)
-      //Start to looking DATA_ID "manualy" ;)
-    m_pif->seekg( sizeof( RIFF ) + sizeof( FMT ) );
-    bool foundData = false;
-    char ch;
+    try {
+        inputFile->read((char*) dataHeader, sizeof(DATA));
+        if(!CheckID( dataHeader->dataID, 'd', 'a', 't', 'a'))
+            throw(0);
+    } catch(...) {
+        //something stange! In wave files the DATA identifier
+        //can be offseted (maybe because of address aligment)
+        //Start to looking DATA_ID "manualy" ;)
+        inputFile->seek(sizeof(RIFF) + sizeof(FMT));
+        bool foundData = false;
+        char ch;
 
-    while( m_pif )
-    {
-      m_pif->get(ch);
-      if( ch == 'd' )
-      {
-          //It can be DATA_ID, check it!
-        m_pif->unget();
-        m_pif->read( (char*)m_pDATA, sizeof( DATA ) );
-        if( CheckID( m_pDATA->dataID, 'd','a','t','a' ) )
-        {
-          foundData = true;
-          break;
+        while(inputFile) {
+            inputFile->getChar(&ch);
+            if(ch == 'd') {
+                //It can be DATA_ID, check it!
+                inputFile->ungetChar(ch);
+                inputFile->read((char*)dataHeader, sizeof(DATA));
+                if(CheckID(dataHeader->dataID, 'd','a','t','a')) {
+                    foundData = true;
+                    break;
+                }
+            }
         }
-      }
-    }
 
-    if( !foundData )
-      throw( 0 );
-  }
+        if(!foundData)
+            throw(0);
+    }
 }
 
-bool InputWaveFile::CheckID( char *idPar, char A, char B, char C, char D )
+bool InputWaveFile::CheckID(char *idPar, char A, char B, char C, char D)
 {
-  return
-  (
-    ( idPar[ 0 ] == A ) &&
-    ( idPar[ 1 ] == B ) &&
-    ( idPar[ 2 ] == C ) &&
-    ( idPar[ 3 ] == D )
-  );
+    return
+        (
+         (idPar[ 0 ] == A) &&
+         (idPar[ 1 ] == B) &&
+         (idPar[ 2 ] == C) &&
+         (idPar[ 3 ] == D)
+         );
 }
 
 /************************************************************* OutputWaveFile *********************************************************/
 
 OutputWaveFile::OutputWaveFile() :
-  m_pof( 0 )
+    outputFile(0)
 {
 }
 
 OutputWaveFile::~OutputWaveFile()
 {
-  mp_bClose();
+    mp_bClose();
 }
 
-bool OutputWaveFile::mp_bOpen( const std::string& ac_sFileName, const unsigned ac_nChannels, const unsigned long ac_nFs, const AudioFormat::mt_eBitMode ac_eMode )
+bool OutputWaveFile::mp_bOpen(const QString& fileName, const unsigned channelCount, const unsigned long ac_nFs, const AudioFormat::mt_eBitMode ac_eMode)
 {
     //do not allow create more than once
-  if( !m_pof )
-  {
-    if( ac_nChannels == 0 || ac_nChannels > 2 || ac_nFs ==0 )
-      return false;
+    if(outputFile.isNull()) {
+        if(channelCount == 0 || channelCount > 2 || ac_nFs ==0)
+            return false;
 
-    m_pof = new ofstream( ac_sFileName.data(), ios::out | ios::binary | ios::trunc );
-    if( !m_pof->is_open() )
-      return false;
+        outputFile.reset(new QFile(fileName));
+        if(!outputFile->open(QIODevice::WriteOnly | QIODevice::Truncate))
+            return false;
 
-    const short c_nChannels = (short)ac_nChannels;
+        const short c_channelCount = (short)channelCount;
 
-    m_eBitMode = ac_eMode;
-    short wBitsPS = 0;
-    short wFormat = 0;
-    short wBlockA = 0;
-    if( m_eBitMode == AudioFormat::MSBint16 )
-    {
-      wBitsPS = 16;
-      wFormat = 1;
-      wBlockA = 2 * c_nChannels;
-      m_nBytesPerSample = 2;
+        m_eBitMode = ac_eMode;
+        short wBitsPS = 0;
+        short wFormat = 0;
+        short wBlockA = 0;
+        if(m_eBitMode == AudioFormat::MSBint16) {
+            wBitsPS = 16;
+            wFormat = 1;
+            wBlockA = 2 * c_channelCount;
+            bytesPerSample = 2;
+        } else if(m_eBitMode == AudioFormat::MSBint32) {
+            wBitsPS = 32;
+            wFormat = 1;
+            wBlockA = 4 * c_channelCount;
+            bytesPerSample = 4;
+        } else if(m_eBitMode == AudioFormat::MSBfloat32) {
+            wBitsPS = 32;
+            wFormat = 3;
+            wBlockA = 4 * c_channelCount;
+            bytesPerSample = 4;
+        } else if(m_eBitMode == AudioFormat::MSBint24) {
+            wBitsPS = 24;
+            wFormat = 1;
+            wBlockA = 3 * c_channelCount;
+            bytesPerSample = 3;
+        } else {
+            throw(utils::StringException("unknown wave format"));
+        }
+
+        bytesPerFrame = channelCount * bytesPerSample;
+
+        //RIFF
+        strncpy(riffHeader->riffID, "RIFF", 4);
+        riffHeader->riffSIZE = waveHeaderSize - 8;
+        strncpy(riffHeader->riffFORMAT, "WAVE", 4);
+
+        //FMT
+        strncpy(fmtHeader->fmtID, "fmt ", 4);
+        fmtHeader->fmtSIZE = sizeof(WAVEFORM);
+        fmtHeader->fmtFORMAT.wFormatTag      = wFormat;
+        fmtHeader->fmtFORMAT.channelCount       = (short) channelCount;
+        fmtHeader->fmtFORMAT.samplesPerSecond  = ac_nFs;
+        fmtHeader->fmtFORMAT.nBlockAlign     = wBlockA;
+        fmtHeader->fmtFORMAT.nAvgBytesPerSec = bytesPerFrame * ac_nFs;
+        fmtHeader->fmtFORMAT.wBitsPerSample  = wBitsPS;
+
+        //DATA
+        strncpy(dataHeader->dataID, "data", 4);
+        dataHeader->dataSIZE = 0;
+
+        outputFile->write((char*)riffHeader, sizeof(RIFF));
+        outputFile->write((char*)fmtHeader , sizeof(FMT) );
+        outputFile->write((char*)dataHeader, sizeof(DATA));
+
+        return true;
     }
-    else if( m_eBitMode == AudioFormat::MSBint32 )
-    {
-      wBitsPS = 32;
-      wFormat = 1;
-      wBlockA = 4 * c_nChannels;
-      m_nBytesPerSample = 4;
-    }
-    else if( m_eBitMode == AudioFormat::MSBfloat32 )
-    {
-      wBitsPS = 32;
-      wFormat = 3;
-      wBlockA = 4 * c_nChannels;
-      m_nBytesPerSample = 4;
-    }
-    else if( m_eBitMode == AudioFormat::MSBint24 )
-    {
-      wBitsPS = 24;
-      wFormat = 1;
-      wBlockA = 3 * c_nChannels;
-      m_nBytesPerSample = 3;
-    }
-    else
-    {
-      throw( utils::StringException( "unknown wave format" ) );
-    }
 
-    m_nBytesPerFrame = ac_nChannels * m_nBytesPerSample;
-
-      //RIFF
-    strncpy( m_pRIFF->riffID, "RIFF", 4 );
-    m_pRIFF->riffSIZE = sf_lHeaderSize - 8;
-    strncpy( m_pRIFF->riffFORMAT, "WAVE", 4 );
-
-      //FMT
-    strncpy( m_pFMT->fmtID, "fmt ", 4 );
-    m_pFMT->fmtSIZE = sizeof( WAVEFORM );
-    m_pFMT->fmtFORMAT.wFormatTag      = wFormat;
-    m_pFMT->fmtFORMAT.nChannels       = (short) ac_nChannels;
-    m_pFMT->fmtFORMAT.nSamplesPerSec  = ac_nFs;
-    m_pFMT->fmtFORMAT.nBlockAlign     = wBlockA;
-    m_pFMT->fmtFORMAT.nAvgBytesPerSec = m_nBytesPerFrame * ac_nFs;
-    m_pFMT->fmtFORMAT.wBitsPerSample  = wBitsPS;
-
-      //DATA
-    strncpy( m_pDATA->dataID, "data", 4 );
-    m_pDATA->dataSIZE = 0;
-
-    m_pof->write( (char*)m_pRIFF, sizeof(RIFF) );
-    m_pof->write( (char*)m_pFMT , sizeof(FMT)  );
-    m_pof->write( (char*)m_pDATA, sizeof(DATA) );
-
-    return true;
-  }
-
-  return false;
+    return false;
 }
 
 bool OutputWaveFile::mp_bClose()
 {
-  if( m_pof )
-  {
-    WriteHeader();
-    m_pof->close();
-    delete m_pof;
-    m_pof = 0;
-    return true;
-  }
-  return false;
+    if(!outputFile.isNull()) {
+        WriteHeader();
+        outputFile.reset(0);
+        return true;
+    }
+    return false;
 }
 
 void OutputWaveFile::WriteHeader()
 {
-  m_pof->seekp( 0 );
-  m_pRIFF->riffSIZE += m_nDataLeft;
-  m_pDATA->dataSIZE += m_nDataLeft;
-  m_pof->write( (char*)m_pRIFF, sizeof(RIFF) );
-  m_pof->write( (char*)m_pFMT , sizeof(FMT)  );
-  m_pof->write( (char*)m_pDATA, sizeof(DATA) );
+    outputFile->seek(0);
+    riffHeader->riffSIZE += dataLeft;
+    dataHeader->dataSIZE += dataLeft;
+    outputFile->write((char*)riffHeader, sizeof(RIFF));
+    outputFile->write((char*)fmtHeader, sizeof(FMT));
+    outputFile->write((char*)dataHeader, sizeof(DATA));
 }
 
-unsigned long OutputWaveFile::Write( const void** a_pBuf, const unsigned ac_nSamples )
+unsigned long OutputWaveFile::Write(const void** a_pBuf, const unsigned ac_nSamples)
 {
-  if( !m_pof->is_open() )
-    throw( utils::StringException( "OutputWaveFile::Write" ) );  //should *never* come here
+    if(!outputFile->isOpen())
+        throw(utils::StringException("OutputWaveFile::Write"));  //should *never* come here
 
-  unsigned        nSamples = ac_nSamples;
-  const unsigned nChannels = mf_nChannels();
+    unsigned        nSamples = ac_nSamples;
+    const unsigned channelCount = mf_nChannels();
 
-  const int* src0 = (const int*) a_pBuf[ 0 ];
-  const int* src1 = (const int*) a_pBuf[ 1 ];
+    const int* src0 = (const int*) a_pBuf[ 0 ];
+    const int* src1 = (const int*) a_pBuf[ 1 ];
 
-  while( nSamples > 0 )
-  {
-    const unsigned nThisTime      = s_min( tempBufSize / m_nBytesPerFrame, nSamples );
-    const unsigned nToWrite       = nThisTime * m_nBytesPerFrame;
+    while(nSamples > 0) {
+        const unsigned nThisTime      = s_min(tempBufSize / bytesPerFrame, nSamples);
+        const unsigned nToWrite       = nThisTime * bytesPerFrame;
 
-    if( m_eBitMode == AudioFormat::MSBint16 )
-    {
-      short* dest = (short*) tempBuffer;
-      if( nChannels == 1 )
-      {
-        for( unsigned i = 0 ; i < nThisTime ; ++ i )
-          *dest++ = (short) ( *src0++ >> 16 );
-      }
-      else
-      {
-        for( unsigned i = 0 ; i < nThisTime ; ++ i )
-        {
-          *dest++ = (short) ( *src0++ >> 16 );
-          *dest++ = (short) ( *src1++ >> 16 );
+        if(m_eBitMode == AudioFormat::MSBint16) {
+            short* dest = (short*) tempBuffer;
+            if(channelCount == 1) {
+                for(unsigned i = 0 ; i < nThisTime ; ++ i)
+                    *dest++ = (short) (*src0++ >> 16);
+            } else {
+                for(unsigned i = 0 ; i < nThisTime ; ++ i) {
+                    *dest++ = (short) (*src0++ >> 16);
+                    *dest++ = (short) (*src1++ >> 16);
+                }
+            }
+        } else if(m_eBitMode == AudioFormat::MSBint24) {
+            char* dest = (char*) tempBuffer;
+            if(channelCount == 1) {
+                for(unsigned i = 0 ; i < nThisTime ; ++ i) {
+                    littleEndian24BitToChars(*src0++ >> 8, dest);
+                    dest += 3;
+                }
+            } else {
+                for(unsigned i = 0 ; i < nThisTime ; ++ i) {
+                    littleEndian24BitToChars(*src0++ >> 8, dest);
+                    dest += 3;
+                    littleEndian24BitToChars(*src1++ >> 8, dest);
+                    dest += 3;
+                }
+            }
+        } else if(m_eBitMode == AudioFormat::MSBint32) {
+            int* dest = (int*) tempBuffer;
+            if(channelCount == 1) {
+                for(unsigned i = 0 ; i < nThisTime ; ++ i)
+                    *dest++ = *src0++;
+            } else {
+                for(unsigned i = 0 ; i < nThisTime ; ++ i) {
+                    *dest++ = *src0++;
+                    *dest++ = *src1++;
+                }
+            }
+        } else if(m_eBitMode == AudioFormat::MSBfloat32) {
+            int* dest = (int*) tempBuffer;
+            if(channelCount == 1) {
+                for(unsigned i = 0 ; i < nThisTime ; ++ i)
+                    *dest++ = *src0++;
+            } else {
+                for(unsigned i = 0 ; i < nThisTime ; ++ i) {
+                    *dest++ = *src0++;
+                    *dest++ = *src1++;
+                }
+            }
         }
-      }
-    }
-    else if( m_eBitMode == AudioFormat::MSBint24 )
-    {
-      char* dest = (char*) tempBuffer;
-      if( nChannels == 1 )
-      {
-        for( unsigned i = 0 ; i < nThisTime ; ++ i )
-        {
-          littleEndian24BitToChars( *src0++ >> 8, dest );
-          dest += 3;
+
+        if(outputFile->write(tempBuffer, nToWrite) == -1) {
+            //disk full or so, write header so we still have usable data
+            WriteHeader();
+            return 0l;
         }
-      }
-      else
-      {
-        for( unsigned i = 0 ; i < nThisTime ; ++ i )
-        {
-          littleEndian24BitToChars( *src0++ >> 8, dest );
-          dest += 3;
-          littleEndian24BitToChars( *src1++ >> 8, dest );
-          dest += 3;
-        }
-      }
-    }
-    else if( m_eBitMode == AudioFormat::MSBint32 )
-    {
-      int* dest = (int*) tempBuffer;
-      if( nChannels == 1 )
-      {
-        for( unsigned i = 0 ; i < nThisTime ; ++ i )
-          *dest++ = *src0++;
-      }
-      else
-      {
-        for( unsigned i = 0 ; i < nThisTime ; ++ i )
-        {
-          *dest++ = *src0++;
-          *dest++ = *src1++;
-        }
-      }
-    }
-    else if( m_eBitMode == AudioFormat::MSBfloat32 )
-    {
-      int* dest = (int*) tempBuffer;
-      if( nChannels == 1 )
-      {
-        for( unsigned i = 0 ; i < nThisTime ; ++ i )
-          *dest++ = *src0++;
-      }
-      else
-      {
-        for( unsigned i = 0 ; i < nThisTime ; ++ i )
-        {
-          *dest++ = *src0++;
-          *dest++ = *src1++;
-        }
-      }
+
+        dataLeft += nToWrite;
+        nSamples -= nThisTime;
     }
 
-    if( !m_pof->write( tempBuffer, nToWrite ) )
-    {
-        //disk full or so, write header so we still have usable data
-      WriteHeader();
-      return 0l;
-    }
-
-    m_nDataLeft += nToWrite;
-    nSamples -= nThisTime;
-  }
-
-  return ac_nSamples;
+    return ac_nSamples;
 }

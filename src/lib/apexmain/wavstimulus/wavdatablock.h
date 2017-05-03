@@ -48,7 +48,7 @@ public:
     /**
      * Constructor.
      */
-    WavDataBlock(const data::DatablockData& data, const QUrl& filename,
+    WavDataBlock(const data::DatablockData& data, const QString& filename,
                  const ExperimentRunDelegate* experiment);
 
     /**
@@ -60,12 +60,6 @@ public:
         * Implementation of the WavCompatibleDataBlock method.
         */
     PositionableAudioFormatReaderStream* GetWavStream( const unsigned ac_nBufferSize, const unsigned long ac_lFs ) const;
-
-    /**
-        * Implementation of the DataBlock method.
-        */
-    virtual const QString& GetModule() const
-    { return sc_sWavDevice; }
 
     virtual DataBlock* GetCopy(QString id);
 

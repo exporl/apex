@@ -101,11 +101,6 @@ class WavFilter : public Filter
                 /**
                   * @see IApexdevice
                   */
-                //virtual void RestoreParametersImpl() = 0;
-
-                /**
-                  * @see IApexdevice
-                  */
                 void mp_NeedRestore()
                 { mv_bNeedsRestore = true; }
 

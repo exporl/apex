@@ -27,7 +27,7 @@ results are written to a results file.
  \centering
  \includegraphics[width=\textwidth]{example2sentenceinnoise.png}
  \caption{Example of adaptive sentence in noise experiment}
- \label{fig:sentencenoise}
+ \label{fig:sentencenoise} \todo{bold werkt niet correct?}
 
 \end{figure}
 \subsection{Conceptual}
@@ -73,13 +73,13 @@ detail.
   <parameters>
     <presentations>1</presentations>
     <order>sequential</order>
+    <corrector xsi:type="apex:isequal"/>
     <nUp>1</nUp>
     <nDown>1</nDown>
     <adapt_parameter>gain</adapt_parameter>
     <start_value>0</start_value>
     <stop_after_type>presentations</stop_after_type>
     <stop_after>1</stop_after>
-    <rev_for_mean>4</rev_for_mean>
     <larger_is_easier>true</larger_is_easier>
     <repeat_first_until_correct>true</repeat_first_until_correct>
     <stepsizes><stepsize begin="0" size="2"/></stepsizes>
@@ -139,6 +139,12 @@ the order that is specified in the experiment file (if
 \xml{random} would be specified, they would be presented in random
 order).
 
+\item \element{corrector} the corrector checks whether the response is correct or not. The
+attribute \xml{xsi:type="apex:isequal"} compares whether the two
+input values are exactly the same. In this example
+\element{corrector} compares the answer specified under trial  (\id{button_correct}) and
+the ID corresponding to the picture that has been clicked (either \id{button_correct} or \id{button_incorrect}).
+
 \item \element{nUp} the level is increased after n (here 1)
 incorrect response(s); cf \element{larger_is_easier}
 
@@ -157,11 +163,7 @@ specified number of presentations of each trial is completed (it
 is also possible to stop after \element{reversals}.
 
 \item \element{stop_after} the experiment stops after 1
-presentation
-
-\item \element{rev_for_mean} the average is determined on the
-basis of a certain number of presentations (or reversals if
-\element{reversals} is specified in \element{stop_after_type}). \todo{outdated, now parameter for results script}
+presentation of each trial
 
 \item \element{larger_is_easier} If \xml{true}, then larger values
 of the parameter are easier than smaller values. It is used to
@@ -197,6 +199,10 @@ element of the screen that was clicked (\id{button_correct} or
 
 \index{presentations}
 
+\index{order}
+
+\index{corrector}
+
 \index{nUp}
 
 \index{nDown}
@@ -209,8 +215,6 @@ element of the screen that was clicked (\id{button_correct} or
 
 \index{stop after}
 
-\index{rev for mean}
-
 \index{larger is easier}
 
 \index{repeat first until}
@@ -220,16 +224,6 @@ element of the screen that was clicked (\id{button_correct} or
 \index{trial}
 
 \index{answer}
-
-\begin{lstlisting}
-<corrector xsi:type="apex:isequal" />
-\end{lstlisting}
-\index{corrector}
-
-The corrector checks whether the response is correct or not. In
-this example \element{corrector} compares the answer specified
-under trial (\id{button_correct}) with the response given by the
-subject (either \id{button_correct} or \id{button_incorrect}).
 
 \begin{lstlisting}
 <screens>
@@ -291,8 +285,7 @@ feedback
 
 \item \element{progressbar} If the value is \xml {true} a progress
 bar will be displayed in the right hand bottom corner of the
-screen that indicates how many trials have been completed and how
-many remain.
+screen that indicates the percentage of trials that have been completed.
 
 \item \element{feedback length} duration of the time after
 response (in msec) that \apex waits before presenting the next
@@ -311,8 +304,10 @@ screenshot, figure...).
 
 \item \element{gridlayout} places elements in an irregular grid.
 The screen is divided into sections according to the values. In
-this example there are equal number of rows and columns. The
-stretch factor for the columns is a list of integers, separated by
+this example there are two nested layouts. The main layout divides the screen in two main rows (height = 2, width = 1).
+The parameter layout divides the first of these rows in four rows and four columns, of which only the two first ones are filled.
+The answer layout divides the second main row in two columns, each with one button.
+The stretch factor for the columns is a list of integers, separated by
 comma's. There should be as many integers as columns. The width of
 the columns is proportional to the numbers. With \xml{width="1"},
 and \xml{height="2"} \xml{rowstretch="1,2"} implies that the
@@ -328,7 +323,7 @@ the \element{text} ``SNR'' and ``Sentence''. The button
 ``Correct'' and ``Incorrect'' are indicated at the bottom of the
 screen
 
-\item \element{parameterlabel} the blocks on the right the values
+\item \element{parameterlabel} the blocks on the right display the values
 of the fixed parameters. Gain is the (variable) SNR level, and
 sentence is a fixed parameter, defined in \element{stimulus}
 
@@ -342,7 +337,7 @@ contains the subject's response. Therefore, in
 contains the subject's response. In the case of screen elements
 that are clicked in order to respond, the example is further
 complicated by the fact that we cannot specify just one of the
-elements (buttons, pictures), but that the response rather comes
+elements (one button, one picture), but that the response rather comes
 from a group of elements. This is when a \element{buttongroup} can
 be used to group together different screen elements.
 
@@ -400,18 +395,18 @@ to give the absolute path, starting at the root. There are 3 ways
 to specify a prefix: by directly specifying an absolute path, by
 directly specifying a path relative to the experiment file or by
 referring to a prefix stored in \filename{apexconfig.xml}. Please
-refer to section~\ref{sec:prefixes} for more information.
+refer to section~\ref{sec:prefixes} for more information. \todo{necessary to repeat all this information here, not enough to refer to prefixes section? (Lot)}
 
 \item \element{datablock} for each wave file a datablock is made,
 with an ID.
 
-Each datablock is associated to a \element{device} (by means of
-its ID). In datablock \id{silence} the special syntax is
+In datablock \id{silence} the special syntax is
 demonstrated for creating a datablock containing only silence
 (i.e., zeros). This is done to put silence before and after the
-sentence (not the noise), to prevent the speech and noise from
+sentence, to prevent the speech and noise from
 starting at the same time. The length of the silence datablock is
-specified in ms after the prefix \xml{silence}.
+specified in ms after the prefix \xml{silence}. It is added before the signal (in element \element{stimulus}), not
+before the noise.
 
 \begin{itemize}
 \item the datablock is associated with the sound card with ID
@@ -446,7 +441,7 @@ above
 
 All devices defined in the experiment file are grouped in
 \element{devices}.The ID is set to \id{wavdevice}. As an ID is
-unique for a entire experiment file, it can be used later on to
+unique for an entire experiment file, it can be used later on to
 refer to this device (eg in datablocks).
 
 \begin{itemize}
@@ -504,12 +499,12 @@ that a dataloop generator has to be created. This is a generator
 that takes a datablock and loops it infinitely. The datablock to
 be looped is specified by its ID \id {noisedata}.
 
-\item \element{filter} The attribute
-\xml{xsi:type="apex:amplifier"} tells \apex that it is assigned an
-ID \id{amplifier}. The gain of this amplifier will be varied to
-change the amplitude of the words and thus the SNR. The gain of
-the amplifier is made a variable parameter by assigning it ID
-\id{gain}
+\item \element{filter} on line~\ref{xml:filter2} the attribute
+\xml{xsi:type="apex:amplifier"} tells \apex that an amplifier has
+to be created. The gain of this amplifier will be varied to change
+the amplitude of the words and thus the SNR. It is assigned ID
+\id{amplifier}. The gain of the amplifier is made a variable
+parameter by assigning it ID \id{gain}
 
 \begin{itemize}
 
@@ -660,9 +655,6 @@ appear in bold on screen.
 
 This is repeated for all the sentences.
 
-
-
-
 \index{stimuli}
 
 \index{fixed parameters}
@@ -674,6 +666,8 @@ This is repeated for all the sentences.
 \index{sequential}
 
 \index{parameter}
+
+
 
 \begin{lstlisting}
 <connections>
@@ -713,7 +707,6 @@ This is repeated for all the sentences.
 \index{connections} \index{channel}
 
 \begin{itemize}
-
 \item \element{connections} defines how the different datablocks
 and filters are routed to the output device. The ID \id{_ALL_}
 stands for all the datablocks. In this example they are routed to
@@ -724,35 +717,46 @@ to~\ref{xml:ch2}. At the same time the noise, generated by a
 generator with ID noisegen, is sent to the same channel of the
 wavdevice. The channels are numbered from 0 onwards. The level of
 the noise remains constant and does not pass through an amplifier
-(lines~\ref{xml:ch3} to ~\ref{xml:ch4}).Although noisedata is a
+(lines~\ref{xml:ch3} to ~\ref{xml:ch4}). Although noisedata is a
 \element{datablock} and connected to \emph{amplifier} it is not
 specified in \element{stimulus} and does not pass through
 \emph{amplifier}.
+\end{itemize}
 
 A visual representation of connections can be obtained by choosing
 ``Show stimulus connections'' under ``Experiment''in the main
 \apex menu (top left menu bar).
 
-\end{itemize}
-\todo{outdated}
+
 \begin{lstlisting}
-<results>
-    <xsltscript>mao.xsl</xsltscript>
-</results>
+ <results>
+  <page>apex:resultsviewer.html</page>
+  <resultparameters>
+   <parameter name="reversals for mean">4</parameter>
+  </resultparameters>
+  <showduringexperiment>false</showduringexperiment>
+  <showafterexperiment>true</showafterexperiment>
+  <saveprocessedresults>true</saveprocessedresults>
+ </results>
 \end{lstlisting}
 
 
 \element{results} Even if \element{results} is not specified in
 the experiment file \apex will save a results file in XML.
 
-\begin{itemize}
-\item \element{xsltscript} a script can transform the XML data to
-an easier readable format; this script can be stored in folder
-\filename{scripts} under \apex. For more information please read
-section~\ref{sec:Using XSLT transforms}.
+\todo{new part, to check!}
+\begin{itemize} 
+\item \element{page} URL of the html page to show in the results window. The page should have the appropriate java script methods embedded. More example pages can be found in the \apex resultsviewer folder.
+\item \element{resultparameters} Parameters to be passed to the results page. Each parameter will be set in hash params. In this example, the result will be calculated as the mean of the variable parameter (gap) at the last 4 reversals.  \todo{what is hash params? (lot)}
+\item \element{showduringexperiment} If true, an extra window will be created which will show the results of the current experiment while the experiment is being executed. Javascript embedded in the page will be executed upon each new trial.
+\item \element{showafterexperiment} If true, when the experiment is finished, a dialog box will appear querying whether results should be shown. If the answer is affirmative, a new window will be opened and the results will be shown after javascript processing.
+\item \element{saveprocessedresults} If \xml {true} the
+experimenter will be asked whether the processed results must be
+appended to the results file. This will only work if the results are successfully saved to disk and your javascript code supports this transformation.
 \end{itemize}
 
-\index{results} \index{xsltscript}
+\index{results} \index{page} \index{resultparameters} \index{showduringexperiment} \index{showafterexperiment} \index{saveprocessedresults}
+
 
 \begin{lstlisting}
 <interactive> <entry type="int" description="SNR start value"
@@ -762,7 +766,7 @@ section~\ref{sec:Using XSLT transforms}.
 
 If a small part of an experiment file has to be changed right
 before the start of an experiment (e.g. a start value, a gain
-value, the subject's name), \apex can shown the experimenter a
+value, the subject's name), \apex can show the experimenter a
 small \ac{gui} containing the elements to be changed. This is
 accomplished by defining the \element{interactive} element in the
 experiment file.
@@ -785,30 +789,3 @@ default value; more than one entry may be defined.
 \index{entry type}
 
 \index{expression}
-
-\begin{lstlisting}
-<general>
-  <showresults>true</showresults>
-  <saveprocessedresults>true</saveprocessedresults>
-</general>
-\end{lstlisting}
-
-\element{general} defines some general parameters. Saving
-\textbf{processed} results in a results file is only possible if a
-XSLT-script is defined. See section~\ref{sec:Using XSLT
-transforms}.
-
-\begin{itemize}
-\item \element{showresults} If \xml {true} a window will appear
-after completion of the experiment asking whether the results
-should be viewed on screen. The sequence of responses will be
-shown, as well as the average SNR (based on the number of
-reversals specified before).
-
-\item \element{saveprocessedresults} If \xml {true} the
-experimenter will be asked whether the processed results must be
-saved.
-\end{itemize}
-
-
-\index{general} \index{showresults} \index{saveprocessedresults}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
 
     <xs:include schemaLocation="xmlgeneratingplugin.xsd"/>
 
@@ -311,11 +311,11 @@
         <xs:annotation>
             <xs:documentation>Parameter with obligated ID</xs:documentation>
         </xs:annotation>
-        <xs:complexContent>
+        <xs:simpleContent>
             <xs:extension base="apex:parameterType">
                 <xs:attribute name="id" type="xs:ID" use="required"/>
             </xs:extension>
-        </xs:complexContent>
+        </xs:simpleContent>
     </xs:complexType>
 
     <xs:complexType name="parameterType">

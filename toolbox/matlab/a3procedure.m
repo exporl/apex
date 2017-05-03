@@ -20,8 +20,8 @@ end
 lf=sprintf('\n');
 tb=sprintf('\t');
 
-switch apexversion
-    case '3.0'
+% switch apexversion
+if regexp(apexversion,'3.0')
 
         if (type==1)
             result=['<procedure xsi:type="apex:adaptiveProcedureType"' id '>' lf ];
@@ -31,7 +31,7 @@ switch apexversion
             result=['<procedure xsi:type="apex:trainingProcedureType"' id '>' lf ];
         end
 
-    case '3.1'
+elseif regexp(apexversion,'3.1')
 
          if (type==1)
             result=['<procedure xsi:type="apex:adaptiveProcedure"' id '>' lf ];

@@ -28,11 +28,6 @@
 #include <QObject>
 #include <QString>
 
-namespace XERCES_CPP_NAMESPACE
-{
-class DOMElement;
-}
-
 namespace apex
 {
 

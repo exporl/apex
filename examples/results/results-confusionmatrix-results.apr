@@ -6,7 +6,7 @@
         <startdate>2015-10-22T11:40:22</startdate>
         <enddate>2015-10-22T11:40:37</enddate>
         <duration unit="seconds">15</duration>
-        <jscript>apex:rtresults-confusionmatrix.html</jscript>
+        <jscript>apex:resultsviewer.html</jscript>
 </general>
 <trial id="trial1">
 <procedure type="apex:constantProcedure">

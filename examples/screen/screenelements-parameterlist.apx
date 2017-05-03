@@ -1,179 +1,176 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
-
- <!-- @doc
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
+  <!-- @doc
   @what: shows how to implement a parameterlist on the screen
   @description: Parameters of the played stimuli are shown on the screen. This example shows two different parameterlists (two different trials).
   @how: <parameterlist>
   -->
-
-
- <procedure xsi:type="apex:adaptiveProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <skip>0</skip>
-   <order>random</order>
-   <corrector xsi:type="apex:isequal"/>
-   <nUp>1</nUp>
-   <nDown>1</nDown>
-   <adapt_parameter>snr</adapt_parameter>
-   <start_value>3</start_value>
-   <stop_after_type>reversals</stop_after_type>
-   <stop_after>5</stop_after>
-   <larger_is_easier>true</larger_is_easier>
-   <stepsizes>
-    <stepsize begin="0" size="2"/>
-    <stepsize begin="2" size="1"/>
-   </stepsizes>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>button_correct</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-   <trial id="trial2">
-    <answer>button_correct</answer>
-    <screen id="screen2"/>
-    <stimulus id="stimulus2"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">true</feedback>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout width="2" height="2" id="main_layout">
-    <parameterlist x="1" id="paramlist" y="1">
-     <parameter name="original snr">snr</parameter>
-     <parameter expression="5*x+10" name="5*snr+10">snr</parameter>
-     <parameter expression="5*x-10" name="5*snr-10">snr</parameter>
-     <parameter expression="-1*x+0" name="-1*snr+0">snr</parameter>
-     <parameter expression="-1*x+3.7" name="-1*snr+3.7">snr</parameter>
-     <parameter>fixed</parameter>
-     <parameter name="markup">markupstring</parameter>
-    </parameterlist>
-    <button x="1" id="button_correct" y="2">
-     <text>correct</text>
-    </button>
-    <button x="2" id="button_wrong" y="2">
-     <text>wrong</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button_correct"/>
-    <button id="button_wrong"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
-  <screen id="screen2">
-   <gridLayout width="1" height="2" id="min_layout">
-    <!--answerlabel x="1" y="1" id="helplabel"/-->
-    <parameterlist x="1" id="parameterlist" y="1">
-     <parameter>snr</parameter>
-     <parameter>fixed</parameter>
-    </parameterlist>
-    <gridLayout width="2" height="1" x="1" id="answer_layout" y="2">
-     <button x="1" id="button_c" y="1">
-      <text>Correct</text>
-     </button>
-     <button x="2" id="button_w" y="1">
-      <text>Wrong</text>
-     </button>
-    </gridLayout>
-   </gridLayout>
-   <buttongroup id="buttongroup">
-    <button id="button_c"/>
-    <button id="button_w"/>
-   </buttongroup>
-   <default_answer_element>buttongroup</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli</uri_prefix>
-  <datablock id="rawdata1">
-   <device>wavdevice</device>
-   <uri>wd1.wav</uri>
-  </datablock>
-  <datablock id="rawdata2">
-   <device>wavdevice</device>
-   <uri>wd2.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device xsi:type="apex:wavDeviceType" id="wavdevice">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain>0</gain>
-   <samplerate>44100</samplerate>
-   <buffersize>512</buffersize>
-  </device>
- </devices>
- <filters>
-  <filter xsi:type="apex:generator" id="noisegen">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <continuous>false</continuous>
-   <type>noise</type>
-   <basegain>-20</basegain>
-   <gain id="snr">0</gain>
-   <frequency>0</frequency>
-   <phase>0</phase>
-  </filter>
- </filters>
- <stimuli>
-  <fixed_parameters>
-   <parameter id="fixed"/>
-   <parameter id="markupstring"/>
-  </fixed_parameters>
-  <stimulus id="stimulus1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="fixed">1</parameter>
-    <parameter id="markupstring">word <b>bold</b>
-    </parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="stimulus2">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="rawdata2"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters>
-    <parameter id="fixed">2</parameter>
-    <parameter id="markupstring">word <i>italic</i>
-    </parameter>
-   </fixedParameters>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>noisegen</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>random</order>
+      <corrector xsi:type="apex:isequal"/>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>snr</adapt_parameter>
+      <start_value>3</start_value>
+      <stop_after_type>reversals</stop_after_type>
+      <stop_after>5</stop_after>
+      <larger_is_easier>true</larger_is_easier>
+      <stepsizes>
+        <stepsize size="2" begin="0"/>
+        <stepsize size="1" begin="2"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>button_correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+      <trial id="trial2">
+        <answer>button_correct</answer>
+        <screen id="screen2"/>
+        <stimulus id="stimulus2"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">true</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout width="2" height="2" id="main_layout">
+        <parameterlist id="paramlist" x="1" y="1">
+          <parameter name="original snr">snr</parameter>
+          <parameter name="5*snr+10" expression="5*x+10">snr</parameter>
+          <parameter name="5*snr-10" expression="5*x-10">snr</parameter>
+          <parameter name="-1*snr+0" expression="-1*x+0">snr</parameter>
+          <parameter name="-1*snr+3.7" expression="-1*x+3.7">snr</parameter>
+          <parameter>fixed</parameter>
+          <parameter name="markup">markupstring</parameter>
+        </parameterlist>
+        <button id="button_correct" x="1" y="2">
+          <text>correct</text>
+        </button>
+        <button id="button_wrong" x="2" y="2">
+          <text>wrong</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button_correct"/>
+        <button id="button_wrong"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+    <screen id="screen2">
+      <gridLayout width="1" height="2" id="min_layout">
+        <!--answerlabel x="1" y="1" id="helplabel"/-->
+        <parameterlist id="parameterlist" x="1" y="1">
+          <parameter>snr</parameter>
+          <parameter>fixed</parameter>
+        </parameterlist>
+        <gridLayout width="2" height="1" id="answer_layout" x="1" y="2">
+          <button id="button_c" x="1" y="1">
+            <text>Correct</text>
+          </button>
+          <button id="button_w" x="2" y="1">
+            <text>Wrong</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="button_c"/>
+        <button id="button_w"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="rawdata1">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="rawdata2">
+      <device>wavdevice</device>
+      <file>wd2.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+      <buffersize>512</buffersize>
+    </device>
+  </devices>
+  <filters>
+    <filter xsi:type="apex:generator" id="noisegen">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <type>noise</type>
+      <basegain>-20</basegain>
+      <gain id="snr">0</gain>
+      <frequency>0</frequency>
+      <phase>0</phase>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="fixed"/>
+      <parameter id="markupstring"/>
+    </fixed_parameters>
+    <stimulus id="stimulus1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="fixed">1</parameter>
+        <parameter id="markupstring">word <b>bold</b>
+        </parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus2">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="rawdata2"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters>
+        <parameter id="fixed">2</parameter>
+        <parameter id="markupstring">word <i>italic</i>
+        </parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>noisegen</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
 </apex:apex>

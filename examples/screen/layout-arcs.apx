@@ -1,145 +1,136 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
-
- <!-- @doc
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1">
+  <!-- @doc
   @what: example of different arc layouts for buttons
   @description: Buttons are placed in several semi-circles on the screen
   @how: <arcLayout> upper, lower, left, right, full
   -->
-
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>10</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>buttongroup1</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-   </trial>
-  </trials>
- </procedure>
-
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">true</feedback>
-   <showcurrent>true</showcurrent>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout width="2" height="2" id="main_layout">
-    <arcLayout width="6" type="upper" x="1" y="1">
-     <button id="button1" x="1">
-      <text>1</text>
-     </button>
-     <button id="button2" x="2">
-      <text>2</text>
-     </button>
-     <button id="button3" x="3">
-      <text>3</text>
-     </button>
-     <button id="button4" x="4">
-      <text>4</text>
-     </button>
-     <button id="button5" x="5">
-      <text>5</text>
-     </button>
-     <button id="button6" x="6">
-      <text>6</text>
-     </button>
-    </arcLayout>
-    <arcLayout width="6" type="lower" x="2" y="1">
-     <button id="button11" x="1">
-      <text>1</text>
-     </button>
-     <button id="button21" x="2">
-      <text>2</text>
-     </button>
-     <button id="button31" x="3">
-      <text>3</text>
-     </button>
-     <button id="button41" x="4">
-      <text>4</text>
-     </button>
-     <button id="button51" x="5">
-      <text>5</text>
-     </button>
-     <button id="button61" x="6">
-      <text>6</text>
-     </button>
-    </arcLayout>
-    <arcLayout width="6" type="left" x="1" y="2">
-     <button id="button112" x="1">
-      <text>1</text>
-     </button>
-     <button id="button212" x="2">
-      <text>2</text>
-     </button>
-     <button id="button312" x="3">
-      <text>3</text>
-     </button>
-     <button id="button412" x="4">
-      <text>4</text>
-     </button>
-     <button id="button512" x="5">
-      <text>5</text>
-     </button>
-     <button id="button612" x="6">
-      <text>6</text>
-     </button>
-    </arcLayout>
-    <arcLayout width="6" type="right" x="2" y="2">
-     <button id="button1123" x="1">
-      <text>1</text>
-     </button>
-     <button id="button2123" x="2">
-      <text>2</text>
-     </button>
-     <button id="button3123" x="3">
-      <text>3</text>
-     </button>
-     <button id="button4123" x="4">
-      <text>4</text>
-     </button>
-     <button id="button5123" x="5">
-      <text>5</text>
-     </button>
-     <button id="button6123" x="6">
-      <text>6</text>
-     </button>
-    </arcLayout>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-    <button id="button2"/>
-    <button id="button3"/>
-    <button id="button4"/>
-    <button id="button5"/>
-    <button id="button6"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
-
- <datablocks/>
-
- <devices/>
-
- <filters/>
-
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus1">
-   <description/>
-   <datablocks/>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
-
- <connections/>
-
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>10</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>buttongroup1</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">true</feedback>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout width="2" height="2" id="main_layout">
+        <arcLayout width="6" type="upper" x="1" y="1">
+          <button x="1" id="button1">
+            <text>1</text>
+          </button>
+          <button x="2" id="button2">
+            <text>2</text>
+          </button>
+          <button x="3" id="button3">
+            <text>3</text>
+          </button>
+          <button x="4" id="button4">
+            <text>4</text>
+          </button>
+          <button x="5" id="button5">
+            <text>5</text>
+          </button>
+          <button x="6" id="button6">
+            <text>6</text>
+          </button>
+        </arcLayout>
+        <arcLayout width="6" type="lower" x="2" y="1">
+          <button x="1" id="button11">
+            <text>1</text>
+          </button>
+          <button x="2" id="button21">
+            <text>2</text>
+          </button>
+          <button x="3" id="button31">
+            <text>3</text>
+          </button>
+          <button x="4" id="button41">
+            <text>4</text>
+          </button>
+          <button x="5" id="button51">
+            <text>5</text>
+          </button>
+          <button x="6" id="button61">
+            <text>6</text>
+          </button>
+        </arcLayout>
+        <arcLayout width="6" type="left" x="1" y="2">
+          <button x="1" id="button112">
+            <text>1</text>
+          </button>
+          <button x="2" id="button212">
+            <text>2</text>
+          </button>
+          <button x="3" id="button312">
+            <text>3</text>
+          </button>
+          <button x="4" id="button412">
+            <text>4</text>
+          </button>
+          <button x="5" id="button512">
+            <text>5</text>
+          </button>
+          <button x="6" id="button612">
+            <text>6</text>
+          </button>
+        </arcLayout>
+        <arcLayout width="6" type="right" x="2" y="2">
+          <button x="1" id="button1123">
+            <text>1</text>
+          </button>
+          <button x="2" id="button2123">
+            <text>2</text>
+          </button>
+          <button x="3" id="button3123">
+            <text>3</text>
+          </button>
+          <button x="4" id="button4123">
+            <text>4</text>
+          </button>
+          <button x="5" id="button5123">
+            <text>5</text>
+          </button>
+          <button x="6" id="button6123">
+            <text>6</text>
+          </button>
+        </arcLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+        <button id="button2"/>
+        <button id="button3"/>
+        <button id="button4"/>
+        <button id="button5"/>
+        <button id="button6"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks/>
+  <devices/>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus1">
+      <description/>
+      <datablocks/>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections/>
 </apex:apex>

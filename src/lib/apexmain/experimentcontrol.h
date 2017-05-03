@@ -1,7 +1,7 @@
-#ifndef _EXPORL_SRC_LIB_APEXMAIN_EXPERIMENTCONTROL_H_
-#define _EXPORL_SRC_LIB_APEXMAIN_EXPERIMENTCONTROL_H_
+#ifndef _APEX_SRC_LIB_APEXMAIN_EXPERIMENTCONTROL_H_
+#define _APEX_SRC_LIB_APEXMAIN_EXPERIMENTCONTROL_H_
 
-#include "apextools/status/errorlogger.h"
+#include "apextools/global.h"
 
 #include <QDate>
 #include <QObject>
@@ -36,67 +36,63 @@ class ExperimentControlPrivate;
  * run and start() to run it. After a call to start(), isRunning() will
  * return true until experimentDone() has been emitted.
  */
-class APEX_EXPORT ExperimentControl : public QObject, public ErrorLogger
+class APEX_EXPORT ExperimentControl : public QObject
 {
-        Q_OBJECT
+    Q_OBJECT
+    friend class ExperimentControlPrivate;
+public:
+    enum Flag
+    {
+        NoFlags         = 0,
+        AutoStart       = 1 << 0,
+        NoResults       = 1 << 1,
+        Deterministic   = 1 << 2
+    };
 
-        friend class ExperimentControlPrivate;
+    Q_DECLARE_FLAGS(Flags, Flag);
 
-    public:
+    ExperimentControl(Flags flags = NoFlags);
 
-        enum Flag
-        {
-            NoFlags         = 0,
-            AutoStart       = 1 << 0,
-            NoResults       = 1 << 1,
-            Deterministic   = 1 << 2
-        };
+    ~ExperimentControl();
 
-        Q_DECLARE_FLAGS(Flags, Flag);
+    void loadExperiment(ExperimentRunDelegate* runDelegate);
 
-        ExperimentControl(Flags flags = NoFlags);
+    /**
+     * Starts the loaded experiment.
+     */
+    void start();
 
-        ~ExperimentControl();
+    /**
+     * Returns true if the experiment is running, ie start() has been
+     * called and experimentDone() has not been emitted yet.
+     */
+    bool isRunning() const;
 
-        void loadExperiment(ExperimentRunDelegate* runDelegate);
+    /**
+     * Returns the time the experiment started. I.e. the time the first
+     * trial was started.
+     */
+    QDateTime startTime() const;
 
-        /**
-         * Starts the loaded experiment.
-         */
-        void start();
+    ExperimentIo* io() const;
+    const QStateMachine* machine() const;
 
-        /**
-         * Returns true if the experiment is running, ie start() has been
-         * called and experimentDone() has not been emitted yet.
-         */
-        bool isRunning() const;
+Q_SIGNALS:
+    /**
+     * Emitted when the experiment is done.
+     */
+    void experimentDone();
+    void savedResults(QString filename);
 
-        /**
-         * Returns the time the experiment started. I.e. the time the first
-         * trial was started.
-         */
-        QDateTime startTime() const;
+    void errorMessage(const QString& source, const QString& message);
 
-        ExperimentIo* io() const;
-        const QStateMachine* machine() const;
+private:
 
-    Q_SIGNALS:
-
-        /**
-         * Emitted when the experiment is done.
-         */
-        void experimentDone();
-        void savedResults(QString filename);
-
-        void errorMessage(const QString& source, const QString& message);
-
-    private:
-
-        ExperimentControlPrivate* const d;
+    ExperimentControlPrivate* const d;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(ExperimentControl::Flags)
 
-}
+    }
 
 #endif

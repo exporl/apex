@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef __MULTISTREAM_H__
-#define __MULTISTREAM_H__
+#ifndef _APEX_SRC_LIB_STREAMAPP_MULTISTREAM_H__
+#define _APEX_SRC_LIB_STREAMAPP_MULTISTREAM_H__
 
 #include "containers/dynstrlist.h"
 
@@ -289,4 +289,4 @@ namespace streamapp
 
 #include "multistream.cpp"
 
-#endif //#ifndef __MULTISTREAM_H__
+#endif //#ifndef _APEX_SRC_LIB_STREAMAPP_MULTISTREAM_H__

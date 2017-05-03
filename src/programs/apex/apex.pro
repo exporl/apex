@@ -1,5 +1,9 @@
-CLEBS *= apexmain asciicast
-
+CLEBS *= apexmain apextools common asciicast
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)
 
-win32:RC_FILE = ../../../data/bitmaps/icon.rc
+QT *= widgets
+
+# androiddeployqt does not take library dependencies into account, so link all of them directly
+android:QT *= network printsupport script scripttools svg xml xmlpatterns webview testlib androidextras
+
+win32:RC_FILE = ../../../data/icons/icon.rc

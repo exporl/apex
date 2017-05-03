@@ -20,7 +20,7 @@
 #ifndef __SYSTEMUTILS_H__
 #define __SYSTEMUTILS_H__
 
-#include <string>
+#include <QString>
 
   /**
     * namespace with system utilities
@@ -34,18 +34,18 @@ namespace systemutils
       * @param ac_sOutputFile the copy of the file
       * @return true on succesfull copy
       */
-  bool f_bCopyFile( const std::string& ac_sInputFile, const std::string& ac_sOutputFile );
+  bool f_bCopyFile( const QString &ac_sInputFile, const QString &ac_sOutputFile );
 
     /**
       * Check if a file exists.
       * @return true if the file exists and can be opened for reading
       */
-  bool f_bFileExists( const std::string& ac_sFile );
+  bool f_bFileExists( const QString &ac_sFile );
 
     /**
       * Clear an entire file.
       */
-  bool f_bClearFile( const std::string& ac_sFile );
+  bool f_bClearFile( const QString &ac_sFile );
 
 }
 

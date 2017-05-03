@@ -40,6 +40,8 @@ public:
     /** Destroys the plugin dialog. */
     ~PluginDialog();
 
+    static void refreshPluginCache();
+
 private:
     DECLARE_PRIVATE(PluginDialog)
 

@@ -35,7 +35,7 @@ namespace apex {
 
     void sf_ShowCardsForDriver( const gt_eDeviceType ac_tType )
     {
-      std::string sErr;
+      QString sErr;
       tStringVector saCards( SoundCardFactory::GetDriverNames( ac_tType, sErr ) );
       const tStringVector::size_type nCards = saCards.size();
       if( nCards )

@@ -1,1 +1,2 @@
-CLEBS *= common xml2 xerces
+CLEBS *= common xml2
+QT *= xml

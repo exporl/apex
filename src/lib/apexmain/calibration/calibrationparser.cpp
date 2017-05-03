@@ -21,16 +21,14 @@
 
 #include "apextools/exceptions.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
 #include "apextools/xml/xmlkeys.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/global.h"
 
 #include "parser/simpleparametersparser.h"
 
 #include "calibrationparser.h"
-
-using namespace apex::ApexXMLTools;
-using namespace XERCES_CPP_NAMESPACE;
 
 namespace apex
 {
@@ -38,37 +36,31 @@ namespace apex
 namespace parser
 {
 
-data::CalibrationData *CalibrationParser::Parse
-    (XERCES_CPP_NAMESPACE::DOMElement *a_pCalib)
+data::CalibrationData *CalibrationParser::Parse(const QDomElement &a_pCalib)
 {
     data::CalibrationData* calibdata = new data::CalibrationData;
 
-    calibdata->setCalibrationProfile (XMLutils::GetAttribute (a_pCalib,
-                "profile"));
+    calibdata->setCalibrationProfile(a_pCalib.attribute(QSL("profile")));
 
-    for (DOMNode *currentNode = a_pCalib->getFirstChild();
-            currentNode != NULL;
-            currentNode = currentNode->getNextSibling()) {
-        const QString stimtag (XMLutils::GetTagName (currentNode));
+    for (QDomElement currentNode = a_pCalib.firstChildElement(); !currentNode.isNull();
+            currentNode = currentNode.nextSiblingElement()) {
+        const QString stimtag(currentNode.tagName());
 
         if (stimtag == "soundlevelmeter") {
             SimpleParametersParser parser;
             data::SoundLevelMeterData* d = new data::SoundLevelMeterData();
-            parser.Parse((DOMElement*)currentNode, d);
+            parser.Parse(currentNode, d);
             calibdata->setSoundLevelMeterData(d);
         } else if (stimtag == "stimuli") {
             //parse stimuli
-            for (DOMNode *currentStim = currentNode->getFirstChild();
-                    currentStim != NULL;
-                    currentStim = currentStim->getNextSibling())
-                calibdata->addAvailableStimulus (XMLutils::GetAttribute
-                        (currentStim, "id"));
+            for (QDomElement currentStim = currentNode.firstChildElement(); !currentStim.isNull();
+                    currentStim = currentStim.nextSiblingElement())
+                calibdata->addAvailableStimulus(currentStim.attribute(QSL("id")));
         } else if (stimtag == "parameters") {
             //parse parameters
-            for (DOMNode *currentStim = currentNode->getFirstChild();
-                    currentStim != NULL;
-                    currentStim = currentStim->getNextSibling()) {
-                const QString tag (XMLutils::GetTagName (currentStim));
+            for (QDomElement currentStim = currentNode.firstChildElement(); !currentStim.isNull();
+                    currentStim = currentStim.nextSiblingElement()) {
+                const QString tag(currentStim.tagName());
                 if (tag == "parameter") {
                     double defaultTargetAmplitude = 0;
                     bool hasDefaultTargetAmplitude = false;
@@ -78,33 +70,25 @@ data::CalibrationData *CalibrationParser::Parse
                     double defaultParameter = 0;
                     double muteParameter = -150;
 
-                    const QString id (XMLutils::GetAttribute (currentStim, "id"));
-                    for (DOMNode *currentPar = currentStim->getFirstChild();
-                            currentPar != NULL;
-                            currentPar = currentPar->getNextSibling()) {
-                        const QString tagp (XMLutils::GetTagName (currentPar));
+                    const QString id (currentStim.attribute(QSL("id")));
+                    for (QDomElement currentPar = currentStim.firstChildElement(); !currentPar.isNull();
+                            currentPar = currentPar.nextSiblingElement()) {
+                        const QString tagp(currentPar.tagName());
                         if (tagp == "calibrationamplitude") {
-                            defaultTargetAmplitude = XMLutils::GetFirstChildText
-                                (currentPar).toDouble();
+                            defaultTargetAmplitude = currentPar.text().toDouble();
                             hasDefaultTargetAmplitude = true;
                         } else if (tagp == "targetamplitude") {
-                            finalTargetAmplitude = XMLutils::GetFirstChildText
-                                (currentPar).toDouble();
+                            finalTargetAmplitude = currentPar.text().toDouble();
                         } else if (tagp == "mute") {
-                            muteParameter = XMLutils::GetFirstChildText
-                                (currentPar).toDouble();
+                            muteParameter = currentPar.text().toDouble();
                         } else if (tagp == "min") {
-                            minimumParameter = XMLutils::GetFirstChildText
-                                (currentPar).toDouble();
+                            minimumParameter = currentPar.text().toDouble();
                         } else if (tagp == "max") {
-                            maximumParameter = XMLutils::GetFirstChildText
-                                (currentPar).toDouble();
+                            maximumParameter = currentPar.text().toDouble();
                         } else if (tagp == "default") {
-                            defaultParameter = XMLutils::GetFirstChildText
-                                (currentPar).toDouble();
+                            defaultParameter = currentPar.text().toDouble();
                         } else {
-                            throw ApexStringException
-                                ("Calibration: unknown tag: " + tagp);
+                            throw ApexStringException("Calibration: unknown tag: " + tagp);
                         }
                     }
                     calibdata->addParameter (id, data::CalibrationParameterData
@@ -113,12 +97,11 @@ data::CalibrationData *CalibrationParser::Parse
                              hasDefaultTargetAmplitude ? defaultTargetAmplitude
                              : finalTargetAmplitude, finalTargetAmplitude));
                 } else {
-                    throw ApexStringException
-                        ("Calibration: unknown tag: " + tag);
+                    throw ApexStringException("Calibration: unknown tag: " + tag);
                 }
             }
         } else {
-            throw ApexStringException ("Calibration: unknown tag: " + stimtag);
+            throw ApexStringException("Calibration: unknown tag: " + stimtag);
         }
     }
 

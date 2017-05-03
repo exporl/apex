@@ -19,11 +19,7 @@
 
 #include "apextools/apextypedefs.h"
 
-#include "apextools/xml/xercesinclude.h"
-
 #include "streamapptypedefs.h"
-
-using namespace xercesc;
 
 namespace apex
 {
@@ -137,7 +133,6 @@ class PlayMatrixCreator
         PlayMatrix  m_WorkHere;
         unsigned    m_nSeq;
         unsigned    m_nSim;
-        unsigned    m_nSeqRec;
         unsigned    m_nSimRec;
 };
 

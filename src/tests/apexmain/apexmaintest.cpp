@@ -28,188 +28,180 @@
 
 #include "apexdata/stimulus/nucleus/nicstream/stimulation_mode.h"
 
+#include "apexmain/accessmanager.h"
+
 #include "apexmain/calibration/soundlevelmeter.h"
+
+#include "apexmain/cohstimulus/cohdatablock.h"
+
 #include "apexmain/device/soundcardsettings.h"
-#include "apexmain/gui/soundcardsdialog.h"
 
 #include "apexmain/experimentparser.h"
 
+#include "apexmain/gui/soundcardsdialog.h"
+
 #include "apexmain/interactive/interactiveparameters.h"
 
-#include "apexmain/l34stimulus/aseqparser.h"
-#include "apexmain/l34stimulus/l34datablock.h"
-#include "apexmain/l34stimulus/qicparser.h"
+#include "apexmain/mainconfigfileparser.h"
 
 #include "apexmain/randomgenerator/uniformrandomgenerator.h"
 
-#include "apexmain/result/resultviewer.h"
-
-#include "apexmain/resultsink/rtresultsink.h"
-
-#include "apexmain/services/accessmanager.h"
-#include "apexmain/services/mainconfigfileparser.h"
-#include "apexmain/services/pluginloader.h"
-
+#include "apextools/apexpaths.h"
+#include "apextools/apexpluginloader.h"
 #include "apextools/apextools.h"
-#include "apextools/pathtools.h"
-
-#include "apextools/services/paths.h"
-
 #include "apextools/version.h"
 
-#include "apextools/xml/xmldocumentgetter.h"
+#include "apextools/xml/xmltools.h"
+
+#include "coh/aseqloader.h"
+#include "coh/cohnicxmldumper.h"
+#include "coh/cohtextdumper.h"
+
+#include "common/exception.h"
+#include "common/paths.h"
+#include "common/pluginloader.h"
+#include "common/testutils.h"
 
 #include "apexmaintest.h"
 
 #include <QDomDocument>
 #include <QDomNode>
 #include <QDomNodeList>
+#include <QTest>
 #include <QUrl>
+
+#if !defined(Q_OS_ANDROID)
+#include "apexmain/result/resultviewer.h"
+
+#include "apexmain/resultsink/rtresultsink.h"
+
 #include <QWebElement>
-#include <QWebFrame>
 #include <QWebFrame>
 #include <QWebPage>
 #include <QWebView>
+#endif
 
 using namespace apex;
 using namespace apex::stimulus;
 using namespace apex::data;
-
-/*
-QString ApexMainTest::name() const
-{
-    return "libapex";
-}
-*/
+using namespace cmn;
+using namespace coh;
 
 void ApexMainTest::initTestCase()
 {
     networkError = false;
-    xercesc::XMLPlatformUtils::Initialize();
-}
-
-void ApexMainTest::testQic()
-{
-    const unsigned char data[] = {
-        0x01, 0x00, 0x00, 0x00, 0x80, 0x3f, 0x01, 0x00, 0x00, 0x00, 0x80, 0x3f,
-        0x01, 0x00, 0x00, 0x00, 0x80, 0x3f, 0x01, 0x00, 0x00, 0x00, 0x80, 0x3f,
-        0x01, 0x00, 0x00, 0x00, 0x80, 0x3f, 0x01, 0x00, 0x00, 0x00, 0x80, 0x3f,
-        0x01, 0x00, 0x00, 0x00, 0x80, 0x3f, 0x01, 0x00, 0x00, 0x00, 0x80, 0x3f,
-        0x01, 0x00, 0x00, 0x00, 0x80, 0x3f, 0x01, 0x00, 0x00, 0x00, 0x80, 0x3f,
-        0x01, 0x00, 0x00, 0x00, 0x80, 0xbf, 0x01, 0x00, 0x00, 0x00, 0x80, 0xbf,
-        0x01, 0x00, 0x00, 0x00, 0x80, 0xbf, 0x01, 0x00, 0x00, 0x00, 0x80, 0xbf};
-
-        QicParser parser(QByteArray(reinterpret_cast<const char *>(data), sizeof(data)));
-        L34Data parsedData(parser.GetData());
-        QCOMPARE(parsedData.size(), 14);
-        QCOMPARE(parsedData[0].channel, qint16(1));
-        QCOMPARE(parsedData[0].magnitude, 1.0f);
-        QCOMPARE(parsedData[0].period, -1.0f);
-        QCOMPARE(parsedData[0].mode, qint16(-1));
-        QCOMPARE(parsedData[0].phaseWidth, -1.0f);
-        QCOMPARE(parsedData[0].phaseGap, -1.0f);
-        QCOMPARE(parsedData[10].channel, qint16(0));
-        QCOMPARE(parsedData[10].magnitude, 0.0f);
-        QCOMPARE(parsedData[10].period, -1.0f);
-        QCOMPARE(parsedData[10].mode, qint16(-1));
-        QCOMPARE(parsedData[10].phaseWidth, -1.0f);
-        QCOMPARE(parsedData[10].phaseGap, -1.0f);
 }
 
 void ApexMainTest::testAseq()
 {
-    {
-    const unsigned char data[]= {
-        82, 73, 70, 70, 72, 0, 0, 0, 65, 83, 69, 81, 73, 78, 70, 79, 20, 0, 0, 0, 0, 0, 128, 63, 67, 72, 65, 78, 3, 0, 0, 0, 77, 65, 71, 78, 3, 0, 0, 0, 67, 72, 65, 78, 3, 0, 0, 0, 1, 2, 3, 0, 77, 65, 71, 78, 12, 0, 0, 0, 0, 0, 160, 64, 0, 0, 192, 64, 0, 0, 224, 64 };
+    TEST_EXCEPTIONS_TRY
 
-        AseqParser parser(QByteArray(reinterpret_cast<const char *>(data), sizeof(data)) );
+    {
+        const unsigned char data[]= {
+            82, 73, 70, 70, 72, 0, 0, 0, 65, 83, 69, 81, 73, 78, 70, 79, 20, 0,
+            0, 0, 0, 0, 128, 63, 67, 72, 65, 78, 3, 0, 0, 0, 77, 65, 71, 78, 3,
+            0, 0, 0, 67, 72, 65, 78, 3, 0, 0, 0, 1, 2, 3, 0, 77, 65, 71, 78, 12,
+            0, 0, 0, 0, 0, 160, 64, 0, 0, 192, 64, 0, 0, 224, 64
+        };
+
+        QString result = QL1S("Sequence: repeats 1\n"
+            "  Biphasic: active nan reference nan level nan width nan gap nan period nan channel 1 magnitude 5.0 trigger 0\n"
+            "  Biphasic: active nan reference nan level nan width nan gap nan period nan channel 2 magnitude 6.0 trigger 0\n"
+            "  Biphasic: active nan reference nan level nan width nan gap nan period nan channel 3 magnitude 7.0 trigger 0\n");
 
         try {
-            L34Data parsedData(parser.GetData());
-            QCOMPARE( parsedData.size(), 3);
-            QCOMPARE(parsedData[0].magnitude, 5.0f);
-            QCOMPARE(parsedData[1].magnitude, 6.0f);
-            QCOMPARE(parsedData[2].magnitude, 7.0f);
-            QCOMPARE(parsedData[0].channel, qint16(1));
-            QCOMPARE(parsedData[1].channel, qint16(2));
-            QCOMPARE(parsedData[2].channel, qint16(3));
-        } catch (ApexStringException &e) {
-            qCDebug(APEX_RS) << e.what();
-            throw(e);
+            QScopedPointer<CohSequence> parsed(loadCohSequenceAseq
+                    (QByteArray((char*)data, sizeof(data)), true));
+            QCOMPARE(dumpCohSequenceText(parsed.data()), result);
+        } catch (const std::exception &e) {
+            QFAIL(e.what());
         }
-
     }
 
     {
         const unsigned char data[]= {
-            82, 73, 70, 70, 134, 0, 0, 0, 65, 83, 69, 81, 73, 78, 70, 79, 44, 0, 0, 0, 0, 0, 128, 63, 65, 69, 76, 69, 4, 0, 0, 0, 82, 69, 76, 69, 1, 0, 0, 0, 67, 85, 82, 76, 4, 0, 0, 0, 80, 72, 87, 73, 1, 0, 0, 0, 80, 69, 82, 73, 4, 0, 0, 0, 65, 69, 76, 69, 4, 0, 0, 0, 10, 11, 12, 13, 82, 69, 76, 69, 1, 0, 0, 0, 255, 0, 67, 85, 82, 76, 4, 0, 0, 0, 22, 23, 24, 25, 80, 72, 87, 73, 4, 0, 0, 0, 0, 0, 32, 65, 80, 69, 82, 73, 16, 0, 0, 0, 0, 0, 220, 66, 0, 0, 240, 66, 0, 0, 2, 67, 0, 0, 12, 67
-            };
+            82, 73, 70, 70, 134, 0, 0, 0, 65, 83, 69, 81, 73, 78, 70, 79, 44, 0,
+            0, 0, 0, 0, 128, 63, 65, 69, 76, 69, 4, 0, 0, 0, 82, 69, 76, 69, 1,
+            0, 0, 0, 67, 85, 82, 76, 4, 0, 0, 0, 80, 72, 87, 73, 1, 0, 0, 0, 80,
+            69, 82, 73, 4, 0, 0, 0, 65, 69, 76, 69, 4, 0, 0, 0, 10, 11, 12, 13,
+            82, 69, 76, 69, 1, 0, 0, 0, 255, 0, 67, 85, 82, 76, 4, 0, 0, 0, 22,
+            23, 24, 25, 80, 72, 87, 73, 4, 0, 0, 0, 0, 0, 32, 65, 80, 69, 82,
+            73, 16, 0, 0, 0, 0, 0, 220, 66, 0, 0, 240, 66, 0, 0, 2, 67, 0, 0,
+            12, 67 };
 
-//             seq.electrodes=[10 11 12 13];
-//             seq.return_electrodes=[-1];
-//             seq.current_levels=[22 23 24 25];
-//             seq.phase_widths=10;
-//             seq.periods=[110 120 130 140];
+        QString result = QL1S("Sequence: repeats 1\n"
+            "  Biphasic: active 10 reference -1 level 22 width 10.0 gap nan period 110.0 channel nan magnitude nan trigger 0\n"
+            "  Biphasic: active 11 reference -1 level 23 width 10.0 gap nan period 120.0 channel nan magnitude nan trigger 0\n"
+            "  Biphasic: active 12 reference -1 level 24 width 10.0 gap nan period 130.0 channel nan magnitude nan trigger 0\n"
+            "  Biphasic: active 13 reference -1 level 25 width 10.0 gap nan period 140.0 channel nan magnitude nan trigger 0\n");
 
+        // seq.electrodes=[10 11 12 13];
+        // seq.return_electrodes=[-1];
+        // seq.current_levels=[22 23 24 25];
+        // seq.phase_widths=10;
+        // seq.periods=[110 120 130 140];
 
-            AseqParser parser(QByteArray(reinterpret_cast<const char *>(data), sizeof(data)) );
-
-            try {
-                L34Data parsedData(parser.GetData());
-                QCOMPARE( parsedData.size(), 4);
-                QCOMPARE(parsedData[0].activeElectrode, int(10));
-                QCOMPARE(parsedData[1].activeElectrode, int(11));
-                QCOMPARE(parsedData[2].activeElectrode, int(12));
-                QCOMPARE(parsedData[3].activeElectrode, int(13));
-
-                for (int i=0; i<4; ++i) {
-                    QCOMPARE(parsedData[i].returnElectrode, -1);
-                    QCOMPARE(parsedData[i].phaseWidth, 10.0f);
-                    QCOMPARE(parsedData[i].channel, qint16(-1));
-                    QCOMPARE(parsedData[i].magnitude, -1.0f);
-                    QCOMPARE(parsedData[i].phaseGap, -1.0f);
-                }
-
-                QCOMPARE(parsedData[0].currentLevel, int(22));
-                QCOMPARE(parsedData[1].currentLevel, int(23));
-                QCOMPARE(parsedData[2].currentLevel, int(24));
-                QCOMPARE(parsedData[3].currentLevel, int(25));
-
-                QCOMPARE(parsedData[0].period, 110.0f);
-                QCOMPARE(parsedData[1].period, 120.0f);
-                QCOMPARE(parsedData[2].period, 130.0f);
-                QCOMPARE(parsedData[3].period, 140.0f);
-
-            } catch (ApexStringException &e) {
-                qCDebug(APEX_RS) << e.what();
-                throw(e);
-            }
-
+        try {
+            QScopedPointer<CohSequence> parsed(loadCohSequenceAseq
+                    (QByteArray((char*)data, sizeof(data)), true));
+            QCOMPARE(dumpCohSequenceText(parsed.data()), result);
+        } catch (const std::exception &e) {
+            QFAIL(e.what());
+        }
     }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
-void ApexMainTest::testL34DatablockQic()
+void ApexMainTest::testCohDatablockInvalidFile()
 {
+    TEST_EXCEPTIONS_TRY
+
     DatablockData data;
 
-
     {
-        QUrl url("invalidfilenameamzleirjalmijh");
-        data.setUri( url );
+        QString file("invalidfilenameamzleirjalmijh");
+        data.setFile(file);
         bool ex=false;
         try {
-            L34DataBlock (data, url, 0);
-        } catch (ApexStringException) {
+            CohDataBlock(data, file, 0);
+        } catch (const std::exception &) {
             ex=true;
         }
         QCOMPARE(ex,true);
     }
 
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::testCohDatablockAseq_data()
+{
+    QTest::addColumn<QString>("reference");
+
+    QTest::newRow("sequence1.aseq") << "MP1";
+    QTest::newRow("chanmag.aseq") << "MP1";
+    QTest::newRow("peri.aseq") << "MP1";
+    QTest::newRow("phga.aseq") << "MP1";
+    QTest::newRow("phwi.aseq") << "MP1";
+    QTest::newRow("rele.aseq") << "MP2";
+    QTest::newRow("powerup1.aseq") << "MP1";
+    QTest::newRow("powerup2.aseq") << "MP1";
+    QTest::newRow("powerup3.aseq") << "MP1";
+    QTest::newRow("powerup4.aseq") << "MP1";
+}
+
+void ApexMainTest::testCohDatablockAseq()
+{
+    TEST_EXCEPTIONS_TRY
+
+    DatablockData data;
     ApexMap map;
     ChannelMap basemap;
 
+    QFETCH(QString, reference);
+
     map.setNumberOfElectrodes(22);
-    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1+2"));
+    basemap.setMode(ChannelMap::modeToStimulationModeType(reference));
     basemap.setPhaseWidth(25);
     basemap.setPhaseGap(25);
     basemap.setPeriod(150);
@@ -219,169 +211,57 @@ void ApexMainTest::testL34DatablockQic()
         basemap.setStimulationElectrode(22-i+1);
         basemap.setThresholdLevel(1+i);
         basemap.setComfortLevel(255-i);
-        Q_ASSERT(basemap.isValid());
-        map[basemap.channelNumber()]=basemap;
-    }
-
-    // parse qic
-    try {
-        // Find suitable qic file
-        apex::Paths paths;
-        QDir testDir(paths.GetBasePath());
-        testDir.cd("examples/stimuli");
-        QUrl url(testDir.path() + "/roos.qic");
-        data.setUri (url);
-        L34DataBlock datablock(data, url, 0);
-
-        const L34XMLData& xmldata = datablock.GetMappedData(&map, 100);
-
-        // Write reference data (we consider the current implementation correct
-        // (verified with Matlab, 20091001)
-        /*QFile file("out.xml");
-        file.open(QIODevice::WriteOnly);
-        QTextStream out(&file);
-        out << xmldata.join("\n");
-        file.close();*/
-
-        // Read reference data
-        QDir d(paths.GetBasePath());
-        d.cd("data/tests/libapex");
-        QFile file(d.path() + "/roos_qic.xml");
-        QVERIFY(file.open(QIODevice::ReadOnly));
-        QTextStream t(&file);
-        for (int i=0; i<xmldata.length(); ++i) {
-            QCOMPARE( xmldata.at(i), t.readLine(0));
-        }
-        file.close();
-
-        // Compare reference data
-    //    QCOMPARE(fromfile, xmldata.join("\n"));
-
-    } catch (ApexStringException &e) {
-        qCDebug(APEX_RS) << e.what();
-        throw(e);
-    }
-}
-
-void ApexMainTest::testL34DatablockInvalidFile()
-{
-    DatablockData data;
-
-    {
-        QUrl url("invalidfilenameamzleirjalmijh");
-        data.setUri( url );
-        bool ex=false;
-        try {
-            L34DataBlock (data, url, 0);
-        } catch (ApexStringException) {
-            ex=true;
-        }
-        QCOMPARE(ex,true);
-    }
-}
-
-void ApexMainTest::testL34DatablockAseq_data()
-{
-    QTest::addColumn<QString>("filename");
-
-    QStringList files;
-    files << "sequence1.aseq"
-            << "chanmag.aseq" << "peri.aseq"
-            << "phga.aseq" << "phwi.aseq" << "rele.aseq"
-            << "powerup1.aseq" << "powerup2.aseq"
-            << "powerup3.aseq" << "powerup4.aseq";
-
-    for (int i=0; i<files.size(); ++i) {
-        QTest::newRow(files[i].toLatin1())  << files[i];
-    }
-}
-
-void ApexMainTest::testL34DatablockAseq()
-{
-    DatablockData data;
-    ApexMap map;
-    ChannelMap basemap;
-
-    map.setNumberOfElectrodes(22);
-    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1"));
-    basemap.setPhaseWidth(25);
-    basemap.setPhaseGap(25);
-    basemap.setPeriod(150);
-    map.setDefaultMap(basemap);
-    for (int i=1; i<=22; ++i) {
-        basemap.setChannelNumber(i);
-        basemap.setStimulationElectrode(22-i+1);
-        basemap.setThresholdLevel(1+i);
-        basemap.setComfortLevel(255-i);
-        Q_ASSERT(basemap.isValid());
+        QVERIFY(basemap.isValid());
         map[basemap.channelNumber()]=basemap;
     }
 
     // parse aseq files and write XML results
-    try {
-        apex::Paths paths;
-        QDir testDir(paths.GetBasePath());
-        testDir.cd("data/tests/libapex/");
-        QFETCH(QString, filename);
+    QString filename(QTest::currentDataTag());
 
-        QUrl url(testDir.path() + "/"+filename);
-        data.setUri (url);
-        L34DataBlock  datablock(data, url, 0);
+    QString filePath(Paths::searchFile(QL1S("tests/libapex/") + filename, Paths::dataDirectories()));
+    data.setFile(filePath);
+    CohDataBlock datablock(data, filePath, 0);
 
-        QVERIFY( datablock.canMap(&map));
-        const L34XMLData& xmldata = datablock.GetMappedData(&map, 100);
+    QScopedPointer<CohSequence> xmlSequence(datablock.mappedData(&map, 100));
+    QList<QByteArray> xmlData(dumpCohSequenceNicXml(xmlSequence.data()).split('\n'));
 
-        // Write data
-        /*QFile wfile(filename+"-out.xml");
-        wfile.open(QIODevice::WriteOnly);
-        QTextStream out(&wfile);
-        out << xmldata.join("\n");
-        wfile.close();*/
-
-        // Read reference data
-        QFile file(testDir.path() + "/" + filename + ".xml");
-        QVERIFY(file.open(QIODevice::ReadOnly));
-        QTextStream t(&file);
-        for (int i = 0; i < xmldata.length(); ++i) {
-            QCOMPARE(xmldata.at(i), t.readLine(0));
-        }
-        //QString fromfile(t.readAll());
-        file.close();
-        //QCOMPARE(fromfile, xmldata.join("\n"));
-    } catch (ApexStringException &e) {
-        QFAIL(e.what());
+    // Read reference data
+    QFile file(Paths::searchFile(QL1S("tests/libapex/") + filename + QL1S(".xml"), Paths::dataDirectories()));
+    QVERIFY(file.open(QIODevice::ReadOnly));
+    QTextStream t(&file);
+    for (int i = 0; i < xmlData.length(); ++i) {
+        QCOMPARE(QString::fromLatin1(xmlData.at(i)), t.readLine(0));
     }
+    file.close();
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexMainTest::testAseqParser()
 {
-    QString filename("quantization.aseq");
+    TEST_EXCEPTIONS_TRY
 
-    apex::Paths paths;
-    QDir testDir(paths.GetBasePath());
-    testDir.cd("data/tests/libapex/");
-
-    QFile file(testDir.path() + "/"+filename);
+    QFile file(Paths::searchFile(QL1S("tests/libapex/quantization.aseq"), Paths::dataDirectories()));
     if (!file.open(QIODevice::ReadOnly)) {
         QFAIL("Can't open file for reading");
     }
-    AseqParser parser(file.readAll());
 
-    L34Data data = parser.GetData();
+    QString result = QL1S("Sequence: repeats 1\n"
+        "  Biphasic: active nan reference nan level nan width nan gap nan period 120.0 channel 1 magnitude 0.1 trigger 0\n"
+        "  Biphasic: active nan reference nan level nan width nan gap nan period 120.2 channel 2 magnitude 0.2 trigger 0\n"
+        "  Biphasic: active nan reference nan level nan width nan gap nan period 120.4 channel 3 magnitude 0.1 trigger 0\n"
+        "  Biphasic: active nan reference nan level nan width nan gap nan period 120.8 channel 4 magnitude 0.3 trigger 0\n");
 
-    qint16 channels[] = {1, 2, 3, 4};
-    float magnitudes[] = {0.1, 0.2, 0.12345, 0.3};
-    float periods[] = {120, 120.2, 120.4, 120.8351};
+    QScopedPointer<CohSequence> parsed(loadCohSequenceAseq(file.readAll(), true));
+    QCOMPARE(dumpCohSequenceText(parsed.data()), result);
 
-    for (int i=0; i<4; ++i) {
-        QCOMPARE( data[i].period, periods[i]);
-        QCOMPARE( data[i].magnitude, magnitudes[i]);
-        QCOMPARE( data[i].channel, channels[i]);
-    }
+    TEST_EXCEPTIONS_CATCH
 }
 
-void ApexMainTest::testL34DatablockAseqMapping()
+void ApexMainTest::testCohDatablockAseqMapping()
 {
+    TEST_EXCEPTIONS_TRY
+
     DatablockData data;
     ApexMap map;
     ChannelMap basemap;
@@ -397,100 +277,72 @@ void ApexMainTest::testL34DatablockAseqMapping()
         basemap.setStimulationElectrode(22-i+1);
         basemap.setThresholdLevel(1+i);
         basemap.setComfortLevel(255-i);
-        Q_ASSERT(basemap.isValid());
+        QVERIFY(basemap.isValid());
         map[basemap.channelNumber()]=basemap;
     }
 
     // parse aseq files and write XML results
+    QString filePath(Paths::searchFile(QL1S("tests/libapex/mapping.aseq"), Paths::dataDirectories()));
+    data.setFile(filePath);
+    CohDataBlock datablock(data, filePath, 0);
+
+    QScopedPointer<CohSequence> xmlSequence(datablock.mappedData(&map, 100));
+    QList<QByteArray> xmlData(dumpCohSequenceNicXml(xmlSequence.data()).split('\n'));
+
+    QFile file(Paths::searchFile(QL1S("tests/libapex/mapping.aseq.xml"), Paths::dataDirectories()));
+    QVERIFY(file.open(QIODevice::ReadOnly));
+    QTextStream t(&file);
+    for (int i=0; i<xmlData.length(); ++i) {
+        QCOMPARE(QString::fromLatin1(xmlData.at(i)), t.readLine(0));
+    }
+    file.close();
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+
+void ApexMainTest::testCohDatablock_invalid()
+{
+    TEST_EXCEPTIONS_TRY
+
+    DatablockData data;
+    ApexMap map;
+    ChannelMap basemap;
+
+    map.setNumberOfElectrodes(22);
+    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1"));
+    basemap.setPhaseWidth(25);
+    basemap.setPhaseGap(25);
+    basemap.setPeriod(150);
+    map.setDefaultMap(basemap);
+    for (int i=1; i<=22; ++i) {
+        basemap.setChannelNumber(i);
+        basemap.setStimulationElectrode(22-i+1);
+        basemap.setThresholdLevel(1+i);
+        basemap.setComfortLevel(255-i);
+        QVERIFY(basemap.isValid());
+        map[basemap.channelNumber()]=basemap;
+    }
+
+    QString file(Paths::searchFile(QL1S("tests/libapex/invalid1.aseq"), Paths::dataDirectories()));
+    data.setFile(file);
+
     try {
-        apex::Paths paths;
-        QDir testDir(paths.GetBasePath());
-        testDir.cd("data/tests/libapex/");
-        QString filename("mapping.aseq");
-
-        QUrl url(testDir.path() + "/"+filename);
-        data.setUri (url);
-        L34DataBlock  datablock(data, url, 0);
-
-        QVERIFY( datablock.canMap(&map));
-        const L34XMLData& xmldata = datablock.GetMappedData(&map, 100);
-
-        // Write data
-        /*QFile file(testDir.path() + "/" +filename+".xml");
-        file.open(QIODevice::WriteOnly);
-        QTextStream out(&file);
-        out << xmldata.join("\n");
-        file.close();*/
-
-        //qCDebug(APEX_RS, qPrintable(filename+".xml" + " to be read by checkmapping2.m"));
-
-        QFile file(testDir.path() + "/" +filename+".xml");
-        QVERIFY(file.open(QIODevice::ReadOnly));
-        QTextStream t(&file);
-        for (int i=0; i<xmldata.length(); ++i) {
-            QCOMPARE( xmldata.at(i), t.readLine(0));
-        }
-        file.close();
-        //QCOMPARE(fromfile, xmldata.join("\n"));
-    } catch (ApexStringException &e) {
-        QFAIL(e.what());
+        CohDataBlock datablock(data, file, 0);
+        datablock.mappedData(&map, 100);
+        QFAIL("invalid datablock did not cause exception");
+    } catch (...) {
+        // expected
     }
 
-
+    TEST_EXCEPTIONS_CATCH
 }
 
 
-void ApexMainTest::testL34Datablock_invalid()
+void ApexMainTest::testCohInvalidCL()
 {
-    DatablockData data;
-    ApexMap map;
-    ChannelMap basemap;
+    TEST_EXCEPTIONS_TRY
 
-    map.setNumberOfElectrodes(22);
-    basemap.setMode(ChannelMap::modeToStimulationModeType("MP1"));
-    basemap.setPhaseWidth(25);
-    basemap.setPhaseGap(25);
-    basemap.setPeriod(150);
-    map.setDefaultMap(basemap);
-    for (int i=1; i<=22; ++i) {
-        basemap.setChannelNumber(i);
-        basemap.setStimulationElectrode(22-i+1);
-        basemap.setThresholdLevel(1+i);
-        basemap.setComfortLevel(255-i);
-        Q_ASSERT(basemap.isValid());
-        map[basemap.channelNumber()]=basemap;
-    }
-
-    // parse aseq files and write XML results
-        QStringList files;
-        files << "invalid1.aseq";
-
-        apex::Paths paths;
-        QDir testDir(paths.GetBasePath());
-        testDir.cd("data/tests/libapex/");
-
-        for (int i=0; i<files.size(); ++i) {
-            qCDebug(APEX_RS) << "Testing file " << files[i];
-
-            QUrl url(testDir.path() + "/"+files[i]);
-            data.setUri (url);
-
-            bool failed=false;
-            try {
-                L34DataBlock datablock(data, url, 0);
-                QVERIFY( datablock.canMap(&map));
-                datablock.GetMappedData(&map, 100);
-            } catch (...) {
-                failed=true;
-            }
-            QVERIFY(failed);
-
-        }
-}
-
-
-void ApexMainTest::testL34InvalidCL()
-{
     ChannelMap basemap;
     DatablockData data;
     ApexMap map;
@@ -506,33 +358,28 @@ void ApexMainTest::testL34InvalidCL()
         basemap.setStimulationElectrode(22-i+1);
         basemap.setThresholdLevel(1+i);
         basemap.setComfortLevel(100);
-        Q_ASSERT(basemap.isValid());
+        QVERIFY(basemap.isValid());
         map[basemap.channelNumber()]=basemap;
     }
 
-    apex::Paths paths;
-    QDir testDir(paths.GetBasePath());
-    testDir.cd("data/tests/libapex/");
+    QString file(Paths::searchFile(QL1S("tests/libapex/chancl.aseq"), Paths::dataDirectories()));
+    data.setFile (file);
 
-    QUrl url(testDir.path() + "/chancl.aseq");
-    data.setUri (url);
-
-    bool failed=false;
     try {
-        L34DataBlock datablock(data, url, 0);
-        QVERIFY( datablock.canMap(&map));
-        datablock.GetMappedData(&map, 100);
+        CohDataBlock datablock(data, file, 0);
+        datablock.mappedData(&map, 100);
+        QFAIL("invalid datablock did not cause exception");
     } catch (...) {
-        failed=true;
+        // expected
     }
-    QVERIFY(failed);
 
+    TEST_EXCEPTIONS_CATCH
 }
 
 class RandomGeneratorTestParameters : public RandomGeneratorParameters {
 public:
     void setParameter(QString name, QString value) {
-        SetParameter(name, "", value, NULL);
+        SetParameter(name, "", value, QDomElement());
     }
     QString min() {
         return QString::number(m_dMin);
@@ -543,8 +390,8 @@ public:
 };
 
 template <typename T>
-T convert(QString s, bool* ok) {
-    Q_ASSERT(false);
+T convert(QString, bool*) {
+    QVERIFY(false);
 }
 
 template <>
@@ -573,6 +420,8 @@ void ApexMainTest::verifyInterval(RandomGeneratorTestParameters* params, T min, 
 
 void ApexMainTest::testUniformInt()
 {
+    TEST_EXCEPTIONS_TRY
+
     long min = 0;
     long max = 10;
 
@@ -602,6 +451,8 @@ void ApexMainTest::testUniformInt()
 
     QVERIFY(v >= 2.558);
     QVERIFY(v <= 23.21);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 double f(double val, double min, double max) {
@@ -610,6 +461,8 @@ double f(double val, double min, double max) {
 
 void ApexMainTest::testUniformDouble()
 {
+    TEST_EXCEPTIONS_TRY
+
     double min = 0;
     double max = 10;
 
@@ -647,10 +500,14 @@ void ApexMainTest::testUniformDouble()
 
     QVERIFY(kMax >= 0.02912);
     QVERIFY(kMax <= 1.444);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexMainTest::testRandomInterval()
 {
+    TEST_EXCEPTIONS_TRY
+
     RandomGeneratorTestParameters params;
     params.setParameter("type", "int");
     params.setParameter("min", "0");
@@ -691,11 +548,15 @@ void ApexMainTest::testRandomInterval()
 
     params.setParameter("max", "-1.3");
     verifyInterval<double>(&params, -2.3, -1.3);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexMainTest::testMainConfigFileParser()
 {
-    MainConfigFileParser::Get().CFParse();
+    TEST_EXCEPTIONS_TRY
+
+    MainConfigFileParser::Get().parse();
     const data::MainConfigFileData& d = MainConfigFileParser::Get().data();
 
     QCOMPARE( d.soundCardName("RME", "asio"), QString("ASIO Hammerfall DSP") );
@@ -704,33 +565,26 @@ void ApexMainTest::testMainConfigFileParser()
     QCOMPARE( d.prefix("invalid"), QString(""));
     QCOMPARE( d.pluginScriptLibrary(), QString("pluginscriptlibrary.js"));
 
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexMainTest::testUpgradeTo3_1_1()
 {
+    TEST_EXCEPTIONS_TRY
+
     //Load the xml file to test. This is a file from version 3.1.0
-    apex::Paths paths;
-    QFile testFile(paths.GetBasePath() + "/data/tests/libapex/results-upgradeoldschema.apx");
+    QFile testFile(Paths::searchFile(QL1S("tests/libapex/results-upgradeoldschema.apx"), Paths::dataDirectories()));
     testFile.open(QIODevice::ReadOnly);
 
     //Create the experiment parser
     apex::data::ExperimentData* testData;
-    try
-    {
-        apex::ExperimentParser parser(testFile.fileName());
 
-        //Parse the xml file, this should call the upgradeTo3_1_1 function
-        //apex::data::ExperimentData* testData;
-        testData = parser.parse(false);
-    }
-    catch (const std::exception& e)
-    {
-        QFAIL(qPrintable(QString("Could not parse test file: %1").arg(e.what())));
-    }
-    catch (...)
-    {
-        QFAIL(qPrintable(QString("Unknown exception while parsing %1").arg(testFile.fileName())));
-    }
+    apex::ExperimentParser parser(testFile.fileName());
+
+    //Parse the xml file, this should call the upgradeTo3_1_1 function
+    //apex::data::ExperimentData* testData;
+    testData = parser.parse(false);
 
     //Get the results from the parsing
     apex::data::ResultParameters* parameterList = testData->resultParameters();
@@ -739,92 +593,120 @@ void ApexMainTest::testUpgradeTo3_1_1()
     QCOMPARE(parameterList->showResultsAfter(), true); //This is supposed to be true
     QCOMPARE(parameterList->showRTResults(), false);
     QCOMPARE(parameterList->resultPage(), QUrl("apex:resultsviewer.html"));
-    Q_ASSERT(parameterList->matlabScript().isEmpty());
-    //Q_ASSERT(parameterList->GetXsltScript().isEmpty());
-    //Q_ASSERT(parameterList->getJavascriptScript().isEmpty());
+    QVERIFY(parameterList->matlabScript().isEmpty());
+    //QVERIFY(parameterList->GetXsltScript().isEmpty());
+    //QVERIFY(parameterList->getJavascriptScript().isEmpty());
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexMainTest::testResultViewerConvertToCSV_data()
 {
-    apex::Paths paths;
     QTest::addColumn<QString>("resultFilePath");
     QTest::addColumn<QString>("testFilePath");
     QTest::addColumn<QString>("desiredFilePath");
 
-    QTest::newRow("Simple") << paths.GetBasePath() + "data/tests/libapex/subject_test-r.apr"
-                            << paths.GetBasePath() + "data/tests/libapex/testJavascriptResult2.xml"
-                            << paths.GetBasePath() + "data/tests/libapex/desiredJavascriptResult.xml";
+    QTest::newRow("Simple") << Paths::searchFile(QL1S("tests/libapex/subject_test-r.apr"), Paths::dataDirectories())
+                            << Paths::searchFile(QL1S("tests/libapex/testJavascriptResult2.xml"), Paths::dataDirectories())
+                            << Paths::searchFile(QL1S("tests/libapex/desiredJavascriptResult.xml"), Paths::dataDirectories());
 
 }
 
 void ApexMainTest::testResultViewerConvertToCSV()
 {
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
     //First, create the result parameters
-       data::ResultParameters rvparam;
-       rvparam.setShowResultsAfter(true);
-       rvparam.setSaveResults(false);
+        data::ResultParameters rvparam;
+    rvparam.setShowResultsAfter(true);
+    rvparam.setSaveResults(false);
 
-       //Fetch the filenames:
-       QFETCH(QString, resultFilePath);
-       QFETCH(QString, testFilePath);
-       QFETCH(QString, desiredFilePath);
+    //Fetch the filenames:
+    QFETCH(QString, resultFilePath);
+    QFETCH(QString, testFilePath);
+    QFETCH(QString, desiredFilePath);
 
-       QFileInfo resultFileInfo(resultFilePath);
-       QString resultFile = resultFileInfo.absoluteFilePath(); //To get the right path on all
-                                               //operating systems.
+    QFileInfo resultFileInfo(resultFilePath);
+    QString resultFile = resultFileInfo.absoluteFilePath(); //To get the right path on all
+    //operating systems.
 
-       apex::ResultViewer testViewer(&rvparam, resultFile);
+    apex::ResultViewer testViewer(&rvparam, resultFile);
 
-       //Export the contents to a file:
-       QFileInfo testFileInfo(testFilePath);
-       QString testFile = testFileInfo.absoluteFilePath();
+    //Export the contents to a file:
+    QFileInfo testFileInfo(testFilePath);
+    QString testFile = testFileInfo.absoluteFilePath();
 
-       //export the new data to the existing result file.
-       testViewer.addtofile(testFile);
-       QDomDocument testResult = readXmlResults(testFile);
+    //export the new data to the existing result file.
+    testViewer.addtofile(testFile);
+    QDomDocument testResult = readXmlResults(testFile);
 
-       //Get the comparison values
-       QFileInfo desiredFileInfo(desiredFilePath);
-       QDomDocument desiredContent = readXmlResults(desiredFileInfo.absoluteFilePath());
+    //Get the comparison values
+    QFileInfo desiredFileInfo(desiredFilePath);
+    QDomDocument desiredContent = readXmlResults(desiredFileInfo.absoluteFilePath());
 
-       QCOMPARE(compareXml(testResult, desiredContent), QString());
+    QCOMPARE(compareXml(testResult, desiredContent), QString());
 
-       //Now remove the part that has been written to the text file, so the test can be done again...
-       QFile file(testFile);
-       file.open(QIODevice::ReadWrite);
-       QByteArray fileData = file.readAll();
-       QString fileText(fileData);
+    //Now remove the part that has been written to the text file, so the test can be done again...
+    QFile file(testFile);
+    file.open(QIODevice::ReadWrite);
+    QByteArray fileData = file.readAll();
+    QString fileText(fileData);
 
-       QString processedTag = "<processed>";
+    QString processedTag = "<processed>";
 
-       int startIndex = fileText.lastIndexOf(processedTag) + processedTag.length();
-       int endIndex = fileText.lastIndexOf("</processed>");
+    int startIndex = fileText.lastIndexOf(processedTag) + processedTag.length();
+    int endIndex = fileText.lastIndexOf("</processed>");
 
-       fileText.remove(startIndex, endIndex - startIndex);
+    fileText.remove(startIndex, endIndex - startIndex);
 
-       //Now clear the old file, and write contents to the new file
+    //Now clear the old file, and write contents to the new file
 
-       file.resize(0);
-       QTextStream out(&file);
-       out.setCodec("UTF-8");
-       out<<fileText;
-       file.close();
+    file.resize(0);
+    QTextStream out(&file);
+    out.setCodec("UTF-8");
+    out<<fileText;
+    file.close();
+
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
 void ApexMainTest::testResultViewer_data()
 {
-    apex::Paths paths;
     QTest::addColumn<QString>("resultFilePath");
     QTest::addColumn<QString>("resultViewerPath");
-    QTest::addColumn<QString>("desiredFilePath");
+    QTest::addColumn<QString>("plotConfig"); // sets up config object correctly
+    QTest::addColumn<QString>("testCommand"); // JSON.stringify(plots.<type>.data) + JSON.stringify(plots.text.data)
+    QTest::addColumn<QString>("plotDataJSON"); // Target result JSON
 
-    QTest::newRow("Simple") << paths.GetBasePath() + "data/tests/libapex/subject_test-r.apr"
-                            << paths.GetBasePath() + "data/resultsviewer/resultsviewer.html"
-                            << paths.GetBasePath() + "data/tests/libapex/subject_test-r-resultsviewer.html";
+    //Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"), Paths::dataDirectories())
+    QTest::newRow("line")        << Paths::searchFile(QL1S("data/tests/libapex/results-test-line.apr"), Paths::dataDirectories())
+                                 << Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"), Paths::dataDirectories())
+                                 << "config = { global: { removefromanswer: [\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\",\"answer\"] }, line: { show: true, parameterkey: \"parametervalue\", trialsformean: 6, reversalsformean: 6 }, matrix: { show: false }, polar: { show:false }, text: { show: true } };"
+                                 << "JSON.stringify( plots.line.data ) + JSON.stringify( plots.text.data );"
+                                 << "[{\"values\":[-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1],\"reversals\":[-1,-3,-1,-3,3,-1,1],\"meanrevs\":-0.6666666666666666,\"meanrevstd\":2.1343747458109497,\"meantrials\":0.6666666666666666,\"meantrialstd\":1.3743685418725535}][{\"line\":{\"allvalues\":\"<tr><td>Parametervalues</td><td>-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1</td></tr>\",\"lastvalue\":\"<tr><td>Lastvalue</td><td>-1</td></tr>\",\"reversals\":\"<tr><td>Reversals</td><td>-1,-3,-1,-3,3,-1,1</td></tr>\",\"meanrevs\":\"<tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6reversals</tdclass=\\\"dataname\\\"><td>-0.6667(&plusmn;2.134)</td></tr>\",\"meantrials\":\"<tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6trials</tdclass=\\\"dataname\\\"><td>0.6667(&plusmn1.374)</td></tr>\",\"linedatatable\":\"<tableclass=\\\"datatable\\\"><tr><td>Parametervalues</td><td>-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1</td></tr><tr><td>Lastvalue</td><td>-1</td></tr><tr><td>Reversals</td><td>-1,-3,-1,-3,3,-1,1</td></tr><tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6reversals</tdclass=\\\"dataname\\\"><td>-0.6667(&plusmn;2.134)</td></tr><tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6trials</tdclass=\\\"dataname\\\"><td>0.6667(&plusmn1.374)</td></tr></table>\",\"paramtable\":\"<tableclass=\\\"stripedtable\\\"><tr><th>Trial</th><th>Answer</th><th>Correct</th><th>Parameter</th></tr><tr><td>1</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-5</td></tr><tr><td>2</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-3</td></tr><tr><td>3</td><td>correct</td><td><spanclass=\\\"correct\\\">Correct</span></td><td>-1</td></tr><tr><td>4</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-3</td></tr><tr><td>5</td><td>correct</td><td><spanclass=\\\"correct\\\">Correct</span></td><td>-1</td></tr><tr><td>6</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-3</td></tr><tr><td>7</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-1</td></tr><tr><td>8</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>1</td></tr><tr><td>9</td><td>correct</td><td><spanclass=\\\"correct\\\">Correct</span></td><td>3</td></tr><tr><td>10</td><td>correct</td><td><spanclass=\\\"correct\\\">Correct</span></td><td>1</td></tr><tr><td>11</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-1</td></tr><tr><td>12</td><td>correct</td><td><spanclass=\\\"correct\\\">Correct</span></td><td>1</td></tr><tr><td>13</td><td>n/a</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-1</td></tr></table>\"}}]";
+
+    QTest::newRow("matrixpolar") << Paths::searchFile(QL1S("data/tests/libapex/results-test-matrixpolar.apr"), Paths::dataDirectories())
+                                 << Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"), Paths::dataDirectories())
+                                 << "$.extend( config, { global: { stimuli: [\"-90\",\"-75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\",\"30\",\"45\",\"60\",\"75\",\"90\"],  removefromanswer: [\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\",\"answer\"] },line: {show: false }, matrix: { show: true },polar: { show: true, mindegree: -90, maxdegree: 90 }, text: { show: true } } );"
+                                 << "JSON.stringify( plots.matrix.data );"
+                                 << "[{\"values\":[{\"x\":0,\"y\":1,\"z\":1},{\"x\":1,\"y\":0,\"z\":1},{\"x\":2,\"y\":3,\"z\":1},{\"x\":3,\"y\":2,\"z\":2},{\"x\":4,\"y\":3,\"z\":1},{\"x\":6,\"y\":3,\"z\":1},{\"x\":7,\"y\":1,\"z\":1},{\"x\":7,\"y\":4,\"z\":1},{\"x\":7,\"y\":6,\"z\":1},{\"x\":8,\"y\":4,\"z\":1},{\"x\":8,\"y\":6,\"z\":1},{\"x\":9,\"y\":7,\"z\":1},{\"x\":10,\"y\":8,\"z\":2},{\"x\":12,\"y\":5,\"z\":1},{\"x\":12,\"y\":6,\"z\":1},{\"x\":12,\"y\":8,\"z\":1}],\"percentages\":[0,0,0,0,0,0,0,0.3333333333333333,0,0,0,0,0],\"xlabels\":[\"-90\",\"-75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\",\"30\",\"45\",\"60\",\"75\",\"90\"],\"ylabels\":[\"-90\",\"-60\",\"-30\",\"-15\",\"15\",\"30\",\"45\",\"60\",\"75\"],\"raw\":[[0,1,0,0,0,0,0,0,0],[1,0,0,0,0,0,0,0,0],[0,0,0,1,0,0,0,0,0],[0,0,2,0,0,0,0,0,0],[0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,1,0,0,0,0,0],[0,1,0,0,1,0,1,0,0],[0,0,0,0,1,0,1,0,0],[0,0,0,0,0,0,0,1,0],[0,0,0,0,0,0,0,0,2],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,0,1]]}]";
+
+    QTest::newRow("matrixpolartext") << Paths::searchFile(QL1S("data/tests/libapex/results-test-matrixpolar.apr"), Paths::dataDirectories())
+                                    << Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"), Paths::dataDirectories())
+                                    << "$.extend( config, { global: { stimuli: [\"-90\",\"-75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\",\"30\",\"45\",\"60\",\"75\",\"90\"],  removefromanswer: [\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\",\"answer\"] },line: {show: false }, matrix: { show: true },polar: { show: true, mindegree: -90, maxdegree: 90 }, text: { show: true } } );"
+                                    << "JSON.stringify( plots.text.data );"
+                                    << "[{\"matrix\":{\"correctpercentage\":\"<tr><tdcolspan=\\\"13\\\">Totalpercentagecorrect:5.5556%</td></tr>\",\"correctpercentages\":\"<tr><thcolspan=\\\"13\\\">Correct%perstimulus</th></tr><tr><th>-90</th><th>-75</th><th>-60</th><th>-45</th><th>-30</th><th>-15</th><th>0</th><th>15</th><th>30</th><th>45</th><th>60</th><th>75</th><th>90</th></tr><tr><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><td>33.33%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td></tr>\",\"matrixtable\":\"<tableclass=\\\"stripedtable\\\"><tbody><tr><tr><tr><tr><tr><tr><tr><tr><tr><tr><th></th><th>-90</th><th>-75</th><th>-60</th><th>-45</th><th>-30</th><th>-15</th><th>0</th><th>15</th><th>30</th><th>45</th><th>60</th><th>75</th><th>90</th></tr><th>-90</th><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>-60</th><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>-30</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>2</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>-15</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>15</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>30</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td></tr><th>45</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td></tr><th>60</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>75</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>2</td><tdclass=\\\"lightcell\\\">0</td><td>1</td></tr></tbody></table>\",\"answertable\":\"<tableclass=\\\"stripedtable\\\"><tr><th>Trial</th><th>Stimulus</th><th>Answer</th><th>Correct</th></tr><tr><td>1</td><td>-75</td><td>-90</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>2</td><td>30</td><td>15</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>3</td><td>-60</td><td>-15</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>4</td><td>15</td><td>-60</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>5</td><td>-45</td><td>-30</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>6</td><td>15</td><td>15</td><td><spanclass=\\\"correct\\\">Correct</span></td></tr><tr><td>7</td><td>-45</td><td>-30</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>8</td><td>30</td><td>45</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>9</td><td>60</td><td>75</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>10</td><td>0</td><td>-15</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>11</td><td>15</td><td>45</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>12</td><td>90</td><td>45</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>13</td><td>45</td><td>60</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>14</td><td>60</td><td>75</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>15</td><td>-30</td><td>-15</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>16</td><td>90</td><td>30</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>17</td><td>-90</td><td>-60</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>18</td><td>90</td><td>75</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr></table>\"}}]";
 }
 
 void ApexMainTest::testResultViewer()
 {
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
     //First, create the result parameters
     data::ResultParameters rvparam;
     rvparam.setShowResultsAfter(true);
@@ -833,11 +715,13 @@ void ApexMainTest::testResultViewer()
     //Fetch the filenames:
     QFETCH(QString, resultFilePath);
     QFETCH(QString, resultViewerPath);
-    QFETCH(QString, desiredFilePath);
+    QFETCH(QString, plotConfig);
+    QFETCH(QString, testCommand);
+    QFETCH(QString, plotDataJSON);
 
     QFileInfo resultFileInfo(resultFilePath);
-    QString resultFile = resultFileInfo.absoluteFilePath(); //To get the right path on all
-    //operating systems.
+    QString resultFile = resultFileInfo.absoluteFilePath();
+    //To get the right path on all operating systems.
 
     // Read results file
     QFile resultsFile(resultFilePath);
@@ -846,8 +730,7 @@ void ApexMainTest::testResultViewer()
     resultsFile.close();
 
     QWebView webView;
-    webView.setGeometry(0, 0, 1000, 700);       // Needed to get reproducible results: the plots are scaled to the page width
-    // TODO: this still fails when xvfb is not used under linux, leading to failure of this unit test
+
     QUrl ResultViewerUrl(QUrl::fromUserInput(resultViewerPath));
     qCDebug(APEX_RS) << ResultViewerUrl.scheme();
     apex::RTResultSink resultSink(ResultViewerUrl,rvparam.resultParameters(), rvparam.extraScript(), &webView);
@@ -859,75 +742,43 @@ void ApexMainTest::testResultViewer()
         QTest::qWait(10);
     }
 
-
+    resultSink.evaluateJavascript (plotConfig);
     resultSink.newResults(resultsFileData);
     resultSink.plot();
     QCoreApplication::processEvents();
-    QString resultHtml = resultSink.currentHtml();
 
-    // Other ways to do it
-    /*qCDebug(APEX_RS) << resultHtml;
-    qCDebug(APEX_RS) << resultSink.mainWebFrame()->documentElement().toOuterXml();
-    qCDebug(APEX_RS) << resultSink.evaluateJavascript("document.getElementsByTagName('body')[0].innerHTML");*/
+    QString resultJSON = resultSink.evaluateJavascript(testCommand).toString();
 
-    // Write comparison values (in case result is intended to change):
-    /*{
-    QFile file(desiredFilePath);
-    file.open(QIODevice::WriteOnly);
-    file.write(resultHtml.toUtf8());
-    file.close();
-    }*/
+    resultJSON = resultJSON.simplified().replace(" ","");
+    plotDataJSON = plotDataJSON.simplified().replace(" ","");
 
-    //Get the comparison values
-    QFile file(desiredFilePath);
-    file.open(QIODevice::ReadOnly);
-    QByteArray fileData = file.readAll();
-    file.close();
-    QString fileText(fileData);
+    QCOMPARE(resultJSON, plotDataJSON);
 
-
-
-    // Write both to temporary files
-    /*{
-    QFile file("testResultViewer-test.html");
-    file.open(QIODevice::WriteOnly);
-    file.write(resultHtml.toUtf8());
-    file.close();
-    }
-    {
-    QFile file("testResultViewer-desired.html");
-    file.open(QIODevice::WriteOnly);
-    file.write(fileText.toUtf8());
-    file.close();
-    }*/
-
-
-    QSKIP("Result is correct at time of checking, but test fails for unknown reasons, to be fixed");
-//    QCOMPARE(resultHtml, fileText);
-
-
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
 
-QUrl createUrl(QString filename) {
-    apex::Paths paths;
-    QDir testDir(paths.GetBasePath() + "/data/tests/libapex/");
-    QUrl url = QDir::toNativeSeparators(testDir.path() + "/" + filename);
-
-    QDir currentDir =  QDir::current().path();
-    url = currentDir.relativeFilePath(url.path());
-
-    return url;
+#if !defined(Q_OS_ANDROID)
+static QUrl createUrl(const QString &filename)
+{
+    return QDir::current().relativeFilePath(Paths::searchFile(QL1S("tests/libapex/") + filename, Paths::dataDirectories()));
 }
+#endif
 
-void ApexMainTest::wait() {
+void ApexMainTest::wait()
+{
     for(int i=0; i<5; ++i) {
         QCoreApplication::processEvents();
         QTest::qSleep(100);
     }
 }
 
-QPair<QWebFrame*, AccessManager*> ApexMainTest::initAccesManager() {
+QPair<QWebFrame*, AccessManager*> ApexMainTest::initAccesManager()
+{
+#if !defined(Q_OS_ANDROID)
     networkError = false;
     QWebView* webView = new QWebView();
     QWebPage* page = new QWebPage(webView);
@@ -937,12 +788,18 @@ QPair<QWebFrame*, AccessManager*> ApexMainTest::initAccesManager() {
     connect(page->networkAccessManager(), SIGNAL(finished(QNetworkReply*)), loadChecker, SLOT(check(QNetworkReply*)));
 
     return QPair<QWebFrame*, AccessManager*>(page->mainFrame(), am);
+#else
+    return QPair<QWebFrame*, AccessManager*>(NULL, NULL);
+#endif
 }
 
 
 //Load a local file that loads another local file
 void ApexMainTest::testAccessManagerLoadLocal()
 {
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
     QUrl p_page = createUrl("test_local.html");
     QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
 
@@ -950,11 +807,19 @@ void ApexMainTest::testAccessManagerLoadLocal()
     wait();
 
     QCOMPARE(networkError, false);
+
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
 //Load a local file that loads another local file
 void ApexMainTest::testAccessManagerLoadLocalWithScheme()
 {
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
     QUrl p_page = createUrl("test_local.html");
     p_page.setScheme("file");
     QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
@@ -963,10 +828,19 @@ void ApexMainTest::testAccessManagerLoadLocalWithScheme()
     wait();
 
     QCOMPARE(networkError, false);
+
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
 
-void ApexMainTest::testAccessManagerLoadLocalAndApex() {
+void ApexMainTest::testAccessManagerLoadLocalAndApex()
+{
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
     QUrl p_page = createUrl("test_global.html");
     QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
 
@@ -974,9 +848,18 @@ void ApexMainTest::testAccessManagerLoadLocalAndApex() {
     wait();
 
     QCOMPARE(networkError, false);
+
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
-void ApexMainTest::testAccessManagerLoadLocalAndApexWithScheme() {
+void ApexMainTest::testAccessManagerLoadLocalAndApexWithScheme()
+{
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
     QUrl p_page = createUrl("test_global.html");
     p_page.setScheme("file");
     QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
@@ -985,9 +868,18 @@ void ApexMainTest::testAccessManagerLoadLocalAndApexWithScheme() {
     wait();
 
     QCOMPARE(networkError, false);
+
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
-void ApexMainTest::testAccessManagerLoadApex() {
+void ApexMainTest::testAccessManagerLoadApex()
+{
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
     QUrl p_page("apex:resultsviewer.html");
     QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
 
@@ -995,10 +887,19 @@ void ApexMainTest::testAccessManagerLoadApex() {
     wait();
 
     QCOMPARE(networkError, false);
+
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
-void ApexMainTest::testAccessManagerLoadApexAndLocal() {
-    QUrl p_page("apex:resultsviewer-test-psignifit.html");
+void ApexMainTest::testAccessManagerLoadApexAndLocal()
+{
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
+    QUrl p_page("apex:resultsviewer-config.js");
     QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
 
     pair.first->load( pair.second->prepare(p_page) );
@@ -1006,9 +907,17 @@ void ApexMainTest::testAccessManagerLoadApexAndLocal() {
 
     QCOMPARE(networkError, false);
 
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
-void ApexMainTest::testAccessManagerLoadUnknownLocal() {
+void ApexMainTest::testAccessManagerLoadUnknownLocal()
+{
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
     QUrl p_page("unk.html");
     QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
 
@@ -1017,9 +926,17 @@ void ApexMainTest::testAccessManagerLoadUnknownLocal() {
 
     QCOMPARE(networkError, true);
 
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
-void ApexMainTest::testAccessManagerLoadUnknownApex() {
+void ApexMainTest::testAccessManagerLoadUnknownApex()
+{
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
     QUrl p_page("apex:unk.html");
     QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
 
@@ -1027,30 +944,32 @@ void ApexMainTest::testAccessManagerLoadUnknownApex() {
     wait();
 
     QCOMPARE(networkError, true);
+
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
-struct MocWarning : public InteractiveParameters::Callback {
+struct MocWarning : public InteractiveParameters::Callback
+{
     MocWarning() : InteractiveParameters::Callback(), count(0) {}
 
-    void warning(QString, QString) {
+    void warning(const QString &)
+    {
         ++count;
     }
 
     int count;
 };
 
-void ApexMainTest::testInteractive() {
-    apex::Paths paths;
-    QString filename = paths.GetBasePath() + "examples/interactive/setgain.apx";
-    QString fileschema = paths.GetExperimentSchemaPath();
-    QString filenamespace = EXPERIMENT_NAMESPACE;
+void ApexMainTest::testInteractive()
+{
+    TEST_EXCEPTIONS_TRY
 
-    qCDebug(APEX_RS) << "Filename: " << filename;
-    qCDebug(APEX_RS) << "File schema: " << fileschema;
-    qCDebug(APEX_RS) << "filenamespace: " << filenamespace;
-
-    ApexXMLTools::XMLDocumentGetter xmlDocumentGetter;
-    xercesc::DOMDocument* document = xmlDocumentGetter.GetXMLDocument(filename, fileschema, filenamespace);
+    QString filename = Paths::searchFile(QL1S("examples/interactive/setgain.apx"), Paths::dataDirectories());
+    ExperimentParser expParser(filename);
+    QDomDocument document = expParser.loadAndUpgradeDom();
 
     QString expectedPresentations = "80";
     QString expectedGain = "15";
@@ -1061,36 +980,36 @@ void ApexMainTest::testInteractive() {
     QStringList entryResults;
     entryResults << "Sub" << expectedGain << expectedPresentations << "invalid" << "" << expectedFeedbackLength << expectedText1 << expectedText2;
 
-    InteractiveParameters params(document, xmlDocumentGetter);
+    InteractiveParameters params(document);
     MocWarning* mocWarning = new MocWarning;
     params.apply(entryResults, mocWarning);
     document = params.document();
 
-    xercesc::DOMElement* apex = dynamic_cast<xercesc::DOMElement*>(document->getElementsByTagName(S2X(QString("apex:apex")))->item(0));
-    xercesc::DOMElement* procedure = dynamic_cast<xercesc::DOMElement*>(apex->getElementsByTagName(S2X(QString("procedure")))->item(0));
-    xercesc::DOMElement* parameters = dynamic_cast<xercesc::DOMElement*>(procedure->getElementsByTagName(S2X(QString("parameters")))->item(0));
-    xercesc::DOMElement* presentations = dynamic_cast<xercesc::DOMElement*>(parameters->getElementsByTagName(S2X(QString("presentations")))->item(0));
+    QDomElement apex = document.firstChildElement(QSL("apex:apex"));
+    QDomElement procedure = apex.firstChildElement(QSL("procedure"));
+    QDomElement parameters = procedure.firstChildElement(QSL("parameters"));
+    QDomElement presentations = parameters.firstChildElement(QSL("presentations"));
 
-    xercesc::DOMElement* devices = dynamic_cast<xercesc::DOMElement*>(apex->getElementsByTagName(S2X(QString("devices")))->item(0));
-    xercesc::DOMElement* device = dynamic_cast<xercesc::DOMElement*>(devices->getElementsByTagName(S2X(QString("device")))->item(0));
-    xercesc::DOMElement* gain = dynamic_cast<xercesc::DOMElement*>(device->getElementsByTagName(S2X(QString("gain")))->item(0));
+    QDomElement devices = apex.firstChildElement(QSL("devices"));
+    QDomElement device = devices.firstChildElement(QSL("device"));
+    QDomElement gain = device.firstChildElement(QSL("gain"));
 
-    xercesc::DOMElement* screens = dynamic_cast<xercesc::DOMElement*>(apex->getElementsByTagName(S2X(QString("screens")))->item(0));
-    xercesc::DOMElement* reinforcement = dynamic_cast<xercesc::DOMElement*>(screens->getElementsByTagName(S2X(QString("reinforcement")))->item(0));
-    xercesc::DOMElement* feedback = dynamic_cast<xercesc::DOMElement*>(reinforcement->getElementsByTagName(S2X(QString("feedback")))->item(0));
+    QDomElement screens = apex.firstChildElement(QSL("screens"));
+    QDomElement reinforcement = screens.firstChildElement(QSL("reinforcement"));
+    QDomElement feedback = reinforcement.firstChildElement(QSL("feedback"));
 
-    xercesc::DOMElement* screen = dynamic_cast<xercesc::DOMElement*>(screens->getElementsByTagName(S2X(QString("screen")))->item(0));
-    xercesc::DOMElement* gridlayout = dynamic_cast<xercesc::DOMElement*>(screen->getElementsByTagName(S2X(QString("gridLayout")))->item(0));
-    xercesc::DOMElement* button1 = dynamic_cast<xercesc::DOMElement*>(gridlayout->getElementsByTagName(S2X(QString("button")))->item(0));
-    xercesc::DOMElement* button2 = dynamic_cast<xercesc::DOMElement*>(gridlayout->getElementsByTagName(S2X(QString("button")))->item(1));
-    xercesc::DOMElement* text1 = dynamic_cast<xercesc::DOMElement*>(button1->getElementsByTagName(S2X(QString("text")))->item(0));
-    xercesc::DOMElement* text2 = dynamic_cast<xercesc::DOMElement*>(button2->getElementsByTagName(S2X(QString("text")))->item(0));
+    QDomElement screen = screens.firstChildElement(QSL("screen"));
+    QDomElement gridlayout = screen.firstChildElement(QSL("gridLayout"));
+    QDomElement button1 = gridlayout.firstChildElement(QSL("button"));
+    QDomElement button2 = button1.nextSiblingElement();
+    QDomElement text1 = button1.firstChildElement(QSL("text"));
+    QDomElement text2 = button2.firstChildElement(QSL("text"));
 
-    QString actualPresentations = X2S(presentations->getFirstChild()->getNodeValue());
-    QString actualGain = X2S(gain->getFirstChild()->getNodeValue());
-    QString actualFeedbackLength = X2S(feedback->getAttribute(S2X(QString("length"))));
-    QString actualText1 = X2S(text1->getFirstChild()->getNodeValue());
-    QString actualText2 = X2S(text2->getFirstChild()->getNodeValue());
+    QString actualPresentations = presentations.text();
+    QString actualGain = gain.text();
+    QString actualFeedbackLength = feedback.attribute(QSL("length"));
+    QString actualText1 = text1.text();
+    QString actualText2 = text2.text();
 
     QCOMPARE(actualPresentations, expectedPresentations);
     QCOMPARE(actualGain, expectedGain);
@@ -1098,20 +1017,23 @@ void ApexMainTest::testInteractive() {
     QCOMPARE(actualText1, expectedText1);
     QCOMPARE(actualText2, expectedText2);
     QCOMPARE(mocWarning->count, 1);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexMainTest::testSoundLevelMeter()
 {
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
+
     QString dummy = QL1S("dummyslmslave");
-    PluginLoader &loader = PluginLoader::Get();
     QList<SoundLevelMeterPluginCreator*> available =
-        loader.availablePlugins<SoundLevelMeterPluginCreator>();
+        PluginLoader().availablePlugins<SoundLevelMeterPluginCreator>();
     QStringList plugins;
     Q_FOREACH (SoundLevelMeterPluginCreator *creator, available)
         plugins.append(creator->availablePlugins());
     QVERIFY(plugins.contains(dummy));
-    SoundLevelMeterPluginCreator* creator = loader.
-        createPluginCreator<SoundLevelMeterPluginCreator>(dummy);
+    SoundLevelMeterPluginCreator* creator = createPluginCreator<SoundLevelMeterPluginCreator>(dummy);
     QVERIFY(creator != NULL);
     try {
         QScopedPointer<SoundLevelMeter> slm(creator->createSoundLevelMeter(dummy));
@@ -1120,6 +1042,11 @@ void ApexMainTest::testSoundLevelMeter()
     } catch (const std::exception &e) {
         QFAIL(e.what());
     }
+
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
 QDomDocument ApexMainTest::readXmlResults(const QString &fileName)
@@ -1188,24 +1115,24 @@ QString ApexMainTest::compareXml(const QDomNode &actual, const QDomNode &expecte
 
 void ApexMainTest::testStandaloneUpgrader()
 {
-    QProcess upgraderProcess;
-    apex::Paths paths;
+#if !defined(Q_OS_ANDROID)
+    TEST_EXCEPTIONS_TRY
 
-    QString processFile = paths.GetExecutablePath() + "/experimentupgrader";
-#ifdef WIN32
-    processFile.append(".exe");
+    QProcess upgraderProcess;
+
+#ifdef Q_OS_WIN32
+    QString processFile = QL1S("apexupgrader.exe");
+#else
+    QString processFile = QL1S("apexupgrader");
 #endif
+    processFile = Paths::searchFile(processFile, Paths::binDirectories());
     upgraderProcess.setProgram(processFile);
 
     //Set the right command line arguments:
     QStringList argumentsList;
-    QString arg1 = "-f";
-    QString arg2 = paths.GetBasePath() + "data/tests/libapex/upgraderTest.apx";
-    QString arg3 = paths.GetBasePath() + "data/tests/libapex/upgraderResult.apx";
+    QString arg2 = Paths::searchFile(QL1S("tests/libapex/upgraderTest.apx"), Paths::dataDirectories());
 
-    argumentsList.append(arg1);
     argumentsList.append(arg2);
-    argumentsList.append(arg3);
     upgraderProcess.setArguments(argumentsList);
 
     upgraderProcess.setProcessChannelMode(QProcess::MergedChannels); //to redirect standard output
@@ -1217,9 +1144,9 @@ void ApexMainTest::testStandaloneUpgrader()
 
     //Now read the contents of the tranformed file, and compare with desired file.
     //Transformed:
-    QFile upgradeResultFile(paths.GetBasePath() + "data/tests/libapex/upgraderResult.apx");
-    Q_ASSERT(upgradeResultFile.exists()); //Otherwise conversion failed by default.
-    Q_ASSERT(upgradeResultFile.open(QIODevice::ReadOnly));
+    QFile upgradeResultFile(arg2 + QSL(".upgraded"));
+    QVERIFY(upgradeResultFile.exists()); //Otherwise conversion failed by default.
+    QVERIFY(upgradeResultFile.open(QIODevice::ReadOnly));
 
     //qCDebug(APEX_RS) << "Upgrade resultfile: "<<upgradeResultFile.fileName();
 
@@ -1245,7 +1172,7 @@ void ApexMainTest::testStandaloneUpgrader()
                 <<"."<<upgradedVersion.at(2);*/
 
     //get the current version:
-    QString currentVersionString = QString(SCHEMA_VERSION);
+    QString currentVersionString = QString(APEX_SCHEMA_VERSION);
     QVector<int> currentVersion;
     currentVersion.resize(3);
     currentVersion[0] = currentVersionString.section(".", 0, 0).toInt();
@@ -1259,10 +1186,17 @@ void ApexMainTest::testStandaloneUpgrader()
 
     //Remove the newly created file so the test can be done again...
     upgradeResultFile.remove();
+
+    TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Skipped on Android");
+#endif
 }
 
 void ApexMainTest::testSoundcardSettings()
 {
+    TEST_EXCEPTIONS_TRY
+
     SoundcardSettings soundcardSettings;
 
     soundcardSettings.removeSavedSettings();
@@ -1277,10 +1211,13 @@ void ApexMainTest::testSoundcardSettings()
 
     soundcardSettings.removeSavedSettings();
 
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexMainTest::testSoundcardsDialog()
 {
+    TEST_EXCEPTIONS_TRY
+
     // simply test for segfaults etc
     SoundcardSettings scs;
     SoundcardsDialog d;
@@ -1288,16 +1225,11 @@ void ApexMainTest::testSoundcardsDialog()
     if (scs.hasData())
         d.setSelection(scs.hostApi(), scs.device());
 
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ApexMainTest::cleanupTestCase()
 {
-    xercesc::XMLPlatformUtils::Terminate();
 }
 
-//generate standalnne binary for the test
 QTEST_MAIN(ApexMainTest)
-
-//no use of plugin for now
-//Q_EXPORT_PLUGIN2(test_libapex, ApexMainTest);
-

@@ -1,12 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.0/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.0/experiment.xsd">
-      <!--  @doc
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!--  @doc
         @what: GUI to change some settings right before the experiment
         @description: GUI appears to set/change some settings
         @how: The name of the subject, in <results>/<subject> is set from the interactive dialog that appears before the experiment is loaded.
    -->
-
-    <procedure xsi:type="apex:constantProcedure">
+  <procedure xsi:type="apex:constantProcedure">
     <parameters>
       <presentations>2</presentations>
       <order>sequential</order>
@@ -27,10 +26,10 @@
   <screens>
     <screen id="screen1">
       <gridLayout width="2" height="1">
-        <button row="1" col="1" id="btn_house">
+        <button col="1" row="1" id="btn_house">
           <text>house</text>
         </button>
-        <button row="1" col="2" id="btn_mouse">
+        <button col="2" row="1" id="btn_mouse">
           <text>mouse</text>
         </button>
       </gridLayout>
@@ -38,24 +37,22 @@
         <button id="btn_house"/>
         <button id="btn_mouse"/>
       </buttongroup>
-      <default_answer_element>
-      buttongroup
-    </default_answer_element>
+      <default_answer_element>buttongroup</default_answer_element>
     </screen>
   </screens>
   <datablocks>
-    <uri_prefix>../stimuli</uri_prefix>
+    <prefix>../stimuli</prefix>
     <datablock id="db_house">
       <device>soundcard</device>
-      <uri>house.wav</uri>
+      <file>house.wav</file>
     </datablock>
     <datablock id="db_mouse">
       <device>soundcard</device>
-      <uri>mouse.wav</uri>
+      <file>mouse.wav</file>
     </datablock>
   </datablocks>
   <devices>
-    <device id="soundcard" xsi:type="apex:wavDeviceType">
+    <device xsi:type="apex:wavDeviceType" id="soundcard">
       <driver>portaudio</driver>
       <card>interactive</card>
       <channels>2</channels>
@@ -77,14 +74,14 @@
       </datablocks>
     </stimulus>
   </stimuli>
-
   <results>
-    <xsltscript>apexresult.xsl</xsltscript>
-    <showresults>false</showresults>
-    <subject></subject>
+    <page>apex:resultsviewer.html</page>
+    <resultparameters/>
+    <showduringexperiment>false</showduringexperiment>
+    <showafterexperiment>false</showafterexperiment>
+    <subject/>
   </results>
-
   <interactive>
-    <entry type="string" description="Subject" expression="apex:apex/results[1]/subject[1]" default=""/>
+    <entry description="Subject" default="" type="string" expression="apex:apex/results[1]/subject[1]"/>
   </interactive>
 </apex:apex>

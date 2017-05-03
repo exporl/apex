@@ -29,8 +29,6 @@
 #include "screen/rundelegatecreatorvisitor.h"
 #include "screen/spinboxrundelegate.h"
 
-#include "services/errorhandler.h"
-
 #include "apexcontrol.h"
 #include "screenrundelegate.h"
 
@@ -61,7 +59,7 @@ void ScreenRunDelegate::feedback(ScreenElementRunDelegate::FeedbackMode mode,
     if (!warning.isEmpty())
     {
         QString message = tr("Cannot show feedback because: %1").arg(warning);
-        ErrorHandler::Get().addWarning(tr("Feedback"), message);
+        qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(tr("Feedback"), message)));
     }
 }
 
@@ -241,7 +239,7 @@ QWidget* ScreenRunDelegate::getWidget()
 
 void ScreenRunDelegate::setAnswer(const QString& answer)
 {
-    emit newAnswer(answer);
+    Q_EMIT newAnswer(answer);
 }
 
 }

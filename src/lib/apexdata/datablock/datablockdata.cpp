@@ -21,7 +21,6 @@
 
 #include "fileprefix.h"
 
-#include <QUrl>
 #include <QDateTime>
 
 namespace apex
@@ -38,11 +37,9 @@ struct DatablockDataPrivate
     bool operator==(const DatablockDataPrivate& other) const;
 
     QString    id;
-    QUrl       uri;
+    QString    file;
     FilePrefix prefix;
     QString    directData;
-    bool       doChecksum;
-    QString    checksum;
     QString    description;
     QString    device;
     unsigned   nbChannels;
@@ -51,8 +48,7 @@ struct DatablockDataPrivate
 };
 
 
-DatablockDataPrivate::DatablockDataPrivate() : doChecksum(false),
-                                               nbChannels(0),
+DatablockDataPrivate::DatablockDataPrivate() : nbChannels(0),
                                                nbLoops(1),
                                                gain(0.0)
 {
@@ -66,11 +62,9 @@ bool DatablockDataPrivate::operator==(const DatablockDataPrivate& other) const
         nbChannels == other.nbChannels &&
         device == other.device &&
         description == other.description &&
-        checksum == other.checksum &&
-        doChecksum == other.doChecksum &&
         prefix == other.prefix &&
         id == other.id &&
-        uri == other.uri &&
+        file == other.file &&
         directData == other.directData;
 }
 
@@ -103,9 +97,9 @@ const QString& DatablockData::device() const
     return d->device;
 }
 
-const QUrl& DatablockData::uri() const
+const QString& DatablockData::file() const
 {
-    return d->uri;
+    return d->file;
 }
 
 const QString& DatablockData::description() const
@@ -124,17 +118,6 @@ const QString& DatablockData::directData() const
     return d->directData;
 }
 
-
-bool DatablockData::doChecksum() const
-{
-    return d->doChecksum;
-}
-
-
-const QString& DatablockData::checksum() const
-{
-    return d->checksum;
-}
 
 unsigned int DatablockData::nbChannels() const
 {
@@ -165,9 +148,9 @@ void DatablockData::setDevice(const QString& device)
     d->device = device;
 }
 
-void DatablockData::setUri(QUrl url)
+void DatablockData::setFile(const QString &file)
 {
-    d->uri = url;
+    d->file = file;
 }
 
 void DatablockData::setDescription(const QString& description)
@@ -187,17 +170,6 @@ void DatablockData::setDirectData(const QString& data)
     d->directData = data;
 }
 
-
-void DatablockData::setDoChecksum(bool doChecksum)
-{
-    d->doChecksum = doChecksum;
-}
-
-
-void DatablockData::setChecksum(const QString& checksum)
-{
-    d->checksum = checksum;
-}
 
 void DatablockData::setNbChannels(unsigned int nb)
 {

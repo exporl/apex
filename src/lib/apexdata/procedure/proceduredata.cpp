@@ -20,18 +20,11 @@
 #include "apextools/apextools.h"
 #include "apextools/exceptions.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
-#include "apextools/xml/xmlkeys.h"
-
 #include "corrector/correctordata.h"
 
 #include "proceduredata.h"
 #include "trialdata.h"
 
-using namespace xercesc;
-using namespace apex::XMLKeys;
-using namespace apex::ApexXMLTools;
 using namespace apex::data;
 
 namespace apex
@@ -64,11 +57,9 @@ int Choices::randomPosition() const
 {
     if (stimulusIntervals.isEmpty() ) {
         return mRandom.nextUInt( m_nChoices );
-         //return ApexTools::RandomRange(0, nChoices-1 );
     }
     int pos;
-    while (1) {
-        //pos= ApexTools::RandomRange(0, nChoices-1 );
+    while (true) {
         pos = mRandom.nextUInt( m_nChoices );
         if (stimulusIntervals.contains(pos))
             break;
@@ -321,21 +312,20 @@ bool ProcedureData::operator==(const ProcedureData& other) const
             ARE_EQUAL(m_correctorData, other.m_correctorData);
 }
 
-
 #ifdef PRINTPROCEDURECONFIG
-        void  ProcedureData::SetID(const QString& p_id) {
-            qCDebug(APEX_RS, "ProcedureConfig: Set id: "+p_id); m_id=p_id;
-        };
-        const  ProcedureData::QString& GetID() const {
-            qCDebug(APEX_RS, "ProcedureConfig: Get id: "+m_id); return m_id;
-        };
+void  ProcedureData::SetID(const QString& p_id) {
+    qCDebug(APEX_RS, "ProcedureConfig: Set id: "+p_id); m_id=p_id;
+};
+const  ProcedureData::QString& GetID() const {
+    qCDebug(APEX_RS, "ProcedureConfig: Get id: "+m_id); return m_id;
+};
 #else
-        void  ProcedureData::SetID(const QString& p_id) {
-            m_id=p_id;
-        };
-        const QString& ProcedureData::GetID() const {
-            return m_id;
-        };
+void  ProcedureData::SetID(const QString& p_id) {
+    m_id=p_id;
+};
+const QString& ProcedureData::GetID() const {
+    return m_id;
+};
 #endif
 
 }

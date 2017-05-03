@@ -20,8 +20,6 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_RANDOMGENERATOR_RANDOMGENERATORFACTORY_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_RANDOMGENERATOR_RANDOMGENERATORFACTORY_H_
 
-#include "apextools/status/errorlogger.h"
-
 #include <QMap>
 #include <QString>
 
@@ -40,7 +38,7 @@ class RandomGeneratorParameters;
 /**
 @author Tom Francart,,,
 */
-class RandomGeneratorFactory : public ErrorLogger
+class RandomGeneratorFactory
 {
 public:
     RandomGenerators* GetRandomGenerators(ExperimentRunDelegate& p_rd, QMap<QString,data::RandomGeneratorParameters*> p_param);

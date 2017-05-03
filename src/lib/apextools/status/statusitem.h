@@ -22,7 +22,6 @@
 
 #include "../global.h"
 
-#include <QList>
 #include <QString>
 
 class QDateTime;
@@ -42,7 +41,7 @@ struct StatusItemPrivate;
  * Supports the "named parameter" idiom:
  * @code
  * StatusReporter rep;
- * rep << StatusItem(StatusItem::Error)
+ * rep << StatusItem(StatusItem::Fatal)
  *              .setSource("Apex")
  *              .setMessage("Some error...");
  * @endcode
@@ -51,30 +50,27 @@ class APEXTOOLS_EXPORT StatusItem
 {
     public:
 
-        typedef QList<StatusItem> List;
-
-        enum Level
-        {
-            Unused  = 0x0,   //use when there's nothing to report
-            Message = 0x1,
-            Warning = 0x2,
-            Error   = 0x4
+        enum Level {
+            Unused      = 0x00,   //use when there's nothing to report
+            Debug       = 0x01,
+            Info        = 0x02,
+            Warning     = 0x04,
+            Critical    = 0x08,
+            Fatal       = 0x10,
+            AllButDebug = 0x1E,
+            All         = 0x1F
         };
         Q_DECLARE_FLAGS(Levels, Level);
 
-        StatusItem(Level level = Unused, const QString& source  = "",
-                                         const QString& message = "");
+        StatusItem(Level level = Unused, const QString& source  = QString(),
+                                         const QString& message = QString());
         StatusItem(const StatusItem& other);
         ~StatusItem();
-
-        //getters
 
         Level level() const;
         const QString& source() const;
         const QString& message() const;
         const QDateTime& dateTime() const;
-
-        //setters
 
         StatusItem& setLevel(Level level);
         StatusItem& setSource(const QString& source);
@@ -84,12 +80,12 @@ class APEXTOOLS_EXPORT StatusItem
         bool operator==(const StatusItem& other) const;
 
     private:
-
         StatusItemPrivate* d;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(apex::StatusItem::Levels);
-
 }//ns apex
+
+Q_DECLARE_METATYPE(apex::StatusItem)
+Q_DECLARE_OPERATORS_FOR_FLAGS(apex::StatusItem::Levels);
 
 #endif

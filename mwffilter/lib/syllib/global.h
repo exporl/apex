@@ -29,53 +29,10 @@
  * MWF filtering classes.
  */
 
-/** GCC version (e.g., 413).
- * @hideinitializer
- */
-#define SYL_GCC_VERSION (__GNUC__ * 100                                     \
-                       + __GNUC_MINOR__ * 10                                \
-                       + __GNUC_PATCHLEVEL)
-
-/** @def SYL_EXPORT_DECL
- * Exports the following symbol from a DLL.
- */
-
-/** @def SYL_IMPORT_DECL
- * Imports the following symbol from a DLL.
- */
-
-/** @def SYL_EXPORT
- * Exports or imports the following symbol from the library DLL as needed.
- */
-
-/** @def SYL_DEPRECATED
- * Marks the following symbol as deprecated.
- */
-
-#if defined (Q_CC_MSVC) || defined (Q_OS_WIN32)
-    #define SYL_EXPORT_DECL __declspec (dllexport)
-    #define SYL_IMPORT_DECL __declspec (dllimport)
-#else
-    // Test for GCC >= 4.0.0
-    #if SYL_GCC_VERSION >= 400
-        #define SYL_EXPORT_DECL __attribute__ ((visibility ("default")))
-        #define SYL_IMPORT_DECL
-    #else
-        #define SYL_EXPORT_DECL
-        #define SYL_IMPORT_DECL
-    #endif
-#endif
-
-#if defined (Q_CC_MSVC)
-    #define SYL_DEPRECATED __declspec (deprecated)
-#else
-    #define SYL_DEPRECATED __attribute__ ((__deprecated__))
-#endif
-
 #ifdef SYL_MAKEDLL
-    #define SYL_EXPORT SYL_EXPORT_DECL
+    #define SYL_EXPORT Q_DECL_EXPORT
 #else
-    #define SYL_EXPORT SYL_IMPORT_DECL
+    #define SYL_EXPORT Q_DECL_IMPORT
 #endif
 
 #endif

@@ -20,21 +20,15 @@
 #include "apexdata/result/resultparameters.h"
 
 #include "apextools/apextools.h"
-#include "apextools/pathtools.h"
 
-#include "apextools/services/paths.h"
-
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xercesinclude.h"
+#include "apextools/apexpaths.h"
 
 #include "parser/xmlpluginapi.h"
 
 #include "resultsink/apexresultsink.h"
 #include "resultsink/rtresultsink.h"
 
-#include "services/accessmanager.h"
-#include "services/errorhandler.h"
-#include "services/mainconfigfileparser.h"
+#include "accessmanager.h"
 
 #include "resultviewer.h"
 #include "ui_resultviewer.h"
@@ -70,11 +64,6 @@ static const char* ERROR_SOURCE = "ResultViewer";
 
 using namespace apex;
 
-namespace
-{
-    const unsigned sc_nBufferSize = 4096;
-}
-
 ResultViewer::ResultViewer(const data::ResultParameters* p_param,
         const QString& p_resultfile):
     m_pParam(p_param),
@@ -98,7 +87,7 @@ QByteArray ResultViewer::createCSVtext()
     QFile resultsfile(m_sResultfile);
     resultsfile.open(QIODevice::ReadOnly);
     if(!resultsfile.isOpen()){
-        emit errorMessage(ERROR_SOURCE, "resultsfile could not be loaded");
+        Q_EMIT errorMessage(ERROR_SOURCE, "resultsfile could not be loaded");
         return QByteArray();
     }
     QString xmlString = resultsfile.readAll();
@@ -138,11 +127,11 @@ bool ResultViewer::findResultPage()
         qCDebug(APEX_RS, "Resultsfile does not exist");
     if( resultsfile.open(QIODevice::ReadOnly) ) {
         QXmlStreamReader xsr( &resultsfile );
-        if (! xsr.error() == QXmlStreamReader::NoError)
+        if (xsr.error() != QXmlStreamReader::NoError)
             qCDebug(APEX_RS, "XMLStreamReader error: %s", qPrintable(xsr.errorString()));
         while (!xsr.atEnd()) {
             xsr.readNext();
-            if (! xsr.error() == QXmlStreamReader::NoError)
+            if (xsr.error() != QXmlStreamReader::NoError)
                 qCDebug(APEX_RS, "XMLStreamReader error: %s", qPrintable(xsr.errorString()));
             //qCDebug(APEX_RS) << xsr.name();
             if (xsr.isStartElement() && xsr.name() == "jscript") {
@@ -227,7 +216,7 @@ void ResultViewer::loadFinished(bool ok)
 {
     if (!ok) {
         m_dialog->close();
-        emit errorMessage(ERROR_SOURCE, tr("ResultViewer: cannot load results page"));
+        Q_EMIT errorMessage(ERROR_SOURCE, tr("ResultViewer: cannot load results page"));
         return;
     }
 
@@ -237,11 +226,11 @@ void ResultViewer::loadFinished(bool ok)
     if( resultsfile.open(QIODevice::ReadOnly) ) {
 
         QTextStream stream(&resultsfile);
+        stream.setCodec("UTF-8");
 
         m_rtr->newResults( stream.readAll() );
         m_rtr->plot();
         qCDebug(APEX_RS, "Showing rtresultsink");
-        //        rtr.show();
     }
 }
 
@@ -295,7 +284,7 @@ bool apex::ResultViewer::addtofile( const QString & p_filename )
     {
         // overwrite the </apex:results> thing
         // -1 to account for windows cr/lf
-        f.seek(f.size()- ApexResultSink::c_fileFooter.length() - 1);
+        f.seek(f.size() - ApexResultSink::c_fileFooter.length() - 1);
         out << "<processed>" << endl << endl;
         out << result_csv;
     }

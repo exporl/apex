@@ -1,176 +1,174 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
- <!-- @doc
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+  <!-- @doc
   @what: Test of synchronized bilateral CI setup
   @description: Test whether the stimuli are given from the first, the second or both L34 devices
   @how: Including two L34 devices, stimuli can be presented stimultaneously
     -->
- <procedure xsi:type="apex:trainingProcedure">
-  <parameters>
-   <presentations>100</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <answer>first</answer>
-    <screen id="screen1"/>
-    <stimulus id="stim1"/>
-   </trial>
-   <trial id="trial2">
-    <answer>second</answer>
-    <screen id="screen1"/>
-    <stimulus id="stim2"/>
-   </trial>
-   <trial id="trial3">
-    <answer>both</answer>
-    <screen id="screen1"/>
-    <stimulus id="stim12"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <screen id="screen1">
-   <gridLayout width="3" height="1" id="main_layout">
-    <button x="1" y="1" id="first">
-     <text>first</text>
-    </button>
-    <button x="2" y="1" id="second">
-     <text>second</text>
-    </button>
-    <button x="3" y="1" id="both">
-     <text>both</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="first"/>
-    <button id="second"/>
-    <button id="both"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>../stimuli/</uri_prefix>
-  <datablock id="elecdata1">
-   <device>l34-1</device>
-   <description>sample raw l34 datablock</description>
-   <uri>fadein.qic</uri>
-  </datablock>
-  <datablock id="elecdata2">
-   <device>l34-2</device>
-   <description>sample raw l34 datablock</description>
-   <uri>fadein.qic</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <master>l34-1</master>
-  <device xsi:type="apex:L34DeviceType" id="l34-1">
-   <device_id>1</device_id>
-   <implant>cic3</implant>
-   <trigger>out</trigger>
-   <defaultmap>
-    <inline>
-     <number_electrodes>3</number_electrodes>
-     <mode>MP1+2</mode>
-     <pulsewidth>25</pulsewidth>
-     <pulsegap>8</pulsegap>
-     <period>140</period>
-     <channel electrode="22" number="1" threshold="1" comfort="255"/>
-     <channel electrode="21" number="2" threshold="1" comfort="255"/>
-     <channel electrode="20" number="3" threshold="1" comfort="255"/>
-     <channel electrode="19" number="4" threshold="1" comfort="255"/>
-     <channel electrode="18" number="5" threshold="1" comfort="255"/>
-     <channel electrode="17" number="6" threshold="1" comfort="255"/>
-     <channel electrode="16" number="7" threshold="1" comfort="255"/>
-     <channel electrode="15" number="8" threshold="1" comfort="255"/>
-     <channel electrode="14" number="9" threshold="1" comfort="255"/>
-     <channel electrode="13" number="10" threshold="1" comfort="255"/>
-     <channel electrode="12" number="11" threshold="1" comfort="255"/>
-     <channel electrode="11" number="12" threshold="1" comfort="255"/>
-     <channel electrode="10" number="13" threshold="1" comfort="255"/>
-     <channel electrode="9" number="14" threshold="1" comfort="255"/>
-     <channel electrode="8" number="15" threshold="1" comfort="255"/>
-     <channel electrode="7" number="16" threshold="1" comfort="255"/>
-     <channel electrode="6" number="17" threshold="1" comfort="255"/>
-     <channel electrode="5" number="18" threshold="1" comfort="255"/>
-     <channel electrode="4" number="19" threshold="1" comfort="255"/>
-     <channel electrode="3" number="20" threshold="1" comfort="255"/>
-     <channel electrode="2" number="21" threshold="1" comfort="255"/>
-     <channel electrode="1" number="22" threshold="1" comfort="255"/>
-    </inline>
-   </defaultmap>
-  </device>
-  <device xsi:type="apex:L34DeviceType" id="l34-2">
-   <device_id>2</device_id>
-   <implant>cic3</implant>
-   <trigger>in</trigger>
-   <defaultmap>
-    <inline>
-     <number_electrodes>3</number_electrodes>
-     <mode>MP1+2</mode>
-     <pulsewidth>25</pulsewidth>
-     <pulsegap>8</pulsegap>
-     <period>140</period>
-     <channel electrode="22" number="1" threshold="1" comfort="255"/>
-     <channel electrode="21" number="2" threshold="1" comfort="255"/>
-     <channel electrode="20" number="3" threshold="1" comfort="255"/>
-     <channel electrode="19" number="4" threshold="1" comfort="255"/>
-     <channel electrode="18" number="5" threshold="1" comfort="255"/>
-     <channel electrode="17" number="6" threshold="1" comfort="255"/>
-     <channel electrode="16" number="7" threshold="1" comfort="255"/>
-     <channel electrode="15" number="8" threshold="1" comfort="255"/>
-     <channel electrode="14" number="9" threshold="1" comfort="255"/>
-     <channel electrode="13" number="10" threshold="1" comfort="255"/>
-     <channel electrode="12" number="11" threshold="1" comfort="255"/>
-     <channel electrode="11" number="12" threshold="1" comfort="255"/>
-     <channel electrode="10" number="13" threshold="1" comfort="255"/>
-     <channel electrode="9" number="14" threshold="1" comfort="255"/>
-     <channel electrode="8" number="15" threshold="1" comfort="255"/>
-     <channel electrode="7" number="16" threshold="1" comfort="255"/>
-     <channel electrode="6" number="17" threshold="1" comfort="255"/>
-     <channel electrode="5" number="18" threshold="1" comfort="255"/>
-     <channel electrode="4" number="19" threshold="1" comfort="255"/>
-     <channel electrode="3" number="20" threshold="1" comfort="255"/>
-     <channel electrode="2" number="21" threshold="1" comfort="255"/>
-     <channel electrode="1" number="22" threshold="1" comfort="255"/>
-    </inline>
-   </defaultmap>
-  </device>
- </devices>
- <filters/>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stim1">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="elecdata1"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
-  <stimulus id="stim2">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <datablock id="elecdata2"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
-  <stimulus id="stim12">
-   <description>Eenvoudige teststimulus</description>
-   <datablocks>
-    <simultaneous>
-     <datablock id="elecdata1"/>
-     <datablock id="elecdata2"/>
-    </simultaneous>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <!--connections>
+  <procedure xsi:type="apex:trainingProcedure">
+    <parameters>
+      <presentations>100</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>first</answer>
+        <screen id="screen1"/>
+        <stimulus id="stim1"/>
+      </trial>
+      <trial id="trial2">
+        <answer>second</answer>
+        <screen id="screen1"/>
+        <stimulus id="stim2"/>
+      </trial>
+      <trial id="trial3">
+        <answer>both</answer>
+        <screen id="screen1"/>
+        <stimulus id="stim12"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <screen id="screen1">
+      <gridLayout id="main_layout" width="3" height="1">
+        <button id="first" x="1" y="1">
+          <text>first</text>
+        </button>
+        <button id="second" x="2" y="1">
+          <text>second</text>
+        </button>
+        <button id="both" x="3" y="1">
+          <text>both</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="first"/>
+        <button id="second"/>
+        <button id="both"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli/</prefix>
+    <datablock id="elecdata1">
+      <device>l34-1</device>
+      <description>sample raw l34 datablock</description>
+      <file>fadein.aseq</file>
+    </datablock>
+    <datablock id="elecdata2">
+      <device>l34-2</device>
+      <description>sample raw l34 datablock</description>
+      <file>fadein.aseq</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <master>l34-1</master>
+    <device id="l34-1" xsi:type="apex:CohDeviceType">
+      <device>L34-cic3-1</device>
+      <trigger>out</trigger>
+      <defaultmap>
+        <inline>
+          <number_electrodes>3</number_electrodes>
+          <mode>MP1+2</mode>
+          <pulsewidth>25</pulsewidth>
+          <pulsegap>8</pulsegap>
+          <period>140</period>
+          <channel threshold="1" comfort="255" electrode="22" number="1"/>
+          <channel threshold="1" comfort="255" electrode="21" number="2"/>
+          <channel threshold="1" comfort="255" electrode="20" number="3"/>
+          <channel threshold="1" comfort="255" electrode="19" number="4"/>
+          <channel threshold="1" comfort="255" electrode="18" number="5"/>
+          <channel threshold="1" comfort="255" electrode="17" number="6"/>
+          <channel threshold="1" comfort="255" electrode="16" number="7"/>
+          <channel threshold="1" comfort="255" electrode="15" number="8"/>
+          <channel threshold="1" comfort="255" electrode="14" number="9"/>
+          <channel threshold="1" comfort="255" electrode="13" number="10"/>
+          <channel threshold="1" comfort="255" electrode="12" number="11"/>
+          <channel threshold="1" comfort="255" electrode="11" number="12"/>
+          <channel threshold="1" comfort="255" electrode="10" number="13"/>
+          <channel threshold="1" comfort="255" electrode="9" number="14"/>
+          <channel threshold="1" comfort="255" electrode="8" number="15"/>
+          <channel threshold="1" comfort="255" electrode="7" number="16"/>
+          <channel threshold="1" comfort="255" electrode="6" number="17"/>
+          <channel threshold="1" comfort="255" electrode="5" number="18"/>
+          <channel threshold="1" comfort="255" electrode="4" number="19"/>
+          <channel threshold="1" comfort="255" electrode="3" number="20"/>
+          <channel threshold="1" comfort="255" electrode="2" number="21"/>
+          <channel threshold="1" comfort="255" electrode="1" number="22"/>
+        </inline>
+      </defaultmap>
+    </device>
+    <device id="l34-2" xsi:type="apex:CohDeviceType">
+      <device>L34-cic3-2</device>
+      <trigger>in</trigger>
+      <defaultmap>
+        <inline>
+          <number_electrodes>3</number_electrodes>
+          <mode>MP1+2</mode>
+          <pulsewidth>25</pulsewidth>
+          <pulsegap>8</pulsegap>
+          <period>140</period>
+          <channel threshold="1" comfort="255" electrode="22" number="1"/>
+          <channel threshold="1" comfort="255" electrode="21" number="2"/>
+          <channel threshold="1" comfort="255" electrode="20" number="3"/>
+          <channel threshold="1" comfort="255" electrode="19" number="4"/>
+          <channel threshold="1" comfort="255" electrode="18" number="5"/>
+          <channel threshold="1" comfort="255" electrode="17" number="6"/>
+          <channel threshold="1" comfort="255" electrode="16" number="7"/>
+          <channel threshold="1" comfort="255" electrode="15" number="8"/>
+          <channel threshold="1" comfort="255" electrode="14" number="9"/>
+          <channel threshold="1" comfort="255" electrode="13" number="10"/>
+          <channel threshold="1" comfort="255" electrode="12" number="11"/>
+          <channel threshold="1" comfort="255" electrode="11" number="12"/>
+          <channel threshold="1" comfort="255" electrode="10" number="13"/>
+          <channel threshold="1" comfort="255" electrode="9" number="14"/>
+          <channel threshold="1" comfort="255" electrode="8" number="15"/>
+          <channel threshold="1" comfort="255" electrode="7" number="16"/>
+          <channel threshold="1" comfort="255" electrode="6" number="17"/>
+          <channel threshold="1" comfort="255" electrode="5" number="18"/>
+          <channel threshold="1" comfort="255" electrode="4" number="19"/>
+          <channel threshold="1" comfort="255" electrode="3" number="20"/>
+          <channel threshold="1" comfort="255" electrode="2" number="21"/>
+          <channel threshold="1" comfort="255" electrode="1" number="22"/>
+        </inline>
+      </defaultmap>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stim1">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="elecdata1"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stim2">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <datablock id="elecdata2"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+    <stimulus id="stim12">
+      <description>Eenvoudige teststimulus</description>
+      <datablocks>
+        <simultaneous>
+          <datablock id="elecdata1"/>
+          <datablock id="elecdata2"/>
+        </simultaneous>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <!--connections>
     <connection>
       <from>
         <id>elecdata1</id>

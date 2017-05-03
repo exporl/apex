@@ -43,8 +43,8 @@ public:
         * If name is not specified, a dialog will be shown with all available
         * plugins. Otherwise only the plugin matching name will be loaded
         */
-    void select(const QString& name);
-    void selectFromDir(const QString& path);
+    bool select(const QString& name) Q_DECL_OVERRIDE;
+    void selectFromDir(const QString& path) Q_DECL_OVERRIDE;
 
 private:
     QString path;

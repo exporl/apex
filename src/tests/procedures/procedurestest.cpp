@@ -53,37 +53,27 @@
 
 #include "apexmain/corrector/equalcorrector.h"
 
+#include "apexmain/experimentparser.h"
+
 #include "apexmain/procedure/procedureapiimplementation.h"
 
 #include "apexmain/runner/experimentrundelegate.h"
 
-#include "apextools/services/paths.h"
-
+#include "apextools/apexpaths.h"
+#include "apextools/apexpluginloader.h"
+#include "apextools/exceptions.h"
 #include "apextools/version.h"
 
-#include "apextools/xml/apexxmltools.h"
-#include "apextools/xml/xmldocumentgetter.h"
+#include "apextools/xml/xmltools.h"
+
+#include "common/paths.h"
+#include "common/testutils.h"
 
 #include "procedurestest.h"
 
-#include <QDebug>
-#include <QPluginLoader>
-
 using namespace apex;
-
 using namespace apex::data;
-
-using namespace apex::ApexXMLTools;
-
-QString libraryName(const QString& base)
-{
-    QString path(  QCoreApplication::applicationDirPath() );
-#ifdef Q_OS_WIN32
-    return path + "\\" +  base + QLatin1String(".dll");
-#else
-    return path + "/" + QLatin1String("lib") + base + QLatin1String(".so");
-#endif
-}
+using namespace cmn;
 
 QString ProceduresTest::name() const
 {
@@ -100,6 +90,8 @@ struct ProcedureAttributes {
 
 void ProceduresTest::testProcedureApi()
 {
+    TEST_EXCEPTIONS_TRY
+
     MainConfigFileData mcd;
 
     QScopedPointer<ExperimentData> d(makeDummyExperimentData());
@@ -200,51 +192,29 @@ void ProceduresTest::testProcedureApi()
         QCOMPARE(answerElement, QString("trial2_answerelement"));
     }
 
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 
 void ProceduresTest::testConstantProcedureParser()
 {
+    TEST_EXCEPTIONS_TRY
+
     MainConfigFileData mcd;
-    QPluginLoader loader(libraryName("apexprocedures"));
-    QObject *plugin = loader.instance();
 
-    QVERIFY(loader.isLoaded());
-    QVERIFY(plugin);
-
-    ProcedureCreatorInterface* creator =
-        qobject_cast<ProcedureCreatorInterface*> (plugin);
-
-    QVERIFY(creator);
-
-    QScopedPointer<ProcedureParserInterface> parser(
-        creator->createProcedureParser(QLatin1String("apex:constantProcedure")));
+    ProcedureCreatorInterface *creator = createPluginCreator
+        <ProcedureCreatorInterface>(QSL("apex:constantProcedure"));
+    QScopedPointer<ProcedureParserInterface> parser(creator->createProcedureParser
+            (QSL("apex:constantProcedure")));
 
     QVERIFY(parser.data());
 
-    // load test XML file
-    XMLDocumentGetter xdg;
+    ExperimentParser expParser(Paths::searchFile(QL1S("examples/procedure/idn1.apx"), Paths::dataDirectories()));
+    QDomDocument doc = expParser.loadAndUpgradeDom();
 
-    QDir dir(qApp->applicationDirPath());
-
-    dir.cdUp();
-
-    dir.cdUp();
-
-    QString apexpath(dir.path());
-
-    QString testfile("idn1.apx");
-
-    xercesc::DOMDocument* doc = xdg.GetXMLDocument(
-                                    apexpath + "/examples/procedure/" + testfile,
-                                    apexpath + "/data/schemas/experiment.xsd", EXPERIMENT_NAMESPACE);
-
-    xercesc::DOMElement* element =
-        XMLutils::GetElementsByTagName(doc->getDocumentElement(), "procedure");
-
-    QVERIFY(element);
-
-    QScopedPointer<data::ProcedureData> data( parser->parse(element) );
+    QScopedPointer<data::ProcedureData> data(parser->parse(doc.documentElement()
+                .firstChildElement(QSL("procedure"))));
 
     QCOMPARE(data->GetTrials().size(), 6);
 
@@ -260,6 +230,8 @@ void ProceduresTest::testConstantProcedureParser()
                                                            api.data(),
                                                            data.data()));
 
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 ListIt ProceduresTest::indexOf(const QString& text, QList<QStringList>& list)
@@ -309,6 +281,8 @@ void ProceduresTest::checkResultXml(QString xml, QSet<QString> elements,
 
 void ProceduresTest::testConstantProcedure()
 {
+    TEST_EXCEPTIONS_TRY
+
     MainConfigFileData mcd;
     QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
 
@@ -338,20 +312,6 @@ void ProceduresTest::testConstantProcedure()
     trial->SetAnswer("answer2");
     params->AddTrial(trial);
 
-    QPluginLoader loader(libraryName("apexprocedures"));
-    QObject *plugin = loader.instance();
-
-    QVERIFY(loader.isLoaded());
-    QVERIFY(plugin);
-
-    ProcedureCreatorInterface* creator =
-        qobject_cast<ProcedureCreatorInterface*>(plugin);
-
-    QVERIFY(creator);
-
-    //    QScopedPointer<ProcedureParserInterface> parser(
-    //            creator->createProcedureParser(QLatin1String("dummyprocedure")) );
-    //    QScopedPointer<data::ProcedureData> data( parser->parse(0) );
     QScopedPointer<ProcedureApiImplementation> api(new
             ProcedureApiImplementation(*rd));
 
@@ -360,12 +320,13 @@ void ProceduresTest::testConstantProcedure()
     expectedStimuli << "stimulus1" << "stimulus2" << "stimulus1"
                     << "stimulus2" << "stimulus1" << "stimulus2";
 
+    ProcedureCreatorInterface *creator = createPluginCreator
+        <ProcedureCreatorInterface>(QSL("apex:constantProcedure"));
+
     // Test correct answers
     {
-        QScopedPointer<ProcedureInterface> procedure(
-            creator->createProcedure(QLatin1String("apex:constantProcedure"),
-                                     api.data(),
-                                     params));
+        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+                (QSL("apex:constantProcedure"), api.data(), params));
 
         QVERIFY(procedure.data() != 0);
         int count;
@@ -422,10 +383,8 @@ void ProceduresTest::testConstantProcedure()
 
     // Test incorrect answers
     {
-        QScopedPointer<ProcedureInterface> procedure(
-            creator->createProcedure(QLatin1String("apex:constantProcedure"),
-                                     api.data(),
-                                     params));
+        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+                (QSL("apex:constantProcedure"), api.data(), params));
         QVERIFY(procedure.data());
         int count;
 
@@ -476,15 +435,20 @@ void ProceduresTest::testConstantProcedure()
 
         QCOMPARE(count, expectedStimuli.size());
     }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::testScriptProcedureInvalidTrial()
 {
+    TEST_EXCEPTIONS_TRY
+
     MainConfigFileData mcd;
     QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
 
     data::ScriptProcedureData *params = new ScriptProcedureData();
-    params->setScript(QDir::toNativeSeparators("../tests/libapex/") + "testprocedureinvalidtrial.js");
+    params->setScript(Paths::searchFile(QSL("tests/libapex/testprocedureinvalidtrial.js"),
+                Paths::dataDirectories()));
     params->setDebugger(false);
     params->setPresentations(1);
     params->setSkip(0);
@@ -499,38 +463,32 @@ void ProceduresTest::testScriptProcedureInvalidTrial()
         params->AddTrial(trial);
     }
 
-    QPluginLoader loader(libraryName("apexprocedures"));
-    QObject *plugin = loader.instance();
-
-    QVERIFY(loader.isLoaded());
-
-    ProcedureCreatorInterface* creator =
-        qobject_cast<ProcedureCreatorInterface*>(plugin);
-
     QScopedPointer<ProcedureApiImplementation> api(new
             ProcedureApiImplementation(*rd));
+    ProcedureCreatorInterface *creator = createPluginCreator
+        <ProcedureCreatorInterface>(QSL("apex:pluginProcedure"));
 
     // Test if the procedure throws an error when setupNextTrial is executed
     {
-        QScopedPointer<ProcedureInterface> procedure(
-            creator->createProcedure(QLatin1String("apex:pluginProcedure"),
-                                     api.data(),
-                                     params));
+        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+                (QSL("apex:pluginProcedure"), api.data(), params));
         QVERIFY(procedure.data());
 
         try {
             procedure->setupNextTrial();
-            QFAIL("Expected an ApexStringException");
-        } catch (const ApexStringException&) {
+            QFAIL("Expected an exception");
+        } catch (const std::exception &) {
             // expected
-        } catch (...) {
-            QFAIL("Expected an ApexStringException but got something else");
         }
     }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::testScriptProcedure()
 {
+    TEST_EXCEPTIONS_TRY
+
     qCDebug(APEX_RS) << "Testing plugin procedure";
     MainConfigFileData mcd;
     QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
@@ -553,17 +511,6 @@ void ProceduresTest::testScriptProcedure()
         params->AddTrial(trial);
     }
 
-    QPluginLoader loader(libraryName("apexprocedures"));
-    QObject *plugin = loader.instance();
-
-    QVERIFY(loader.isLoaded());
-    QVERIFY(plugin);
-
-    ProcedureCreatorInterface* creator =
-        qobject_cast<ProcedureCreatorInterface*>(plugin);
-
-    QVERIFY(creator);
-
     QScopedPointer<ProcedureApiImplementation> api(new
             ProcedureApiImplementation(*rd));
 
@@ -575,10 +522,10 @@ void ProceduresTest::testScriptProcedure()
     qCDebug(APEX_RS) << "Test correct anwers";
     // Test correct answers
     {
-        QScopedPointer<ProcedureInterface> procedure(
-            creator->createProcedure(QLatin1String("apex:pluginProcedure"),
-                                     api.data(),
-                                     params));
+        ProcedureCreatorInterface *creator = createPluginCreator
+            <ProcedureCreatorInterface>(QSL("apex:pluginProcedure"));
+        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+                (QSL("apex:pluginProcedure"), api.data(), params));
         QVERIFY(procedure.data());
         int count;
 
@@ -615,34 +562,29 @@ void ProceduresTest::testScriptProcedure()
     }
 
 
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::testDummyProcedure()
 {
+    TEST_EXCEPTIONS_TRY
+
     MainConfigFileData mcd;
     QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd)) ;
 
-    QPluginLoader loader(libraryName("dummyprocedure"));
-    QObject *plugin = loader.instance();
+    ProcedureCreatorInterface *creator = createPluginCreator
+        <ProcedureCreatorInterface>(QSL("dummyprocedure"));
+    QScopedPointer<ProcedureParserInterface> parser(creator->createProcedureParser
+            (QSL("dummyprocedure")));
 
-    QVERIFY(loader.isLoaded());
-    QVERIFY(plugin);
-
-    ProcedureCreatorInterface* creator = qobject_cast<ProcedureCreatorInterface*> (plugin);
-
-    QVERIFY(creator);
-
-    QScopedPointer<ProcedureParserInterface> parser(
-        creator->createProcedureParser(QLatin1String("dummyprocedure")));
-
-    QScopedPointer<data::ProcedureData> data(parser->parse(0));
+    QScopedPointer<data::ProcedureData> data(parser->parse(QDomElement()));
 
     QScopedPointer<ProcedureApiImplementation> api(
         new ProcedureApiImplementation(*rd));
 
-    QScopedPointer<ProcedureInterface> procedure(
-        creator->createProcedure(QLatin1String("dummyprocedure"), api.data(),
-                                 data.data()));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+            (QSL("dummyprocedure"), api.data(), data.data()));
 
     Trial trial = procedure->setupNextTrial();
 
@@ -657,10 +599,14 @@ void ProceduresTest::testDummyProcedure()
     QCOMPARE(trial.stimulus(1, 0), QString("stimulus1"));
 
     QCOMPARE(trial.stimulusCount(1), 2);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::testTrainingProcedure()
 {
+    TEST_EXCEPTIONS_TRY
+
     MainConfigFileData mcd;
     QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
 
@@ -698,21 +644,11 @@ void ProceduresTest::testTrainingProcedure()
     trialData->SetAnswer("answer3");
     params->AddTrial(trialData);
 
-    QPluginLoader loader(libraryName("apexprocedures"));
-    QObject *plugin = loader.instance();
-
-    QVERIFY(loader.isLoaded());
-    QVERIFY(plugin);
-
-    ProcedureCreatorInterface* creator =
-        qobject_cast<ProcedureCreatorInterface*>(plugin);
-
-    QVERIFY(creator);
-
     QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-    QScopedPointer<ProcedureInterface> procedure(
-            creator->createProcedure(QLatin1String("apex:trainingProcedure"),
-                                     api.data(), params));
+    ProcedureCreatorInterface *creator = createPluginCreator
+        <ProcedureCreatorInterface>(QSL("apex:trainingProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+            (QSL("apex:trainingProcedure"), api.data(), params));
 
     //generate first trial. there should not be any stimuli
     data::Trial trial = procedure->setupNextTrial();
@@ -800,10 +736,14 @@ void ProceduresTest::testTrainingProcedure()
     //procedure should be done now (presentations == 3)
     QCOMPARE(procedure->progress(), 100.0);
     QVERIFY(!procedure->setupNextTrial().isValid());
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::testKaernbachProcedure()
 {
+    TEST_EXCEPTIONS_TRY
+
     MainConfigFileData mcd;
     QScopedPointer<ExperimentRunDelegate> rd(makeStimulusExperimentRunDelegate(mcd));
 
@@ -832,22 +772,11 @@ void ProceduresTest::testKaernbachProcedure()
     trialData->AddStimulus("stimulus1");
     params->AddTrial(trialData);
 
-    QPluginLoader loader(libraryName("apexprocedures"));
-    QObject *plugin = loader.instance();
-
-    QVERIFY(loader.isLoaded());
-    QVERIFY(plugin);
-
-    ProcedureCreatorInterface* creator =
-        qobject_cast<ProcedureCreatorInterface*>(plugin);
-
-    QVERIFY(creator);
-
     QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-
-    QScopedPointer<ProcedureInterface> procedure(
-            creator->createProcedure(QLatin1String("apex:adaptiveProcedure"),
-                                     api.data(), params));
+    ProcedureCreatorInterface *creator = createPluginCreator
+        <ProcedureCreatorInterface>(QSL("apex:adaptiveProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+            (QSL("apex:adaptiveProcedure"), api.data(), params));
 
     data::Trial trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
@@ -1030,10 +959,14 @@ void ProceduresTest::testKaernbachProcedure()
 
     trial = procedure->setupNextTrial();
     QVERIFY(!trial.isValid());
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::testAdaptiveProcedure()
 {
+    TEST_EXCEPTIONS_TRY
+
     MainConfigFileData mcd;
     QScopedPointer<ExperimentRunDelegate> rd(makeStimulusExperimentRunDelegate(mcd));
 
@@ -1068,22 +1001,11 @@ void ProceduresTest::testAdaptiveProcedure()
     trialData->AddStimulus("stimulus2");
     params->AddTrial(trialData);
 
-    QPluginLoader loader(libraryName("apexprocedures"));
-    QObject *plugin = loader.instance();
-
-    QVERIFY(loader.isLoaded());
-    QVERIFY(plugin);
-
-    ProcedureCreatorInterface* creator =
-        qobject_cast<ProcedureCreatorInterface*>(plugin);
-
-    QVERIFY(creator);
-
     QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-
-    QScopedPointer<ProcedureInterface> procedure(
-            creator->createProcedure(QLatin1String("apex:adaptiveProcedure"),
-                                     api.data(), params));
+    ProcedureCreatorInterface *creator = createPluginCreator
+        <ProcedureCreatorInterface>(QSL("apex:adaptiveProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+            (QSL("apex:adaptiveProcedure"), api.data(), params));
 
     data::Trial trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
@@ -1264,6 +1186,8 @@ void ProceduresTest::testAdaptiveProcedure()
 
     trial = procedure->setupNextTrial();
     QVERIFY(!trial.isValid());
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::createConstantProcedure(ConstantProcedureData*& data,
@@ -1339,15 +1263,22 @@ void ProceduresTest::createTrainingProcedure(TrainingProcedureData*& data,
     data->SetID(trainingProcedureAttributes.id);
 }
 
-void ProceduresTest::testTrial(const data::Trial& trial, const QString id, const int count) const {
+void ProceduresTest::testTrial(const data::Trial& trial, const QString id, const int count) const
+{
+    TEST_EXCEPTIONS_TRY
+
     QVERIFY(trial.isValid());
     QVERIFY(trial.acceptResponse(0));
     QCOMPARE(trial.id(), id);
     QCOMPARE(trial.stimulusCount(0), count);
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::testMultiProcedureOneByOne()
 {
+    TEST_EXCEPTIONS_TRY
+
     MainConfigFileData mcd;
     QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
 
@@ -1366,17 +1297,11 @@ void ProceduresTest::testMultiProcedureOneByOne()
     params->addProcedure(data1);
     params->addProcedure(data2);
 
-    QPluginLoader loader(libraryName("apexprocedures"));
-    QObject *plugin = loader.instance();
-    ProcedureCreatorInterface* creator =
-        qobject_cast<ProcedureCreatorInterface*>(plugin);
-
     QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-
-    QScopedPointer<ProcedureInterface> procedure(
-        creator->createProcedure(QLatin1String("apex:multiProcedure"),
-                                 api.data(),
-                                 params));
+    ProcedureCreatorInterface *creator = createPluginCreator
+        <ProcedureCreatorInterface>(QSL("apex:multiProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+            (QSL("apex:multiProcedure"), api.data(), params));
     QVERIFY(procedure.data());
 
     QString ae("button1");      // answerelement
@@ -1507,10 +1432,14 @@ void ProceduresTest::testMultiProcedureOneByOne()
         QVERIFY(procedure->progress() >= 100.0);
         QVERIFY(!procedure->setupNextTrial().isValid());
     }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::testMultiProcedureSequential()
 {
+    TEST_EXCEPTIONS_TRY
+
     MainConfigFileData mcd;
     QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
 
@@ -1529,17 +1458,11 @@ void ProceduresTest::testMultiProcedureSequential()
     params->addProcedure(data1);
     params->addProcedure(data2);
 
-    QPluginLoader loader(libraryName("apexprocedures"));
-    QObject *plugin = loader.instance();
-    ProcedureCreatorInterface* creator =
-        qobject_cast<ProcedureCreatorInterface*>(plugin);
-
     QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-
-    QScopedPointer<ProcedureInterface> procedure(
-        creator->createProcedure(QLatin1String("apex:multiProcedure"),
-                                 api.data(),
-                                 params));
+    ProcedureCreatorInterface *creator = createPluginCreator
+        <ProcedureCreatorInterface>(QSL("apex:multiProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+            (QSL("apex:multiProcedure"), api.data(), params));
     QVERIFY(procedure.data());
 
     QString ae("button1");      // answerelement
@@ -1706,11 +1629,15 @@ void ProceduresTest::testMultiProcedureSequential()
     //procedure should be done now
     QVERIFY(procedure->progress() >= 100.0);
     QVERIFY(!procedure->setupNextTrial().isValid());
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::testMultiProcedureRandom()
 {
-    Random::setDeterministic(true);
+    TEST_EXCEPTIONS_TRY
+
+    cmn::Random::setDeterministic(true);
 
     MainConfigFileData mcd;
     QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
@@ -1730,17 +1657,11 @@ void ProceduresTest::testMultiProcedureRandom()
     params->addProcedure(data1);
     params->addProcedure(data2);
 
-    QPluginLoader loader(libraryName("apexprocedures"));
-    QObject *plugin = loader.instance();
-    ProcedureCreatorInterface* creator =
-        qobject_cast<ProcedureCreatorInterface*>(plugin);
-
     QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-
-    QScopedPointer<ProcedureInterface> procedure(
-        creator->createProcedure(QLatin1String("apex:multiProcedure"),
-                                 api.data(),
-                                 params));
+    ProcedureCreatorInterface *creator = createPluginCreator
+        <ProcedureCreatorInterface>(QSL("apex:multiProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
+            (QSL("apex:multiProcedure"), api.data(), params));
     QVERIFY(procedure.data());
 
     QString ae("button1");      // answerelement
@@ -1907,10 +1828,14 @@ void ProceduresTest::testMultiProcedureRandom()
     //procedure should be done now
     QVERIFY(procedure->progress() >= 100.0);
     QVERIFY(!procedure->setupNextTrial().isValid());
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 void ProceduresTest::testEqualCorrector()
 {
+    TEST_EXCEPTIONS_TRY
+
     EqualCorrector c;
     {
         QVariant result = c.compare("string1", "string2");
@@ -1921,6 +1846,8 @@ void ProceduresTest::testEqualCorrector()
         QVariant result = c.compare("string1", "string1");
         QVERIFY(result.toBool());
     }
+
+    TEST_EXCEPTIONS_CATCH
 }
 
 ExperimentData* ProceduresTest::makeDummyExperimentData()

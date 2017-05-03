@@ -11,20 +11,10 @@ MainConfigFileData::MainConfigFileData():
 {
 }
 
-void MainConfigFileData::setPerlPath(const QString &p)
-{
-    m_perl_path = p;
-}
-
 void MainConfigFileData::setPluginScriptLibrary(const QString &p)
 {
     m_plugin_script_library = p;
 }
-
-/*void MainConfigFileData::setSchemasPath(const QString &p)
-{
-    m_schemas_path = p;
-}*/
 
 void MainConfigFileData::addSoundDriver(const QString &id, const QString &driver, const QString &name)
 {
@@ -34,14 +24,14 @@ void MainConfigFileData::addSoundDriver(const QString &id, const QString &driver
     m_SndDrivers[id].insert(driver,name);
 }
 
+void MainConfigFileData::addCohDriverName(const QString &id, const QString &name)
+{
+    cohDriverNames[id.toLower()] = name;
+}
+
 void MainConfigFileData::addPrefix(const QString &id, const QString &path)
 {
     m_prefixes.insert(id, path);
-}
-
-const QString& MainConfigFileData::perlPath() const
-{
-    return m_perl_path;
 }
 
 const MainConfigFileData::SoundCardNames& MainConfigFileData::soundCardDrivers() const
@@ -59,6 +49,10 @@ const QString MainConfigFileData::soundCardName(const QString &id, const QString
     return m_SndDrivers[id][driver];
 }
 
+QString MainConfigFileData::cohDriverName(const QString &id) const
+{
+    return cohDriverNames.value(id.toLower(), id);
+}
 
 /**
  * Return prefix according to given id, if no prefix is found, an empty string is returned

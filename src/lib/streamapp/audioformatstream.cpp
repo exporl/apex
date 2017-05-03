@@ -34,11 +34,10 @@ using namespace appcore;
 using namespace streamapp;
 
 AudioFormatReaderStream::AudioFormatReaderStream( AudioFormatReader* const ac_cpSource, const unsigned ac_nBufferSize,
-                                                  const bool ac_bNormalize, const bool ac_bDeleteReader ) :
+                                                  const bool ac_bDeleteReader ) :
     InputStream(),
   m_pSource( PtrCheck( ac_cpSource ) ),
   m_Output( ac_cpSource->mf_nChannels(), ac_nBufferSize ),
-  mc_bNormalize( ac_bNormalize ),
   mv_nReadLastTime( 0 ),
   mv_bDeleteReader( ac_bDeleteReader ),
   mv_bEOF( false ),
@@ -94,7 +93,7 @@ const Stream& AudioFormatReaderStream::Read()
   if( !mv_bEOF )
   {
     const unsigned nSamples = m_Output.mf_nGetBufferSize();
-    mv_nReadLastTime = m_Output.ReadFromSource( m_pSource, nSamples, mc_bNormalize );
+    mv_nReadLastTime = m_Output.ReadFromSource( m_pSource, nSamples, 0 );
     if( mv_nReadLastTime != nSamples )
       mv_bEOF = true;
   }
@@ -104,12 +103,10 @@ const Stream& AudioFormatReaderStream::Read()
 }
 
 AudioFormatWriterStream::AudioFormatWriterStream( AudioFormatWriter* const ac_cpSource, const unsigned ac_nBufferSize,
-                                                  const bool ac_bNormalize, const bool ac_bClipping, const bool ac_bDeleteWriter ) :
+                                                  const bool ac_bDeleteWriter ) :
     OutputStream(),
   m_pSource( ac_cpSource ),
   m_Output( ac_cpSource->mf_nChannels(), ac_nBufferSize ), //allocates buffer but is not always used
-  mc_bNormalize( ac_bNormalize ),
-  mc_bClipping( ac_bClipping ),
   mv_bEOF( false ),
   mv_bDeleteWriter( ac_bDeleteWriter ),
   mc_WriteLock()
@@ -136,7 +133,7 @@ void AudioFormatWriterStream::Write( const Stream& ac_Stream )
 
     //write
   const unsigned nSamples = m_Output.mf_nGetBufferSize();
-  if( m_Output.WriteToSource( m_pSource, nSamples, mc_bNormalize, mc_bClipping ) != nSamples )
+  if( m_Output.WriteToSource( m_pSource, nSamples ) != nSamples )
     mv_bEOF = true;
 }
 
@@ -154,8 +151,7 @@ void AudioFormatWriterStream::mp_ReplaceWriter( AudioFormatWriter* const ac_cpSo
 }
 
 PositionableAudioFormatReaderStream::PositionableAudioFormatReaderStream( PositionableAudioFormatReader* const ac_pSource, const unsigned ac_nBufferSize,
-                                                                         const bool ac_bNormalize, const bool ac_bDeleteReader ) :
-  mc_bNormalize( ac_bNormalize ),
+                                                                         const bool ac_bDeleteReader ) :
   mv_bDeleteReader( ac_bDeleteReader ),
   mv_bEOF( false ),
   mv_bOutputCleared( false ),
@@ -207,7 +203,7 @@ const Stream& PositionableAudioFormatReaderStream::Read()
     //read
   const unsigned nSamples = m_Output.mf_nGetBufferSize();
   const unsigned nLeft = m_pSource->mf_lSamplesLeft();
-  mv_nReadLastTime = m_Output.ReadFromSource( m_pSource, nSamples, mc_bNormalize );
+  mv_nReadLastTime = m_Output.ReadFromSource( m_pSource, nSamples, 0 );
 
   if( mf_bIsLooping() )
   {

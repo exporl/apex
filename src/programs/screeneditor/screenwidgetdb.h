@@ -17,8 +17,8 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef _EXPORL_SRC_PROGRAMS_SCREENEDITOR_SCREENWIDGETDB_H_
-#define _EXPORL_SRC_PROGRAMS_SCREENEDITOR_SCREENWIDGETDB_H_
+#ifndef _APEX_SRC_PROGRAMS_SCREENEDITOR_SCREENWIDGETDB_H_
+#define _APEX_SRC_PROGRAMS_SCREENEDITOR_SCREENWIDGETDB_H_
 
 #include <QList>
 
@@ -37,11 +37,10 @@ namespace apex
      */
     class ScreenWidgetDB
     {
-      ScreenEditor* editor;
       QList<QAction*> addWidgetActions;
       QList<QAction*> addLayoutActions;
     public:
-      ScreenWidgetDB( ScreenEditor* editor );
+      ScreenWidgetDB( ScreenEditor* e );
       QList<QAction*> getAddWidgetActions();
       QList<QAction*> getAddLayoutActions();
     };

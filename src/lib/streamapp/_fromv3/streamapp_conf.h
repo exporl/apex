@@ -191,14 +191,6 @@
   #endif
 
     /**
-      * S_USE_STREAMAPP_MIXER
-      * Define for using files in streamapp/mixer/
-      */
-  #ifndef S_USE_STREAMAPP_MIXER
-    //#define S_STREAMAPP_USE_MIXER
-  #endif
-
-    /**
       * S_USE_STREAMAPP_NSP
       * Define for using Intel NSP libraries
       */
@@ -210,7 +202,6 @@
 
   #undef S_USE_ASIO
   #undef S_USE_PORTAUDIO
-  #undef S_USE_MIXER
   #undef S_USE_NSP
 
 #endif

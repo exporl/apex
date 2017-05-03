@@ -157,7 +157,7 @@ void SnrWidget::updateSnr()
     widgets.snrSpeechLine->setLevel(snr);
     widgets.snrNoiseLine->setLevel(snr);*/
 
-    emit levelsChanged(speech, noise);
+    Q_EMIT levelsChanged(speech, noise);
 
     //ok done updating
     updatingSNR = false;

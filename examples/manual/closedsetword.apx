@@ -1,227 +1,227 @@
 <?xml version='1.0' encoding='UTF-8'?>
- <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
   <!--  @doc
    @what: Closed-set identification of words in noise with figures
    @description: A word is presented in noise and the subject responds by clicking on one of the 4 figures on the screen, repeated 3 times. Initial SNR is set via interactive GUI.
    @how: full experiment
   -->
- <procedure xsi:type="apex:constantProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-  </parameters>
-  <trials>
-   <trial id="trial_star">
-    <answer>picturestar</answer>
-    <screen id="screenstar_horse_vase_moon"/>
-    <stimulus id="stimulus_star"/>
-   </trial>
-   <trial id="trial_fly">
-    <answer>picturefly</answer>
-    <screen id="screenknee_fly_mouse_star"/>
-    <stimulus id="stimulus_fly"/>
-   </trial>
-   <trial id="trial_mouse">
-    <answer>picturemouse</answer>
-    <screen id="screenmouse_fly_star_moon"/>
-    <stimulus id="stimulus_mouse"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <uri_prefix>closedset </uri_prefix>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="600">false</feedback>
-  </reinforcement>
-  <screen id="screenstar_horse_vase_moon">
-   <gridLayout width="2" height="2">
-    <picture col="1" id="picturestar" row="1">
-     <uri>star.jpg</uri>
-    </picture>
-    <picture col="1" id="picturehorse" row="2">
-     <uri>horse.jpg</uri>
-    </picture>
-    <picture col="2" id="picturevase" row="1">
-     <uri>vase.jpg</uri>
-    </picture>
-    <picture col="2" id="picturemoon" row="2">
-     <uri>moon.jpg</uri>
-    </picture>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="picturestar"/>
-    <button id="picturehorse"/>
-    <button id="picturevase"/>
-    <button id="picturemoon"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
-  <screen id="screenknee_fly_mouse_star">
-   <gridLayout width="2" height="2">
-    <picture col="1" id="pictureknee" row="1">
-     <uri>knee.jpg</uri>
-    </picture>
-    <picture col="1" id="picturefly" row="2">
-     <uri>fly.jpg</uri>
-    </picture>
-    <picture col="2" id="picturemouse" row="1">
-     <uri>mouse.jpg</uri>
-    </picture>
-    <picture col="2" id="picturestar" row="2">
-     <uri>star.jpg</uri>
-    </picture>
-   </gridLayout>
-   <buttongroup id="buttongroup2">
-    <button id="pictureknee"/>
-    <button id="picturefly"/>
-    <button id="picturemouse"/>
-    <button id="picturestar"/>
-   </buttongroup>
-   <default_answer_element>buttongroup2</default_answer_element>
-  </screen>
-  <screen id="screenmouse_fly_star_moon">
-   <gridLayout width="2" height="2">
-    <picture col="1" id="picturemouse" row="1">
-     <uri>mouse.jpg</uri>
-    </picture>
-    <picture col="1" id="picturefly" row="2">
-     <uri>fly.jpg</uri>
-    </picture>
-    <picture col="2" id="picturestar" row="1">
-     <uri>star.jpg</uri>
-    </picture>
-    <picture col="2" id="picturemoon" row="2">
-     <uri>moon.jpg</uri>
-    </picture>
-   </gridLayout>
-   <buttongroup id="buttongroup3">
-    <button id="picturemouse"/>
-    <button id="picturefly"/>
-    <button id="picturestar"/>
-    <button id="picturemoon"/>
-   </buttongroup>
-   <default_answer_element>buttongroup3</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>closedset</uri_prefix>
-  <datablock id="datablock_star">
-   <device>wavdevice</device>
-   <uri>star.wav</uri>
-  </datablock>
-  <datablock id="datablock_fly">
-   <device>wavdevice</device>
-   <uri>fly.wav</uri>
-  </datablock>
-  <datablock id="datablock_mouse">
-   <device>wavdevice</device>
-   <uri>mouse.wav</uri>
-  </datablock>
-  <datablock id="noisedata">
-   <device>wavdevice</device>
-   <uri>noise.wav</uri>
-  </datablock>
-  <datablock id="silence">
-   <device>wavdevice</device>
-   <uri>silence:500</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>1</channels>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <filters>
-  <filter id="noisegen" xsi:type="apex:dataloop">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <continuous>false</continuous>
-   <datablock>noisedata</datablock>
-   <basegain>-5</basegain>
-   <gain id="noisegain">0</gain>
-   <randomjump>true</randomjump>
-  </filter>
-  <filter id="amplifier" xsi:type="apex:amplifier">
-   <device>wavdevice</device>
-   <channels>1</channels>
-   <basegain>-5</basegain>
-   <gain id="gain">0</gain>
-  </filter>
- </filters>
- <stimuli>
-  <stimulus id="stimulus_star">
-   <datablocks>
-    <sequential>
-     <datablock id="silence"/>
-     <datablock id="datablock_star"/>
-     <datablock id="silence"/>
-    </sequential>
-   </datablocks>
-  </stimulus>
-  <stimulus id="stimulus_fly">
-   <datablocks>
-    <sequential>
-     <datablock id="silence"/>
-     <datablock id="datablock_fly"/>
-     <datablock id="silence"/>
-    </sequential>
-   </datablocks>
-  </stimulus>
-  <stimulus id="stimulus_mouse">
-   <datablocks>
-    <sequential>
-     <datablock id="silence"/>
-     <datablock id="datablock_mouse"/>
-     <datablock id="silence"/>
-    </sequential>
-   </datablocks>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>amplifier</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
-  <connection>
-   <from>
-    <id>noisegen</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
- <results>
-  <page>apex:resultsviewer.html</page>
-  <resultparameters/>
-  <showduringexperiment>false</showduringexperiment>
-  <showafterexperiment>true</showafterexperiment>
-  <saveprocessedresults>true</saveprocessedresults>
- </results>
- <interactive>
-  <entry default="0" type="int" expression="/apex:apex/filters/filter[@id='amplifier']/gain" description="SNR in dB"/>
- </interactive>
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial_star">
+        <answer>picturestar</answer>
+        <screen id="screenstar_horse_vase_moon"/>
+        <stimulus id="stimulus_star"/>
+      </trial>
+      <trial id="trial_fly">
+        <answer>picturefly</answer>
+        <screen id="screenknee_fly_mouse_star"/>
+        <stimulus id="stimulus_fly"/>
+      </trial>
+      <trial id="trial_mouse">
+        <answer>picturemouse</answer>
+        <screen id="screenmouse_fly_star_moon"/>
+        <stimulus id="stimulus_mouse"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <prefix>closedset </prefix>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="600">false</feedback>
+    </reinforcement>
+    <screen id="screenstar_horse_vase_moon">
+      <gridLayout width="2" height="2">
+        <picture col="1" id="picturestar" row="1">
+          <file>star.jpg</file>
+        </picture>
+        <picture col="1" id="picturehorse" row="2">
+          <file>horse.jpg</file>
+        </picture>
+        <picture col="2" id="picturevase" row="1">
+          <file>vase.jpg</file>
+        </picture>
+        <picture col="2" id="picturemoon" row="2">
+          <file>moon.jpg</file>
+        </picture>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="picturestar"/>
+        <button id="picturehorse"/>
+        <button id="picturevase"/>
+        <button id="picturemoon"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+    <screen id="screenknee_fly_mouse_star">
+      <gridLayout width="2" height="2">
+        <picture col="1" id="pictureknee" row="1">
+          <file>knee.jpg</file>
+        </picture>
+        <picture col="1" id="picturefly" row="2">
+          <file>fly.jpg</file>
+        </picture>
+        <picture col="2" id="picturemouse" row="1">
+          <file>mouse.jpg</file>
+        </picture>
+        <picture col="2" id="picturestar" row="2">
+          <file>star.jpg</file>
+        </picture>
+      </gridLayout>
+      <buttongroup id="buttongroup2">
+        <button id="pictureknee"/>
+        <button id="picturefly"/>
+        <button id="picturemouse"/>
+        <button id="picturestar"/>
+      </buttongroup>
+      <default_answer_element>buttongroup2</default_answer_element>
+    </screen>
+    <screen id="screenmouse_fly_star_moon">
+      <gridLayout width="2" height="2">
+        <picture col="1" id="picturemouse" row="1">
+          <file>mouse.jpg</file>
+        </picture>
+        <picture col="1" id="picturefly" row="2">
+          <file>fly.jpg</file>
+        </picture>
+        <picture col="2" id="picturestar" row="1">
+          <file>star.jpg</file>
+        </picture>
+        <picture col="2" id="picturemoon" row="2">
+          <file>moon.jpg</file>
+        </picture>
+      </gridLayout>
+      <buttongroup id="buttongroup3">
+        <button id="picturemouse"/>
+        <button id="picturefly"/>
+        <button id="picturestar"/>
+        <button id="picturemoon"/>
+      </buttongroup>
+      <default_answer_element>buttongroup3</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>closedset</prefix>
+    <datablock id="datablock_star">
+      <device>wavdevice</device>
+      <file>star.wav</file>
+    </datablock>
+    <datablock id="datablock_fly">
+      <device>wavdevice</device>
+      <file>fly.wav</file>
+    </datablock>
+    <datablock id="datablock_mouse">
+      <device>wavdevice</device>
+      <file>mouse.wav</file>
+    </datablock>
+    <datablock id="noisedata">
+      <device>wavdevice</device>
+      <file>noise.wav</file>
+    </datablock>
+    <datablock id="silence">
+      <device>wavdevice</device>
+      <file>silence:500</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>1</channels>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters>
+    <filter xsi:type="apex:dataloop" id="noisegen">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <continuous>false</continuous>
+      <datablock>noisedata</datablock>
+      <basegain>-5</basegain>
+      <gain id="noisegain">0</gain>
+      <randomjump>true</randomjump>
+    </filter>
+    <filter xsi:type="apex:amplifier" id="amplifier">
+      <device>wavdevice</device>
+      <channels>1</channels>
+      <basegain>-5</basegain>
+      <gain id="gain">0</gain>
+    </filter>
+  </filters>
+  <stimuli>
+    <stimulus id="stimulus_star">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="datablock_star"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+    </stimulus>
+    <stimulus id="stimulus_fly">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="datablock_fly"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+    </stimulus>
+    <stimulus id="stimulus_mouse">
+      <datablocks>
+        <sequential>
+          <datablock id="silence"/>
+          <datablock id="datablock_mouse"/>
+          <datablock id="silence"/>
+        </sequential>
+      </datablocks>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>noisegen</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
+  <results>
+    <page>apex:resultsviewer.html</page>
+    <resultparameters/>
+    <showduringexperiment>false</showduringexperiment>
+    <showafterexperiment>true</showafterexperiment>
+    <saveprocessedresults>true</saveprocessedresults>
+  </results>
+  <interactive>
+    <entry description="SNR in dB" default="0" expression="/apex:apex/filters/filter[@id='amplifier']/gain" type="int"/>
+  </interactive>
 </apex:apex>

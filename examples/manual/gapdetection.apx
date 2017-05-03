@@ -1,187 +1,184 @@
 <?xml version='1.0' encoding='UTF-8'?>
- <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!--  @doc
    @what: Gap detection
    @description:
    @how:
   -->
- <procedure xsi:type="apex:adaptiveProcedure">
-  <parameters>
-   <presentations>1</presentations>
-   <order>sequential</order>
-   <corrector xsi:type="apex:alternatives">
-    <answers>
-     <answer value="button1" number="1"/>
-     <answer value="button2" number="2"/>
-    </answers>
-   </corrector>
-   <choices select="1,2">2</choices>
-   <pause_between_stimuli>500</pause_between_stimuli>
-   <nUp>1</nUp>
-   <nDown>2</nDown>
-   <adapt_parameter>gap</adapt_parameter>
-   <start_value>5</start_value>
-   <stop_after_type>reversals</stop_after_type>
-   <stop_after>5</stop_after>
-   <min_value>0</min_value>
-   <max_value>5</max_value>
-   <larger_is_easier>true</larger_is_easier>
-   <stepsizes>
-    <change_after>reversals</change_after>
-    <stepsize begin="0" size="2"/>
-    <stepsize begin="2" size="1"/>
-   </stepsizes>
-  </parameters>
-  <trials>
-   <trial id="trial1">
-    <screen id="screen1"/>
-    <stimulus id="stimulus1"/>
-    <stimulus id="stimulus2"/>
-    <stimulus id="stimulus3"/>
-    <stimulus id="stimulus4"/>
-    <stimulus id="stimulus5"/>
-    <standard id="standard"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">true</feedback>
-   <showcurrent>true</showcurrent>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout id="main_layout" width="2" height="1">
-    <button id="button1" row="1" col="1">
-     <text>1</text>
-    </button>
-    <button id="button2" row="1" col="2">
-     <text>2</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup1">
-    <button id="button1"/>
-    <button id="button2"/>
-   </buttongroup>
-   <default_answer_element>buttongroup1</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>gapfiles</uri_prefix>
-  <datablock id="g5ms">
-   <device>wavdevice</device>
-   <uri>g5.wav</uri>
-  </datablock>
-  <datablock id="g4ms">
-   <device>wavdevice</device>
-   <uri>g4.wav</uri>
-  </datablock>
-  <datablock id="g3ms">
-   <device>wavdevice</device>
-   <uri>g3.wav</uri>
-  </datablock>
-  <datablock id="g2ms">
-   <device>wavdevice</device>
-   <uri>g2.wav</uri>
-  </datablock>
-  <datablock id="g1ms">
-   <device>wavdevice</device>
-   <uri>g1.wav</uri>
-  </datablock>
-  <datablock id="datablockref">
-   <device>wavdevice</device>
-   <uri>ref500.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="wavdevice" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <filters/>
- <stimuli>
-  <fixed_parameters>
-   <parameter id="gap"/>
-  </fixed_parameters>
-  <stimulus id="stimulus1">
-   <description>noisewithgap1</description>
-   <datablocks>
-    <datablock id="g5ms"/>
-   </datablocks>
-   <fixedParameters>
-    <parameter id="gap">5</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="stimulus2">
-   <description>noisewithgap2</description>
-   <datablocks>
-    <datablock id="g4ms"/>
-   </datablocks>
-   <fixedParameters>
-    <parameter id="gap">4</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="stimulus3">
-   <description>noisewithgap3</description>
-   <datablocks>
-    <datablock id="g3ms"/>
-   </datablocks>
-   <fixedParameters>
-    <parameter id="gap">3</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="stimulus4">
-   <description>noisewithgap4</description>
-   <datablocks>
-    <datablock id="g2ms"/>
-   </datablocks>
-   <fixedParameters>
-    <parameter id="gap">2</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="stimulus5">
-   <description>noisewithgap5</description>
-   <datablocks>
-    <datablock id="g1ms"/>
-   </datablocks>
-   <fixedParameters>
-    <parameter id="gap">1</parameter>
-   </fixedParameters>
-  </stimulus>
-  <stimulus id="standard">
-   <datablocks>
-    <datablock id="datablockref"/>
-   </datablocks>
-   <fixedParameters>
-    <parameter id="gap">0</parameter>
-   </fixedParameters>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>wavdevice</id>
-    <channel>1</channel>
-   </to>
-  </connection>
- </connections>
- <results>
-  <page>apex:resultsviewer.html</page>
-  <resultparameters>
-   <parameter name="reversals for mean">3</parameter>
-  </resultparameters>
-  <showduringexperiment>false</showduringexperiment>
-  <showafterexperiment>true</showafterexperiment>
-  <saveprocessedresults>true</saveprocessedresults>
- </results>
- <general>
-  <exitafter>true</exitafter>
- </general>
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <order>sequential</order>
+      <intervals count="2">
+        <interval element="button1" number="1"/>
+        <interval element="button2" number="2"/>
+      </intervals>
+      <pause_between_stimuli>500</pause_between_stimuli>
+      <nUp>1</nUp>
+      <nDown>2</nDown>
+      <adapt_parameter>gap</adapt_parameter>
+      <start_value>5</start_value>
+      <stop_after_type>reversals</stop_after_type>
+      <stop_after>5</stop_after>
+      <min_value>0</min_value>
+      <max_value>5</max_value>
+      <larger_is_easier>true</larger_is_easier>
+      <stepsizes>
+        <change_after>reversals</change_after>
+        <stepsize begin="0" size="2"/>
+        <stepsize begin="2" size="1"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <screen id="screen1"/>
+        <stimulus id="stimulus1"/>
+        <stimulus id="stimulus2"/>
+        <stimulus id="stimulus3"/>
+        <stimulus id="stimulus4"/>
+        <stimulus id="stimulus5"/>
+        <standard id="standard"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">true</feedback>
+      <showcurrent>true</showcurrent>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout width="2" height="1" id="main_layout">
+        <button col="1" row="1" id="button1">
+          <text>1</text>
+        </button>
+        <button col="2" row="1" id="button2">
+          <text>2</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup1">
+        <button id="button1"/>
+        <button id="button2"/>
+      </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>gapfiles</prefix>
+    <datablock id="g5ms">
+      <device>wavdevice</device>
+      <file>g5.wav</file>
+    </datablock>
+    <datablock id="g4ms">
+      <device>wavdevice</device>
+      <file>g4.wav</file>
+    </datablock>
+    <datablock id="g3ms">
+      <device>wavdevice</device>
+      <file>g3.wav</file>
+    </datablock>
+    <datablock id="g2ms">
+      <device>wavdevice</device>
+      <file>g2.wav</file>
+    </datablock>
+    <datablock id="g1ms">
+      <device>wavdevice</device>
+      <file>g1.wav</file>
+    </datablock>
+    <datablock id="datablockref">
+      <device>wavdevice</device>
+      <file>ref500.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="wavdevice">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="gap"/>
+    </fixed_parameters>
+    <stimulus id="stimulus1">
+      <description>noisewithgap1</description>
+      <datablocks>
+        <datablock id="g5ms"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="gap">5</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus2">
+      <description>noisewithgap2</description>
+      <datablocks>
+        <datablock id="g4ms"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="gap">4</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus3">
+      <description>noisewithgap3</description>
+      <datablocks>
+        <datablock id="g3ms"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="gap">3</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus4">
+      <description>noisewithgap4</description>
+      <datablocks>
+        <datablock id="g2ms"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="gap">2</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="stimulus5">
+      <description>noisewithgap5</description>
+      <datablocks>
+        <datablock id="g1ms"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="gap">1</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="standard">
+      <datablocks>
+        <datablock id="datablockref"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="gap">0</parameter>
+      </fixedParameters>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>wavdevice</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+  </connections>
+  <results>
+    <page>apex:resultsviewer.html</page>
+    <resultparameters>
+      <parameter name="reversals for mean">3</parameter>
+    </resultparameters>
+    <showduringexperiment>false</showduringexperiment>
+    <showafterexperiment>true</showafterexperiment>
+    <saveprocessedresults>true</saveprocessedresults>
+  </results>
+  <general>
+    <exitafter>true</exitafter>
+  </general>
 </apex:apex>

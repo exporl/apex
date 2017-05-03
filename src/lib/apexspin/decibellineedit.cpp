@@ -104,7 +104,7 @@ void DecibelLineEdit::emitLevelChange(QString levelText)
     emitting = true;
 
     if (hasLevel())
-        emit levelChanged(level());
+        Q_EMIT levelChanged(level());
 
     //done emitting
     emitting = false;
@@ -115,7 +115,7 @@ void DecibelLineEdit::focusOutEvent(QFocusEvent* event)
     if (!text().isEmpty() && !hasAcceptableInput())
         setText(QString::number(0.0));
 
-    emit levelChanged(level());
+    Q_EMIT levelChanged(level());
     QLineEdit::focusOutEvent(event);
 }
 

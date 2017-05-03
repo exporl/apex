@@ -28,8 +28,6 @@
 
 #include "screen/screenrundelegate.h"
 
-#include "services/errorhandler.h"
-
 #include "stimulus/stimulus.h"
 
 #include "fileprefixconvertor.h"
@@ -134,7 +132,7 @@ PictureRunDelegate::PictureRunDelegate(
 void PictureRunDelegate::sendAnsweredSignal( const QPointF& point)
 {
     lastClickPosition = point;
-    emit answered( this );
+    Q_EMIT answered( this );
 }
 
 void PictureRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
@@ -176,13 +174,13 @@ void PictureRunDelegate::setEnabled(const bool e) {
 void PictureRunDelegate::mouseReleaseEvent ( QMouseEvent * /*event*/ )
 {
 //    qCDebug(APEX_RS, "release event");
-    emit(released());
+    Q_EMIT(released());
 
 }
 
 void PictureRunDelegate::newStimulus( stimulus::Stimulus* stimulus ) {
     QString value;
-    QString id( element->getUriId() );
+    QString id( element->getFileId() );
     if (id.isEmpty())
         return;
 
@@ -214,7 +212,7 @@ void PictureRunDelegate::newStimulus( stimulus::Stimulus* stimulus ) {
         }
 
     } else {
-        ErrorHandler::Get().addWarning("Picture", QString("Could not open image %1").arg(value));
+        qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("Picture", QString("Could not open image %1").arg(value))));
     }
 
     qCDebug(APEX_RS) << "PictureRunDelegate: param " << id << " = " << value;

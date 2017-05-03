@@ -113,12 +113,10 @@ public:
      * instance, returns @c NULL.
      *
      * @param name name of Runner as returned by #availableRunners()
-     * @param apexbasepath base path of the current apex instance
      * @return new Runner instance or @c NULL if it was not possible to create
      * the Runner
      */
-    virtual PluginRunnerInterface *createRunner(const QString &name,
-            const QString &apexbasepath) const = 0;
+    virtual PluginRunnerInterface *createRunner(const QString &name) const = 0;
 };
 
 Q_DECLARE_INTERFACE(PluginRunnerCreator, "be.exporl.apex.pluginRunner/1.0")

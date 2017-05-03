@@ -1,2342 +1,2338 @@
-<apex:speechmaterialfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.3/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.3/experiment.xsd"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/experiment">
-    
-    <noises>
-        <noise id="FrMatrix_ltass">
-            <description>Long term average speech spectrum noise for French Matrix test</description>
-            <name>French Matrix test</name>
-            <uri>french/frmatrix/frmatrixnoise.wav</uri>
-            <rms>-17.58</rms>
-            <speechmaterial>FrMatrix</speechmaterial>
-        </noise>
-    </noises>
-    
-    <speechmaterial id="FrMatrix">
-        <rms>-17.58</rms>
-        <list id="lijst20_01">
-            <speechtoken id="03663">
-                <uri>french/frmatrix/03663.wav</uri>
-                <text>Jean-Luc dessine neuf ballons bruns</text>
-            </speechtoken>
-            <speechtoken id="12977">
-                <uri>french/frmatrix/12977.wav</uri>
-                <text>Emile attrape sept anneaux blancs</text>
-            </speechtoken>
-            <speechtoken id="20811">
-                <uri>french/frmatrix/20811.wav</uri>
-                <text>Agnès ramasse cinq livres rouges</text>
-            </speechtoken>
-            <speechtoken id="36222">
-                <uri>french/frmatrix/36222.wav</uri>
-                <text>Julien reprend quinze crayons verts</text>
-            </speechtoken>
-            <speechtoken id="47185">
-                <uri>french/frmatrix/47185.wav</uri>
-                <text>Etienne achète deux rubans mauves</text>
-            </speechtoken>
-            <speechtoken id="59439">
-                <uri>french/frmatrix/59439.wav</uri>
-                <text>Michel déplace douze piquets noirs</text>
-            </speechtoken>
-            <speechtoken id="68054">
-                <uri>french/frmatrix/68054.wav</uri>
-                <text>Eugène propose trois jetons bleus</text>
-            </speechtoken>
-            <speechtoken id="71746">
-                <uri>french/frmatrix/71746.wav</uri>
-                <text>Félix voudrait six vélos roses</text>
-            </speechtoken>
-            <speechtoken id="85500">
-                <uri>french/frmatrix/85500.wav</uri>
-                <text>Charlotte ramène onze classeurs jaunes</text>
-            </speechtoken>
-            <speechtoken id="94398">
-                <uri>french/frmatrix/94398.wav</uri>
-                <text>Sophie demande huit pions gris</text>
-            </speechtoken>
-            <speechtoken id="07601">
-                <uri>french/frmatrix/07601.wav</uri>
-                <text>Jean-Luc achète neuf classeurs rouges</text>
-            </speechtoken>
-            <speechtoken id="13777">
-                <uri>french/frmatrix/13777.wav</uri>
-                <text>Emile dessine six anneaux blancs</text>
-            </speechtoken>
-            <speechtoken id="25334">
-                <uri>french/frmatrix/25334.wav</uri>
-                <text>Agnès ramène huit piquets bleus</text>
-            </speechtoken>
-            <speechtoken id="38069">
-                <uri>french/frmatrix/38069.wav</uri>
-                <text>Julien propose trois ballons noirs</text>
-            </speechtoken>
-            <speechtoken id="44913">
-                <uri>french/frmatrix/44913.wav</uri>
-                <text>Etienne demande sept livres bruns</text>
-            </speechtoken>
-            <speechtoken id="59858">
-                <uri>french/frmatrix/59858.wav</uri>
-                <text>Michel déplace cinq jetons gris</text>
-            </speechtoken>
-            <speechtoken id="66225">
-                <uri>french/frmatrix/66225.wav</uri>
-                <text>Eugène reprend quinze crayons mauves</text>
-            </speechtoken>
-            <speechtoken id="70446">
-                <uri>french/frmatrix/70446.wav</uri>
-                <text>Félix ramasse douze vélos roses</text>
-            </speechtoken>
-            <speechtoken id="81592">
-                <uri>french/frmatrix/81592.wav</uri>
-                <text>Charlotte voudrait onze pions verts</text>
-            </speechtoken>
-            <speechtoken id="92180">
-                <uri>french/frmatrix/92180.wav</uri>
-                <text>Sophie attrape deux rubans jaunes</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_02">
-            <speechtoken id="01886">
-                <uri>french/frmatrix/01886.wav</uri>
-                <text>Jean-Luc voudrait cinq rubans roses</text>
-            </speechtoken>
-            <speechtoken id="19043">
-                <uri>french/frmatrix/19043.wav</uri>
-                <text>Emile déplace trois vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="28465">
-                <uri>french/frmatrix/28465.wav</uri>
-                <text>Agnès propose douze ballons mauves</text>
-            </speechtoken>
-            <speechtoken id="32909">
-                <uri>french/frmatrix/32909.wav</uri>
-                <text>Julien attrape sept classeurs noirs</text>
-            </speechtoken>
-            <speechtoken id="40791">
-                <uri>french/frmatrix/40791.wav</uri>
-                <text>Etienne ramasse six pions rouges</text>
-            </speechtoken>
-            <speechtoken id="54234">
-                <uri>french/frmatrix/54234.wav</uri>
-                <text>Michel demande quinze piquets bleus</text>
-            </speechtoken>
-            <speechtoken id="63317">
-                <uri>french/frmatrix/63317.wav</uri>
-                <text>Eugène dessine huit livres blancs</text>
-            </speechtoken>
-            <speechtoken id="76620">
-                <uri>french/frmatrix/76620.wav</uri>
-                <text>Félix reprend neuf crayons jaunes</text>
-            </speechtoken>
-            <speechtoken id="87152">
-                <uri>french/frmatrix/87152.wav</uri>
-                <text>Charlotte achète deux jetons verts</text>
-            </speechtoken>
-            <speechtoken id="95578">
-                <uri>french/frmatrix/95578.wav</uri>
-                <text>Sophie ramène onze anneaux gris</text>
-            </speechtoken>
-            <speechtoken id="01626">
-                <uri>french/frmatrix/01626.wav</uri>
-                <text>Jean-Luc voudrait neuf crayons roses</text>
-            </speechtoken>
-            <speechtoken id="19079">
-                <uri>french/frmatrix/19079.wav</uri>
-                <text>Emile déplace trois anneaux noirs</text>
-            </speechtoken>
-            <speechtoken id="25430">
-                <uri>french/frmatrix/25430.wav</uri>
-                <text>Agnès ramène douze piquets jaunes</text>
-            </speechtoken>
-            <speechtoken id="32891">
-                <uri>french/frmatrix/32891.wav</uri>
-                <text>Julien attrape cinq pions rouges</text>
-            </speechtoken>
-            <speechtoken id="44368">
-                <uri>french/frmatrix/44368.wav</uri>
-                <text>Etienne demande huit ballons gris</text>
-            </speechtoken>
-            <speechtoken id="50952">
-                <uri>french/frmatrix/50952.wav</uri>
-                <text>Michel ramasse sept jetons verts</text>
-            </speechtoken>
-            <speechtoken id="67143">
-                <uri>french/frmatrix/67143.wav</uri>
-                <text>Eugène achète deux vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="78704">
-                <uri>french/frmatrix/78704.wav</uri>
-                <text>Félix propose six classeurs bleus</text>
-            </speechtoken>
-            <speechtoken id="86215">
-                <uri>french/frmatrix/86215.wav</uri>
-                <text>Charlotte reprend quinze livres mauves</text>
-            </speechtoken>
-            <speechtoken id="93587">
-                <uri>french/frmatrix/93587.wav</uri>
-                <text>Sophie dessine onze rubans blancs</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_03">
-            <speechtoken id="03406">
-                <uri>french/frmatrix/03406.wav</uri>
-                <text>Jean-Luc dessine douze classeurs roses</text>
-            </speechtoken>
-            <speechtoken id="14522">
-                <uri>french/frmatrix/14522.wav</uri>
-                <text>Emile demande onze crayons verts</text>
-            </speechtoken>
-            <speechtoken id="25369">
-                <uri>french/frmatrix/25369.wav</uri>
-                <text>Agnès ramène huit ballons noirs</text>
-            </speechtoken>
-            <speechtoken id="31644">
-                <uri>french/frmatrix/31644.wav</uri>
-                <text>Julien voudrait neuf vélos bleus</text>
-            </speechtoken>
-            <speechtoken id="49798">
-                <uri>french/frmatrix/49798.wav</uri>
-                <text>Etienne déplace six pions gris</text>
-            </speechtoken>
-            <speechtoken id="58871">
-                <uri>french/frmatrix/58871.wav</uri>
-                <text>Michel propose cinq anneaux rouges</text>
-            </speechtoken>
-            <speechtoken id="66257">
-                <uri>french/frmatrix/66257.wav</uri>
-                <text>Eugène reprend quinze jetons blancs</text>
-            </speechtoken>
-            <speechtoken id="72935">
-                <uri>french/frmatrix/72935.wav</uri>
-                <text>Félix attrape sept piquets mauves</text>
-            </speechtoken>
-            <speechtoken id="80113">
-                <uri>french/frmatrix/80113.wav</uri>
-                <text>Charlotte ramasse deux livres bruns</text>
-            </speechtoken>
-            <speechtoken id="97080">
-                <uri>french/frmatrix/97080.wav</uri>
-                <text>Sophie achète trois rubans jaunes</text>
-            </speechtoken>
-            <speechtoken id="00456">
-                <uri>french/frmatrix/00456.wav</uri>
-                <text>Jean-Luc ramasse douze jetons roses</text>
-            </speechtoken>
-            <speechtoken id="18210">
-                <uri>french/frmatrix/18210.wav</uri>
-                <text>Emile propose quinze livres jaunes</text>
-            </speechtoken>
-            <speechtoken id="27128">
-                <uri>french/frmatrix/27128.wav</uri>
-                <text>Agnès achète deux crayons gris</text>
-            </speechtoken>
-            <speechtoken id="33877">
-                <uri>french/frmatrix/33877.wav</uri>
-                <text>Julien dessine cinq anneaux blancs</text>
-            </speechtoken>
-            <speechtoken id="41649">
-                <uri>french/frmatrix/41649.wav</uri>
-                <text>Etienne voudrait neuf vélos noirs</text>
-            </speechtoken>
-            <speechtoken id="55992">
-                <uri>french/frmatrix/55992.wav</uri>
-                <text>Michel ramène sept pions verts</text>
-            </speechtoken>
-            <speechtoken id="69331">
-                <uri>french/frmatrix/69331.wav</uri>
-                <text>Eugène déplace huit piquets rouges</text>
-            </speechtoken>
-            <speechtoken id="76564">
-                <uri>french/frmatrix/76564.wav</uri>
-                <text>Félix reprend onze ballons bleus</text>
-            </speechtoken>
-            <speechtoken id="84705">
-                <uri>french/frmatrix/84705.wav</uri>
-                <text>Charlotte demande six classeurs mauves</text>
-            </speechtoken>
-            <speechtoken id="92083">
-                <uri>french/frmatrix/92083.wav</uri>
-                <text>Sophie attrape trois rubans bruns</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_04">
-            <speechtoken id="04260">
-                <uri>french/frmatrix/04260.wav</uri>
-                <text>Jean-Luc demande quinze ballons jaunes</text>
-            </speechtoken>
-            <speechtoken id="11387">
-                <uri>french/frmatrix/11387.wav</uri>
-                <text>Emile voudrait huit rubans blancs</text>
-            </speechtoken>
-            <speechtoken id="22819">
-                <uri>french/frmatrix/22819.wav</uri>
-                <text>Agnès attrape cinq livres noirs</text>
-            </speechtoken>
-            <speechtoken id="35732">
-                <uri>french/frmatrix/35732.wav</uri>
-                <text>Julien ramène six piquets verts</text>
-            </speechtoken>
-            <speechtoken id="48175">
-                <uri>french/frmatrix/48175.wav</uri>
-                <text>Etienne propose deux anneaux mauves</text>
-            </speechtoken>
-            <speechtoken id="57641">
-                <uri>french/frmatrix/57641.wav</uri>
-                <text>Michel achète neuf vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="66928">
-                <uri>french/frmatrix/66928.wav</uri>
-                <text>Eugène reprend sept crayons gris</text>
-            </speechtoken>
-            <speechtoken id="70096">
-                <uri>french/frmatrix/70096.wav</uri>
-                <text>Félix ramasse trois pions roses</text>
-            </speechtoken>
-            <speechtoken id="83503">
-                <uri>french/frmatrix/83503.wav</uri>
-                <text>Charlotte dessine onze classeurs bruns</text>
-            </speechtoken>
-            <speechtoken id="99454">
-                <uri>french/frmatrix/99454.wav</uri>
-                <text>Sophie déplace douze jetons bleus</text>
-            </speechtoken>
-            <speechtoken id="07222">
-                <uri>french/frmatrix/07222.wav</uri>
-                <text>Jean-Luc achète quinze crayons verts</text>
-            </speechtoken>
-            <speechtoken id="14800">
-                <uri>french/frmatrix/14800.wav</uri>
-                <text>Emile demande cinq classeurs jaunes</text>
-            </speechtoken>
-            <speechtoken id="23081">
-                <uri>french/frmatrix/23081.wav</uri>
-                <text>Agnès dessine trois rubans rouges</text>
-            </speechtoken>
-            <speechtoken id="38469">
-                <uri>french/frmatrix/38469.wav</uri>
-                <text>Julien propose douze ballons noirs</text>
-            </speechtoken>
-            <speechtoken id="40993">
-                <uri>french/frmatrix/40993.wav</uri>
-                <text>Etienne ramasse sept pions bruns</text>
-            </speechtoken>
-            <speechtoken id="55174">
-                <uri>french/frmatrix/55174.wav</uri>
-                <text>Michel ramène deux anneaux bleus</text>
-            </speechtoken>
-            <speechtoken id="61755">
-                <uri>french/frmatrix/61755.wav</uri>
-                <text>Eugène voudrait six jetons mauves</text>
-            </speechtoken>
-            <speechtoken id="76346">
-                <uri>french/frmatrix/76346.wav</uri>
-                <text>Félix reprend huit vélos roses</text>
-            </speechtoken>
-            <speechtoken id="89637">
-                <uri>french/frmatrix/89637.wav</uri>
-                <text>Charlotte déplace neuf piquets blancs</text>
-            </speechtoken>
-            <speechtoken id="92518">
-                <uri>french/frmatrix/92518.wav</uri>
-                <text>Sophie attrape onze livres gris</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_05">
-            <speechtoken id="02337">
-                <uri>french/frmatrix/02337.wav</uri>
-                <text>Jean-Luc attrape huit piquets blancs</text>
-            </speechtoken>
-            <speechtoken id="11965">
-                <uri>french/frmatrix/11965.wav</uri>
-                <text>Emile voudrait sept ballons mauves</text>
-            </speechtoken>
-            <speechtoken id="20014">
-                <uri>french/frmatrix/20014.wav</uri>
-                <text>Agnès ramasse trois livres bleus</text>
-            </speechtoken>
-            <speechtoken id="33652">
-                <uri>french/frmatrix/33652.wav</uri>
-                <text>Julien dessine neuf jetons verts</text>
-            </speechtoken>
-            <speechtoken id="47593">
-                <uri>french/frmatrix/47593.wav</uri>
-                <text>Etienne achète onze pions bruns</text>
-            </speechtoken>
-            <speechtoken id="59128">
-                <uri>french/frmatrix/59128.wav</uri>
-                <text>Michel déplace deux crayons gris</text>
-            </speechtoken>
-            <speechtoken id="66781">
-                <uri>french/frmatrix/66781.wav</uri>
-                <text>Eugène reprend six rubans rouges</text>
-            </speechtoken>
-            <speechtoken id="74879">
-                <uri>french/frmatrix/74879.wav</uri>
-                <text>Félix demande cinq anneaux noirs</text>
-            </speechtoken>
-            <speechtoken id="85200">
-                <uri>french/frmatrix/85200.wav</uri>
-                <text>Charlotte ramène quinze classeurs jaunes</text>
-            </speechtoken>
-            <speechtoken id="98446">
-                <uri>french/frmatrix/98446.wav</uri>
-                <text>Sophie propose douze vélos roses</text>
-            </speechtoken>
-            <speechtoken id="08287">
-                <uri>french/frmatrix/08287.wav</uri>
-                <text>Jean-Luc propose quinze rubans blancs</text>
-            </speechtoken>
-            <speechtoken id="17522">
-                <uri>french/frmatrix/17522.wav</uri>
-                <text>Emile achète onze crayons verts</text>
-            </speechtoken>
-            <speechtoken id="22915">
-                <uri>french/frmatrix/22915.wav</uri>
-                <text>Agnès attrape sept livres mauves</text>
-            </speechtoken>
-            <speechtoken id="34158">
-                <uri>french/frmatrix/34158.wav</uri>
-                <text>Julien demande deux jetons gris</text>
-            </speechtoken>
-            <speechtoken id="45009">
-                <uri>french/frmatrix/45009.wav</uri>
-                <text>Etienne ramène trois classeurs noirs</text>
-            </speechtoken>
-            <speechtoken id="56670">
-                <uri>french/frmatrix/56670.wav</uri>
-                <text>Michel reprend neuf anneaux jaunes</text>
-            </speechtoken>
-            <speechtoken id="63864">
-                <uri>french/frmatrix/63864.wav</uri>
-                <text>Eugène dessine cinq ballons bleus</text>
-            </speechtoken>
-            <speechtoken id="79331">
-                <uri>french/frmatrix/79331.wav</uri>
-                <text>Félix déplace huit piquets rouges</text>
-            </speechtoken>
-            <speechtoken id="81743">
-                <uri>french/frmatrix/81743.wav</uri>
-                <text>Charlotte voudrait six vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="90496">
-                <uri>french/frmatrix/90496.wav</uri>
-                <text>Sophie ramasse douze pions roses</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_06">
-            <speechtoken id="08741">
-                <uri>french/frmatrix/08741.wav</uri>
-                <text>Jean-Luc propose six vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="11804">
-                <uri>french/frmatrix/11804.wav</uri>
-                <text>Emile voudrait cinq classeurs bleus</text>
-            </speechtoken>
-            <speechtoken id="20518">
-                <uri>french/frmatrix/20518.wav</uri>
-                <text>Agnès ramasse onze livres gris</text>
-            </speechtoken>
-            <speechtoken id="33136">
-                <uri>french/frmatrix/33136.wav</uri>
-                <text>Julien dessine deux piquets roses</text>
-            </speechtoken>
-            <speechtoken id="49927">
-                <uri>french/frmatrix/49927.wav</uri>
-                <text>Etienne déplace sept crayons blancs</text>
-            </speechtoken>
-            <speechtoken id="56682">
-                <uri>french/frmatrix/56682.wav</uri>
-                <text>Michel reprend neuf rubans verts</text>
-            </speechtoken>
-            <speechtoken id="67365">
-                <uri>french/frmatrix/67365.wav</uri>
-                <text>Eugène achète huit ballons mauves</text>
-            </speechtoken>
-            <speechtoken id="74293">
-                <uri>french/frmatrix/74293.wav</uri>
-                <text>Félix demande quinze pions bruns</text>
-            </speechtoken>
-            <speechtoken id="82450">
-                <uri>french/frmatrix/82450.wav</uri>
-                <text>Charlotte attrape douze jetons jaunes</text>
-            </speechtoken>
-            <speechtoken id="95079">
-                <uri>french/frmatrix/95079.wav</uri>
-                <text>Sophie ramène trois anneaux noirs</text>
-            </speechtoken>
-            <speechtoken id="00914">
-                <uri>french/frmatrix/00914.wav</uri>
-                <text>Jean-Luc ramasse sept livres bleus</text>
-            </speechtoken>
-            <speechtoken id="16150">
-                <uri>french/frmatrix/16150.wav</uri>
-                <text>Emile reprend deux jetons jaunes</text>
-            </speechtoken>
-            <speechtoken id="29639">
-                <uri>french/frmatrix/29639.wav</uri>
-                <text>Agnès déplace neuf piquets noirs</text>
-            </speechtoken>
-            <speechtoken id="32085">
-                <uri>french/frmatrix/32085.wav</uri>
-                <text>Julien attrape trois rubans mauves</text>
-            </speechtoken>
-            <speechtoken id="44398">
-                <uri>french/frmatrix/44398.wav</uri>
-                <text>Etienne demande huit pions gris</text>
-            </speechtoken>
-            <speechtoken id="51466">
-                <uri>french/frmatrix/51466.wav</uri>
-                <text>Michel voudrait douze ballons roses</text>
-            </speechtoken>
-            <speechtoken id="63572">
-                <uri>french/frmatrix/63572.wav</uri>
-                <text>Eugène dessine onze anneaux verts</text>
-            </speechtoken>
-            <speechtoken id="77841">
-                <uri>french/frmatrix/77841.wav</uri>
-                <text>Félix achète cinq vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="88203">
-                <uri>french/frmatrix/88203.wav</uri>
-                <text>Charlotte propose quinze classeurs bruns</text>
-            </speechtoken>
-            <speechtoken id="95727">
-                <uri>french/frmatrix/95727.wav</uri>
-                <text>Sophie ramène six crayons blancs</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_07">
-            <speechtoken id="06298">
-                <uri>french/frmatrix/06298.wav</uri>
-                <text>Jean-Luc reprend quinze pions gris</text>
-            </speechtoken>
-            <speechtoken id="19104">
-                <uri>french/frmatrix/19104.wav</uri>
-                <text>Emile déplace deux classeurs bleus</text>
-            </speechtoken>
-            <speechtoken id="22387">
-                <uri>french/frmatrix/22387.wav</uri>
-                <text>Agnès attrape huit rubans blancs</text>
-            </speechtoken>
-            <speechtoken id="38632">
-                <uri>french/frmatrix/38632.wav</uri>
-                <text>Julien propose neuf piquets verts</text>
-            </speechtoken>
-            <speechtoken id="43919">
-                <uri>french/frmatrix/43919.wav</uri>
-                <text>Etienne dessine sept livres noirs</text>
-            </speechtoken>
-            <speechtoken id="55726">
-                <uri>french/frmatrix/55726.wav</uri>
-                <text>Michel ramène six crayons roses</text>
-            </speechtoken>
-            <speechtoken id="61875">
-                <uri>french/frmatrix/61875.wav</uri>
-                <text>Eugène voudrait cinq anneaux mauves</text>
-            </speechtoken>
-            <speechtoken id="74563">
-                <uri>french/frmatrix/74563.wav</uri>
-                <text>Félix demande onze ballons bruns</text>
-            </speechtoken>
-            <speechtoken id="87450">
-                <uri>french/frmatrix/87450.wav</uri>
-                <text>Charlotte achète douze jetons jaunes</text>
-            </speechtoken>
-            <speechtoken id="90041">
-                <uri>french/frmatrix/90041.wav</uri>
-                <text>Sophie ramasse trois vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="05439">
-                <uri>french/frmatrix/05439.wav</uri>
-                <text>Jean-Luc ramène douze piquets noirs</text>
-            </speechtoken>
-            <speechtoken id="11320">
-                <uri>french/frmatrix/11320.wav</uri>
-                <text>Emile voudrait huit crayons jaunes</text>
-            </speechtoken>
-            <speechtoken id="23815">
-                <uri>french/frmatrix/23815.wav</uri>
-                <text>Agnès dessine cinq livres mauves</text>
-            </speechtoken>
-            <speechtoken id="32001">
-                <uri>french/frmatrix/32001.wav</uri>
-                <text>Julien attrape trois classeurs rouges</text>
-            </speechtoken>
-            <speechtoken id="49773">
-                <uri>french/frmatrix/49773.wav</uri>
-                <text>Etienne déplace six anneaux bruns</text>
-            </speechtoken>
-            <speechtoken id="54564">
-                <uri>french/frmatrix/54564.wav</uri>
-                <text>Michel demande onze ballons bleus</text>
-            </speechtoken>
-            <speechtoken id="66258">
-                <uri>french/frmatrix/66258.wav</uri>
-                <text>Eugène reprend quinze jetons gris</text>
-            </speechtoken>
-            <speechtoken id="78686">
-                <uri>french/frmatrix/78686.wav</uri>
-                <text>Félix propose neuf rubans roses</text>
-            </speechtoken>
-            <speechtoken id="80947">
-                <uri>french/frmatrix/80947.wav</uri>
-                <text>Charlotte ramasse sept vélos blancs</text>
-            </speechtoken>
-            <speechtoken id="97192">
-                <uri>french/frmatrix/97192.wav</uri>
-                <text>Sophie achète deux pions verts</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_08">
-            <speechtoken id="04971">
-                <uri>french/frmatrix/04971.wav</uri>
-                <text>Jean-Luc demande sept anneaux rouges</text>
-            </speechtoken>
-            <speechtoken id="16199">
-                <uri>french/frmatrix/16199.wav</uri>
-                <text>Emile reprend deux pions noirs</text>
-            </speechtoken>
-            <speechtoken id="28804">
-                <uri>french/frmatrix/28804.wav</uri>
-                <text>Agnès propose cinq classeurs bleus</text>
-            </speechtoken>
-            <speechtoken id="37212">
-                <uri>french/frmatrix/37212.wav</uri>
-                <text>Julien achète quinze livres verts</text>
-            </speechtoken>
-            <speechtoken id="41426">
-                <uri>french/frmatrix/41426.wav</uri>
-                <text>Etienne voudrait douze crayons roses</text>
-            </speechtoken>
-            <speechtoken id="53540">
-                <uri>french/frmatrix/53540.wav</uri>
-                <text>Michel dessine onze vélos jaunes</text>
-            </speechtoken>
-            <speechtoken id="65737">
-                <uri>french/frmatrix/65737.wav</uri>
-                <text>Eugène ramène six piquets blancs</text>
-            </speechtoken>
-            <speechtoken id="72068">
-                <uri>french/frmatrix/72068.wav</uri>
-                <text>Félix attrape trois ballons gris</text>
-            </speechtoken>
-            <speechtoken id="80655">
-                <uri>french/frmatrix/80655.wav</uri>
-                <text>Charlotte ramasse neuf jetons mauves</text>
-            </speechtoken>
-            <speechtoken id="99383">
-                <uri>french/frmatrix/99383.wav</uri>
-                <text>Sophie déplace huit rubans bruns</text>
-            </speechtoken>
-            <speechtoken id="04564">
-                <uri>french/frmatrix/04564.wav</uri>
-                <text>Jean-Luc demande onze ballons bleus</text>
-            </speechtoken>
-            <speechtoken id="10333">
-                <uri>french/frmatrix/10333.wav</uri>
-                <text>Emile ramasse huit piquets bruns</text>
-            </speechtoken>
-            <speechtoken id="26058">
-                <uri>french/frmatrix/26058.wav</uri>
-                <text>Agnès reprend trois jetons gris</text>
-            </speechtoken>
-            <speechtoken id="39609">
-                <uri>french/frmatrix/39609.wav</uri>
-                <text>Julien déplace neuf classeurs noirs</text>
-            </speechtoken>
-            <speechtoken id="41122">
-                <uri>french/frmatrix/41122.wav</uri>
-                <text>Etienne voudrait deux crayons verts</text>
-            </speechtoken>
-            <speechtoken id="58940">
-                <uri>french/frmatrix/58940.wav</uri>
-                <text>Michel propose sept vélos jaunes</text>
-            </speechtoken>
-            <speechtoken id="67481">
-                <uri>french/frmatrix/67481.wav</uri>
-                <text>Eugène achète douze rubans rouges</text>
-            </speechtoken>
-            <speechtoken id="75876">
-                <uri>french/frmatrix/75876.wav</uri>
-                <text>Félix ramène cinq anneaux roses</text>
-            </speechtoken>
-            <speechtoken id="82715">
-                <uri>french/frmatrix/82715.wav</uri>
-                <text>Charlotte attrape six livres mauves</text>
-            </speechtoken>
-            <speechtoken id="93297">
-                <uri>french/frmatrix/93297.wav</uri>
-                <text>Sophie dessine quinze pions blancs</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_09">
-            <speechtoken id="07823">
-                <uri>french/frmatrix/07823.wav</uri>
-                <text>Jean-Luc achète cinq crayons bruns</text>
-            </speechtoken>
-            <speechtoken id="10275">
-                <uri>french/frmatrix/10275.wav</uri>
-                <text>Emile ramasse quinze anneaux mauves</text>
-            </speechtoken>
-            <speechtoken id="28987">
-                <uri>french/frmatrix/28987.wav</uri>
-                <text>Agnès propose sept rubans blancs</text>
-            </speechtoken>
-            <speechtoken id="35594">
-                <uri>french/frmatrix/35594.wav</uri>
-                <text>Julien ramène onze pions bleus</text>
-            </speechtoken>
-            <speechtoken id="49132">
-                <uri>french/frmatrix/49132.wav</uri>
-                <text>Etienne déplace deux piquets verts</text>
-            </speechtoken>
-            <speechtoken id="51618">
-                <uri>french/frmatrix/51618.wav</uri>
-                <text>Michel voudrait neuf livres gris</text>
-            </speechtoken>
-            <speechtoken id="62341">
-                <uri>french/frmatrix/62341.wav</uri>
-                <text>Eugène attrape huit vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="76069">
-                <uri>french/frmatrix/76069.wav</uri>
-                <text>Félix reprend trois ballons noirs</text>
-            </speechtoken>
-            <speechtoken id="84450">
-                <uri>french/frmatrix/84450.wav</uri>
-                <text>Charlotte demande douze jetons jaunes</text>
-            </speechtoken>
-            <speechtoken id="93706">
-                <uri>french/frmatrix/93706.wav</uri>
-                <text>Sophie dessine six classeurs roses</text>
-            </speechtoken>
-            <speechtoken id="00200">
-                <uri>french/frmatrix/00200.wav</uri>
-                <text>Jean-Luc ramasse quinze classeurs jaunes</text>
-            </speechtoken>
-            <speechtoken id="16457">
-                <uri>french/frmatrix/16457.wav</uri>
-                <text>Emile reprend douze jetons blancs</text>
-            </speechtoken>
-            <speechtoken id="22743">
-                <uri>french/frmatrix/22743.wav</uri>
-                <text>Agnès attrape six vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="35635">
-                <uri>french/frmatrix/35635.wav</uri>
-                <text>Julien ramène neuf piquets mauves</text>
-            </speechtoken>
-            <speechtoken id="49326">
-                <uri>french/frmatrix/49326.wav</uri>
-                <text>Etienne déplace huit crayons roses</text>
-            </speechtoken>
-            <speechtoken id="53561">
-                <uri>french/frmatrix/53561.wav</uri>
-                <text>Michel dessine onze ballons rouges</text>
-            </speechtoken>
-            <speechtoken id="61819">
-                <uri>french/frmatrix/61819.wav</uri>
-                <text>Eugène voudrait cinq livres noirs</text>
-            </speechtoken>
-            <speechtoken id="78988">
-                <uri>french/frmatrix/78988.wav</uri>
-                <text>Félix propose sept rubans gris</text>
-            </speechtoken>
-            <speechtoken id="84172">
-                <uri>french/frmatrix/84172.wav</uri>
-                <text>Charlotte demande deux anneaux verts</text>
-            </speechtoken>
-            <speechtoken id="97094">
-                <uri>french/frmatrix/97094.wav</uri>
-                <text>Sophie achète trois pions bleus</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_10">
-            <speechtoken id="04683">
-                <uri>french/frmatrix/04683.wav</uri>
-                <text>Jean-Luc demande neuf rubans bruns</text>
-            </speechtoken>
-            <speechtoken id="12502">
-                <uri>french/frmatrix/12502.wav</uri>
-                <text>Emile attrape onze classeurs verts</text>
-            </speechtoken>
-            <speechtoken id="28060">
-                <uri>french/frmatrix/28060.wav</uri>
-                <text>Agnès propose trois ballons jaunes</text>
-            </speechtoken>
-            <speechtoken id="33259">
-                <uri>french/frmatrix/33259.wav</uri>
-                <text>Julien dessine quinze jetons noirs</text>
-            </speechtoken>
-            <speechtoken id="41144">
-                <uri>french/frmatrix/41144.wav</uri>
-                <text>Etienne voudrait deux vélos bleus</text>
-            </speechtoken>
-            <speechtoken id="56997">
-                <uri>french/frmatrix/56997.wav</uri>
-                <text>Michel reprend sept pions blancs</text>
-            </speechtoken>
-            <speechtoken id="67815">
-                <uri>french/frmatrix/67815.wav</uri>
-                <text>Eugène achète cinq livres mauves</text>
-            </speechtoken>
-            <speechtoken id="70438">
-                <uri>french/frmatrix/70438.wav</uri>
-                <text>Félix ramasse douze piquets gris</text>
-            </speechtoken>
-            <speechtoken id="89721">
-                <uri>french/frmatrix/89721.wav</uri>
-                <text>Charlotte déplace six crayons rouges</text>
-            </speechtoken>
-            <speechtoken id="95376">
-                <uri>french/frmatrix/95376.wav</uri>
-                <text>Sophie ramène huit anneaux roses</text>
-            </speechtoken>
-            <speechtoken id="07247">
-                <uri>french/frmatrix/07247.wav</uri>
-                <text>Jean-Luc achète quinze vélos blancs</text>
-            </speechtoken>
-            <speechtoken id="13435">
-                <uri>french/frmatrix/13435.wav</uri>
-                <text>Emile dessine douze piquets mauves</text>
-            </speechtoken>
-            <speechtoken id="20073">
-                <uri>french/frmatrix/20073.wav</uri>
-                <text>Agnès ramasse trois anneaux bruns</text>
-            </speechtoken>
-            <speechtoken id="31124">
-                <uri>french/frmatrix/31124.wav</uri>
-                <text>Julien voudrait deux crayons bleus</text>
-            </speechtoken>
-            <speechtoken id="45519">
-                <uri>french/frmatrix/45519.wav</uri>
-                <text>Etienne ramène onze livres noirs</text>
-            </speechtoken>
-            <speechtoken id="54398">
-                <uri>french/frmatrix/54398.wav</uri>
-                <text>Michel demande huit pions gris</text>
-            </speechtoken>
-            <speechtoken id="68801">
-                <uri>french/frmatrix/68801.wav</uri>
-                <text>Eugène propose cinq classeurs rouges</text>
-            </speechtoken>
-            <speechtoken id="76966">
-                <uri>french/frmatrix/76966.wav</uri>
-                <text>Félix reprend sept ballons roses</text>
-            </speechtoken>
-            <speechtoken id="82782">
-                <uri>french/frmatrix/82782.wav</uri>
-                <text>Charlotte attrape six rubans verts</text>
-            </speechtoken>
-            <speechtoken id="99650">
-                <uri>french/frmatrix/99650.wav</uri>
-                <text>Sophie déplace neuf jetons jaunes</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_11">
-            <speechtoken id="07015">
-                <uri>french/frmatrix/07015.wav</uri>
-                <text>Jean-Luc achète trois livres mauves</text>
-            </speechtoken>
-            <speechtoken id="15139">
-                <uri>french/frmatrix/15139.wav</uri>
-                <text>Emile ramène deux piquets noirs</text>
-            </speechtoken>
-            <speechtoken id="26867">
-                <uri>french/frmatrix/26867.wav</uri>
-                <text>Agnès reprend cinq ballons blancs</text>
-            </speechtoken>
-            <speechtoken id="32228">
-                <uri>french/frmatrix/32228.wav</uri>
-                <text>Julien attrape quinze crayons gris</text>
-            </speechtoken>
-            <speechtoken id="48901">
-                <uri>french/frmatrix/48901.wav</uri>
-                <text>Etienne propose sept classeurs rouges</text>
-            </speechtoken>
-            <speechtoken id="51386">
-                <uri>french/frmatrix/51386.wav</uri>
-                <text>Michel voudrait huit rubans roses</text>
-            </speechtoken>
-            <speechtoken id="69570">
-                <uri>french/frmatrix/69570.wav</uri>
-                <text>Eugène déplace onze anneaux jaunes</text>
-            </speechtoken>
-            <speechtoken id="74743">
-                <uri>french/frmatrix/74743.wav</uri>
-                <text>Félix demande six vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="80494">
-                <uri>french/frmatrix/80494.wav</uri>
-                <text>Charlotte ramasse douze pions bleus</text>
-            </speechtoken>
-            <speechtoken id="93652">
-                <uri>french/frmatrix/93652.wav</uri>
-                <text>Sophie dessine neuf jetons verts</text>
-            </speechtoken>
-            <speechtoken id="07122">
-                <uri>french/frmatrix/07122.wav</uri>
-                <text>Jean-Luc achète deux crayons verts</text>
-            </speechtoken>
-            <speechtoken id="11886">
-                <uri>french/frmatrix/11886.wav</uri>
-                <text>Emile voudrait cinq rubans roses</text>
-            </speechtoken>
-            <speechtoken id="24971">
-                <uri>french/frmatrix/24971.wav</uri>
-                <text>Agnès demande sept anneaux rouges</text>
-            </speechtoken>
-            <speechtoken id="38433">
-                <uri>french/frmatrix/38433.wav</uri>
-                <text>Julien propose douze piquets bruns</text>
-            </speechtoken>
-            <speechtoken id="49618">
-                <uri>french/frmatrix/49618.wav</uri>
-                <text>Etienne déplace neuf livres gris</text>
-            </speechtoken>
-            <speechtoken id="53057">
-                <uri>french/frmatrix/53057.wav</uri>
-                <text>Michel dessine trois jetons blancs</text>
-            </speechtoken>
-            <speechtoken id="62209">
-                <uri>french/frmatrix/62209.wav</uri>
-                <text>Eugène attrape quinze classeurs noirs</text>
-            </speechtoken>
-            <speechtoken id="70745">
-                <uri>french/frmatrix/70745.wav</uri>
-                <text>Félix ramasse six vélos mauves</text>
-            </speechtoken>
-            <speechtoken id="86360">
-                <uri>french/frmatrix/86360.wav</uri>
-                <text>Charlotte reprend huit ballons jaunes</text>
-            </speechtoken>
-            <speechtoken id="95594">
-                <uri>french/frmatrix/95594.wav</uri>
-                <text>Sophie ramène onze pions bleus</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_12">
-            <speechtoken id="04707">
-                <uri>french/frmatrix/04707.wav</uri>
-                <text>Jean-Luc demande six classeurs blancs</text>
-            </speechtoken>
-            <speechtoken id="17894">
-                <uri>french/frmatrix/17894.wav</uri>
-                <text>Emile achète cinq pions bleus</text>
-            </speechtoken>
-            <speechtoken id="25156">
-                <uri>french/frmatrix/25156.wav</uri>
-                <text>Agnès ramène deux jetons roses</text>
-            </speechtoken>
-            <speechtoken id="30312">
-                <uri>french/frmatrix/30312.wav</uri>
-                <text>Julien ramasse huit livres verts</text>
-            </speechtoken>
-            <speechtoken id="49261">
-                <uri>french/frmatrix/49261.wav</uri>
-                <text>Etienne déplace quinze ballons rouges</text>
-            </speechtoken>
-            <speechtoken id="53578">
-                <uri>french/frmatrix/53578.wav</uri>
-                <text>Michel dessine onze anneaux gris</text>
-            </speechtoken>
-            <speechtoken id="66625">
-                <uri>french/frmatrix/66625.wav</uri>
-                <text>Eugène reprend neuf crayons mauves</text>
-            </speechtoken>
-            <speechtoken id="71930">
-                <uri>french/frmatrix/71930.wav</uri>
-                <text>Félix voudrait sept piquets jaunes</text>
-            </speechtoken>
-            <speechtoken id="88043">
-                <uri>french/frmatrix/88043.wav</uri>
-                <text>Charlotte propose trois vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="92489">
-                <uri>french/frmatrix/92489.wav</uri>
-                <text>Sophie attrape douze rubans noirs</text>
-            </speechtoken>
-            <speechtoken id="02397">
-                <uri>french/frmatrix/02397.wav</uri>
-                <text>Jean-Luc attrape huit pions blancs</text>
-            </speechtoken>
-            <speechtoken id="16024">
-                <uri>french/frmatrix/16024.wav</uri>
-                <text>Emile reprend trois crayons bleus</text>
-            </speechtoken>
-            <speechtoken id="24542">
-                <uri>french/frmatrix/24542.wav</uri>
-                <text>Agnès demande onze vélos verts</text>
-            </speechtoken>
-            <speechtoken id="30108">
-                <uri>french/frmatrix/30108.wav</uri>
-                <text>Julien ramasse deux classeurs gris</text>
-            </speechtoken>
-            <speechtoken id="48759">
-                <uri>french/frmatrix/48759.wav</uri>
-                <text>Etienne propose six jetons noirs</text>
-            </speechtoken>
-            <speechtoken id="55836">
-                <uri>french/frmatrix/55836.wav</uri>
-                <text>Michel ramène cinq piquets roses</text>
-            </speechtoken>
-            <speechtoken id="63473">
-                <uri>french/frmatrix/63473.wav</uri>
-                <text>Eugène dessine douze anneaux bruns</text>
-            </speechtoken>
-            <speechtoken id="79961">
-                <uri>french/frmatrix/79961.wav</uri>
-                <text>Félix déplace sept ballons rouges</text>
-            </speechtoken>
-            <speechtoken id="87615">
-                <uri>french/frmatrix/87615.wav</uri>
-                <text>Charlotte achète neuf livres mauves</text>
-            </speechtoken>
-            <speechtoken id="91280">
-                <uri>french/frmatrix/91280.wav</uri>
-                <text>Sophie voudrait quinze rubans jaunes</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_13">
-            <speechtoken id="06307">
-                <uri>french/frmatrix/06307.wav</uri>
-                <text>Jean-Luc reprend huit classeurs blancs</text>
-            </speechtoken>
-            <speechtoken id="19935">
-                <uri>french/frmatrix/19935.wav</uri>
-                <text>Emile déplace sept piquets mauves</text>
-            </speechtoken>
-            <speechtoken id="22289">
-                <uri>french/frmatrix/22289.wav</uri>
-                <text>Agnès attrape quinze rubans noirs</text>
-            </speechtoken>
-            <speechtoken id="35462">
-                <uri>french/frmatrix/35462.wav</uri>
-                <text>Julien ramène douze ballons verts</text>
-            </speechtoken>
-            <speechtoken id="44826">
-                <uri>french/frmatrix/44826.wav</uri>
-                <text>Etienne demande cinq crayons roses</text>
-            </speechtoken>
-            <speechtoken id="58694">
-                <uri>french/frmatrix/58694.wav</uri>
-                <text>Michel propose neuf pions bleus</text>
-            </speechtoken>
-            <speechtoken id="67578">
-                <uri>french/frmatrix/67578.wav</uri>
-                <text>Eugène achète onze anneaux gris</text>
-            </speechtoken>
-            <speechtoken id="70741">
-                <uri>french/frmatrix/70741.wav</uri>
-                <text>Félix ramasse six vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="83113">
-                <uri>french/frmatrix/83113.wav</uri>
-                <text>Charlotte dessine deux livres bruns</text>
-            </speechtoken>
-            <speechtoken id="91050">
-                <uri>french/frmatrix/91050.wav</uri>
-                <text>Sophie voudrait trois jetons jaunes</text>
-            </speechtoken>
-            <speechtoken id="09137">
-                <uri>french/frmatrix/09137.wav</uri>
-                <text>Jean-Luc déplace deux piquets blancs</text>
-            </speechtoken>
-            <speechtoken id="18505">
-                <uri>french/frmatrix/18505.wav</uri>
-                <text>Emile propose onze classeurs mauves</text>
-            </speechtoken>
-            <speechtoken id="24253">
-                <uri>french/frmatrix/24253.wav</uri>
-                <text>Agnès demande quinze jetons bruns</text>
-            </speechtoken>
-            <speechtoken id="36720">
-                <uri>french/frmatrix/36720.wav</uri>
-                <text>Julien reprend six crayons jaunes</text>
-            </speechtoken>
-            <speechtoken id="42871">
-                <uri>french/frmatrix/42871.wav</uri>
-                <text>Etienne attrape cinq anneaux rouges</text>
-            </speechtoken>
-            <speechtoken id="51369">
-                <uri>french/frmatrix/51369.wav</uri>
-                <text>Michel voudrait huit ballons noirs</text>
-            </speechtoken>
-            <speechtoken id="63946">
-                <uri>french/frmatrix/63946.wav</uri>
-                <text>Eugène dessine sept vélos roses</text>
-            </speechtoken>
-            <speechtoken id="75098">
-                <uri>french/frmatrix/75098.wav</uri>
-                <text>Félix ramène trois pions gris</text>
-            </speechtoken>
-            <speechtoken id="80684">
-                <uri>french/frmatrix/80684.wav</uri>
-                <text>Charlotte ramasse neuf rubans bleus</text>
-            </speechtoken>
-            <speechtoken id="97412">
-                <uri>french/frmatrix/97412.wav</uri>
-                <text>Sophie achète douze livres verts</text>
-            </speechtoken>
-        </list>
-        <list id="lijst20_14">
-            <speechtoken id="05213">
-                <uri>french/frmatrix/05213.wav</uri>
-                <text>Jean-Luc ramène quinze livres bruns</text>
-            </speechtoken>
-            <speechtoken id="11897">
-                <uri>french/frmatrix/11897.wav</uri>
-                <text>Emile voudrait cinq pions blancs</text>
-            </speechtoken>
-            <speechtoken id="20075">
-                <uri>french/frmatrix/20075.wav</uri>
-                <text>Agnès ramasse trois anneaux mauves</text>
-            </speechtoken>
-            <speechtoken id="32162">
-                <uri>french/frmatrix/32162.wav</uri>
-                <text>Julien attrape deux ballons verts</text>
-            </speechtoken>
-            <speechtoken id="43721">
-                <uri>french/frmatrix/43721.wav</uri>
-                <text>Etienne dessine six crayons rouges</text>
-            </speechtoken>
-            <speechtoken id="59358">
-                <uri>french/frmatrix/59358.wav</uri>
-                <text>Michel déplace huit jetons gris</text>
-            </speechtoken>
-            <speechtoken id="68404">
-                <uri>french/frmatrix/68404.wav</uri>
-                <text>Eugène propose douze classeurs bleus</text>
-            </speechtoken>
-            <speechtoken id="76689">
-                <uri>french/frmatrix/76689.wav</uri>
-                <text>Félix reprend neuf rubans noirs</text>
-            </speechtoken>
-            <speechtoken id="84930">
-                <uri>french/frmatrix/84930.wav</uri>
-                <text>Charlotte demande sept piquets jaunes</text>
-            </speechtoken>
-            <speechtoken id="97546">
-                <uri>french/frmatrix/97546.wav</uri>
-                <text>Sophie achète onze vélos roses</text>
-            </speechtoken>
-            <speechtoken id="01786">
-                <uri>french/frmatrix/01786.wav</uri>
-                <text>Jean-Luc voudrait six rubans roses</text>
-            </speechtoken>
-            <speechtoken id="17852">
-                <uri>french/frmatrix/17852.wav</uri>
-                <text>Emile achète cinq jetons verts</text>
-            </speechtoken>
-            <speechtoken id="29968">
-                <uri>french/frmatrix/29968.wav</uri>
-                <text>Agnès déplace sept ballons gris</text>
-            </speechtoken>
-            <speechtoken id="32144">
-                <uri>french/frmatrix/32144.wav</uri>
-                <text>Julien attrape deux vélos bleus</text>
-            </speechtoken>
-            <speechtoken id="44527">
-                <uri>french/frmatrix/44527.wav</uri>
-                <text>Etienne demande onze crayons blancs</text>
-            </speechtoken>
-            <speechtoken id="55309">
-                <uri>french/frmatrix/55309.wav</uri>
-                <text>Michel ramène huit classeurs noirs</text>
-            </speechtoken>
-            <speechtoken id="63673">
-                <uri>french/frmatrix/63673.wav</uri>
-                <text>Eugène dessine neuf anneaux bruns</text>
-            </speechtoken>
-            <speechtoken id="70431">
-                <uri>french/frmatrix/70431.wav</uri>
-                <text>Félix ramasse douze piquets rouges</text>
-            </speechtoken>
-            <speechtoken id="88215">
-                <uri>french/frmatrix/88215.wav</uri>
-                <text>Charlotte propose quinze livres mauves</text>
-            </speechtoken>
-            <speechtoken id="96090">
-                <uri>french/frmatrix/96090.wav</uri>
-                <text>Sophie reprend trois pions jaunes</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_01">
-            <speechtoken id="03663">
-                <uri>french/frmatrix/03663.wav</uri>
-                <text>Jean-Luc dessine neuf ballons bruns</text>
-            </speechtoken>
-            <speechtoken id="12977">
-                <uri>french/frmatrix/12977.wav</uri>
-                <text>Emile attrape sept anneaux blancs</text>
-            </speechtoken>
-            <speechtoken id="20811">
-                <uri>french/frmatrix/20811.wav</uri>
-                <text>Agnès ramasse cinq livres rouges</text>
-            </speechtoken>
-            <speechtoken id="36222">
-                <uri>french/frmatrix/36222.wav</uri>
-                <text>Julien reprend quinze crayons verts</text>
-            </speechtoken>
-            <speechtoken id="47185">
-                <uri>french/frmatrix/47185.wav</uri>
-                <text>Etienne achète deux rubans mauves</text>
-            </speechtoken>
-            <speechtoken id="59439">
-                <uri>french/frmatrix/59439.wav</uri>
-                <text>Michel déplace douze piquets noirs</text>
-            </speechtoken>
-            <speechtoken id="68054">
-                <uri>french/frmatrix/68054.wav</uri>
-                <text>Eugène propose trois jetons bleus</text>
-            </speechtoken>
-            <speechtoken id="71746">
-                <uri>french/frmatrix/71746.wav</uri>
-                <text>Félix voudrait six vélos roses</text>
-            </speechtoken>
-            <speechtoken id="85500">
-                <uri>french/frmatrix/85500.wav</uri>
-                <text>Charlotte ramène onze classeurs jaunes</text>
-            </speechtoken>
-            <speechtoken id="94398">
-                <uri>french/frmatrix/94398.wav</uri>
-                <text>Sophie demande huit pions gris</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_02">
-            <speechtoken id="07601">
-                <uri>french/frmatrix/07601.wav</uri>
-                <text>Jean-Luc achète neuf classeurs rouges</text>
-            </speechtoken>
-            <speechtoken id="13777">
-                <uri>french/frmatrix/13777.wav</uri>
-                <text>Emile dessine six anneaux blancs</text>
-            </speechtoken>
-            <speechtoken id="25334">
-                <uri>french/frmatrix/25334.wav</uri>
-                <text>Agnès ramène huit piquets bleus</text>
-            </speechtoken>
-            <speechtoken id="38069">
-                <uri>french/frmatrix/38069.wav</uri>
-                <text>Julien propose trois ballons noirs</text>
-            </speechtoken>
-            <speechtoken id="44913">
-                <uri>french/frmatrix/44913.wav</uri>
-                <text>Etienne demande sept livres bruns</text>
-            </speechtoken>
-            <speechtoken id="59858">
-                <uri>french/frmatrix/59858.wav</uri>
-                <text>Michel déplace cinq jetons gris</text>
-            </speechtoken>
-            <speechtoken id="66225">
-                <uri>french/frmatrix/66225.wav</uri>
-                <text>Eugène reprend quinze crayons mauves</text>
-            </speechtoken>
-            <speechtoken id="70446">
-                <uri>french/frmatrix/70446.wav</uri>
-                <text>Félix ramasse douze vélos roses</text>
-            </speechtoken>
-            <speechtoken id="81592">
-                <uri>french/frmatrix/81592.wav</uri>
-                <text>Charlotte voudrait onze pions verts</text>
-            </speechtoken>
-            <speechtoken id="92180">
-                <uri>french/frmatrix/92180.wav</uri>
-                <text>Sophie attrape deux rubans jaunes</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_03">
-            <speechtoken id="01886">
-                <uri>french/frmatrix/01886.wav</uri>
-                <text>Jean-Luc voudrait cinq rubans roses</text>
-            </speechtoken>
-            <speechtoken id="19043">
-                <uri>french/frmatrix/19043.wav</uri>
-                <text>Emile déplace trois vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="28465">
-                <uri>french/frmatrix/28465.wav</uri>
-                <text>Agnès propose douze ballons mauves</text>
-            </speechtoken>
-            <speechtoken id="32909">
-                <uri>french/frmatrix/32909.wav</uri>
-                <text>Julien attrape sept classeurs noirs</text>
-            </speechtoken>
-            <speechtoken id="40791">
-                <uri>french/frmatrix/40791.wav</uri>
-                <text>Etienne ramasse six pions rouges</text>
-            </speechtoken>
-            <speechtoken id="54234">
-                <uri>french/frmatrix/54234.wav</uri>
-                <text>Michel demande quinze piquets bleus</text>
-            </speechtoken>
-            <speechtoken id="63317">
-                <uri>french/frmatrix/63317.wav</uri>
-                <text>Eugène dessine huit livres blancs</text>
-            </speechtoken>
-            <speechtoken id="76620">
-                <uri>french/frmatrix/76620.wav</uri>
-                <text>Félix reprend neuf crayons jaunes</text>
-            </speechtoken>
-            <speechtoken id="87152">
-                <uri>french/frmatrix/87152.wav</uri>
-                <text>Charlotte achète deux jetons verts</text>
-            </speechtoken>
-            <speechtoken id="95578">
-                <uri>french/frmatrix/95578.wav</uri>
-                <text>Sophie ramène onze anneaux gris</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_04">
-            <speechtoken id="01626">
-                <uri>french/frmatrix/01626.wav</uri>
-                <text>Jean-Luc voudrait neuf crayons roses</text>
-            </speechtoken>
-            <speechtoken id="19079">
-                <uri>french/frmatrix/19079.wav</uri>
-                <text>Emile déplace trois anneaux noirs</text>
-            </speechtoken>
-            <speechtoken id="25430">
-                <uri>french/frmatrix/25430.wav</uri>
-                <text>Agnès ramène douze piquets jaunes</text>
-            </speechtoken>
-            <speechtoken id="32891">
-                <uri>french/frmatrix/32891.wav</uri>
-                <text>Julien attrape cinq pions rouges</text>
-            </speechtoken>
-            <speechtoken id="44368">
-                <uri>french/frmatrix/44368.wav</uri>
-                <text>Etienne demande huit ballons gris</text>
-            </speechtoken>
-            <speechtoken id="50952">
-                <uri>french/frmatrix/50952.wav</uri>
-                <text>Michel ramasse sept jetons verts</text>
-            </speechtoken>
-            <speechtoken id="67143">
-                <uri>french/frmatrix/67143.wav</uri>
-                <text>Eugène achète deux vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="78704">
-                <uri>french/frmatrix/78704.wav</uri>
-                <text>Félix propose six classeurs bleus</text>
-            </speechtoken>
-            <speechtoken id="86215">
-                <uri>french/frmatrix/86215.wav</uri>
-                <text>Charlotte reprend quinze livres mauves</text>
-            </speechtoken>
-            <speechtoken id="93587">
-                <uri>french/frmatrix/93587.wav</uri>
-                <text>Sophie dessine onze rubans blancs</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_05">
-            <speechtoken id="03406">
-                <uri>french/frmatrix/03406.wav</uri>
-                <text>Jean-Luc dessine douze classeurs roses</text>
-            </speechtoken>
-            <speechtoken id="14522">
-                <uri>french/frmatrix/14522.wav</uri>
-                <text>Emile demande onze crayons verts</text>
-            </speechtoken>
-            <speechtoken id="25369">
-                <uri>french/frmatrix/25369.wav</uri>
-                <text>Agnès ramène huit ballons noirs</text>
-            </speechtoken>
-            <speechtoken id="31644">
-                <uri>french/frmatrix/31644.wav</uri>
-                <text>Julien voudrait neuf vélos bleus</text>
-            </speechtoken>
-            <speechtoken id="49798">
-                <uri>french/frmatrix/49798.wav</uri>
-                <text>Etienne déplace six pions gris</text>
-            </speechtoken>
-            <speechtoken id="58871">
-                <uri>french/frmatrix/58871.wav</uri>
-                <text>Michel propose cinq anneaux rouges</text>
-            </speechtoken>
-            <speechtoken id="66257">
-                <uri>french/frmatrix/66257.wav</uri>
-                <text>Eugène reprend quinze jetons blancs</text>
-            </speechtoken>
-            <speechtoken id="72935">
-                <uri>french/frmatrix/72935.wav</uri>
-                <text>Félix attrape sept piquets mauves</text>
-            </speechtoken>
-            <speechtoken id="80113">
-                <uri>french/frmatrix/80113.wav</uri>
-                <text>Charlotte ramasse deux livres bruns</text>
-            </speechtoken>
-            <speechtoken id="97080">
-                <uri>french/frmatrix/97080.wav</uri>
-                <text>Sophie achète trois rubans jaunes</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_06">
-            <speechtoken id="00456">
-                <uri>french/frmatrix/00456.wav</uri>
-                <text>Jean-Luc ramasse douze jetons roses</text>
-            </speechtoken>
-            <speechtoken id="18210">
-                <uri>french/frmatrix/18210.wav</uri>
-                <text>Emile propose quinze livres jaunes</text>
-            </speechtoken>
-            <speechtoken id="27128">
-                <uri>french/frmatrix/27128.wav</uri>
-                <text>Agnès achète deux crayons gris</text>
-            </speechtoken>
-            <speechtoken id="33877">
-                <uri>french/frmatrix/33877.wav</uri>
-                <text>Julien dessine cinq anneaux blancs</text>
-            </speechtoken>
-            <speechtoken id="41649">
-                <uri>french/frmatrix/41649.wav</uri>
-                <text>Etienne voudrait neuf vélos noirs</text>
-            </speechtoken>
-            <speechtoken id="55992">
-                <uri>french/frmatrix/55992.wav</uri>
-                <text>Michel ramène sept pions verts</text>
-            </speechtoken>
-            <speechtoken id="69331">
-                <uri>french/frmatrix/69331.wav</uri>
-                <text>Eugène déplace huit piquets rouges</text>
-            </speechtoken>
-            <speechtoken id="76564">
-                <uri>french/frmatrix/76564.wav</uri>
-                <text>Félix reprend onze ballons bleus</text>
-            </speechtoken>
-            <speechtoken id="84705">
-                <uri>french/frmatrix/84705.wav</uri>
-                <text>Charlotte demande six classeurs mauves</text>
-            </speechtoken>
-            <speechtoken id="92083">
-                <uri>french/frmatrix/92083.wav</uri>
-                <text>Sophie attrape trois rubans bruns</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_07">
-            <speechtoken id="04260">
-                <uri>french/frmatrix/04260.wav</uri>
-                <text>Jean-Luc demande quinze ballons jaunes</text>
-            </speechtoken>
-            <speechtoken id="11387">
-                <uri>french/frmatrix/11387.wav</uri>
-                <text>Emile voudrait huit rubans blancs</text>
-            </speechtoken>
-            <speechtoken id="22819">
-                <uri>french/frmatrix/22819.wav</uri>
-                <text>Agnès attrape cinq livres noirs</text>
-            </speechtoken>
-            <speechtoken id="35732">
-                <uri>french/frmatrix/35732.wav</uri>
-                <text>Julien ramène six piquets verts</text>
-            </speechtoken>
-            <speechtoken id="48175">
-                <uri>french/frmatrix/48175.wav</uri>
-                <text>Etienne propose deux anneaux mauves</text>
-            </speechtoken>
-            <speechtoken id="57641">
-                <uri>french/frmatrix/57641.wav</uri>
-                <text>Michel achète neuf vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="66928">
-                <uri>french/frmatrix/66928.wav</uri>
-                <text>Eugène reprend sept crayons gris</text>
-            </speechtoken>
-            <speechtoken id="70096">
-                <uri>french/frmatrix/70096.wav</uri>
-                <text>Félix ramasse trois pions roses</text>
-            </speechtoken>
-            <speechtoken id="83503">
-                <uri>french/frmatrix/83503.wav</uri>
-                <text>Charlotte dessine onze classeurs bruns</text>
-            </speechtoken>
-            <speechtoken id="99454">
-                <uri>french/frmatrix/99454.wav</uri>
-                <text>Sophie déplace douze jetons bleus</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_08">
-            <speechtoken id="07222">
-                <uri>french/frmatrix/07222.wav</uri>
-                <text>Jean-Luc achète quinze crayons verts</text>
-            </speechtoken>
-            <speechtoken id="14800">
-                <uri>french/frmatrix/14800.wav</uri>
-                <text>Emile demande cinq classeurs jaunes</text>
-            </speechtoken>
-            <speechtoken id="23081">
-                <uri>french/frmatrix/23081.wav</uri>
-                <text>Agnès dessine trois rubans rouges</text>
-            </speechtoken>
-            <speechtoken id="38469">
-                <uri>french/frmatrix/38469.wav</uri>
-                <text>Julien propose douze ballons noirs</text>
-            </speechtoken>
-            <speechtoken id="40993">
-                <uri>french/frmatrix/40993.wav</uri>
-                <text>Etienne ramasse sept pions bruns</text>
-            </speechtoken>
-            <speechtoken id="55174">
-                <uri>french/frmatrix/55174.wav</uri>
-                <text>Michel ramène deux anneaux bleus</text>
-            </speechtoken>
-            <speechtoken id="61755">
-                <uri>french/frmatrix/61755.wav</uri>
-                <text>Eugène voudrait six jetons mauves</text>
-            </speechtoken>
-            <speechtoken id="76346">
-                <uri>french/frmatrix/76346.wav</uri>
-                <text>Félix reprend huit vélos roses</text>
-            </speechtoken>
-            <speechtoken id="89637">
-                <uri>french/frmatrix/89637.wav</uri>
-                <text>Charlotte déplace neuf piquets blancs</text>
-            </speechtoken>
-            <speechtoken id="92518">
-                <uri>french/frmatrix/92518.wav</uri>
-                <text>Sophie attrape onze livres gris</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_09">
-            <speechtoken id="02337">
-                <uri>french/frmatrix/02337.wav</uri>
-                <text>Jean-Luc attrape huit piquets blancs</text>
-            </speechtoken>
-            <speechtoken id="11965">
-                <uri>french/frmatrix/11965.wav</uri>
-                <text>Emile voudrait sept ballons mauves</text>
-            </speechtoken>
-            <speechtoken id="20014">
-                <uri>french/frmatrix/20014.wav</uri>
-                <text>Agnès ramasse trois livres bleus</text>
-            </speechtoken>
-            <speechtoken id="33652">
-                <uri>french/frmatrix/33652.wav</uri>
-                <text>Julien dessine neuf jetons verts</text>
-            </speechtoken>
-            <speechtoken id="47593">
-                <uri>french/frmatrix/47593.wav</uri>
-                <text>Etienne achète onze pions bruns</text>
-            </speechtoken>
-            <speechtoken id="59128">
-                <uri>french/frmatrix/59128.wav</uri>
-                <text>Michel déplace deux crayons gris</text>
-            </speechtoken>
-            <speechtoken id="66781">
-                <uri>french/frmatrix/66781.wav</uri>
-                <text>Eugène reprend six rubans rouges</text>
-            </speechtoken>
-            <speechtoken id="74879">
-                <uri>french/frmatrix/74879.wav</uri>
-                <text>Félix demande cinq anneaux noirs</text>
-            </speechtoken>
-            <speechtoken id="85200">
-                <uri>french/frmatrix/85200.wav</uri>
-                <text>Charlotte ramène quinze classeurs jaunes</text>
-            </speechtoken>
-            <speechtoken id="98446">
-                <uri>french/frmatrix/98446.wav</uri>
-                <text>Sophie propose douze vélos roses</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_10">
-            <speechtoken id="08287">
-                <uri>french/frmatrix/08287.wav</uri>
-                <text>Jean-Luc propose quinze rubans blancs</text>
-            </speechtoken>
-            <speechtoken id="17522">
-                <uri>french/frmatrix/17522.wav</uri>
-                <text>Emile achète onze crayons verts</text>
-            </speechtoken>
-            <speechtoken id="22915">
-                <uri>french/frmatrix/22915.wav</uri>
-                <text>Agnès attrape sept livres mauves</text>
-            </speechtoken>
-            <speechtoken id="34158">
-                <uri>french/frmatrix/34158.wav</uri>
-                <text>Julien demande deux jetons gris</text>
-            </speechtoken>
-            <speechtoken id="45009">
-                <uri>french/frmatrix/45009.wav</uri>
-                <text>Etienne ramène trois classeurs noirs</text>
-            </speechtoken>
-            <speechtoken id="56670">
-                <uri>french/frmatrix/56670.wav</uri>
-                <text>Michel reprend neuf anneaux jaunes</text>
-            </speechtoken>
-            <speechtoken id="63864">
-                <uri>french/frmatrix/63864.wav</uri>
-                <text>Eugène dessine cinq ballons bleus</text>
-            </speechtoken>
-            <speechtoken id="79331">
-                <uri>french/frmatrix/79331.wav</uri>
-                <text>Félix déplace huit piquets rouges</text>
-            </speechtoken>
-            <speechtoken id="81743">
-                <uri>french/frmatrix/81743.wav</uri>
-                <text>Charlotte voudrait six vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="90496">
-                <uri>french/frmatrix/90496.wav</uri>
-                <text>Sophie ramasse douze pions roses</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_11">
-            <speechtoken id="08741">
-                <uri>french/frmatrix/08741.wav</uri>
-                <text>Jean-Luc propose six vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="11804">
-                <uri>french/frmatrix/11804.wav</uri>
-                <text>Emile voudrait cinq classeurs bleus</text>
-            </speechtoken>
-            <speechtoken id="20518">
-                <uri>french/frmatrix/20518.wav</uri>
-                <text>Agnès ramasse onze livres gris</text>
-            </speechtoken>
-            <speechtoken id="33136">
-                <uri>french/frmatrix/33136.wav</uri>
-                <text>Julien dessine deux piquets roses</text>
-            </speechtoken>
-            <speechtoken id="49927">
-                <uri>french/frmatrix/49927.wav</uri>
-                <text>Etienne déplace sept crayons blancs</text>
-            </speechtoken>
-            <speechtoken id="56682">
-                <uri>french/frmatrix/56682.wav</uri>
-                <text>Michel reprend neuf rubans verts</text>
-            </speechtoken>
-            <speechtoken id="67365">
-                <uri>french/frmatrix/67365.wav</uri>
-                <text>Eugène achète huit ballons mauves</text>
-            </speechtoken>
-            <speechtoken id="74293">
-                <uri>french/frmatrix/74293.wav</uri>
-                <text>Félix demande quinze pions bruns</text>
-            </speechtoken>
-            <speechtoken id="82450">
-                <uri>french/frmatrix/82450.wav</uri>
-                <text>Charlotte attrape douze jetons jaunes</text>
-            </speechtoken>
-            <speechtoken id="95079">
-                <uri>french/frmatrix/95079.wav</uri>
-                <text>Sophie ramène trois anneaux noirs</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_12">
-            <speechtoken id="00914">
-                <uri>french/frmatrix/00914.wav</uri>
-                <text>Jean-Luc ramasse sept livres bleus</text>
-            </speechtoken>
-            <speechtoken id="16150">
-                <uri>french/frmatrix/16150.wav</uri>
-                <text>Emile reprend deux jetons jaunes</text>
-            </speechtoken>
-            <speechtoken id="29639">
-                <uri>french/frmatrix/29639.wav</uri>
-                <text>Agnès déplace neuf piquets noirs</text>
-            </speechtoken>
-            <speechtoken id="32085">
-                <uri>french/frmatrix/32085.wav</uri>
-                <text>Julien attrape trois rubans mauves</text>
-            </speechtoken>
-            <speechtoken id="44398">
-                <uri>french/frmatrix/44398.wav</uri>
-                <text>Etienne demande huit pions gris</text>
-            </speechtoken>
-            <speechtoken id="51466">
-                <uri>french/frmatrix/51466.wav</uri>
-                <text>Michel voudrait douze ballons roses</text>
-            </speechtoken>
-            <speechtoken id="63572">
-                <uri>french/frmatrix/63572.wav</uri>
-                <text>Eugène dessine onze anneaux verts</text>
-            </speechtoken>
-            <speechtoken id="77841">
-                <uri>french/frmatrix/77841.wav</uri>
-                <text>Félix achète cinq vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="88203">
-                <uri>french/frmatrix/88203.wav</uri>
-                <text>Charlotte propose quinze classeurs bruns</text>
-            </speechtoken>
-            <speechtoken id="95727">
-                <uri>french/frmatrix/95727.wav</uri>
-                <text>Sophie ramène six crayons blancs</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_13">
-            <speechtoken id="06298">
-                <uri>french/frmatrix/06298.wav</uri>
-                <text>Jean-Luc reprend quinze pions gris</text>
-            </speechtoken>
-            <speechtoken id="19104">
-                <uri>french/frmatrix/19104.wav</uri>
-                <text>Emile déplace deux classeurs bleus</text>
-            </speechtoken>
-            <speechtoken id="22387">
-                <uri>french/frmatrix/22387.wav</uri>
-                <text>Agnès attrape huit rubans blancs</text>
-            </speechtoken>
-            <speechtoken id="38632">
-                <uri>french/frmatrix/38632.wav</uri>
-                <text>Julien propose neuf piquets verts</text>
-            </speechtoken>
-            <speechtoken id="43919">
-                <uri>french/frmatrix/43919.wav</uri>
-                <text>Etienne dessine sept livres noirs</text>
-            </speechtoken>
-            <speechtoken id="55726">
-                <uri>french/frmatrix/55726.wav</uri>
-                <text>Michel ramène six crayons roses</text>
-            </speechtoken>
-            <speechtoken id="61875">
-                <uri>french/frmatrix/61875.wav</uri>
-                <text>Eugène voudrait cinq anneaux mauves</text>
-            </speechtoken>
-            <speechtoken id="74563">
-                <uri>french/frmatrix/74563.wav</uri>
-                <text>Félix demande onze ballons bruns</text>
-            </speechtoken>
-            <speechtoken id="87450">
-                <uri>french/frmatrix/87450.wav</uri>
-                <text>Charlotte achète douze jetons jaunes</text>
-            </speechtoken>
-            <speechtoken id="90041">
-                <uri>french/frmatrix/90041.wav</uri>
-                <text>Sophie ramasse trois vélos rouges</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_14">
-            <speechtoken id="05439">
-                <uri>french/frmatrix/05439.wav</uri>
-                <text>Jean-Luc ramène douze piquets noirs</text>
-            </speechtoken>
-            <speechtoken id="11320">
-                <uri>french/frmatrix/11320.wav</uri>
-                <text>Emile voudrait huit crayons jaunes</text>
-            </speechtoken>
-            <speechtoken id="23815">
-                <uri>french/frmatrix/23815.wav</uri>
-                <text>Agnès dessine cinq livres mauves</text>
-            </speechtoken>
-            <speechtoken id="32001">
-                <uri>french/frmatrix/32001.wav</uri>
-                <text>Julien attrape trois classeurs rouges</text>
-            </speechtoken>
-            <speechtoken id="49773">
-                <uri>french/frmatrix/49773.wav</uri>
-                <text>Etienne déplace six anneaux bruns</text>
-            </speechtoken>
-            <speechtoken id="54564">
-                <uri>french/frmatrix/54564.wav</uri>
-                <text>Michel demande onze ballons bleus</text>
-            </speechtoken>
-            <speechtoken id="66258">
-                <uri>french/frmatrix/66258.wav</uri>
-                <text>Eugène reprend quinze jetons gris</text>
-            </speechtoken>
-            <speechtoken id="78686">
-                <uri>french/frmatrix/78686.wav</uri>
-                <text>Félix propose neuf rubans roses</text>
-            </speechtoken>
-            <speechtoken id="80947">
-                <uri>french/frmatrix/80947.wav</uri>
-                <text>Charlotte ramasse sept vélos blancs</text>
-            </speechtoken>
-            <speechtoken id="97192">
-                <uri>french/frmatrix/97192.wav</uri>
-                <text>Sophie achète deux pions verts</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_15">
-            <speechtoken id="04971">
-                <uri>french/frmatrix/04971.wav</uri>
-                <text>Jean-Luc demande sept anneaux rouges</text>
-            </speechtoken>
-            <speechtoken id="16199">
-                <uri>french/frmatrix/16199.wav</uri>
-                <text>Emile reprend deux pions noirs</text>
-            </speechtoken>
-            <speechtoken id="28804">
-                <uri>french/frmatrix/28804.wav</uri>
-                <text>Agnès propose cinq classeurs bleus</text>
-            </speechtoken>
-            <speechtoken id="37212">
-                <uri>french/frmatrix/37212.wav</uri>
-                <text>Julien achète quinze livres verts</text>
-            </speechtoken>
-            <speechtoken id="41426">
-                <uri>french/frmatrix/41426.wav</uri>
-                <text>Etienne voudrait douze crayons roses</text>
-            </speechtoken>
-            <speechtoken id="53540">
-                <uri>french/frmatrix/53540.wav</uri>
-                <text>Michel dessine onze vélos jaunes</text>
-            </speechtoken>
-            <speechtoken id="65737">
-                <uri>french/frmatrix/65737.wav</uri>
-                <text>Eugène ramène six piquets blancs</text>
-            </speechtoken>
-            <speechtoken id="72068">
-                <uri>french/frmatrix/72068.wav</uri>
-                <text>Félix attrape trois ballons gris</text>
-            </speechtoken>
-            <speechtoken id="80655">
-                <uri>french/frmatrix/80655.wav</uri>
-                <text>Charlotte ramasse neuf jetons mauves</text>
-            </speechtoken>
-            <speechtoken id="99383">
-                <uri>french/frmatrix/99383.wav</uri>
-                <text>Sophie déplace huit rubans bruns</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_16">
-            <speechtoken id="04564">
-                <uri>french/frmatrix/04564.wav</uri>
-                <text>Jean-Luc demande onze ballons bleus</text>
-            </speechtoken>
-            <speechtoken id="10333">
-                <uri>french/frmatrix/10333.wav</uri>
-                <text>Emile ramasse huit piquets bruns</text>
-            </speechtoken>
-            <speechtoken id="26058">
-                <uri>french/frmatrix/26058.wav</uri>
-                <text>Agnès reprend trois jetons gris</text>
-            </speechtoken>
-            <speechtoken id="39609">
-                <uri>french/frmatrix/39609.wav</uri>
-                <text>Julien déplace neuf classeurs noirs</text>
-            </speechtoken>
-            <speechtoken id="41122">
-                <uri>french/frmatrix/41122.wav</uri>
-                <text>Etienne voudrait deux crayons verts</text>
-            </speechtoken>
-            <speechtoken id="58940">
-                <uri>french/frmatrix/58940.wav</uri>
-                <text>Michel propose sept vélos jaunes</text>
-            </speechtoken>
-            <speechtoken id="67481">
-                <uri>french/frmatrix/67481.wav</uri>
-                <text>Eugène achète douze rubans rouges</text>
-            </speechtoken>
-            <speechtoken id="75876">
-                <uri>french/frmatrix/75876.wav</uri>
-                <text>Félix ramène cinq anneaux roses</text>
-            </speechtoken>
-            <speechtoken id="82715">
-                <uri>french/frmatrix/82715.wav</uri>
-                <text>Charlotte attrape six livres mauves</text>
-            </speechtoken>
-            <speechtoken id="93297">
-                <uri>french/frmatrix/93297.wav</uri>
-                <text>Sophie dessine quinze pions blancs</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_17">
-            <speechtoken id="07823">
-                <uri>french/frmatrix/07823.wav</uri>
-                <text>Jean-Luc achète cinq crayons bruns</text>
-            </speechtoken>
-            <speechtoken id="10275">
-                <uri>french/frmatrix/10275.wav</uri>
-                <text>Emile ramasse quinze anneaux mauves</text>
-            </speechtoken>
-            <speechtoken id="28987">
-                <uri>french/frmatrix/28987.wav</uri>
-                <text>Agnès propose sept rubans blancs</text>
-            </speechtoken>
-            <speechtoken id="35594">
-                <uri>french/frmatrix/35594.wav</uri>
-                <text>Julien ramène onze pions bleus</text>
-            </speechtoken>
-            <speechtoken id="49132">
-                <uri>french/frmatrix/49132.wav</uri>
-                <text>Etienne déplace deux piquets verts</text>
-            </speechtoken>
-            <speechtoken id="51618">
-                <uri>french/frmatrix/51618.wav</uri>
-                <text>Michel voudrait neuf livres gris</text>
-            </speechtoken>
-            <speechtoken id="62341">
-                <uri>french/frmatrix/62341.wav</uri>
-                <text>Eugène attrape huit vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="76069">
-                <uri>french/frmatrix/76069.wav</uri>
-                <text>Félix reprend trois ballons noirs</text>
-            </speechtoken>
-            <speechtoken id="84450">
-                <uri>french/frmatrix/84450.wav</uri>
-                <text>Charlotte demande douze jetons jaunes</text>
-            </speechtoken>
-            <speechtoken id="93706">
-                <uri>french/frmatrix/93706.wav</uri>
-                <text>Sophie dessine six classeurs roses</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_18">
-            <speechtoken id="00200">
-                <uri>french/frmatrix/00200.wav</uri>
-                <text>Jean-Luc ramasse quinze classeurs jaunes</text>
-            </speechtoken>
-            <speechtoken id="16457">
-                <uri>french/frmatrix/16457.wav</uri>
-                <text>Emile reprend douze jetons blancs</text>
-            </speechtoken>
-            <speechtoken id="22743">
-                <uri>french/frmatrix/22743.wav</uri>
-                <text>Agnès attrape six vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="35635">
-                <uri>french/frmatrix/35635.wav</uri>
-                <text>Julien ramène neuf piquets mauves</text>
-            </speechtoken>
-            <speechtoken id="49326">
-                <uri>french/frmatrix/49326.wav</uri>
-                <text>Etienne déplace huit crayons roses</text>
-            </speechtoken>
-            <speechtoken id="53561">
-                <uri>french/frmatrix/53561.wav</uri>
-                <text>Michel dessine onze ballons rouges</text>
-            </speechtoken>
-            <speechtoken id="61819">
-                <uri>french/frmatrix/61819.wav</uri>
-                <text>Eugène voudrait cinq livres noirs</text>
-            </speechtoken>
-            <speechtoken id="78988">
-                <uri>french/frmatrix/78988.wav</uri>
-                <text>Félix propose sept rubans gris</text>
-            </speechtoken>
-            <speechtoken id="84172">
-                <uri>french/frmatrix/84172.wav</uri>
-                <text>Charlotte demande deux anneaux verts</text>
-            </speechtoken>
-            <speechtoken id="97094">
-                <uri>french/frmatrix/97094.wav</uri>
-                <text>Sophie achète trois pions bleus</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_19">
-            <speechtoken id="04683">
-                <uri>french/frmatrix/04683.wav</uri>
-                <text>Jean-Luc demande neuf rubans bruns</text>
-            </speechtoken>
-            <speechtoken id="12502">
-                <uri>french/frmatrix/12502.wav</uri>
-                <text>Emile attrape onze classeurs verts</text>
-            </speechtoken>
-            <speechtoken id="28060">
-                <uri>french/frmatrix/28060.wav</uri>
-                <text>Agnès propose trois ballons jaunes</text>
-            </speechtoken>
-            <speechtoken id="33259">
-                <uri>french/frmatrix/33259.wav</uri>
-                <text>Julien dessine quinze jetons noirs</text>
-            </speechtoken>
-            <speechtoken id="41144">
-                <uri>french/frmatrix/41144.wav</uri>
-                <text>Etienne voudrait deux vélos bleus</text>
-            </speechtoken>
-            <speechtoken id="56997">
-                <uri>french/frmatrix/56997.wav</uri>
-                <text>Michel reprend sept pions blancs</text>
-            </speechtoken>
-            <speechtoken id="67815">
-                <uri>french/frmatrix/67815.wav</uri>
-                <text>Eugène achète cinq livres mauves</text>
-            </speechtoken>
-            <speechtoken id="70438">
-                <uri>french/frmatrix/70438.wav</uri>
-                <text>Félix ramasse douze piquets gris</text>
-            </speechtoken>
-            <speechtoken id="89721">
-                <uri>french/frmatrix/89721.wav</uri>
-                <text>Charlotte déplace six crayons rouges</text>
-            </speechtoken>
-            <speechtoken id="95376">
-                <uri>french/frmatrix/95376.wav</uri>
-                <text>Sophie ramène huit anneaux roses</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_20">
-            <speechtoken id="07247">
-                <uri>french/frmatrix/07247.wav</uri>
-                <text>Jean-Luc achète quinze vélos blancs</text>
-            </speechtoken>
-            <speechtoken id="13435">
-                <uri>french/frmatrix/13435.wav</uri>
-                <text>Emile dessine douze piquets mauves</text>
-            </speechtoken>
-            <speechtoken id="20073">
-                <uri>french/frmatrix/20073.wav</uri>
-                <text>Agnès ramasse trois anneaux bruns</text>
-            </speechtoken>
-            <speechtoken id="31124">
-                <uri>french/frmatrix/31124.wav</uri>
-                <text>Julien voudrait deux crayons bleus</text>
-            </speechtoken>
-            <speechtoken id="45519">
-                <uri>french/frmatrix/45519.wav</uri>
-                <text>Etienne ramène onze livres noirs</text>
-            </speechtoken>
-            <speechtoken id="54398">
-                <uri>french/frmatrix/54398.wav</uri>
-                <text>Michel demande huit pions gris</text>
-            </speechtoken>
-            <speechtoken id="68801">
-                <uri>french/frmatrix/68801.wav</uri>
-                <text>Eugène propose cinq classeurs rouges</text>
-            </speechtoken>
-            <speechtoken id="76966">
-                <uri>french/frmatrix/76966.wav</uri>
-                <text>Félix reprend sept ballons roses</text>
-            </speechtoken>
-            <speechtoken id="82782">
-                <uri>french/frmatrix/82782.wav</uri>
-                <text>Charlotte attrape six rubans verts</text>
-            </speechtoken>
-            <speechtoken id="99650">
-                <uri>french/frmatrix/99650.wav</uri>
-                <text>Sophie déplace neuf jetons jaunes</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_21">
-            <speechtoken id="07015">
-                <uri>french/frmatrix/07015.wav</uri>
-                <text>Jean-Luc achète trois livres mauves</text>
-            </speechtoken>
-            <speechtoken id="15139">
-                <uri>french/frmatrix/15139.wav</uri>
-                <text>Emile ramène deux piquets noirs</text>
-            </speechtoken>
-            <speechtoken id="26867">
-                <uri>french/frmatrix/26867.wav</uri>
-                <text>Agnès reprend cinq ballons blancs</text>
-            </speechtoken>
-            <speechtoken id="32228">
-                <uri>french/frmatrix/32228.wav</uri>
-                <text>Julien attrape quinze crayons gris</text>
-            </speechtoken>
-            <speechtoken id="48901">
-                <uri>french/frmatrix/48901.wav</uri>
-                <text>Etienne propose sept classeurs rouges</text>
-            </speechtoken>
-            <speechtoken id="51386">
-                <uri>french/frmatrix/51386.wav</uri>
-                <text>Michel voudrait huit rubans roses</text>
-            </speechtoken>
-            <speechtoken id="69570">
-                <uri>french/frmatrix/69570.wav</uri>
-                <text>Eugène déplace onze anneaux jaunes</text>
-            </speechtoken>
-            <speechtoken id="74743">
-                <uri>french/frmatrix/74743.wav</uri>
-                <text>Félix demande six vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="80494">
-                <uri>french/frmatrix/80494.wav</uri>
-                <text>Charlotte ramasse douze pions bleus</text>
-            </speechtoken>
-            <speechtoken id="93652">
-                <uri>french/frmatrix/93652.wav</uri>
-                <text>Sophie dessine neuf jetons verts</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_22">
-            <speechtoken id="07122">
-                <uri>french/frmatrix/07122.wav</uri>
-                <text>Jean-Luc achète deux crayons verts</text>
-            </speechtoken>
-            <speechtoken id="11886">
-                <uri>french/frmatrix/11886.wav</uri>
-                <text>Emile voudrait cinq rubans roses</text>
-            </speechtoken>
-            <speechtoken id="24971">
-                <uri>french/frmatrix/24971.wav</uri>
-                <text>Agnès demande sept anneaux rouges</text>
-            </speechtoken>
-            <speechtoken id="38433">
-                <uri>french/frmatrix/38433.wav</uri>
-                <text>Julien propose douze piquets bruns</text>
-            </speechtoken>
-            <speechtoken id="49618">
-                <uri>french/frmatrix/49618.wav</uri>
-                <text>Etienne déplace neuf livres gris</text>
-            </speechtoken>
-            <speechtoken id="53057">
-                <uri>french/frmatrix/53057.wav</uri>
-                <text>Michel dessine trois jetons blancs</text>
-            </speechtoken>
-            <speechtoken id="62209">
-                <uri>french/frmatrix/62209.wav</uri>
-                <text>Eugène attrape quinze classeurs noirs</text>
-            </speechtoken>
-            <speechtoken id="70745">
-                <uri>french/frmatrix/70745.wav</uri>
-                <text>Félix ramasse six vélos mauves</text>
-            </speechtoken>
-            <speechtoken id="86360">
-                <uri>french/frmatrix/86360.wav</uri>
-                <text>Charlotte reprend huit ballons jaunes</text>
-            </speechtoken>
-            <speechtoken id="95594">
-                <uri>french/frmatrix/95594.wav</uri>
-                <text>Sophie ramène onze pions bleus</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_23">
-            <speechtoken id="04707">
-                <uri>french/frmatrix/04707.wav</uri>
-                <text>Jean-Luc demande six classeurs blancs</text>
-            </speechtoken>
-            <speechtoken id="17894">
-                <uri>french/frmatrix/17894.wav</uri>
-                <text>Emile achète cinq pions bleus</text>
-            </speechtoken>
-            <speechtoken id="25156">
-                <uri>french/frmatrix/25156.wav</uri>
-                <text>Agnès ramène deux jetons roses</text>
-            </speechtoken>
-            <speechtoken id="30312">
-                <uri>french/frmatrix/30312.wav</uri>
-                <text>Julien ramasse huit livres verts</text>
-            </speechtoken>
-            <speechtoken id="49261">
-                <uri>french/frmatrix/49261.wav</uri>
-                <text>Etienne déplace quinze ballons rouges</text>
-            </speechtoken>
-            <speechtoken id="53578">
-                <uri>french/frmatrix/53578.wav</uri>
-                <text>Michel dessine onze anneaux gris</text>
-            </speechtoken>
-            <speechtoken id="66625">
-                <uri>french/frmatrix/66625.wav</uri>
-                <text>Eugène reprend neuf crayons mauves</text>
-            </speechtoken>
-            <speechtoken id="71930">
-                <uri>french/frmatrix/71930.wav</uri>
-                <text>Félix voudrait sept piquets jaunes</text>
-            </speechtoken>
-            <speechtoken id="88043">
-                <uri>french/frmatrix/88043.wav</uri>
-                <text>Charlotte propose trois vélos bruns</text>
-            </speechtoken>
-            <speechtoken id="92489">
-                <uri>french/frmatrix/92489.wav</uri>
-                <text>Sophie attrape douze rubans noirs</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_24">
-            <speechtoken id="02397">
-                <uri>french/frmatrix/02397.wav</uri>
-                <text>Jean-Luc attrape huit pions blancs</text>
-            </speechtoken>
-            <speechtoken id="16024">
-                <uri>french/frmatrix/16024.wav</uri>
-                <text>Emile reprend trois crayons bleus</text>
-            </speechtoken>
-            <speechtoken id="24542">
-                <uri>french/frmatrix/24542.wav</uri>
-                <text>Agnès demande onze vélos verts</text>
-            </speechtoken>
-            <speechtoken id="30108">
-                <uri>french/frmatrix/30108.wav</uri>
-                <text>Julien ramasse deux classeurs gris</text>
-            </speechtoken>
-            <speechtoken id="48759">
-                <uri>french/frmatrix/48759.wav</uri>
-                <text>Etienne propose six jetons noirs</text>
-            </speechtoken>
-            <speechtoken id="55836">
-                <uri>french/frmatrix/55836.wav</uri>
-                <text>Michel ramène cinq piquets roses</text>
-            </speechtoken>
-            <speechtoken id="63473">
-                <uri>french/frmatrix/63473.wav</uri>
-                <text>Eugène dessine douze anneaux bruns</text>
-            </speechtoken>
-            <speechtoken id="79961">
-                <uri>french/frmatrix/79961.wav</uri>
-                <text>Félix déplace sept ballons rouges</text>
-            </speechtoken>
-            <speechtoken id="87615">
-                <uri>french/frmatrix/87615.wav</uri>
-                <text>Charlotte achète neuf livres mauves</text>
-            </speechtoken>
-            <speechtoken id="91280">
-                <uri>french/frmatrix/91280.wav</uri>
-                <text>Sophie voudrait quinze rubans jaunes</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_25">
-            <speechtoken id="06307">
-                <uri>french/frmatrix/06307.wav</uri>
-                <text>Jean-Luc reprend huit classeurs blancs</text>
-            </speechtoken>
-            <speechtoken id="19935">
-                <uri>french/frmatrix/19935.wav</uri>
-                <text>Emile déplace sept piquets mauves</text>
-            </speechtoken>
-            <speechtoken id="22289">
-                <uri>french/frmatrix/22289.wav</uri>
-                <text>Agnès attrape quinze rubans noirs</text>
-            </speechtoken>
-            <speechtoken id="35462">
-                <uri>french/frmatrix/35462.wav</uri>
-                <text>Julien ramène douze ballons verts</text>
-            </speechtoken>
-            <speechtoken id="44826">
-                <uri>french/frmatrix/44826.wav</uri>
-                <text>Etienne demande cinq crayons roses</text>
-            </speechtoken>
-            <speechtoken id="58694">
-                <uri>french/frmatrix/58694.wav</uri>
-                <text>Michel propose neuf pions bleus</text>
-            </speechtoken>
-            <speechtoken id="67578">
-                <uri>french/frmatrix/67578.wav</uri>
-                <text>Eugène achète onze anneaux gris</text>
-            </speechtoken>
-            <speechtoken id="70741">
-                <uri>french/frmatrix/70741.wav</uri>
-                <text>Félix ramasse six vélos rouges</text>
-            </speechtoken>
-            <speechtoken id="83113">
-                <uri>french/frmatrix/83113.wav</uri>
-                <text>Charlotte dessine deux livres bruns</text>
-            </speechtoken>
-            <speechtoken id="91050">
-                <uri>french/frmatrix/91050.wav</uri>
-                <text>Sophie voudrait trois jetons jaunes</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_26">
-            <speechtoken id="09137">
-                <uri>french/frmatrix/09137.wav</uri>
-                <text>Jean-Luc déplace deux piquets blancs</text>
-            </speechtoken>
-            <speechtoken id="18505">
-                <uri>french/frmatrix/18505.wav</uri>
-                <text>Emile propose onze classeurs mauves</text>
-            </speechtoken>
-            <speechtoken id="24253">
-                <uri>french/frmatrix/24253.wav</uri>
-                <text>Agnès demande quinze jetons bruns</text>
-            </speechtoken>
-            <speechtoken id="36720">
-                <uri>french/frmatrix/36720.wav</uri>
-                <text>Julien reprend six crayons jaunes</text>
-            </speechtoken>
-            <speechtoken id="42871">
-                <uri>french/frmatrix/42871.wav</uri>
-                <text>Etienne attrape cinq anneaux rouges</text>
-            </speechtoken>
-            <speechtoken id="51369">
-                <uri>french/frmatrix/51369.wav</uri>
-                <text>Michel voudrait huit ballons noirs</text>
-            </speechtoken>
-            <speechtoken id="63946">
-                <uri>french/frmatrix/63946.wav</uri>
-                <text>Eugène dessine sept vélos roses</text>
-            </speechtoken>
-            <speechtoken id="75098">
-                <uri>french/frmatrix/75098.wav</uri>
-                <text>Félix ramène trois pions gris</text>
-            </speechtoken>
-            <speechtoken id="80684">
-                <uri>french/frmatrix/80684.wav</uri>
-                <text>Charlotte ramasse neuf rubans bleus</text>
-            </speechtoken>
-            <speechtoken id="97412">
-                <uri>french/frmatrix/97412.wav</uri>
-                <text>Sophie achète douze livres verts</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_27">
-            <speechtoken id="05213">
-                <uri>french/frmatrix/05213.wav</uri>
-                <text>Jean-Luc ramène quinze livres bruns</text>
-            </speechtoken>
-            <speechtoken id="11897">
-                <uri>french/frmatrix/11897.wav</uri>
-                <text>Emile voudrait cinq pions blancs</text>
-            </speechtoken>
-            <speechtoken id="20075">
-                <uri>french/frmatrix/20075.wav</uri>
-                <text>Agnès ramasse trois anneaux mauves</text>
-            </speechtoken>
-            <speechtoken id="32162">
-                <uri>french/frmatrix/32162.wav</uri>
-                <text>Julien attrape deux ballons verts</text>
-            </speechtoken>
-            <speechtoken id="43721">
-                <uri>french/frmatrix/43721.wav</uri>
-                <text>Etienne dessine six crayons rouges</text>
-            </speechtoken>
-            <speechtoken id="59358">
-                <uri>french/frmatrix/59358.wav</uri>
-                <text>Michel déplace huit jetons gris</text>
-            </speechtoken>
-            <speechtoken id="68404">
-                <uri>french/frmatrix/68404.wav</uri>
-                <text>Eugène propose douze classeurs bleus</text>
-            </speechtoken>
-            <speechtoken id="76689">
-                <uri>french/frmatrix/76689.wav</uri>
-                <text>Félix reprend neuf rubans noirs</text>
-            </speechtoken>
-            <speechtoken id="84930">
-                <uri>french/frmatrix/84930.wav</uri>
-                <text>Charlotte demande sept piquets jaunes</text>
-            </speechtoken>
-            <speechtoken id="97546">
-                <uri>french/frmatrix/97546.wav</uri>
-                <text>Sophie achète onze vélos roses</text>
-            </speechtoken>
-        </list>
-        <list id="lijst_per10_28">
-            <speechtoken id="01786">
-                <uri>french/frmatrix/01786.wav</uri>
-                <text>Jean-Luc voudrait six rubans roses</text>
-            </speechtoken>
-            <speechtoken id="17852">
-                <uri>french/frmatrix/17852.wav</uri>
-                <text>Emile achète cinq jetons verts</text>
-            </speechtoken>
-            <speechtoken id="29968">
-                <uri>french/frmatrix/29968.wav</uri>
-                <text>Agnès déplace sept ballons gris</text>
-            </speechtoken>
-            <speechtoken id="32144">
-                <uri>french/frmatrix/32144.wav</uri>
-                <text>Julien attrape deux vélos bleus</text>
-            </speechtoken>
-            <speechtoken id="44527">
-                <uri>french/frmatrix/44527.wav</uri>
-                <text>Etienne demande onze crayons blancs</text>
-            </speechtoken>
-            <speechtoken id="55309">
-                <uri>french/frmatrix/55309.wav</uri>
-                <text>Michel ramène huit classeurs noirs</text>
-            </speechtoken>
-            <speechtoken id="63673">
-                <uri>french/frmatrix/63673.wav</uri>
-                <text>Eugène dessine neuf anneaux bruns</text>
-            </speechtoken>
-            <speechtoken id="70431">
-                <uri>french/frmatrix/70431.wav</uri>
-                <text>Félix ramasse douze piquets rouges</text>
-            </speechtoken>
-            <speechtoken id="88215">
-                <uri>french/frmatrix/88215.wav</uri>
-                <text>Charlotte propose quinze livres mauves</text>
-            </speechtoken>
-            <speechtoken id="96090">
-                <uri>french/frmatrix/96090.wav</uri>
-                <text>Sophie reprend trois pions jaunes</text>
-            </speechtoken>
-        </list>
-    </speechmaterial>
+<apex:speechmaterialfile xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/spin.xsd">
+  <noises>
+    <noise id="FrMatrix_ltass">
+      <description>Long term average speech spectrum noise for French Matrix test</description>
+      <name>French Matrix test</name>
+      <file>french/frmatrix/frmatrixnoise.wav</file>
+      <rms>-17.58</rms>
+      <speechmaterial>FrMatrix</speechmaterial>
+    </noise>
+  </noises>
+  <speechmaterial id="FrMatrix">
+    <rms>-17.58</rms>
+    <list id="lijst20_01">
+      <speechtoken id="03663">
+        <file>french/frmatrix/03663.wav</file>
+        <text>Jean-Luc dessine neuf ballons bruns</text>
+      </speechtoken>
+      <speechtoken id="12977">
+        <file>french/frmatrix/12977.wav</file>
+        <text>Emile attrape sept anneaux blancs</text>
+      </speechtoken>
+      <speechtoken id="20811">
+        <file>french/frmatrix/20811.wav</file>
+        <text>Agnès ramasse cinq livres rouges</text>
+      </speechtoken>
+      <speechtoken id="36222">
+        <file>french/frmatrix/36222.wav</file>
+        <text>Julien reprend quinze crayons verts</text>
+      </speechtoken>
+      <speechtoken id="47185">
+        <file>french/frmatrix/47185.wav</file>
+        <text>Etienne achète deux rubans mauves</text>
+      </speechtoken>
+      <speechtoken id="59439">
+        <file>french/frmatrix/59439.wav</file>
+        <text>Michel déplace douze piquets noirs</text>
+      </speechtoken>
+      <speechtoken id="68054">
+        <file>french/frmatrix/68054.wav</file>
+        <text>Eugène propose trois jetons bleus</text>
+      </speechtoken>
+      <speechtoken id="71746">
+        <file>french/frmatrix/71746.wav</file>
+        <text>Félix voudrait six vélos roses</text>
+      </speechtoken>
+      <speechtoken id="85500">
+        <file>french/frmatrix/85500.wav</file>
+        <text>Charlotte ramène onze classeurs jaunes</text>
+      </speechtoken>
+      <speechtoken id="94398">
+        <file>french/frmatrix/94398.wav</file>
+        <text>Sophie demande huit pions gris</text>
+      </speechtoken>
+      <speechtoken id="07601">
+        <file>french/frmatrix/07601.wav</file>
+        <text>Jean-Luc achète neuf classeurs rouges</text>
+      </speechtoken>
+      <speechtoken id="13777">
+        <file>french/frmatrix/13777.wav</file>
+        <text>Emile dessine six anneaux blancs</text>
+      </speechtoken>
+      <speechtoken id="25334">
+        <file>french/frmatrix/25334.wav</file>
+        <text>Agnès ramène huit piquets bleus</text>
+      </speechtoken>
+      <speechtoken id="38069">
+        <file>french/frmatrix/38069.wav</file>
+        <text>Julien propose trois ballons noirs</text>
+      </speechtoken>
+      <speechtoken id="44913">
+        <file>french/frmatrix/44913.wav</file>
+        <text>Etienne demande sept livres bruns</text>
+      </speechtoken>
+      <speechtoken id="59858">
+        <file>french/frmatrix/59858.wav</file>
+        <text>Michel déplace cinq jetons gris</text>
+      </speechtoken>
+      <speechtoken id="66225">
+        <file>french/frmatrix/66225.wav</file>
+        <text>Eugène reprend quinze crayons mauves</text>
+      </speechtoken>
+      <speechtoken id="70446">
+        <file>french/frmatrix/70446.wav</file>
+        <text>Félix ramasse douze vélos roses</text>
+      </speechtoken>
+      <speechtoken id="81592">
+        <file>french/frmatrix/81592.wav</file>
+        <text>Charlotte voudrait onze pions verts</text>
+      </speechtoken>
+      <speechtoken id="92180">
+        <file>french/frmatrix/92180.wav</file>
+        <text>Sophie attrape deux rubans jaunes</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_02">
+      <speechtoken id="01886">
+        <file>french/frmatrix/01886.wav</file>
+        <text>Jean-Luc voudrait cinq rubans roses</text>
+      </speechtoken>
+      <speechtoken id="19043">
+        <file>french/frmatrix/19043.wav</file>
+        <text>Emile déplace trois vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="28465">
+        <file>french/frmatrix/28465.wav</file>
+        <text>Agnès propose douze ballons mauves</text>
+      </speechtoken>
+      <speechtoken id="32909">
+        <file>french/frmatrix/32909.wav</file>
+        <text>Julien attrape sept classeurs noirs</text>
+      </speechtoken>
+      <speechtoken id="40791">
+        <file>french/frmatrix/40791.wav</file>
+        <text>Etienne ramasse six pions rouges</text>
+      </speechtoken>
+      <speechtoken id="54234">
+        <file>french/frmatrix/54234.wav</file>
+        <text>Michel demande quinze piquets bleus</text>
+      </speechtoken>
+      <speechtoken id="63317">
+        <file>french/frmatrix/63317.wav</file>
+        <text>Eugène dessine huit livres blancs</text>
+      </speechtoken>
+      <speechtoken id="76620">
+        <file>french/frmatrix/76620.wav</file>
+        <text>Félix reprend neuf crayons jaunes</text>
+      </speechtoken>
+      <speechtoken id="87152">
+        <file>french/frmatrix/87152.wav</file>
+        <text>Charlotte achète deux jetons verts</text>
+      </speechtoken>
+      <speechtoken id="95578">
+        <file>french/frmatrix/95578.wav</file>
+        <text>Sophie ramène onze anneaux gris</text>
+      </speechtoken>
+      <speechtoken id="01626">
+        <file>french/frmatrix/01626.wav</file>
+        <text>Jean-Luc voudrait neuf crayons roses</text>
+      </speechtoken>
+      <speechtoken id="19079">
+        <file>french/frmatrix/19079.wav</file>
+        <text>Emile déplace trois anneaux noirs</text>
+      </speechtoken>
+      <speechtoken id="25430">
+        <file>french/frmatrix/25430.wav</file>
+        <text>Agnès ramène douze piquets jaunes</text>
+      </speechtoken>
+      <speechtoken id="32891">
+        <file>french/frmatrix/32891.wav</file>
+        <text>Julien attrape cinq pions rouges</text>
+      </speechtoken>
+      <speechtoken id="44368">
+        <file>french/frmatrix/44368.wav</file>
+        <text>Etienne demande huit ballons gris</text>
+      </speechtoken>
+      <speechtoken id="50952">
+        <file>french/frmatrix/50952.wav</file>
+        <text>Michel ramasse sept jetons verts</text>
+      </speechtoken>
+      <speechtoken id="67143">
+        <file>french/frmatrix/67143.wav</file>
+        <text>Eugène achète deux vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="78704">
+        <file>french/frmatrix/78704.wav</file>
+        <text>Félix propose six classeurs bleus</text>
+      </speechtoken>
+      <speechtoken id="86215">
+        <file>french/frmatrix/86215.wav</file>
+        <text>Charlotte reprend quinze livres mauves</text>
+      </speechtoken>
+      <speechtoken id="93587">
+        <file>french/frmatrix/93587.wav</file>
+        <text>Sophie dessine onze rubans blancs</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_03">
+      <speechtoken id="03406">
+        <file>french/frmatrix/03406.wav</file>
+        <text>Jean-Luc dessine douze classeurs roses</text>
+      </speechtoken>
+      <speechtoken id="14522">
+        <file>french/frmatrix/14522.wav</file>
+        <text>Emile demande onze crayons verts</text>
+      </speechtoken>
+      <speechtoken id="25369">
+        <file>french/frmatrix/25369.wav</file>
+        <text>Agnès ramène huit ballons noirs</text>
+      </speechtoken>
+      <speechtoken id="31644">
+        <file>french/frmatrix/31644.wav</file>
+        <text>Julien voudrait neuf vélos bleus</text>
+      </speechtoken>
+      <speechtoken id="49798">
+        <file>french/frmatrix/49798.wav</file>
+        <text>Etienne déplace six pions gris</text>
+      </speechtoken>
+      <speechtoken id="58871">
+        <file>french/frmatrix/58871.wav</file>
+        <text>Michel propose cinq anneaux rouges</text>
+      </speechtoken>
+      <speechtoken id="66257">
+        <file>french/frmatrix/66257.wav</file>
+        <text>Eugène reprend quinze jetons blancs</text>
+      </speechtoken>
+      <speechtoken id="72935">
+        <file>french/frmatrix/72935.wav</file>
+        <text>Félix attrape sept piquets mauves</text>
+      </speechtoken>
+      <speechtoken id="80113">
+        <file>french/frmatrix/80113.wav</file>
+        <text>Charlotte ramasse deux livres bruns</text>
+      </speechtoken>
+      <speechtoken id="97080">
+        <file>french/frmatrix/97080.wav</file>
+        <text>Sophie achète trois rubans jaunes</text>
+      </speechtoken>
+      <speechtoken id="00456">
+        <file>french/frmatrix/00456.wav</file>
+        <text>Jean-Luc ramasse douze jetons roses</text>
+      </speechtoken>
+      <speechtoken id="18210">
+        <file>french/frmatrix/18210.wav</file>
+        <text>Emile propose quinze livres jaunes</text>
+      </speechtoken>
+      <speechtoken id="27128">
+        <file>french/frmatrix/27128.wav</file>
+        <text>Agnès achète deux crayons gris</text>
+      </speechtoken>
+      <speechtoken id="33877">
+        <file>french/frmatrix/33877.wav</file>
+        <text>Julien dessine cinq anneaux blancs</text>
+      </speechtoken>
+      <speechtoken id="41649">
+        <file>french/frmatrix/41649.wav</file>
+        <text>Etienne voudrait neuf vélos noirs</text>
+      </speechtoken>
+      <speechtoken id="55992">
+        <file>french/frmatrix/55992.wav</file>
+        <text>Michel ramène sept pions verts</text>
+      </speechtoken>
+      <speechtoken id="69331">
+        <file>french/frmatrix/69331.wav</file>
+        <text>Eugène déplace huit piquets rouges</text>
+      </speechtoken>
+      <speechtoken id="76564">
+        <file>french/frmatrix/76564.wav</file>
+        <text>Félix reprend onze ballons bleus</text>
+      </speechtoken>
+      <speechtoken id="84705">
+        <file>french/frmatrix/84705.wav</file>
+        <text>Charlotte demande six classeurs mauves</text>
+      </speechtoken>
+      <speechtoken id="92083">
+        <file>french/frmatrix/92083.wav</file>
+        <text>Sophie attrape trois rubans bruns</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_04">
+      <speechtoken id="04260">
+        <file>french/frmatrix/04260.wav</file>
+        <text>Jean-Luc demande quinze ballons jaunes</text>
+      </speechtoken>
+      <speechtoken id="11387">
+        <file>french/frmatrix/11387.wav</file>
+        <text>Emile voudrait huit rubans blancs</text>
+      </speechtoken>
+      <speechtoken id="22819">
+        <file>french/frmatrix/22819.wav</file>
+        <text>Agnès attrape cinq livres noirs</text>
+      </speechtoken>
+      <speechtoken id="35732">
+        <file>french/frmatrix/35732.wav</file>
+        <text>Julien ramène six piquets verts</text>
+      </speechtoken>
+      <speechtoken id="48175">
+        <file>french/frmatrix/48175.wav</file>
+        <text>Etienne propose deux anneaux mauves</text>
+      </speechtoken>
+      <speechtoken id="57641">
+        <file>french/frmatrix/57641.wav</file>
+        <text>Michel achète neuf vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="66928">
+        <file>french/frmatrix/66928.wav</file>
+        <text>Eugène reprend sept crayons gris</text>
+      </speechtoken>
+      <speechtoken id="70096">
+        <file>french/frmatrix/70096.wav</file>
+        <text>Félix ramasse trois pions roses</text>
+      </speechtoken>
+      <speechtoken id="83503">
+        <file>french/frmatrix/83503.wav</file>
+        <text>Charlotte dessine onze classeurs bruns</text>
+      </speechtoken>
+      <speechtoken id="99454">
+        <file>french/frmatrix/99454.wav</file>
+        <text>Sophie déplace douze jetons bleus</text>
+      </speechtoken>
+      <speechtoken id="07222">
+        <file>french/frmatrix/07222.wav</file>
+        <text>Jean-Luc achète quinze crayons verts</text>
+      </speechtoken>
+      <speechtoken id="14800">
+        <file>french/frmatrix/14800.wav</file>
+        <text>Emile demande cinq classeurs jaunes</text>
+      </speechtoken>
+      <speechtoken id="23081">
+        <file>french/frmatrix/23081.wav</file>
+        <text>Agnès dessine trois rubans rouges</text>
+      </speechtoken>
+      <speechtoken id="38469">
+        <file>french/frmatrix/38469.wav</file>
+        <text>Julien propose douze ballons noirs</text>
+      </speechtoken>
+      <speechtoken id="40993">
+        <file>french/frmatrix/40993.wav</file>
+        <text>Etienne ramasse sept pions bruns</text>
+      </speechtoken>
+      <speechtoken id="55174">
+        <file>french/frmatrix/55174.wav</file>
+        <text>Michel ramène deux anneaux bleus</text>
+      </speechtoken>
+      <speechtoken id="61755">
+        <file>french/frmatrix/61755.wav</file>
+        <text>Eugène voudrait six jetons mauves</text>
+      </speechtoken>
+      <speechtoken id="76346">
+        <file>french/frmatrix/76346.wav</file>
+        <text>Félix reprend huit vélos roses</text>
+      </speechtoken>
+      <speechtoken id="89637">
+        <file>french/frmatrix/89637.wav</file>
+        <text>Charlotte déplace neuf piquets blancs</text>
+      </speechtoken>
+      <speechtoken id="92518">
+        <file>french/frmatrix/92518.wav</file>
+        <text>Sophie attrape onze livres gris</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_05">
+      <speechtoken id="02337">
+        <file>french/frmatrix/02337.wav</file>
+        <text>Jean-Luc attrape huit piquets blancs</text>
+      </speechtoken>
+      <speechtoken id="11965">
+        <file>french/frmatrix/11965.wav</file>
+        <text>Emile voudrait sept ballons mauves</text>
+      </speechtoken>
+      <speechtoken id="20014">
+        <file>french/frmatrix/20014.wav</file>
+        <text>Agnès ramasse trois livres bleus</text>
+      </speechtoken>
+      <speechtoken id="33652">
+        <file>french/frmatrix/33652.wav</file>
+        <text>Julien dessine neuf jetons verts</text>
+      </speechtoken>
+      <speechtoken id="47593">
+        <file>french/frmatrix/47593.wav</file>
+        <text>Etienne achète onze pions bruns</text>
+      </speechtoken>
+      <speechtoken id="59128">
+        <file>french/frmatrix/59128.wav</file>
+        <text>Michel déplace deux crayons gris</text>
+      </speechtoken>
+      <speechtoken id="66781">
+        <file>french/frmatrix/66781.wav</file>
+        <text>Eugène reprend six rubans rouges</text>
+      </speechtoken>
+      <speechtoken id="74879">
+        <file>french/frmatrix/74879.wav</file>
+        <text>Félix demande cinq anneaux noirs</text>
+      </speechtoken>
+      <speechtoken id="85200">
+        <file>french/frmatrix/85200.wav</file>
+        <text>Charlotte ramène quinze classeurs jaunes</text>
+      </speechtoken>
+      <speechtoken id="98446">
+        <file>french/frmatrix/98446.wav</file>
+        <text>Sophie propose douze vélos roses</text>
+      </speechtoken>
+      <speechtoken id="08287">
+        <file>french/frmatrix/08287.wav</file>
+        <text>Jean-Luc propose quinze rubans blancs</text>
+      </speechtoken>
+      <speechtoken id="17522">
+        <file>french/frmatrix/17522.wav</file>
+        <text>Emile achète onze crayons verts</text>
+      </speechtoken>
+      <speechtoken id="22915">
+        <file>french/frmatrix/22915.wav</file>
+        <text>Agnès attrape sept livres mauves</text>
+      </speechtoken>
+      <speechtoken id="34158">
+        <file>french/frmatrix/34158.wav</file>
+        <text>Julien demande deux jetons gris</text>
+      </speechtoken>
+      <speechtoken id="45009">
+        <file>french/frmatrix/45009.wav</file>
+        <text>Etienne ramène trois classeurs noirs</text>
+      </speechtoken>
+      <speechtoken id="56670">
+        <file>french/frmatrix/56670.wav</file>
+        <text>Michel reprend neuf anneaux jaunes</text>
+      </speechtoken>
+      <speechtoken id="63864">
+        <file>french/frmatrix/63864.wav</file>
+        <text>Eugène dessine cinq ballons bleus</text>
+      </speechtoken>
+      <speechtoken id="79331">
+        <file>french/frmatrix/79331.wav</file>
+        <text>Félix déplace huit piquets rouges</text>
+      </speechtoken>
+      <speechtoken id="81743">
+        <file>french/frmatrix/81743.wav</file>
+        <text>Charlotte voudrait six vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="90496">
+        <file>french/frmatrix/90496.wav</file>
+        <text>Sophie ramasse douze pions roses</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_06">
+      <speechtoken id="08741">
+        <file>french/frmatrix/08741.wav</file>
+        <text>Jean-Luc propose six vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="11804">
+        <file>french/frmatrix/11804.wav</file>
+        <text>Emile voudrait cinq classeurs bleus</text>
+      </speechtoken>
+      <speechtoken id="20518">
+        <file>french/frmatrix/20518.wav</file>
+        <text>Agnès ramasse onze livres gris</text>
+      </speechtoken>
+      <speechtoken id="33136">
+        <file>french/frmatrix/33136.wav</file>
+        <text>Julien dessine deux piquets roses</text>
+      </speechtoken>
+      <speechtoken id="49927">
+        <file>french/frmatrix/49927.wav</file>
+        <text>Etienne déplace sept crayons blancs</text>
+      </speechtoken>
+      <speechtoken id="56682">
+        <file>french/frmatrix/56682.wav</file>
+        <text>Michel reprend neuf rubans verts</text>
+      </speechtoken>
+      <speechtoken id="67365">
+        <file>french/frmatrix/67365.wav</file>
+        <text>Eugène achète huit ballons mauves</text>
+      </speechtoken>
+      <speechtoken id="74293">
+        <file>french/frmatrix/74293.wav</file>
+        <text>Félix demande quinze pions bruns</text>
+      </speechtoken>
+      <speechtoken id="82450">
+        <file>french/frmatrix/82450.wav</file>
+        <text>Charlotte attrape douze jetons jaunes</text>
+      </speechtoken>
+      <speechtoken id="95079">
+        <file>french/frmatrix/95079.wav</file>
+        <text>Sophie ramène trois anneaux noirs</text>
+      </speechtoken>
+      <speechtoken id="00914">
+        <file>french/frmatrix/00914.wav</file>
+        <text>Jean-Luc ramasse sept livres bleus</text>
+      </speechtoken>
+      <speechtoken id="16150">
+        <file>french/frmatrix/16150.wav</file>
+        <text>Emile reprend deux jetons jaunes</text>
+      </speechtoken>
+      <speechtoken id="29639">
+        <file>french/frmatrix/29639.wav</file>
+        <text>Agnès déplace neuf piquets noirs</text>
+      </speechtoken>
+      <speechtoken id="32085">
+        <file>french/frmatrix/32085.wav</file>
+        <text>Julien attrape trois rubans mauves</text>
+      </speechtoken>
+      <speechtoken id="44398">
+        <file>french/frmatrix/44398.wav</file>
+        <text>Etienne demande huit pions gris</text>
+      </speechtoken>
+      <speechtoken id="51466">
+        <file>french/frmatrix/51466.wav</file>
+        <text>Michel voudrait douze ballons roses</text>
+      </speechtoken>
+      <speechtoken id="63572">
+        <file>french/frmatrix/63572.wav</file>
+        <text>Eugène dessine onze anneaux verts</text>
+      </speechtoken>
+      <speechtoken id="77841">
+        <file>french/frmatrix/77841.wav</file>
+        <text>Félix achète cinq vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="88203">
+        <file>french/frmatrix/88203.wav</file>
+        <text>Charlotte propose quinze classeurs bruns</text>
+      </speechtoken>
+      <speechtoken id="95727">
+        <file>french/frmatrix/95727.wav</file>
+        <text>Sophie ramène six crayons blancs</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_07">
+      <speechtoken id="06298">
+        <file>french/frmatrix/06298.wav</file>
+        <text>Jean-Luc reprend quinze pions gris</text>
+      </speechtoken>
+      <speechtoken id="19104">
+        <file>french/frmatrix/19104.wav</file>
+        <text>Emile déplace deux classeurs bleus</text>
+      </speechtoken>
+      <speechtoken id="22387">
+        <file>french/frmatrix/22387.wav</file>
+        <text>Agnès attrape huit rubans blancs</text>
+      </speechtoken>
+      <speechtoken id="38632">
+        <file>french/frmatrix/38632.wav</file>
+        <text>Julien propose neuf piquets verts</text>
+      </speechtoken>
+      <speechtoken id="43919">
+        <file>french/frmatrix/43919.wav</file>
+        <text>Etienne dessine sept livres noirs</text>
+      </speechtoken>
+      <speechtoken id="55726">
+        <file>french/frmatrix/55726.wav</file>
+        <text>Michel ramène six crayons roses</text>
+      </speechtoken>
+      <speechtoken id="61875">
+        <file>french/frmatrix/61875.wav</file>
+        <text>Eugène voudrait cinq anneaux mauves</text>
+      </speechtoken>
+      <speechtoken id="74563">
+        <file>french/frmatrix/74563.wav</file>
+        <text>Félix demande onze ballons bruns</text>
+      </speechtoken>
+      <speechtoken id="87450">
+        <file>french/frmatrix/87450.wav</file>
+        <text>Charlotte achète douze jetons jaunes</text>
+      </speechtoken>
+      <speechtoken id="90041">
+        <file>french/frmatrix/90041.wav</file>
+        <text>Sophie ramasse trois vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="05439">
+        <file>french/frmatrix/05439.wav</file>
+        <text>Jean-Luc ramène douze piquets noirs</text>
+      </speechtoken>
+      <speechtoken id="11320">
+        <file>french/frmatrix/11320.wav</file>
+        <text>Emile voudrait huit crayons jaunes</text>
+      </speechtoken>
+      <speechtoken id="23815">
+        <file>french/frmatrix/23815.wav</file>
+        <text>Agnès dessine cinq livres mauves</text>
+      </speechtoken>
+      <speechtoken id="32001">
+        <file>french/frmatrix/32001.wav</file>
+        <text>Julien attrape trois classeurs rouges</text>
+      </speechtoken>
+      <speechtoken id="49773">
+        <file>french/frmatrix/49773.wav</file>
+        <text>Etienne déplace six anneaux bruns</text>
+      </speechtoken>
+      <speechtoken id="54564">
+        <file>french/frmatrix/54564.wav</file>
+        <text>Michel demande onze ballons bleus</text>
+      </speechtoken>
+      <speechtoken id="66258">
+        <file>french/frmatrix/66258.wav</file>
+        <text>Eugène reprend quinze jetons gris</text>
+      </speechtoken>
+      <speechtoken id="78686">
+        <file>french/frmatrix/78686.wav</file>
+        <text>Félix propose neuf rubans roses</text>
+      </speechtoken>
+      <speechtoken id="80947">
+        <file>french/frmatrix/80947.wav</file>
+        <text>Charlotte ramasse sept vélos blancs</text>
+      </speechtoken>
+      <speechtoken id="97192">
+        <file>french/frmatrix/97192.wav</file>
+        <text>Sophie achète deux pions verts</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_08">
+      <speechtoken id="04971">
+        <file>french/frmatrix/04971.wav</file>
+        <text>Jean-Luc demande sept anneaux rouges</text>
+      </speechtoken>
+      <speechtoken id="16199">
+        <file>french/frmatrix/16199.wav</file>
+        <text>Emile reprend deux pions noirs</text>
+      </speechtoken>
+      <speechtoken id="28804">
+        <file>french/frmatrix/28804.wav</file>
+        <text>Agnès propose cinq classeurs bleus</text>
+      </speechtoken>
+      <speechtoken id="37212">
+        <file>french/frmatrix/37212.wav</file>
+        <text>Julien achète quinze livres verts</text>
+      </speechtoken>
+      <speechtoken id="41426">
+        <file>french/frmatrix/41426.wav</file>
+        <text>Etienne voudrait douze crayons roses</text>
+      </speechtoken>
+      <speechtoken id="53540">
+        <file>french/frmatrix/53540.wav</file>
+        <text>Michel dessine onze vélos jaunes</text>
+      </speechtoken>
+      <speechtoken id="65737">
+        <file>french/frmatrix/65737.wav</file>
+        <text>Eugène ramène six piquets blancs</text>
+      </speechtoken>
+      <speechtoken id="72068">
+        <file>french/frmatrix/72068.wav</file>
+        <text>Félix attrape trois ballons gris</text>
+      </speechtoken>
+      <speechtoken id="80655">
+        <file>french/frmatrix/80655.wav</file>
+        <text>Charlotte ramasse neuf jetons mauves</text>
+      </speechtoken>
+      <speechtoken id="99383">
+        <file>french/frmatrix/99383.wav</file>
+        <text>Sophie déplace huit rubans bruns</text>
+      </speechtoken>
+      <speechtoken id="04564">
+        <file>french/frmatrix/04564.wav</file>
+        <text>Jean-Luc demande onze ballons bleus</text>
+      </speechtoken>
+      <speechtoken id="10333">
+        <file>french/frmatrix/10333.wav</file>
+        <text>Emile ramasse huit piquets bruns</text>
+      </speechtoken>
+      <speechtoken id="26058">
+        <file>french/frmatrix/26058.wav</file>
+        <text>Agnès reprend trois jetons gris</text>
+      </speechtoken>
+      <speechtoken id="39609">
+        <file>french/frmatrix/39609.wav</file>
+        <text>Julien déplace neuf classeurs noirs</text>
+      </speechtoken>
+      <speechtoken id="41122">
+        <file>french/frmatrix/41122.wav</file>
+        <text>Etienne voudrait deux crayons verts</text>
+      </speechtoken>
+      <speechtoken id="58940">
+        <file>french/frmatrix/58940.wav</file>
+        <text>Michel propose sept vélos jaunes</text>
+      </speechtoken>
+      <speechtoken id="67481">
+        <file>french/frmatrix/67481.wav</file>
+        <text>Eugène achète douze rubans rouges</text>
+      </speechtoken>
+      <speechtoken id="75876">
+        <file>french/frmatrix/75876.wav</file>
+        <text>Félix ramène cinq anneaux roses</text>
+      </speechtoken>
+      <speechtoken id="82715">
+        <file>french/frmatrix/82715.wav</file>
+        <text>Charlotte attrape six livres mauves</text>
+      </speechtoken>
+      <speechtoken id="93297">
+        <file>french/frmatrix/93297.wav</file>
+        <text>Sophie dessine quinze pions blancs</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_09">
+      <speechtoken id="07823">
+        <file>french/frmatrix/07823.wav</file>
+        <text>Jean-Luc achète cinq crayons bruns</text>
+      </speechtoken>
+      <speechtoken id="10275">
+        <file>french/frmatrix/10275.wav</file>
+        <text>Emile ramasse quinze anneaux mauves</text>
+      </speechtoken>
+      <speechtoken id="28987">
+        <file>french/frmatrix/28987.wav</file>
+        <text>Agnès propose sept rubans blancs</text>
+      </speechtoken>
+      <speechtoken id="35594">
+        <file>french/frmatrix/35594.wav</file>
+        <text>Julien ramène onze pions bleus</text>
+      </speechtoken>
+      <speechtoken id="49132">
+        <file>french/frmatrix/49132.wav</file>
+        <text>Etienne déplace deux piquets verts</text>
+      </speechtoken>
+      <speechtoken id="51618">
+        <file>french/frmatrix/51618.wav</file>
+        <text>Michel voudrait neuf livres gris</text>
+      </speechtoken>
+      <speechtoken id="62341">
+        <file>french/frmatrix/62341.wav</file>
+        <text>Eugène attrape huit vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="76069">
+        <file>french/frmatrix/76069.wav</file>
+        <text>Félix reprend trois ballons noirs</text>
+      </speechtoken>
+      <speechtoken id="84450">
+        <file>french/frmatrix/84450.wav</file>
+        <text>Charlotte demande douze jetons jaunes</text>
+      </speechtoken>
+      <speechtoken id="93706">
+        <file>french/frmatrix/93706.wav</file>
+        <text>Sophie dessine six classeurs roses</text>
+      </speechtoken>
+      <speechtoken id="00200">
+        <file>french/frmatrix/00200.wav</file>
+        <text>Jean-Luc ramasse quinze classeurs jaunes</text>
+      </speechtoken>
+      <speechtoken id="16457">
+        <file>french/frmatrix/16457.wav</file>
+        <text>Emile reprend douze jetons blancs</text>
+      </speechtoken>
+      <speechtoken id="22743">
+        <file>french/frmatrix/22743.wav</file>
+        <text>Agnès attrape six vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="35635">
+        <file>french/frmatrix/35635.wav</file>
+        <text>Julien ramène neuf piquets mauves</text>
+      </speechtoken>
+      <speechtoken id="49326">
+        <file>french/frmatrix/49326.wav</file>
+        <text>Etienne déplace huit crayons roses</text>
+      </speechtoken>
+      <speechtoken id="53561">
+        <file>french/frmatrix/53561.wav</file>
+        <text>Michel dessine onze ballons rouges</text>
+      </speechtoken>
+      <speechtoken id="61819">
+        <file>french/frmatrix/61819.wav</file>
+        <text>Eugène voudrait cinq livres noirs</text>
+      </speechtoken>
+      <speechtoken id="78988">
+        <file>french/frmatrix/78988.wav</file>
+        <text>Félix propose sept rubans gris</text>
+      </speechtoken>
+      <speechtoken id="84172">
+        <file>french/frmatrix/84172.wav</file>
+        <text>Charlotte demande deux anneaux verts</text>
+      </speechtoken>
+      <speechtoken id="97094">
+        <file>french/frmatrix/97094.wav</file>
+        <text>Sophie achète trois pions bleus</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_10">
+      <speechtoken id="04683">
+        <file>french/frmatrix/04683.wav</file>
+        <text>Jean-Luc demande neuf rubans bruns</text>
+      </speechtoken>
+      <speechtoken id="12502">
+        <file>french/frmatrix/12502.wav</file>
+        <text>Emile attrape onze classeurs verts</text>
+      </speechtoken>
+      <speechtoken id="28060">
+        <file>french/frmatrix/28060.wav</file>
+        <text>Agnès propose trois ballons jaunes</text>
+      </speechtoken>
+      <speechtoken id="33259">
+        <file>french/frmatrix/33259.wav</file>
+        <text>Julien dessine quinze jetons noirs</text>
+      </speechtoken>
+      <speechtoken id="41144">
+        <file>french/frmatrix/41144.wav</file>
+        <text>Etienne voudrait deux vélos bleus</text>
+      </speechtoken>
+      <speechtoken id="56997">
+        <file>french/frmatrix/56997.wav</file>
+        <text>Michel reprend sept pions blancs</text>
+      </speechtoken>
+      <speechtoken id="67815">
+        <file>french/frmatrix/67815.wav</file>
+        <text>Eugène achète cinq livres mauves</text>
+      </speechtoken>
+      <speechtoken id="70438">
+        <file>french/frmatrix/70438.wav</file>
+        <text>Félix ramasse douze piquets gris</text>
+      </speechtoken>
+      <speechtoken id="89721">
+        <file>french/frmatrix/89721.wav</file>
+        <text>Charlotte déplace six crayons rouges</text>
+      </speechtoken>
+      <speechtoken id="95376">
+        <file>french/frmatrix/95376.wav</file>
+        <text>Sophie ramène huit anneaux roses</text>
+      </speechtoken>
+      <speechtoken id="07247">
+        <file>french/frmatrix/07247.wav</file>
+        <text>Jean-Luc achète quinze vélos blancs</text>
+      </speechtoken>
+      <speechtoken id="13435">
+        <file>french/frmatrix/13435.wav</file>
+        <text>Emile dessine douze piquets mauves</text>
+      </speechtoken>
+      <speechtoken id="20073">
+        <file>french/frmatrix/20073.wav</file>
+        <text>Agnès ramasse trois anneaux bruns</text>
+      </speechtoken>
+      <speechtoken id="31124">
+        <file>french/frmatrix/31124.wav</file>
+        <text>Julien voudrait deux crayons bleus</text>
+      </speechtoken>
+      <speechtoken id="45519">
+        <file>french/frmatrix/45519.wav</file>
+        <text>Etienne ramène onze livres noirs</text>
+      </speechtoken>
+      <speechtoken id="54398">
+        <file>french/frmatrix/54398.wav</file>
+        <text>Michel demande huit pions gris</text>
+      </speechtoken>
+      <speechtoken id="68801">
+        <file>french/frmatrix/68801.wav</file>
+        <text>Eugène propose cinq classeurs rouges</text>
+      </speechtoken>
+      <speechtoken id="76966">
+        <file>french/frmatrix/76966.wav</file>
+        <text>Félix reprend sept ballons roses</text>
+      </speechtoken>
+      <speechtoken id="82782">
+        <file>french/frmatrix/82782.wav</file>
+        <text>Charlotte attrape six rubans verts</text>
+      </speechtoken>
+      <speechtoken id="99650">
+        <file>french/frmatrix/99650.wav</file>
+        <text>Sophie déplace neuf jetons jaunes</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_11">
+      <speechtoken id="07015">
+        <file>french/frmatrix/07015.wav</file>
+        <text>Jean-Luc achète trois livres mauves</text>
+      </speechtoken>
+      <speechtoken id="15139">
+        <file>french/frmatrix/15139.wav</file>
+        <text>Emile ramène deux piquets noirs</text>
+      </speechtoken>
+      <speechtoken id="26867">
+        <file>french/frmatrix/26867.wav</file>
+        <text>Agnès reprend cinq ballons blancs</text>
+      </speechtoken>
+      <speechtoken id="32228">
+        <file>french/frmatrix/32228.wav</file>
+        <text>Julien attrape quinze crayons gris</text>
+      </speechtoken>
+      <speechtoken id="48901">
+        <file>french/frmatrix/48901.wav</file>
+        <text>Etienne propose sept classeurs rouges</text>
+      </speechtoken>
+      <speechtoken id="51386">
+        <file>french/frmatrix/51386.wav</file>
+        <text>Michel voudrait huit rubans roses</text>
+      </speechtoken>
+      <speechtoken id="69570">
+        <file>french/frmatrix/69570.wav</file>
+        <text>Eugène déplace onze anneaux jaunes</text>
+      </speechtoken>
+      <speechtoken id="74743">
+        <file>french/frmatrix/74743.wav</file>
+        <text>Félix demande six vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="80494">
+        <file>french/frmatrix/80494.wav</file>
+        <text>Charlotte ramasse douze pions bleus</text>
+      </speechtoken>
+      <speechtoken id="93652">
+        <file>french/frmatrix/93652.wav</file>
+        <text>Sophie dessine neuf jetons verts</text>
+      </speechtoken>
+      <speechtoken id="07122">
+        <file>french/frmatrix/07122.wav</file>
+        <text>Jean-Luc achète deux crayons verts</text>
+      </speechtoken>
+      <speechtoken id="11886">
+        <file>french/frmatrix/11886.wav</file>
+        <text>Emile voudrait cinq rubans roses</text>
+      </speechtoken>
+      <speechtoken id="24971">
+        <file>french/frmatrix/24971.wav</file>
+        <text>Agnès demande sept anneaux rouges</text>
+      </speechtoken>
+      <speechtoken id="38433">
+        <file>french/frmatrix/38433.wav</file>
+        <text>Julien propose douze piquets bruns</text>
+      </speechtoken>
+      <speechtoken id="49618">
+        <file>french/frmatrix/49618.wav</file>
+        <text>Etienne déplace neuf livres gris</text>
+      </speechtoken>
+      <speechtoken id="53057">
+        <file>french/frmatrix/53057.wav</file>
+        <text>Michel dessine trois jetons blancs</text>
+      </speechtoken>
+      <speechtoken id="62209">
+        <file>french/frmatrix/62209.wav</file>
+        <text>Eugène attrape quinze classeurs noirs</text>
+      </speechtoken>
+      <speechtoken id="70745">
+        <file>french/frmatrix/70745.wav</file>
+        <text>Félix ramasse six vélos mauves</text>
+      </speechtoken>
+      <speechtoken id="86360">
+        <file>french/frmatrix/86360.wav</file>
+        <text>Charlotte reprend huit ballons jaunes</text>
+      </speechtoken>
+      <speechtoken id="95594">
+        <file>french/frmatrix/95594.wav</file>
+        <text>Sophie ramène onze pions bleus</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_12">
+      <speechtoken id="04707">
+        <file>french/frmatrix/04707.wav</file>
+        <text>Jean-Luc demande six classeurs blancs</text>
+      </speechtoken>
+      <speechtoken id="17894">
+        <file>french/frmatrix/17894.wav</file>
+        <text>Emile achète cinq pions bleus</text>
+      </speechtoken>
+      <speechtoken id="25156">
+        <file>french/frmatrix/25156.wav</file>
+        <text>Agnès ramène deux jetons roses</text>
+      </speechtoken>
+      <speechtoken id="30312">
+        <file>french/frmatrix/30312.wav</file>
+        <text>Julien ramasse huit livres verts</text>
+      </speechtoken>
+      <speechtoken id="49261">
+        <file>french/frmatrix/49261.wav</file>
+        <text>Etienne déplace quinze ballons rouges</text>
+      </speechtoken>
+      <speechtoken id="53578">
+        <file>french/frmatrix/53578.wav</file>
+        <text>Michel dessine onze anneaux gris</text>
+      </speechtoken>
+      <speechtoken id="66625">
+        <file>french/frmatrix/66625.wav</file>
+        <text>Eugène reprend neuf crayons mauves</text>
+      </speechtoken>
+      <speechtoken id="71930">
+        <file>french/frmatrix/71930.wav</file>
+        <text>Félix voudrait sept piquets jaunes</text>
+      </speechtoken>
+      <speechtoken id="88043">
+        <file>french/frmatrix/88043.wav</file>
+        <text>Charlotte propose trois vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="92489">
+        <file>french/frmatrix/92489.wav</file>
+        <text>Sophie attrape douze rubans noirs</text>
+      </speechtoken>
+      <speechtoken id="02397">
+        <file>french/frmatrix/02397.wav</file>
+        <text>Jean-Luc attrape huit pions blancs</text>
+      </speechtoken>
+      <speechtoken id="16024">
+        <file>french/frmatrix/16024.wav</file>
+        <text>Emile reprend trois crayons bleus</text>
+      </speechtoken>
+      <speechtoken id="24542">
+        <file>french/frmatrix/24542.wav</file>
+        <text>Agnès demande onze vélos verts</text>
+      </speechtoken>
+      <speechtoken id="30108">
+        <file>french/frmatrix/30108.wav</file>
+        <text>Julien ramasse deux classeurs gris</text>
+      </speechtoken>
+      <speechtoken id="48759">
+        <file>french/frmatrix/48759.wav</file>
+        <text>Etienne propose six jetons noirs</text>
+      </speechtoken>
+      <speechtoken id="55836">
+        <file>french/frmatrix/55836.wav</file>
+        <text>Michel ramène cinq piquets roses</text>
+      </speechtoken>
+      <speechtoken id="63473">
+        <file>french/frmatrix/63473.wav</file>
+        <text>Eugène dessine douze anneaux bruns</text>
+      </speechtoken>
+      <speechtoken id="79961">
+        <file>french/frmatrix/79961.wav</file>
+        <text>Félix déplace sept ballons rouges</text>
+      </speechtoken>
+      <speechtoken id="87615">
+        <file>french/frmatrix/87615.wav</file>
+        <text>Charlotte achète neuf livres mauves</text>
+      </speechtoken>
+      <speechtoken id="91280">
+        <file>french/frmatrix/91280.wav</file>
+        <text>Sophie voudrait quinze rubans jaunes</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_13">
+      <speechtoken id="06307">
+        <file>french/frmatrix/06307.wav</file>
+        <text>Jean-Luc reprend huit classeurs blancs</text>
+      </speechtoken>
+      <speechtoken id="19935">
+        <file>french/frmatrix/19935.wav</file>
+        <text>Emile déplace sept piquets mauves</text>
+      </speechtoken>
+      <speechtoken id="22289">
+        <file>french/frmatrix/22289.wav</file>
+        <text>Agnès attrape quinze rubans noirs</text>
+      </speechtoken>
+      <speechtoken id="35462">
+        <file>french/frmatrix/35462.wav</file>
+        <text>Julien ramène douze ballons verts</text>
+      </speechtoken>
+      <speechtoken id="44826">
+        <file>french/frmatrix/44826.wav</file>
+        <text>Etienne demande cinq crayons roses</text>
+      </speechtoken>
+      <speechtoken id="58694">
+        <file>french/frmatrix/58694.wav</file>
+        <text>Michel propose neuf pions bleus</text>
+      </speechtoken>
+      <speechtoken id="67578">
+        <file>french/frmatrix/67578.wav</file>
+        <text>Eugène achète onze anneaux gris</text>
+      </speechtoken>
+      <speechtoken id="70741">
+        <file>french/frmatrix/70741.wav</file>
+        <text>Félix ramasse six vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="83113">
+        <file>french/frmatrix/83113.wav</file>
+        <text>Charlotte dessine deux livres bruns</text>
+      </speechtoken>
+      <speechtoken id="91050">
+        <file>french/frmatrix/91050.wav</file>
+        <text>Sophie voudrait trois jetons jaunes</text>
+      </speechtoken>
+      <speechtoken id="09137">
+        <file>french/frmatrix/09137.wav</file>
+        <text>Jean-Luc déplace deux piquets blancs</text>
+      </speechtoken>
+      <speechtoken id="18505">
+        <file>french/frmatrix/18505.wav</file>
+        <text>Emile propose onze classeurs mauves</text>
+      </speechtoken>
+      <speechtoken id="24253">
+        <file>french/frmatrix/24253.wav</file>
+        <text>Agnès demande quinze jetons bruns</text>
+      </speechtoken>
+      <speechtoken id="36720">
+        <file>french/frmatrix/36720.wav</file>
+        <text>Julien reprend six crayons jaunes</text>
+      </speechtoken>
+      <speechtoken id="42871">
+        <file>french/frmatrix/42871.wav</file>
+        <text>Etienne attrape cinq anneaux rouges</text>
+      </speechtoken>
+      <speechtoken id="51369">
+        <file>french/frmatrix/51369.wav</file>
+        <text>Michel voudrait huit ballons noirs</text>
+      </speechtoken>
+      <speechtoken id="63946">
+        <file>french/frmatrix/63946.wav</file>
+        <text>Eugène dessine sept vélos roses</text>
+      </speechtoken>
+      <speechtoken id="75098">
+        <file>french/frmatrix/75098.wav</file>
+        <text>Félix ramène trois pions gris</text>
+      </speechtoken>
+      <speechtoken id="80684">
+        <file>french/frmatrix/80684.wav</file>
+        <text>Charlotte ramasse neuf rubans bleus</text>
+      </speechtoken>
+      <speechtoken id="97412">
+        <file>french/frmatrix/97412.wav</file>
+        <text>Sophie achète douze livres verts</text>
+      </speechtoken>
+    </list>
+    <list id="lijst20_14">
+      <speechtoken id="05213">
+        <file>french/frmatrix/05213.wav</file>
+        <text>Jean-Luc ramène quinze livres bruns</text>
+      </speechtoken>
+      <speechtoken id="11897">
+        <file>french/frmatrix/11897.wav</file>
+        <text>Emile voudrait cinq pions blancs</text>
+      </speechtoken>
+      <speechtoken id="20075">
+        <file>french/frmatrix/20075.wav</file>
+        <text>Agnès ramasse trois anneaux mauves</text>
+      </speechtoken>
+      <speechtoken id="32162">
+        <file>french/frmatrix/32162.wav</file>
+        <text>Julien attrape deux ballons verts</text>
+      </speechtoken>
+      <speechtoken id="43721">
+        <file>french/frmatrix/43721.wav</file>
+        <text>Etienne dessine six crayons rouges</text>
+      </speechtoken>
+      <speechtoken id="59358">
+        <file>french/frmatrix/59358.wav</file>
+        <text>Michel déplace huit jetons gris</text>
+      </speechtoken>
+      <speechtoken id="68404">
+        <file>french/frmatrix/68404.wav</file>
+        <text>Eugène propose douze classeurs bleus</text>
+      </speechtoken>
+      <speechtoken id="76689">
+        <file>french/frmatrix/76689.wav</file>
+        <text>Félix reprend neuf rubans noirs</text>
+      </speechtoken>
+      <speechtoken id="84930">
+        <file>french/frmatrix/84930.wav</file>
+        <text>Charlotte demande sept piquets jaunes</text>
+      </speechtoken>
+      <speechtoken id="97546">
+        <file>french/frmatrix/97546.wav</file>
+        <text>Sophie achète onze vélos roses</text>
+      </speechtoken>
+      <speechtoken id="01786">
+        <file>french/frmatrix/01786.wav</file>
+        <text>Jean-Luc voudrait six rubans roses</text>
+      </speechtoken>
+      <speechtoken id="17852">
+        <file>french/frmatrix/17852.wav</file>
+        <text>Emile achète cinq jetons verts</text>
+      </speechtoken>
+      <speechtoken id="29968">
+        <file>french/frmatrix/29968.wav</file>
+        <text>Agnès déplace sept ballons gris</text>
+      </speechtoken>
+      <speechtoken id="32144">
+        <file>french/frmatrix/32144.wav</file>
+        <text>Julien attrape deux vélos bleus</text>
+      </speechtoken>
+      <speechtoken id="44527">
+        <file>french/frmatrix/44527.wav</file>
+        <text>Etienne demande onze crayons blancs</text>
+      </speechtoken>
+      <speechtoken id="55309">
+        <file>french/frmatrix/55309.wav</file>
+        <text>Michel ramène huit classeurs noirs</text>
+      </speechtoken>
+      <speechtoken id="63673">
+        <file>french/frmatrix/63673.wav</file>
+        <text>Eugène dessine neuf anneaux bruns</text>
+      </speechtoken>
+      <speechtoken id="70431">
+        <file>french/frmatrix/70431.wav</file>
+        <text>Félix ramasse douze piquets rouges</text>
+      </speechtoken>
+      <speechtoken id="88215">
+        <file>french/frmatrix/88215.wav</file>
+        <text>Charlotte propose quinze livres mauves</text>
+      </speechtoken>
+      <speechtoken id="96090">
+        <file>french/frmatrix/96090.wav</file>
+        <text>Sophie reprend trois pions jaunes</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_01">
+      <speechtoken id="03663">
+        <file>french/frmatrix/03663.wav</file>
+        <text>Jean-Luc dessine neuf ballons bruns</text>
+      </speechtoken>
+      <speechtoken id="12977">
+        <file>french/frmatrix/12977.wav</file>
+        <text>Emile attrape sept anneaux blancs</text>
+      </speechtoken>
+      <speechtoken id="20811">
+        <file>french/frmatrix/20811.wav</file>
+        <text>Agnès ramasse cinq livres rouges</text>
+      </speechtoken>
+      <speechtoken id="36222">
+        <file>french/frmatrix/36222.wav</file>
+        <text>Julien reprend quinze crayons verts</text>
+      </speechtoken>
+      <speechtoken id="47185">
+        <file>french/frmatrix/47185.wav</file>
+        <text>Etienne achète deux rubans mauves</text>
+      </speechtoken>
+      <speechtoken id="59439">
+        <file>french/frmatrix/59439.wav</file>
+        <text>Michel déplace douze piquets noirs</text>
+      </speechtoken>
+      <speechtoken id="68054">
+        <file>french/frmatrix/68054.wav</file>
+        <text>Eugène propose trois jetons bleus</text>
+      </speechtoken>
+      <speechtoken id="71746">
+        <file>french/frmatrix/71746.wav</file>
+        <text>Félix voudrait six vélos roses</text>
+      </speechtoken>
+      <speechtoken id="85500">
+        <file>french/frmatrix/85500.wav</file>
+        <text>Charlotte ramène onze classeurs jaunes</text>
+      </speechtoken>
+      <speechtoken id="94398">
+        <file>french/frmatrix/94398.wav</file>
+        <text>Sophie demande huit pions gris</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_02">
+      <speechtoken id="07601">
+        <file>french/frmatrix/07601.wav</file>
+        <text>Jean-Luc achète neuf classeurs rouges</text>
+      </speechtoken>
+      <speechtoken id="13777">
+        <file>french/frmatrix/13777.wav</file>
+        <text>Emile dessine six anneaux blancs</text>
+      </speechtoken>
+      <speechtoken id="25334">
+        <file>french/frmatrix/25334.wav</file>
+        <text>Agnès ramène huit piquets bleus</text>
+      </speechtoken>
+      <speechtoken id="38069">
+        <file>french/frmatrix/38069.wav</file>
+        <text>Julien propose trois ballons noirs</text>
+      </speechtoken>
+      <speechtoken id="44913">
+        <file>french/frmatrix/44913.wav</file>
+        <text>Etienne demande sept livres bruns</text>
+      </speechtoken>
+      <speechtoken id="59858">
+        <file>french/frmatrix/59858.wav</file>
+        <text>Michel déplace cinq jetons gris</text>
+      </speechtoken>
+      <speechtoken id="66225">
+        <file>french/frmatrix/66225.wav</file>
+        <text>Eugène reprend quinze crayons mauves</text>
+      </speechtoken>
+      <speechtoken id="70446">
+        <file>french/frmatrix/70446.wav</file>
+        <text>Félix ramasse douze vélos roses</text>
+      </speechtoken>
+      <speechtoken id="81592">
+        <file>french/frmatrix/81592.wav</file>
+        <text>Charlotte voudrait onze pions verts</text>
+      </speechtoken>
+      <speechtoken id="92180">
+        <file>french/frmatrix/92180.wav</file>
+        <text>Sophie attrape deux rubans jaunes</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_03">
+      <speechtoken id="01886">
+        <file>french/frmatrix/01886.wav</file>
+        <text>Jean-Luc voudrait cinq rubans roses</text>
+      </speechtoken>
+      <speechtoken id="19043">
+        <file>french/frmatrix/19043.wav</file>
+        <text>Emile déplace trois vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="28465">
+        <file>french/frmatrix/28465.wav</file>
+        <text>Agnès propose douze ballons mauves</text>
+      </speechtoken>
+      <speechtoken id="32909">
+        <file>french/frmatrix/32909.wav</file>
+        <text>Julien attrape sept classeurs noirs</text>
+      </speechtoken>
+      <speechtoken id="40791">
+        <file>french/frmatrix/40791.wav</file>
+        <text>Etienne ramasse six pions rouges</text>
+      </speechtoken>
+      <speechtoken id="54234">
+        <file>french/frmatrix/54234.wav</file>
+        <text>Michel demande quinze piquets bleus</text>
+      </speechtoken>
+      <speechtoken id="63317">
+        <file>french/frmatrix/63317.wav</file>
+        <text>Eugène dessine huit livres blancs</text>
+      </speechtoken>
+      <speechtoken id="76620">
+        <file>french/frmatrix/76620.wav</file>
+        <text>Félix reprend neuf crayons jaunes</text>
+      </speechtoken>
+      <speechtoken id="87152">
+        <file>french/frmatrix/87152.wav</file>
+        <text>Charlotte achète deux jetons verts</text>
+      </speechtoken>
+      <speechtoken id="95578">
+        <file>french/frmatrix/95578.wav</file>
+        <text>Sophie ramène onze anneaux gris</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_04">
+      <speechtoken id="01626">
+        <file>french/frmatrix/01626.wav</file>
+        <text>Jean-Luc voudrait neuf crayons roses</text>
+      </speechtoken>
+      <speechtoken id="19079">
+        <file>french/frmatrix/19079.wav</file>
+        <text>Emile déplace trois anneaux noirs</text>
+      </speechtoken>
+      <speechtoken id="25430">
+        <file>french/frmatrix/25430.wav</file>
+        <text>Agnès ramène douze piquets jaunes</text>
+      </speechtoken>
+      <speechtoken id="32891">
+        <file>french/frmatrix/32891.wav</file>
+        <text>Julien attrape cinq pions rouges</text>
+      </speechtoken>
+      <speechtoken id="44368">
+        <file>french/frmatrix/44368.wav</file>
+        <text>Etienne demande huit ballons gris</text>
+      </speechtoken>
+      <speechtoken id="50952">
+        <file>french/frmatrix/50952.wav</file>
+        <text>Michel ramasse sept jetons verts</text>
+      </speechtoken>
+      <speechtoken id="67143">
+        <file>french/frmatrix/67143.wav</file>
+        <text>Eugène achète deux vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="78704">
+        <file>french/frmatrix/78704.wav</file>
+        <text>Félix propose six classeurs bleus</text>
+      </speechtoken>
+      <speechtoken id="86215">
+        <file>french/frmatrix/86215.wav</file>
+        <text>Charlotte reprend quinze livres mauves</text>
+      </speechtoken>
+      <speechtoken id="93587">
+        <file>french/frmatrix/93587.wav</file>
+        <text>Sophie dessine onze rubans blancs</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_05">
+      <speechtoken id="03406">
+        <file>french/frmatrix/03406.wav</file>
+        <text>Jean-Luc dessine douze classeurs roses</text>
+      </speechtoken>
+      <speechtoken id="14522">
+        <file>french/frmatrix/14522.wav</file>
+        <text>Emile demande onze crayons verts</text>
+      </speechtoken>
+      <speechtoken id="25369">
+        <file>french/frmatrix/25369.wav</file>
+        <text>Agnès ramène huit ballons noirs</text>
+      </speechtoken>
+      <speechtoken id="31644">
+        <file>french/frmatrix/31644.wav</file>
+        <text>Julien voudrait neuf vélos bleus</text>
+      </speechtoken>
+      <speechtoken id="49798">
+        <file>french/frmatrix/49798.wav</file>
+        <text>Etienne déplace six pions gris</text>
+      </speechtoken>
+      <speechtoken id="58871">
+        <file>french/frmatrix/58871.wav</file>
+        <text>Michel propose cinq anneaux rouges</text>
+      </speechtoken>
+      <speechtoken id="66257">
+        <file>french/frmatrix/66257.wav</file>
+        <text>Eugène reprend quinze jetons blancs</text>
+      </speechtoken>
+      <speechtoken id="72935">
+        <file>french/frmatrix/72935.wav</file>
+        <text>Félix attrape sept piquets mauves</text>
+      </speechtoken>
+      <speechtoken id="80113">
+        <file>french/frmatrix/80113.wav</file>
+        <text>Charlotte ramasse deux livres bruns</text>
+      </speechtoken>
+      <speechtoken id="97080">
+        <file>french/frmatrix/97080.wav</file>
+        <text>Sophie achète trois rubans jaunes</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_06">
+      <speechtoken id="00456">
+        <file>french/frmatrix/00456.wav</file>
+        <text>Jean-Luc ramasse douze jetons roses</text>
+      </speechtoken>
+      <speechtoken id="18210">
+        <file>french/frmatrix/18210.wav</file>
+        <text>Emile propose quinze livres jaunes</text>
+      </speechtoken>
+      <speechtoken id="27128">
+        <file>french/frmatrix/27128.wav</file>
+        <text>Agnès achète deux crayons gris</text>
+      </speechtoken>
+      <speechtoken id="33877">
+        <file>french/frmatrix/33877.wav</file>
+        <text>Julien dessine cinq anneaux blancs</text>
+      </speechtoken>
+      <speechtoken id="41649">
+        <file>french/frmatrix/41649.wav</file>
+        <text>Etienne voudrait neuf vélos noirs</text>
+      </speechtoken>
+      <speechtoken id="55992">
+        <file>french/frmatrix/55992.wav</file>
+        <text>Michel ramène sept pions verts</text>
+      </speechtoken>
+      <speechtoken id="69331">
+        <file>french/frmatrix/69331.wav</file>
+        <text>Eugène déplace huit piquets rouges</text>
+      </speechtoken>
+      <speechtoken id="76564">
+        <file>french/frmatrix/76564.wav</file>
+        <text>Félix reprend onze ballons bleus</text>
+      </speechtoken>
+      <speechtoken id="84705">
+        <file>french/frmatrix/84705.wav</file>
+        <text>Charlotte demande six classeurs mauves</text>
+      </speechtoken>
+      <speechtoken id="92083">
+        <file>french/frmatrix/92083.wav</file>
+        <text>Sophie attrape trois rubans bruns</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_07">
+      <speechtoken id="04260">
+        <file>french/frmatrix/04260.wav</file>
+        <text>Jean-Luc demande quinze ballons jaunes</text>
+      </speechtoken>
+      <speechtoken id="11387">
+        <file>french/frmatrix/11387.wav</file>
+        <text>Emile voudrait huit rubans blancs</text>
+      </speechtoken>
+      <speechtoken id="22819">
+        <file>french/frmatrix/22819.wav</file>
+        <text>Agnès attrape cinq livres noirs</text>
+      </speechtoken>
+      <speechtoken id="35732">
+        <file>french/frmatrix/35732.wav</file>
+        <text>Julien ramène six piquets verts</text>
+      </speechtoken>
+      <speechtoken id="48175">
+        <file>french/frmatrix/48175.wav</file>
+        <text>Etienne propose deux anneaux mauves</text>
+      </speechtoken>
+      <speechtoken id="57641">
+        <file>french/frmatrix/57641.wav</file>
+        <text>Michel achète neuf vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="66928">
+        <file>french/frmatrix/66928.wav</file>
+        <text>Eugène reprend sept crayons gris</text>
+      </speechtoken>
+      <speechtoken id="70096">
+        <file>french/frmatrix/70096.wav</file>
+        <text>Félix ramasse trois pions roses</text>
+      </speechtoken>
+      <speechtoken id="83503">
+        <file>french/frmatrix/83503.wav</file>
+        <text>Charlotte dessine onze classeurs bruns</text>
+      </speechtoken>
+      <speechtoken id="99454">
+        <file>french/frmatrix/99454.wav</file>
+        <text>Sophie déplace douze jetons bleus</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_08">
+      <speechtoken id="07222">
+        <file>french/frmatrix/07222.wav</file>
+        <text>Jean-Luc achète quinze crayons verts</text>
+      </speechtoken>
+      <speechtoken id="14800">
+        <file>french/frmatrix/14800.wav</file>
+        <text>Emile demande cinq classeurs jaunes</text>
+      </speechtoken>
+      <speechtoken id="23081">
+        <file>french/frmatrix/23081.wav</file>
+        <text>Agnès dessine trois rubans rouges</text>
+      </speechtoken>
+      <speechtoken id="38469">
+        <file>french/frmatrix/38469.wav</file>
+        <text>Julien propose douze ballons noirs</text>
+      </speechtoken>
+      <speechtoken id="40993">
+        <file>french/frmatrix/40993.wav</file>
+        <text>Etienne ramasse sept pions bruns</text>
+      </speechtoken>
+      <speechtoken id="55174">
+        <file>french/frmatrix/55174.wav</file>
+        <text>Michel ramène deux anneaux bleus</text>
+      </speechtoken>
+      <speechtoken id="61755">
+        <file>french/frmatrix/61755.wav</file>
+        <text>Eugène voudrait six jetons mauves</text>
+      </speechtoken>
+      <speechtoken id="76346">
+        <file>french/frmatrix/76346.wav</file>
+        <text>Félix reprend huit vélos roses</text>
+      </speechtoken>
+      <speechtoken id="89637">
+        <file>french/frmatrix/89637.wav</file>
+        <text>Charlotte déplace neuf piquets blancs</text>
+      </speechtoken>
+      <speechtoken id="92518">
+        <file>french/frmatrix/92518.wav</file>
+        <text>Sophie attrape onze livres gris</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_09">
+      <speechtoken id="02337">
+        <file>french/frmatrix/02337.wav</file>
+        <text>Jean-Luc attrape huit piquets blancs</text>
+      </speechtoken>
+      <speechtoken id="11965">
+        <file>french/frmatrix/11965.wav</file>
+        <text>Emile voudrait sept ballons mauves</text>
+      </speechtoken>
+      <speechtoken id="20014">
+        <file>french/frmatrix/20014.wav</file>
+        <text>Agnès ramasse trois livres bleus</text>
+      </speechtoken>
+      <speechtoken id="33652">
+        <file>french/frmatrix/33652.wav</file>
+        <text>Julien dessine neuf jetons verts</text>
+      </speechtoken>
+      <speechtoken id="47593">
+        <file>french/frmatrix/47593.wav</file>
+        <text>Etienne achète onze pions bruns</text>
+      </speechtoken>
+      <speechtoken id="59128">
+        <file>french/frmatrix/59128.wav</file>
+        <text>Michel déplace deux crayons gris</text>
+      </speechtoken>
+      <speechtoken id="66781">
+        <file>french/frmatrix/66781.wav</file>
+        <text>Eugène reprend six rubans rouges</text>
+      </speechtoken>
+      <speechtoken id="74879">
+        <file>french/frmatrix/74879.wav</file>
+        <text>Félix demande cinq anneaux noirs</text>
+      </speechtoken>
+      <speechtoken id="85200">
+        <file>french/frmatrix/85200.wav</file>
+        <text>Charlotte ramène quinze classeurs jaunes</text>
+      </speechtoken>
+      <speechtoken id="98446">
+        <file>french/frmatrix/98446.wav</file>
+        <text>Sophie propose douze vélos roses</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_10">
+      <speechtoken id="08287">
+        <file>french/frmatrix/08287.wav</file>
+        <text>Jean-Luc propose quinze rubans blancs</text>
+      </speechtoken>
+      <speechtoken id="17522">
+        <file>french/frmatrix/17522.wav</file>
+        <text>Emile achète onze crayons verts</text>
+      </speechtoken>
+      <speechtoken id="22915">
+        <file>french/frmatrix/22915.wav</file>
+        <text>Agnès attrape sept livres mauves</text>
+      </speechtoken>
+      <speechtoken id="34158">
+        <file>french/frmatrix/34158.wav</file>
+        <text>Julien demande deux jetons gris</text>
+      </speechtoken>
+      <speechtoken id="45009">
+        <file>french/frmatrix/45009.wav</file>
+        <text>Etienne ramène trois classeurs noirs</text>
+      </speechtoken>
+      <speechtoken id="56670">
+        <file>french/frmatrix/56670.wav</file>
+        <text>Michel reprend neuf anneaux jaunes</text>
+      </speechtoken>
+      <speechtoken id="63864">
+        <file>french/frmatrix/63864.wav</file>
+        <text>Eugène dessine cinq ballons bleus</text>
+      </speechtoken>
+      <speechtoken id="79331">
+        <file>french/frmatrix/79331.wav</file>
+        <text>Félix déplace huit piquets rouges</text>
+      </speechtoken>
+      <speechtoken id="81743">
+        <file>french/frmatrix/81743.wav</file>
+        <text>Charlotte voudrait six vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="90496">
+        <file>french/frmatrix/90496.wav</file>
+        <text>Sophie ramasse douze pions roses</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_11">
+      <speechtoken id="08741">
+        <file>french/frmatrix/08741.wav</file>
+        <text>Jean-Luc propose six vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="11804">
+        <file>french/frmatrix/11804.wav</file>
+        <text>Emile voudrait cinq classeurs bleus</text>
+      </speechtoken>
+      <speechtoken id="20518">
+        <file>french/frmatrix/20518.wav</file>
+        <text>Agnès ramasse onze livres gris</text>
+      </speechtoken>
+      <speechtoken id="33136">
+        <file>french/frmatrix/33136.wav</file>
+        <text>Julien dessine deux piquets roses</text>
+      </speechtoken>
+      <speechtoken id="49927">
+        <file>french/frmatrix/49927.wav</file>
+        <text>Etienne déplace sept crayons blancs</text>
+      </speechtoken>
+      <speechtoken id="56682">
+        <file>french/frmatrix/56682.wav</file>
+        <text>Michel reprend neuf rubans verts</text>
+      </speechtoken>
+      <speechtoken id="67365">
+        <file>french/frmatrix/67365.wav</file>
+        <text>Eugène achète huit ballons mauves</text>
+      </speechtoken>
+      <speechtoken id="74293">
+        <file>french/frmatrix/74293.wav</file>
+        <text>Félix demande quinze pions bruns</text>
+      </speechtoken>
+      <speechtoken id="82450">
+        <file>french/frmatrix/82450.wav</file>
+        <text>Charlotte attrape douze jetons jaunes</text>
+      </speechtoken>
+      <speechtoken id="95079">
+        <file>french/frmatrix/95079.wav</file>
+        <text>Sophie ramène trois anneaux noirs</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_12">
+      <speechtoken id="00914">
+        <file>french/frmatrix/00914.wav</file>
+        <text>Jean-Luc ramasse sept livres bleus</text>
+      </speechtoken>
+      <speechtoken id="16150">
+        <file>french/frmatrix/16150.wav</file>
+        <text>Emile reprend deux jetons jaunes</text>
+      </speechtoken>
+      <speechtoken id="29639">
+        <file>french/frmatrix/29639.wav</file>
+        <text>Agnès déplace neuf piquets noirs</text>
+      </speechtoken>
+      <speechtoken id="32085">
+        <file>french/frmatrix/32085.wav</file>
+        <text>Julien attrape trois rubans mauves</text>
+      </speechtoken>
+      <speechtoken id="44398">
+        <file>french/frmatrix/44398.wav</file>
+        <text>Etienne demande huit pions gris</text>
+      </speechtoken>
+      <speechtoken id="51466">
+        <file>french/frmatrix/51466.wav</file>
+        <text>Michel voudrait douze ballons roses</text>
+      </speechtoken>
+      <speechtoken id="63572">
+        <file>french/frmatrix/63572.wav</file>
+        <text>Eugène dessine onze anneaux verts</text>
+      </speechtoken>
+      <speechtoken id="77841">
+        <file>french/frmatrix/77841.wav</file>
+        <text>Félix achète cinq vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="88203">
+        <file>french/frmatrix/88203.wav</file>
+        <text>Charlotte propose quinze classeurs bruns</text>
+      </speechtoken>
+      <speechtoken id="95727">
+        <file>french/frmatrix/95727.wav</file>
+        <text>Sophie ramène six crayons blancs</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_13">
+      <speechtoken id="06298">
+        <file>french/frmatrix/06298.wav</file>
+        <text>Jean-Luc reprend quinze pions gris</text>
+      </speechtoken>
+      <speechtoken id="19104">
+        <file>french/frmatrix/19104.wav</file>
+        <text>Emile déplace deux classeurs bleus</text>
+      </speechtoken>
+      <speechtoken id="22387">
+        <file>french/frmatrix/22387.wav</file>
+        <text>Agnès attrape huit rubans blancs</text>
+      </speechtoken>
+      <speechtoken id="38632">
+        <file>french/frmatrix/38632.wav</file>
+        <text>Julien propose neuf piquets verts</text>
+      </speechtoken>
+      <speechtoken id="43919">
+        <file>french/frmatrix/43919.wav</file>
+        <text>Etienne dessine sept livres noirs</text>
+      </speechtoken>
+      <speechtoken id="55726">
+        <file>french/frmatrix/55726.wav</file>
+        <text>Michel ramène six crayons roses</text>
+      </speechtoken>
+      <speechtoken id="61875">
+        <file>french/frmatrix/61875.wav</file>
+        <text>Eugène voudrait cinq anneaux mauves</text>
+      </speechtoken>
+      <speechtoken id="74563">
+        <file>french/frmatrix/74563.wav</file>
+        <text>Félix demande onze ballons bruns</text>
+      </speechtoken>
+      <speechtoken id="87450">
+        <file>french/frmatrix/87450.wav</file>
+        <text>Charlotte achète douze jetons jaunes</text>
+      </speechtoken>
+      <speechtoken id="90041">
+        <file>french/frmatrix/90041.wav</file>
+        <text>Sophie ramasse trois vélos rouges</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_14">
+      <speechtoken id="05439">
+        <file>french/frmatrix/05439.wav</file>
+        <text>Jean-Luc ramène douze piquets noirs</text>
+      </speechtoken>
+      <speechtoken id="11320">
+        <file>french/frmatrix/11320.wav</file>
+        <text>Emile voudrait huit crayons jaunes</text>
+      </speechtoken>
+      <speechtoken id="23815">
+        <file>french/frmatrix/23815.wav</file>
+        <text>Agnès dessine cinq livres mauves</text>
+      </speechtoken>
+      <speechtoken id="32001">
+        <file>french/frmatrix/32001.wav</file>
+        <text>Julien attrape trois classeurs rouges</text>
+      </speechtoken>
+      <speechtoken id="49773">
+        <file>french/frmatrix/49773.wav</file>
+        <text>Etienne déplace six anneaux bruns</text>
+      </speechtoken>
+      <speechtoken id="54564">
+        <file>french/frmatrix/54564.wav</file>
+        <text>Michel demande onze ballons bleus</text>
+      </speechtoken>
+      <speechtoken id="66258">
+        <file>french/frmatrix/66258.wav</file>
+        <text>Eugène reprend quinze jetons gris</text>
+      </speechtoken>
+      <speechtoken id="78686">
+        <file>french/frmatrix/78686.wav</file>
+        <text>Félix propose neuf rubans roses</text>
+      </speechtoken>
+      <speechtoken id="80947">
+        <file>french/frmatrix/80947.wav</file>
+        <text>Charlotte ramasse sept vélos blancs</text>
+      </speechtoken>
+      <speechtoken id="97192">
+        <file>french/frmatrix/97192.wav</file>
+        <text>Sophie achète deux pions verts</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_15">
+      <speechtoken id="04971">
+        <file>french/frmatrix/04971.wav</file>
+        <text>Jean-Luc demande sept anneaux rouges</text>
+      </speechtoken>
+      <speechtoken id="16199">
+        <file>french/frmatrix/16199.wav</file>
+        <text>Emile reprend deux pions noirs</text>
+      </speechtoken>
+      <speechtoken id="28804">
+        <file>french/frmatrix/28804.wav</file>
+        <text>Agnès propose cinq classeurs bleus</text>
+      </speechtoken>
+      <speechtoken id="37212">
+        <file>french/frmatrix/37212.wav</file>
+        <text>Julien achète quinze livres verts</text>
+      </speechtoken>
+      <speechtoken id="41426">
+        <file>french/frmatrix/41426.wav</file>
+        <text>Etienne voudrait douze crayons roses</text>
+      </speechtoken>
+      <speechtoken id="53540">
+        <file>french/frmatrix/53540.wav</file>
+        <text>Michel dessine onze vélos jaunes</text>
+      </speechtoken>
+      <speechtoken id="65737">
+        <file>french/frmatrix/65737.wav</file>
+        <text>Eugène ramène six piquets blancs</text>
+      </speechtoken>
+      <speechtoken id="72068">
+        <file>french/frmatrix/72068.wav</file>
+        <text>Félix attrape trois ballons gris</text>
+      </speechtoken>
+      <speechtoken id="80655">
+        <file>french/frmatrix/80655.wav</file>
+        <text>Charlotte ramasse neuf jetons mauves</text>
+      </speechtoken>
+      <speechtoken id="99383">
+        <file>french/frmatrix/99383.wav</file>
+        <text>Sophie déplace huit rubans bruns</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_16">
+      <speechtoken id="04564">
+        <file>french/frmatrix/04564.wav</file>
+        <text>Jean-Luc demande onze ballons bleus</text>
+      </speechtoken>
+      <speechtoken id="10333">
+        <file>french/frmatrix/10333.wav</file>
+        <text>Emile ramasse huit piquets bruns</text>
+      </speechtoken>
+      <speechtoken id="26058">
+        <file>french/frmatrix/26058.wav</file>
+        <text>Agnès reprend trois jetons gris</text>
+      </speechtoken>
+      <speechtoken id="39609">
+        <file>french/frmatrix/39609.wav</file>
+        <text>Julien déplace neuf classeurs noirs</text>
+      </speechtoken>
+      <speechtoken id="41122">
+        <file>french/frmatrix/41122.wav</file>
+        <text>Etienne voudrait deux crayons verts</text>
+      </speechtoken>
+      <speechtoken id="58940">
+        <file>french/frmatrix/58940.wav</file>
+        <text>Michel propose sept vélos jaunes</text>
+      </speechtoken>
+      <speechtoken id="67481">
+        <file>french/frmatrix/67481.wav</file>
+        <text>Eugène achète douze rubans rouges</text>
+      </speechtoken>
+      <speechtoken id="75876">
+        <file>french/frmatrix/75876.wav</file>
+        <text>Félix ramène cinq anneaux roses</text>
+      </speechtoken>
+      <speechtoken id="82715">
+        <file>french/frmatrix/82715.wav</file>
+        <text>Charlotte attrape six livres mauves</text>
+      </speechtoken>
+      <speechtoken id="93297">
+        <file>french/frmatrix/93297.wav</file>
+        <text>Sophie dessine quinze pions blancs</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_17">
+      <speechtoken id="07823">
+        <file>french/frmatrix/07823.wav</file>
+        <text>Jean-Luc achète cinq crayons bruns</text>
+      </speechtoken>
+      <speechtoken id="10275">
+        <file>french/frmatrix/10275.wav</file>
+        <text>Emile ramasse quinze anneaux mauves</text>
+      </speechtoken>
+      <speechtoken id="28987">
+        <file>french/frmatrix/28987.wav</file>
+        <text>Agnès propose sept rubans blancs</text>
+      </speechtoken>
+      <speechtoken id="35594">
+        <file>french/frmatrix/35594.wav</file>
+        <text>Julien ramène onze pions bleus</text>
+      </speechtoken>
+      <speechtoken id="49132">
+        <file>french/frmatrix/49132.wav</file>
+        <text>Etienne déplace deux piquets verts</text>
+      </speechtoken>
+      <speechtoken id="51618">
+        <file>french/frmatrix/51618.wav</file>
+        <text>Michel voudrait neuf livres gris</text>
+      </speechtoken>
+      <speechtoken id="62341">
+        <file>french/frmatrix/62341.wav</file>
+        <text>Eugène attrape huit vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="76069">
+        <file>french/frmatrix/76069.wav</file>
+        <text>Félix reprend trois ballons noirs</text>
+      </speechtoken>
+      <speechtoken id="84450">
+        <file>french/frmatrix/84450.wav</file>
+        <text>Charlotte demande douze jetons jaunes</text>
+      </speechtoken>
+      <speechtoken id="93706">
+        <file>french/frmatrix/93706.wav</file>
+        <text>Sophie dessine six classeurs roses</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_18">
+      <speechtoken id="00200">
+        <file>french/frmatrix/00200.wav</file>
+        <text>Jean-Luc ramasse quinze classeurs jaunes</text>
+      </speechtoken>
+      <speechtoken id="16457">
+        <file>french/frmatrix/16457.wav</file>
+        <text>Emile reprend douze jetons blancs</text>
+      </speechtoken>
+      <speechtoken id="22743">
+        <file>french/frmatrix/22743.wav</file>
+        <text>Agnès attrape six vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="35635">
+        <file>french/frmatrix/35635.wav</file>
+        <text>Julien ramène neuf piquets mauves</text>
+      </speechtoken>
+      <speechtoken id="49326">
+        <file>french/frmatrix/49326.wav</file>
+        <text>Etienne déplace huit crayons roses</text>
+      </speechtoken>
+      <speechtoken id="53561">
+        <file>french/frmatrix/53561.wav</file>
+        <text>Michel dessine onze ballons rouges</text>
+      </speechtoken>
+      <speechtoken id="61819">
+        <file>french/frmatrix/61819.wav</file>
+        <text>Eugène voudrait cinq livres noirs</text>
+      </speechtoken>
+      <speechtoken id="78988">
+        <file>french/frmatrix/78988.wav</file>
+        <text>Félix propose sept rubans gris</text>
+      </speechtoken>
+      <speechtoken id="84172">
+        <file>french/frmatrix/84172.wav</file>
+        <text>Charlotte demande deux anneaux verts</text>
+      </speechtoken>
+      <speechtoken id="97094">
+        <file>french/frmatrix/97094.wav</file>
+        <text>Sophie achète trois pions bleus</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_19">
+      <speechtoken id="04683">
+        <file>french/frmatrix/04683.wav</file>
+        <text>Jean-Luc demande neuf rubans bruns</text>
+      </speechtoken>
+      <speechtoken id="12502">
+        <file>french/frmatrix/12502.wav</file>
+        <text>Emile attrape onze classeurs verts</text>
+      </speechtoken>
+      <speechtoken id="28060">
+        <file>french/frmatrix/28060.wav</file>
+        <text>Agnès propose trois ballons jaunes</text>
+      </speechtoken>
+      <speechtoken id="33259">
+        <file>french/frmatrix/33259.wav</file>
+        <text>Julien dessine quinze jetons noirs</text>
+      </speechtoken>
+      <speechtoken id="41144">
+        <file>french/frmatrix/41144.wav</file>
+        <text>Etienne voudrait deux vélos bleus</text>
+      </speechtoken>
+      <speechtoken id="56997">
+        <file>french/frmatrix/56997.wav</file>
+        <text>Michel reprend sept pions blancs</text>
+      </speechtoken>
+      <speechtoken id="67815">
+        <file>french/frmatrix/67815.wav</file>
+        <text>Eugène achète cinq livres mauves</text>
+      </speechtoken>
+      <speechtoken id="70438">
+        <file>french/frmatrix/70438.wav</file>
+        <text>Félix ramasse douze piquets gris</text>
+      </speechtoken>
+      <speechtoken id="89721">
+        <file>french/frmatrix/89721.wav</file>
+        <text>Charlotte déplace six crayons rouges</text>
+      </speechtoken>
+      <speechtoken id="95376">
+        <file>french/frmatrix/95376.wav</file>
+        <text>Sophie ramène huit anneaux roses</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_20">
+      <speechtoken id="07247">
+        <file>french/frmatrix/07247.wav</file>
+        <text>Jean-Luc achète quinze vélos blancs</text>
+      </speechtoken>
+      <speechtoken id="13435">
+        <file>french/frmatrix/13435.wav</file>
+        <text>Emile dessine douze piquets mauves</text>
+      </speechtoken>
+      <speechtoken id="20073">
+        <file>french/frmatrix/20073.wav</file>
+        <text>Agnès ramasse trois anneaux bruns</text>
+      </speechtoken>
+      <speechtoken id="31124">
+        <file>french/frmatrix/31124.wav</file>
+        <text>Julien voudrait deux crayons bleus</text>
+      </speechtoken>
+      <speechtoken id="45519">
+        <file>french/frmatrix/45519.wav</file>
+        <text>Etienne ramène onze livres noirs</text>
+      </speechtoken>
+      <speechtoken id="54398">
+        <file>french/frmatrix/54398.wav</file>
+        <text>Michel demande huit pions gris</text>
+      </speechtoken>
+      <speechtoken id="68801">
+        <file>french/frmatrix/68801.wav</file>
+        <text>Eugène propose cinq classeurs rouges</text>
+      </speechtoken>
+      <speechtoken id="76966">
+        <file>french/frmatrix/76966.wav</file>
+        <text>Félix reprend sept ballons roses</text>
+      </speechtoken>
+      <speechtoken id="82782">
+        <file>french/frmatrix/82782.wav</file>
+        <text>Charlotte attrape six rubans verts</text>
+      </speechtoken>
+      <speechtoken id="99650">
+        <file>french/frmatrix/99650.wav</file>
+        <text>Sophie déplace neuf jetons jaunes</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_21">
+      <speechtoken id="07015">
+        <file>french/frmatrix/07015.wav</file>
+        <text>Jean-Luc achète trois livres mauves</text>
+      </speechtoken>
+      <speechtoken id="15139">
+        <file>french/frmatrix/15139.wav</file>
+        <text>Emile ramène deux piquets noirs</text>
+      </speechtoken>
+      <speechtoken id="26867">
+        <file>french/frmatrix/26867.wav</file>
+        <text>Agnès reprend cinq ballons blancs</text>
+      </speechtoken>
+      <speechtoken id="32228">
+        <file>french/frmatrix/32228.wav</file>
+        <text>Julien attrape quinze crayons gris</text>
+      </speechtoken>
+      <speechtoken id="48901">
+        <file>french/frmatrix/48901.wav</file>
+        <text>Etienne propose sept classeurs rouges</text>
+      </speechtoken>
+      <speechtoken id="51386">
+        <file>french/frmatrix/51386.wav</file>
+        <text>Michel voudrait huit rubans roses</text>
+      </speechtoken>
+      <speechtoken id="69570">
+        <file>french/frmatrix/69570.wav</file>
+        <text>Eugène déplace onze anneaux jaunes</text>
+      </speechtoken>
+      <speechtoken id="74743">
+        <file>french/frmatrix/74743.wav</file>
+        <text>Félix demande six vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="80494">
+        <file>french/frmatrix/80494.wav</file>
+        <text>Charlotte ramasse douze pions bleus</text>
+      </speechtoken>
+      <speechtoken id="93652">
+        <file>french/frmatrix/93652.wav</file>
+        <text>Sophie dessine neuf jetons verts</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_22">
+      <speechtoken id="07122">
+        <file>french/frmatrix/07122.wav</file>
+        <text>Jean-Luc achète deux crayons verts</text>
+      </speechtoken>
+      <speechtoken id="11886">
+        <file>french/frmatrix/11886.wav</file>
+        <text>Emile voudrait cinq rubans roses</text>
+      </speechtoken>
+      <speechtoken id="24971">
+        <file>french/frmatrix/24971.wav</file>
+        <text>Agnès demande sept anneaux rouges</text>
+      </speechtoken>
+      <speechtoken id="38433">
+        <file>french/frmatrix/38433.wav</file>
+        <text>Julien propose douze piquets bruns</text>
+      </speechtoken>
+      <speechtoken id="49618">
+        <file>french/frmatrix/49618.wav</file>
+        <text>Etienne déplace neuf livres gris</text>
+      </speechtoken>
+      <speechtoken id="53057">
+        <file>french/frmatrix/53057.wav</file>
+        <text>Michel dessine trois jetons blancs</text>
+      </speechtoken>
+      <speechtoken id="62209">
+        <file>french/frmatrix/62209.wav</file>
+        <text>Eugène attrape quinze classeurs noirs</text>
+      </speechtoken>
+      <speechtoken id="70745">
+        <file>french/frmatrix/70745.wav</file>
+        <text>Félix ramasse six vélos mauves</text>
+      </speechtoken>
+      <speechtoken id="86360">
+        <file>french/frmatrix/86360.wav</file>
+        <text>Charlotte reprend huit ballons jaunes</text>
+      </speechtoken>
+      <speechtoken id="95594">
+        <file>french/frmatrix/95594.wav</file>
+        <text>Sophie ramène onze pions bleus</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_23">
+      <speechtoken id="04707">
+        <file>french/frmatrix/04707.wav</file>
+        <text>Jean-Luc demande six classeurs blancs</text>
+      </speechtoken>
+      <speechtoken id="17894">
+        <file>french/frmatrix/17894.wav</file>
+        <text>Emile achète cinq pions bleus</text>
+      </speechtoken>
+      <speechtoken id="25156">
+        <file>french/frmatrix/25156.wav</file>
+        <text>Agnès ramène deux jetons roses</text>
+      </speechtoken>
+      <speechtoken id="30312">
+        <file>french/frmatrix/30312.wav</file>
+        <text>Julien ramasse huit livres verts</text>
+      </speechtoken>
+      <speechtoken id="49261">
+        <file>french/frmatrix/49261.wav</file>
+        <text>Etienne déplace quinze ballons rouges</text>
+      </speechtoken>
+      <speechtoken id="53578">
+        <file>french/frmatrix/53578.wav</file>
+        <text>Michel dessine onze anneaux gris</text>
+      </speechtoken>
+      <speechtoken id="66625">
+        <file>french/frmatrix/66625.wav</file>
+        <text>Eugène reprend neuf crayons mauves</text>
+      </speechtoken>
+      <speechtoken id="71930">
+        <file>french/frmatrix/71930.wav</file>
+        <text>Félix voudrait sept piquets jaunes</text>
+      </speechtoken>
+      <speechtoken id="88043">
+        <file>french/frmatrix/88043.wav</file>
+        <text>Charlotte propose trois vélos bruns</text>
+      </speechtoken>
+      <speechtoken id="92489">
+        <file>french/frmatrix/92489.wav</file>
+        <text>Sophie attrape douze rubans noirs</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_24">
+      <speechtoken id="02397">
+        <file>french/frmatrix/02397.wav</file>
+        <text>Jean-Luc attrape huit pions blancs</text>
+      </speechtoken>
+      <speechtoken id="16024">
+        <file>french/frmatrix/16024.wav</file>
+        <text>Emile reprend trois crayons bleus</text>
+      </speechtoken>
+      <speechtoken id="24542">
+        <file>french/frmatrix/24542.wav</file>
+        <text>Agnès demande onze vélos verts</text>
+      </speechtoken>
+      <speechtoken id="30108">
+        <file>french/frmatrix/30108.wav</file>
+        <text>Julien ramasse deux classeurs gris</text>
+      </speechtoken>
+      <speechtoken id="48759">
+        <file>french/frmatrix/48759.wav</file>
+        <text>Etienne propose six jetons noirs</text>
+      </speechtoken>
+      <speechtoken id="55836">
+        <file>french/frmatrix/55836.wav</file>
+        <text>Michel ramène cinq piquets roses</text>
+      </speechtoken>
+      <speechtoken id="63473">
+        <file>french/frmatrix/63473.wav</file>
+        <text>Eugène dessine douze anneaux bruns</text>
+      </speechtoken>
+      <speechtoken id="79961">
+        <file>french/frmatrix/79961.wav</file>
+        <text>Félix déplace sept ballons rouges</text>
+      </speechtoken>
+      <speechtoken id="87615">
+        <file>french/frmatrix/87615.wav</file>
+        <text>Charlotte achète neuf livres mauves</text>
+      </speechtoken>
+      <speechtoken id="91280">
+        <file>french/frmatrix/91280.wav</file>
+        <text>Sophie voudrait quinze rubans jaunes</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_25">
+      <speechtoken id="06307">
+        <file>french/frmatrix/06307.wav</file>
+        <text>Jean-Luc reprend huit classeurs blancs</text>
+      </speechtoken>
+      <speechtoken id="19935">
+        <file>french/frmatrix/19935.wav</file>
+        <text>Emile déplace sept piquets mauves</text>
+      </speechtoken>
+      <speechtoken id="22289">
+        <file>french/frmatrix/22289.wav</file>
+        <text>Agnès attrape quinze rubans noirs</text>
+      </speechtoken>
+      <speechtoken id="35462">
+        <file>french/frmatrix/35462.wav</file>
+        <text>Julien ramène douze ballons verts</text>
+      </speechtoken>
+      <speechtoken id="44826">
+        <file>french/frmatrix/44826.wav</file>
+        <text>Etienne demande cinq crayons roses</text>
+      </speechtoken>
+      <speechtoken id="58694">
+        <file>french/frmatrix/58694.wav</file>
+        <text>Michel propose neuf pions bleus</text>
+      </speechtoken>
+      <speechtoken id="67578">
+        <file>french/frmatrix/67578.wav</file>
+        <text>Eugène achète onze anneaux gris</text>
+      </speechtoken>
+      <speechtoken id="70741">
+        <file>french/frmatrix/70741.wav</file>
+        <text>Félix ramasse six vélos rouges</text>
+      </speechtoken>
+      <speechtoken id="83113">
+        <file>french/frmatrix/83113.wav</file>
+        <text>Charlotte dessine deux livres bruns</text>
+      </speechtoken>
+      <speechtoken id="91050">
+        <file>french/frmatrix/91050.wav</file>
+        <text>Sophie voudrait trois jetons jaunes</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_26">
+      <speechtoken id="09137">
+        <file>french/frmatrix/09137.wav</file>
+        <text>Jean-Luc déplace deux piquets blancs</text>
+      </speechtoken>
+      <speechtoken id="18505">
+        <file>french/frmatrix/18505.wav</file>
+        <text>Emile propose onze classeurs mauves</text>
+      </speechtoken>
+      <speechtoken id="24253">
+        <file>french/frmatrix/24253.wav</file>
+        <text>Agnès demande quinze jetons bruns</text>
+      </speechtoken>
+      <speechtoken id="36720">
+        <file>french/frmatrix/36720.wav</file>
+        <text>Julien reprend six crayons jaunes</text>
+      </speechtoken>
+      <speechtoken id="42871">
+        <file>french/frmatrix/42871.wav</file>
+        <text>Etienne attrape cinq anneaux rouges</text>
+      </speechtoken>
+      <speechtoken id="51369">
+        <file>french/frmatrix/51369.wav</file>
+        <text>Michel voudrait huit ballons noirs</text>
+      </speechtoken>
+      <speechtoken id="63946">
+        <file>french/frmatrix/63946.wav</file>
+        <text>Eugène dessine sept vélos roses</text>
+      </speechtoken>
+      <speechtoken id="75098">
+        <file>french/frmatrix/75098.wav</file>
+        <text>Félix ramène trois pions gris</text>
+      </speechtoken>
+      <speechtoken id="80684">
+        <file>french/frmatrix/80684.wav</file>
+        <text>Charlotte ramasse neuf rubans bleus</text>
+      </speechtoken>
+      <speechtoken id="97412">
+        <file>french/frmatrix/97412.wav</file>
+        <text>Sophie achète douze livres verts</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_27">
+      <speechtoken id="05213">
+        <file>french/frmatrix/05213.wav</file>
+        <text>Jean-Luc ramène quinze livres bruns</text>
+      </speechtoken>
+      <speechtoken id="11897">
+        <file>french/frmatrix/11897.wav</file>
+        <text>Emile voudrait cinq pions blancs</text>
+      </speechtoken>
+      <speechtoken id="20075">
+        <file>french/frmatrix/20075.wav</file>
+        <text>Agnès ramasse trois anneaux mauves</text>
+      </speechtoken>
+      <speechtoken id="32162">
+        <file>french/frmatrix/32162.wav</file>
+        <text>Julien attrape deux ballons verts</text>
+      </speechtoken>
+      <speechtoken id="43721">
+        <file>french/frmatrix/43721.wav</file>
+        <text>Etienne dessine six crayons rouges</text>
+      </speechtoken>
+      <speechtoken id="59358">
+        <file>french/frmatrix/59358.wav</file>
+        <text>Michel déplace huit jetons gris</text>
+      </speechtoken>
+      <speechtoken id="68404">
+        <file>french/frmatrix/68404.wav</file>
+        <text>Eugène propose douze classeurs bleus</text>
+      </speechtoken>
+      <speechtoken id="76689">
+        <file>french/frmatrix/76689.wav</file>
+        <text>Félix reprend neuf rubans noirs</text>
+      </speechtoken>
+      <speechtoken id="84930">
+        <file>french/frmatrix/84930.wav</file>
+        <text>Charlotte demande sept piquets jaunes</text>
+      </speechtoken>
+      <speechtoken id="97546">
+        <file>french/frmatrix/97546.wav</file>
+        <text>Sophie achète onze vélos roses</text>
+      </speechtoken>
+    </list>
+    <list id="lijst_per10_28">
+      <speechtoken id="01786">
+        <file>french/frmatrix/01786.wav</file>
+        <text>Jean-Luc voudrait six rubans roses</text>
+      </speechtoken>
+      <speechtoken id="17852">
+        <file>french/frmatrix/17852.wav</file>
+        <text>Emile achète cinq jetons verts</text>
+      </speechtoken>
+      <speechtoken id="29968">
+        <file>french/frmatrix/29968.wav</file>
+        <text>Agnès déplace sept ballons gris</text>
+      </speechtoken>
+      <speechtoken id="32144">
+        <file>french/frmatrix/32144.wav</file>
+        <text>Julien attrape deux vélos bleus</text>
+      </speechtoken>
+      <speechtoken id="44527">
+        <file>french/frmatrix/44527.wav</file>
+        <text>Etienne demande onze crayons blancs</text>
+      </speechtoken>
+      <speechtoken id="55309">
+        <file>french/frmatrix/55309.wav</file>
+        <text>Michel ramène huit classeurs noirs</text>
+      </speechtoken>
+      <speechtoken id="63673">
+        <file>french/frmatrix/63673.wav</file>
+        <text>Eugène dessine neuf anneaux bruns</text>
+      </speechtoken>
+      <speechtoken id="70431">
+        <file>french/frmatrix/70431.wav</file>
+        <text>Félix ramasse douze piquets rouges</text>
+      </speechtoken>
+      <speechtoken id="88215">
+        <file>french/frmatrix/88215.wav</file>
+        <text>Charlotte propose quinze livres mauves</text>
+      </speechtoken>
+      <speechtoken id="96090">
+        <file>french/frmatrix/96090.wav</file>
+        <text>Sophie reprend trois pions jaunes</text>
+      </speechtoken>
+    </list>
+  </speechmaterial>
 </apex:speechmaterialfile>

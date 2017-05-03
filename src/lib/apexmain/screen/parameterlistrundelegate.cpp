@@ -169,11 +169,7 @@ ParameterListRunDelegate::ParameterListRunDelegate(
     setStyleSheet(element->getStyle());
     setModel( model );
     verticalHeader()->hide();
-#if QT_VERSION < 0x050000
-    horizontalHeader()->setClickable(false);
-#else
     horizontalHeader()->setSectionsClickable( false );
-#endif
     resizeColumnsToContents();
 
 

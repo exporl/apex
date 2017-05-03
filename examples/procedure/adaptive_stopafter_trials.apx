@@ -1,101 +1,101 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
   <!-- @doc
   @what: Stop after a specified number of trials (10)
   @description: When you click on the button 'correct or wrong', you hear a stimulus 'wd1.wav (een/one)' in the left ear. When you click again, the gain of the stimulus Decreases/Increases according to the button (correct/false)
                 After 10 trials (a trial is ended when you click) the experiment stops.
   @how: adaptiveProcedure - stop_after_type: trials - adapt_parameter (gain: gain of stimulus)
  -->
- <procedure xsi:type="apex:adaptiveProcedure">
-  <parameters>
-   <presentations>3</presentations>
-   <skip>0</skip>
-   <order>sequential</order>
-   <corrector xsi:type="apex:isequal"/>
-   <nUp>1</nUp>
-   <nDown>1</nDown>
-   <adapt_parameter>gain</adapt_parameter>
-   <start_value>-10</start_value>
-   <stop_after_type>trials</stop_after_type>
-   <stop_after>10</stop_after>
-   <min_value>-100</min_value>
-   <max_value>0</max_value>
-   <larger_is_easier>true</larger_is_easier>
-   <stepsizes>
-    <stepsize size="5" begin="0"/>
-   </stepsizes>
-  </parameters>
-  <trials>
-   <trial id="trial0">
-    <answer>correct</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus0"/>
-   </trial>
-   <trial id="trial1">
-    <answer>correct</answer>
-    <screen id="screen1"/>
-    <stimulus id="stimulus0"/>
-   </trial>
-  </trials>
- </procedure>
- <screens>
-  <reinforcement>
-   <progressbar>true</progressbar>
-   <feedback length="300">false</feedback>
-  </reinforcement>
-  <screen id="screen1">
-   <gridLayout id="main_layout" width="2" height="1">
-    <button id="correct" row="1" col="1">
-     <text>correct</text>
-    </button>
-    <button id="false" row="1" col="2">
-     <text>false</text>
-    </button>
-   </gridLayout>
-   <buttongroup id="buttongroup">
-    <button id="correct"/>
-    <button id="false"/>
-   </buttongroup>
-   <default_answer_element>buttongroup</default_answer_element>
-  </screen>
- </screens>
- <datablocks>
-  <uri_prefix>file:../stimuli</uri_prefix>
-  <datablock id="datablock0">
-   <device>dev</device>
-   <uri>wd1.wav</uri>
-  </datablock>
- </datablocks>
- <devices>
-  <device id="dev" xsi:type="apex:wavDeviceType">
-   <driver>portaudio</driver>
-   <card>interactive</card>
-   <channels>2</channels>
-   <gain id="gain">0</gain>
-   <samplerate>44100</samplerate>
-  </device>
- </devices>
- <stimuli>
-  <fixed_parameters/>
-  <stimulus id="stimulus0">
-   <description>Stimulus 0</description>
-   <datablocks>
-    <datablock id="datablock0"/>
-   </datablocks>
-   <variableParameters/>
-   <fixedParameters/>
-  </stimulus>
- </stimuli>
- <connections>
-  <connection>
-   <from>
-    <id>_ALL_</id>
-    <channel>0</channel>
-   </from>
-   <to>
-    <id>dev</id>
-    <channel>0</channel>
-   </to>
-  </connection>
- </connections>
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>3</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>gain</adapt_parameter>
+      <start_value>-10</start_value>
+      <stop_after_type>trials</stop_after_type>
+      <stop_after>10</stop_after>
+      <min_value>-100</min_value>
+      <max_value>0</max_value>
+      <larger_is_easier>true</larger_is_easier>
+      <stepsizes>
+        <stepsize begin="0" size="5"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <trial id="trial0">
+        <answer>correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus0"/>
+      </trial>
+      <trial id="trial1">
+        <answer>correct</answer>
+        <screen id="screen1"/>
+        <stimulus id="stimulus0"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback length="300">false</feedback>
+    </reinforcement>
+    <screen id="screen1">
+      <gridLayout width="2" height="1" id="main_layout">
+        <button col="1" row="1" id="correct">
+          <text>correct</text>
+        </button>
+        <button col="2" row="1" id="false">
+          <text>false</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="correct"/>
+        <button id="false"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="datablock0">
+      <device>dev</device>
+      <file>wd1.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="dev">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain id="gain">0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stimulus0">
+      <description>Stimulus 0</description>
+      <datablocks>
+        <datablock id="datablock0"/>
+      </datablocks>
+      <variableParameters/>
+      <fixedParameters/>
+    </stimulus>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>dev</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+  </connections>
 </apex:apex>

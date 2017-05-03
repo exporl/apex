@@ -37,7 +37,6 @@ public:
             unsigned maximumLength = 0);
 
 private:
-    unsigned blocksize;
     QVector<double> B;
     QVector<double> A;
 

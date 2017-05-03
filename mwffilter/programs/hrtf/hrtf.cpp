@@ -18,6 +18,8 @@
 
 #include "apexmain/filter/pluginfilterinterface.h"
 
+#include "common/pluginloader.h"
+
 #include <audiofile.h>
 
 #include <QCoreApplication>
@@ -27,6 +29,8 @@
 
 #include <cstdio>
 #include <memory>
+
+using namespace cmn;
 
 void extractBlocks (float *input, unsigned channels, unsigned size,
         double **output)
@@ -44,51 +48,6 @@ void mergeBlocks (double **input, unsigned channels, unsigned size,
             output[j * channels + i] = input[i][j];
 }
 
-class Plugins
-{
-public:
-    Plugins()
-    {
-        Q_FOREACH (QObject *plugin, QPluginLoader::staticInstances())
-            plugins.append (plugin);
-
-        QDir pluginsDir (QCoreApplication::applicationDirPath());
-        Q_FOREACH (QString fileName, pluginsDir.entryList (QDir::Files)) {
-            QPluginLoader loader (pluginsDir.absoluteFilePath (fileName));
-            QObject *plugin = loader.instance();
-            if (plugin)
-                plugins.append (plugin);
-        }
-    }
-
-    QList<QObject*> get() const
-    {
-        return plugins;
-    }
-
-private:
-    QList<QObject*> plugins;
-};
-
-Q_GLOBAL_STATIC (Plugins, plugins)
-
-QList<QObject*> allAvailablePlugins()
-{
-    return plugins()->get();
-}
-
-template <typename T>
-QList<T*> availablePlugins()
-{
-    QList<T*> result;
-
-    Q_FOREACH (QObject * const plugin, allAvailablePlugins())
-        if (T * const casted = qobject_cast<T*> (plugin))
-            result.append (casted);
-
-    return result;
-}
-
 int main (int argc, char *argv[])
 {
     QCoreApplication application (argc, argv);
@@ -101,7 +60,7 @@ int main (int argc, char *argv[])
 
     PluginFilterCreator* hrtfCreator = NULL;
     Q_FOREACH (PluginFilterCreator *creator,
-            availablePlugins<PluginFilterCreator>()) {
+            PluginLoader().availablePlugins<PluginFilterCreator>()) {
         if (creator->availablePlugins().contains (QLatin1String("hrtf"))) {
             hrtfCreator = creator;
             break;
@@ -164,7 +123,7 @@ int main (int argc, char *argv[])
         exit (6);
     }
     hrtfFilter->resetParameters();
-    if (!hrtfFilter->setParameter (QLatin1String("uri"), -1, QString::fromLocal8Bit(argv[4]))) {
+    if (!hrtfFilter->setParameter (QLatin1String("file"), -1, QString::fromLocal8Bit(argv[4]))) {
         fprintf (stderr, "Unable to set coefficient file path: %s\n",
             qPrintable (hrtfFilter->errorMessage()));
         exit (7);

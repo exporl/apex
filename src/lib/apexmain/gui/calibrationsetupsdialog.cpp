@@ -296,6 +296,9 @@ CalibrationSetupsDialog::CalibrationSetupsDialog (QWidget *parent) :
     QDialog (parent),
     d (new CalibrationSetupsDialogPrivate (this))
 {
+#ifdef Q_OS_ANDROID
+    showMaximized();
+#endif
 }
 
 CalibrationSetupsDialog::~CalibrationSetupsDialog()

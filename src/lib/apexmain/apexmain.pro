@@ -1,15 +1,11 @@
-CLEBS *= +xerces coh streamapp apextools apexdata apexwriters portaudio psignifit -ctags subdirsources pch asciicast builddll
-unix_CLEBS *= jack
+CLEBS *= coh streamapp apextools apexdata apexwriters portaudio psignifit -ctags subdirsources pch asciicast builddll
+unix_CLEBS *= -jack
 
 DEFINES *= APEX_MAKEDLL
 
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)
 
 QT += gui network printsupport script scripttools svg webkitwidgets xml xmlpatterns
-
-lessThan(QT_MAJOR_VERSION, 5):QT += webkit
-
-DEFINES += SETMIXER
 
 win32 {
     QT += axcontainer
@@ -31,6 +27,8 @@ win32 {
 
 android {
     QT -= webkitwidgets
+    QT += androidextras
+
     HEADERS -= \
         result/resultviewer.h \
         result/webpageprocessor.h \
@@ -49,10 +47,10 @@ android {
         gui/flashwidget.cpp \
         screen/htmlrundelegate.cpp \
         screen/flashplayerrundelegate.cpp
+} else {
+    HEADERS -= apexandroidnative.h
+    SOURCES -= apexandroidnative.cpp
 }
-
-# TODO these are still there but not used?
-SOURCES -= pa5device/pa5_actx.cpp
 
 FORMS += \
     gui/autocalibrationdialog.ui \
@@ -68,4 +66,4 @@ FORMS += \
     gui/soundcardsdialog.ui \
     gui/startupdialog.ui \
 
-CTAGSSRCDIRS = $${BASEDIR}/contrib $${BASEDIR}/mwffilter $${BASEDIR}/src $${BASEDIR}/coh $${BASEDIR}/common
+CTAGSSRCDIRS = $${BASEDIR}/contrib $${BASEDIR}/mwffilter $${BASEDIR}/src $${BASEDIR}/bertha-lib $${BASEDIR}/coh $${BASEDIR}/common

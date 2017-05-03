@@ -133,7 +133,6 @@ namespace apex
       QWidget*      m_pPanel;
       QLayout* m_pScreen;
       QGridLayout* m_pMainLayout;
-      QMainWindow* m_pMainWindow;
       QColor        m_ScreenBG;
       QColor        m_Good;
       QColor        m_Bad;

@@ -1,1 +1,0 @@
-Apex uses the NSIS installer (http://nsis.sourceforge.net)

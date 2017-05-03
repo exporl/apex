@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US" 
-        targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.3/config"
-        xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.3/config">
-        
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+        targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
+        xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+
         <xs:annotation>
             <xs:documentation xml:lang="en-US">
                 Apex main config file schema
             </xs:documentation>
         </xs:annotation>
-        
+
         <xs:complexType name="drivernameType" mixed="true">
             <xs:attribute name="driver" type="xs:Name"  use="required"/>
         </xs:complexType>
-        
+
         <xs:complexType name="soundcardType">
             <xs:sequence>
                 <xs:element name="drivername" type="apex:drivernameType" minOccurs="1" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attribute name="id" type="xs:ID"  use="required"/>
         </xs:complexType>
-        
+
+        <xs:complexType name="cohDriverType" mixed="true">
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+        </xs:complexType>
+
         <xs:element name="apex">
             <xs:complexType>
                 <xs:sequence>
                     <xs:element name="paths">
                         <xs:complexType>
                             <xs:sequence>
-                                <xs:element name="perl" type="xs:anyURI" minOccurs="0" />
                                 <xs:element name="pluginScriptLibrary" type="xs:anyURI" minOccurs="0">
                                     <xs:annotation>
                                         <xs:documentation>
-                                            Name of main script library. Will be searched for in the plugins path and will be concatenated to any 
+                                            Name of main script library. Will be searched for in the plugins path and will be concatenated to any
                                             XML generating plugin.
                                         </xs:documentation>
                                     </xs:annotation>
@@ -44,14 +47,22 @@
                         </xs:complexType>
                     </xs:element>
 
-	  <xs:element name="soundcards">
-                     <xs:complexType>
-                         <xs:sequence>
-                             <xs:element name="card" type="apex:soundcardType" minOccurs="0" maxOccurs="unbounded"/>
-                         </xs:sequence>	           
-                     </xs:complexType>	      
-	  </xs:element>
-                    
+                    <xs:element name="soundcards">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="card" type="apex:soundcardType" minOccurs="0" maxOccurs="unbounded"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+
+                    <xs:element name="cohdrivers" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="cohdriver" type="apex:cohDriverType" minOccurs="0" maxOccurs="unbounded"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+
                     <xs:element name="prefixes" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
@@ -71,10 +82,10 @@
                 </xs:sequence>
                 <xs:attribute name="version" use="required" type="xs:positiveInteger"></xs:attribute>
             </xs:complexType>
-            
+
         </xs:element>
 
 
-        
-        
-</xs:schema>
+
+
+    </xs:schema>
