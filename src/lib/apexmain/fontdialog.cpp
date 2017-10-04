@@ -20,9 +20,9 @@
 #include <QApplication>
 #include <QFontDialog>
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-  QApplication app( argc, argv );
-  bool bOk;
-  QFontDialog::getFont( &bOk );
+    QApplication app(argc, argv);
+    bool bOk;
+    QFontDialog::getFont(&bOk);
 }

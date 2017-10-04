@@ -37,54 +37,57 @@ using namespace apex::XMLKeys;
 using namespace cmn;
 using namespace r126;
 
-namespace apex {
+namespace apex
+{
 
 MapFactory::MapFactory()
 {
 }
 
-
 MapFactory::~MapFactory()
 {
 }
 
-data::ApexMap* MapFactory::GetMap(const QDomElement &p_base) {
-    //const QString id = XMLutils::GetAttribute( p_base, gc_sID );
-    data::ChannelMap basemap;      // this contains all default values
-    data::ApexMap* result = new data::ApexMap;
+data::ApexMap *MapFactory::GetMap(const QDomElement &p_base)
+{
+    // const QString id = XMLutils::GetAttribute( p_base, gc_sID );
+    data::ChannelMap basemap; // this contains all default values
+    data::ApexMap *result = new data::ApexMap;
 
-    bool hasElec[22];      // array of bools, determining whether an electrode was defined
+    bool hasElec[22]; // array of bools, determining whether an electrode was
+                      // defined
     memset(hasElec, 0, 22);
 
     QDomElement mapElement = p_base.firstChildElement();
     const QString tag = mapElement.tagName();
-    if (tag=="from_r126") {
+    if (tag == "from_r126") {
 #ifdef R126
-        ApexMapWizard* pWiz = new ApexMapWizard();
-        //cancelled??
-        if( pWiz->exec() != QDialog::Accepted )
-        {
+        ApexMapWizard *pWiz = new ApexMapWizard();
+        // cancelled??
+        if (pWiz->exec() != QDialog::Accepted) {
             delete pWiz;
             delete result;
             return 0;
         }
-        R126NucleusMAPRecord* pRec = pWiz->GetSelectedMap();
+        R126NucleusMAPRecord *pRec = pWiz->GetSelectedMap();
         delete result;
         result = R126ToApexMap(pRec);
         delete pRec;
         Q_ASSERT(result);
         delete pWiz;
 #endif
-    } else if (tag=="inline") {
-        for (QDomElement currentNode = mapElement.firstChildElement(); !currentNode.isNull();
-                currentNode = currentNode.nextSiblingElement()) {
-            const QString tag   = currentNode.tagName();
+    } else if (tag == "inline") {
+        for (QDomElement currentNode = mapElement.firstChildElement();
+             !currentNode.isNull();
+             currentNode = currentNode.nextSiblingElement()) {
+            const QString tag = currentNode.tagName();
             const QString value = currentNode.text();
 
             if (tag == "mode") {
-                Q_ASSERT(value.isEmpty()==0);
-                basemap.setMode(data::ChannelMap::modeToStimulationModeType(value));
-                Q_ASSERT(basemap.mode() != -1 );
+                Q_ASSERT(value.isEmpty() == 0);
+                basemap.setMode(
+                    data::ChannelMap::modeToStimulationModeType(value));
+                Q_ASSERT(basemap.mode() != -1);
             } else if (tag == "pulsewidth") {
                 basemap.setPhaseWidth(value.toDouble());
             } else if (tag == "number_electrodes") {
@@ -93,40 +96,57 @@ data::ApexMap* MapFactory::GetMap(const QDomElement &p_base) {
                 basemap.setPhaseGap(value.toDouble());
             } else if (tag == "period") {
                 basemap.setPeriod(value.toDouble());
-            } else if  (tag == gc_sChannel) {    // this should be the last tag encountered, so basemap is valid
+            } else if (tag == gc_sChannel) { // this should be the last tag
+                                             // encountered, so basemap is valid
                 Q_ASSERT(basemap.isBaseValid());
                 if (result->defaultMap().totalRate() == -1)
                     result->setDefaultMap(basemap);
-                basemap.setChannelNumber(currentNode.attribute(QSL("number")).toInt());
-                basemap.setStimulationElectrode(currentNode.attribute(QSL("electrode")).toInt());
-                basemap.setThresholdLevel(currentNode.attribute(QSL("threshold")).toInt());
-                basemap.setComfortLevel(currentNode.attribute(QSL("comfort")).toInt());
+                basemap.setChannelNumber(
+                    currentNode.attribute(QSL("number")).toInt());
+                basemap.setStimulationElectrode(
+                    currentNode.attribute(QSL("electrode")).toInt());
+                basemap.setThresholdLevel(
+                    currentNode.attribute(QSL("threshold")).toInt());
+                basemap.setComfortLevel(
+                    currentNode.attribute(QSL("comfort")).toInt());
 
-                //qCDebug(APEX_RS, "%s", qPrintable("channelnr = " + QString::number(basemap.channelNumber())));
-                //qCDebug(APEX_RS, "%s", qPrintable("electrode = " + QString::number(basemap.stimulationElectrode())));
+                // qCDebug(APEX_RS, "%s", qPrintable("channelnr = " +
+                // QString::number(basemap.channelNumber())));
+                // qCDebug(APEX_RS, "%s", qPrintable("electrode = " +
+                // QString::number(basemap.stimulationElectrode())));
 
                 Q_ASSERT(basemap.isValid());
-                //result->insert(result->begin()+basemap.m_nChannelNr, basemap);
-                (*result)[basemap.channelNumber()]=basemap;
-                Q_ASSERT( (*result)[basemap.channelNumber()].isValid() );
+                // result->insert(result->begin()+basemap.m_nChannelNr,
+                // basemap);
+                (*result)[basemap.channelNumber()] = basemap;
+                Q_ASSERT((*result)[basemap.channelNumber()].isValid());
 
-
-                hasElec[basemap.channelNumber()-1]=true;
+                hasElec[basemap.channelNumber() - 1] = true;
 
             } else {
                 qCCritical(APEX_RS, "Unknown element in mapfactory::getmap");
             }
         }
 
-        if (basemap.phaseGap()+basemap.phaseWidth()*2>=basemap.period())
-            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("Mapfactory", QString("PhaseGap+PhaseWidth*2>=Period, this is not physically possible"))));
+        if (basemap.phaseGap() + basemap.phaseWidth() * 2 >= basemap.period())
+            qCWarning(
+                APEX_RS, "%s",
+                qPrintable(QSL("%1: %2").arg(
+                    "Mapfactory", QString("PhaseGap+PhaseWidth*2>=Period, this "
+                                          "is not physically possible"))));
 
-        bool ok=true;
-        for (int i=0; i<22; ++i) {
-            if (hasElec[i]==false) {
-                qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("Mapfactory", QString("No map defined for channel %1").arg(i))));
-                qCDebug(APEX_RS, "%s", qPrintable( QString("No map defined for channel %1").arg(i) ));
-                ok=false;
+        bool ok = true;
+        for (int i = 0; i < 22; ++i) {
+            if (hasElec[i] == false) {
+                qCWarning(
+                    APEX_RS, "%s",
+                    qPrintable(QSL("%1: %2").arg(
+                        "Mapfactory",
+                        QString("No map defined for channel %1").arg(i))));
+                qCDebug(APEX_RS, "%s",
+                        qPrintable(
+                            QString("No map defined for channel %1").arg(i)));
+                ok = false;
             }
         }
         if (!ok)
@@ -140,19 +160,18 @@ data::ApexMap* MapFactory::GetMap(const QDomElement &p_base) {
 #endif
 
     return result;
-
 }
-
 
 /**
 * Converts a R126NucleusMAPRecord to an ApexMap
 * @param p_map
 * @return new ApexMap
 */
-data::ApexMap* apex::MapFactory::R126ToApexMap( const R126NucleusMAPRecord * p_map )
+data::ApexMap *
+apex::MapFactory::R126ToApexMap(const R126NucleusMAPRecord *p_map)
 {
 
-    data::ApexMap* result = new data::ApexMap;
+    data::ApexMap *result = new data::ApexMap;
 
     result->setNumberOfElectrodes(p_map->m_nChannels);
 
@@ -161,15 +180,12 @@ data::ApexMap* apex::MapFactory::R126ToApexMap( const R126NucleusMAPRecord * p_m
     defaultMap.setPhaseGap(p_map->m_nInterPhaseGap);
     //  result->m_defaultMap.m_nPeriod = p_map->m_nPeriod;
     defaultMap.setTotalRate(p_map->m_nTotalRate);
-    //result->m_defaultMap.m_nMode = p_map->GetStimulationMode();
+    // result->m_defaultMap.m_nMode = p_map->GetStimulationMode();
     result->setDefaultMap(defaultMap);
-
-
 
     // FIXME sommige parameters worden genegeerd
 
-
-    for (int i=0; i<p_map->m_nChannels; ++i) {
+    for (int i = 0; i < p_map->m_nChannels; ++i) {
         data::ChannelMap temp;
         temp.setComfortLevel(p_map->m_naCLevels[i]);
         temp.setThresholdLevel(p_map->m_naTLevels[i]);
@@ -180,10 +196,11 @@ data::ApexMap* apex::MapFactory::R126ToApexMap( const R126NucleusMAPRecord * p_m
         Q_ASSERT(temp.thresholdLevel() >= 0 && temp.thresholdLevel() <= 255);
         Q_ASSERT(temp.thresholdLevel() <= temp.comfortLevel());
         Q_ASSERT(temp.channelNumber() >= 1 && temp.channelNumber() <= 22);
-        Q_ASSERT(temp.stimulationElectrode() >= 1 && temp.stimulationElectrode() <= 22);
+        Q_ASSERT(temp.stimulationElectrode() >= 1 &&
+                 temp.stimulationElectrode() <= 22);
 
-        //FIXME remove test if not needed. it is here to keep
-        //the same behaviour is with std::map
+        // FIXME remove test if not needed. it is here to keep
+        // the same behaviour is with std::map
         if (!result->contains(i + 1)) {
             result->insert(i + 1, temp);
         } else {
@@ -193,8 +210,4 @@ data::ApexMap* apex::MapFactory::R126ToApexMap( const R126NucleusMAPRecord * p_m
 
     return result;
 }
-
-
-
-
 }

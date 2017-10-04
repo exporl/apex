@@ -41,9 +41,10 @@ struct Ui {
 
     QLabel *info;
 
-    QWidget* centralWidget;
+    QWidget *centralWidget;
 
-    ~Ui() {
+    ~Ui()
+    {
         delete layout;
         delete makeLocal;
         delete makeGlobal;
@@ -56,8 +57,7 @@ struct Ui {
     }
 };
 
-MainWindow::MainWindow(QMainWindow *parent) :
-    QMainWindow(parent)
+MainWindow::MainWindow(QMainWindow *parent) : QMainWindow(parent)
 {
     ui = new Ui();
     ui->layout = new QGridLayout();
@@ -71,8 +71,10 @@ MainWindow::MainWindow(QMainWindow *parent) :
     ui->global = new QLabel(tr("Global setups"));
     ui->centralWidget = new QWidget();
 
-    connect(ui->localSetups, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showInfo(QListWidgetItem*)));
-    connect(ui->globalSetups, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showInfo(QListWidgetItem*)));
+    connect(ui->localSetups, SIGNAL(itemClicked(QListWidgetItem *)), this,
+            SLOT(showInfo(QListWidgetItem *)));
+    connect(ui->globalSetups, SIGNAL(itemClicked(QListWidgetItem *)), this,
+            SLOT(showInfo(QListWidgetItem *)));
 
     connect(ui->makeLocal, SIGNAL(clicked()), this, SLOT(makeLocal()));
     connect(ui->makeGlobal, SIGNAL(clicked()), this, SLOT(makeGlobal()));
@@ -101,9 +103,10 @@ MainWindow::MainWindow(QMainWindow *parent) :
     setCentralWidget(ui->centralWidget);
 
     CalibrationDatabase cd;
-    if(!cd.isWritable()) {
+    if (!cd.isWritable()) {
         QMessageBox msg;
-        msg.setText(tr("Can't write the settings, are you running this program as administrator?\nYou are in read only mode now."));
+        msg.setText(tr("Can't write the settings, are you running this program "
+                       "as administrator?\nYou are in read only mode now."));
         msg.exec();
 
         ui->makeGlobal->setDisabled(true);
@@ -112,36 +115,41 @@ MainWindow::MainWindow(QMainWindow *parent) :
     }
 }
 
-MainWindow::~MainWindow() {
+MainWindow::~MainWindow()
+{
     delete ui;
 }
 
-void MainWindow::fillSetups() {
+void MainWindow::fillSetups()
+{
     fillLocalSetups();
     fillGlobalSetups();
 }
 
-void MainWindow::fillLocalSetups() {
+void MainWindow::fillLocalSetups()
+{
     ui->localSetups->clear();
     CalibrationDatabase cd;
     HardwareSetups setups = cd.localHardwareSetups();
-    foreach(HardwareSetup setup, setups) {
+    foreach (HardwareSetup setup, setups) {
         ui->localSetups->addItem(setup.name());
     }
 }
 
-void MainWindow::fillGlobalSetups() {
+void MainWindow::fillGlobalSetups()
+{
     ui->globalSetups->clear();
     CalibrationDatabase cd;
     HardwareSetups setups = cd.globalHardwareSetups();
-    foreach(HardwareSetup setup, setups) {
+    foreach (HardwareSetup setup, setups) {
         ui->globalSetups->addItem(setup.name());
     }
 }
 
-void MainWindow::makeLocal() {
-    QList<QListWidgetItem*> items = ui->globalSetups->selectedItems();
-    if(items.count() != 1) {
+void MainWindow::makeLocal()
+{
+    QList<QListWidgetItem *> items = ui->globalSetups->selectedItems();
+    if (items.count() != 1) {
         QMessageBox msg;
         msg.setText(tr("Please select 1 item form the global column"));
         msg.exec();
@@ -153,21 +161,23 @@ void MainWindow::makeLocal() {
 
     try {
         cd.makeLocal(setup);
-        statusBar()->showMessage(tr("Hardware setup %1 is made local.").arg(setup.name()));
-    } catch(const std::domain_error& err) {
+        statusBar()->showMessage(
+            tr("Hardware setup %1 is made local.").arg(setup.name()));
+    } catch (const std::domain_error &err) {
         QMessageBox msg;
         msg.setText(err.what());
         msg.exec();
-        statusBar()->showMessage(tr("Couldn't make hardware setup %1 local.").arg(setup.name()));
+        statusBar()->showMessage(
+            tr("Couldn't make hardware setup %1 local.").arg(setup.name()));
     }
-
 
     fillSetups();
 }
 
-void MainWindow::makeGlobal() {
-    QList<QListWidgetItem*>  items = ui->localSetups->selectedItems();
-    if(items.count() != 1) {
+void MainWindow::makeGlobal()
+{
+    QList<QListWidgetItem *> items = ui->localSetups->selectedItems();
+    if (items.count() != 1) {
         QMessageBox msg;
         msg.setText(tr("Please select 1 item form the local column"));
         msg.exec();
@@ -178,19 +188,22 @@ void MainWindow::makeGlobal() {
     HardwareSetup setup = cd.setup(items.first()->text());
     try {
         cd.makeGlobal(setup);
-        statusBar()->showMessage(tr("Hardware setup %1 is made global.").arg(setup.name()));
-    } catch(const std::domain_error& err) {
+        statusBar()->showMessage(
+            tr("Hardware setup %1 is made global.").arg(setup.name()));
+    } catch (const std::domain_error &err) {
         QMessageBox msg;
         msg.setText(err.what());
         msg.exec();
-        statusBar()->showMessage(tr("Couldn't make hardware setup %1 global.").arg(setup.name()));
+        statusBar()->showMessage(
+            tr("Couldn't make hardware setup %1 global.").arg(setup.name()));
     }
 
     fillSetups();
 }
 
-void MainWindow::showInfo(QListWidgetItem *item) {
-    if(item->listWidget() == ui->localSetups) {
+void MainWindow::showInfo(QListWidgetItem *item)
+{
+    if (item->listWidget() == ui->localSetups) {
         ui->globalSetups->setCurrentItem(0);
     } else {
         ui->localSetups->setCurrentItem(0);
@@ -201,7 +214,7 @@ void MainWindow::showInfo(QListWidgetItem *item) {
     QStringList profiles = setup.profiles();
 
     QString text = "Setup: " + setup.name();
-    foreach(QString profile, profiles){
+    foreach (QString profile, profiles) {
         text += "\n";
         text += "\t" + profile;
     }

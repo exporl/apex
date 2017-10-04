@@ -50,49 +50,61 @@ public:
         * Used to iterate the parameters. I know it looks strange but M$VC
         * cannot handle template inheritance across libraries...
         */
-    struct APEXDATA_EXPORT const_iterator
-    {
-        const_iterator(const QMap<QString, QString>::const_iterator& it);
-        const_iterator() {}
+    struct APEXDATA_EXPORT const_iterator {
+        const_iterator(const QMap<QString, QString>::const_iterator &it);
+        const_iterator()
+        {
+        }
 
-        const_iterator& operator=(const QMap<QString, QString>::
-                const_iterator& it);
-        const_iterator& operator++(); //prefix++
-        const_iterator  operator++(int); //postfix++
-        bool operator==(const const_iterator& other) const;
-        bool operator!=(const const_iterator& other) const;
-        const QString& key();
-        const QString& value();
+        const_iterator &
+        operator=(const QMap<QString, QString>::const_iterator &it);
+        const_iterator &operator++();   // prefix++
+        const_iterator operator++(int); // postfix++
+        bool operator==(const const_iterator &other) const;
+        bool operator!=(const const_iterator &other) const;
+        const QString &key();
+        const QString &value();
 
-        private:
-
-            QMap<QString, QString>::const_iterator it;
+    private:
+        QMap<QString, QString>::const_iterator it;
     };
 
     QMap<QString, QString>::const_iterator begin() const;
     QMap<QString, QString>::const_iterator end() const;
 
-    virtual bool Parse(const QDomElement &p_paramElement);                   // don't do this in the constructor because of overriding of the SetParameter function
+    virtual bool Parse(const QDomElement &p_paramElement); // don't do this in
+                                                           // the constructor
+                                                           // because of
+                                                           // overriding of the
+                                                           // SetParameter
+                                                           // function
 
+    virtual QString GetParameter(const QString &p_name) const; //[ stijn ]
+                                                               // changed to
+    // reference
+    // again; no need
+    // to make extra
+    // copies
 
-    virtual QString GetParameter(const QString& p_name) const;         //[ stijn ] changed to reference again; no need to make extra copies
+    virtual bool HasParameter(const QString &p_name) const;
 
-    virtual bool HasParameter(const QString& p_name) const;
-
-    virtual void SetParameter(const QString& ac_sName, const QString& ac_sValue)
+    virtual void SetParameter(const QString &ac_sName, const QString &ac_sValue)
     {
         parameters[ac_sName] = ac_sValue;
     }
 
     virtual bool CheckParameters();
 
-    virtual bool operator==(const ApexParameters& other) const;
+    virtual bool operator==(const ApexParameters &other) const;
 
 protected:
-    //virtual bool SetParameter(const QString& p_name, const QString& p_id, const QString& p_value, QDomElement base=0)
-    virtual bool SetParameter(const QString& , const QString& , const QString& , const QDomElement &)
+    // virtual bool SetParameter(const QString& p_name, const QString& p_id,
+    // const QString& p_value, QDomElement base=0)
+    virtual bool SetParameter(const QString &, const QString &, const QString &,
+                              const QDomElement &)
     {
-//              qCDebug(APEX_RS, "ApexParameters: SetParameter: should not come here?");
+        //              qCDebug(APEX_RS, "ApexParameters: SetParameter: should
+        //              not come here?");
         return true;
     }
 
@@ -101,7 +113,6 @@ private:
 
     QMap<QString, QString> parameters;
 };
-
 }
 }
 

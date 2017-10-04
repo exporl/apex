@@ -36,12 +36,11 @@ namespace parser
 class ConnectionParser
 {
 public:
-    data::ConnectionData* Parse(const QDomElement &node);
+    data::ConnectionData *Parse(const QDomElement &node);
 
 private:
     QString GenerateType(QString parameterid);
 };
-
 }
 }
 

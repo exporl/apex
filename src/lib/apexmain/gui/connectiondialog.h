@@ -32,11 +32,11 @@ class ExperimentRunDelegate;
 
 class ConnectionDialogPrivate;
 
-class ConnectionDialog: public QDialog
+class ConnectionDialog : public QDialog
 {
 public:
-    ConnectionDialog (QWidget *parent = NULL);
-    void setDelegate (const ExperimentRunDelegate &delegate);
+    ConnectionDialog(QWidget *parent = NULL);
+    void setDelegate(const ExperimentRunDelegate &delegate);
     ~ConnectionDialog();
 
 private:
@@ -46,4 +46,3 @@ private:
 } // namespace apex
 
 #endif
-

@@ -32,55 +32,56 @@ class ArcLayoutPrivate;
  * - take spacing and margins into account
  * - take maximum sizes and size policies into account
  */
-class APEXTOOLS_EXPORT ArcLayout: public QLayout {
-    Q_PROPERTY (ArcType arcType READ arcType WRITE setArcType)
-    Q_PROPERTY (ArcLayoutFlags arcLayoutFlags READ arcLayoutFlags
-            WRITE setArcLayoutFlags)
-    Q_ENUMS (ArcType)
-    Q_FLAGS (ArcLayoutFlags)
+class APEXTOOLS_EXPORT ArcLayout : public QLayout
+{
+    Q_PROPERTY(ArcType arcType READ arcType WRITE setArcType)
+    Q_PROPERTY(ArcLayoutFlags arcLayoutFlags READ arcLayoutFlags WRITE
+                   setArcLayoutFlags)
+    Q_ENUMS(ArcType)
+    Q_FLAGS(ArcLayoutFlags)
 public:
     enum ArcType {
-        ARC_TOP    = 0x0001,
+        ARC_TOP = 0x0001,
         ARC_BOTTOM = 0x0002,
-        ARC_LEFT   = 0x0004,
-        ARC_RIGHT  = 0x0008,
-        ARC_FULL   = 0x0010
+        ARC_LEFT = 0x0004,
+        ARC_RIGHT = 0x0008,
+        ARC_FULL = 0x0010
     };
 
     enum ArcLayoutFlag {
-        ARC_RECTANGULAR      = 0x0001,
+        ARC_RECTANGULAR = 0x0001,
         ARC_IRREGULAR_CENTER = 0x0002
     };
-    Q_DECLARE_FLAGS (ArcLayoutFlags, ArcLayoutFlag)
+    Q_DECLARE_FLAGS(ArcLayoutFlags, ArcLayoutFlag)
 
-    ArcLayout (ArcType arcType, QWidget *parent = NULL);
+    ArcLayout(ArcType arcType, QWidget *parent = NULL);
     ~ArcLayout();
 
     // element 0 is the center element
-    void addItem (QLayoutItem *item);
-    void insertWidget (int index, QWidget *item);
-    void insertItem (int index, QLayoutItem *item);
+    void addItem(QLayoutItem *item);
+    void insertWidget(int index, QWidget *item);
+    void insertItem(int index, QLayoutItem *item);
     Qt::Orientations expandingDirections() const;
     bool hasHeightForWidth() const;
-    int heightForWidth (int width) const;
+    int heightForWidth(int width) const;
     int count() const;
-    QLayoutItem *itemAt (int index) const;
+    QLayoutItem *itemAt(int index) const;
     QSize minimumSize() const;
-    void setGeometry (const QRect &rect);
+    void setGeometry(const QRect &rect);
     QSize sizeHint() const;
-    QLayoutItem *takeAt (int index);
+    QLayoutItem *takeAt(int index);
 
 public Q_SLOTS:
-    void setArcType (ArcType arcType);
+    void setArcType(ArcType arcType);
     ArcType arcType() const;
 
-    void setArcLayoutFlags (ArcLayoutFlags arcLayoutFlags);
+    void setArcLayoutFlags(ArcLayoutFlags arcLayoutFlags);
     ArcLayoutFlags arcLayoutFlags() const;
 
 private:
     QScopedPointer<ArcLayoutPrivate> d;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS (ArcLayout::ArcLayoutFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(ArcLayout::ArcLayoutFlags)
 
 #endif

@@ -5,40 +5,39 @@
 #include "screen/apexscreen.h"
 #include "stimulus/stimulusoutput.h"
 
-#include <QProgressBar>
-#include <QTimer>
-#include <QThread>
 #include <QDebug>
+#include <QProgressBar>
+#include <QThread>
+#include <QTimer>
 
 #define NOT_IMPL qFatal("%s: not implemented yet", Q_FUNC_INFO)
 
 namespace apex
 {
 
-//class ExperimentIoPrivate ***************************************************
+// class ExperimentIoPrivate ***************************************************
 
-struct ExperimentIoPrivate
-{
+struct ExperimentIoPrivate {
     ExperimentIoPrivate();
 
-    gui::ApexMainWindow* gui;
+    gui::ApexMainWindow *gui;
 
     QString currentAnswer;
-    gui::ScreenRunDelegate* currentScreen;
+    gui::ScreenRunDelegate *currentScreen;
 };
 
 ExperimentIoPrivate::ExperimentIoPrivate() : gui(0), currentScreen(0)
 {
 }
 
-//class TimerDescription ******************************************************
+// class TimerDescription ******************************************************
 
-TimerDescription::TimerDescription() : msec(-1), startObject(0), startSignal(0),
-                                                 endObject(0),   endMember(0)
+TimerDescription::TimerDescription()
+    : msec(-1), startObject(0), startSignal(0), endObject(0), endMember(0)
 {
 }
 
-//class ExperimentIo **********************************************************
+// class ExperimentIo **********************************************************
 
 ExperimentIo::ExperimentIo() : d(new ExperimentIoPrivate())
 {
@@ -49,30 +48,29 @@ ExperimentIo::~ExperimentIo()
     delete d;
 }
 
-void ExperimentIo::setGui(gui::ApexMainWindow* gui)
+void ExperimentIo::setGui(gui::ApexMainWindow *gui)
 {
     if (d->gui == gui)
         return;
 
-    if (d->gui != 0)
-    {
+    if (d->gui != 0) {
         d->gui->disconnect(this);
         disconnect(d->gui);
     }
 
     d->gui = gui;
 
-    connect(gui, SIGNAL(Answered(const ScreenResult*)),
-            this, SIGNAL(responseGiven(const ScreenResult*)));
+    connect(gui, SIGNAL(Answered(const ScreenResult *)), this,
+            SIGNAL(responseGiven(const ScreenResult *)));
     connect(gui, SIGNAL(startClicked()), this, SIGNAL(startRequest()));
     connect(gui, SIGNAL(stopClicked()), this, SIGNAL(stopRequest()));
     connect(gui, SIGNAL(pauseClicked()), this, SIGNAL(pauseRequest()));
     connect(gui, SIGNAL(skipClicked()), this, SIGNAL(skipRequest()));
-    connect(gui, SIGNAL(repeatTrial()), this, SIGNAL(repeatTrialRequest()));
+    connect(gui, SIGNAL(RepeatOutput()), this, SIGNAL(repeatTrialRequest()));
     connect(this, SIGNAL(feedbackDone()), this, SLOT(endFeedback()));
 }
 
-void ExperimentIo::showScreen(const QString& screen)
+void ExperimentIo::showScreen(const QString &screen)
 {
     d->currentScreen = d->gui->setScreen(screen);
     d->gui->setAnswer(d->currentAnswer);
@@ -85,7 +83,7 @@ void ExperimentIo::showScreen(const QString& screen)
     d->currentScreen->newStimulus();
 }*/
 
-void ExperimentIo::playStimulus(const QString& stimulus, double silenceBefore)
+void ExperimentIo::playStimulus(const QString &stimulus, double silenceBefore)
 {
     Q_EMIT newStimulus(stimulus, silenceBefore);
 }
@@ -96,13 +94,13 @@ void ExperimentIo::onStimulusPlayed()
     Q_EMIT stimulusPlayed();
 }
 
-void ExperimentIo::showFeedback(rundelegates::ScreenElementRunDelegate::FeedbackMode mode,
-                                const QString& screenElement, int msec)
+void ExperimentIo::showFeedback(
+    rundelegates::ScreenElementRunDelegate::FeedbackMode mode,
+    const QString &screenElement, int msec)
 {
     d->gui->feedback(mode, screenElement);
 
-    if (msec >= 0)
-    {
+    if (msec >= 0) {
         TimerDescription timer;
         timer.msec = msec;
         timer.endObject = this;
@@ -121,10 +119,9 @@ void ExperimentIo::setProgress(double percentage)
     d->gui->setProgress(percentage);
 }
 
-void apex::ExperimentIo::setAnswer(const QString& answer)
+void apex::ExperimentIo::setAnswer(const QString &answer)
 {
-    if (answer != d->currentAnswer)
-    {
+    if (answer != d->currentAnswer) {
         d->currentAnswer = answer;
         d->gui->setAnswer(answer);
     }
@@ -146,10 +143,25 @@ void ExperimentIo::disableStart()
     setStartEnabled(false);
 }
 
+void ExperimentIo::disableStop()
+{
+    setStopEnabled(false);
+}
+
 void ExperimentIo::enableStartStop()
 {
     setStartEnabled(true);
     setStopEnabled(true);
+}
+
+void ExperimentIo::enableRepeat()
+{
+    setRepeatEnabled(true);
+}
+
+void ExperimentIo::disableRepeat()
+{
+    setRepeatEnabled(false);
 }
 
 void ExperimentIo::enableResponseStopPause()
@@ -173,7 +185,7 @@ void ExperimentIo::enableSelectSoundcard()
 
 void ExperimentIo::disableSelectSoundcard()
 {
-     d->gui->EnableSelectSoundcard(false);
+    d->gui->EnableSelectSoundcard(false);
 }
 
 bool ExperimentIo::startEnabled() const
@@ -208,8 +220,8 @@ bool ExperimentIo::responseEnabled() const
 
 bool ExperimentIo::allEnabled() const
 {
-    return startEnabled() && pauseEnabled() && stopEnabled() &&
-           skipEnabled() && repeatEnabled() && responseEnabled();
+    return startEnabled() && pauseEnabled() && stopEnabled() && skipEnabled() &&
+           repeatEnabled() && responseEnabled();
 }
 
 bool ExperimentIo::isPaused() const
@@ -256,7 +268,8 @@ void ExperimentIo::setRepeatEnabled(bool enable)
 
 void ExperimentIo::setResponseEnabled(bool enable)
 {
-    qCDebug(APEX_RS) << QString("ExperimentIo::setResponseEnabled(%1)").arg(enable?"true":"false");
+    qCDebug(APEX_RS) << QString("ExperimentIo::setResponseEnabled(%1)")
+                            .arg(enable ? "true" : "false");
     d->gui->EnableScreen(enable);
 }
 
@@ -289,27 +302,26 @@ void ExperimentIo::setInterTrialTimeout(int timeout)
 
 void ExperimentIo::setTimer(TimerDescription description)
 {
-    if (description.endObject == 0 || description.endMember == 0)
-    {
-        //no slot to call at end of timer so just call our own timeout() signal
+    if (description.endObject == 0 || description.endMember == 0) {
+        // no slot to call at end of timer so just call our own timeout() signal
         description.endObject = this;
         description.endMember = SIGNAL(timeout());
     }
 
-    if (description.msec > 0)
-    {
-        QTimer* timer = new QTimer(this);
+    if (description.msec > 0) {
+        QTimer *timer = new QTimer(this);
         timer->setSingleShot(true);
         timer->setInterval(description.msec);
-        connect(timer, SIGNAL(timeout()), description.endObject, description.endMember);
+        connect(timer, SIGNAL(timeout()), description.endObject,
+                description.endMember);
         connect(timer, SIGNAL(timeout()), timer, SLOT(deleteLater()));
 
         if (description.startObject != 0 && description.startSignal != 0)
-            connect(description.startObject, description.startSignal, timer,  SLOT(start()));
+            connect(description.startObject, description.startSignal, timer,
+                    SLOT(start()));
         else
             timer->start();
-    }
-    else //timeout <= 0 so just call endMember
+    } else // timeout <= 0 so just call endMember
         QTimer::singleShot(0, description.endObject, description.endMember);
 }
 
@@ -327,25 +339,22 @@ void ExperimentIo::killTimers()
 
 void ExperimentIo::finishTimers()
 {
-    Q_FOREACH (QTimer* timer, allTimers())
+    Q_FOREACH (QTimer *timer, allTimers())
         timer->setInterval(0);
 }
 
-QList<QTimer*> ExperimentIo::allTimers()
+QList<QTimer *> ExperimentIo::allTimers()
 {
-    return findChildren<QTimer*>();
+    return findChildren<QTimer *>();
 }
 
-void ExperimentIo::setTimeout(int timeout, QProgressBar* bar)
+void ExperimentIo::setTimeout(int timeout, QProgressBar *bar)
 {
-    if (timeout == 0)
-    {
-        //timeout done
+    if (timeout == 0) {
+        // timeout done
         bar->setEnabled(false);
-    }
-    else if (bar->value() == 0)
-    {
-        //timeout started
+    } else if (bar->value() == 0) {
+        // timeout started
         bar->setEnabled(true);
         bar->setMaximum(timeout);
     }
@@ -353,4 +362,4 @@ void ExperimentIo::setTimeout(int timeout, QProgressBar* bar)
     bar->setValue(timeout);
 }
 
-}//ns apex
+} // ns apex

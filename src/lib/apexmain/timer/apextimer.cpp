@@ -21,36 +21,35 @@
 
 #include <QDateTime>
 
-namespace apex {
+namespace apex
+{
 
-ApexTimer::ApexTimer(ExperimentRunDelegate& p_rd) :
-    ApexModule(p_rd),
-    m_result(-1)
+ApexTimer::ApexTimer(ExperimentRunDelegate &p_rd)
+    : ApexModule(p_rd), m_result(-1)
 {
 }
 
-QString ApexTimer::GetResultXML( ) const
+QString ApexTimer::GetResultXML() const
 {
-    //qCDebug(APEX_RS, "ApexTimer::GetResultXML\n");
+    // qCDebug(APEX_RS, "ApexTimer::GetResultXML\n");
 
     QString temp("<responsetime unit='ms'>%1</responsetime>");
     temp = temp.arg(m_result);
-//      m_result=-1;
+    //      m_result=-1;
 
     return temp;
 }
 
 void ApexTimer::start()
 {
-    //qCDebug(APEX_RS, "Starting timer");
-    m_result=-1;
+    // qCDebug(APEX_RS, "Starting timer");
+    m_result = -1;
     m_time.restart();
 }
 
 void ApexTimer::stop()
 {
-    //qCDebug(APEX_RS, "Stopping timer");
+    // qCDebug(APEX_RS, "Stopping timer");
     m_result = m_time.elapsed();
 }
-
 }

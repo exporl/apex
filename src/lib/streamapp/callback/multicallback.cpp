@@ -21,42 +21,40 @@
 
 using namespace streamapp;
 
-MultiCallback::MultiCallback( const bool ac_bDeleteContent ) :
-  mc_bDeleteContent( ac_bDeleteContent )
+MultiCallback::MultiCallback(const bool ac_bDeleteContent)
+    : mc_bDeleteContent(ac_bDeleteContent)
 {
-
 }
 
 MultiCallback::~MultiCallback()
 {
-  if( mc_bDeleteContent )
-  {
-    for( unsigned i = 0 ; i < m_Callbacks.mf_nGetNumItems() ; ++i )
-      delete m_Callbacks( i );
-  }
-  m_Callbacks.mp_RemoveAllItems();
+    if (mc_bDeleteContent) {
+        for (unsigned i = 0; i < m_Callbacks.mf_nGetNumItems(); ++i)
+            delete m_Callbacks(i);
+    }
+    m_Callbacks.mp_RemoveAllItems();
 }
 
-void MultiCallback::mp_AddItem( Callback* a_pCallback )
+void MultiCallback::mp_AddItem(Callback *a_pCallback)
 {
-  m_Callbacks.mp_AddItem( a_pCallback );
+    m_Callbacks.mp_AddItem(a_pCallback);
 }
 
-void MultiCallback::mp_RemoveItem( Callback* a_pCallback )
+void MultiCallback::mp_RemoveItem(Callback *a_pCallback)
 {
-  m_Callbacks.mp_RemoveItem( a_pCallback );
-  if( mc_bDeleteContent )
-    delete a_pCallback;
+    m_Callbacks.mp_RemoveItem(a_pCallback);
+    if (mc_bDeleteContent)
+        delete a_pCallback;
 }
 
 unsigned MultiCallback::mf_nGetNumItems() const
 {
-  return m_Callbacks.mf_nGetNumItems();
+    return m_Callbacks.mf_nGetNumItems();
 }
 
 void MultiCallback::mf_Callback()
 {
-  const unsigned nItems = m_Callbacks.mf_nGetNumItems();
-  for( unsigned i = 0 ; i < nItems ; ++i )
-    m_Callbacks.mf_GetItem( i )->mf_Callback();
+    const unsigned nItems = m_Callbacks.mf_nGetNumItems();
+    for (unsigned i = 0; i < nItems; ++i)
+        m_Callbacks.mf_GetItem(i)->mf_Callback();
 }

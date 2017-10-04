@@ -21,37 +21,35 @@
 #include <QStringList>
 
 #ifdef Q_OS_WIN32
-#include <windows.h>        // Sleep
+#include <windows.h> // Sleep
 #else
 #include <unistd.h>
 #endif
 
-void milliSleep (unsigned millis)
+void milliSleep(unsigned millis)
 {
 #ifdef Q_OS_WIN32
-    Sleep (millis);
+    Sleep(millis);
 #else
-    usleep (1000 * millis);
+    usleep(1000 * millis);
 #endif
 }
 
-class DelayFilterCreator :
-    public QObject,
-    public PluginFilterCreator
+class DelayFilterCreator : public QObject, public PluginFilterCreator
 {
     Q_OBJECT
-    Q_INTERFACES (PluginFilterCreator)
-    Q_PLUGIN_METADATA  (IID "apex.delayfilter")
+    Q_INTERFACES(PluginFilterCreator)
+    Q_PLUGIN_METADATA(IID "apex.delayfilter")
 public:
     virtual QStringList availablePlugins() const;
 
-    virtual PluginFilterInterface *createFilter (const QString &name,
-            unsigned channels, unsigned blocksize, unsigned fs) const;
+    virtual PluginFilterInterface *createFilter(const QString &name,
+                                                unsigned channels,
+                                                unsigned blocksize,
+                                                unsigned fs) const;
 };
 
-class DelayFilter:
-    public QObject,
-    public PluginFilterInterface
+class DelayFilter : public QObject, public PluginFilterInterface
 {
     Q_OBJECT
 public:
@@ -59,22 +57,20 @@ public:
     ~DelayFilter();
 
     virtual void resetParameters();
-    virtual bool isValidParameter (const QString &type, int channel) const;
-    virtual bool setParameter (const QString &type, int channel,
-            const QString &value);
-    virtual bool prepare (unsigned numberOfFrames);
+    virtual bool isValidParameter(const QString &type, int channel) const;
+    virtual bool setParameter(const QString &type, int channel,
+                              const QString &value);
+    virtual bool prepare(unsigned numberOfFrames);
 
-    virtual void process (double * const *data);
+    virtual void process(double *const *data);
 
 private:
-    int delay;          // delay in ms
+    int delay; // delay in ms
 };
-
 
 // DelayFilter =================================================================
 
-DelayFilter::DelayFilter() :
-    delay(0)
+DelayFilter::DelayFilter() : delay(0)
 {
     resetParameters();
 
@@ -87,17 +83,17 @@ DelayFilter::~DelayFilter()
 
 void DelayFilter::resetParameters()
 {
-    delay=0;
+    delay = 0;
 }
 
-bool DelayFilter::prepare (unsigned numberOfFrames)
+bool DelayFilter::prepare(unsigned numberOfFrames)
 {
-    Q_UNUSED (numberOfFrames);
+    Q_UNUSED(numberOfFrames);
 
     return true;
 }
 
-bool DelayFilter::isValidParameter (const QString &type, int channel) const
+bool DelayFilter::isValidParameter(const QString &type, int channel) const
 {
     if (type == "delay" && channel == -1)
         return true;
@@ -105,21 +101,22 @@ bool DelayFilter::isValidParameter (const QString &type, int channel) const
     return false;
 }
 
-bool DelayFilter::setParameter (const QString &type, int channel,
-        const QString &value)
+bool DelayFilter::setParameter(const QString &type, int channel,
+                               const QString &value)
 {
 
-    if (type=="delay" && channel==-1) {
-        delay=value.toInt();
+    if (type == "delay" && channel == -1) {
+        delay = value.toInt();
         return true;
     }
 
-    setErrorMessage (QString ("Unknown parameter %2 or invalid channel %1")
-            .arg (channel).arg (type));
+    setErrorMessage(QString("Unknown parameter %2 or invalid channel %1")
+                        .arg(channel)
+                        .arg(type));
     return false;
 }
 
-void DelayFilter::process (double * const *data)
+void DelayFilter::process(double *const *data)
 {
     Q_UNUSED(data);
     milliSleep(delay);
@@ -132,13 +129,13 @@ QStringList DelayFilterCreator::availablePlugins() const
     return QStringList() << "delayfilter";
 }
 
-PluginFilterInterface *DelayFilterCreator::createFilter
-       (const QString &name, unsigned channels, unsigned size,
-        unsigned sampleRate) const
+PluginFilterInterface *
+DelayFilterCreator::createFilter(const QString &name, unsigned channels,
+                                 unsigned size, unsigned sampleRate) const
 {
-    Q_UNUSED (channels);
-    Q_UNUSED (size);
-    Q_UNUSED (sampleRate);
+    Q_UNUSED(channels);
+    Q_UNUSED(size);
+    Q_UNUSED(sampleRate);
 
     if (name == "delayfilter")
         return new DelayFilter();

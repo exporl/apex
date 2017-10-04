@@ -26,112 +26,106 @@
 #ifdef S_WIN32
 #include "../_archs/win32/win32_timers.h"
 #elif defined S_POSIX
-//FIXME add v3 timers
+// FIXME add v3 timers
 #include <QTime>
 #else
-  #ERROR !no platform defined!
+#ERROR !no platform defined !
 #endif
 
 using namespace streamapp;
 
 namespace
 {
-  ITimer* sf_InitTimer()
-  {
+ITimer *sf_InitTimer()
+{
 #ifdef S_WIN32
     return new utils::Timer4();
 #else
     return 0;
 #endif
-  }
+}
 }
 
-BufferDropCheck::BufferDropCheck( const bool ac_bDeleteSlave ) :
-  mv_pDlock( 0 ),
-  mv_pNlock( 0 ),
-  mv_bPrint( true ),
-  mv_dTime( 666.0 ),
-  mc_pTimer( sf_InitTimer() ),
-  mc_bDelete( ac_bDeleteSlave ),
-  mc_Lock()
+BufferDropCheck::BufferDropCheck(const bool ac_bDeleteSlave)
+    : mv_pDlock(0),
+      mv_pNlock(0),
+      mv_bPrint(true),
+      mv_dTime(666.0),
+      mc_pTimer(sf_InitTimer()),
+      mc_bDelete(ac_bDeleteSlave),
+      mc_Lock()
 {
-
 }
 
 BufferDropCheck::~BufferDropCheck()
 {
-  const Lock L( mc_Lock );
-  if( mc_bDelete )
-  {
-    delete mv_pDlock;
-    delete mv_pNlock;
-  }
+    const Lock L(mc_Lock);
+    if (mc_bDelete) {
+        delete mv_pDlock;
+        delete mv_pNlock;
+    }
 }
 
-void BufferDropCheck::mp_SetMaxCallbackTime( const double ac_dTimInSec )
+void BufferDropCheck::mp_SetMaxCallbackTime(const double ac_dTimInSec)
 {
-  const Lock L( mc_Lock );
-  mv_dTime = ac_dTimInSec;
+    const Lock L(mc_Lock);
+    mv_dTime = ac_dTimInSec;
 }
 
 void BufferDropCheck::mf_Callback()
 {
-  if( mc_pTimer )
-  {
-    mc_pTimer->Reset();
-    if( mv_pDlock )
-      mv_pDlock->mf_Callback();
-    if( mc_pTimer->Elapsed() >= mv_dTime )
-    {
-      if( mv_pNlock )
-        mv_pNlock->mf_Callback();
-      if( mv_bPrint )
-        std::cout << "BufferDropCheck: Buffer Underrun!" << std::endl;
+    if (mc_pTimer) {
+        mc_pTimer->Reset();
+        if (mv_pDlock)
+            mv_pDlock->mf_Callback();
+        if (mc_pTimer->Elapsed() >= mv_dTime) {
+            if (mv_pNlock)
+                mv_pNlock->mf_Callback();
+            if (mv_bPrint)
+                std::cout << "BufferDropCheck: Buffer Underrun!" << std::endl;
+        }
+    } else {
+        if (mv_pDlock)
+            mv_pDlock->mf_Callback();
     }
-  }
-  else
-  {
-    if( mv_pDlock )
-      mv_pDlock->mf_Callback();
-  }
 }
 
-void BufferDropCheck::mp_InstallMainCallback( Callback* a_pCallback )
+void BufferDropCheck::mp_InstallMainCallback(Callback *a_pCallback)
 {
-  const Lock L( mc_Lock );
-  if( mc_bDelete )
-    delete mv_pDlock;
-  mv_pDlock = a_pCallback;
+    const Lock L(mc_Lock);
+    if (mc_bDelete)
+        delete mv_pDlock;
+    mv_pDlock = a_pCallback;
 }
 
-void BufferDropCheck::mp_InstallNoLockCallback( Callback* a_pCallback )
+void BufferDropCheck::mp_InstallNoLockCallback(Callback *a_pCallback)
 {
-  const Lock L( mc_Lock );
-  if( mv_pNlock )
-    delete mv_pNlock;
-  mv_pNlock = a_pCallback;
+    const Lock L(mc_Lock);
+    if (mv_pNlock)
+        delete mv_pNlock;
+    mv_pNlock = a_pCallback;
 }
 
-Callback* BufferDropCheck::mf_pGetMainCallback()
+Callback *BufferDropCheck::mf_pGetMainCallback()
 {
-  const Lock L( mc_Lock );
-  return mv_pDlock;
+    const Lock L(mc_Lock);
+    return mv_pDlock;
 }
 
-Callback* BufferDropCheck::mf_pGetNoLockCallback()
+Callback *BufferDropCheck::mf_pGetNoLockCallback()
 {
-  const Lock L( mc_Lock );
-  return mv_pNlock;
+    const Lock L(mc_Lock);
+    return mv_pNlock;
 }
 
-void BufferDropCheck::mp_SetPrintToStdOut( const bool ac_bSet /*= true*/ )
+void BufferDropCheck::mp_SetPrintToStdOut(const bool ac_bSet /*= true*/)
 {
-  const Lock L( mc_Lock );
-  mv_bPrint = ac_bSet;
+    const Lock L(mc_Lock);
+    mv_bPrint = ac_bSet;
 }
 
-const bool& BufferDropCheck::mf_bGetPrintToStdOut() const
+const bool &BufferDropCheck::mf_bGetPrintToStdOut() const
 {
-  const Lock L( mc_Lock );
-  return mv_bPrint;
+    const Lock L(mc_Lock);
+    return mv_bPrint;
 }

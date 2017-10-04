@@ -61,19 +61,23 @@ DevicesParser::~DevicesParser()
  * Parse the <devices> tag and return a map of DeviceData objects of the
  * correct class
  */
-tAllDevices DevicesParser::Parse(const QDomElement &p_base, data::ParameterManagerData* pm)
+tAllDevices DevicesParser::Parse(const QDomElement &p_base,
+                                 data::ParameterManagerData *pm)
 {
     data::DevicesData devMap;
     data::DevicesData controlMap;
 
-    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(tr("DevicesParser"), tr("Processing devices"))));
+    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(
+                              tr("DevicesParser"), tr("Processing devices"))));
 
-    for (QDomElement currentNode = p_base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
+    for (QDomElement currentNode = p_base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
         const QString tag = currentNode.tagName();
 
         if (tag == "device") {
-            QScopedPointer<data::DeviceData> tempData(ParseDevice(currentNode, pm));
+            QScopedPointer<data::DeviceData> tempData(
+                ParseDevice(currentNode, pm));
             QString id = tempData->id();
             if (tempData->isControlDevice())
                 controlMap[id] = tempData.take();
@@ -82,12 +86,14 @@ tAllDevices DevicesParser::Parse(const QDomElement &p_base, data::ParameterManag
         } else if (tag == "master") {
             devMap.setMasterDevice(currentNode.text());
         } else {
-            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "EDevicesParser::Parse", "Unknown tag: " + tag )));
-            throw ApexStringException( "Parsing devices failed" );
+            qCWarning(APEX_RS, "%s",
+                      qPrintable(QSL("%1: %2").arg("EDevicesParser::Parse",
+                                                   "Unknown tag: " + tag)));
+            throw ApexStringException("Parsing devices failed");
         }
     }
 
-    if (devMap.masterDevice().isEmpty() && devMap.size() )
+    if (devMap.masterDevice().isEmpty() && devMap.size())
         devMap.setMasterDevice(devMap.begin().key());
 
     tAllDevices all;
@@ -96,12 +102,12 @@ tAllDevices DevicesParser::Parse(const QDomElement &p_base, data::ParameterManag
     return all;
 }
 
-
-data::DeviceData* DevicesParser::ParseDevice(const QDomElement &p_base, data::ParameterManagerData* pm )
+data::DeviceData *DevicesParser::ParseDevice(const QDomElement &p_base,
+                                             data::ParameterManagerData *pm)
 {
-    const QString sModule =  p_base.attribute(sc_sType);
-    const QString id      =  p_base.attribute(sc_sID);
-    const QString sMode   =  p_base.attribute(QSL("mode"));
+    const QString sModule = p_base.attribute(sc_sType);
+    const QString id = p_base.attribute(sc_sID);
+    const QString sMode = p_base.attribute(QSL("mode"));
 
     if (id.isEmpty())
         throw ApexStringException(tr("No device id found"));
@@ -111,32 +117,32 @@ data::DeviceData* DevicesParser::ParseDevice(const QDomElement &p_base, data::Pa
     if (sModule == sc_sWavDevice) {
         WavDeviceParser parser;
         parser.SetParameterManagerData(pm);
-        data::WavDeviceData* d = new data::WavDeviceData();
+        data::WavDeviceData *d = new data::WavDeviceData();
         parser.Parse(p_base, d);
         result.reset(d);
     } else if (sModule == sc_sDummyDevice) {
-        result.reset (new data::DummyDeviceData());
+        result.reset(new data::DummyDeviceData());
     } else if (sModule == sc_sPluginController) {
         parser::SimpleParametersParser parser;
         parser.SetParameterManagerData(pm);
-        data::PluginControllerData* pfd = new data::PluginControllerData;
+        data::PluginControllerData *pfd = new data::PluginControllerData;
         parser.Parse(p_base, pfd);
-        result.reset (pfd );
+        result.reset(pfd);
     } else if (sModule == sc_sCohDevice) {
         parser::CohDeviceParser parser;
         parser.SetParameterManagerData(pm);
-        data::CohDeviceData* d = new data::CohDeviceData();
+        data::CohDeviceData *d = new data::CohDeviceData();
         parser.Parse(p_base, d);
         result.reset(d);
     } else {
-        throw ApexStringException(tr("Unknown device type: %1. Does your apex version include this feature?")
-                .arg(sModule));
+        throw ApexStringException(tr("Unknown device type: %1. Does your apex "
+                                     "version include this feature?")
+                                      .arg(sModule));
     }
 
     result->setId(id);
 
     return result.take();
 }
-
 }
 }

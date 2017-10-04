@@ -21,19 +21,18 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    void ScreenEditorAddWidgetActionBase::addWidgetSlot()
-    {
-      addWidgetSlotCalled();
-    }
+namespace editor
+{
+void ScreenEditorAddWidgetActionBase::addWidgetSlot()
+{
+    addWidgetSlotCalled();
+}
 
-    ScreenEditorAddWidgetActionBase::ScreenEditorAddWidgetActionBase( ScreenEditor* e, const QString& name )
-      : QAction( e ), editor( e ), elName( name )
-    {
-      connect( this, SIGNAL( triggered() ),
-               this, SLOT( addWidgetSlot() ) );
-    }
-
-  }
+ScreenEditorAddWidgetActionBase::ScreenEditorAddWidgetActionBase(
+    ScreenEditor *e, const QString &name)
+    : QAction(e), editor(e), elName(name)
+{
+    connect(this, SIGNAL(triggered()), this, SLOT(addWidgetSlot()));
+}
+}
 }

@@ -29,179 +29,180 @@
 namespace streamapp
 {
 
+/**
+  * BufferReader
+  ************** */
+class BufferReader : public InputStream
+{
+public:
     /**
-      * BufferReader
-      ************** */
-  class BufferReader : public InputStream
-  {
-  public:
-      /**
-        * Constructor.
-        * @param a_pParent
-        */
-    BufferReader( BufferedProcessing* a_pParent ) :
-      m_Read( a_pParent->mc_nChannels, a_pParent->mc_nOutputBufferSize ),
-      mc_pParent( a_pParent )
+      * Constructor.
+      * @param a_pParent
+      */
+    BufferReader(BufferedProcessing *a_pParent)
+        : m_Read(a_pParent->mc_nChannels, a_pParent->mc_nOutputBufferSize),
+          mc_pParent(a_pParent)
     {
     }
 
-      /**
-        * Destructor.
-        */
+    /**
+      * Destructor.
+      */
     ~BufferReader()
     {
     }
 
-      /**
-        * Implementation of the InputStream method.
-        */
-    const Stream& Read()
+    /**
+      * Implementation of the InputStream method.
+      */
+    const Stream &Read()
     {
-      unsigned nRead;
-      mc_pParent->m_pFifo->mp_Read( m_Read.mf_pGetArray(), nRead, mc_pParent->mc_nOutputBufferSize );
-      if( nRead != mc_pParent->mc_nOutputBufferSize )
-      {
-        DBG( "BufferReader: buffer underrun" );
-        if( mc_pParent->m_pUnderRun )
-          mc_pParent->m_pUnderRun->mf_Callback();
-      }
-      return m_Read;
+        unsigned nRead;
+        mc_pParent->m_pFifo->mp_Read(m_Read.mf_pGetArray(), nRead,
+                                     mc_pParent->mc_nOutputBufferSize);
+        if (nRead != mc_pParent->mc_nOutputBufferSize) {
+            DBG("BufferReader: buffer underrun");
+            if (mc_pParent->m_pUnderRun)
+                mc_pParent->m_pUnderRun->mf_Callback();
+        }
+        return m_Read;
     }
-
-      /**
-        * Implementation of the InputStream method.
-        */
-    unsigned mf_nGetNumChannels() const
-    {
-      return mc_pParent->mc_nChannels;
-    }
-
-      /**
-        * Implementation of the InputStream method.
-        */
-    unsigned mf_nGetBufferSize() const
-    {
-      return mc_pParent->mc_nOutputBufferSize;
-    }
-
-  private:
-    StreamBuf m_Read; //must keep copy since source is circular
-    BufferedProcessing* const mc_pParent;
-
-    BufferReader( const BufferReader& );
-    BufferReader& operator = ( const BufferReader& );
-  };
 
     /**
-      * BufferWriter
-      ************** */
-  class BufferWriter : public OutputStream
-  {
-  public:
-      /**
-        * Constructor.
-        * @param a_pParent
-        */
-    BufferWriter( BufferedProcessing* a_pParent ) :
-      mc_pParent( a_pParent )
+      * Implementation of the InputStream method.
+      */
+    unsigned mf_nGetNumChannels() const
+    {
+        return mc_pParent->mc_nChannels;
+    }
+
+    /**
+      * Implementation of the InputStream method.
+      */
+    unsigned mf_nGetBufferSize() const
+    {
+        return mc_pParent->mc_nOutputBufferSize;
+    }
+
+private:
+    StreamBuf m_Read; // must keep copy since source is circular
+    BufferedProcessing *const mc_pParent;
+
+    BufferReader(const BufferReader &);
+    BufferReader &operator=(const BufferReader &);
+};
+
+/**
+  * BufferWriter
+  ************** */
+class BufferWriter : public OutputStream
+{
+public:
+    /**
+      * Constructor.
+      * @param a_pParent
+      */
+    BufferWriter(BufferedProcessing *a_pParent) : mc_pParent(a_pParent)
     {
     }
 
-      /**
-        * Destructor.
-        */
+    /**
+      * Destructor.
+      */
     ~BufferWriter()
     {
     }
 
-      /**
-        * Implementation of the OutputStream method.
-        */
-    void Write( const Stream& ac_Input )
+    /**
+      * Implementation of the OutputStream method.
+      */
+    void Write(const Stream &ac_Input)
     {
-      Q_ASSERT( ac_Input.mf_nGetBufferSize() == mc_pParent->mc_nInputBufferSize );
-      Q_ASSERT( ac_Input.mf_nGetChannelCount() == mc_pParent->mc_nChannels );
-      unsigned nWritten;
-      mc_pParent->m_pFifo->mp_Write( ac_Input.mf_pGetArray(), nWritten, mc_pParent->mc_nInputBufferSize );
-      if( nWritten != mc_pParent->mc_nInputBufferSize )
-      {
-        DBG( "BufferWriter: buffer overrun" );
-        if( mc_pParent->m_pOverRun )
-          mc_pParent->m_pOverRun->mf_Callback();
-      }
+        Q_ASSERT(ac_Input.mf_nGetBufferSize() ==
+                 mc_pParent->mc_nInputBufferSize);
+        Q_ASSERT(ac_Input.mf_nGetChannelCount() == mc_pParent->mc_nChannels);
+        unsigned nWritten;
+        mc_pParent->m_pFifo->mp_Write(ac_Input.mf_pGetArray(), nWritten,
+                                      mc_pParent->mc_nInputBufferSize);
+        if (nWritten != mc_pParent->mc_nInputBufferSize) {
+            DBG("BufferWriter: buffer overrun");
+            if (mc_pParent->m_pOverRun)
+                mc_pParent->m_pOverRun->mf_Callback();
+        }
     }
 
-      /**
-        * Implementation of the OutputStream method.
-        */
+    /**
+      * Implementation of the OutputStream method.
+      */
     unsigned mf_nGetNumChannels() const
     {
-      return mc_pParent->mc_nChannels;
+        return mc_pParent->mc_nChannels;
     }
 
-      /**
-        * Implementation of the OutputStream method.
-        */
+    /**
+      * Implementation of the OutputStream method.
+      */
     unsigned mf_nGetBufferSize() const
     {
-      return mc_pParent->mc_nInputBufferSize;
+        return mc_pParent->mc_nInputBufferSize;
     }
 
-  private:
-    BufferedProcessing* const mc_pParent;
+private:
+    BufferedProcessing *const mc_pParent;
 
-    BufferWriter( const BufferWriter& );
-    BufferWriter& operator = ( const BufferWriter& );
-  };
+    BufferWriter(const BufferWriter &);
+    BufferWriter &operator=(const BufferWriter &);
+};
 }
 
 using namespace streamapp;
 
-BufferedProcessing::BufferedProcessing( const unsigned ac_nInputBufferSize,
-                                        const unsigned ac_nOutputBufferSize,
-                                        const unsigned ac_nChannels,
-                                        const unsigned ac_nBufferSize ) :
-  mc_nInputBufferSize( ac_nInputBufferSize ),
-  mc_nOutputBufferSize( ac_nOutputBufferSize ),
-  mc_nChannels( ac_nChannels ),
-  mc_nBufferSize( ac_nBufferSize ),
-  m_Buffer( ac_nChannels, ac_nBufferSize ),
-  m_pOverRun( 0 ),
-  m_pUnderRun( 0 )
+BufferedProcessing::BufferedProcessing(const unsigned ac_nInputBufferSize,
+                                       const unsigned ac_nOutputBufferSize,
+                                       const unsigned ac_nChannels,
+                                       const unsigned ac_nBufferSize)
+    : mc_nInputBufferSize(ac_nInputBufferSize),
+      mc_nOutputBufferSize(ac_nOutputBufferSize),
+      mc_nChannels(ac_nChannels),
+      mc_nBufferSize(ac_nBufferSize),
+      m_Buffer(ac_nChannels, ac_nBufferSize),
+      m_pOverRun(0),
+      m_pUnderRun(0)
 {
-  m_pFifo = new mt_Fifo( m_Buffer.mf_pGetArray(), ac_nBufferSize, ac_nChannels );
-  m_pReader = new BufferReader( this );
-  m_pWriter = new BufferWriter( this );
+    m_pFifo =
+        new mt_Fifo(m_Buffer.mf_pGetArray(), ac_nBufferSize, ac_nChannels);
+    m_pReader = new BufferReader(this);
+    m_pWriter = new BufferWriter(this);
 }
 
 BufferedProcessing::~BufferedProcessing()
 {
-  delete m_pWriter;
-  delete m_pReader;
-  delete m_pFifo;
+    delete m_pWriter;
+    delete m_pReader;
+    delete m_pFifo;
 }
 
-InputStream& BufferedProcessing::mf_GetInputStream()
+InputStream &BufferedProcessing::mf_GetInputStream()
 {
-  return *m_pReader;
+    return *m_pReader;
 }
 
-OutputStream& BufferedProcessing::mf_GetOutputStream()
+OutputStream &BufferedProcessing::mf_GetOutputStream()
 {
-  return *m_pWriter;
+    return *m_pWriter;
 }
 
 void BufferedProcessing::mp_Reset()
 {
-  m_pFifo->mp_SetEmpty();
+    m_pFifo->mp_SetEmpty();
 }
 
 unsigned BufferedProcessing::mf_nGetNumInBuffer() const
 {
-  return m_pFifo->mf_nGetMaxRead();
+    return m_pFifo->mf_nGetMaxRead();
 }
 
 unsigned BufferedProcessing::mf_nGetNumFree() const
 {
-  return m_pFifo->mf_nGetMaxWrite();
+    return m_pFifo->mf_nGetMaxWrite();
 }

@@ -34,6 +34,7 @@ private slots:
     void showInfo(QListWidgetItem *item);
     void makeLocal();
     void makeGlobal();
+
 private:
     Ui *ui;
 

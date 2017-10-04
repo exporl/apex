@@ -3,7 +3,8 @@
 
 #include <QObject>
 
-namespace apex {
+namespace apex
+{
 
 class HtmlAPI : public QObject
 {
@@ -13,10 +14,9 @@ public:
 
 signals:
     void answered();
+    void parameterChanged(const QString &id, const QVariant &value);
 
 public slots:
-
-
 };
 
 } // ns apex

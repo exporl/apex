@@ -24,6 +24,7 @@
 
 #include "spindataenums.h"
 
+#include <QCoreApplication>
 #include <QDate>
 #include <QMap>
 #include <QString>
@@ -33,21 +34,18 @@ namespace spin
 namespace data
 {
 
-struct APEXSPIN_EXPORT Info
-{
+struct APEXSPIN_EXPORT Info {
     QString subjectName;
 };
 
-struct APEXSPIN_EXPORT Materials
-{
+struct APEXSPIN_EXPORT Materials {
     QString speechmaterial;
     QString speechcategory;
     QString noisematerial;
     QString list;
 };
 
-struct APEXSPIN_EXPORT SpeakerLevels
-{
+struct APEXSPIN_EXPORT SpeakerLevels {
     SpeakerLevels();
 
     // FIXME: make methods and on noise() or speech() check whether hasNoise and
@@ -62,9 +60,8 @@ struct APEXSPIN_EXPORT SpeakerLevels
     bool isInUse() const;
 };
 
-struct APEXSPIN_EXPORT Headphone
-{
-    enum Speaker { LEFT , RIGHT };
+struct APEXSPIN_EXPORT Headphone {
+    enum Speaker { LEFT, RIGHT };
 
     Q_DECLARE_FLAGS(Speakers, Speaker)
 
@@ -76,8 +73,7 @@ struct APEXSPIN_EXPORT Headphone
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Headphone::Speakers)
 
-struct APEXSPIN_EXPORT FreeField
-{
+struct APEXSPIN_EXPORT FreeField {
     /**
      * Returns the speaker levels of the speaker at the given degree.
      * Will assert if there is no such speaker.
@@ -99,12 +95,8 @@ private:
     QMap<uint, SpeakerLevels> levelsMap;
 };
 
-struct APEXSPIN_EXPORT Speakers
-{
-    Speakers() :
-        type(NO_TYPE),
-        lockSpeech(false),
-        lockNoise(false)
+struct APEXSPIN_EXPORT Speakers {
+    Speakers() : type(NO_TYPE), lockSpeech(false), lockNoise(false)
     {
     }
 
@@ -116,13 +108,12 @@ struct APEXSPIN_EXPORT Speakers
     bool lockNoise;
 };
 
-struct APEXSPIN_EXPORT Procedure
-{
+struct APEXSPIN_EXPORT Procedure {
     Procedure();
 
     ProcedureType type;
     Material adaptingMaterial;
-    QMap<uint, double> stepsizes; //maps from trial to stepsize
+    QMap<uint, double> stepsizes; // maps from trial to stepsize
     bool repeatFirst;
 
     /**
@@ -138,13 +129,11 @@ struct APEXSPIN_EXPORT Procedure
     void addStepsize(uint trial, double stepsize);
 };
 
-struct APEXSPIN_EXPORT Calibration
-{
+struct APEXSPIN_EXPORT Calibration {
     double dBAOfInternalRms;
 };
 
-struct APEXSPIN_EXPORT Options
-{
+struct APEXSPIN_EXPORT Options {
     Options();
 
     bool noiseStops;
@@ -159,14 +148,16 @@ struct APEXSPIN_EXPORT Options
     Order trialOrder;
     QMap<int, double> noiseJumps;
     SoundCard soundCard;
+    bool generatePluginProcedure;
 };
 
 class APEXSPIN_EXPORT SpinUserSettings
 {
+    Q_DECLARE_TR_FUNCTIONS(SpinUserSettings)
 public:
     SpinUserSettings();
 
-    //setters
+    // setters
     void setSubjectName(const QString &subject);
     void setSpeechmaterial(const QString &speechmaterial);
     void setSpeechcategory(const QString &speechcategory);
@@ -207,7 +198,7 @@ public:
     void setRepeatFirst(bool repeat);
     void setNoiseStopsBetweenTrials(bool stops);
     void setPersonBeforeScreen(Person person);
-    void setCustomScreen(const QString& screen);
+    void setCustomScreen(const QString &screen);
     void setTimeBeforeFirstStimulus(double time);
     void setReinforcement(bool reinforcement);
     void setShowResults(bool show);
@@ -219,24 +210,25 @@ public:
     void setLockSpeechlevels(bool lock);
     void setLockNoiselevels(bool lock);
     void setSoundCard(SoundCard value);
+    void setGeneratePluginProcedure(bool value);
 
-    //getters
-    const QString& subjectName() const;
-    const QString& speechmaterial() const;
-    const QString& speechcategory() const;
-    const QString& noisematerial() const;
-    const QString& list() const;
-    const SpeakerType& speakerType() const;
-    const SpeakerLevels& speakerLevels(Headphone::Speaker which) const;
+    // getters
+    const QString &subjectName() const;
+    const QString &speechmaterial() const;
+    const QString &speechcategory() const;
+    const QString &noisematerial() const;
+    const QString &list() const;
+    const SpeakerType &speakerType() const;
+    const SpeakerLevels &speakerLevels(Headphone::Speaker which) const;
     const SpeakerLevels speakerLevels(uint angle) const;
     QList<uint> speakerAngles() const;
-    const ProcedureType& procedureType() const;
-    const Material& adaptingMaterial() const;
-    const QMap<uint, double>& stepsizes() const;
+    const ProcedureType &procedureType() const;
+    const Material &adaptingMaterial() const;
+    const QMap<uint, double> &stepsizes() const;
     bool repeatFirst() const;
     bool noiseStopsBetweenTrials() const;
-    const Person& personBeforeScreen() const;
-    const QString& customScreen() const;
+    const Person &personBeforeScreen() const;
+    const QString &customScreen() const;
     double timeBeforeFirstStimulus() const;
     bool reinforcement() const;
     bool showResults() const;
@@ -246,6 +238,7 @@ public:
     Order trialOrder() const;
     uint numberOfChannelsInUse() const;
     double noiseJump(int channel) const;
+    bool generatePluginProcedure() const;
 
     // [Tom] FIXME: this corresponds to defaultCalibration in spinconfig
     double dBAOfInternalRms() const;
@@ -253,7 +246,7 @@ public:
     bool lockNoiselevels() const;
     SoundCard soundCard() const;
 
-    //FIXME only applicable when levels are locked
+    // FIXME only applicable when levels are locked
     double snr() const;
 
     /*
@@ -269,12 +262,13 @@ public:
 
     /**
       * Return level of the speech signal in dB.
-      * Not defined if different speech levels are presented at each ear with headphones
+      * Not defined if different speech levels are presented at each ear with
+      *headphones
       * Total level from all speakers for free field
       **/
     double speechLevel() const;
 
-    //extra
+    // extra
     void print() const;
 
 private:
@@ -283,10 +277,10 @@ private:
     Speakers speakers;
     Procedure procedure;
     Options options;
-    //Calibration calibration; TODO
+    // Calibration calibration; TODO
 };
 
-} //ns data
-} //ns spin
+} // ns data
+} // ns spin
 
 #endif

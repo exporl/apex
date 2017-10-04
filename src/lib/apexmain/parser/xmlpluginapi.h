@@ -27,13 +27,15 @@
 #include <QStringList>
 #include <QVariant>
 
-namespace apex {
+namespace apex
+{
 
 /**
  * API for XML plugins expanded by scriptexpander
  */
-class XMLPluginAPI: public QObject {
-Q_OBJECT
+class XMLPluginAPI : public QObject
+{
+    Q_OBJECT
 
 public slots:
     QString version();
@@ -41,17 +43,17 @@ public slots:
     /**
      * Get all files in the filesystem matching wildcard
      */
-    QStringList files(const QString& path);
+    QStringList files(const QString &path);
 
     /**
       * Read file content into string
       */
-    QString readAll(const QString& path);
+    QString readAll(const QString &path);
 
     /**
       * Get the duration of a WAV file in seconds
       */
-    double stimulusDuration(const QString& path);
+    double stimulusDuration(const QString &path);
 
     /**
      * Get path without filename for relative path
@@ -64,19 +66,18 @@ public slots:
     /**
       * Returns full filepath for relative path
       */
-    QString absoluteFilePath(const QString& path);
+    QString absoluteFilePath(const QString &path);
 
     /**
      * Add warning message to message window
      */
-    void addWarning(const QString& warning);
+    void addWarning(const QString &warning);
 
     /**
      * Add error message to message window
      */
-    void addError(const QString& warning);
+    void addError(const QString &warning);
 };
-
 }
 
 #endif

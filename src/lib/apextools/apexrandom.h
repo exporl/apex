@@ -23,65 +23,69 @@
 
 #define IA 16807
 #define IM 2147483647
-#define AM (1.0/IM)
+#define AM (1.0 / IM)
 #define IQ 127773
 #define IR 2836
 #define NTAB 32
-#define NDIV (1+(IM-1)/NTAB)
+#define NDIV (1 + (IM - 1) / NTAB)
 #define EPS 1.2e-7f
-#define RNMX (1.f-EPS)
-
+#define RNMX (1.f - EPS)
 
 float ran1(long);
-float ran1(long*);
+float ran1(long *);
 
-float ran1(long start=0) {
+float ran1(long start = 0)
+{
     static long init;
     if (start)
-        init=start;
+        init = start;
     return ran1(&init);
 }
 
-
 /**
- * ?Minimal? random number generator of Park and Miller with Bays-Durham shuffle and added
-safeguards. Returns a uniform random deviate between 0.0 and 1.0 (exclusive of the endpoint
-values). Call with idum a negative integer to initialize; thereafter, do not alter idum between
-successive deviates in a sequence. RNMX should approximate the largest floating value that is
+ * ?Minimal? random number generator of Park and Miller with Bays-Durham shuffle
+and added
+safeguards. Returns a uniform random deviate between 0.0 and 1.0 (exclusive of
+the endpoint
+values). Call with idum a negative integer to initialize; thereafter, do not
+alter idum between
+successive deviates in a sequence. RNMX should approximate the largest floating
+value that is
 less than 1.
  * @param idum
  * @return
  */
-float ran1(long *idum) {
+float ran1(long *idum)
+{
     int j;
     long k;
-    static long iy=0;
+    static long iy = 0;
     static long iv[NTAB];
     float temp;
     if (*idum <= 0 || !iy) {
         if (-(*idum) < 1)
-            *idum=1;
+            *idum = 1;
         else
             *idum = -(*idum);
-        for (j=NTAB+7;j>=0;j--) {
-            k=(*idum)/IQ;
-            *idum=IA*(*idum-k*IQ)-IR*k;
+        for (j = NTAB + 7; j >= 0; j--) {
+            k = (*idum) / IQ;
+            *idum = IA * (*idum - k * IQ) - IR * k;
             if (*idum < 0)
                 *idum += IM;
             if (j < NTAB)
                 iv[j] = *idum;
         }
-        iy=iv[0];
+        iy = iv[0];
     }
-    k=(*idum)/IQ;
+    k = (*idum) / IQ;
 
-    *idum=IA*(*idum-k*IQ)-IR*k;
+    *idum = IA * (*idum - k * IQ) - IR * k;
     *idum += IM;
-    j=iy/NDIV;
+    j = iy / NDIV;
 
-    iy=iv[j];
+    iy = iv[j];
     iv[j] = *idum;
-    if ((temp=AM*iy) > RNMX)
+    if ((temp = AM * iy) > RNMX)
         return RNMX;
     else
         return temp;

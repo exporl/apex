@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-cd "$(dirname ${BASH_SOURCE[0]})/.."
+cd "$(dirname $(readlink -f ${BASH_SOURCE[0]}))/.."
 
 ROOTDIR=$(pwd)
 APK=bin/android-debug-installed/armv7/apex/bin/QtApp-debug.apk
@@ -97,7 +97,7 @@ echo "Package: $APK"
         trap 'kill -INT -$pid; exit' INT
         timeout 120 bash -c "while [ ! -s $TARGET-results.xml ]; do adb pull /sdcard/temp/tests/$TARGET-results.xml $ROOTDIR || true; sleep 2; done" &
         pid=$!
-        wait $pid || true
+        wait $pid
         trap - INT
         # wait until xml file is complete
         sleep 2

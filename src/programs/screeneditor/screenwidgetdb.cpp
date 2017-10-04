@@ -33,83 +33,88 @@
 
 namespace apex
 {
-  namespace editor
-  {
+namespace editor
+{
 
-    using data::AnswerLabelElement;
-    using data::ArcLayoutElement;
-    using data::ButtonElement;
-    using data::FlashPlayerElement;
-    using data::GridLayoutElement;
-    using data::LabelElement;
-    using data::ParameterListElement;
-    using data::PictureElement;
-    using data::PictureLabelElement;
-    using data::TextEditElement;
+using data::AnswerLabelElement;
+using data::ArcLayoutElement;
+using data::ButtonElement;
+using data::FlashPlayerElement;
+using data::GridLayoutElement;
+using data::LabelElement;
+using data::ParameterListElement;
+using data::PictureElement;
+using data::PictureLabelElement;
+using data::TextEditElement;
 
-    ScreenWidgetDB::ScreenWidgetDB( ScreenEditor* e )
-    {
-      QAction* addButtonAction =
-        new ScreenEditorAddWidgetAction<ButtonElement>( e, QObject::tr( "button" ) );
-      addButtonAction->setText( QObject::tr( "Button" ) );
-      addWidgetActions.push_back( addButtonAction );
+ScreenWidgetDB::ScreenWidgetDB(ScreenEditor *e)
+{
+    QAction *addButtonAction = new ScreenEditorAddWidgetAction<ButtonElement>(
+        e, QObject::tr("button"));
+    addButtonAction->setText(QObject::tr("Button"));
+    addWidgetActions.push_back(addButtonAction);
 
-      QAction* addLabelAction =
-        new ScreenEditorAddWidgetAction<LabelElement>( e, QObject::tr( "label" ) );
-      addLabelAction->setText( QObject::tr( "Label" ) );
-      addWidgetActions.push_back( addLabelAction );
+    QAction *addLabelAction =
+        new ScreenEditorAddWidgetAction<LabelElement>(e, QObject::tr("label"));
+    addLabelAction->setText(QObject::tr("Label"));
+    addWidgetActions.push_back(addLabelAction);
 
-      QAction* addAnswerLabelAction =
-        new ScreenEditorAddWidgetAction<AnswerLabelElement>( e, QObject::tr( "answer label" ) );
-      addAnswerLabelAction->setText( QObject::tr( "Answer Label" ) );
-      addWidgetActions.push_back( addAnswerLabelAction );
+    QAction *addAnswerLabelAction =
+        new ScreenEditorAddWidgetAction<AnswerLabelElement>(
+            e, QObject::tr("answer label"));
+    addAnswerLabelAction->setText(QObject::tr("Answer Label"));
+    addWidgetActions.push_back(addAnswerLabelAction);
 
-      QAction* addParameterListAction =
-        new ScreenEditorAddWidgetAction<ParameterListElement>( e, QObject::tr( "parameter list" ) );
-      addParameterListAction->setText( QObject::tr( "Parameter List" ) );
-      addWidgetActions.push_back( addParameterListAction );
+    QAction *addParameterListAction =
+        new ScreenEditorAddWidgetAction<ParameterListElement>(
+            e, QObject::tr("parameter list"));
+    addParameterListAction->setText(QObject::tr("Parameter List"));
+    addWidgetActions.push_back(addParameterListAction);
 
-      QAction* addFlashPlayerAction =
-        new ScreenEditorAddWidgetAction<FlashPlayerElement>( e, QObject::tr( "flash player" ) );
-      addFlashPlayerAction->setText( QObject::tr( "Flash Player" ) );
-      addWidgetActions.push_back( addFlashPlayerAction );
+    QAction *addFlashPlayerAction =
+        new ScreenEditorAddWidgetAction<FlashPlayerElement>(
+            e, QObject::tr("flash player"));
+    addFlashPlayerAction->setText(QObject::tr("Flash Player"));
+    addWidgetActions.push_back(addFlashPlayerAction);
 
-      QAction* addTextEditAction =
-        new ScreenEditorAddWidgetAction<TextEditElement>( e, QObject::tr( "text edit" ) );
-      addTextEditAction->setText( QObject::tr( "Text Edit" ) );
-      addWidgetActions.push_back( addTextEditAction );
+    QAction *addTextEditAction =
+        new ScreenEditorAddWidgetAction<TextEditElement>(
+            e, QObject::tr("text edit"));
+    addTextEditAction->setText(QObject::tr("Text Edit"));
+    addWidgetActions.push_back(addTextEditAction);
 
-      QAction* addPictureAction =
-        new ScreenEditorAddWidgetAction<PictureElement>( e, QObject::tr( "picture" ) );
-      addPictureAction->setText( QObject::tr( "Picture" ) );
-      addWidgetActions.push_back( addPictureAction );
+    QAction *addPictureAction = new ScreenEditorAddWidgetAction<PictureElement>(
+        e, QObject::tr("picture"));
+    addPictureAction->setText(QObject::tr("Picture"));
+    addWidgetActions.push_back(addPictureAction);
 
-      QAction* addPictureLabelAction =
-        new ScreenEditorAddWidgetAction<PictureLabelElement>( e, QObject::tr( "picture label" ) );
-      addPictureLabelAction->setText( QObject::tr( "Picture Label" ) );
-      addWidgetActions.push_back( addPictureLabelAction );
+    QAction *addPictureLabelAction =
+        new ScreenEditorAddWidgetAction<PictureLabelElement>(
+            e, QObject::tr("picture label"));
+    addPictureLabelAction->setText(QObject::tr("Picture Label"));
+    addWidgetActions.push_back(addPictureLabelAction);
 
-      QAction* addGridLayoutAction =
-        new ScreenEditorAddWidgetAction<GridLayoutElement>( e, QObject::tr( "grid layout" ) );
-      addGridLayoutAction->setText( QObject::tr( "Grid layout" ) );
-      addLayoutActions.push_back( addGridLayoutAction );
+    QAction *addGridLayoutAction =
+        new ScreenEditorAddWidgetAction<GridLayoutElement>(
+            e, QObject::tr("grid layout"));
+    addGridLayoutAction->setText(QObject::tr("Grid layout"));
+    addLayoutActions.push_back(addGridLayoutAction);
 
-      QAction* addArcLayoutAction =
-        new ScreenEditorAddWidgetAction<ArcLayoutElement>( e, QObject::tr( "arc layout" ) );
-      addArcLayoutAction->setText( QObject::tr( "Arc layout" ) );
-      addLayoutActions.push_back( addArcLayoutAction );
+    QAction *addArcLayoutAction =
+        new ScreenEditorAddWidgetAction<ArcLayoutElement>(
+            e, QObject::tr("arc layout"));
+    addArcLayoutAction->setText(QObject::tr("Arc layout"));
+    addLayoutActions.push_back(addArcLayoutAction);
+}
 
-    }
+QList<QAction *> ScreenWidgetDB::getAddWidgetActions()
+{
+    return addWidgetActions;
+}
 
-    QList<QAction*> ScreenWidgetDB::getAddWidgetActions()
-    {
-      return addWidgetActions;
-    }
-
-    QList<QAction*> ScreenWidgetDB::getAddLayoutActions()
-    {
-      return addLayoutActions;
-    }
-
-  }
+QList<QAction *> ScreenWidgetDB::getAddLayoutActions()
+{
+    return addLayoutActions;
+}
+}
 }

@@ -108,6 +108,7 @@
         <button id="again_button"/>
         <button id="next_button"/>
       </buttongroup>
+      <default_answer_element>buttongroup1</default_answer_element>
     </screen>
   </screens>
   <datablocks>

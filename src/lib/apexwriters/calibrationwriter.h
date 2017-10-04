@@ -54,19 +54,20 @@ public:
      *@return the created element
      */
     static QDomElement addElement(QDomDocument *doc,
-            const data::CalibrationData& data);
+                                  const data::CalibrationData &data);
 
 private:
-    static QDomElement addSoundLevelMeter(QDomDocument *doc,
-            const data::SoundLevelMeterData& data);
-    static QDomElement addParameters(QDomDocument *doc,
-            const QMap<QString, data::CalibrationParameterData>& data);
-    static void appendParameterTo(QDomDocument *doc,
-            QDomElement *slm, const QString &param, const data::SoundLevelMeterData& data);
-    static QDomElement addStimuli(QDomDocument *doc,
-            const QStringList& data);
+    static QDomElement
+    addSoundLevelMeter(QDomDocument *doc,
+                       const data::SoundLevelMeterData &data);
+    static QDomElement
+    addParameters(QDomDocument *doc,
+                  const QMap<QString, data::CalibrationParameterData> &data);
+    static void appendParameterTo(QDomDocument *doc, QDomElement *slm,
+                                  const QString &param,
+                                  const data::SoundLevelMeterData &data);
+    static QDomElement addStimuli(QDomDocument *doc, const QStringList &data);
 };
-
 }
 }
 

@@ -42,7 +42,7 @@ namespace stimulus
 /** Base class representing a single stimulus file on disk */
 class APEX_EXPORT DataBlock
 {
-    //FIXME [job refactory] move all implementations to cpp
+    // FIXME [job refactory] move all implementations to cpp
 public:
     /**
      * Constructor.
@@ -53,8 +53,8 @@ public:
      * @param ac_sBirt ??
      * @param ac_Params the parameters
      */
-    DataBlock(const apex::data::DatablockData& data, const QString& filename,
-              const ExperimentRunDelegate* experiment);
+    DataBlock(const apex::data::DatablockData &data, const QString &filename,
+              const ExperimentRunDelegate *experiment);
 
     /**
      * Copy Constructor with ID.
@@ -62,10 +62,10 @@ public:
      * @param other the one to copy
      * @param newId the new ID
      */
-    DataBlock( const DataBlock& other, const QString& newId ) :
-        filename(other.filename),
-        data(other.data),
-        experiment(other.experiment)
+    DataBlock(const DataBlock &other, const QString &newId)
+        : filename(other.filename),
+          data(other.data),
+          experiment(other.experiment)
     {
         data.setId(newId);
     }
@@ -81,55 +81,67 @@ public:
      * Get the id.
      * @return string reference
      */
-    const QString&    GetID           () const
-    { return data.id(); }
+    const QString &GetID() const
+    {
+        return data.id();
+    }
 
     /**
      * Get the description.
      * @return string reference
      */
-    const QString&    GetDescription  () const
-    { return data.description(); }
+    const QString &GetDescription() const
+    {
+        return data.description();
+    }
 
     /**
      * Get the device for this datablock.
      * @return string reference
      */
-    const QString&    GetDevice       () const
-    { return data.device(); }
-
+    const QString &GetDevice() const
+    {
+        return data.device();
+    }
 
     /**
      * Get the url.
      * @return string reference
      */
-    const QString&       GetUrl          () const
-    { return filename; }
+    const QString &GetUrl() const
+    {
+        return filename;
+    }
 
     /**
      * Get the parameters.
      * @return const parameters
      */
-    const apex::data::DatablockData& GetParameters() const
-    { return data; }
+    const apex::data::DatablockData &GetParameters() const
+    {
+        return data;
+    }
 
     /**
      * Set a parameter.
      * Needed since some parameters (eg loop) are not known at the time
      * of constructing the datablock.
      */
-    virtual void SetParameter( const QString& ac_sID, const QString& ac_sVal )
-    { throw ApexStringException( "Can't set " + ac_sID + "to value" + ac_sVal + " on datablock" ); }
+    virtual void SetParameter(const QString &ac_sID, const QString &ac_sVal)
+    {
+        throw ApexStringException("Can't set " + ac_sID + "to value" + ac_sVal +
+                                  " on datablock");
+    }
 
     /**
      * Create identical datablock with new id
      */
-    virtual DataBlock* GetCopy(QString id);
+    virtual DataBlock *GetCopy(QString id);
 
 protected:
     const QString filename;
     data::DatablockData data;
-    const ExperimentRunDelegate* const experiment;
+    const ExperimentRunDelegate *const experiment;
     /*DataBlock( const DataBlock& ac_Rh );
     DataBlock& operator= ( const DataBlock& ac_Rh );*/
 };

@@ -31,36 +31,34 @@ class StartLevelWidget;
 
 class NoiseStartpointDialog : public QDialog
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    /**
+     * @param   slw     The widget the reults of this dialog will be sent to.
+     * @param   value   The value to be filled in in this dialog.
+     *                  If < 0: startpoint will be set to random.
+     */
+    NoiseStartpointDialog(QWidget *parent, StartLevelWidget *slw, double value);
+    ~NoiseStartpointDialog()
+    {
+    }
 
-        /**
-         * @param   slw     The widget the reults of this dialog will be sent to.
-         * @param   value   The value to be filled in in this dialog.
-         *                  If < 0: startpoint will be set to random.
-         */
-        NoiseStartpointDialog(QWidget* parent, StartLevelWidget* slw,
-                              double value);
-        ~NoiseStartpointDialog() {}
+private:
+    void setupUi(double value);
+    void setupConnections(StartLevelWidget *slw);
 
-    private:
+    Ui::NoiseStartpointDlg widgets;
 
-        void setupUi(double value);
-        void setupConnections(StartLevelWidget* slw);
+private slots:
 
-        Ui::NoiseStartpointDlg widgets;
+    void accept();
 
-    private slots:
+signals:
 
-        void accept();
-
-    signals:
-
-        void startpointChosen(double startpoint);
+    void startpointChosen(double startpoint);
 };
 }
 }
-
 
 #endif

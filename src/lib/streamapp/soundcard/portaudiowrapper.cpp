@@ -19,9 +19,9 @@
 
 #include "soundcard/portaudiowrapper.h"
 #include "appcore/singleton.h"
-#include "utils/stringutils.h"
 #include "containers/matrix.h"
 #include "utils/stringexception.h"
+#include "utils/stringutils.h"
 #include <iostream>
 
 #include <portaudio.h>
@@ -36,7 +36,7 @@ using namespace utils;
 using namespace streamapp;
 
 #ifdef S_MAC
-#define S_MACPA //define to open all cards with PaFloat
+#define S_MACPA // define to open all cards with PaFloat
 #endif
 
 namespace streamapp
@@ -45,37 +45,45 @@ namespace streamapp
 /**
  * PaUserData
  *   data passed to the PaUserCallback.
- *   Member of PortAudioWrapper, will be accessed by Reader/Writer to get ptr to input/output.
- ********************************************************************************************* */
-struct PaUserData
-{
-    const void*     m_pInput;
-    void*           m_pOutput;
-    unsigned        m_nIChan;
-    unsigned        m_nOChan;
-    unsigned long   m_nBufferSize;
-    unsigned long   m_nSampleRate;
-    Callback*       m_pCallback;
+ *   Member of PortAudioWrapper, will be accessed by Reader/Writer to get ptr to
+ *input/output.
+ *********************************************************************************************
+ */
+struct PaUserData {
+    const void *m_pInput;
+    void *m_pOutput;
+    unsigned m_nIChan;
+    unsigned m_nOChan;
+    unsigned long m_nBufferSize;
+    unsigned long m_nSampleRate;
+    Callback *m_pCallback;
 };
 
 /**
  * Portaudio callback.
  */
-int PaCallback( const void* inputBuffer, void* outputBuffer, unsigned long framesPerBuffer,
-                const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags, void* userData )
+int PaCallback(const void *inputBuffer, void *outputBuffer,
+               unsigned long framesPerBuffer,
+               const PaStreamCallbackTimeInfo *timeInfo, PaStreamCallbackFlags,
+               void *userData)
 {
     Q_UNUSED(framesPerBuffer);
-    PaUserData* p = (PaUserData*) userData;
+    PaUserData *p = (PaUserData *)userData;
 
     Q_ASSERT(p->m_nBufferSize == framesPerBuffer);
-    p->m_pInput   = inputBuffer;
-    p->m_pOutput  = outputBuffer;
+    p->m_pInput = inputBuffer;
+    p->m_pOutput = outputBuffer;
 
-    //!due to bug in PA driver we can get zero ptr when streaming has just started !!
+    //! due to bug in PA driver we can get zero ptr when streaming has just
+    //! started !!
     if (p->m_nIChan && inputBuffer == 0)
-        std::cout << "Portaudio inbuffer missing - time::" + toString(timeInfo->currentTime)  << std::endl;
+        std::cout << "Portaudio inbuffer missing - time::" +
+                         toString(timeInfo->currentTime)
+                  << std::endl;
     if (p->m_nOChan && outputBuffer == 0)
-        std::cout << "Portaudio outbuffer missing - time::" + toString(timeInfo->currentTime) << std::endl;
+        std::cout << "Portaudio outbuffer missing - time::" +
+                         toString(timeInfo->currentTime)
+                  << std::endl;
 
     if (p->m_pCallback)
         p->m_pCallback->mf_Callback();
@@ -90,15 +98,14 @@ const unsigned sc_nNumBuffers = 4;
  *   initializes and terminates the library once.
  *   Manages driver infos.
  ************************************************ */
-class PortAudioInitter : public appcore::Singleton< PortAudioInitter >
+class PortAudioInitter : public appcore::Singleton<PortAudioInitter>
 {
-    friend class appcore::Singleton< PortAudioInitter >;
+    friend class appcore::Singleton<PortAudioInitter>;
 
     /**
      * Constructor.
      */
-    PortAudioInitter() throw() :
-    mv_bError(false)
+    PortAudioInitter() throw() : mv_bError(false)
     {
         if (Pa_Initialize() != paNoError)
             mv_bError = true;
@@ -108,7 +115,7 @@ class PortAudioInitter : public appcore::Singleton< PortAudioInitter >
      * Refresh driver infos and names.
      * @param a_sError set to error string if any
      */
-    void mp_GetDriverInfos(QString& a_sError) throw()
+    void mp_GetDriverInfos(QString &a_sError) throw()
     {
         const int nDevs = Pa_GetDeviceCount();
         if (!nDevs) {
@@ -118,8 +125,8 @@ class PortAudioInitter : public appcore::Singleton< PortAudioInitter >
 
         m_DriverInfos.clear();
         m_saDrivers.clear();
-        for (int i = 0 ; i < nDevs; ++i) {
-            const PaDeviceInfo* pCur = Pa_GetDeviceInfo(i);
+        for (int i = 0; i < nDevs; ++i) {
+            const PaDeviceInfo *pCur = Pa_GetDeviceInfo(i);
             m_DriverInfos.push_back(pCur);
             m_saDrivers.push_back(pCur->name);
         }
@@ -137,7 +144,7 @@ class PortAudioInitter : public appcore::Singleton< PortAudioInitter >
     }
 
 public:
-    typedef std::vector< const PaDeviceInfo* > tDrvrInfos;
+    typedef std::vector<const PaDeviceInfo *> tDrvrInfos;
 
     /**
      * Destructor.
@@ -146,7 +153,6 @@ public:
     {
         Pa_Terminate();
     }
-
 
     /**
      * Check if portaudio is initialized.
@@ -157,13 +163,12 @@ public:
         return mv_bError;
     }
 
-
     /**
      * Get all drivernames.
      * @param a_sError set to error if any
      * @return string array
      */
-    tStringVector mf_GetDriverNames(QString& a_sError) throw()
+    tStringVector mf_GetDriverNames(QString &a_sError) throw()
     {
         if (m_saDrivers.empty())
             mp_GetDriverInfos(a_sError);
@@ -174,30 +179,38 @@ public:
      * Get all driver infos.
      * @return PaDeviceInfo array
      */
-    const tDrvrInfos& mf_GetDriverInfos() throw()
+    const tDrvrInfos &mf_GetDriverInfos() throw()
     {
         mp_AssureDriverInfos();
         return m_DriverInfos;
     }
-
 
     /**
      * Get a PaDeviceIndex from a drivername.
      * @param ac_sDriverName drivername ("default" works here)
      * @return input device index or paNoDevice
      */
-    PaDeviceIndex mf_nGetInputDeviceID(const QString& ac_sDriverName) throw()
+    PaDeviceIndex mf_nGetInputDeviceID(const QString &ac_sDriverName) throw()
     {
         if (ac_sDriverName == sc_sDefault) {
 #ifdef _WIN32
-            PaHostApiTypeId preferredHostApiTypeIds[] = {paWASAPI, paWDMKS, paDirectSound, paMME, paASIO, paInDevelopment};
+            PaHostApiTypeId preferredHostApiTypeIds[] = {
+                paWASAPI, paWDMKS, paDirectSound,
+                paMME,    paASIO,  paInDevelopment};
 
             PaHostApiIndex numberOfInstalledHostApis = Pa_GetHostApiCount();
 
-            for (PaHostApiIndex preferredHostApiIndex = 0 ; preferredHostApiTypeIds[preferredHostApiIndex] != paInDevelopment ; preferredHostApiIndex++) {
-                for (PaHostApiIndex installedHostApiIndex = 0 ; installedHostApiIndex < numberOfInstalledHostApis ; installedHostApiIndex++) {
-                    if (preferredHostApiTypeIds[preferredHostApiIndex] == Pa_GetHostApiInfo(installedHostApiIndex)->type)
-                        return Pa_GetHostApiInfo(installedHostApiIndex)->defaultInputDevice;
+            for (PaHostApiIndex preferredHostApiIndex = 0;
+                 preferredHostApiTypeIds[preferredHostApiIndex] !=
+                 paInDevelopment;
+                 preferredHostApiIndex++) {
+                for (PaHostApiIndex installedHostApiIndex = 0;
+                     installedHostApiIndex < numberOfInstalledHostApis;
+                     installedHostApiIndex++) {
+                    if (preferredHostApiTypeIds[preferredHostApiIndex] ==
+                        Pa_GetHostApiInfo(installedHostApiIndex)->type)
+                        return Pa_GetHostApiInfo(installedHostApiIndex)
+                            ->defaultInputDevice;
                 }
             }
 #endif
@@ -207,9 +220,10 @@ public:
         mp_AssureDriverInfos();
 
         tStringVector::size_type nNames = m_saDrivers.size();
-        for (tStringVector::size_type i = 0 ; i < nNames ; ++i) {
-            if (ac_sDriverName.toStdString() == m_saDrivers.at(i) && m_DriverInfos.at(i)->maxInputChannels)
-                return (PaDeviceIndex) i;
+        for (tStringVector::size_type i = 0; i < nNames; ++i) {
+            if (ac_sDriverName.toStdString() == m_saDrivers.at(i) &&
+                m_DriverInfos.at(i)->maxInputChannels)
+                return (PaDeviceIndex)i;
         }
         return paNoDevice;
     }
@@ -219,61 +233,74 @@ public:
      * @param ac_sDriverName drivername ("default" works here)
      * @return output device index or paNoDevice
      */
-    PaDeviceIndex mf_nGetOutputDeviceID(const QString& cardName) throw()
+    PaDeviceIndex mf_nGetOutputDeviceID(const QString &cardName) throw()
     {
         mp_AssureDriverInfos();
 
-        qCDebug(soundcard) << "PortaudioWrapper::mf_nGetOutputDeviceID, card=" << cardName;
+        qCDebug(soundcard) << "PortaudioWrapper::mf_nGetOutputDeviceID, card="
+                           << cardName;
         bool isInt;
         cardName.toInt(&isInt);
 
         if (isInt) {
-            qCDebug(soundcard) << "PortaudioWrapper::mf_nGetOutputDeviceID: returning numeric";
+            qCDebug(soundcard)
+                << "PortaudioWrapper::mf_nGetOutputDeviceID: returning numeric";
             return static_cast<PaDeviceIndex>(cardName.toInt());
         } else if (cardName == sc_sDefault) {
-/*
-#ifdef _WIN32
-            // on windows if the cardname is default, check which of the hostapi's default output devices supports 44.1kHz
-            PaHostApiTypeId preferredHostApiTypeIds[] = {paWASAPI, paWDMKS, paDirectSound, paMME, paInDevelopment};
-            for (PaHostApiIndex preferredHostApiIndex = 0; preferredHostApiTypeIds[preferredHostApiIndex] != paInDevelopment; preferredHostApiIndex++) {
-                PaHostApiIndex hostApiIndex = Pa_HostApiTypeIdToHostApiIndex(preferredHostApiTypeIds[preferredHostApiIndex]);
-                if (hostApiIndex < 0)
-                    continue;
+            /*
+            #ifdef _WIN32
+                        // on windows if the cardname is default, check which of
+            the hostapi's default output devices supports 44.1kHz
+                        PaHostApiTypeId preferredHostApiTypeIds[] = {paWASAPI,
+            paWDMKS, paDirectSound, paMME, paInDevelopment};
+                        for (PaHostApiIndex preferredHostApiIndex = 0;
+            preferredHostApiTypeIds[preferredHostApiIndex] != paInDevelopment;
+            preferredHostApiIndex++) {
+                            PaHostApiIndex hostApiIndex =
+            Pa_HostApiTypeIdToHostApiIndex(preferredHostApiTypeIds[preferredHostApiIndex]);
+                            if (hostApiIndex < 0)
+                                continue;
 
-                PaDeviceIndex devindex = Pa_GetHostApiInfo(hostApiIndex)->defaultOutputDevice;
-                const PaDeviceInfo *dinfo = Pa_GetDeviceInfo(devindex);
-                PaStreamParameters out;
-                out.channelCount = dinfo->maxOutputChannels;
-                out.device = devindex;
-                out.hostApiSpecificStreamInfo = 0;
-                out.sampleFormat = paInt32;
-                out.suggestedLatency = 0.0;
+                            PaDeviceIndex devindex =
+            Pa_GetHostApiInfo(hostApiIndex)->defaultOutputDevice;
+                            const PaDeviceInfo *dinfo =
+            Pa_GetDeviceInfo(devindex);
+                            PaStreamParameters out;
+                            out.channelCount = dinfo->maxOutputChannels;
+                            out.device = devindex;
+                            out.hostApiSpecificStreamInfo = 0;
+                            out.sampleFormat = paInt32;
+                            out.suggestedLatency = 0.0;
 
-                // Check if 44.1kHz is supported, if it is, the device is suitable
-                if (devindex != paNoDevice && dinfo && dinfo->maxOutputChannels > 0
-                    && Pa_IsFormatSupported(0, &out, 44100) == paFormatIsSupported) {
-                    return devindex;
-                }
-            }
-#endif
-*/
+                            // Check if 44.1kHz is supported, if it is, the
+            device is suitable
+                            if (devindex != paNoDevice && dinfo &&
+            dinfo->maxOutputChannels > 0
+                                && Pa_IsFormatSupported(0, &out, 44100) ==
+            paFormatIsSupported) {
+                                return devindex;
+                            }
+                        }
+            #endif
+            */
             return Pa_GetDefaultOutputDevice();
         }
 
         mp_AssureDriverInfos();
 
         tStringVector::size_type nNames = m_saDrivers.size();
-        for (tStringVector::size_type i = 0 ; i < nNames ; ++i) {
+        for (tStringVector::size_type i = 0; i < nNames; ++i) {
             std::cout << "    checking against driver " << m_saDrivers.at(i);
-            std::cout << " which has max " << m_DriverInfos.at(i)->maxOutputChannels;
+            std::cout << " which has max "
+                      << m_DriverInfos.at(i)->maxOutputChannels;
             std::cout << " output channels" << std::endl;
-            if ("portaudio" == m_saDrivers.at(i ) && m_DriverInfos.at( i)->maxOutputChannels)
-                return (PaDeviceIndex) i;
+            if ("portaudio" == m_saDrivers.at(i) &&
+                m_DriverInfos.at(i)->maxOutputChannels)
+                return (PaDeviceIndex)i;
         }
 
         return paNoDevice;
     }
-
 
     /**
      * Get device info for input/output at once.
@@ -283,29 +310,33 @@ public:
      * @param a_nOutChannels set to max #output channels
      * @param a_SampleRates filled with supported samplerates
      */
-    void mf_GetDeviceInfo( const PaDeviceIndex ac_iInIndex, const PaDeviceIndex ac_iOutIndex,
-                           unsigned& a_nInChannels, unsigned& a_nOutChannels, std::vector< unsigned long >& a_SampleRates )
+    void mf_GetDeviceInfo(const PaDeviceIndex ac_iInIndex,
+                          const PaDeviceIndex ac_iOutIndex,
+                          unsigned &a_nInChannels, unsigned &a_nOutChannels,
+                          std::vector<unsigned long> &a_SampleRates)
     {
         mp_AssureDriverInfos();
-        const PaDeviceInfo* pIn = 0;
-        const PaDeviceInfo* pOut = 0;
+        const PaDeviceInfo *pIn = 0;
+        const PaDeviceInfo *pOut = 0;
 
-        //get dev info and channels
-        if (ac_iInIndex == paNoDevice || (tDrvrInfos::size_type) ac_iInIndex >= m_DriverInfos.size()) {
+        // get dev info and channels
+        if (ac_iInIndex == paNoDevice ||
+            (tDrvrInfos::size_type)ac_iInIndex >= m_DriverInfos.size()) {
             a_nInChannels = 0;
         } else {
-            pIn = m_DriverInfos[ ac_iInIndex ];
+            pIn = m_DriverInfos[ac_iInIndex];
             a_nInChannels = pIn->maxInputChannels;
         }
-        if (ac_iOutIndex == paNoDevice || (tDrvrInfos::size_type) ac_iOutIndex >= m_DriverInfos.size()) {
+        if (ac_iOutIndex == paNoDevice ||
+            (tDrvrInfos::size_type)ac_iOutIndex >= m_DriverInfos.size()) {
             a_nOutChannels = 0;
         } else {
-            pOut = m_DriverInfos[ ac_iOutIndex ];
+            pOut = m_DriverInfos[ac_iOutIndex];
             a_nOutChannels = pOut->maxOutputChannels;
         }
 
-        //get samplerates
-        //PaStreamParameters in;
+        // get samplerates
+        // PaStreamParameters in;
         PaStreamParameters out;
         /*in.channelCount = a_nInChannels;
           in.device = ac_iInIndex;
@@ -319,18 +350,19 @@ public:
         out.suggestedLatency = pIn ? pIn->defaultLowOutputLatency : 0.0;
 
         const unsigned nRatesToTry = 9;
-        const unsigned long RatesToTry[] = { 8000, 12000, 16000, 24000, 32000, 44100, 48000, 96000, 192000 };
-        for (unsigned i = 0 ; i < nRatesToTry ; ++i)
-            if (Pa_IsFormatSupported(0, &out, RatesToTry[ i ]) == paFormatIsSupported)
-                a_SampleRates.push_back(RatesToTry[ i ]);
+        const unsigned long RatesToTry[] = {8000,  12000, 16000, 24000, 32000,
+                                            44100, 48000, 96000, 192000};
+        for (unsigned i = 0; i < nRatesToTry; ++i)
+            if (Pa_IsFormatSupported(0, &out, RatesToTry[i]) ==
+                paFormatIsSupported)
+                a_SampleRates.push_back(RatesToTry[i]);
     }
 
 private:
-    bool          mv_bError;
-    tDrvrInfos    m_DriverInfos;
+    bool mv_bError;
+    tDrvrInfos m_DriverInfos;
     tStringVector m_saDrivers;
 };
-
 
 /**
  * PortAudioReader
@@ -338,75 +370,83 @@ private:
 class PortAudioReader : public AudioFormatReader
 {
 public:
-    ~PortAudioReader() {}
+    ~PortAudioReader()
+    {
+    }
 
     unsigned mf_nChannels() const
-    { return m_Host.mf_nGetIChan(); }
+    {
+        return m_Host.mf_nGetIChan();
+    }
     unsigned long mf_lSampleRate() const
-    { return m_Host.mf_lGetSampleRate(); }
+    {
+        return m_Host.mf_lGetSampleRate();
+    }
     AudioFormat::mt_eBitMode mf_eBitMode() const
-    { return AudioFormat::MSBint32; }
+    {
+        return AudioFormat::MSBint32;
+    }
 
-    unsigned long Read(void** a_pBuf, const unsigned ac_nSamples)
+    unsigned long Read(void **a_pBuf, const unsigned ac_nSamples)
     {
         Q_ASSERT(ac_nSamples == m_Host.mf_nGetBufferSize());
         Q_ASSERT(a_pBuf);
 
-        int** pBuf = (int**) a_pBuf;
+        int **pBuf = (int **)a_pBuf;
 
 #ifndef S_MACPA
-        int* in = (int*) m_Host.m_pUserData->m_pInput;
+        int *in = (int *)m_Host.m_pUserData->m_pInput;
 #else
-        float* in = (float*) m_Host.m_pUserData->m_pInput;
+        float *in = (float *)m_Host.m_pUserData->m_pInput;
 #endif
 
         if (in != 0) {
-            const unsigned  nSize = m_Samples.mf_nGetBufferSize();
+            const unsigned nSize = m_Samples.mf_nGetBufferSize();
 
-            if (m_Samples.mf_nGetChannelCount() == 2)//de-interleave
-                {
-                    for (unsigned i = 0 ; i < nSize ; ++i) {
-                        pBuf[ 0 ][ i ] =
+            if (m_Samples.mf_nGetChannelCount() == 2) // de-interleave
+            {
+                for (unsigned i = 0; i < nSize; ++i) {
+                    pBuf[0][i] =
 #ifdef S_MACPA
-                            (int) (in[ 2 * i ] * sc_f32BitMinMax);
+                        (int)(in[2 * i] * sc_f32BitMinMax);
 #else
-                        in[ 2 * i ];
+                        in[2 * i];
 #endif
-                        pBuf[ 1 ][ i ] =
+                    pBuf[1][i] =
 #ifdef S_MACPA
-                            (int) (in[ 2 * i + 1 ] * sc_f32BitMinMax);
+                        (int)(in[2 * i + 1] * sc_f32BitMinMax);
 #else
-                        in[ 2 * i + 1  ];
+                        in[2 * i + 1];
 #endif
-                    }
-                } else
+                }
+            } else
 #ifndef S_MACPA
-                memcpy(pBuf[ 0 ], in, nSize * sizeof(int));
+                memcpy(pBuf[0], in, nSize * sizeof(int));
 #else
             {
-            for (unsigned i = 0 ; i < nSize ; ++i)
-                pBuf[ 0 ][ i ] = (int) (in[ i ] * sc_f32BitMinMax);
-        }
+                for (unsigned i = 0; i < nSize; ++i)
+                    pBuf[0][i] = (int)(in[i] * sc_f32BitMinMax);
+            }
 #endif
- return ac_nSamples;
-    }
+            return ac_nSamples;
+        }
         return ac_nSamples;
-}
+    }
 
     friend class PortAudioWrapper;
 
 private:
-PortAudioReader(const PortAudioWrapper& a_Host) :
-    m_Host(a_Host),
-    m_Samples(a_Host.mf_nGetIChan(), a_Host.mf_nGetBufferSize())
-{}
-const PortAudioWrapper& m_Host;
-MatrixStorage<int>      m_Samples;
+    PortAudioReader(const PortAudioWrapper &a_Host)
+        : m_Host(a_Host),
+          m_Samples(a_Host.mf_nGetIChan(), a_Host.mf_nGetBufferSize())
+    {
+    }
+    const PortAudioWrapper &m_Host;
+    MatrixStorage<int> m_Samples;
 
-PortAudioReader(const PortAudioReader&);
-PortAudioReader& operator = (const PortAudioReader&);
+    PortAudioReader(const PortAudioReader &);
+    PortAudioReader &operator=(const PortAudioReader &);
 };
-
 
 /**
  * PortAudioWriter
@@ -414,55 +454,62 @@ PortAudioReader& operator = (const PortAudioReader&);
 class PortAudioWriter : public AudioFormatWriter
 {
 public:
-    ~PortAudioWriter() {}
+    ~PortAudioWriter()
+    {
+    }
 
     unsigned mf_nChannels() const
-    { return m_Host.mf_nGetOChan(); }
+    {
+        return m_Host.mf_nGetOChan();
+    }
     unsigned long mf_lSampleRate() const
-    { return m_Host.mf_lGetSampleRate(); }
+    {
+        return m_Host.mf_lGetSampleRate();
+    }
     AudioFormat::mt_eBitMode mf_eBitMode() const
-    { return AudioFormat::MSBint32; }
+    {
+        return AudioFormat::MSBint32;
+    }
 
-    unsigned long Write(const void** a_pBuf, const unsigned ac_nSamples)
+    unsigned long Write(const void **a_pBuf, const unsigned ac_nSamples)
     {
         Q_ASSERT(ac_nSamples == m_Host.mf_nGetBufferSize());
         Q_ASSERT(a_pBuf);
 
 #ifndef S_MACPA
-        int* out = (int*) m_Host.m_pUserData->m_pOutput;
+        int *out = (int *)m_Host.m_pUserData->m_pOutput;
 #else
-        float* out = (float*) m_Host.m_pUserData->m_pOutput;
+        float *out = (float *)m_Host.m_pUserData->m_pOutput;
 #endif
 
-        int** pBuf = (int**) a_pBuf;
+        int **pBuf = (int **)a_pBuf;
 
         if (out != 0) {
             if (m_Host.mf_nGetOChan() == 2) {
-                for (unsigned i = 0 ; i < ac_nSamples ; ++i) {
-                    out[ 2 * i ] =
+                for (unsigned i = 0; i < ac_nSamples; ++i) {
+                    out[2 * i] =
 #ifdef S_MACPA
-                        (float) (pBuf[ 0 ][ i ]) / sc_f32BitMinMax;
+                        (float)(pBuf[0][i]) / sc_f32BitMinMax;
 #else
-                    pBuf[ 0 ][ i ];
+                        pBuf[0][i];
 #endif
-                    out[ 2*i + 1 ] =
+                    out[2 * i + 1] =
 #ifdef S_MACPA
-                        (float) (pBuf[ 1 ][ i ]) / sc_f32BitMinMax;
+                        (float)(pBuf[1][i]) / sc_f32BitMinMax;
 #else
-                    pBuf[ 1 ][ i ];
+                        pBuf[1][i];
 #endif
                 }
-            }
-            else
+            } else
 
 #ifndef S_MACPA
-                {
-                    memcpy(out, pBuf[ 0 ], ac_nSamples * sizeof(int));
-                }
-#else
-                for (unsigned i = 0 ; i < ac_nSamples ; ++i)
-                    out[ i ] = (float) (pBuf[ 0 ][ i ]) / sc_f32BitMinMax;
+            {
+                memcpy(out, pBuf[0], ac_nSamples * sizeof(int));
             }
+#else
+                for (unsigned i = 0; i < ac_nSamples; ++i)
+                    out[i] = (float)(pBuf[0][i]) / sc_f32BitMinMax;
+        }
 #endif
         }
 
@@ -472,20 +519,19 @@ public:
     friend class PortAudioWrapper;
 
 private:
-    PortAudioWriter(const PortAudioWrapper& a_Host) :
-        m_Host(a_Host)
-    {}
-    const PortAudioWrapper& m_Host;
+    PortAudioWriter(const PortAudioWrapper &a_Host) : m_Host(a_Host)
+    {
+    }
+    const PortAudioWrapper &m_Host;
 
-    PortAudioWriter(const PortAudioWriter&);
-    PortAudioWriter& operator = (const PortAudioWriter&);
+    PortAudioWriter(const PortAudioWriter &);
+    PortAudioWriter &operator=(const PortAudioWriter &);
 };
-
 }
 
 /***************************************************************************************************/
 
-tStringVector PortAudioWrapper::sf_saGetDriverNames(QString& a_sError)
+tStringVector PortAudioWrapper::sf_saGetDriverNames(QString &a_sError)
 {
     return PortAudioInitter::sf_pInstance()->mf_GetDriverNames(a_sError);
 }
@@ -498,27 +544,33 @@ tStringVector PortAudioWrapper::sf_saGetDriverNames(std::string &a_sError)
     return v;
 }
 
-PortAudioWrapper::PortAudioWrapper(const QString& cardName ) :
-    m_pPaStream(0),
-    m_pUserData(new PaUserData()),
-    mv_bOpen(false),
-    mv_nBuffers(sc_nNumBuffers)
+PortAudioWrapper::PortAudioWrapper(const QString &cardName)
+    : m_pPaStream(0),
+      m_pUserData(new PaUserData()),
+      mv_bOpen(false),
+      mv_nBuffers(sc_nNumBuffers)
 {
-    PortAudioInitter* pInst = PortAudioInitter::sf_pInstance();
+    PortAudioInitter *pInst = PortAudioInitter::sf_pInstance();
     if (pInst->mf_bSeriousError()) {
-        std::cout <<  "Portaudio: failed initializing: there is no audio hardware, or it's busy" << std::endl;
-        throw StringException("Portaudio: failed initializing: there is no audio hardware, or it's busy");
+        std::cout << "Portaudio: failed initializing: there is no audio "
+                     "hardware, or it's busy"
+                  << std::endl;
+        throw StringException("Portaudio: failed initializing: there is no "
+                              "audio hardware, or it's busy");
     }
 
-    m_iInputID = PortAudioInitter::sf_pInstance()->mf_nGetInputDeviceID(cardName);
-    m_iOutputID = PortAudioInitter::sf_pInstance()->mf_nGetOutputDeviceID(cardName);
+    m_iInputID =
+        PortAudioInitter::sf_pInstance()->mf_nGetInputDeviceID(cardName);
+    m_iOutputID =
+        PortAudioInitter::sf_pInstance()->mf_nGetOutputDeviceID(cardName);
 
     /*if (m_iInputID == paNoDevice && m_iOutputID == paNoDevice) {
       QString sDummy;
       if (PortAudioInitter::sf_pInstance()->mf_GetDriverNames(sDummy).empty())
       throw StringException("Portaudio: no soundcards found");
       else
-      throw StringException(QString("Portaudio: couldn't open driver:" + cardName));
+      throw StringException(QString("Portaudio: couldn't open driver:" +
+      cardName));
       }*/
 }
 
@@ -533,34 +585,37 @@ tSoundCardInfo PortAudioWrapper::mf_GetInfo() const
     tSoundCardInfo Ret;
 
     std::cout << "in: " << m_iInputID << " out: " << m_iOutputID << std::endl;
-    PortAudioInitter::sf_pInstance()->mf_GetDeviceInfo( m_iInputID, m_iOutputID,
-                                                        Ret.m_nMaxInputChannels, Ret.m_nMaxOutputChannels, Ret.m_SampleRates );
+    PortAudioInitter::sf_pInstance()->mf_GetDeviceInfo(
+        m_iInputID, m_iOutputID, Ret.m_nMaxInputChannels,
+        Ret.m_nMaxOutputChannels, Ret.m_SampleRates);
 
-    //pa supports any buffersize since it does it's own buffering, so just push back common values
-    //but beware of latency!
-    for (unsigned i = 64 ; i <= 16384 ; i *= 2)
+    // pa supports any buffersize since it does it's own buffering, so just push
+    // back common values
+    // but beware of latency!
+    for (unsigned i = 64; i <= 16384; i *= 2)
         Ret.m_BufferSizes.push_back(i);
-    //use sth sensible
+    // use sth sensible
     Ret.m_nDefaultBufferSize = 4096;
 
     return Ret;
 }
 
-bool PortAudioWrapper::mp_bOpenDriver( const unsigned       ac_nIChan,
-                                       const unsigned       ac_nOChan,
-                                       const unsigned long  ac_nFs,
-                                       const unsigned       ac_nSize )
+bool PortAudioWrapper::mp_bOpenDriver(const unsigned ac_nIChan,
+                                      const unsigned ac_nOChan,
+                                      const unsigned long ac_nFs,
+                                      const unsigned ac_nSize)
 {
     if ((ac_nIChan > 2) || (ac_nOChan > 2) || mv_bOpen)
         return false;
 
-    PaStream** str = (PaStream**) &m_pPaStream;
+    PaStream **str = (PaStream **)&m_pPaStream;
 
     PaStreamParameters in;
     PaStreamParameters out;
-    PaStreamParameters* pIn = &in;
-    PaStreamParameters* pOut = &out;
-    const PortAudioInitter::tDrvrInfos& infos(PortAudioInitter::sf_pInstance()->mf_GetDriverInfos());
+    PaStreamParameters *pIn = &in;
+    PaStreamParameters *pOut = &out;
+    const PortAudioInitter::tDrvrInfos &infos(
+        PortAudioInitter::sf_pInstance()->mf_GetDriverInfos());
 
     if (ac_nIChan == 0 || m_iInputID == paNoDevice) {
         pIn = 0;
@@ -572,9 +627,9 @@ bool PortAudioWrapper::mp_bOpenDriver( const unsigned       ac_nIChan,
 #ifdef S_MACPA
             paFloat32;
 #else
-        paInt32;
+            paInt32;
 #endif
-        in.suggestedLatency = infos[ m_iInputID ]->defaultLowInputLatency;
+        in.suggestedLatency = infos[m_iInputID]->defaultLowInputLatency;
     }
     if (ac_nOChan == 0 || m_iOutputID == paNoDevice) {
         pOut = 0;
@@ -586,20 +641,21 @@ bool PortAudioWrapper::mp_bOpenDriver( const unsigned       ac_nIChan,
 #ifdef S_MACPA
             paFloat32;
 #else
-        paInt32;
+            paInt32;
 #endif
-        out.suggestedLatency = infos[ m_iOutputID ]->defaultLowOutputLatency;
+        out.suggestedLatency = infos[m_iOutputID]->defaultLowOutputLatency;
     }
 
     const PaStreamFlags flags = paClipOff | paDitherOff;
-    PaError err = Pa_OpenStream(str, pIn, pOut, ac_nFs, ac_nSize, flags, PaCallback, m_pUserData);
+    PaError err = Pa_OpenStream(str, pIn, pOut, ac_nFs, ac_nSize, flags,
+                                PaCallback, m_pUserData);
     if (err == paNoError) {
-        m_pUserData->m_nIChan        = ac_nIChan;
-        m_pUserData->m_nOChan        = ac_nOChan;
-        m_pUserData->m_nBufferSize   = ac_nSize;
-        m_pUserData->m_nSampleRate   = ac_nFs;
-        m_pUserData->m_pOutput       = 0;
-        m_pUserData->m_pInput        = 0;
+        m_pUserData->m_nIChan = ac_nIChan;
+        m_pUserData->m_nOChan = ac_nOChan;
+        m_pUserData->m_nBufferSize = ac_nSize;
+        m_pUserData->m_nSampleRate = ac_nFs;
+        m_pUserData->m_pOutput = 0;
+        m_pUserData->m_pInput = 0;
 
         return mv_bOpen = true;
     } else {
@@ -611,18 +667,18 @@ bool PortAudioWrapper::mp_bOpenDriver( const unsigned       ac_nIChan,
 bool PortAudioWrapper::mp_bCloseDriver()
 {
     if (mv_bOpen) {
-        Pa_CloseStream((PaStream*) m_pPaStream);
-        m_pUserData->m_nIChan        = 0;
-        m_pUserData->m_nOChan        = 0;
-        m_pUserData->m_nBufferSize   = 0;
-        m_pUserData->m_nSampleRate   = 0l;
+        Pa_CloseStream((PaStream *)m_pPaStream);
+        m_pUserData->m_nIChan = 0;
+        m_pUserData->m_nOChan = 0;
+        m_pUserData->m_nBufferSize = 0;
+        m_pUserData->m_nSampleRate = 0l;
         mv_bOpen = false;
         return true;
     }
     return false;
 }
 
-bool PortAudioWrapper::mp_bStart(Callback& a_CallbackToUse)
+bool PortAudioWrapper::mp_bStart(Callback &a_CallbackToUse)
 {
     if (mv_bOpen && !mf_bIsRunning()) {
         m_pUserData->m_pCallback = &a_CallbackToUse;
@@ -652,14 +708,14 @@ bool PortAudioWrapper::mf_bIsRunning() const
     return Pa_IsStreamActive(m_pPaStream) == 1;
 }
 
-AudioFormatReader* PortAudioWrapper::mf_pCreateReader() const
+AudioFormatReader *PortAudioWrapper::mf_pCreateReader() const
 {
     if (mv_bOpen)
         return new PortAudioReader(*this);
     return 0;
 }
 
-AudioFormatWriter* PortAudioWrapper::mf_pCreateWriter() const
+AudioFormatWriter *PortAudioWrapper::mf_pCreateWriter() const
 {
     if (mv_bOpen)
         return new PortAudioWriter(*this);
@@ -688,8 +744,8 @@ unsigned long PortAudioWrapper::mf_lGetSampleRate() const
 
 unsigned long PortAudioWrapper::mf_lGetEstimatedLatency() const
 {
-    const PaStreamInfo* p = Pa_GetStreamInfo(m_pPaStream);
+    const PaStreamInfo *p = Pa_GetStreamInfo(m_pPaStream);
     if (p)
-        return (unsigned long) ((p->inputLatency + p->outputLatency) * 1000.0);
+        return (unsigned long)((p->inputLatency + p->outputLatency) * 1000.0);
     return 0;
 }

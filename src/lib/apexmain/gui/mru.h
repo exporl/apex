@@ -20,8 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_MRU_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_GUI_MRU_H_
 
-#include <QObject>
 #include <QAction>
+#include <QObject>
 
 class QString;
 class QMenu;
@@ -35,21 +35,23 @@ class MRUAction : public QAction
 {
     Q_OBJECT
 public:
-    MRUAction( QObject* a_pParent, const QString& ac_sText ) :
-        QAction( a_pParent )
+    MRUAction(QObject *a_pParent, const QString &ac_sText) : QAction(a_pParent)
     {
-        QAction::setText( ac_sText );
-        connect( this, SIGNAL(triggered() ), this, SLOT( Activated() ) );
+        QAction::setText(ac_sText);
+        connect(this, SIGNAL(triggered()), this, SLOT(Activated()));
     }
     virtual ~MRUAction()
-    {}
+    {
+    }
 
 signals:
-    void Activated( const QString& );
+    void Activated(const QString &);
 
 private slots:
     virtual void Activated()
-    { Q_EMIT Activated( QAction::text() ); }
+    {
+        Q_EMIT Activated(QAction::text());
+    }
 };
 
 /**
@@ -61,37 +63,37 @@ class MRU : public QObject
 {
     Q_OBJECT
 public:
-    MRU(QMenu* const menuToMRU);
+    MRU(QMenu *const menuToMRU);
     ~MRU();
 
     void loadFromFile();
 
-    //get/set the open dir (doesn't affect the menu but is handy to store in file)
-    void setOpenDir(const QString& file);
-    const QString& openDir() const;
+    // get/set the open dir (doesn't affect the menu but is handy to store in
+    // file)
+    void setOpenDir(const QString &file);
+    const QString &openDir() const;
 
     void enable(const bool enable);
 
-    QStringList items(bool filterNonExistingFiles=true) const;
+    QStringList items(bool filterNonExistingFiles = true) const;
 
 public slots:
-    void addAndSave(const QString& item, const bool enable = true);
+    void addAndSave(const QString &item, const bool enable = true);
 
 signals:
-    void Released(const QString& fileName);
+    void Released(const QString &fileName);
 
 private:
-    typedef QVector<MRUAction*> MRUvector;
+    typedef QVector<MRUAction *> MRUvector;
 
-    QMenu* const m_menu;
-    MRUvector* const m_items;
+    QMenu *const m_menu;
+    MRUvector *const m_items;
     QString m_openDirName;
 
-    void addItem(const QString& item, const bool enable = true);
+    void addItem(const QString &item, const bool enable = true);
     void saveToFile();
     void removeAllItems();
 };
-
 }
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_MRU_H_

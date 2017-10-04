@@ -25,10 +25,8 @@ namespace apex
 namespace data
 {
 
-DeviceData::DeviceData(DeviceType type) :
-    isControlDev(false),
-    devType(type),
-    silent(false)
+DeviceData::DeviceData(DeviceType type)
+    : isControlDev(false), devType(type), silent(false)
 {
 }
 
@@ -36,12 +34,10 @@ DeviceData::~DeviceData()
 {
 }
 
-bool DeviceData::operator==(const DeviceData& other) const
+bool DeviceData::operator==(const DeviceData &other) const
 {
-    return  SimpleParameters::operator==(other) &&
-            id() == other.id() &&
-            devType == other.devType &&
-            isControlDev == other.isControlDev;
+    return SimpleParameters::operator==(other) && id() == other.id() &&
+           devType == other.devType && isControlDev == other.isControlDev;
 }
 DeviceType DeviceData::deviceType() const
 {
@@ -62,13 +58,14 @@ void DeviceData::setNumberOfChannels(unsigned int n)
     setValueByType("channels", n);
 }
 
-void DeviceData::setSilent(bool newSilent) {
+void DeviceData::setSilent(bool newSilent)
+{
     silent = newSilent;
 }
 
-bool DeviceData::isSilent() const {
+bool DeviceData::isSilent() const
+{
     return silent;
 }
 }
-
 }

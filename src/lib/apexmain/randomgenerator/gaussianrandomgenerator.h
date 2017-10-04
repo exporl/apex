@@ -22,7 +22,8 @@
 
 #include "randomgenerator.h"
 
-namespace apex {
+namespace apex
+{
 namespace data
 {
 class RandomGeneratorParameters;
@@ -33,15 +34,13 @@ class RandomGeneratorParameters;
 class GaussianRandomGenerator : public RandomGenerator
 {
 public:
-    GaussianRandomGenerator(data::RandomGeneratorParameters* p_param);
+    GaussianRandomGenerator(data::RandomGeneratorParameters *p_param);
 
     ~GaussianRandomGenerator();
 
     virtual QString GetNextValue();
     void doDeterministicGeneration();
-
 };
-
 }
 
 #endif

@@ -21,86 +21,83 @@
 
 CTIMER::CTIMER()
 {
-  prev = 0;
-  CTIMER::TicksPerMS=0;
-  QueryPerformanceCounter((LARGE_INTEGER*)&(CTIMER::LASTCALL));
+    prev = 0;
+    CTIMER::TicksPerMS = 0;
+    QueryPerformanceCounter((LARGE_INTEGER *)&(CTIMER::LASTCALL));
 }
 
 void CTIMER::WaitTillMS(__int64 Time)
 {
-  __int64 Temp=0;
-  while((Temp/CTIMER::TicksPerMS)<Time)
-  {
-    QueryPerformanceCounter((LARGE_INTEGER*)&Temp);
-    Temp*=(1000/CTIMER::TicksPerMS);
-    Sleep(2);
-  }
-  CTIMER::LASTCALL=Temp;
+    __int64 Temp = 0;
+    while ((Temp / CTIMER::TicksPerMS) < Time) {
+        QueryPerformanceCounter((LARGE_INTEGER *)&Temp);
+        Temp *= (1000 / CTIMER::TicksPerMS);
+        Sleep(2);
+    }
+    CTIMER::LASTCALL = Temp;
 }
 
 void CTIMER::InitTimers()
 {
-  __int64 Temp=0;
-  QueryPerformanceFrequency((LARGE_INTEGER*)&Temp);
-  CTIMER::TicksPerMS=Temp/1000;
+    __int64 Temp = 0;
+    QueryPerformanceFrequency((LARGE_INTEGER *)&Temp);
+    CTIMER::TicksPerMS = Temp / 1000;
 }
 
-__int64 CTIMER::TicksPerMS=0;
+__int64 CTIMER::TicksPerMS = 0;
 
 CTIMER::~CTIMER()
 {
-  CTIMER::LASTCALL=0;
+    CTIMER::LASTCALL = 0;
 }
 
 bool CTIMER::HasPassedMS(__int64 time)
 {
-  __int64 Temp=0;
+    __int64 Temp = 0;
 
-  QueryPerformanceCounter((LARGE_INTEGER*)&Temp);
-  if (((Temp/CTIMER::TicksPerMS)-CTIMER::LASTCALL)>time)
-  {
-    CTIMER::LASTCALL=Temp;
-    return true;
-  }
-  return false;
+    QueryPerformanceCounter((LARGE_INTEGER *)&Temp);
+    if (((Temp / CTIMER::TicksPerMS) - CTIMER::LASTCALL) > time) {
+        CTIMER::LASTCALL = Temp;
+        return true;
+    }
+    return false;
 }
 
 bool CTIMER::HasPassedSinceStartMS(__int64 time)
 {
-  __int64 Temp=0;
+    __int64 Temp = 0;
 
-  QueryPerformanceCounter((LARGE_INTEGER*)&Temp);
-  if ((Temp/CTIMER::TicksPerMS)>time)
-  {
-    CTIMER::LASTCALL=Temp;
-    return true;
-  }
-  return false;
+    QueryPerformanceCounter((LARGE_INTEGER *)&Temp);
+    if ((Temp / CTIMER::TicksPerMS) > time) {
+        CTIMER::LASTCALL = Temp;
+        return true;
+    }
+    return false;
 }
 
 DWORD CTIMER::GetPassedMS()
 {
-  QueryPerformanceCounter((LARGE_INTEGER*)&(CTIMER::LASTCALL));
-  CTIMER::LASTCALL/=CTIMER::TicksPerMS;
-  return (DWORD) CTIMER::LASTCALL;
+    QueryPerformanceCounter((LARGE_INTEGER *)&(CTIMER::LASTCALL));
+    CTIMER::LASTCALL /= CTIMER::TicksPerMS;
+    return (DWORD)CTIMER::LASTCALL;
 }
 
 DWORD CTIMER::sinceprev()
 {
-  __int64 ret = GetPassedMS() - prev;
-  prev += ret;
-  return (DWORD) ret;
+    __int64 ret = GetPassedMS() - prev;
+    prev += ret;
+    return (DWORD)ret;
 }
 
 DWORD CTIMER::GetPassed(int Sec)
 {
-  __int64 Temp;
-  __int64 Passed;
-  QueryPerformanceCounter((LARGE_INTEGER*)&(Temp));
-  Temp/=CTIMER::TicksPerMS;
-  Temp*=1000;
-  Temp/=Sec;
-  Passed=Temp-CTIMER::LASTCALL;
-  CTIMER::LASTCALL=Temp;
-  return (DWORD)Passed;
+    __int64 Temp;
+    __int64 Passed;
+    QueryPerformanceCounter((LARGE_INTEGER *)&(Temp));
+    Temp /= CTIMER::TicksPerMS;
+    Temp *= 1000;
+    Temp /= Sec;
+    Passed = Temp - CTIMER::LASTCALL;
+    CTIMER::LASTCALL = Temp;
+    return (DWORD)Passed;
 }

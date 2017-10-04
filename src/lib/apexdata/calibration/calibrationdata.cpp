@@ -34,26 +34,28 @@ namespace data
 class CalibrationParameterDataPrivate : public QSharedData
 {
 public:
-    CalibrationParameterDataPrivate() :
-        minimumParameter (0),
-        maximumParameter (0),
-        defaultParameter (0),
-        muteParameter (0),
-        defaultTargetAmplitude (0),
-        finalTargetAmplitude (0)
+    CalibrationParameterDataPrivate()
+        : minimumParameter(0),
+          maximumParameter(0),
+          defaultParameter(0),
+          muteParameter(0),
+          defaultTargetAmplitude(0),
+          finalTargetAmplitude(0)
     {
     }
 
-    CalibrationParameterDataPrivate (double minimumParameter,
-            double maximumParameter, double defaultParameter,
-            double muteParameter, double defaultTargetAmplitude,
-            double finalTargetAmplitude) :
-        minimumParameter (minimumParameter),
-        maximumParameter (maximumParameter),
-        defaultParameter (defaultParameter),
-        muteParameter (muteParameter),
-        defaultTargetAmplitude (defaultTargetAmplitude),
-        finalTargetAmplitude (finalTargetAmplitude)
+    CalibrationParameterDataPrivate(double minimumParameter,
+                                    double maximumParameter,
+                                    double defaultParameter,
+                                    double muteParameter,
+                                    double defaultTargetAmplitude,
+                                    double finalTargetAmplitude)
+        : minimumParameter(minimumParameter),
+          maximumParameter(maximumParameter),
+          defaultParameter(defaultParameter),
+          muteParameter(muteParameter),
+          defaultTargetAmplitude(defaultTargetAmplitude),
+          finalTargetAmplitude(finalTargetAmplitude)
     {
     }
 
@@ -63,7 +65,6 @@ public:
     double muteParameter;
     double defaultTargetAmplitude;
     double finalTargetAmplitude;
-
 };
 
 class CalibrationDataPrivate
@@ -77,17 +78,18 @@ public:
 
 // CalibrationParameterData ====================================================
 
-CalibrationParameterData::CalibrationParameterData() :
-    d (new CalibrationParameterDataPrivate)
+CalibrationParameterData::CalibrationParameterData()
+    : d(new CalibrationParameterDataPrivate)
 {
 }
 
-CalibrationParameterData::CalibrationParameterData (double minimumParameter,
-        double maximumParameter, double defaultParameter, double muteParameter,
-        double defaultTargetAmplitude, double finalTargetAmplitude) :
-    d (new CalibrationParameterDataPrivate (minimumParameter, maximumParameter,
-                defaultParameter, muteParameter, defaultTargetAmplitude,
-                finalTargetAmplitude))
+CalibrationParameterData::CalibrationParameterData(
+    double minimumParameter, double maximumParameter, double defaultParameter,
+    double muteParameter, double defaultTargetAmplitude,
+    double finalTargetAmplitude)
+    : d(new CalibrationParameterDataPrivate(
+          minimumParameter, maximumParameter, defaultParameter, muteParameter,
+          defaultTargetAmplitude, finalTargetAmplitude))
 {
 }
 
@@ -95,14 +97,14 @@ CalibrationParameterData::~CalibrationParameterData()
 {
 }
 
-CalibrationParameterData::CalibrationParameterData (const
-        CalibrationParameterData &other) :
-    d (other.d)
+CalibrationParameterData::CalibrationParameterData(
+    const CalibrationParameterData &other)
+    : d(other.d)
 {
 }
 
-CalibrationParameterData &CalibrationParameterData::operator= (const
-        CalibrationParameterData &other)
+CalibrationParameterData &CalibrationParameterData::
+operator=(const CalibrationParameterData &other)
 {
     d = other.d;
     return *this;
@@ -138,26 +140,25 @@ double CalibrationParameterData::finalTargetAmplitude() const
     return d->finalTargetAmplitude;
 }
 
-
 void CalibrationParameterData::setFinalTargetAmplitude(const double a)
 {
-     d->finalTargetAmplitude=a;
+    d->finalTargetAmplitude = a;
 }
 
-bool CalibrationParameterData::operator==(const CalibrationParameterData& other) const
+bool CalibrationParameterData::
+operator==(const CalibrationParameterData &other) const
 {
-    return  d->minimumParameter == other.d->minimumParameter &&
-            d->maximumParameter == other.d->maximumParameter &&
-            d->defaultParameter == other.d->defaultParameter &&
-            d->muteParameter == other.d->muteParameter &&
-            d->defaultTargetAmplitude == other.d->defaultTargetAmplitude &&
-            d->finalTargetAmplitude == other.d->finalTargetAmplitude;
+    return d->minimumParameter == other.d->minimumParameter &&
+           d->maximumParameter == other.d->maximumParameter &&
+           d->defaultParameter == other.d->defaultParameter &&
+           d->muteParameter == other.d->muteParameter &&
+           d->defaultTargetAmplitude == other.d->defaultTargetAmplitude &&
+           d->finalTargetAmplitude == other.d->finalTargetAmplitude;
 }
 
 // CalibrationData =============================================================
 
-CalibrationData::CalibrationData() :
-    d (new CalibrationDataPrivate)
+CalibrationData::CalibrationData() : d(new CalibrationDataPrivate)
 {
 }
 
@@ -166,7 +167,7 @@ CalibrationData::~CalibrationData()
     delete d;
 }
 
-void CalibrationData::setCalibrationProfile (const QString &value)
+void CalibrationData::setCalibrationProfile(const QString &value)
 {
     d->calibrationProfile = value;
 }
@@ -176,9 +177,9 @@ QString CalibrationData::calibrationProfile() const
     return d->calibrationProfile;
 }
 
-void CalibrationData::addAvailableStimulus (const QString &value)
+void CalibrationData::addAvailableStimulus(const QString &value)
 {
-    d->availableStimuli.append (value);
+    d->availableStimuli.append(value);
 }
 
 QStringList CalibrationData::availableStimuli() const
@@ -186,10 +187,10 @@ QStringList CalibrationData::availableStimuli() const
     return d->availableStimuli;
 }
 
-void CalibrationData::addParameter (const QString &name,
-        const CalibrationParameterData &value)
+void CalibrationData::addParameter(const QString &name,
+                                   const CalibrationParameterData &value)
 {
-    d->parameters.insert (name, value);
+    d->parameters.insert(name, value);
 }
 
 QMap<QString, CalibrationParameterData> CalibrationData::parameters() const
@@ -197,27 +198,27 @@ QMap<QString, CalibrationParameterData> CalibrationData::parameters() const
     return d->parameters;
 }
 
-
-void CalibrationData::setSoundLevelMeterData(
-        data::SoundLevelMeterData * slmdata)
+void CalibrationData::setSoundLevelMeterData(data::SoundLevelMeterData *slmdata)
 {
     d->soundLevelMeterData.reset(slmdata);
 }
 
-const SoundLevelMeterData* CalibrationData::soundLevelMeterData() const {
+const SoundLevelMeterData *CalibrationData::soundLevelMeterData() const
+{
     return d->soundLevelMeterData.data();
 }
 
-bool CalibrationData::operator==(const CalibrationData& other) const
+bool CalibrationData::operator==(const CalibrationData &other) const
 {
-    return  d->calibrationProfile == other.d->calibrationProfile &&
-            ApexTools::haveSameContents(d->availableStimuli, other.d->availableStimuli) &&
-            d->parameters == other.d->parameters &&
-            (d->soundLevelMeterData.data() == other.d->soundLevelMeterData.data() ||
+    return d->calibrationProfile == other.d->calibrationProfile &&
+           ApexTools::haveSameContents(d->availableStimuli,
+                                       other.d->availableStimuli) &&
+           d->parameters == other.d->parameters &&
+           (d->soundLevelMeterData.data() ==
+                other.d->soundLevelMeterData.data() ||
             *d->soundLevelMeterData == *other.d->soundLevelMeterData);
 }
 
 } // namespace data
 
 } // namespace apex
-

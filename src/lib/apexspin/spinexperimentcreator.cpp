@@ -49,21 +49,29 @@
 
 #include "apexdata/stimulus/stimulidata.h"
 
+#include "apexmain/mainconfigfileparser.h"
+
 #include "apextools/apextools.h"
+#include "apextools/exceptions.h"
 
 #include "apexwriters/experimentwriter.h"
 
 #include "spinexperimentconstants.h"
 #include "spinexperimentcreator.h"
 
+#include "common/paths.h"
+
 #include <QDebug>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 
 using namespace spin;
 using namespace spin::data;
 
-SpinExperimentCreator::SpinExperimentCreator(const SpinConfig& config,
-                                             const SpinUserSettings& settings)
-        : config(config), settings(settings)
+SpinExperimentCreator::SpinExperimentCreator(const SpinConfig &config,
+                                             const SpinUserSettings &settings)
+    : config(config), settings(settings)
 {
 }
 
@@ -71,13 +79,74 @@ SpinExperimentCreator::~SpinExperimentCreator()
 {
 }
 
-void SpinExperimentCreator::createExperimentFile(const QString& fileName) const
+void SpinExperimentCreator::createExperimentFile(const QString &fileName) const
 {
-    apex::writer::ExperimentWriter::write(createExperimentData(), fileName,
-                                  QStringList() << screen());
+    QFileInfo fileInfo(fileName);
+    QString jsFile = fileInfo.dir().filePath(fileInfo.baseName() + QL1S(".js"));
+
+    apex::writer::ExperimentWriter::write(
+        createExperimentData(QFileInfo(jsFile).fileName()), fileName,
+        QStringList() << screen());
+    if (settings.generatePluginProcedure())
+        createJavascriptFile(jsFile, cmn::Paths::searchFile(
+                                         QSL("pluginprocedures/spin_suffix.js"),
+                                         cmn::Paths::dataDirectories()));
 }
 
-apex::data::ExperimentData SpinExperimentCreator::createExperimentData() const
+void SpinExperimentCreator::createJavascriptFile(
+    const QString &fileName, const QString &suffixFilename) const
+{
+    // Create json struct that contains speechmaterial info
+    const Speechmaterial &s = config.speechmaterial(speechmaterial());
+
+    QString json("speechmaterial={");
+
+    Q_FOREACH (List cList, s.lists(speechcategory())) {
+        json.append(QString("\"%1\": [\n").arg(cList.id));
+        Q_FOREACH (Speechtoken cToken, cList) {
+            json.append(
+                QString("{\n"
+                        "\tid: \"%1\",\n"
+                        "\turi: \"%2\",\n"
+                        "\ttext:\"%3\"\n"
+                        "},\n")
+                    .arg(cToken.id, cToken.file, cToken.text.simplified()));
+        }
+        json.append("],\n");
+    }
+
+    json.append("};\n");
+
+    // Add some constants
+    json.append(QString("prefix=\"%1").arg(speechmaterial()));
+    if (!speechcategory().isEmpty())
+        json.append("_" + speechcategory());
+    json.append("_\";\n");
+
+    json.append(QString("targetlist = \"%1\";\n"
+                        "targetscreen = \"%2\";\n")
+                    .arg(settings.list(), screenId()));
+
+    // Write to file
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly)) {
+        // TODO: error message
+        throw ApexStringException(
+            tr("Unable to open file for writing: %1").arg(fileName));
+        return;
+    }
+    file.write(json.toUtf8());
+
+    // Append spin_suffix.js
+    if (!suffixFilename.isEmpty()) {
+        QFile suffix(suffixFilename);
+        if (suffix.open(QIODevice::ReadOnly))
+            file.write(suffix.readAll());
+    }
+}
+
+apex::data::ExperimentData
+SpinExperimentCreator::createExperimentData(const QString &jsFile) const
 {
     QScopedPointer<apex::data::ScreensData> screens;
     QScopedPointer<apex::data::ProcedureData> procedures;
@@ -86,7 +155,8 @@ apex::data::ExperimentData SpinExperimentCreator::createExperimentData() const
     QScopedPointer<apex::data::GeneralParameters> generalParams;
     QScopedPointer<apex::data::ResultParameters> resultParams;
     QScopedPointer<apex::data::ParameterDialogResults> paramDlg;
-    QScopedPointer<QMap<QString, apex::data::RandomGeneratorParameters*> > randomGen;
+    QScopedPointer<QMap<QString, apex::data::RandomGeneratorParameters *>>
+        randomGen;
     QScopedPointer<apex::data::DevicesData> devices;
     QScopedPointer<apex::data::FiltersData> filters;
     QScopedPointer<apex::data::DevicesData> controlDevices;
@@ -102,172 +172,164 @@ apex::data::ExperimentData SpinExperimentCreator::createExperimentData() const
     filters.reset(createFiltersData());
     connections.reset(createConnectionsData());
     calibration.reset(createCalibrationData());
-    generalParams.reset(createGeneralParameters());
+    generalParams.reset(createGeneralParameters(jsFile));
     resultParams.reset(createResultParameters());
 
     controlDevices.reset(new apex::data::DevicesData());
     paramManager.reset(new apex::data::ParameterManagerData());
     paramDlg.reset(new apex::data::ParameterDialogResults());
-    randomGen.reset(new QMap<QString, apex::data::RandomGeneratorParameters*>());
+    randomGen.reset(
+        new QMap<QString, apex::data::RandomGeneratorParameters *>());
 
-    return apex::data::ExperimentData(QString(),
-                                      screens.take(),
-                                      procedures.take(),
-                                      connections.take(),
-                                      calibration.take(),
-                                      generalParams.take(),
-                                      resultParams.take(),
-                                      paramDlg.take(),
-                                      randomGen.take(),
-                                      devices.take(),
-                                      filters.take(),
-                                      controlDevices.take(),
-                                      datablocks.take(),
-                                      stimuli.take(),
-                                      QString(),
-                                      paramManager.take());
+    return apex::data::ExperimentData(
+        QString(), screens.take(), procedures.take(), connections.take(),
+        calibration.take(), generalParams.take(), resultParams.take(),
+        paramDlg.take(), randomGen.take(), devices.take(), filters.take(),
+        controlDevices.take(), datablocks.take(), stimuli.take(), QString(),
+        paramManager.take());
 }
 
-apex::data::DatablocksData* SpinExperimentCreator::createDatablocksData() const
+apex::data::DatablocksData *SpinExperimentCreator::createDatablocksData() const
 {
-    apex::data::DatablocksData* data = new apex::data::DatablocksData();
+    apex::data::DatablocksData *data = new apex::data::DatablocksData();
     data->setPrefix(config.prefix());
 
+    if (settings.generatePluginProcedure()) {
+        data->setHasPluginDatablocks(true);
+    } else {
+        // create a datablock for each speechtoken
+        Q_FOREACH (Speechtoken token, list()) {
+            apex::data::DatablockData *datablock =
+                new apex::data::DatablockData();
+            QString id = datablockId(token.id);
+            datablock->setId(id);
+            datablock->setFile(token.file);
+            datablock->setDevice(constants::DEVICE_ID);
+            data->insert(id, datablock);
+        }
+    }
+
     if (needSilentDatablocks()) {
-        apex::data::DatablockData* silent = new apex::data::DatablockData();
+        apex::data::DatablockData *silent = new apex::data::DatablockData();
         silent->setId(constants::SILENT_DATABLOCK_ID);
         silent->setFile(constants::SILENT_DATABLOCK_FILE);
         silent->setDevice(constants::DEVICE_ID);
-
         data->insert(constants::SILENT_DATABLOCK_ID, silent);
     }
-
-    //create a datablock for each speechtoken
-    Q_FOREACH(Speechtoken token, list()) {
-        apex::data::DatablockData* datablock = new apex::data::DatablockData();
-        QString id = datablockId(token.id);
-        datablock->setId(id);
-        datablock->setFile(token.file);
-        datablock->setDevice(constants::DEVICE_ID);
-
-        data->insert(id, datablock);
-    }
-
-    //create noise datablock
-    apex::data::DatablockData* noise = new apex::data::DatablockData();
+    // create noise datablock
+    apex::data::DatablockData *noise = new apex::data::DatablockData();
     noise->setId(constants::NOISE_DATABLOCK_ID);
     noise->setFile(config.noise(settings.noisematerial()).file);
     noise->setDevice(constants::DEVICE_ID);
-
     data->insert(constants::NOISE_DATABLOCK_ID, noise);
 
     return data;
 }
 
-apex::data::StimuliData* SpinExperimentCreator::createStimuliData() const
+apex::data::StimuliData *SpinExperimentCreator::createStimuliData() const
 {
-    apex::data::StimuliData* data = new apex::data::StimuliData();
+    apex::data::StimuliData *data = new apex::data::StimuliData();
     data->setFixedParameters(QStringList() << config.textId());
 
-    bool needSilence = needSilentDatablocks();
-    //create a stimulus for each speechtoken
-    Q_FOREACH(Speechtoken token, list())
-    {
-        apex::data::StimulusData stimulus;
-        apex::data::StimulusDatablocksContainer datablocks;
-        QString stimulusId = this->stimulusId(token.id);
-        QString datablockId = this->datablockId(token.id);
-        stimulus.setId(stimulusId);
+    if (settings.generatePluginProcedure()) {
+        data->setHasPluginStimuli(true);
+    } else {
+        // create a stimulus for each speechtoken
+        Q_FOREACH (Speechtoken token, list()) {
+            apex::data::StimulusData stimulus;
+            apex::data::StimulusDatablocksContainer datablocks;
+            QString stimulusId = this->stimulusId(token.id);
+            QString datablockId = this->datablockId(token.id);
+            stimulus.setId(stimulusId);
 
-        Q_ASSERT(!data->contains(stimulusId));
+            Q_ASSERT(!data->contains(stimulusId));
 
-        //all datablocks are sequential
-        apex::data::StimulusDatablocksContainer seqDatablocks(
+            // all datablocks are sequential
+            apex::data::StimulusDatablocksContainer seqDatablocks(
                 apex::data::StimulusDatablocksContainer::SEQUENTIAL);
 
-        apex::data::StimulusDatablocksContainer datablock(
+            apex::data::StimulusDatablocksContainer datablock(
                 apex::data::StimulusDatablocksContainer::DATABLOCK);
 
-        if (needSilence)
-        {
-            datablock.id = constants::SILENT_DATABLOCK_ID;
+            if (needSilentDatablocks()) {
+                datablock.id = constants::SILENT_DATABLOCK_ID;
+                seqDatablocks.append(datablock);
+            }
+
+            datablock.id = datablockId;
             seqDatablocks.append(datablock);
+
+            if (needSilentDatablocks()) {
+                datablock.id = constants::SILENT_DATABLOCK_ID;
+                seqDatablocks.append(datablock);
+            }
+
+            datablocks.append(seqDatablocks);
+            stimulus.setDatablocksContainer(datablocks);
+
+            // create the fixed parameters
+            apex::data::StimulusParameters params;
+            params.insert(config.textId(), token.text);
+            stimulus.setFixedParameters(params);
+
+            data->insert(stimulusId, stimulus);
         }
+    }
 
-        datablock.id = datablockId;
-        seqDatablocks.append(datablock);
-
-        if (needSilence)
-        {
-            datablock.id = constants::SILENT_DATABLOCK_ID;
-            seqDatablocks.append(datablock);
-        }
-
-        datablocks.append(seqDatablocks);
+    // stimulus for calibration
+    {
+        apex::data::StimulusData stimulus;
+        stimulus.setId(constants::CALIBRATION_STIMULUS);
+        apex::data::StimulusDatablocksContainer datablocks;
+        apex::data::StimulusDatablocksContainer datablock(
+            apex::data::StimulusDatablocksContainer::DATABLOCK);
+        datablock.id = constants::SILENT_DATABLOCK_ID;
+        datablocks.append(datablock);
         stimulus.setDatablocksContainer(datablocks);
 
-        //create the fixed parameters
+        // create the fixed parameters
         apex::data::StimulusParameters params;
-        params.insert(config.textId(), token.text);
+        params.insert(config.textId(), constants::CALIBRATION_FIXED_PARAM);
         stimulus.setFixedParameters(params);
 
-        data->insert(stimulusId, stimulus);
+        data->insert(constants::CALIBRATION_STIMULUS, stimulus);
     }
 
-     //stimulus for calibration
+    // extra noise stimulus for calibration
     {
-    apex::data::StimulusData stimulus;
-    stimulus.setId(constants::CALIBRATION_STIMULUS);
-    apex::data::StimulusDatablocksContainer datablocks;
-    apex::data::StimulusDatablocksContainer datablock(
+        apex::data::StimulusData stimulus;
+        stimulus.setId(constants::NOISE_STIMULUS);
+        apex::data::StimulusDatablocksContainer datablocks;
+        apex::data::StimulusDatablocksContainer datablock(
             apex::data::StimulusDatablocksContainer::DATABLOCK);
-    datablock.id = constants::SILENT_DATABLOCK_ID;
-    datablocks.append(datablock);
-    stimulus.setDatablocksContainer(datablocks);
+        datablock.id = constants::NOISE_DATABLOCK_ID;
+        datablocks.append(datablock);
+        stimulus.setDatablocksContainer(datablocks);
 
-    //create the fixed parameters
-    apex::data::StimulusParameters params;
-    params.insert(config.textId(), constants::CALIBRATION_FIXED_PARAM);
-    stimulus.setFixedParameters(params);
+        // create the fixed parameters
+        apex::data::StimulusParameters params;
+        params.insert(config.textId(), constants::CALIBRATION_FIXED_PARAM);
+        stimulus.setFixedParameters(params);
 
-    data->insert(constants::CALIBRATION_STIMULUS, stimulus);
+        data->insert(constants::NOISE_STIMULUS, stimulus);
     }
-
-    //extra noise stimulus for calibration
-    {
-    apex::data::StimulusData stimulus;
-    stimulus.setId(constants::NOISE_STIMULUS);
-    apex::data::StimulusDatablocksContainer datablocks;
-    apex::data::StimulusDatablocksContainer datablock(
-            apex::data::StimulusDatablocksContainer::DATABLOCK);
-    datablock.id = constants::NOISE_DATABLOCK_ID;
-    datablocks.append(datablock);
-    stimulus.setDatablocksContainer(datablocks);
-
-    //create the fixed parameters
-    apex::data::StimulusParameters params;
-    params.insert(config.textId(), constants::CALIBRATION_FIXED_PARAM);
-    stimulus.setFixedParameters(params);
-
-    data->insert(constants::NOISE_STIMULUS, stimulus);
-    }
-
     return data;
 }
 
-apex::data::ProcedureData* SpinExperimentCreator::createProcedureConfig() const
+apex::data::ProcedureData *SpinExperimentCreator::createProcedureConfig() const
 {
-    apex::data::ProcedureData* data;
+    apex::data::ProcedureData *data;
 
     if (settings.procedureType() == CONSTANT) {
         data = new apex::data::ConstantProcedureData();
-    } else { //adaptive procedure
-        apex::data::AdaptiveProcedureData* adaptiveData =
-                new apex::data::AdaptiveProcedureData();
+    } else { // adaptive procedure
+        apex::data::AdaptiveProcedureData *adaptiveData =
+            new apex::data::AdaptiveProcedureData();
 
         // will be overriden later if there is no noise present
         // round SNR to 2 decimals
-        double rsnr = settings.hasNoise() ? qRound(settings.snr() * 100) / 100 : 0;
+        double rsnr =
+            settings.hasNoise() ? qRound(settings.snr() * 100) / 100 : 0;
 
         adaptiveData->setStartValue(rsnr);
         adaptiveData->setNUp(constants::PARAM_N_UP);
@@ -278,15 +340,16 @@ apex::data::ProcedureData* SpinExperimentCreator::createProcedureConfig() const
             adaptiveData->setLargerIsEasier(true);
             adaptiveData->addAdaptingParameter(amplifierGainId());
 
-            Q_FOREACH (uint channel, config.channelList(settings.speakerType())) {
+            Q_FOREACH (uint channel,
+                       config.channelList(settings.speakerType())) {
                 data::SpeakerLevels levels;
 
                 if (settings.speakerType() == data::HEADPHONE)
                     levels = settings.speakerLevels(
-                            (data::Headphone::Speaker)channel);
+                        (data::Headphone::Speaker)channel);
                 else
-                    levels = settings.speakerLevels(
-                            config.angleOfChannel(channel));
+                    levels =
+                        settings.speakerLevels(config.angleOfChannel(channel));
 
                 if (levels.hasSpeech && !levels.hasNoise)
                     // levels.speech is the target level in dBA. The adaptive
@@ -296,25 +359,30 @@ apex::data::ProcedureData* SpinExperimentCreator::createProcedureConfig() const
                     // this means that the output level will be 65dBA for a
                     // gain of 0.
                     adaptiveData->setStartValue(levels.speech -
-                            calibrationLevel(channel));
+                                                calibrationLevel(channel));
             }
-        } else { //adapt noise; add gain id of each channel with noise
-            adaptiveData->setLargerIsEasier(true);   // Needs to be true, because in filters invertgain is set to true for adapting noise
-            Q_FOREACH(uint channel, config.channelList(settings.speakerType())) {
+        } else { // adapt noise; add gain id of each channel with noise
+            adaptiveData->setLargerIsEasier(true); // Needs to be true, because
+                                                   // in filters invertgain is
+                                                   // set to true for adapting
+                                                   // noise
+            Q_FOREACH (uint channel,
+                       config.channelList(settings.speakerType())) {
                 data::SpeakerLevels levels;
                 if (settings.speakerType() == data::HEADPHONE)
                     levels = settings.speakerLevels(
                         (data::Headphone::Speaker)channel);
                 else
-                    levels = settings.speakerLevels(
-                        config.angleOfChannel(channel));
+                    levels =
+                        settings.speakerLevels(config.angleOfChannel(channel));
 
                 if (levels.hasNoise)
-                    adaptiveData->addAdaptingParameter(noiseFilterGainId(channel));
+                    adaptiveData->addAdaptingParameter(
+                        noiseFilterGainId(channel));
             }
         }
 
-        //add all stepsizes
+        // add all stepsizes
         QMap<uint, double> stepsizes = settings.stepsizes();
         QMap<uint, double>::const_iterator it;
         for (it = stepsizes.begin(); it != stepsizes.end(); it++) {
@@ -325,7 +393,7 @@ apex::data::ProcedureData* SpinExperimentCreator::createProcedureConfig() const
         data = adaptiveData;
     }
 
-    //set data common between constant and adaptive
+    // set data common between constant and adaptive
 
     data->setTimeBeforeFirstStimulus(settings.timeBeforeFirstStimulus());
     data->setPresentations(constants::PARAM_PRESENTATIONS);
@@ -333,32 +401,35 @@ apex::data::ProcedureData* SpinExperimentCreator::createProcedureConfig() const
     data->setNumberOfChoices(constants::PARAM_NB_CHOICES);
     data->setDefaultStandard(constants::PARAM_DEF_STD);
     data->setInputDuringStimulus(constants::PARAM_INPUT_DURING_STIMULUS);
-    data->setOrder(settings.trialOrder() == data::ORDER_RANDOM ?
-            apex::data::ProcedureData::RandomOrder :
-            apex::data::ProcedureData::SequentialOrder);
+    data->setOrder(settings.trialOrder() == data::ORDER_RANDOM
+                       ? apex::data::ProcedureData::RandomOrder
+                       : apex::data::ProcedureData::SequentialOrder);
 
     data->setCorrectorData(createCorrectorData());
 
-    Q_FOREACH(Speechtoken token, list())
-    {
-        apex::data::TrialData* trial = new apex::data::TrialData();
-        QString answer = (settings.personBeforeScreen() == data::SUBJECT) ?
-                                    apex::ApexTools::removeXmlTags(token.text) :
-                                    constants::ANSWER_EXPERIMENTER_SCREEN;
-        trial->SetAnswer(answer);
-        trial->SetID(trialId(token.id));
-        trial->SetScreen(screenId());
-        trial->AddStimulus(stimulusId(token.id));
-        data->AddTrial(trial);
+    if (settings.generatePluginProcedure()) {
+        data->setHasPluginTrials(true);
+    } else {
+        Q_FOREACH (Speechtoken token, list()) {
+            apex::data::TrialData *trial = new apex::data::TrialData();
+            QString answer = (settings.personBeforeScreen() == data::SUBJECT)
+                                 ? apex::ApexTools::removeXmlTags(token.text)
+                                 : constants::ANSWER_EXPERIMENTER_SCREEN;
+            trial->SetAnswer(answer);
+            trial->SetID(trialId(token.id));
+            trial->SetScreen(screenId());
+            trial->AddStimulus(stimulusId(token.id));
+            data->AddTrial(trial);
+        }
     }
 
     return data;
 }
 
-apex::data::ScreensData* SpinExperimentCreator::createScreensData() const
+apex::data::ScreensData *SpinExperimentCreator::createScreensData() const
 {
-    apex::data::ScreensData* data = new apex::data::ScreensData();
-    //if there is some data to be filled in, do it here
+    apex::data::ScreensData *data = new apex::data::ScreensData();
+    // if there is some data to be filled in, do it here
 
     if (settings.personBeforeScreen() == data::EXPERIMENTER)
         data->setRepeatButtonEnabled(true);
@@ -366,11 +437,12 @@ apex::data::ScreensData* SpinExperimentCreator::createScreensData() const
     return data;
 }
 
-apex::data::DevicesData* SpinExperimentCreator::createDevicesData() const
+apex::data::DevicesData *SpinExperimentCreator::createDevicesData() const
 {
-    apex::data::WavDeviceData* wavdevice = new apex::data::WavDeviceData();
+    apex::data::WavDeviceData *wavdevice = new apex::data::WavDeviceData();
     wavdevice->setId(constants::DEVICE_ID);
-    //[job setDefault] wavdevice->setDefaultParameterValues();//so called "simple" parameters:)
+    //[job setDefault] wavdevice->setDefaultParameterValues();//so called
+    //"simple" parameters:)
     wavdevice->setDriverString(driverString());
 
     if (config.soundcardBlocksize())
@@ -379,7 +451,6 @@ apex::data::DevicesData* SpinExperimentCreator::createDevicesData() const
     if (config.soundcardBuffersize())
         wavdevice->setBufferSize(config.soundcardBuffersize());
 
-
     unsigned padding = padZero();
     if (padding > 0)
         wavdevice->setValueByType("padzero", padding);
@@ -387,16 +458,14 @@ apex::data::DevicesData* SpinExperimentCreator::createDevicesData() const
     int channels = numberOfChannels();
     wavdevice->setNumberOfChannels(channels);
 
-    for (int i = 0; i < channels; i++)
-    {
-        apex::data::Parameter name(constants::DEVICE_ID,
-               "gain", 0.0,
-                i, true, deviceChannelParameterName(i));
+    for (int i = 0; i < channels; i++) {
+        apex::data::Parameter name(constants::DEVICE_ID, "gain", 0.0, i, true,
+                                   deviceChannelParameterName(i));
         name.setDefaultValue(constants::DEVICE_GAIN);
         wavdevice->addParameter(name);
     }
 
-    apex::data::DevicesData* data = new apex::data::DevicesData();
+    apex::data::DevicesData *data = new apex::data::DevicesData();
     (*data)[constants::DEVICE_ID] = wavdevice;
     data->setMasterDevice(constants::DEVICE_ID);
 
@@ -405,17 +474,16 @@ apex::data::DevicesData* SpinExperimentCreator::createDevicesData() const
 
 QString SpinExperimentCreator::deviceChannelParameterName(int channel) const
 {
-    return  QString("gain%1").arg(channel);
+    return QString("gain%1").arg(channel);
 }
 
-apex::data::FiltersData* SpinExperimentCreator::createFiltersData() const
+apex::data::FiltersData *SpinExperimentCreator::createFiltersData() const
 {
-    apex::data::FiltersData* data = new apex::data::FiltersData();
+    apex::data::FiltersData *data = new apex::data::FiltersData();
     bool hasNoise = false;
 
-    //create filters for each channel
-    Q_FOREACH(uint channel, config.channelList(settings.speakerType()))
-    {
+    // create filters for each channel
+    Q_FOREACH (uint channel, config.channelList(settings.speakerType())) {
         data::SpeakerLevels levels;
 
         if (settings.speakerType() == data::HEADPHONE)
@@ -423,42 +491,43 @@ apex::data::FiltersData* SpinExperimentCreator::createFiltersData() const
         else
             levels = settings.speakerLevels(config.angleOfChannel(channel));
 
-        if (levels.hasNoise)
-        {
+        if (levels.hasNoise) {
             hasNoise = true;
-            apex::data::FilterData* filter = createNoiseFilter(channel);
+            apex::data::FilterData *filter = createNoiseFilter(channel);
             QString filterId = filter->id();
 
             // Scale the noise signal to the internal RMS
             // [Tom] FIXME: this is equivalent to (internalRMS - noiseRms())
-            double gainCorr = config.defaultCalibration() -
-                        fullScaleToAccoustic(noiseRms());
+            double gainCorr =
+                config.defaultCalibration() - fullScaleToAccoustic(noiseRms());
             filter->setValueByType("basegain", gainCorr);
-            qCDebug(APEX_RS) << "adding noiselevel" << gainCorr << "to filter" << filterId;
+            qCDebug(APEX_RS) << "adding noiselevel" << gainCorr << "to filter"
+                             << filterId;
 
             (*data)[filterId] = filter;
 
-            if (settings.noiseStopsBetweenTrials())
-            {
-                apex::data::FilterData* fadeInFilter = createNoiseFadeFilter(true, channel);
+            if (settings.noiseStopsBetweenTrials()) {
+                apex::data::FilterData *fadeInFilter =
+                    createNoiseFadeFilter(true, channel);
                 QString fadeInFilterId = fadeInFilter->id();
                 (*data)[fadeInFilterId] = fadeInFilter;
-                apex::data::FilterData* fadeOutFilter = createNoiseFadeFilter(false, channel);
+                apex::data::FilterData *fadeOutFilter =
+                    createNoiseFadeFilter(false, channel);
                 QString fadeOutFilterId = fadeOutFilter->id();
                 (*data)[fadeOutFilterId] = fadeOutFilter;
             }
         }
 
-        if (levels.hasSpeech)
-        {
+        if (levels.hasSpeech) {
             double clevel = calibrationLevel(channel);
 
             double slevel = speechLevel(channel);
 
-            // calculate levels for SNR=0, because the procedure will set the SNR
-            if ((settings.procedureType() == ADAPTIVE && settings.adaptingMaterial() == data::SPEECH) ||
-                    (settings.procedureType() == CONSTANT))
-            {
+            // calculate levels for SNR=0, because the procedure will set the
+            // SNR
+            if ((settings.procedureType() == ADAPTIVE &&
+                 settings.adaptingMaterial() == data::SPEECH) ||
+                (settings.procedureType() == CONSTANT)) {
                 if (settings.hasNoise())
                     // channel is calibrated to the noise level
                     // calibration is for SNR=0
@@ -470,26 +539,27 @@ apex::data::FiltersData* SpinExperimentCreator::createFiltersData() const
                     slevel = 0;
             }
 
-            apex::data::FilterData* filter = createSpeechFilter(channel);
+            apex::data::FilterData *filter = createSpeechFilter(channel);
             QString filterId = filter->id();
             // [Tom] FIXME: can be simplified, see above
-            double gainCorr = config.defaultCalibration() + slevel - clevel
-                - fullScaleToAccoustic(internalRms());
+            double gainCorr = config.defaultCalibration() + slevel - clevel -
+                              fullScaleToAccoustic(internalRms());
             filter->setValueByType("basegain", gainCorr);
-            qCDebug(APEX_RS) << "adding noiselevel" << gainCorr << "to filter" << filterId;
+            qCDebug(APEX_RS) << "adding noiselevel" << gainCorr << "to filter"
+                             << filterId;
 
             (*data)[filterId] = filter;
         }
     }
 
-    apex::data::FilterData* amp = createAmplifier();
+    apex::data::FilterData *amp = createAmplifier();
     double gainCorr = internalRms() - speechRms();
     amp->setValueByType("basegain", gainCorr);
 
     if (settings.procedureType() == CONSTANT) {
-         if (hasNoise) // noise in any channel
+        if (hasNoise) // noise in any channel
             amp->setValueByType("gain", settings.snr());
-         else
+        else
             amp->setValueByType("gain", settings.speechLevel());
     }
     (*data)[amp->id()] = amp;
@@ -499,9 +569,9 @@ apex::data::FiltersData* SpinExperimentCreator::createFiltersData() const
 
 double SpinExperimentCreator::calibrationLevel(uint channel) const
 {
-    //Q_ASSERT(channel<settings.numberOfChannelsInUse());
+    // Q_ASSERT(channel<settings.numberOfChannelsInUse());
 
-    if (! settings.hasNoise() )
+    if (!settings.hasNoise())
         return 0;
 
     data::SpeakerLevels levels;
@@ -527,8 +597,7 @@ double SpinExperimentCreator::calibrationLevel(uint channel) const
     }
 
     // else: no noise
-    if (levels.hasSpeech)
-    {
+    if (levels.hasSpeech) {
         // calculate levels for SNR=0, because the procedure will set the SNR
         double slevel = speechLevel(channel);
         if (settings.procedureType() == ADAPTIVE) {
@@ -547,12 +616,13 @@ double SpinExperimentCreator::calibrationLevel(uint channel) const
     return 0;
 }
 
-apex::data::FilterData* SpinExperimentCreator::createNoiseFadeFilter(
-        bool fadein, uint channel) const
+apex::data::FilterData *
+SpinExperimentCreator::createNoiseFadeFilter(bool fadein, uint channel) const
 {
-    apex::data::FilterData* filter = new apex::data::WavFaderParameters();
-    filter->setId((fadein ? QLatin1String("fadein_") : QLatin1String("fadeout_"))
-                + noiseFilterId(channel));
+    apex::data::FilterData *filter = new apex::data::WavFaderParameters();
+    filter->setId(
+        (fadein ? QLatin1String("fadein_") : QLatin1String("fadeout_")) +
+        noiseFilterId(channel));
     filter->setXsiType("apex:fader");
     filter->setValueByType("channels", 1);
     filter->setValueByType("device", constants::DEVICE_ID);
@@ -563,12 +633,14 @@ apex::data::FilterData* SpinExperimentCreator::createNoiseFadeFilter(
     return filter;
 }
 
-apex::data::FilterData* SpinExperimentCreator::createNoiseFilter(
-        uint channel) const
+apex::data::FilterData *
+SpinExperimentCreator::createNoiseFilter(uint channel) const
 {
-    apex::data::FilterData* filter = new apex::data::DataLoopGeneratorParameters();
+    apex::data::FilterData *filter =
+        new apex::data::DataLoopGeneratorParameters();
     filter->setId(noiseFilterId(channel));
-    //[job setDefault] filter->setDefaultParameterValues();//so called "simple" parameters:)
+    //[job setDefault] filter->setDefaultParameterValues();//so called "simple"
+    // parameters:)
     filter->setXsiType("apex:" + constants::FILTER_TYPE_NOISE);
     filter->setValueByType("channels", 1);
     filter->setValueByType("device", constants::DEVICE_ID);
@@ -578,21 +650,22 @@ apex::data::FilterData* SpinExperimentCreator::createNoiseFilter(
         settings.adaptingMaterial() == data::NOISE)
         filter->setValueByType("invertgain", true);
 
-    //randomjump
+    // randomjump
     int chanangle;
     if (settings.speakerType() == data::FREE_FIELD)
-         chanangle=config.angleOfChannel(channel);
+        chanangle = config.angleOfChannel(channel);
     else
-         chanangle=channel;
+        chanangle = channel;
 
     if (settings.noiseJump(chanangle) == data::RANDOM)
         filter->setValueByType("randomjump", true);
     else
         filter->setValueByType("jump", settings.noiseJump(channel));
 
-    //give gain parameter an id
+    // give gain parameter an id
     apex::data::Parameter gain = filter->parameterByType("gain");
-    filter->removeParameter(gain);//will not replace the gain parametername otherwise
+    filter->removeParameter(
+        gain); // will not replace the gain parametername otherwise
     gain.setId(noiseFilterGainId(channel));
     gain.setDefaultValue(0);
     filter->addParameter(gain);
@@ -600,12 +673,13 @@ apex::data::FilterData* SpinExperimentCreator::createNoiseFilter(
     return filter;
 }
 
-apex::data::FilterData* SpinExperimentCreator::createSpeechFilter(
-        uint channel) const
+apex::data::FilterData *
+SpinExperimentCreator::createSpeechFilter(uint channel) const
 {
-    apex::data::FilterData* filter = new apex::data::WavFilterParameters();
+    apex::data::FilterData *filter = new apex::data::WavFilterParameters();
     filter->setId(speechFilterId(channel));
-    //[job setDefault] filter->setDefaultParameterValues();//so called "simple" parameters:)
+    //[job setDefault] filter->setDefaultParameterValues();//so called "simple"
+    // parameters:)
     filter->setXsiType("apex:" + constants::FILTER_TYPE_SPEECH);
     filter->setValueByType("channels", 1);
     filter->setValueByType("device", constants::DEVICE_ID);
@@ -613,18 +687,20 @@ apex::data::FilterData* SpinExperimentCreator::createSpeechFilter(
     return filter;
 }
 
-apex::data::FilterData* SpinExperimentCreator::createAmplifier() const
+apex::data::FilterData *SpinExperimentCreator::createAmplifier() const
 {
-    apex::data::FilterData* filter = new apex::data::WavFilterParameters();
+    apex::data::FilterData *filter = new apex::data::WavFilterParameters();
     filter->setId(constants::FILTER_TYPE_SPEECH);
-    //[job setDefault] filter->setDefaultParameterValues();//so called "simple" parameters:)
+    //[job setDefault] filter->setDefaultParameterValues();//so called "simple"
+    // parameters:)
     filter->setXsiType("apex:" + constants::FILTER_TYPE_SPEECH);
     filter->setValueByType("channels", 1);
     filter->setValueByType("device", constants::DEVICE_ID);
 
-    //give gain parameter an id
+    // give gain parameter an id
     apex::data::Parameter gain = filter->parameterByType("gain");
-    filter->removeParameter(gain);//will not replace the gain parametername otherwise
+    filter->removeParameter(
+        gain); // will not replace the gain parametername otherwise
     gain.setId(amplifierGainId());
     gain.setDefaultValue(0);
     filter->addParameter(gain);
@@ -632,19 +708,20 @@ apex::data::FilterData* SpinExperimentCreator::createAmplifier() const
     return filter;
 }
 
-apex::data::ConnectionsData* SpinExperimentCreator::createConnectionsData() const
+apex::data::ConnectionsData *
+SpinExperimentCreator::createConnectionsData() const
 {
-    apex::data::ConnectionsData* data = new apex::data::ConnectionsData();
+    apex::data::ConnectionsData *data = new apex::data::ConnectionsData();
 
-    //connection from all to amplifier
-    data->push_back(createConnection(constants::CONN_FROM_ALL_ID, amplifierId()));
-    //connections from amplifier to all speech filters (amplifiers) and from
-    //those filters to the device
-    //we find those filters by looking for channels with speech
-    //also create connections from noise filters (dataloops) to the device
-    //in the same way
-    Q_FOREACH(uint channel, config.channelList(settings.speakerType()))
-    {
+    // connection from all to amplifier
+    data->push_back(
+        createConnection(constants::CONN_FROM_ALL_ID, amplifierId()));
+    // connections from amplifier to all speech filters (amplifiers) and from
+    // those filters to the device
+    // we find those filters by looking for channels with speech
+    // also create connections from noise filters (dataloops) to the device
+    // in the same way
+    Q_FOREACH (uint channel, config.channelList(settings.speakerType())) {
         data::SpeakerLevels levels;
 
         if (settings.speakerType() == data::HEADPHONE)
@@ -652,25 +729,26 @@ apex::data::ConnectionsData* SpinExperimentCreator::createConnectionsData() cons
         else
             levels = settings.speakerLevels(config.angleOfChannel(channel));
 
-        if (levels.hasSpeech)
-        {
-            data->push_back(createConnection(amplifierId(),
-                            speechFilterId(channel)));
+        if (levels.hasSpeech) {
+            data->push_back(
+                createConnection(amplifierId(), speechFilterId(channel)));
             data->push_back(createConnection(speechFilterId(channel),
-                            constants::DEVICE_ID, channel));
+                                             constants::DEVICE_ID, channel));
         }
-        if (levels.hasNoise)
-        {
+        if (levels.hasNoise) {
             if (settings.noiseStopsBetweenTrials()) {
-                data->push_back(createConnection(noiseFilterId(channel),
-                            "fadein_" + noiseFilterId(channel), 0));
-                data->push_back(createConnection("fadein_" + noiseFilterId(channel),
-                            "fadeout_" + noiseFilterId(channel), 0));
-                data->push_back(createConnection("fadeout_" + noiseFilterId(channel),
-                            constants::DEVICE_ID, channel));
+                data->push_back(
+                    createConnection(noiseFilterId(channel),
+                                     "fadein_" + noiseFilterId(channel), 0));
+                data->push_back(
+                    createConnection("fadein_" + noiseFilterId(channel),
+                                     "fadeout_" + noiseFilterId(channel), 0));
+                data->push_back(
+                    createConnection("fadeout_" + noiseFilterId(channel),
+                                     constants::DEVICE_ID, channel));
             } else {
-                data->push_back(createConnection(noiseFilterId(channel),
-                            constants::DEVICE_ID, channel));
+                data->push_back(createConnection(
+                    noiseFilterId(channel), constants::DEVICE_ID, channel));
             }
         }
     }
@@ -678,10 +756,10 @@ apex::data::ConnectionsData* SpinExperimentCreator::createConnectionsData() cons
     return data;
 }
 
-apex::data::ConnectionData* SpinExperimentCreator::createConnection(
-            const QString& fromId, const QString& toId, uint toChannel) const
+apex::data::ConnectionData *SpinExperimentCreator::createConnection(
+    const QString &fromId, const QString &toId, uint toChannel) const
 {
-    apex::data::ConnectionData* connection = new apex::data::ConnectionData();
+    apex::data::ConnectionData *connection = new apex::data::ConnectionData();
 
     connection->setFromId(fromId);
     connection->setFromChannel(0);
@@ -691,33 +769,31 @@ apex::data::ConnectionData* SpinExperimentCreator::createConnection(
     return connection;
 }
 
-apex::data::CorrectorData* SpinExperimentCreator::createCorrectorData() const
+apex::data::CorrectorData *SpinExperimentCreator::createCorrectorData() const
 {
-    apex::data::CorrectorData* data = new apex::data::CorrectorData();
+    apex::data::CorrectorData *data = new apex::data::CorrectorData();
     data->setType(apex::data::CorrectorData::EQUAL);
     return data;
 }
 
-apex::data::CalibrationData* SpinExperimentCreator::createCalibrationData() const
+apex::data::CalibrationData *
+SpinExperimentCreator::createCalibrationData() const
 {
-    apex::data::CalibrationData* data = new apex::data::CalibrationData();
+    apex::data::CalibrationData *data = new apex::data::CalibrationData();
 
-    QString profileName( constants::CALIBRATION_PROFILE +
-            "-" + settings.noisematerial() );
+    QString profileName(constants::CALIBRATION_PROFILE + "-" +
+                        settings.noisematerial());
 
     data->setCalibrationProfile(profileName);
     data->addAvailableStimulus(constants::CALIBRATION_STIMULUS);
     data->addAvailableStimulus(constants::NOISE_STIMULUS);
 
-    apex::data::CalibrationParameterData param(constants::CALIBRATION_MIN,
-            constants::CALIBRATION_MAX,
-            constants::CALIBRATION_DEFAULT,
-            constants::CALIBRATION_MUTE,
-            80, 0);
+    apex::data::CalibrationParameterData param(
+        constants::CALIBRATION_MIN, constants::CALIBRATION_MAX,
+        constants::CALIBRATION_DEFAULT, constants::CALIBRATION_MUTE, 80, 0);
 
     // calibrate one parameter per channel
-    Q_FOREACH(uint channel, config.channelList(settings.speakerType()))
-    {
+    Q_FOREACH (uint channel, config.channelList(settings.speakerType())) {
         data::SpeakerLevels levels;
 
         if (settings.speakerType() == data::HEADPHONE)
@@ -731,28 +807,38 @@ apex::data::CalibrationData* SpinExperimentCreator::createCalibrationData() cons
         }
     }
 
-
-
     return data;
 }
 
-apex::data::GeneralParameters* SpinExperimentCreator::createGeneralParameters() const
+apex::data::GeneralParameters *
+SpinExperimentCreator::createGeneralParameters(const QString &jsFile) const
 {
-    apex::data::GeneralParameters* data = new apex::data::GeneralParameters();
+    apex::data::GeneralParameters *data = new apex::data::GeneralParameters();
     data->setExitAfter(settings.exitAfter());
     data->setAutoSave(settings.autoSaveResults());
+    if (settings.generatePluginProcedure())
+        data->setScriptLibrary(jsFile);
     return data;
 }
 
-apex::data::ResultParameters* SpinExperimentCreator::createResultParameters() const
+apex::data::ResultParameters *
+SpinExperimentCreator::createResultParameters() const
 {
-    apex::data::ResultParameters* data = new apex::data::ResultParameters();
+    apex::data::ResultParameters *data = new apex::data::ResultParameters();
+    QString constraint =
+        apex::MainConfigFileParser::Get().data().interactiveConstraint(
+            QSL("apex:apex/results[1]/subject[1]"));
+    if (!QRegExp(constraint.isEmpty() ? QSL(".*") : constraint)
+             .exactMatch(settings.subjectName()))
+        throw ApexStringException(tr("Subject doesn't match constraint"));
+
     data->setSubject(settings.subjectName());
     data->setShowResultsAfter(settings.showResults());
     data->setResultPage(constants::HTML_PAGE);
     if (settings.procedureType() == ADAPTIVE) {
-         data->setResultParameter("reversals for mean",
-                 QString::number(settings.nbResponsesThatCount()));
+        data->setResultParameter(
+            "reversals for mean",
+            QString::number(settings.nbResponsesThatCount()));
     }
     if (settings.snrDefined())
         data->setResultParameter("snr", QString::number(settings.snr()));
@@ -761,18 +847,18 @@ apex::data::ResultParameters* SpinExperimentCreator::createResultParameters() co
 
 QString SpinExperimentCreator::driverString() const
 {
-    if (! config.soundcardDriver().isEmpty())
+    if (!config.soundcardDriver().isEmpty())
         return config.soundcardDriver();
 
     switch (settings.soundCard()) {
-        case RmeMultiface:
-        case RmeFirefaceUc:
-            return QLatin1String("asio");
-        case LynxOne:
-            return QLatin1String("portaudio");
-        case DefaultSoundcard:
+    case RmeMultiface:
+    case RmeFirefaceUc:
+        return QLatin1String("asio");
+    case LynxOne:
+        return QLatin1String("portaudio");
+    case DefaultSoundcard:
 #ifdef Q_OS_WIN32
-        return QLatin1String("asio");       // make sure 24bit precision is used
+        return QLatin1String("asio"); // make sure 24bit precision is used
 #else
         return QLatin1String("portaudio");
 #endif
@@ -780,7 +866,7 @@ QString SpinExperimentCreator::driverString() const
         qFatal("Invalid sound card");
     }
 
-    return QString();       // avoid compiler warning
+    return QString(); // avoid compiler warning
 }
 
 unsigned SpinExperimentCreator::padZero() const
@@ -813,7 +899,7 @@ int SpinExperimentCreator::bufferSize() const
         return 4096;
     else
         return 8192;*/
-    return -1;                  // system default
+    return -1; // system default
 }
 
 QString SpinExperimentCreator::screen() const
@@ -826,11 +912,11 @@ QString SpinExperimentCreator::screen() const
 
     {
         if (settings.personBeforeScreen() == SUBJECT)
-                return config.subjectScreen();
+            return config.subjectScreen();
         else {
-            if (settings.hasNoise()){
-                return config.experimenterScreenNoise();}
-            else
+            if (settings.hasNoise()) {
+                return config.experimenterScreenNoise();
+            } else
                 return config.experimenterScreenQuiet();
         }
     }
@@ -840,10 +926,9 @@ QString SpinExperimentCreator::screen() const
 
 QString SpinExperimentCreator::screenId() const
 {
-    if (settings.customScreen().isEmpty())
-    {
+    if (settings.customScreen().isEmpty()) {
         if (settings.personBeforeScreen() == SUBJECT)
-                return constants::SCREEN_SUBJECT;
+            return constants::SCREEN_SUBJECT;
         else {
             if (settings.hasNoise())
                 return constants::SCREEN_EXPERIMENTER_NOISE;
@@ -928,8 +1013,7 @@ QList<uint> SpinExperimentCreator::usedChannels() const
 {
     QList<uint> channels;
 
-    Q_FOREACH(uint channel, config.channelList(settings.speakerType()))
-    {
+    Q_FOREACH (uint channel, config.channelList(settings.speakerType())) {
         data::SpeakerLevels levels;
 
         if (settings.speakerType() == data::HEADPHONE)
@@ -995,7 +1079,8 @@ QString SpinExperimentCreator::noiseFilterId(uint channel) const
 
 QString SpinExperimentCreator::speechFilterId(uint channel) const
 {
-    return constants::FILTER_TYPE_SPEECH + "_channel" + QString::number(channel);
+    return constants::FILTER_TYPE_SPEECH + "_channel" +
+           QString::number(channel);
 }
 
 QString SpinExperimentCreator::amplifierId() const
@@ -1008,7 +1093,8 @@ QString SpinExperimentCreator::amplifierGainId() const
     // in the constant or adaptive speech case, this is the gain that needs to
     // be displayed, give it the right id so that the screen can find it
     if ((settings.procedureType() == CONSTANT) ||
-        (settings.procedureType() == ADAPTIVE && settings.adaptingMaterial() == data::SPEECH))
+        (settings.procedureType() == ADAPTIVE &&
+         settings.adaptingMaterial() == data::SPEECH))
         return config.gainId();
     return constants::FILTER_GAIN_SPEECH;
 }
@@ -1017,7 +1103,8 @@ QString SpinExperimentCreator::noiseFilterGainId(uint channel) const
 {
     // in the adaptive noise case on channel 0, this is the gain that needs to
     // be displayed, give it the right id so that the screen can find it
-    if ((settings.procedureType() == ADAPTIVE && settings.adaptingMaterial() == data::NOISE && channel == 0))
+    if ((settings.procedureType() == ADAPTIVE &&
+         settings.adaptingMaterial() == data::NOISE && channel == 0))
         return config.gainId();
     return constants::FILTER_GAIN_NOISE + "_channel" + QString::number(channel);
 }
@@ -1029,18 +1116,18 @@ double SpinExperimentCreator::fullScaleToAccoustic(double dBFS) const
 
 unsigned SpinExperimentCreator::numberOfChannels() const
 {
-// calculate necessary number of channels
-    unsigned int channels=0;
+    // calculate necessary number of channels
+    unsigned int channels = 0;
     if (settings.speakerType() == data::HEADPHONE) {
-        channels=2;
+        channels = 2;
     } else if (settings.speakerType() == data::FREE_FIELD) {
-        channels=0;
+        channels = 0;
 
         QList<uint> angles = settings.speakerAngles();
-        Q_FOREACH(uint angle, angles) {
-            uint channel =  config.channelOfAngle(angle);
-            if (channel>=channels)
-                channels=channel;
+        Q_FOREACH (uint angle, angles) {
+            uint channel = config.channelOfAngle(angle);
+            if (channel >= channels)
+                channels = channel;
         }
         ++channels;
     } else {

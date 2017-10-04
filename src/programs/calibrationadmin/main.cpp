@@ -23,12 +23,13 @@
 
 #include <QApplication>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QApplication a(argc, argv);
 
     a.setOrganizationName(apex::organizationName);
     a.setApplicationName(apex::applicationName);
-    a.setOrganizationDomain (apex::organizationDomain);
+    a.setOrganizationDomain(apex::organizationDomain);
 
     MainWindow window;
     window.show();

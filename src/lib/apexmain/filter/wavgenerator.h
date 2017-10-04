@@ -22,23 +22,24 @@
 
 #include "wavstimulus/wavfilter.h"
 
-
 namespace streamapp
 {
-  class IStreamProcessor;
-  class PositionableInputStream;
+class IStreamProcessor;
+class PositionableInputStream;
 }
 
-namespace apex{
-    namespace data{
-        class FilterData;
-    }
+namespace apex
+{
+namespace data
+{
+class FilterData;
+}
 
-  namespace stimulus{
+namespace stimulus
+{
 
-      class StreamGenerator;
-      class DataBlock;
-
+class StreamGenerator;
+class DataBlock;
 
 /**
         * WavGenerator
@@ -46,63 +47,61 @@ namespace apex{
         *   Actual implementation is a stream,
         *   but parsing is done as filter.
         ******************************************** */
-    class WavGenerator : public WavFilter
+class WavGenerator : public WavFilter
+{
+public:
+    /**
+      * Constructor.
+      */
+    WavGenerator(const QString &ac_sID, const QString &ac_sType,
+                 data::FilterData *const a_cpParams, unsigned long sr,
+                 unsigned bs, bool deterministic = false);
+
+    /**
+      * Destructor.
+      */
+    virtual ~WavGenerator();
+
+    /**
+      * Implementation of the WavFilter method.
+      */
+    // virtual bool        SetParameter( const QString& ac_ParamID, const
+    // QString& ac_Val );
+    virtual bool SetParameter(const QString &type, const int channel,
+                              const QVariant &value);
+
+    /**
+      * Implementation of the WavFilter method.
+      */
+    virtual StreamGenerator *GetStreamGen() const;
+
+    /**
+      * Implementation of the WavFilter method.
+      * Always returns false;
+      */
+    bool mf_bIsRealFilter() const
     {
-    public:
-        /**
-          * Constructor.
-          */
-      WavGenerator( const QString& ac_sID,
-                    const QString& ac_sType,
-                    data::FilterData* const a_cpParams,
-                    unsigned long sr,
-                    unsigned bs,
-                    bool deterministic = false);
+        return false;
+    }
 
-      /**
-        * Destructor.
-        */
-      virtual ~WavGenerator();
+    virtual void Reset();
 
-        /**
-          * Implementation of the WavFilter method.
-          */
-      //virtual bool        SetParameter( const QString& ac_ParamID, const QString& ac_Val );
-          virtual bool SetParameter( const QString& type, const int channel, const QVariant& value ) ;
+    /**
+   * Prepare filter for processing
+   * throw exception if problem
+     */
+    virtual void Prepare();
 
-        /**
-          * Implementation of the WavFilter method.
-          */
-      virtual StreamGenerator* GetStreamGen() const;
+    //        void SetSource(stimulus::DataBlock* s) { m_src=s;};
+    //        stimulus::DataBlock* GetSource() const { Q_CHECK_PTR(m_src);
+    //        return m_src; };
 
-        /**
-          * Implementation of the WavFilter method.
-          * Always returns false;
-          */
-      bool mf_bIsRealFilter() const
-      { return false; }
+private:
+    StreamGenerator *m_pStrGen;
+    QString m_type;
+};
 
-      virtual void Reset();
-
-        /**
-       * Prepare filter for processing
-       * throw exception if problem
-         */
-      virtual void Prepare();
-
-
-//        void SetSource(stimulus::DataBlock* s) { m_src=s;};
-//        stimulus::DataBlock* GetSource() const { Q_CHECK_PTR(m_src); return m_src; };
-
-    private:
-      StreamGenerator* m_pStrGen;
-      QString m_type;
-
-    };
-
-
-  } // ns stimulus
+} // ns stimulus
 } // ns apex
 
 #endif
-

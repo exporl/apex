@@ -40,10 +40,8 @@ public:
      * Return a domelement containing a DOM tree corresponding
      * to the given data structure
      */
-    static QDomElement addElement(QDomDocument *doc, const data::FilePrefix& d);
+    static QDomElement addElement(QDomDocument *doc, const data::FilePrefix &d);
 };
-
-
 }
 }
 

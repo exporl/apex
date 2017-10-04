@@ -20,31 +20,31 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_RUNDELEGATEDEFINES_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_RUNDELEGATEDEFINES_H_
 
-#include <map>
 #include <list>
+#include <map>
 
 #include <QMap>
 
 namespace apex
 {
-  namespace data
-  {
-    class ScreenElement;
-  }
+namespace data
+{
+class ScreenElement;
+}
 
-  namespace rundelegates
-  {
-    using data::ScreenElement;
-    class ScreenElementRunDelegate;
-    class SpinBoxRunDelegate;
-        class CheckBoxRunDelegate;
+namespace rundelegates
+{
+using data::ScreenElement;
+class ScreenElementRunDelegate;
+class SpinBoxRunDelegate;
+class CheckBoxRunDelegate;
 
-    typedef QMap<const ScreenElement*, ScreenElementRunDelegate*> ElementToRunningMap;
+typedef QMap<const ScreenElement *, ScreenElementRunDelegate *>
+    ElementToRunningMap;
 
-    typedef std::list<const SpinBoxRunDelegate*> spinBoxListT;
-        typedef std::list<const CheckBoxRunDelegate*> checkBoxListT;
-
-  }
+typedef std::list<const SpinBoxRunDelegate *> spinBoxListT;
+typedef std::list<const CheckBoxRunDelegate *> checkBoxListT;
+}
 }
 
 #endif

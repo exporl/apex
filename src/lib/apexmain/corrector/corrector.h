@@ -22,13 +22,17 @@
 
 #include <QVariant>
 
-namespace apex {
+namespace apex
+{
 
 class Corrector
 {
 public:
-    virtual const QVariant compare(const QVariant& a, const QVariant& b) const=0;
-    virtual ~Corrector() {}
+    virtual const QVariant compare(const QVariant &a,
+                                   const QVariant &b) const = 0;
+    virtual ~Corrector()
+    {
+    }
 };
 
 } // ns apex

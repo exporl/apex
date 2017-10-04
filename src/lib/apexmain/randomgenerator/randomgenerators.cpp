@@ -32,8 +32,8 @@
 namespace apex
 {
 
-RandomGenerators::RandomGenerators(ExperimentRunDelegate& p_rd) :
-        ApexModule(p_rd)
+RandomGenerators::RandomGenerators(ExperimentRunDelegate &p_rd)
+    : ApexModule(p_rd)
 {
 }
 
@@ -42,29 +42,26 @@ RandomGenerators::~RandomGenerators()
     qDeleteAll(m_generators);
 }
 
-
-void RandomGenerators::AddGenerator(QString id, RandomGenerator* p_generator)
+void RandomGenerators::AddGenerator(QString id, RandomGenerator *p_generator)
 {
     m_generators[id] = p_generator;
 }
 
 void RandomGenerators::doDeterministicGeneration()
 {
-    Q_FOREACH (RandomGenerator* generator, m_generators)
+    Q_FOREACH (RandomGenerator *generator, m_generators)
         generator->doDeterministicGeneration();
 }
 
 void RandomGenerators::ApplyGenerators()
 {
-    QMap<QString, RandomGenerator*>::const_iterator it;
-    for (it = m_generators.begin(); it != m_generators.end(); ++it)
-    {
+    QMap<QString, RandomGenerator *>::const_iterator it;
+    for (it = m_generators.begin(); it != m_generators.end(); ++it) {
         QString value = it.value()->GetNextValue();
         m_rd.GetParameterManager()->setParameter(it.value()->GetParameter(),
                                                  value, true);
 
-        xmlresults.append(GetXMLString(it.key(),
-                                       it.value()->GetParameter(),
+        xmlresults.append(GetXMLString(it.key(), it.value()->GetParameter(),
                                        it.value()->GetLastValue()));
     }
 }
@@ -73,13 +70,13 @@ QString RandomGenerators::GetResultXML() const
 {
     QString result = "<randomgenerators>\n";
 
-/*    for ( std::map<QString,RandomGenerator*>::const_iterator it =
-            m_generators.begin(); it!=m_generators.end(); ++it) {
-        QString value = (*it).second->GetLastValue();
-        result += GetXMLString( (*it).first,
-                                  (*it).second->GetParameter(),
-                                    value );
-    }*/
+    /*    for ( std::map<QString,RandomGenerator*>::const_iterator it =
+                m_generators.begin(); it!=m_generators.end(); ++it) {
+            QString value = (*it).second->GetLastValue();
+            result += GetXMLString( (*it).first,
+                                      (*it).second->GetParameter(),
+                                        value );
+        }*/
 
     result += xmlresults.join("\n");
     xmlresults.clear();
@@ -89,14 +86,12 @@ QString RandomGenerators::GetResultXML() const
     return result;
 }
 
- QString RandomGenerators::GetXMLString(const QString& generator,
-                                        const QString& parameter,
-                                        const QString& value) const
+QString RandomGenerators::GetXMLString(const QString &generator,
+                                       const QString &parameter,
+                                       const QString &value) const
 {
-     return "<randomgenerator id=\"" + generator + "\" parameter=\"" +
-             parameter + "\">" + value +
-             "</randomgenerator>";
+    return "<randomgenerator id=\"" + generator + "\" parameter=\"" +
+           parameter + "\">" + value + "</randomgenerator>";
 }
 
 } // namespace apex
-

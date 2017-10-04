@@ -48,15 +48,13 @@ public:
      *@return the created element
      */
     static QDomElement addElement(QDomDocument *doc,
-            const data::ConnectionsData& data);
+                                  const data::ConnectionsData &data);
 
 private:
     static QDomElement addConnection(QDomDocument *doc,
-            const data::ConnectionData& data);
+                                     const data::ConnectionData &data);
 };
-
 }
-
 }
 
 #endif

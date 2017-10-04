@@ -28,14 +28,14 @@ namespace apex
 namespace data
 {
 
-SpinBoxElement::SpinBoxElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent ),
-    hasDefault(false),
-       minimum(-100),
-        maximum(100),
-        step(1),
-        value(0),
-        reset(false)
+SpinBoxElement::SpinBoxElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent),
+      hasDefault(false),
+      minimum(-100),
+      maximum(100),
+      step(1),
+      value(0),
+      reset(false)
 {
 }
 
@@ -43,15 +43,14 @@ SpinBoxElement::~SpinBoxElement()
 {
 }
 
-
-void SpinBoxElement::visit( ScreenElementVisitor* v )
+void SpinBoxElement::visit(ScreenElementVisitor *v)
 {
-    v->visitSpinBox( this );
+    v->visitSpinBox(this);
 }
 
-void SpinBoxElement::visit( ScreenElementVisitor* v ) const
+void SpinBoxElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitSpinBox( this );
+    v->visitSpinBox(this);
 }
 
 ScreenElement::ElementTypeT SpinBoxElement::elementType() const
@@ -59,18 +58,12 @@ ScreenElement::ElementTypeT SpinBoxElement::elementType() const
     return SpinBox;
 }
 
-bool SpinBoxElement::operator==(const SpinBoxElement& other) const
+bool SpinBoxElement::operator==(const SpinBoxElement &other) const
 {
-    return  ScreenElement::operator==(other) &&
-            hasDefault == other.hasDefault &&
-            minimum == other.minimum &&
-            maximum == other.maximum &&
-            step == other.step &&
-            value == other.value &&
-            reset == other.reset &&
-            parameter == other.parameter;
-}
-
+    return ScreenElement::operator==(other) && hasDefault == other.hasDefault &&
+           minimum == other.minimum && maximum == other.maximum &&
+           step == other.step && value == other.value && reset == other.reset &&
+           parameter == other.parameter;
 }
 }
-
+}

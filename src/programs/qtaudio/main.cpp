@@ -15,118 +15,114 @@ Q_LOGGING_CATEGORY(APEX_QTAUDIO, "apex.qtaudio")
 
 class AudioRunner : public QThread
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    AudioRunner(const QString &file = QString())
+        : callback(file), output(createFormat()), buffer(&callback, 4096)
+    {
+        buffer.open(CallbackBuffer::ReadWrite);
+        callback.setBuffer(&buffer);
+        connect(&output, SIGNAL(stateChanged(QAudio::State)), this,
+                SLOT(printError()));
+    }
 
-        AudioRunner(const QString& file = QString()) : callback(file),
-                                                       output(createFormat()),
-                                                       buffer(&callback, 4096)
-        {
-            buffer.open(CallbackBuffer::ReadWrite);
-            callback.setBuffer(&buffer);
-            connect(&output, SIGNAL(stateChanged(QAudio::State)),
-                    this, SLOT(printError()));
-        }
+    void run()
+    {
+        // output.start(&buffer);
+        QTimer::singleShot(0, this, SLOT(startOutput()));
+        // QTimer::singleShot(400, this, SLOT(quit()));
+        exec();
+    }
 
-        void run()
-        {
-            //output.start(&buffer);
-            QTimer::singleShot(0, this, SLOT(startOutput()));
-            //QTimer::singleShot(400, this, SLOT(quit()));
-            exec();
-        }
+private:
+    QAudioFormat createFormat() const
+    {
+        QAudioDeviceInfo info = QAudioDeviceInfo::defaultOutputDevice();
+        qCDebug(APEX_QTAUDIO) << "supported stuff:";
+        qCDebug(APEX_QTAUDIO) << "codecs:" << info.supportedCodecs();
+        qCDebug(APEX_QTAUDIO) << "byte orders:" << info.supportedByteOrders();
+        qCDebug(APEX_QTAUDIO) << "channels:" << info.supportedChannelCounts();
+        qCDebug(APEX_QTAUDIO) << "sample rates:" << info.supportedSampleRates();
+        qCDebug(APEX_QTAUDIO) << "sample sizes:" << info.supportedSampleSizes();
+        qCDebug(APEX_QTAUDIO) << "sample types:" << info.supportedSampleTypes();
 
-    private:
+        QAudioFormat format = info.preferredFormat();
+        // format.setFrequency(8000);
+        format.setChannelCount(2);
+        format.setSampleSize(32);
+        // format.setCodec("audio/pcm");
+        // format.setByteOrder(QAudioFormat::BigEndian);
+        format.setSampleType(QAudioFormat::Float);
 
-        QAudioFormat createFormat() const
-        {
-            QAudioDeviceInfo info = QAudioDeviceInfo::defaultOutputDevice();
-            qCDebug(APEX_QTAUDIO) << "supported stuff:";
-            qCDebug(APEX_QTAUDIO) << "codecs:" << info.supportedCodecs();
-            qCDebug(APEX_QTAUDIO) << "byte orders:" << info.supportedByteOrders();
-            qCDebug(APEX_QTAUDIO) << "channels:" << info.supportedChannelCounts();
-            qCDebug(APEX_QTAUDIO) << "sample rates:" << info.supportedSampleRates();
-            qCDebug(APEX_QTAUDIO) << "sample sizes:" << info.supportedSampleSizes();
-            qCDebug(APEX_QTAUDIO) << "sample types:" << info.supportedSampleTypes();
+        qCDebug(APEX_QTAUDIO) << "\nformat used:";
+        qCDebug(APEX_QTAUDIO) << "codec:" << format.codec();
+        qCDebug(APEX_QTAUDIO) << "byte order:" << format.byteOrder();
+        qCDebug(APEX_QTAUDIO) << "channels:" << format.channelCount();
+        qCDebug(APEX_QTAUDIO) << "sample rate:" << format.sampleRate();
+        qCDebug(APEX_QTAUDIO) << "sample size:" << format.sampleSize();
+        qCDebug(APEX_QTAUDIO) << "sample type:" << format.sampleType();
 
-            QAudioFormat format = info.preferredFormat();
-            //format.setFrequency(8000);
-            format.setChannelCount(2);
-            format.setSampleSize(32);
-            //format.setCodec("audio/pcm");
-            //format.setByteOrder(QAudioFormat::BigEndian);
-            format.setSampleType(QAudioFormat::Float);
+        return format;
+    }
 
-            qCDebug(APEX_QTAUDIO) << "\nformat used:";
-            qCDebug(APEX_QTAUDIO) << "codec:" << format.codec();
-            qCDebug(APEX_QTAUDIO) << "byte order:" << format.byteOrder();
-            qCDebug(APEX_QTAUDIO) << "channels:" << format.channelCount();
-            qCDebug(APEX_QTAUDIO) << "sample rate:" << format.sampleRate();
-            qCDebug(APEX_QTAUDIO) << "sample size:" << format.sampleSize();
-            qCDebug(APEX_QTAUDIO) << "sample type:" << format.sampleType();
+public slots:
 
-            return format;
-        }
+    void printError()
+    {
+        if (output.error() != QAudio::NoError)
+            qCDebug(APEX_QTAUDIO) << "Error:" << output.error();
+    }
 
-    public slots:
+    void startOutput()
+    {
+        qCDebug(APEX_QTAUDIO) << "starting output";
+        output.start(&buffer);
+    }
 
-        void printError()
-        {
-            if (output.error() != QAudio::NoError)
-                qCDebug(APEX_QTAUDIO) << "Error:" << output.error();
-        }
+    void stopOutput()
+    {
+        qCDebug(APEX_QTAUDIO) << "stopping output";
+        // quit();
+        // terminate();
+        output.stop();
+    }
 
-        void startOutput()
-        {
-            qCDebug(APEX_QTAUDIO) << "starting output";
-            output.start(&buffer);
-        }
-
-        void stopOutput()
-        {
-            qCDebug(APEX_QTAUDIO) << "stopping output";
-            //quit();
-            //terminate();
-            output.stop();
-        }
-
-    private:
-
-        Callback callback;
-        QAudioOutput output;
-        CallbackBuffer buffer;
+private:
+    Callback callback;
+    QAudioOutput output;
+    CallbackBuffer buffer;
 };
 
 class ThreadRunner : public QThread
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    ThreadRunner(const QString &file = QString()) : fileName(file)
+    {
+    }
 
-        ThreadRunner(const QString& file = QString()) : fileName(file) {}
+    void run()
+    {
+        runner = new AudioRunner(fileName);
+        runner->start();
+        exec();
+    }
 
-        void run()
-        {
-            runner = new AudioRunner(fileName);
-            runner->start();
-            exec();
-        }
+private slots:
 
-    private slots:
+    void stop()
+    {
+        runner->terminate();
+    }
 
-        void stop()
-        {
-            runner->terminate();
-        }
-
-    private:
-
-        QString fileName;
-        AudioRunner* runner;
+private:
+    QString fileName;
+    AudioRunner *runner;
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 

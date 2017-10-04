@@ -34,39 +34,29 @@ struct CorrectorDataPrivate;
 
 class APEXDATA_EXPORT CorrectorData
 {
-    public:
+public:
+    enum Type { EQUAL };
 
-        enum Type
-        {
-            EQUAL
-        };
+    enum Language { DUTCH, ENGLISH };
 
-        enum Language
-        {
-            DUTCH,
-            ENGLISH
-        };
+    CorrectorData();
+    CorrectorData(const CorrectorData &other);
+    ~CorrectorData();
 
+    // getters
+    Type type() const;
+    bool answersDefined() const;
+    Language language() const;
 
-        CorrectorData();
-        CorrectorData(const CorrectorData& other);
-        ~CorrectorData();
+    // setters
+    void setType(const Type type);
+    void setLanguage(const Language language);
 
-        //getters
-        Type type() const;
-        bool answersDefined() const;
-        Language language() const;
+    CorrectorData &operator=(const CorrectorData &other);
+    bool operator==(const CorrectorData &other);
 
-        //setters
-        void setType(const Type type);
-        void setLanguage(const Language language);
-
-        CorrectorData& operator=(const CorrectorData& other);
-        bool operator==(const CorrectorData& other);
-
-    private:
-
-        CorrectorDataPrivate* d;
+private:
+    CorrectorDataPrivate *d;
 };
 }
 }

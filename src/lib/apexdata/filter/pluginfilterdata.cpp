@@ -27,8 +27,7 @@ namespace data
 
 // PluginFilterData ============================================================
 
-PluginFilterData::PluginFilterData():
-        FilterData()
+PluginFilterData::PluginFilterData() : FilterData()
 {
 }
 
@@ -40,7 +39,5 @@ QString PluginFilterData::plugin() const
 {
     return valueByType(QString("plugin")).toString();
 }
-
 }
-
 }

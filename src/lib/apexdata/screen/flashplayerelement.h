@@ -35,33 +35,33 @@ namespace data
  * The FlashPlayerElement is an implementation of a \ref
  * ScreenElement representing a "flash player".
  */
-class APEXDATA_EXPORT FlashPlayerElement
-            : public ScreenElement
+class APEXDATA_EXPORT FlashPlayerElement : public ScreenElement
 {
-        QString defaultPath;
-        QString highlightPath;
-        QString positivePath;
-        QString negativePath;
-        bool overrideFeedback;
-    public:
-        FlashPlayerElement(const QString& id, ScreenElement* parent);
-        ~FlashPlayerElement();
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
-        ElementTypeT elementType() const;
+    QString defaultPath;
+    QString highlightPath;
+    QString positivePath;
+    QString negativePath;
+    bool overrideFeedback;
 
-        QString getDefault() const;
-        QString getHighlight() const;
-        QString getPositive() const;
-        QString getNegative() const;
-        bool getOverrideFeedback() const;
-        void setDefault(const QString& p);
-        void setPositive(const QString& p);
-        void setNegative(const QString& p);
-        void setHighlight(const QString& p);
-        void setOverrideFeedback(bool o);
+public:
+    FlashPlayerElement(const QString &id, ScreenElement *parent);
+    ~FlashPlayerElement();
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
+    ElementTypeT elementType() const;
 
-        bool operator==(const FlashPlayerElement& other) const;
+    QString getDefault() const;
+    QString getHighlight() const;
+    QString getPositive() const;
+    QString getNegative() const;
+    bool getOverrideFeedback() const;
+    void setDefault(const QString &p);
+    void setPositive(const QString &p);
+    void setNegative(const QString &p);
+    void setHighlight(const QString &p);
+    void setOverrideFeedback(bool o);
+
+    bool operator==(const FlashPlayerElement &other) const;
 };
 }
 }

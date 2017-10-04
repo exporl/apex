@@ -27,71 +27,69 @@ namespace spin
 namespace constants
 {
 
-//id prefixes
-const QString PREFIX_DATABLOCK              = "datablock";
-const QString PREFIX_STIMULUS               = "stimulus";
-const QString PREFIX_TRIAL                  = "trial";
-const QString PREFIX_GAIN                   = "gain";
+// id prefixes
+const QString PREFIX_DATABLOCK = "datablock";
+const QString PREFIX_STIMULUS = "stimulus";
+const QString PREFIX_TRIAL = "trial";
+const QString PREFIX_GAIN = "gain";
 
-//silent datablock
-const double  SILENT_DATABLOCK_LENGTH       = 1000.0;
-const QString SILENT_DATABLOCK_ID           = PREFIX_DATABLOCK + "_silence";
-const QString SILENT_DATABLOCK_FILE         = "silence:" + QString::number(
-                                                    SILENT_DATABLOCK_LENGTH);
+// silent datablock
+const double SILENT_DATABLOCK_LENGTH = 1000.0;
+const QString SILENT_DATABLOCK_ID = PREFIX_DATABLOCK + "_silence";
+const QString SILENT_DATABLOCK_FILE =
+    "silence:" + QString::number(SILENT_DATABLOCK_LENGTH);
 
-//noise datablock
-const QString NOISE_DATABLOCK_ID            = PREFIX_DATABLOCK + "_noise";
+// noise datablock
+const QString NOISE_DATABLOCK_ID = PREFIX_DATABLOCK + "_noise";
 
-//parameters
-const int     PARAM_PRESENTATIONS           = 1;
-const int     PARAM_SKIP                    = 0;
-const int     PARAM_NB_CHOICES              = 1;
-const QString PARAM_DEF_STD                 = QString();
-const bool    PARAM_INPUT_DURING_STIMULUS   = false;
-const int     PARAM_N_UP                    = 1;
-const int     PARAM_N_DOWN                  = 1;
-const double  PARAM_START_VALUE             = 0.0;
+// parameters
+const int PARAM_PRESENTATIONS = 1;
+const int PARAM_SKIP = 0;
+const int PARAM_NB_CHOICES = 1;
+const QString PARAM_DEF_STD = QString();
+const bool PARAM_INPUT_DURING_STIMULUS = false;
+const int PARAM_N_UP = 1;
+const int PARAM_N_DOWN = 1;
+const double PARAM_START_VALUE = 0.0;
 
-//answer
-const QString ANSWER_EXPERIMENTER_SCREEN    = "correct";
+// answer
+const QString ANSWER_EXPERIMENTER_SCREEN = "correct";
 
-//screen
-const QString SCREEN_SUBJECT                = "subject_screen";
-const QString SCREEN_EXPERIMENTER_QUIET     = "experimenter_screen_quiet";
-const QString SCREEN_EXPERIMENTER_NOISE     = "experimenter_screen_noise";
+// screen
+const QString SCREEN_SUBJECT = "subject_screen";
+const QString SCREEN_EXPERIMENTER_QUIET = "experimenter_screen_quiet";
+const QString SCREEN_EXPERIMENTER_NOISE = "experimenter_screen_noise";
 
-//device
-const QString DEVICE_ID                     = "soundcard";
-const QString DEVICE_GAIN_ID                = "cardgain";
-const double  DEVICE_GAIN                   = 0.0;
+// device
+const QString DEVICE_ID = "soundcard";
+const QString DEVICE_GAIN_ID = "cardgain";
+const double DEVICE_GAIN = 0.0;
 
-//filter
-const QString FILTER_TYPE_NOISE             = "dataloop";
-const QString FILTER_TYPE_SPEECH            = "amplifier";
-const QString FILTER_GAIN_NOISE             = "noisegain";
-const QString FILTER_GAIN_SPEECH            = "speechgain";
+// filter
+const QString FILTER_TYPE_NOISE = "dataloop";
+const QString FILTER_TYPE_SPEECH = "amplifier";
+const QString FILTER_GAIN_NOISE = "noisegain";
+const QString FILTER_GAIN_SPEECH = "speechgain";
 
-//connections
-const QString CONN_FROM_ALL_ID              = "_ALL_";
+// connections
+const QString CONN_FROM_ALL_ID = "_ALL_";
 
-//calibration
-const QString CALIBRATION_STIMULUS          = "calibrationstimulus";
-const QString NOISE_STIMULUS                = "noisestimulus";
-const QString CALIBRATION_PROFILE           = "spin";
-const QString CALIBRATION_FIXED_PARAM       = "calibration";
-const double  CALIBRATION_MUTE              = -150.0;
-const double  CALIBRATION_MIN               = -50.0;
-const double  CALIBRATION_MAX               = 10.0;
-const double  CALIBRATION_DEFAULT           = 0.0;
+// calibration
+const QString CALIBRATION_STIMULUS = "calibrationstimulus";
+const QString NOISE_STIMULUS = "noisestimulus";
+const QString CALIBRATION_PROFILE = "spin";
+const QString CALIBRATION_FIXED_PARAM = "calibration";
+const double CALIBRATION_MUTE = -150.0;
+const double CALIBRATION_MIN = -50.0;
+const double CALIBRATION_MAX = 10.0;
+const double CALIBRATION_DEFAULT = 0.0;
 
-//result
-const QString HTML_PAGE                     = "apex:resultsviewer.html";
-const QString JAVASCRIPT_SCRIPT             = "apexresults.js";
+// result
+const QString HTML_PAGE = "apex:resultsviewer.html";
+const QString JAVASCRIPT_SCRIPT = "apexresults.js";
 
-//general
-const bool    EXIT_AFTER                    = true;
-
-
+// general
+const bool EXIT_AFTER = true;
 }
 }
 #endif

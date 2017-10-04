@@ -19,10 +19,10 @@
 
 #include "soundcardfactory.h"
 
-#if defined( S_WIN32 ) //|| defined( S_MAC )
+#if defined(S_WIN32) //|| defined( S_MAC )
 #include "../_archs/win32/win32_asiowrapper.h"
 #endif
-#if defined( S_MAC )
+#if defined(S_MAC)
 #include "../_archs/osx/osx_coreaudiowrapper.h"
 #endif
 #if defined(ENABLEJACK)
@@ -42,10 +42,11 @@ SoundCardFactory::~SoundCardFactory()
 {
 }
 
-ISoundCard *SoundCardFactory::CreateSoundCard(const QString& cardName, const
-                                    gt_eDeviceType ac_eType, QString& a_sError )
+ISoundCard *SoundCardFactory::CreateSoundCard(const QString &cardName,
+                                              const gt_eDeviceType ac_eType,
+                                              QString &a_sError)
 {
-    qCDebug(APEX_SA, "CreateSoundCard" );
+    qCDebug(APEX_SA, "CreateSoundCard");
     try {
         if (ac_eType == PORTAUDIO) {
             return new PortAudioWrapper(cardName);
@@ -59,7 +60,7 @@ ISoundCard *SoundCardFactory::CreateSoundCard(const QString& cardName, const
             }
             std::string error = a_sError.toStdString();
             Q_FOREACH (const std::string &driver,
-                        AsioWrapper::sf_saGetDriverNames(error)) {
+                       AsioWrapper::sf_saGetDriverNames(error)) {
                 try {
                     return new AsioWrapper(driver);
                 } catch (...) {
@@ -83,7 +84,7 @@ ISoundCard *SoundCardFactory::CreateSoundCard(const QString& cardName, const
         } else {
             a_sError = "SoundcardFactory: unknown driver";
         }
-    } catch (const utils::StringException& e) {
+    } catch (const utils::StringException &e) {
         a_sError = QString::fromStdString(e.mc_sError);
     } catch (...) {
         if (a_sError.isEmpty())
@@ -92,7 +93,8 @@ ISoundCard *SoundCardFactory::CreateSoundCard(const QString& cardName, const
     return 0;
 }
 
-tStringVector SoundCardFactory::GetDriverNames(gt_eDeviceType ac_eType, QString &a_sError)
+tStringVector SoundCardFactory::GetDriverNames(gt_eDeviceType ac_eType,
+                                               QString &a_sError)
 {
     if (ac_eType == PORTAUDIO)
         return PortAudioWrapper::sf_saGetDriverNames(a_sError);
@@ -117,5 +119,4 @@ tStringVector SoundCardFactory::GetDriverNames(gt_eDeviceType ac_eType, QString 
     a_sError = "SoundcardFactory: unknown driver";
     return tStringVector();
 }
-
 }

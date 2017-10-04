@@ -20,8 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_PARAMETERLISTELEMENT_H_
 #define _EXPORL_SRC_LIB_APEXDATA_SCREEN_PARAMETERLISTELEMENT_H_
 
-#include "parameterscontainerelement.h"
 #include "parameterdata.h"
+#include "parameterscontainerelement.h"
 
 #include <vector>
 
@@ -32,41 +32,37 @@ namespace apex
 namespace data
 {
 
-
-
 /**
  * The ParameterListElement is an implementation of a \ref
  * ScreenElement representing a "parameter list".
  */
-class APEXDATA_EXPORT ParameterListElement
-            : public ParametersContainerElement
+class APEXDATA_EXPORT ParameterListElement : public ParametersContainerElement
 {
-    public:
-        typedef std::vector<ParameterData> ParameterListT;
+public:
+    typedef std::vector<ParameterData> ParameterListT;
 
-        ParameterListElement(const QString& id, ScreenElement* parent);
-        ~ParameterListElement();
+    ParameterListElement(const QString &id, ScreenElement *parent);
+    ~ParameterListElement();
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
-        bool addParameter(const QString& id, const QString& name,
-                          const QString& expression = QString::fromUtf8(""));
-        bool setParameterID(int param, const QString& s);
-        void setParameterName(int param, const QString& s);
-        bool setParameterExpression(int param, const QString& s);
-        void removeParameter(int param);
-        bool parameterIDTaken(const QString& s) const;
+    bool addParameter(const QString &id, const QString &name,
+                      const QString &expression = QString::fromUtf8(""));
+    bool setParameterID(int param, const QString &s);
+    void setParameterName(int param, const QString &s);
+    bool setParameterExpression(int param, const QString &s);
+    void removeParameter(int param);
+    bool parameterIDTaken(const QString &s) const;
 
-        const ParameterListT& getParameterList() const;
+    const ParameterListT &getParameterList() const;
 
-        bool operator==(const ParameterListElement& other) const;
+    bool operator==(const ParameterListElement &other) const;
 
-    private:
-        ParameterListT parameterList;
+private:
+    ParameterListT parameterList;
 };
-
 }
 }
 #endif

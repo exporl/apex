@@ -1,0 +1,8 @@
+digraph Stimuli {
+__init__ [shape=point];
+PlayingStimuli [label="PlayingStimuli", shape=circle];
+AfterStimuli [label="AfterStimuli", shape=circle];
+
+__init__ -> PlayingStimuli;
+PlayingStimuli -> AfterStimuli [label="finished()"];
+}

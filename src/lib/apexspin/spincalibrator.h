@@ -16,30 +16,27 @@ class SpinConfig;
 class SpinUserSettings;
 }
 
-//FIXME this is only exported for the tests
+// FIXME this is only exported for the tests
 class APEXSPIN_EXPORT SpinCalibrator
 {
-    public:
+public:
+    SpinCalibrator(const data::SpinConfig &config,
+                   const data::SpinUserSettings &settings, QWidget *parent);
+    ~SpinCalibrator();
 
-        SpinCalibrator(const data::SpinConfig& config,
-                       const data::SpinUserSettings& settings,
-                       QWidget* parent);
-        ~SpinCalibrator();
+    bool calibrate(bool *changesMade = 0);
 
-        bool calibrate(bool* changesMade = 0);
+    /**
+     * Calculates the differences between the old and the new calibration
+     * parameters and propagates those changes to all spin-related
+     * parameters.
+     */
+    void propagateChanges();
 
-        /**
-         * Calculates the differences between the old and the new calibration
-         * parameters and propagates those changes to all spin-related
-         * parameters.
-         */
-        void propagateChanges();
-
-    private:
-
-        SpinCalibratorPrivate* const priv;
+private:
+    SpinCalibratorPrivate *const priv;
 };
 
-}//ns spin
+} // ns spin
 
 #endif

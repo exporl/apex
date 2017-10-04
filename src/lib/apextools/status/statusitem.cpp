@@ -19,32 +19,31 @@
 
 #include "statusitem.h"
 
-#include <QString>
 #include <QDateTime>
+#include <QString>
 
 namespace apex
 {
 
-struct StatusItemPrivate
-{
-    StatusItem::Level   level;
-    QString             source;
-    QString             message;
-    QDateTime           dateTime;
+struct StatusItemPrivate {
+    StatusItem::Level level;
+    QString source;
+    QString message;
+    QDateTime dateTime;
 };
 
-StatusItem::StatusItem(StatusItem::Level level, const QString& source,
-                                                const QString& message) :
-                                        d(new StatusItemPrivate())
+StatusItem::StatusItem(StatusItem::Level level, const QString &source,
+                       const QString &message)
+    : d(new StatusItemPrivate())
 {
-    d->message  = message;
-    d->source   = source;
-    d->level    = level;
+    d->message = message;
+    d->source = source;
+    d->level = level;
     d->dateTime = QDateTime::currentDateTime();
 }
 
-StatusItem::StatusItem(const StatusItem& other) :
-                                        d(new StatusItemPrivate(*other.d))
+StatusItem::StatusItem(const StatusItem &other)
+    : d(new StatusItemPrivate(*other.d))
 {
 }
 
@@ -53,23 +52,23 @@ StatusItem::~StatusItem()
     delete d;
 }
 
-const QString& StatusItem::message() const
+const QString &StatusItem::message() const
 {
     return d->message;
 }
 
-StatusItem& StatusItem::setMessage(const QString& message)
+StatusItem &StatusItem::setMessage(const QString &message)
 {
     d->message = message;
     return *this;
 }
 
-const QString& StatusItem::source() const
+const QString &StatusItem::source() const
 {
     return d->source;
 }
 
-StatusItem& StatusItem::setSource (const QString& source)
+StatusItem &StatusItem::setSource(const QString &source)
 {
     d->source = source;
     return *this;
@@ -80,18 +79,18 @@ StatusItem::Level StatusItem::level() const
     return d->level;
 }
 
-StatusItem& StatusItem::setLevel (StatusItem::Level type)
+StatusItem &StatusItem::setLevel(StatusItem::Level type)
 {
     d->level = type;
     return *this;
 }
 
-const QDateTime& StatusItem::dateTime() const
+const QDateTime &StatusItem::dateTime() const
 {
     return d->dateTime;
 }
 
-StatusItem& StatusItem::operator=(const StatusItem& other)
+StatusItem &StatusItem::operator=(const StatusItem &other)
 {
     if (this != &other)
         *d = *other.d;
@@ -99,13 +98,9 @@ StatusItem& StatusItem::operator=(const StatusItem& other)
     return *this;
 }
 
-bool StatusItem::operator==(const StatusItem& other) const
+bool StatusItem::operator==(const StatusItem &other) const
 {
-    return  d->level == other.d->level &&
-            d->dateTime == other.d->dateTime &&
-            d->message == other.d->message &&
-            d->source == other.d->source;
+    return d->level == other.d->level && d->dateTime == other.d->dateTime &&
+           d->message == other.d->message && d->source == other.d->source;
 }
-
 }
-

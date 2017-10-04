@@ -23,58 +23,57 @@
 
 using namespace streamapp;
 
-BasicBuffer::BasicBuffer( const unsigned ac_nChan, const unsigned ac_nInputSize, const unsigned ac_nBuffers ) :
-  IStreamProcessor(),
-  mc_nBuffers( ac_nBuffers ),
-  mc_nInputSize( ac_nInputSize ),
-  mc_nOutputSize( mc_nBuffers * mc_nInputSize ),
-  mc_nChannels( ac_nChan ),
-  m_nCount( 0 ),
-  m_pResult( 0 ),
-  m_pCallback( 0 )
+BasicBuffer::BasicBuffer(const unsigned ac_nChan, const unsigned ac_nInputSize,
+                         const unsigned ac_nBuffers)
+    : IStreamProcessor(),
+      mc_nBuffers(ac_nBuffers),
+      mc_nInputSize(ac_nInputSize),
+      mc_nOutputSize(mc_nBuffers * mc_nInputSize),
+      mc_nChannels(ac_nChan),
+      m_nCount(0),
+      m_pResult(0),
+      m_pCallback(0)
 {
-  Q_ASSERT( ac_nBuffers );
+    Q_ASSERT(ac_nBuffers);
 }
 
 BasicBuffer::~BasicBuffer()
-{}
-
-const Stream& BasicBuffer::mf_DoProcessing( const Stream& ac_StrToProc )
 {
-  Q_ASSERT( ac_StrToProc.mf_nGetChannelCount() >= mf_nGetNumInputChannels() );
-  Q_ASSERT( ac_StrToProc.mf_nGetBufferSize() >= mf_nGetBufferSize() );
-
-    //we don't necessary have to do something
-  if( m_pResult )
-  {
-      //get samples
-    const unsigned nCurOffset = m_nCount * mf_nGetBufferSize();
-    for( unsigned j = 0 ; j < mf_nGetNumInputChannels() ; ++j )
-    {
-      for( unsigned i = 0 ; i < mf_nGetBufferSize() ; ++ i )
-        m_pResult->mp_Set( j, i + nCurOffset, ac_StrToProc( j, i ) );
-    }
-
-      //buffer full
-    if( ++m_nCount == mc_nBuffers )
-    {
-      m_nCount = 0;
-      if( m_pCallback )
-        m_pCallback->mf_DoProcessing( *m_pResult );
-    }
-  }
-
-  return ac_StrToProc;
 }
 
-void BasicBuffer::mp_SetBufferToFill( Stream* ac_Buf )
+const Stream &BasicBuffer::mf_DoProcessing(const Stream &ac_StrToProc)
 {
-  Q_ASSERT( ac_Buf->mf_nGetChannelCount() >= mf_nGetNumInputChannels() );
-  Q_ASSERT( ac_Buf->mf_nGetBufferSize() >= mc_nOutputSize );
-  m_pResult = ac_Buf;
+    Q_ASSERT(ac_StrToProc.mf_nGetChannelCount() >= mf_nGetNumInputChannels());
+    Q_ASSERT(ac_StrToProc.mf_nGetBufferSize() >= mf_nGetBufferSize());
+
+    // we don't necessary have to do something
+    if (m_pResult) {
+        // get samples
+        const unsigned nCurOffset = m_nCount * mf_nGetBufferSize();
+        for (unsigned j = 0; j < mf_nGetNumInputChannels(); ++j) {
+            for (unsigned i = 0; i < mf_nGetBufferSize(); ++i)
+                m_pResult->mp_Set(j, i + nCurOffset, ac_StrToProc(j, i));
+        }
+
+        // buffer full
+        if (++m_nCount == mc_nBuffers) {
+            m_nCount = 0;
+            if (m_pCallback)
+                m_pCallback->mf_DoProcessing(*m_pResult);
+        }
+    }
+
+    return ac_StrToProc;
 }
 
-void BasicBuffer::mp_SetCallback( IStreamProcessor* const ac_pCallbackProc )
+void BasicBuffer::mp_SetBufferToFill(Stream *ac_Buf)
 {
-  m_pCallback = ac_pCallbackProc;
+    Q_ASSERT(ac_Buf->mf_nGetChannelCount() >= mf_nGetNumInputChannels());
+    Q_ASSERT(ac_Buf->mf_nGetBufferSize() >= mc_nOutputSize);
+    m_pResult = ac_Buf;
+}
+
+void BasicBuffer::mp_SetCallback(IStreamProcessor *const ac_pCallbackProc)
+{
+    m_pCallback = ac_pCallbackProc;
 }

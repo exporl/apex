@@ -23,7 +23,8 @@
 #include <QMap>
 #include <QString>
 
-namespace apex {
+namespace apex
+{
 
 class RandomGenerator;
 class RandomGenerators;
@@ -41,9 +42,10 @@ class RandomGeneratorParameters;
 class RandomGeneratorFactory
 {
 public:
-    RandomGenerators* GetRandomGenerators(ExperimentRunDelegate& p_rd, QMap<QString,data::RandomGeneratorParameters*> p_param);
+    RandomGenerators *GetRandomGenerators(
+        ExperimentRunDelegate &p_rd,
+        QMap<QString, data::RandomGeneratorParameters *> p_param);
 };
-
 }
 
 #endif

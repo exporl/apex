@@ -13,10 +13,6 @@ CLEBS -= pch
 # Some echo command lines are too long
 CLEBS *= nosilent
 
-# Uncomment to disable certain modules although all dependencies are available
-# Do not disable flash here!
-CLEBS_DISABLED -= documentation/manual
-
 # Dependencies for Unix:
 MATLABROOT=c:/api-vs2008/matlab71
 
@@ -120,6 +116,22 @@ win32:LIBLOROOT = c:/api-vs2010/liblo
 #win32:LIBLOLIBDIR_RELEASE = $${LIBLOLIBDIR}/ReleaseDLL
 #win32:LIBLOLIBDIR_DEBUG = $${LIBLOLIBDIR}/DebugDLL
 #win32:LIBLOINCLUDEDIR = $${LIBLOROOT}
+
+win32:OPENSSLROOT = c:/api-vs2010/OpenSSL
+#win32:OPENSSLBINDIR = $${OPENSSLROOT}/bin
+#win32:OPENSSLLIBDIR = $${OPENSSLROOT}/lib
+#win32:LIBSSLLIB = libssl-1_1
+#win32:LIBCRYPTOLIB = libcrypto-1_1
+
+win32:LIBSSH2ROOT = c:/api-vs2010/libssh2
+#win32:LIBSSH2BINDIR = $${LIBSSH2ROOT}/bin
+#win32:LIBSSH2LIBDIR = $${LIBSSH2ROOT}/lib
+#win32:LIBSSH2LIB = libssh2
+
+win32:LIBGIT2ROOT = c:/api-vs2010/libgit2
+#win32:LIBGIT2BINDIR = $${LIBGIT2ROOT}/bin
+#win32:LIBGIT2LIBDIR = $${LIBGIT2ROOT}/lib
+#win32:LIBGIT2LIB = git2
 
 # Installation paths for Unix
 #unix:PREFIXDIR = /usr/local

@@ -27,37 +27,40 @@
 
 using namespace cmn;
 
-apex::gui::ApexFeedbackPicture::ApexFeedbackPicture( QWidget* a_pParent,
-                                                   QString okFilename,
-                                                   QString nOkFilename)
-    : QLabel( a_pParent )
+apex::gui::ApexFeedbackPicture::ApexFeedbackPicture(QWidget *a_pParent,
+                                                    QString okFilename,
+                                                    QString nOkFilename)
+    : QLabel(a_pParent)
 {
     if (okFilename.isEmpty()) {
-        okPixmap = new QPixmap(Paths::searchFile(QL1S("feedback_ok.png"), Paths::iconDirectories()));
+        okPixmap = new QPixmap(Paths::searchFile(QL1S("feedback_ok.png"),
+                                                 Paths::iconDirectories()));
     } else
         okPixmap = new QPixmap(okFilename);
     Q_ASSERT(okPixmap);
 
     if (nOkFilename.isEmpty())
-        nokPixmap = new QPixmap(Paths::searchFile(QL1S("feedback_nok.png"), Paths::iconDirectories()));
+        nokPixmap = new QPixmap(Paths::searchFile(QL1S("feedback_nok.png"),
+                                                  Paths::iconDirectories()));
     else
         nokPixmap = new QPixmap(nOkFilename);
     Q_ASSERT(nokPixmap);
 
-    setMinimumHeight( okPixmap->height());
-    setMinimumWidth( okPixmap->width());
+    setMinimumHeight(okPixmap->height());
+    setMinimumWidth(okPixmap->width());
 }
 
-void apex::gui::ApexFeedbackPicture::feedBack( const ScreenElementRunDelegate::FeedbackMode mode )
+void apex::gui::ApexFeedbackPicture::feedBack(
+    const ScreenElementRunDelegate::FeedbackMode mode)
 {
-    if ( mode == ScreenElementRunDelegate::NoFeedback )
-        setPixmap( QPixmap() );
-    else if ( mode == ScreenElementRunDelegate::NegativeFeedback )
-        setPixmap( *nokPixmap );
-    else if ( mode == ScreenElementRunDelegate::PositiveFeedback )
-        setPixmap( *okPixmap );
-    else if ( mode == ScreenElementRunDelegate::HighlightFeedback )
-        setPixmap( QPixmap() );
+    if (mode == ScreenElementRunDelegate::NoFeedback)
+        setPixmap(QPixmap());
+    else if (mode == ScreenElementRunDelegate::NegativeFeedback)
+        setPixmap(*nokPixmap);
+    else if (mode == ScreenElementRunDelegate::PositiveFeedback)
+        setPixmap(*okPixmap);
+    else if (mode == ScreenElementRunDelegate::HighlightFeedback)
+        setPixmap(QPixmap());
 }
 
 apex::gui::ApexFeedbackPicture::~ApexFeedbackPicture()
@@ -66,36 +69,40 @@ apex::gui::ApexFeedbackPicture::~ApexFeedbackPicture()
     delete nokPixmap;
 }
 
-namespace apex {
-    namespace gui {
+namespace apex
+{
+namespace gui
+{
 
-StatusPicture::StatusPicture( QWidget* parent,
-                              QString answeringFilename,
-                              QString listeningFilename,
-                              QString waitingForStartFilename)
-    : QLabel( parent )
+StatusPicture::StatusPicture(QWidget *parent, QString answeringFilename,
+                             QString listeningFilename,
+                             QString waitingForStartFilename)
+    : QLabel(parent)
 {
     QString targetFile;
     if (answeringFilename.isEmpty())
-        targetFile = Paths::searchFile(QL1S("answering.png"), Paths::iconDirectories());
+        targetFile =
+            Paths::searchFile(QL1S("answering.png"), Paths::iconDirectories());
     else
-        targetFile=answeringFilename;
+        targetFile = answeringFilename;
     answeringPixmap = new QPixmap(targetFile);
-    Q_ASSERT(! answeringPixmap->isNull());
+    Q_ASSERT(!answeringPixmap->isNull());
 
     if (listeningFilename.isEmpty())
-        targetFile = Paths::searchFile(QL1S("listening.png"), Paths::iconDirectories());
+        targetFile =
+            Paths::searchFile(QL1S("listening.png"), Paths::iconDirectories());
     else
-        targetFile=listeningFilename;
+        targetFile = listeningFilename;
     listeningPixmap = new QPixmap(targetFile);
-    Q_ASSERT(! listeningPixmap->isNull());
+    Q_ASSERT(!listeningPixmap->isNull());
 
     if (waitingForStartFilename.isEmpty())
-        targetFile = Paths::searchFile(QL1S("waitforstart.png"), Paths::iconDirectories());
+        targetFile = Paths::searchFile(QL1S("waitforstart.png"),
+                                       Paths::iconDirectories());
     else
-        targetFile=waitingForStartFilename;
+        targetFile = waitingForStartFilename;
     waitingForStartPixmap = new QPixmap(targetFile);
-    Q_ASSERT(! waitingForStartPixmap->isNull());
+    Q_ASSERT(!waitingForStartPixmap->isNull());
 
     setStatus(STATUS_WAITING_FOR_START);
 }
@@ -110,20 +117,20 @@ StatusPicture::~StatusPicture()
         delete waitingForStartPixmap;
 }
 
-void StatusPicture::setStatus(const status s )
+void StatusPicture::setStatus(const status s)
 {
     switch (s) {
-        case STATUS_ANSWERING:
-            setPixmap( *answeringPixmap );
-            break;
-        case STATUS_LISTENING:
-            setPixmap( *listeningPixmap );
-            break;
-        case STATUS_WAITING_FOR_START:
-            setPixmap( *waitingForStartPixmap );
-            break;
-        default:
-            qCDebug(APEX_RS, "Unknown status");
+    case STATUS_ANSWERING:
+        setPixmap(*answeringPixmap);
+        break;
+    case STATUS_LISTENING:
+        setPixmap(*listeningPixmap);
+        break;
+    case STATUS_WAITING_FOR_START:
+        setPixmap(*waitingForStartPixmap);
+        break;
+    default:
+        qCDebug(APEX_RS, "Unknown status");
     }
 }
 
@@ -132,6 +139,5 @@ void StatusPicture::setStatus(const status s )
     setIconSize( e->size() );
 }*/
 
-
-    } // ns gui
+} // ns gui
 } // ns apex

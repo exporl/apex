@@ -32,86 +32,86 @@ typedef std::string String;
 namespace utils
 {
 
+/**
+  * Tracer
+  *   application-wide logging class.
+  *   A subclass of Tracer can be installed, and then all
+  *   sf_Trace() calls get handled there.
+  *   The other methods output to the debugger; it is
+  *   platform-specific how this is done. On Windows with
+  *   VisualStudio, this will actually print to the debugger
+  *   window, all others will just print to std::cout.
+  ********************************************************** */
+class Tracer
+{
+protected:
     /**
-      * Tracer
-      *   application-wide logging class.
-      *   A subclass of Tracer can be installed, and then all
-      *   sf_Trace() calls get handled there.
-      *   The other methods output to the debugger; it is
-      *   platform-specific how this is done. On Windows with
-      *   VisualStudio, this will actually print to the debugger
-      *   window, all others will just print to std::cout.
-      ********************************************************** */
-  class Tracer
-  {
-  protected:
-      /**
-        * Protected Constructor.
-        */
+      * Protected Constructor.
+      */
     Tracer();
 
-      /**
-        * To be implemented in subclasses.
-        * @param ac_sMessage the text
-        */
-    virtual void mp_TraceOne( const String& ac_sMessage ) = 0;
+    /**
+      * To be implemented in subclasses.
+      * @param ac_sMessage the text
+      */
+    virtual void mp_TraceOne(const String &ac_sMessage) = 0;
 
     static bool sv_bTraceAll;
 
-  public:
-      /**
-        * Destructor.
-        */
+public:
+    /**
+      * Destructor.
+      */
     virtual ~Tracer();
 
-      /**
-        * Set the tracer to use.
-        * Note that what you put in here is not deleted automatically!
-        * @param ac_pTracer the new tracer or 0 to disable logging (default)
-        * @param ac_bDeletePrevious if true, deletes the previous tracer.
-        */
-    static void sf_SetCurrentTracer( Tracer* const ac_pTracer, const bool ac_bDeletePrevious = false );
+    /**
+      * Set the tracer to use.
+      * Note that what you put in here is not deleted automatically!
+      * @param ac_pTracer the new tracer or 0 to disable logging (default)
+      * @param ac_bDeletePrevious if true, deletes the previous tracer.
+      */
+    static void sf_SetCurrentTracer(Tracer *const ac_pTracer,
+                                    const bool ac_bDeletePrevious = false);
 
-      /**
-        * Write a string to the current tracer.
-        * @param ac_sMessage the string
-        */
-    static void sf_Trace( const String& ac_sMessage );
+    /**
+      * Write a string to the current tracer.
+      * @param ac_sMessage the string
+      */
+    static void sf_Trace(const String &ac_sMessage);
 
-      /**
-        * Write a message to the debugger.
-        * @param ac_sMessage the message
-        * @see DBG
-        */
-    static void sf_TraceDebug( const String& ac_sMessage );
+    /**
+      * Write a message to the debugger.
+      * @param ac_sMessage the message
+      * @see DBG
+      */
+    static void sf_TraceDebug(const String &ac_sMessage);
 
-      /**
-        * Write a message to the debugger in printf() style.
-        * @param ac_pFormat the message
-        * @param  arguments
-        * @see DBGPF
-        */
-    static void sf_TraceDebugPrintf( const char* ac_pFormat, ... );
+    /**
+      * Write a message to the debugger in printf() style.
+      * @param ac_pFormat the message
+      * @param  arguments
+      * @see DBGPF
+      */
+    static void sf_TraceDebugPrintf(const char *ac_pFormat, ...);
 
-      /**
-        * Set to send all messages to TRACE().
-        * If this is set to true, all commands passed to DBG or DBGPF
-        * are also passed to TRACE.
-        * Use this to get a full log of an application.
-        * @param ac_bSet true to set, false to unset (=the default)
-        */
-    INLINE static void mp_SetTraceAll( const bool ac_bSet )
+    /**
+      * Set to send all messages to TRACE().
+      * If this is set to true, all commands passed to DBG or DBGPF
+      * are also passed to TRACE.
+      * Use this to get a full log of an application.
+      * @param ac_bSet true to set, false to unset (=the default)
+      */
+    INLINE static void mp_SetTraceAll(const bool ac_bSet)
     {
-      sv_bTraceAll = ac_bSet;
+        sv_bTraceAll = ac_bSet;
     }
 
-      /**
-        * The maximum text length is 128.
-        * Should be sufficient..
-        */
+    /**
+      * The maximum text length is 128.
+      * Should be sufficient..
+      */
     static const unsigned sc_nMaxTextSize = 128;
-  };
-
+};
 }
 
 #endif //#ifndef __TRACER_H__

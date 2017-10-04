@@ -36,44 +36,36 @@ struct ParameterDialogResultPrivate;
  */
 class APEXDATA_EXPORT ParameterDialogResult
 {
-    public:
+public:
+    ParameterDialogResult();
+    ParameterDialogResult(const ParameterDialogResult &other);
+    ParameterDialogResult(const QString &xpath, const QString &description,
+                          const QString &newValue, bool succeeded);
 
-        ParameterDialogResult();
-        ParameterDialogResult(const ParameterDialogResult& other);
-        ParameterDialogResult(const QString& xpath,
-                               const QString& description,
-                               const QString& newValue,
-                               bool succeeded);
+    // getters
 
-        //getters
+    QString xpath() const;
+    QString description() const;
+    QString newValue() const;
+    bool succeeded() const;
 
-        QString xpath() const;
-        QString description() const;
-        QString newValue() const;
-        bool    succeeded() const;
+    ParameterDialogResult &operator=(const ParameterDialogResult &other);
+    bool operator==(const ParameterDialogResult &other) const;
+    bool operator<(const ParameterDialogResult &other) const;
 
-        ParameterDialogResult& operator=(const ParameterDialogResult& other);
-        bool operator==(const ParameterDialogResult& other) const;
-        bool operator<(const ParameterDialogResult& other) const;
-
-    private:
-
-        ParameterDialogResultPrivate* d;
+private:
+    ParameterDialogResultPrivate *d;
 };
 
-
-
-class APEXDATA_EXPORT ParameterDialogResults : public QList<ParameterDialogResult>
+class APEXDATA_EXPORT ParameterDialogResults
+    : public QList<ParameterDialogResult>
 {
-    public:
+public:
+    ParameterDialogResults();
+    ~ParameterDialogResults();
 
-        ParameterDialogResults();
-        ~ParameterDialogResults();
-
-        bool operator==(const ParameterDialogResults& other) const;
-
+    bool operator==(const ParameterDialogResults &other) const;
 };
-
 }
 }
 

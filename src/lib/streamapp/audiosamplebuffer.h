@@ -20,9 +20,9 @@
 #ifndef _APEX_SRC_LIB_STREAMAPP_AUDIOSAMPLEBUFFER_H__
 #define _APEX_SRC_LIB_STREAMAPP_AUDIOSAMPLEBUFFER_H__
 
-#include "typedefs.h"
 #include "audioformat.h"
 #include "streamappdefines.h"
+#include "typedefs.h"
 
 namespace streamapp
 {
@@ -54,13 +54,14 @@ public:
      * @param ac_nChannels the number of arrays a_pSourceBuf points to
      * @param ac_nSamples the number of samples in the array(s) pointed to
      */
-    AudioSampleBuffer(StreamType** a_pSourceBuf, const unsigned ac_nChannels, const unsigned ac_nSamples);
+    AudioSampleBuffer(StreamType **a_pSourceBuf, const unsigned ac_nChannels,
+                      const unsigned ac_nSamples);
 
     /**
      * Constructor overload.
      * @param ac_Stream the MatrixAccess to operate on
      */
-    AudioSampleBuffer(const Stream& ac_Stream);
+    AudioSampleBuffer(const Stream &ac_Stream);
 
     /**
      * Destructor.
@@ -73,7 +74,7 @@ public:
      * @param ac_nChannel the channel to calculate the RMS for
      * @param a_RMS the variable to receive the RMS
      */
-    void mf_dCalculateRMS(const unsigned ac_nChannel, StreamType& a_RMS) const;
+    void mf_dCalculateRMS(const unsigned ac_nChannel, StreamType &a_RMS) const;
 
     /**
      * Calculate minimum and maximum sample values.
@@ -81,14 +82,16 @@ public:
      * @param a_Min the variable to receive the min value
      * @param a_Max the variable to receive the max value
      */
-    void mf_dCalculateMinMax(const unsigned ac_nChannel, StreamType& a_Min, StreamType& a_Max) const;
+    void mf_dCalculateMinMax(const unsigned ac_nChannel, StreamType &a_Min,
+                             StreamType &a_Max) const;
 
     /**
      * Calculate the absolute maximum sample value.
      * @param ac_nChannel the channel to operate on
      * @param a_Abs the variable to receive the value
      */
-    void mf_dCalculateAbsMinMax(const unsigned ac_nChannel, StreamType& a_Abs) const;
+    void mf_dCalculateAbsMinMax(const unsigned ac_nChannel,
+                                StreamType &a_Abs) const;
 
     /**
      * Set all samples to the same value.
@@ -122,11 +125,11 @@ public:
      * Write contents to a raw binary file.
      * @param ac_sFile the filename
      */
-    void mf_WriteToBinaryFile(const QString& ac_sFile);
+    void mf_WriteToBinaryFile(const QString &ac_sFile);
 
 private:
-    AudioSampleBuffer(const AudioSampleBuffer&);
-    AudioSampleBuffer& operator = (const AudioSampleBuffer&);
+    AudioSampleBuffer(const AudioSampleBuffer &);
+    AudioSampleBuffer &operator=(const AudioSampleBuffer &);
 };
 
 /**
@@ -143,8 +146,11 @@ public:
      * @param ac_nChannels the number of channels
      * @param ac_nSamples the number of samples
      */
-    AudioSampleBufferStorage(const unsigned ac_nChannels, const unsigned ac_nSamples) :
-        AudioSampleBuffer(f_InitMem<StreamType>(ac_nChannels, ac_nSamples, true), ac_nChannels, ac_nSamples)
+    AudioSampleBufferStorage(const unsigned ac_nChannels,
+                             const unsigned ac_nSamples)
+        : AudioSampleBuffer(
+              f_InitMem<StreamType>(ac_nChannels, ac_nSamples, true),
+              ac_nChannels, ac_nSamples)
     {
     }
 
@@ -152,9 +158,11 @@ public:
      * Constructor overload.
      * @param ac_Rh the Stream to copy all samples from
      */
-    AudioSampleBufferStorage(const Stream& ac_Rh) :
-        AudioSampleBuffer(f_InitMem<StreamType>( ac_Rh.mf_nGetChannelCount(), ac_Rh.mf_nGetBufferSize(), true),
-                          ac_Rh.mf_nGetChannelCount(), ac_Rh.mf_nGetBufferSize() )
+    AudioSampleBufferStorage(const Stream &ac_Rh)
+        : AudioSampleBuffer(
+              f_InitMem<StreamType>(ac_Rh.mf_nGetChannelCount(),
+                                    ac_Rh.mf_nGetBufferSize(), true),
+              ac_Rh.mf_nGetChannelCount(), ac_Rh.mf_nGetBufferSize())
     {
         mp_CopyFrom(ac_Rh);
     }
@@ -164,16 +172,15 @@ public:
      */
     ~AudioSampleBufferStorage()
     {
-        for(unsigned i = 0 ; i < AudioSampleBuffer::mf_nGetChannelCount() ; ++i)
-            delete [] AudioSampleBuffer::mc_pSamplesArray[i];
-        delete [] AudioSampleBuffer::mc_pSamplesArray;
+        for (unsigned i = 0; i < AudioSampleBuffer::mf_nGetChannelCount(); ++i)
+            delete[] AudioSampleBuffer::mc_pSamplesArray[i];
+        delete[] AudioSampleBuffer::mc_pSamplesArray;
     }
 
 private:
-    AudioSampleBufferStorage(const AudioSampleBufferStorage&);
-    AudioSampleBufferStorage& operator = (const AudioSampleBufferStorage&);
+    AudioSampleBufferStorage(const AudioSampleBufferStorage &);
+    AudioSampleBufferStorage &operator=(const AudioSampleBufferStorage &);
 };
-
 }
 
 #endif //_APEX_SRC_LIB_STREAMAPP_AUDIOSAMPLEBUFFER_H__

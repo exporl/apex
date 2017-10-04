@@ -39,24 +39,27 @@ namespace parser
 class SimpleParametersParser
 {
 public:
-    virtual ~SimpleParametersParser() {};
+    virtual ~SimpleParametersParser(){};
     SimpleParametersParser();
-    SimpleParametersParser(data::ParameterManagerData* d);
+    SimpleParametersParser(data::ParameterManagerData *d);
 
     /** Parse parameters under the given DOMElement into SimpleParameters p
      * Does not take ownership of p
      */
-    void Parse(const QDomElement &base, data::SimpleParameters* p);
-    void SetParameterManagerData(data::ParameterManagerData* p) { parameterManagerData=p;};
+    void Parse(const QDomElement &base, data::SimpleParameters *p);
+    void SetParameterManagerData(data::ParameterManagerData *p)
+    {
+        parameterManagerData = p;
+    };
 
 protected:
-    virtual void AddParameter(data::SimpleParameters* p, const QDomElement &e,
-            const QString& owner, const QString& type, const QString& id,
-            const QVariant& value, const int channel);
+    virtual void AddParameter(data::SimpleParameters *p, const QDomElement &e,
+                              const QString &owner, const QString &type,
+                              const QString &id, const QVariant &value,
+                              const int channel);
 
-    data::ParameterManagerData* parameterManagerData;
+    data::ParameterManagerData *parameterManagerData;
 };
-
 }
 }
 

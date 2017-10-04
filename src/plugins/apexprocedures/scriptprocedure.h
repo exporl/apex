@@ -1,7 +1,6 @@
 #ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDURE_H_
 #define _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDURE_H_
 
-
 #include "apexdata/procedure/procedureinterface.h"
 #include "apexdata/procedure/trial.h"
 
@@ -17,7 +16,7 @@ class ScriptProcedureWrapper;
 namespace apex
 {
 class ProcedureApi;
-class ApexScreenResult; //not in refractory
+class ApexScreenResult; // not in refractory
 
 namespace data
 {
@@ -30,7 +29,7 @@ class ScriptProcedure : public ProcedureInterface
 {
     Q_DECLARE_TR_FUNCTIONS(ScriptProcedure)
 public:
-    ScriptProcedure(ProcedureApi* api, const data::ProcedureData *data);
+    ScriptProcedure(ProcedureApi *api, const data::ProcedureData *data);
     ~ScriptProcedure();
 
     double progress() const;
@@ -41,10 +40,9 @@ public:
     data::Trial setupNextTrial();
     QString firstScreen();
 
-    const data::ScriptProcedureData* procedureData();
+    const data::ScriptProcedureData *procedureData();
 
 private:
-
     QScopedPointer<ScriptProcedureWrapper> m_plugin;
     QScopedPointer<ScriptProcedureApi> m_api;
     QScriptEngine m_scriptEngine;
@@ -52,14 +50,13 @@ private:
     bool m_doDebug;
     QScriptValue m_classname;
 
-    const data::ScriptProcedureData* data;
+    const data::ScriptProcedureData *data;
     QString lastAnswer;
     QString lastCorrectAnswer;
     data::Trial lastTrial;
 
     data::Trial trialProto;
 };
-
 }
 
 #endif // _APEX_SRC_PLUGINS_APEXPROCEDURES_SCRIPTPROCEDURE_H_

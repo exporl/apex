@@ -24,9 +24,8 @@
 using namespace appcore;
 using namespace streamapp;
 
-ManualCallbackRunner::ManualCallbackRunner( IEofCheck& a_Checker ) :
-  m_Checker( &a_Checker ),
-  mv_nMillisSeconds( 0 )
+ManualCallbackRunner::ManualCallbackRunner(IEofCheck &a_Checker)
+    : m_Checker(&a_Checker), mv_nMillisSeconds(0)
 {
 }
 
@@ -34,28 +33,27 @@ ManualCallbackRunner::~ManualCallbackRunner()
 {
 }
 
-bool ManualCallbackRunner::mp_bStart( Callback& a_Callback )
+bool ManualCallbackRunner::mp_bStart(Callback &a_Callback)
 {
-  while( !m_Checker->mf_bEof() )
-  {
-    a_Callback.mf_Callback();
-    m_Checker->mf_Callback();
-    if( mv_nMillisSeconds )
-      IThread::sf_Sleep( mv_nMillisSeconds );
-  }
-  return true;
+    while (!m_Checker->mf_bEof()) {
+        a_Callback.mf_Callback();
+        m_Checker->mf_Callback();
+        if (mv_nMillisSeconds)
+            IThread::sf_Sleep(mv_nMillisSeconds);
+    }
+    return true;
 }
 
-bool ManualCallbackRunner::mp_bStart( Callback& a_Callback, const unsigned nTimesOrEnd )
+bool ManualCallbackRunner::mp_bStart(Callback &a_Callback,
+                                     const unsigned nTimesOrEnd)
 {
-  unsigned i = nTimesOrEnd;
-  while( m_Checker->mf_bEof() && i > 0 )
-  {
-    a_Callback.mf_Callback();
-    m_Checker->mf_Callback();
-    if( mv_nMillisSeconds )
-      IThread::sf_Sleep( mv_nMillisSeconds );
-    --i;
-  }
-  return true;
+    unsigned i = nTimesOrEnd;
+    while (m_Checker->mf_bEof() && i > 0) {
+        a_Callback.mf_Callback();
+        m_Checker->mf_Callback();
+        if (mv_nMillisSeconds)
+            IThread::sf_Sleep(mv_nMillisSeconds);
+        --i;
+    }
+    return true;
 }

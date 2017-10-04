@@ -33,7 +33,7 @@ enum Person { INVALID_PERSON, EXPERIMENTER, SUBJECT };
 enum SoundCard { DefaultSoundcard, RmeMultiface, RmeFirefaceUc, LynxOne };
 enum { RANDOM = -1 };
 
-}//ns data
-}//ns spin
+} // ns data
+} // ns spin
 
 #endif

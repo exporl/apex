@@ -28,27 +28,24 @@
 using namespace apex;
 using namespace apex::stimulus;
 
-Stimulus::Stimulus( const data::StimulusData& data ):
-        m_data(data)
+Stimulus::Stimulus(const data::StimulusData &data) : m_data(data)
 {
     PlayMatrixCreator creator;
     mc_PlayMatrix = creator.createMatrix(data.GetDatablocksContainer());
 
-    //PlayMatrixCreator::sf_DoDisplay( mc_PlayMatrix );
-
+    // PlayMatrixCreator::sf_DoDisplay( mc_PlayMatrix );
 }
 
 Stimulus::~Stimulus()
 {
-    delete mc_PlayMatrix; //this is not a FactoryElement so delete it
+    delete mc_PlayMatrix; // this is not a FactoryElement so delete it
 }
-
 
 /**
   * Get the fixed parameters.
   * @return a pointer
   */
-const StimulusParameters* Stimulus::GetFixParameters() const
+const StimulusParameters *Stimulus::GetFixParameters() const
 {
     return &m_data.GetFixedParameters();
 }
@@ -63,36 +60,31 @@ const QString Stimulus::GetID() const
   * It is allowed to change the parameters (eg by adaptiveprocedure).
   * @return a pointer
   */
-const StimulusParameters* Stimulus::GetVarParameters() const
+const StimulusParameters *Stimulus::GetVarParameters() const
 {
     return &m_data.GetVariableParameters();
 }
 
-
-void Stimulus::ConstructDevDBlockMap( const tDeviceMap& ac_Devices, tDataBlockMap& a_DataBlocks )
+void Stimulus::ConstructDevDBlockMap(const tDeviceMap &ac_Devices,
+                                     tDataBlockMap &a_DataBlocks)
 {
-    const PlayMatrix& ac_Mat = *mc_PlayMatrix;
+    const PlayMatrix &ac_Mat = *mc_PlayMatrix;
     const unsigned nS = ac_Mat.mf_nGetBufferSize();
     const unsigned nP = ac_Mat.mf_nGetChannelCount();
-//    Q_ASSERT( nS && nP );
-    tQStringVectorMap& dmap = m_DeviceDataBlocks;
+    //    Q_ASSERT( nS && nP );
+    tQStringVectorMap &dmap = m_DeviceDataBlocks;
 
-    for ( tDeviceMapCIt it = ac_Devices.begin() ; it != ac_Devices.end() ; ++it )
-        dmap[ it.key() ] = tQStringVector();
+    for (tDeviceMapCIt it = ac_Devices.begin(); it != ac_Devices.end(); ++it)
+        dmap[it.key()] = tQStringVector();
 
-    for ( unsigned i = 0 ; i < nS ; ++i )
-    {
-        for ( unsigned j = 0 ; j < nP ; ++j )
-        {
-            const QString& sCur = ac_Mat( j, i );
-            if ( !sCur.isEmpty() )
-            {
-                DataBlock* pCur = a_DataBlocks.value( sCur );
-                Q_ASSERT( pCur );
-                dmap[ pCur->GetDevice() ].push_back( sCur );
+    for (unsigned i = 0; i < nS; ++i) {
+        for (unsigned j = 0; j < nP; ++j) {
+            const QString &sCur = ac_Mat(j, i);
+            if (!sCur.isEmpty()) {
+                DataBlock *pCur = a_DataBlocks.value(sCur);
+                Q_ASSERT(pCur);
+                dmap[pCur->GetDevice()].push_back(sCur);
             }
         }
     }
 }
-
-

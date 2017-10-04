@@ -29,19 +29,19 @@ namespace apex
 namespace data
 {
 
-FilterData* FiltersData::filterData(const QString& name) const
+FilterData *FiltersData::filterData(const QString &name) const
 {
     const_iterator i = find(name);
     if (i == end())
-        throw ApexStringException("Filter " + name + " not found" );
+        throw ApexStringException("Filter " + name + " not found");
     return i.value();
 }
 
-bool FiltersData::operator==(const FiltersData& other) const
+bool FiltersData::operator==(const FiltersData &other) const
 {
     return ApexTools::areEqualPointerMaps(*this, other);
 }
 
-}   // ns data
+} // ns data
 
 } // ns apex

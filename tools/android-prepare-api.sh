@@ -1,10 +1,12 @@
 #!/bin/bash -e
 
-cd "$(dirname ${BASH_SOURCE[0]})/.."
+cd "$(dirname $(readlink -f ${BASH_SOURCE[0]}))/.."
 
 ROOTDIR=$(pwd)
 APIDIR=$ROOTDIR/.build/api-android
 ANDROID_PLATFORM=android-14
+JOBS=1
+JAVA_HOME=/usr/lib/jvm/default-java
 
 parsecmd() {
     while [ $# -gt 0 ]; do
@@ -20,12 +22,22 @@ parsecmd() {
             ANDROID_PLATFORM=$2
             shift
             ;;
+        --java-home) #
+            # set the java vm home directory
+            JAVA_HOME=$2
+            shift
+            ;;
         -h|--help) #
             # this help
             echo "Usage: $0 [OPTION]..."
             printf "\nCommand line arguments:\n"
             sed -rn '/CMDSTART/,/CMDEND/{/\) \#|^ +# /{s/\)? #//g;s/^    //;p}}' "$0"
             exit 0
+            ;;
+        -j|--jobs) # [jobs]
+            # specifies the number of jobs to run simultaneously
+            JOBS=$2
+            shift
             ;;
         *)
             echo "Unknown parameter $1"
@@ -60,6 +72,15 @@ pushd android
 # standalone toolchain we use to crosscompile the libraries
 [ -d android_standalone_armv7/bin ] || android-ndk-r9b/build/tools/make-standalone-toolchain.sh --platform=$ANDROID_PLATFORM --install-dir=$APIDIR/android/android_standalone_armv7 --toolchain=arm-linux-androideabi-4.8
 [ -d android_standalone_x86/bin ] || android-ndk-r9b/build/tools/make-standalone-toolchain.sh --platform=$ANDROID_PLATFORM --install-dir=$APIDIR/android/android_standalone_x86 --toolchain=x86-4.8
+# android sdk
+[ -f tools_r25.2.5-linux.zip ] || wget -q https://dl.google.com/android/repository/tools_r25.2.5-linux.zip
+if [ ! -d android-sdk-linux ]; then
+    mkdir android-sdk-linux
+    pushd android-sdk-linux
+    unzip ../tools_r25.2.5-linux.zip 1>/dev/null
+    yes | ./tools/bin/sdkmanager "build-tools;23.0.3"  "platforms;android-14" "platform-tools"
+    popd
+fi
 popd
 
 # icu
@@ -71,7 +92,7 @@ pushd icu
 if [ ! -f icu_localbuild/source/lib/libicuio.so ]; then
     pushd icu_localbuild && pushd source
     ./configure
-    make -j4
+    make -j "$JOBS"
     popd && popd
 fi
 popd
@@ -99,7 +120,7 @@ if [ ! -f $BUILD_LIBS/bin/protoc ]; then
     ./autogen.sh
     sed -i 's/\(library_names_spec=.\|soname_spec=.\).{libname}.{.*\(.\)/\1${libname}${shared_ext}\2/' configure
     ./configure --prefix=$BUILD_LIBS
-    make -j4 install
+    make -j "$JOBS" install
     make clean
     popd
 fi
@@ -150,6 +171,8 @@ setarmv7env() {
     export CPPFLAGS LIBS CC CXX CPP AR STRIP RANLIB LD AS LDFLAGS LIBS CFLAGS
 
     CURRENT_PREFIX=$HOST_ARMV7_LIBS
+
+    export OPENSSL_CROSSCOMPILE=android-armeabi
 }
 
 setx86env() {
@@ -174,7 +197,7 @@ setx86env() {
     LD="$ANDROID_NDK_TOOLS_FULLPREFIX-ld"
     AS="$ANDROID_NDK_TOOLS_FULLPREFIX-as"
 
-    CFLAGS="-g -O2 -Wa"
+    CFLAGS="-g -O2"
     LIBGCC_PATH_FULL=$($CC -print-libgcc-file-name)
     LIBGCC_PATH=$(dirname "$LIBGCC_PATH_FULL")
     LIBS="-lc -lgcc -L$SYSROOT/usr/lib -I$HOST_X86_LIBS/include -L$HOST_X86_LIBS/lib -I$ANDROID_NDK_ROOT/include/c++/$ANDROID_NDK_TOOLCHAIN_VERSION -L$ANDROID_NDK_ROOT/$ANDROID_NDK_TOOLCHAIN_PREFIX/lib"
@@ -183,6 +206,8 @@ setx86env() {
 
     export CPPFLAGS LIBS CC CXX CPP AR STRIP RANLIB LD AS LDFLAGS LIBS CFLAGS
     CURRENT_PREFIX=$HOST_X86_LIBS
+
+    export OPENSSL_CROSSCOMPILE=android-x86
 }
 
 dobuild() {
@@ -210,13 +235,11 @@ dobuild() {
     if [ ! -f $CURRENT_PREFIX/lib/libicuio.a ]; then
         pushd icu_hostbuild && pushd source
         ./configure --prefix=$CURRENT_PREFIX --host=$TARGET_HOST --with-cross-build=$APIDIR/icu/icu_localbuild/source --enable-static --disable-shared
-        make -j2 install
+        make -j "$JOBS" install
         make clean
         popd && popd
     fi
     popd
-
-    export LIBS="$LIBS -licudata -licuio -licule -licuuc -licutu -liculx"
 
     # protobuf
     [ -d protobuf ] || (echo "protobuf not present, run android-prebuild first" && exit)
@@ -227,7 +250,7 @@ dobuild() {
         pushd protobuf
         sed -i 's/\(library_names_spec=.\|soname_spec=.\).{libname}.{.*\(.\)/\1${libname}${shared_ext}\2/' configure
         ./configure --prefix=$CURRENT_PREFIX --host=$TARGET_HOST --with-protoc=$BUILD_LIBS/bin/protoc
-        make -j4 install
+        make -j "$JOBS" install
         make clean
         popd
     fi
@@ -242,7 +265,7 @@ dobuild() {
         git checkout bdec2183f34b37ee89ae1d330c6ad2bb4d76605f
         ./autogen.sh --prefix=$CURRENT_PREFIX --host=$TARGET_HOST --target=$TARGET_HOST --without-python
         sed -i 's/\(library_names_spec=.\|soname_spec=.\).{libname}.{.*\(.\)/\1${libname}${shared_ext}\2/' configure
-        make -j2 install
+        make -j "$JOBS" install
         make clean
         popd
     fi
@@ -251,13 +274,140 @@ dobuild() {
     # portaudio
     mkdir -p portaudio
     pushd portaudio
-    [ -d  portaudio_opensles_ticket_154 ] || git clone -q -b portaudio_opensles_ticket_154 https://git.assembla.com/portaudio_opensles_ticket_154.git
+    [ -d  portaudio_opensles ] || git clone -q https://github.com/Gundersanne/portaudio_opensles.git
     if [ ! -f $CURRENT_PREFIX/lib/libportaudio.so ]; then
-        pushd portaudio_opensles_ticket_154
+        pushd portaudio_opensles
         sed -i 's/\(library_names_spec=.\|soname_spec=.\).{libname}.{.*\(.\)/\1${libname}${shared_ext}\2/' configure
         ./configure --prefix=$CURRENT_PREFIX --host=$TARGET_HOST --with-opensles
-        make -j2 install
+        make -j "$JOBS" install
         make clean
+        popd
+    fi
+    popd
+
+    # libsndfile
+    mkdir -p sndfile
+    pushd sndfile
+    [ -d libsndfile ] || git clone -q https://github.com/erikd/libsndfile
+    if [ ! -f $CURRENT_PREFIX/lib/libsndfile.so ]; then
+        pushd libsndfile
+        git checkout 1.0.27
+        ./autogen.sh
+        sed -i 's/\(library_names_spec=.\|soname_spec=.\).{libname}.{.*\(.\)/\1${libname}${shared_ext}\2/' configure
+        ./configure --prefix=$CURRENT_PREFIX --host=$TARGET_HOST
+        make -j "$JOBS" install
+        make clean
+        popd
+    fi
+    popd
+
+    # fftw3f and fftw3
+    mkdir -p fftw3
+    pushd fftw3
+    [ -f fftw-3.3.5.zip ] || wget -q ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5.zip
+    [ -d fftw3 ] || (unzip fftw-3.3.5.zip && mv fftw-3.3.5 fftw3)
+    if [ ! -f $CURRENT_PREFIX/lib/libfftw3f.so ]; then
+        pushd fftw3
+        sed -i 's/\(library_names_spec=.\|soname_spec=.\).{libname}.{.*\(.\)/\1${libname}${shared_ext}\2/' configure
+        ./configure --prefix=$CURRENT_PREFIX --host=$TARGET_HOST --enable-float --with-slow-timer --enable-shared
+        make -j "$JOBS" install
+        make clean
+        popd
+    fi
+    if [ ! -f $CURRENT_PREFIX/lib/libfftw3.so ]; then
+        pushd fftw3
+        sed -i 's/\(library_names_spec=.\|soname_spec=.\).{libname}.{.*\(.\)/\1${libname}${shared_ext}\2/' configure
+        ./configure --prefix=$CURRENT_PREFIX --host=$TARGET_HOST --with-slow-timer --enable-shared
+        make -j "$JOBS" install
+        make clean
+        popd
+    fi
+    popd
+
+    # libssl
+    mkdir -p openssl
+    pushd openssl
+    [ -d openssl ] || git clone -q https://github.com/openssl/openssl.git
+    if [ ! -f $CURRENT_PREFIX/lib/libssl.a ]; then
+        pushd openssl
+        git checkout -q OpenSSL_1_1_0f
+        ./Configure no-ssl3 no-shared \
+                    --prefix=$CURRENT_PREFIX \
+                    --openssldir=$CURRENT_PREFIX/ssl \
+                    --sysroot=$SYSROOT \
+                    $OPENSSL_CROSSCOMPILE
+        make depend
+        make -j "$JOBS" all
+
+             # CALC_VERSIONS="SHLIB_COMPAT=; SHLIB_SOVER=" all
+        make install # INSTALL_SHLIBS="libcrypto.so libssl.so" \
+             # INSTALL_SHLIB_INFO=
+        make clean
+        popd
+    fi
+    popd
+
+    # libssh2
+    mkdir -p libssh2
+    pushd libssh2
+    [ -d libssh2 ] || git clone -q https://github.com/libssh2/libssh2
+    if [ ! -f $CURRENT_PREFIX/lib/libssh2.a ]; then
+        pushd libssh2
+        git checkout -q libssh2-1.8.0
+        rm -f configure
+        if [ ! -f configure ]; then
+            sed -i 's/example\/libssh2_config.h//' configure.ac
+            libtoolize --force
+            aclocal
+            autoheader
+            automake --force-missing --add-missing
+            autoconf
+        fi
+        sed -i 's/\(library_names_spec=.\|soname_spec=.\).{libname}.{.*\(.\)/\1${libname}${shared_ext}\2/' configure
+        ./configure --prefix=$CURRENT_PREFIX --host=$TARGET_HOST \
+                    CFLAGS="${CFLAGS//-nostdlib/}" LIBS="$LIBS -lssl -lcrypto" \
+                    --disable-examples-build \
+                    --with-libz=no \
+                    --disable-shared
+        make -j "$JOBS" install
+        make clean
+        popd
+    fi
+    popd
+
+    # libgit2
+    mkdir -p libgit2
+    pushd libgit2
+    [ -d libgit2 ] || git clone -q https://github.com/libgit2/libgit2
+    if [ ! -f $CURRENT_PREFIX/lib/libgit2.so ]; then
+        pushd libgit2
+        git checkout -q v0.26.0
+
+        touch CMakeToolchain.txt
+        : > CMakeToolchain.txt
+        echo "SET(CMAKE_SYSTEM_NAME Linux)" >> CMakeToolchain.txt
+        echo "SET(CMAKE_SYSTEM_VERSION Android)" >> CMakeToolchain.txt
+        echo "SET(CMAKE_C_COMPILER   $CC)" >> CMakeToolchain.txt
+        echo "SET(CMAKE_CXX_COMPILER $CXX)" >> CMakeToolchain.txt
+        echo "SET(CMAKE_FIND_ROOT_PATH $SYSROOT)" >> CMakeToolchain.txt
+        echo "SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)" >> CMakeToolchain.txt
+        echo "SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> CMakeToolchain.txt
+        echo "SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> CMakeToolchain.txt
+
+        mkdir -p build
+        pushd build
+        cmake ../ -DCMAKE_TOOLCHAIN_FILE=../CMakeToolchain.txt \
+              -DCMAKE_INSTALL_PREFIX=$CURRENT_PREFIX -DSONAME=OFF \
+              -DCMAKE_C_FLAGS="$CFLAGS $LIBS -lssl -lcrypto -lssh2 -ldl" \
+              -DOPENSSL_SSL_LIBRARY=$CURRENT_PREFIX/lib/libssl.a \
+              -DOPENSSL_CRYPTO_LIBRARY=$CURRENT_PREFIX/lib/libcrypto.a \
+              -DOPENSSL_INCLUDE_DIR=$CURRENT_PREFIX/include \
+              -DZLIB_LIBRARY=$SYSROOT/usr/lib/libz.so \
+              -DBUILD_CLAR=OFF
+        sed -i 's/zlib//' libgit2.pc
+        cmake --build . --target install
+        popd
+        rm -rf build
         popd
     fi
     popd
@@ -265,8 +415,8 @@ dobuild() {
 
 setarmv7env
 dobuild
-#setx86env
-#dobuild
+setx86env
+dobuild
 
 # ant
 mkdir -p ant

@@ -20,9 +20,8 @@
 #ifndef _APEX_SRC_TESTS_PSIGNIFIT_PSIGNIFITTEST_H_
 #define _APEX_SRC_TESTS_PSIGNIFIT_PSIGNIFITTEST_H_
 
-#include <QtTest/QtTest>
 #include "../testmacros.h"
-
+#include <QtTest/QtTest>
 
 class PsignifitTest : public QObject
 {
@@ -35,7 +34,6 @@ private slots:
     void testPsignifitWrapper();
 
     void testPsignifitSelfTest();
-
 };
 
 #endif

@@ -22,14 +22,15 @@
 
 #include <qstring.h>
 
-namespace r126{
+namespace r126
+{
 
-    static const unsigned sc_nChannels = 22;
+static const unsigned sc_nChannels = 22;
 
-    //!R126 Map Record
-  class R126NucleusMAPRecord
-  {
-  public:
+//! R126 Map Record
+class R126NucleusMAPRecord
+{
+public:
     QString m_sGUID;
     QString m_sSurname;
     QString m_sFirstname;
@@ -37,31 +38,30 @@ namespace r126{
     QString m_sMAPDate;
     QString m_sStimulationMode;
 
-        int GetStimulationMode() const;
+    int GetStimulationMode() const;
 
-    bool    m_baChannelEnabled[ sc_nChannels ];
-    int     m_naElectrodes[ sc_nChannels ];
-    int     m_naCLevels[ sc_nChannels ];
-    int     m_naTLevels[ sc_nChannels ];
-    int     m_nStimulationRate;
-    int     m_nTotalRate;
-    int     m_nMaxima;
-        int     m_nMAPNumber;
-    int     m_nInterPhaseGap;
-        //int     m_nPeriod;
-        int     m_nMinPHaseWidth;
-        int     m_nChannels;
+    bool m_baChannelEnabled[sc_nChannels];
+    int m_naElectrodes[sc_nChannels];
+    int m_naCLevels[sc_nChannels];
+    int m_naTLevels[sc_nChannels];
+    int m_nStimulationRate;
+    int m_nTotalRate;
+    int m_nMaxima;
+    int m_nMAPNumber;
+    int m_nInterPhaseGap;
+    // int     m_nPeriod;
+    int m_nMinPHaseWidth;
+    int m_nChannels;
 
-        R126NucleusMAPRecord():
-                m_nStimulationRate(-1),
-                m_nTotalRate(-1),
-                m_nMaxima(-1),
-                m_nMAPNumber(-1),
-                m_nInterPhaseGap(-1),
-                m_nMinPHaseWidth(-1),
-                m_nChannels(-1) {};
-  };
-
+    R126NucleusMAPRecord()
+        : m_nStimulationRate(-1),
+          m_nTotalRate(-1),
+          m_nMaxima(-1),
+          m_nMAPNumber(-1),
+          m_nInterPhaseGap(-1),
+          m_nMinPHaseWidth(-1),
+          m_nChannels(-1){};
+};
 }
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_R126NUCLEUSMAPRECORD_H_

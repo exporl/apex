@@ -28,11 +28,10 @@ namespace apex
 
 TrialResult::TrialResult()
 {
-    answerTime=-1;
-    targetParam=0;
-    defTargetParam=false;
+    answerTime = -1;
+    targetParam = 0;
+    defTargetParam = false;
 }
-
 
 TrialResult::~TrialResult()
 {
@@ -41,10 +40,9 @@ TrialResult::~TrialResult()
 QString TrialResult::toXML() const
 {
     QString result;
-    result= "<trial id=" + xmlEscapedAttribute(name) +  ">\n";
+    result = "<trial id=" + xmlEscapedAttribute(name) + ">\n";
     result += extra;
     result += "</trial>\n\n";
     return result;
 }
-
 }

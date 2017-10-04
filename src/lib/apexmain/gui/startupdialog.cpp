@@ -44,7 +44,7 @@ public Q_SLOTS:
 
 public:
     StartupDialog *p;
-    QMap<QObject*, PluginRunnerInterface*> interfaces;
+    QMap<QObject *, PluginRunnerInterface *> interfaces;
 
     Ui::StartupDialog ui;
 
@@ -82,25 +82,24 @@ void StartupDialogPrivate::plugin_clicked()
 
 // StartupDialog ===============================================================
 
-StartupDialog::StartupDialog(const QStringList &recent, QWidget *parent) :
-    QDialog(parent),
-    d(new StartupDialogPrivate)
+StartupDialog::StartupDialog(const QStringList &recent, QWidget *parent)
+    : QDialog(parent), d(new StartupDialogPrivate)
 {
     d->p = this;
 
     d->ui.setupUi(this);
 
-    d->ui.buttonBox->addButton(tr("Open..."),
-            QDialogButtonBox::ActionRole)->setObjectName("open");
+    d->ui.buttonBox->addButton(tr("Open..."), QDialogButtonBox::ActionRole)
+        ->setObjectName("open");
 
     Q_FOREACH (PluginRunnerCreator *plugin,
-            PluginLoader().availablePlugins<PluginRunnerCreator>()) {
+               PluginLoader().availablePlugins<PluginRunnerCreator>()) {
         Q_FOREACH (const QString &name, plugin->availablePlugins()) {
             PluginRunnerInterface *interface = plugin->createRunner(name);
             if (!interface)
                 continue;
-            QPushButton *button = d->ui.buttonBox->addButton
-                (interface->getButtonText(), QDialogButtonBox::ActionRole);
+            QPushButton *button = d->ui.buttonBox->addButton(
+                interface->getButtonText(), QDialogButtonBox::ActionRole);
             connect(button, SIGNAL(clicked()), d, SLOT(plugin_clicked()));
             d->interfaces.insert(button, interface);
         }
@@ -109,9 +108,7 @@ StartupDialog::StartupDialog(const QStringList &recent, QWidget *parent) :
     Q_FOREACH (const QString &fileName, recent)
         d->ui.recentFiles->insertItem(0, fileName);
 
-#ifdef Q_OS_ANDROID
-    showMaximized();
-#endif
+    ApexTools::expandWidgetToWindow(this);
 
     ApexTools::connectSlotsByNameToPrivate(this, d);
 }

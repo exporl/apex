@@ -23,7 +23,8 @@
 #include <apexmodule.h>
 #include <qdatetime.h>
 
-namespace apex {
+namespace apex
+{
 
 /**
 Implements a timer that measures the response time of the user
@@ -34,7 +35,7 @@ class ApexTimer : public ApexModule
 {
     Q_OBJECT
 public:
-    ApexTimer(ExperimentRunDelegate& p_rd);
+    ApexTimer(ExperimentRunDelegate &p_rd);
 
     virtual QString GetResultXML() const;
 
@@ -46,7 +47,6 @@ private:
     QTime m_time;
     long m_result;
 };
-
 }
 
 #endif

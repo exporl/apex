@@ -46,16 +46,13 @@ public:
      * DOMElements and used as the screens in ScreensData. No validation
      * is used here so make sure it is valid xml.
      */
-    static void write(const data::ExperimentData& data, const QString& file,
-            const QStringList& screens = QStringList());
+    static void write(const data::ExperimentData &data, const QString &file,
+                      const QStringList &screens = QStringList());
 
 private:
     static void throwIfNull(const QDomElement &e, const QString &where);
 };
-
 }
 }
 
 #endif
-
-

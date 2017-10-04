@@ -41,28 +41,27 @@ using data::ScreenElement;
  * The TextEditRunDelegate class is an implementation of
  * ScreenElementRunDelegate representing a TextEditElement.
  */
-class TextEditRunDelegate
-            : public QLineEdit, public ScreenElementRunDelegate
+class TextEditRunDelegate : public QLineEdit, public ScreenElementRunDelegate
 {
     Q_OBJECT
 
-    const TextEditElement* element;
+    const TextEditElement *element;
+
 public:
-    TextEditRunDelegate(ExperimentRunDelegate* p_exprd,
-                        QWidget* parent, const TextEditElement* e,
-                        const QFont& defaultFont);
+    TextEditRunDelegate(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                        const TextEditElement *e, const QFont &defaultFont);
 
-    const ScreenElement* getScreenElement() const;
+    const ScreenElement *getScreenElement() const;
 
-    QWidget* getWidget();
+    QWidget *getWidget();
     bool hasText() const;
     bool hasInterestingText() const;
     const QString getText() const;
-    void setText(const QString& t);
+    void setText(const QString &t);
     void clearText();
-    void connectSlots(gui::ScreenRunDelegate* d);
+    void connectSlots(gui::ScreenRunDelegate *d);
 signals:
-    void answered(ScreenElementRunDelegate*);
+    void answered(ScreenElementRunDelegate *);
 public slots:
     void sendAnsweredSignal();
 };

@@ -43,7 +43,8 @@ namespace stimulus
  *   eg an amplifier should throw error when param "amplitude" is not there.
  *   @note the parameter system works the same way as for IApexDevice, so maybe
  *   we should have a common interface for that.
- ****************************************************************************** */
+ ******************************************************************************
+ */
 class Filter
 {
 public:
@@ -54,48 +55,52 @@ public:
      * @param ac_sOutput identifier of the device this filter is made for
      * @param ac_pParams pointer to parameters, won't be deleted
      */
-    Filter ( const QString& ac_sID,
-            data::FilterData* const ac_pParams ) :
-        mc_sID ( ac_sID ),
-               m_Params ( ac_pParams )  //[ stijn ] removed copy, just keep pointer, deletion is managed by factory
-               {}
+    Filter(const QString &ac_sID, data::FilterData *const ac_pParams)
+        : mc_sID(ac_sID),
+          m_Params(ac_pParams) //[ stijn ] removed copy, just keep pointer,
+                               // deletion is managed by factory
+    {
+    }
 
     /**
      * Destructor.
      */
     virtual ~Filter()
-    {}
+    {
+    }
 
     /**
      * Get the ID.
      * @return string reference
      */
-    INLINE const QString& GetID()     const
-    { return mc_sID;}
+    INLINE const QString &GetID() const
+    {
+        return mc_sID;
+    }
 
     /**
      * Get the device this filter is made for.
      * @return string reference
      */
     INLINE const QString GetDevice() const
-    { //return mc_sOutput;
+    { // return mc_sOutput;
         return m_Params->device();
     }
 
-
-
     /** Set parameters by querying the given parametermanager object
     */
-    virtual  void SetParameters ( ParameterManager* pm ) ;
+    virtual void SetParameters(ParameterManager *pm);
 
-    virtual bool SetParameter ( data::Parameter name, QVariant value);
+    virtual bool SetParameter(data::Parameter name, QVariant value);
 
     /**
      * Check if this filter has the given parameter.
      * @return true if so.
      */
-    INLINE virtual bool HasParameter ( const QString& ac_sParamID )
-    { return m_Params->hasParameter ( ac_sParamID ); }
+    INLINE virtual bool HasParameter(const QString &ac_sParamID)
+    {
+        return m_Params->hasParameter(ac_sParamID);
+    }
 
     /**
      * Restore all parameters to their default value.
@@ -105,15 +110,17 @@ public:
         Q_FOREACH (data::Parameter param, m_Params->parameters())
             SetParameter(param.type(), param.channel(), param.defaultValue());
 
-        //                     for ( data::FilterData::const_iterator it= m_Params->begin(); it!=m_Params->end();++it )
+        //                     for ( data::FilterData::const_iterator it=
+        //                     m_Params->begin(); it!=m_Params->end();++it )
         //                     {
-        //                         SetParameter ( it.key().type(), it.key().channel(), it.value() );
+        //                         SetParameter ( it.key().type(),
+        //                         it.key().channel(), it.value() );
         //                     }
-
     }
 
     /**
-     * Reset the filter to its initial state and set all internal parameters to built in
+     * Reset the filter to its initial state and set all internal parameters to
+     * built in
      * default values
      * throw exception if problem
      */
@@ -123,18 +130,20 @@ public:
      * Prepare filter for processing
      * throw exception if problem
      */
-    virtual void Prepare() =0;
+    virtual void Prepare() = 0;
 
     /**
      * Get a reference to the parameters.
      * @return a const ApexFilterParameters reference
      */
-    INLINE const data::FilterData& GetParameters() const
-    { return *m_Params; }
-
+    INLINE const data::FilterData &GetParameters() const
+    {
+        return *m_Params;
+    }
 
 protected:
-    virtual bool SetParameter ( const QString& type, const int channel, const QVariant& value ) = 0;
+    virtual bool SetParameter(const QString &type, const int channel,
+                              const QVariant &value) = 0;
 
 private:
     const QString mc_sID;
@@ -142,9 +151,8 @@ private:
               const QString mc_sOutput;*/
 
 protected:
-    data::FilterData* const m_Params;
+    data::FilterData *const m_Params;
 };
-
 }
 }
 

@@ -34,24 +34,23 @@ namespace data
  * The ButtonElement is an implementation of a \ref
  * ScreenElement representing a "button".
  */
-class APEXDATA_EXPORT ButtonElement
-            : public ScreenElement
+class APEXDATA_EXPORT ButtonElement : public ScreenElement
 {
-        QString txt;
-    public:
-        ButtonElement(const QString& id, ScreenElement* parent);
-        ~ButtonElement();
+    QString txt;
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+public:
+    ButtonElement(const QString &id, ScreenElement *parent);
+    ~ButtonElement();
 
-        void setText(const QString& t);
-        virtual QString text() const;
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
-        bool operator==(const ButtonElement& other) const;
+    void setText(const QString &t);
+    virtual QString text() const;
+
+    bool operator==(const ButtonElement &other) const;
 };
-
 }
 }
 #endif

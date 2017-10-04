@@ -26,57 +26,56 @@
 namespace streamapp
 {
 
+/**
+  * MultiCallback
+  *   keeps array of Callbacks that are called one after another.
+  *************************************************************** */
+class MultiCallback : public Callback
+{
+public:
     /**
-      * MultiCallback
-      *   keeps array of Callbacks that are called one after another.
-      *************************************************************** */
-  class MultiCallback : public Callback
-  {
-  public:
-      /**
-        * Constructor.
-        * @param ac_bDeleteContent if true, deletes all callbacks added
-        */
-    MultiCallback( const bool ac_bDeleteContent = false );
+      * Constructor.
+      * @param ac_bDeleteContent if true, deletes all callbacks added
+      */
+    MultiCallback(const bool ac_bDeleteContent = false);
 
-      /**
-        * Destructor.
-        */
+    /**
+      * Destructor.
+      */
     ~MultiCallback();
 
-      /**
-        * Adds a Callback at the first free position.
-        * @param a_pCallback the Callback to add, must be non-zero
-        */
-    void mp_AddItem( Callback* a_pCallback );
+    /**
+      * Adds a Callback at the first free position.
+      * @param a_pCallback the Callback to add, must be non-zero
+      */
+    void mp_AddItem(Callback *a_pCallback);
 
-      /**
-        * Remove the specified Callback.
-        * Nothing is done when a_pCallback isn't in the list.
-        * @param a_pCallback the one to remove
-        */
-    void mp_RemoveItem( Callback* a_pCallback );
+    /**
+      * Remove the specified Callback.
+      * Nothing is done when a_pCallback isn't in the list.
+      * @param a_pCallback the one to remove
+      */
+    void mp_RemoveItem(Callback *a_pCallback);
 
-      /**
-        * Get the current number of Callbacks.
-        * @return the number
-        */
+    /**
+      * Get the current number of Callbacks.
+      * @return the number
+      */
     unsigned mf_nGetNumItems() const;
 
-      /**
-        * Callback functions.
-        * Calls all Callbacks added, one by one.
-        */
+    /**
+      * Callback functions.
+      * Calls all Callbacks added, one by one.
+      */
     void mf_Callback();
 
-  private:
+private:
     const bool mc_bDeleteContent;
-    DynamicArray<Callback*> m_Callbacks;
+    DynamicArray<Callback *> m_Callbacks;
 
-    MultiCallback( const MultiCallback& );
-    MultiCallback& operator = ( const MultiCallback& );
-  };
-
+    MultiCallback(const MultiCallback &);
+    MultiCallback &operator=(const MultiCallback &);
+};
 }
 
 #endif //#ifndef __MULTICALLBACK_H__

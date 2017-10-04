@@ -24,45 +24,45 @@
 
 namespace apex
 {
-  namespace data
-  {
-    class FlashPlayerElement;
-  }
+namespace data
+{
+class FlashPlayerElement;
+}
 
-  namespace editor
-  {
+namespace editor
+{
 
-    using data::FlashPlayerElement;
+using data::FlashPlayerElement;
 
-    /**
-     * This class is an ScreenElementEditorDelegate representing a
-     * FlashPlayerElement.
-     */
-    class FlashPlayerEditorDelegate
-      : public LabelEditorDelegateBase
-    {
-      Q_OBJECT
+/**
+ * This class is an ScreenElementEditorDelegate representing a
+ * FlashPlayerElement.
+ */
+class FlashPlayerEditorDelegate : public LabelEditorDelegateBase
+{
+    Q_OBJECT
 
-      FlashPlayerElement* element;
-    public:
-      FlashPlayerEditorDelegate( FlashPlayerElement* e, QWidget* parent, ScreenWidget* w );
-      ~FlashPlayerEditorDelegate();
+    FlashPlayerElement *element;
 
-      ScreenElement* getScreenElement();
+public:
+    FlashPlayerEditorDelegate(FlashPlayerElement *e, QWidget *parent,
+                              ScreenWidget *w);
+    ~FlashPlayerEditorDelegate();
 
-      int getPropertyCount();
-      QString getPropertyName( int nr );
-      QVariant getPropertyData( int nr, int role );
-      PropertyType getPropertyType( int nr );
-      bool setProperty( int nr, const QVariant& v );
+    ScreenElement *getScreenElement();
 
-      const QString getText() const;
+    int getPropertyCount();
+    QString getPropertyName(int nr);
+    QVariant getPropertyData(int nr, int role);
+    PropertyType getPropertyType(int nr);
+    bool setProperty(int nr, const QVariant &v);
 
-    protected:
-      void mouseReleaseEvent( QMouseEvent* ev );
-    };
+    const QString getText() const;
 
-  }
+protected:
+    void mouseReleaseEvent(QMouseEvent *ev);
+};
+}
 }
 
 #endif

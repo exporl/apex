@@ -37,24 +37,14 @@ class ButtonGroup;
 namespace data
 {
 
+enum gt_eGuiMode { gc_eNormal, gc_eChild };
 
-enum gt_eGuiMode
-{
-    gc_eNormal,
-    gc_eChild
-};
+enum tFeedbackOn { HIGHLIGHT_NONE, HIGHLIGHT_CORRECT, HIGHLIGHT_ANSWER };
 
-enum tFeedbackOn
-{
-    HIGHLIGHT_NONE,
-    HIGHLIGHT_CORRECT,
-    HIGHLIGHT_ANSWER
-};
-
-typedef QList< QPair<QString, QString> > FeedbackPluginParameters;
+typedef QList<QPair<QString, QString>> FeedbackPluginParameters;
 typedef QPair<QString, FeedbackPluginParameters> FeedbackPluginPair;
 
-//using data::Screen;
+// using data::Screen;
 
 /**
  * The ScreensData keeps the data about all the Screens in an
@@ -66,25 +56,25 @@ class APEXDATA_EXPORT ScreensData
 {
     Q_DECLARE_TR_FUNCTIONS(ScreensData)
 public:
-    typedef std::map<QString, Screen*> ScreenMap;
+    typedef std::map<QString, Screen *> ScreenMap;
 
     ScreensData();
     ~ScreensData();
 
-    const Screen& GetScreen(const QString& id) const;
-    Screen& GetScreen(const QString& id);
-    void manageScreen(Screen* s);
-    const ScreenMap& getScreens() const;
-    ScreenMap& getScreens();
+    const Screen &GetScreen(const QString &id) const;
+    Screen &GetScreen(const QString &id);
+    void manageScreen(Screen *s);
+    const ScreenMap &getScreens() const;
+    ScreenMap &getScreens();
 
     bool hasDefaultFont() const;
     bool hasDefaultFontSize() const;
     QString defaultFont() const;
     int defaultFontSize() const;
-    void setDefaultFont(const QString& font);
+    void setDefaultFont(const QString &font);
     void setDefaultFontSize(int fs);
 
-    const FilePrefix& prefix() const;
+    const FilePrefix &prefix() const;
     void setPrefix(FilePrefix prefix);
     bool hasPrefix() const;
 
@@ -164,49 +154,46 @@ public:
     bool hasGeneralScreenData() const;
     bool hasReinforcement() const;
 
-    const QList<FeedbackPluginPair>& feedbackPlugins() const;
-    void addFeedbackPlugin(const QString& name,
-                            const FeedbackPluginParameters& params);
+    const QList<FeedbackPluginPair> &feedbackPlugins() const;
+    void addFeedbackPlugin(const QString &name,
+                           const FeedbackPluginParameters &params);
 
-    bool operator==(const ScreensData& other);
+    bool operator==(const ScreensData &other);
 
-    gt_eGuiMode  m_eMode;
+    gt_eGuiMode m_eMode;
 
 private:
-
-    QString     standardFont;
-    int         standardFontSize;
-    bool        showFeedback;
-    bool        showCurrent;
-    bool        fullScreen;
+    QString standardFont;
+    int standardFontSize;
+    bool showFeedback;
+    bool showCurrent;
+    bool fullScreen;
     tFeedbackOn showFeedbackOn;
-    bool        showMenu;
-    unsigned    beforeLength;
-    unsigned    afterLength;
-    unsigned    betweenTrialsLength;
-    unsigned    lengthOfFeedback;
-    bool        feedbackLengthDefined;
-    bool        showPanel;
-    bool        showProgress;
-    bool        showStopButton;
-    bool        showRepeatButton;
-    bool        showStatusPicture;
-    QString     beforeScreen;
-    QString     afterScreen;
-    QString     betweenTrialsScreen;
-    QString     styleSheet;
-    QString     apexStyleSheet;
-    QString     movieOfPanel;
+    bool showMenu;
+    unsigned beforeLength;
+    unsigned afterLength;
+    unsigned betweenTrialsLength;
+    unsigned lengthOfFeedback;
+    bool feedbackLengthDefined;
+    bool showPanel;
+    bool showProgress;
+    bool showStopButton;
+    bool showRepeatButton;
+    bool showStatusPicture;
+    QString beforeScreen;
+    QString afterScreen;
+    QString betweenTrialsScreen;
+    QString styleSheet;
+    QString apexStyleSheet;
+    QString movieOfPanel;
 
     ScreenMap screens;
 
-    FilePrefix  filePrefix;
-    QString     feedbackPositive;
-    QString     feedbackNegative;
+    FilePrefix filePrefix;
+    QString feedbackPositive;
+    QString feedbackNegative;
     QList<FeedbackPluginPair> feedbackPluginList;
 };
-
-
 }
 }
 

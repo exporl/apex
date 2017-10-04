@@ -20,8 +20,8 @@
 #include <QApplication>
 #include <QPushButton>
 
-#include "screeneditor.h"
 #include "experimentfilemanager.h"
+#include "screeneditor.h"
 
 #include <QFileDialog>
 
@@ -30,20 +30,17 @@ using apex::editor::ExperimentFileManager;
 /**
  * This is the main function of the screeneditor application.
  */
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-    QApplication a( argc, argv );
+    QApplication a(argc, argv);
 
     QString fileName = QFileDialog::getOpenFileName(
-        0, QObject::tr( "Open Experiment" ), QString(),
-      QObject::tr( "Apex Experiment Files(*.xml *.apx)" ) );
-    if ( !fileName.isEmpty() )
-    {
-        ExperimentFileManager* fm = new ExperimentFileManager(
-            qApp, fileName );
+        0, QObject::tr("Open Experiment"), QString(),
+        QObject::tr("Apex Experiment Files(*.xml *.apx)"));
+    if (!fileName.isEmpty()) {
+        ExperimentFileManager *fm = new ExperimentFileManager(qApp, fileName);
         fm->openScreenEditors();
         return a.exec();
     }
     return 0;
 }
-

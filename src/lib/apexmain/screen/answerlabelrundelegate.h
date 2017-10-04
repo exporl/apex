@@ -24,39 +24,39 @@
 
 namespace apex
 {
-    class ExperimentRunDelegate;
-  namespace data
-  {
-    class AnswerLabelElement;
-    class ScreenElement;
-  }
+class ExperimentRunDelegate;
+namespace data
+{
+class AnswerLabelElement;
+class ScreenElement;
+}
 
-  namespace rundelegates
-  {
-    using data::ScreenElement;
-    using data::AnswerLabelElement;
+namespace rundelegates
+{
+using data::ScreenElement;
+using data::AnswerLabelElement;
 
-    /**
-     * The AnswerLabelRunDelegate class is an implementation of
-     * ScreenElementRunDelegate representing a AnswerLabelElement.
-     */
-    class AnswerLabelRunDelegate
-      : public LabelRunDelegateBase
-    {
-      Q_OBJECT
+/**
+ * The AnswerLabelRunDelegate class is an implementation of
+ * ScreenElementRunDelegate representing a AnswerLabelElement.
+ */
+class AnswerLabelRunDelegate : public LabelRunDelegateBase
+{
+    Q_OBJECT
 
-      const AnswerLabelElement* element;
-    public:
-        AnswerLabelRunDelegate( ExperimentRunDelegate* p_exprd,
-                                QWidget* parent, const data::AnswerLabelElement* e,
-                              const QFont& defaultFont );
+    const AnswerLabelElement *element;
 
-      const ScreenElement* getScreenElement() const;
-      void connectSlots( gui::ScreenRunDelegate* d );
-    public slots:
-      void newAnswer( const QString& answer );
-    };
-  }
+public:
+    AnswerLabelRunDelegate(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                           const data::AnswerLabelElement *e,
+                           const QFont &defaultFont);
+
+    const ScreenElement *getScreenElement() const;
+    void connectSlots(gui::ScreenRunDelegate *d);
+public slots:
+    void newAnswer(const QString &answer);
+};
+}
 }
 
 #endif

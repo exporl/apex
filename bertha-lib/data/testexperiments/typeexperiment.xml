@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bertha:experiment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/bertha/1.0/experiment ../schema/experiment.xsd"
+    xmlns:bertha="http://med.kuleuven.be/exporl/bertha/1.0/experiment">
+    <blocks>
+        <block id="block1">
+            <plugin>TypeTesting</plugin>
+            <parameter name="m_int">1234</parameter>
+            <parameter name="m_float">11.1111</parameter>
+            <parameter name="m_double">2222.222</parameter>
+            <parameter name="m_stringList">"ene","nog ene","IET \"moeilijker\",comma","\\en wa\tnu"</parameter>
+            <parameter name="m_vector">[0.1 1.23 2 3.115]</parameter>
+            <parameter name="m_doubleVector">[[0.1][2.3 3][4.3 -2.345]]</parameter>
+            <parameter name="m_bool">false</parameter>
+            <parameter name="m_enum">One</parameter>
+        </block>
+        <block id="block2">
+            <plugin>TypeTesting</plugin>
+            <parameter name="m_stringList">gewoon,comma's,mag,ook</parameter>
+            <parameter name="m_vector">[0.1  1.23   2 3.115]</parameter>
+            <parameter name="m_doubleVector">  [0.1   ;  2.3   3;4.3 -2.345] </parameter>
+            <parameter name="m_bool">0</parameter>
+            <parameter name="m_enum">1</parameter>
+        </block>
+    </blocks>
+    <connections>
+        <connection>
+            <from id="block1" port="output-1"/>
+            <to id="block2" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="block2" port="output-1"/>
+            <to id="device" port="playback-1"/>
+        </connection>
+    </connections>
+    <device id="device">
+        <driver>File</driver>
+        <samplerate>44100</samplerate>
+        <blocksize>44100</blocksize>
+        <playbackports>1</playbackports>
+        <captureports>0</captureports>
+    </device>
+</bertha:experiment>
+

@@ -48,26 +48,25 @@ class CalibrationDialog : public QDialog
 {
     Q_OBJECT
     /** Available hardware setups. */
-    Q_PROPERTY (QStringList hardwareSetups READ hardwareSetups
-            WRITE setHardwareSetups)
+    Q_PROPERTY(
+        QStringList hardwareSetups READ hardwareSetups WRITE setHardwareSetups)
     /** Currently selected hardware setup. */
-    Q_PROPERTY (QString hardwareSetup READ hardwareSetup
-            WRITE setHardwareSetup)
+    Q_PROPERTY(QString hardwareSetup READ hardwareSetup WRITE setHardwareSetup)
     /** Minimum output parameter value. */
-    Q_PROPERTY (double minimumOutputParameter READ minimumOutputParameter
-            WRITE setMinimumOutputParameter)
+    Q_PROPERTY(double minimumOutputParameter READ minimumOutputParameter WRITE
+                   setMinimumOutputParameter)
     /** Maximum output parameter value. */
-    Q_PROPERTY (double maximumOutputParameter READ maximumOutputParameter
-            WRITE setMaximumOutputParameter)
+    Q_PROPERTY(double maximumOutputParameter READ maximumOutputParameter WRITE
+                   setMaximumOutputParameter)
     /** Current output parameter value. */
-    Q_PROPERTY (QString outputParameter READ outputParameter
-            WRITE setOutputParameter)
+    Q_PROPERTY(
+        QString outputParameter READ outputParameter WRITE setOutputParameter)
     /** Target amplitude for calibration. */
-    Q_PROPERTY (QString targetAmplitude READ targetAmplitude
-            WRITE setTargetAmplitude)
+    Q_PROPERTY(
+        QString targetAmplitude READ targetAmplitude WRITE setTargetAmplitude)
     /** Amplitude measured by the user. */
-    Q_PROPERTY (QString measuredAmplitude READ measuredAmplitude
-            WRITE setMeasuredAmplitude)
+    Q_PROPERTY(QString measuredAmplitude READ measuredAmplitude WRITE
+                   setMeasuredAmplitude)
 
 public:
     /** Creates a new calibration dialog. You still need to call
@@ -82,7 +81,7 @@ public:
      *
      * @param parent the parent QWidget
      */
-    CalibrationDialog (QWidget *parent = NULL);
+    CalibrationDialog(QWidget *parent = NULL);
 
     /** Destroys the calibration dialog. */
     ~CalibrationDialog();
@@ -95,7 +94,7 @@ public Q_SLOTS:
      *
      * @param value available hardware setups
      */
-    void setHardwareSetups (const QStringList &value);
+    void setHardwareSetups(const QStringList &value);
 
     /** Returns the available hardware setups.
      *
@@ -109,7 +108,7 @@ public Q_SLOTS:
      *
      * @param value hardware setup to select
      */
-    void setHardwareSetup (const QString &value);
+    void setHardwareSetup(const QString &value);
 
     /** Returns the currently selected hardware setup.
      *
@@ -122,7 +121,7 @@ public Q_SLOTS:
      *
      * @param status database status description
      */
-    void setDatabaseStatus (const QString &status);
+    void setDatabaseStatus(const QString &status);
 
     /** Sets the available stimuli. This determines which stimuli the
      * user can select in the advanced UI. If the currently selected value is
@@ -131,7 +130,7 @@ public Q_SLOTS:
      *
      * @param value available stimuli
      */
-    void setStimuli (QStringList value);
+    void setStimuli(QStringList value);
 
     /** Returns the available stimuli.
      *
@@ -145,7 +144,7 @@ public Q_SLOTS:
      *
      * @param value stimulus to select
      */
-    void setStimulus (const QString &value);
+    void setStimulus(const QString &value);
 
     /** Returns the currently selected stimulus.
      *
@@ -159,7 +158,7 @@ public Q_SLOTS:
      *
      * @param value true if stimuli should loop, false otherwise
      */
-    void setLooping (bool value);
+    void setLooping(bool value);
 
     /** Returns whether stimuli should loop.
      *
@@ -173,14 +172,14 @@ public Q_SLOTS:
      *
      * @param value true if playing, false otherwise
      */
-    void setPlaying (bool value);
+    void setPlaying(bool value);
 
     /** Disables or enables the ok button depending whether the calibration is
      * considered complete.
      *
      * @param value true if the ok button should be enabled, false otherwise
      */
-    void setComplete (bool value);
+    void setComplete(bool value);
 
     /** Sets the available parameters. If the currently selected value is not
      * available in the new list, the currently selected parameter will be
@@ -189,12 +188,12 @@ public Q_SLOTS:
      *
      * @param value available parameters
      */
-    void setParameterNames (const QStringList &value);
+    void setParameterNames(const QStringList &value);
 
     /**
      * If true, shows an autocalibrate button
      */
-    void setAutoCalibrateEnabled (bool value);
+    void setAutoCalibrateEnabled(bool value);
 
     /** Returns the available parameters.
      *
@@ -206,7 +205,7 @@ public Q_SLOTS:
      *
      * @param value muted parameters
      */
-    void setMutedParameters (const QStringList &value);
+    void setMutedParameters(const QStringList &value);
 
     /** Returns the muted parameters.
      *
@@ -221,7 +220,7 @@ public Q_SLOTS:
      *
      * @param value parameter to select
      */
-    void setParameterName (const QString &value);
+    void setParameterName(const QString &value);
 
     /** Returns the currently selected parameter.
      *
@@ -237,7 +236,7 @@ public Q_SLOTS:
      *
      * @param value minimum output parameter value
      */
-    void setMinimumOutputParameter (double value);
+    void setMinimumOutputParameter(double value);
 
     /** Returns the current minimum output parameter. See
      * #setMinimumOutputParameter() for details.
@@ -254,7 +253,7 @@ public Q_SLOTS:
      *
      * @param value maximum output parameter value
      */
-    void setMaximumOutputParameter (double value);
+    void setMaximumOutputParameter(double value);
 
     /** Returns the current maximum output parameter. See
      * #setMaximumOutputParameter() for details.
@@ -270,7 +269,7 @@ public Q_SLOTS:
      *
      * @param value current output parameter value
      */
-    void setOutputParameter (const QString &value);
+    void setOutputParameter(const QString &value);
 
     /** Returns the current output parameter. For invalid double values or
      * values exceeding the limits set by #setMinimumOutputParameter() and
@@ -287,14 +286,14 @@ public Q_SLOTS:
      *
      * @param amplitude target amplitude
      */
-    void setTargetAmplitude (const QString &amplitude);
+    void setTargetAmplitude(const QString &amplitude);
 
     /** Sets the final desired amplitude during the experiment. Is only used
      * for visualisation
      *
      * @param amplitude experiment amplitude
      */
-    void setExperimentAmplitude (const QString &amplitude);
+    void setExperimentAmplitude(const QString &amplitude);
 
     /** Returns the target amplitude. For invalid double values, an empty
      * string is returned.
@@ -311,7 +310,7 @@ public Q_SLOTS:
      * @param amplitude measured amplitude
      * @see #correctOutputParameter()
      */
-    void setMeasuredAmplitude (const QString &amplitude);
+    void setMeasuredAmplitude(const QString &amplitude);
 
     /** Returns the measured amplitude as entered by the user. For invalid
      * double values, an empty string is returned.
@@ -341,13 +340,13 @@ public Q_SLOTS:
      * @param advanced true if the advanced interface should be shown, false
      * otherwise
      */
-    void showAdvanced (bool advanced);
+    void showAdvanced(bool advanced);
 
     /** Sets the unit that is used to display measured and target amplitude.
      *
      * @param unit unit to use
      */
-    void setUnit (const QString &unit);
+    void setUnit(const QString &unit);
 
     /** Returns the unit that is used to display measured and target amplitude.
      *
@@ -360,14 +359,14 @@ public Q_SLOTS:
      * @param value true if a clipping warning should be displayed, false
      * otherwise
      */
-    void setClipping (bool value);
+    void setClipping(bool value);
 
-        /**
-         * Close the window by calling the accept/reject slot
-         *
-         * @param save save the measured results
-         */
-        void finalize(bool save);
+    /**
+     * Close the window by calling the accept/reject slot
+     *
+     * @param save save the measured results
+     */
+    void finalize(bool save);
 
     void setGlobal(bool global);
 
@@ -379,7 +378,7 @@ Q_SIGNALS:
      * @param value new hardware setup or an empty string if no setup is
      * selected
      */
-    void hardwareSetupChanged (const QString &value);
+    void hardwareSetupChanged(const QString &value);
 
     /** Emitted when the user (or program) changes the stimulus. The
      * passed \c value can only be one of the entries in the string list
@@ -388,13 +387,13 @@ Q_SIGNALS:
      * @param value new stimulus or an empty string if no stimulus is
      * selected
      */
-    void stimulusChanged (const QString &value);
+    void stimulusChanged(const QString &value);
 
     /** Emitted when the user (or program) changes whether stimuli should loop.
      *
      * @param value true if stimuli are looping
      */
-    void loopingChanged (bool value);
+    void loopingChanged(bool value);
 
     /** Emitted when the user (or program) changes the muted state of a
      * parameter.
@@ -402,7 +401,7 @@ Q_SIGNALS:
      * @param name parameter name
      * @param muted true if the parameter is muted, false otherwise
      */
-    void mutingChanged (const QString &name, bool muted);
+    void mutingChanged(const QString &name, bool muted);
 
     /** Emitted when the user (or program) changes the parameter. The
      * passed \c value can only be one of the entries in the string list
@@ -411,7 +410,7 @@ Q_SIGNALS:
      * @param value new parameter or an empty string if no parameter is
      * selected
      */
-    void parameterNameChanged (const QString &value);
+    void parameterNameChanged(const QString &value);
 
     /** Emitted when the user requests to manage the hardware setups. You
      * can query and set the hardware setups with #hardwareSetups() and
@@ -425,7 +424,7 @@ Q_SIGNALS:
      * @param value new target amplitude value or an empty string if the new
      * target amplitude is invalid
      */
-    void targetAmplitudeChanged (const QString &value);
+    void targetAmplitudeChanged(const QString &value);
 
     /** Emitted when the user (or program) changes the output parameter. For
      * invalid values or values not in the range specified with
@@ -435,7 +434,7 @@ Q_SIGNALS:
      * @param value new output parameter value or an empty string if the new
      * output parameter is invalid
      */
-    void outputParameterChanged (const QString &value);
+    void outputParameterChanged(const QString &value);
 
     /** Emitted when the user requests to automatically adjust the output
      * parameter. The measured output amplitude for the current output
@@ -450,7 +449,7 @@ Q_SIGNALS:
      *
      * @param amplitude measured output amplitude as entered by the user
      */
-    void correctOutputParameter (double amplitude);
+    void correctOutputParameter(double amplitude);
 
     /** Emitted when the user requests to start the sound output.
      */
@@ -470,11 +469,11 @@ Q_SIGNALS:
 
     /** Emitted when the user clicks the autoCalibrate button for a stimulus
      */
-    void autoCalibrateSingle(const QString& parameter);
+    void autoCalibrateSingle(const QString &parameter);
 
-        /** Emitted when the user presses cancel
-         */
-        void beforeCancel();
+    /** Emitted when the user presses cancel
+     */
+    void beforeCancel();
 
 private:
     QScopedPointer<CalibrationDialogPrivate> d;

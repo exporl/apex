@@ -34,27 +34,26 @@ namespace data
  * The PictureLabelElement is an implementation of a \ref
  * ScreenElement representing a "picture label".
  */
-class APEXDATA_EXPORT PictureLabelElement
-            : public ScreenElement
+class APEXDATA_EXPORT PictureLabelElement : public ScreenElement
 {
-        QString picturePath;
-        QString pictureDisabledPath;
+    QString picturePath;
+    QString pictureDisabledPath;
 
-    public:
-        PictureLabelElement(const QString& id, ScreenElement* parent);
-        ~PictureLabelElement();
+public:
+    PictureLabelElement(const QString &id, ScreenElement *parent);
+    ~PictureLabelElement();
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
-        void setPicture(const QString& p);
-        QString getPicture() const;
+    void setPicture(const QString &p);
+    QString getPicture() const;
 
-        void setPictureDisabled(const QString& p);
-        QString getPictureDisabled() const;
+    void setPictureDisabled(const QString &p);
+    QString getPictureDisabled() const;
 
-        bool operator==(const PictureLabelElement& other) const;
+    bool operator==(const PictureLabelElement &other) const;
 };
 }
 }

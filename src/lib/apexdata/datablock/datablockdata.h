@@ -38,41 +38,39 @@ class FilePrefix;
  */
 class APEXDATA_EXPORT DatablockData
 {
-    public:
+public:
+    DatablockData();
+    DatablockData(const DatablockData &other);
+    virtual ~DatablockData();
 
-        DatablockData();
-        DatablockData(const DatablockData& other);
-        virtual ~DatablockData();
+    // getters
+    const QString &id() const;
+    const QString &device() const;
+    const QString &file() const;
+    const QString &description() const;
+    const FilePrefix &prefix() const;
+    const QString &directData() const;
+    unsigned nbChannels() const;
+    unsigned nbLoops() const;
+    double gain() const;
 
-        //getters
-        const QString& id() const;
-        const QString& device() const;
-        const QString& file() const;
-        const QString& description() const;
-        const FilePrefix& prefix() const;
-        const QString& directData() const;
-        unsigned nbChannels() const;
-        unsigned nbLoops() const;
-        double gain() const;
+    // setters
+    void setId(const QString &id);
+    void setDevice(const QString &device);
+    void setFile(const QString &url);
+    void setDescription(const QString &description);
+    void setPrefix(const FilePrefix &prefix);
+    void setDirectData(const QString &data);
+    void setNbChannels(unsigned nb);
+    void setNbLoops(unsigned nb);
+    void setGain(double gain);
 
-        //setters
-        void setId(const QString& id);
-        void setDevice(const QString& device);
-        void setFile(const QString &url);
-        void setDescription(const QString& description);
-        void setPrefix(const FilePrefix& prefix);
-        void setDirectData(const QString& data);
-        void setNbChannels(unsigned nb);
-        void setNbLoops(unsigned nb);
-        void setGain(double gain);
+    // operators
+    DatablockData &operator=(const DatablockData &other);
+    bool operator==(const DatablockData &other) const;
 
-        //operators
-        DatablockData& operator=(const DatablockData& other);
-        bool operator==(const DatablockData& other) const;
-
-    private:
-
-        DatablockDataPrivate* d;
+private:
+    DatablockDataPrivate *d;
 };
 
 } // namespace data

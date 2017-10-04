@@ -21,7 +21,7 @@
 
 using apex::data::FilePrefix;
 
-QString apex::FilePrefixConvertor::convert (data::FilePrefix p)
+QString apex::FilePrefixConvertor::convert(data::FilePrefix p)
 {
     // TODO: this is just a dummy implementation!
     return p.value();

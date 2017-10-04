@@ -30,13 +30,12 @@ namespace data
 
 class APEXDATA_EXPORT DummyDeviceData : public DeviceData
 {
-    public:
-
-        DummyDeviceData();
+public:
+    DummyDeviceData();
 };
 
-}//ns data
+} // ns data
 
-}//ns apex
+} // ns apex
 
 #endif

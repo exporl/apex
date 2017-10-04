@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+exitwithmsg() {
+    tput setaf 126 >&2
+    echo -e  "$@" >&2
+    tput sgr0 >&2
+    exit 1
+}
+
+while read local_ref local_sha remote_ref remote_sha; do
+    if [[ ! "$remote_ref" =~ "refs/for" ]] && [[ ! "$remote_ref" =~ "refs/tags" ]]; then
+        exitwithmsg \
+            "You seem to be pushing directly to ${remote_ref##*/}.\n" \
+            "\rPlease create a pull request by pushing to refs/for/${remote_ref##*/} instead.\n" \
+            "\rIf you're sure about what you're doing, disable this check with --no-verify."
+    fi
+done
+exit 0

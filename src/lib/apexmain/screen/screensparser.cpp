@@ -48,8 +48,7 @@ namespace parser
 
 // ScreensParser ===============================================================
 
-ScreensParser::ScreensParser(QWidget* parent) :
-    m_parent(parent)
+ScreensParser::ScreensParser(QWidget *parent) : m_parent(parent)
 {
 }
 
@@ -60,154 +59,187 @@ ScreensParser::ParseScreens(const QString &fileName, const QDomElement &p_base,
                             data::ParameterManagerData *pmd)
 {
     QScopedPointer<data::ScreensData> screens(new data::ScreensData());
-    QScopedPointer<ScreenParser> m_screenParser(new ScreenParser(screens.data(), pmd));
+    QScopedPointer<ScreenParser> m_screenParser(
+        new ScreenParser(screens.data(), pmd));
 
-    //start with default font
-    screens->setDefaultFont( sc_sDefaultFont );
-    screens->setDefaultFontSize( sc_nDefaultFontSize );
+    // start with default font
+    screens->setDefaultFont(sc_sDefaultFont);
+    screens->setDefaultFontSize(sc_nDefaultFontSize);
 
 #ifndef NOSCRIPTEXPAND
     // find plugin screens and expand them
-    for (QDomElement currentNode = p_base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
-        const QString tag( currentNode.tagName() );
+    for (QDomElement currentNode = p_base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
+        const QString tag(currentNode.tagName());
         if (tag == "pluginscreens") {
-            ScriptExpander expander(fileName, scriptLibraryFile, scriptParameters, m_parent);
+            ScriptExpander expander(fileName, scriptLibraryFile,
+                                    scriptParameters, m_parent);
             expander.ExpandScript(currentNode, "getScreens");
         }
     }
 #endif
 
-    //parse
-    for (QDomElement currentNode = p_base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
-        const QString tag( currentNode.tagName() );
+    // parse
+    for (QDomElement currentNode = p_base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
+        const QString tag(currentNode.tagName());
         if (tag == "screen") {
             // let it propagate...
             if (!m_screenParser->createScreen(currentNode)) {
                 return 0;
             }
-        } else if (tag== "reinforcement") {
-            for (QDomElement reinf = currentNode.firstChildElement(); !reinf.isNull();
-                    reinf = reinf.nextSiblingElement()) {
-                const QString tag( reinf.tagName() );
-                if ( tag == "progressbar" ) {
-                    screens->setProgressbarEnabled(ApexTools::bQStringToBoolean( reinf.text() ) );
-                } else if ( tag == gc_sFeedback ) {
-                    screens->setFeedbackEnabled(ApexTools::bQStringToBoolean( reinf.text() ));
-                    screens->setFeedbackLength(  reinf.attribute(gc_sLength ).toUInt());
-                } else if ( tag == "feedback_on" ) {
+        } else if (tag == "reinforcement") {
+            for (QDomElement reinf = currentNode.firstChildElement();
+                 !reinf.isNull(); reinf = reinf.nextSiblingElement()) {
+                const QString tag(reinf.tagName());
+                if (tag == "progressbar") {
+                    screens->setProgressbarEnabled(
+                        ApexTools::bQStringToBoolean(reinf.text()));
+                } else if (tag == gc_sFeedback) {
+                    screens->setFeedbackEnabled(
+                        ApexTools::bQStringToBoolean(reinf.text()));
+                    screens->setFeedbackLength(
+                        reinf.attribute(gc_sLength).toUInt());
+                } else if (tag == "feedback_on") {
                     QString value = reinf.text();
-                    if (value=="none")
+                    if (value == "none")
                         screens->setFeedbackOn(data::HIGHLIGHT_NONE);
-                    else if (value=="correct")
+                    else if (value == "correct")
                         screens->setFeedbackOn(data::HIGHLIGHT_CORRECT);
-                    else if (value=="clicked")
+                    else if (value == "clicked")
                         screens->setFeedbackOn(data::HIGHLIGHT_ANSWER);
                     else
                         throw ApexStringException("Illegal feedback_on value");
-                } else if ( tag == "feedback_picture_positive" ) {
+                } else if (tag == "feedback_picture_positive") {
                     QString file = reinf.text();
-                    QString absPath = ApexTools::addPrefix(file, m_screenParser->GetBasePath());
-                    if ( ! QFile::exists(absPath))
-                        throw ApexStringException("Positive feedback picture not found");
+                    QString absPath = ApexTools::addPrefix(
+                        file, m_screenParser->GetBasePath());
+                    if (!QFile::exists(absPath))
+                        throw ApexStringException(
+                            "Positive feedback picture not found");
                     screens->setFeedbackPositivePicture(file);
-                } else if ( tag == "feedback_picture_negative" ) {
+                } else if (tag == "feedback_picture_negative") {
                     QString file = reinf.text();
-                    QString absPath = ApexTools::addPrefix(file, m_screenParser->GetBasePath());
-                    if ( ! QFile::exists(absPath))
-                        throw ApexStringException("Positive feedback picture not found");
+                    QString absPath = ApexTools::addPrefix(
+                        file, m_screenParser->GetBasePath());
+                    if (!QFile::exists(absPath))
+                        throw ApexStringException(
+                            "Positive feedback picture not found");
                     screens->setFeedbackNegativePicture(file);
-                } else if ( tag == "showcurrent" ) {
-                    screens->setShowCurrentEnabled(ApexTools::bQStringToBoolean( reinf.text() ));
-                } else if ( tag == "feedbackplugin" ) {
-                    QString plugin(  reinf.attribute(QSL("name")) );
+                } else if (tag == "showcurrent") {
+                    screens->setShowCurrentEnabled(
+                        ApexTools::bQStringToBoolean(reinf.text()));
+                } else if (tag == "feedbackplugin") {
+                    QString plugin(reinf.attribute(QSL("name")));
                     data::FeedbackPluginParameters params;
-                    for (QDomElement pnode = reinf.firstChildElement(); !pnode.isNull();
-                            pnode = pnode.nextSiblingElement()) {
+                    for (QDomElement pnode = reinf.firstChildElement();
+                         !pnode.isNull(); pnode = pnode.nextSiblingElement()) {
                         QString name(pnode.attribute(QSL("name")));
                         QString value(pnode.text());
-                        params.push_back(QPair<QString,QString>(name, value));
+                        params.push_back(QPair<QString, QString>(name, value));
                     }
                     screens->addFeedbackPlugin(plugin, params);
                 } else {
-                    qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ExperimentConfigFileParser::ParseScreens",
-                                      "Unknown tag: " + tag )));
+                    qCWarning(APEX_RS, "%s",
+                              qPrintable(QSL("%1: %2").arg(
+                                  "ExperimentConfigFileParser::ParseScreens",
+                                  "Unknown tag: " + tag)));
                 }
             }
-        } else if ( tag == "childmode" ) {
-            for (QDomElement reinf = currentNode.firstChildElement(); !reinf.isNull();
-                    reinf = reinf.nextSiblingElement()) {
+        } else if (tag == "childmode") {
+            for (QDomElement reinf = currentNode.firstChildElement();
+                 !reinf.isNull(); reinf = reinf.nextSiblingElement()) {
                 const QString tag(reinf.tagName());
-                if ( tag == "intro" ) {
+                if (tag == "intro") {
                     screens->setIntroScreen(reinf.text());
-                    screens->setIntroLength( reinf.attribute(gc_sLength ).toUInt());
-                } else if ( tag == "outro" ) {
+                    screens->setIntroLength(
+                        reinf.attribute(gc_sLength).toUInt());
+                } else if (tag == "outro") {
                     screens->setOutroScreen(reinf.text());
-                    screens->setOutroLength( reinf.attribute(gc_sLength ).toUInt());
-                } else if ( tag == "panel" ) {
+                    screens->setOutroLength(
+                        reinf.attribute(gc_sLength).toUInt());
+                } else if (tag == "panel") {
                     QString file = reinf.text();
-                    QString absPath = ApexTools::addPrefix( file,  m_screenParser->GetBasePath());
+                    QString absPath = ApexTools::addPrefix(
+                        file, m_screenParser->GetBasePath());
                     // Flash thing wants absolute path:
                     QDir d(absPath);
                     absPath = d.absolutePath();
-                    qCDebug(APEX_RS, "%s", qPrintable (file));
+                    qCDebug(APEX_RS, "%s", qPrintable(file));
                     if (!QFile::exists(absPath)) {
-                        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ScreenParser", "Cannot find panel movie: " + file)));
+                        qCCritical(APEX_RS, "%s",
+                                   qPrintable(QSL("%1: %2").arg(
+                                       "ScreenParser",
+                                       "Cannot find panel movie: " + file)));
                         return 0;
                     }
                     screens->setPanelMovie(file);
                 } else {
-                    qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ExperimentConfigFileParser::ParseScreens",
-                                      "Unknown tag: " + tag)));
+                    qCWarning(APEX_RS, "%s",
+                              qPrintable(QSL("%1: %2").arg(
+                                  "ExperimentConfigFileParser::ParseScreens",
+                                  "Unknown tag: " + tag)));
                 }
             }
             screens->m_eMode = data::gc_eChild;
-        } else if ( tag== "general" ) {
-            for (QDomElement reinf = currentNode.firstChildElement(); !reinf.isNull();
-                    reinf = reinf.nextSiblingElement()) {
-                const QString tag( reinf.tagName() );
-                if ( tag == "stopbutton" ) {
-                    screens->setStopButtonEnabled(ApexTools::bQStringToBoolean( reinf.text() ));
-                } else if ( tag == "repeatbutton" ) {
-                    screens->setRepeatButtonEnabled(ApexTools::bQStringToBoolean( reinf.text() ));
-                } else if ( tag == "statuspicture" ) {
-                    screens->setStatusPictureEnabled(ApexTools::bQStringToBoolean( reinf.text() ));
-                } else if ( tag == "showpanel" ) {
-                    screens->setPanelEnabled(ApexTools::bQStringToBoolean( reinf.text() ));
-                } else if ( tag == "showmenu" ) {
-                    screens->setMenuEnabled(ApexTools::bQStringToBoolean( reinf.text() ));
-                } else if ( tag == "fullscreen" ) {
-                    screens->setFullScreenEnabled(ApexTools::bQStringToBoolean( reinf.text() ));
-                } else if ( tag == gc_sItiScreen ) {
+        } else if (tag == "general") {
+            for (QDomElement reinf = currentNode.firstChildElement();
+                 !reinf.isNull(); reinf = reinf.nextSiblingElement()) {
+                const QString tag(reinf.tagName());
+                if (tag == "stopbutton") {
+                    screens->setStopButtonEnabled(
+                        ApexTools::bQStringToBoolean(reinf.text()));
+                } else if (tag == "repeatbutton") {
+                    screens->setRepeatButtonEnabled(
+                        ApexTools::bQStringToBoolean(reinf.text()));
+                } else if (tag == "statuspicture") {
+                    screens->setStatusPictureEnabled(
+                        ApexTools::bQStringToBoolean(reinf.text()));
+                } else if (tag == "showpanel") {
+                    screens->setPanelEnabled(
+                        ApexTools::bQStringToBoolean(reinf.text()));
+                } else if (tag == "showmenu") {
+                    screens->setMenuEnabled(
+                        ApexTools::bQStringToBoolean(reinf.text()));
+                } else if (tag == "fullscreen") {
+                    screens->setFullScreenEnabled(
+                        ApexTools::bQStringToBoolean(reinf.text()));
+                } else if (tag == gc_sItiScreen) {
                     screens->setInterTrialScreen(reinf.text());
-                    screens->setInterTrialLength(reinf.attribute(gc_sLength ).toUInt());
+                    screens->setInterTrialLength(
+                        reinf.attribute(gc_sLength).toUInt());
                 } else {
-                    qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ExperimentConfigFileParser::ParseScreens",
-                                      "Unknown tag: " + tag )));
+                    qCWarning(APEX_RS, "%s",
+                              qPrintable(QSL("%1: %2").arg(
+                                  "ExperimentConfigFileParser::ParseScreens",
+                                  "Unknown tag: " + tag)));
                 }
             }
-        } else if (tag=="style") {
-            screens->setStyle(currentNode.text() );
-        } else if (tag=="style_apex") {
+        } else if (tag == "style") {
+            screens->setStyle(currentNode.text());
+        } else if (tag == "style_apex") {
             screens->setApexStyle(currentNode.text());
         } else if (tag == "prefix") {
             data::FilePrefix prefix = parser::PrefixParser::Parse(currentNode);
             m_screenParser->mp_SetBasePath(prefix);
             screens->setPrefix(prefix);
-        } else if ( tag == "defaultFont" ) {
+        } else if (tag == "defaultFont") {
             const QString font = currentNode.text();
-            screens->setDefaultFont( font );
-        } else if ( tag == "defaultFontsize" ) {
+            screens->setDefaultFont(font);
+        } else if (tag == "defaultFontsize") {
             unsigned fs = currentNode.text().toUInt();
-            screens->setDefaultFontSize( fs );
+            screens->setDefaultFontSize(fs);
         } else {
-            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ExperimentConfigFileParser::ParseScreens", "Unknown tag: " + tag)));
+            qCWarning(APEX_RS, "%s",
+                      qPrintable(QSL("%1: %2").arg(
+                          "ExperimentConfigFileParser::ParseScreens",
+                          "Unknown tag: " + tag)));
         }
     }
 
     return screens.take();
 }
-
 }
 }

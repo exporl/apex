@@ -26,19 +26,20 @@ namespace apex
 namespace device
 {
 
-IApexDevice::IApexDevice(data::DeviceData* a_pParameters) :
-                                            mc_sID2( a_pParameters->id() ),
-                                            m_pParameters( a_pParameters ),
-                                            mv_bNeedsRestore( false )
+IApexDevice::IApexDevice(data::DeviceData *a_pParameters)
+    : mc_sID2(a_pParameters->id()),
+      m_pParameters(a_pParameters),
+      mv_bNeedsRestore(false)
 {
-    Q_ASSERT( a_pParameters );
+    Q_ASSERT(a_pParameters);
 }
 
 IApexDevice::~IApexDevice()
 {
 }
 
-bool IApexDevice::SetParameter(const data::Parameter& name, const QVariant& value)
+bool IApexDevice::SetParameter(const data::Parameter &name,
+                               const QVariant &value)
 {
     if (name.owner() != GetID())
         return false;
@@ -47,23 +48,23 @@ bool IApexDevice::SetParameter(const data::Parameter& name, const QVariant& valu
     return true;
 }
 
-const QString& IApexDevice::GetID() const
+const QString &IApexDevice::GetID() const
 {
     return mc_sID2;
 }
 
-bool IApexDevice::HasParameter(const QString& type) const
+bool IApexDevice::HasParameter(const QString &type) const
 {
     return m_pParameters->hasParameter(type);
 }
 
-void IApexDevice::SetParameters(const apex::ParameterManager& pm)
+void IApexDevice::SetParameters(const apex::ParameterManager &pm)
 {
     data::ParameterValueMap params = pm.parametersForOwner(GetID());
 
     data::ParameterValueMap::const_iterator it;
     for (it = params.begin(); it != params.end(); ++it)
-        SetParameter ( it.key().type(), it.key().channel(), it.value() );
+        SetParameter(it.key().type(), it.key().channel(), it.value());
 }
 
 void IApexDevice::RestoreParameters()
@@ -72,12 +73,12 @@ void IApexDevice::RestoreParameters()
         SetParameter(param.type(), param.channel(), param.defaultValue());
 }
 
-const apex::data::DeviceData& IApexDevice::GetParameters() const
+const apex::data::DeviceData &IApexDevice::GetParameters() const
 {
     return *m_pParameters;
 }
 
-data::DeviceData* IApexDevice::ModParameters() const
+data::DeviceData *IApexDevice::ModParameters() const
 {
     return m_pParameters;
 }
@@ -92,12 +93,10 @@ QString IApexDevice::GetEndXML() const
     return QString();
 }
 
-bool IApexDevice::GetInfo(const unsigned, void*) const
+bool IApexDevice::GetInfo(const unsigned, void *) const
 {
     return false;
 }
 
-
-}//ns device
-}//ns apex
-
+} // ns device
+} // ns apex

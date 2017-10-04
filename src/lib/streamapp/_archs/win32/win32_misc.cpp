@@ -31,24 +31,24 @@
 
 #ifdef S_DLL_EXPORT
 
-  //#pragma comment( lib, "msvcprtd.lib" )
-  //#pragma comment( lib, "MSVCRTD.lib" )
-  //#pragma comment( lib, "kernel32.lib" )
-  //#pragma comment( lib, "user32.lib" )
-  //#pragma comment( lib, "shell32.lib" )
-  //#pragma comment( lib, "gdi32.lib" )
-  //#pragma comment( lib, "vfw32.lib" )
-  //#pragma comment( lib, "winspool.lib" )
-  //#pragma comment( lib, "comdlg32.lib" )
-  //#pragma comment( lib, "winmm.lib" )
-  //#pragma comment( lib, "wininet.lib" )
-  //#pragma comment( lib, "ole32.lib" )
-  //#pragma comment( lib, "oleaut32.lib" )
-  //#pragma comment( lib, "uuid.lib" )
-  //#pragma comment( lib, "odbc32.lib" )
-  //#pragma comment( lib, "odbccp32.lib" )
-  //#pragma comment( lib, "advapi32.lib")
-  //#pragma comment( lib, "wsock32.lib" )
+//#pragma comment( lib, "msvcprtd.lib" )
+//#pragma comment( lib, "MSVCRTD.lib" )
+//#pragma comment( lib, "kernel32.lib" )
+//#pragma comment( lib, "user32.lib" )
+//#pragma comment( lib, "shell32.lib" )
+//#pragma comment( lib, "gdi32.lib" )
+//#pragma comment( lib, "vfw32.lib" )
+//#pragma comment( lib, "winspool.lib" )
+//#pragma comment( lib, "comdlg32.lib" )
+//#pragma comment( lib, "winmm.lib" )
+//#pragma comment( lib, "wininet.lib" )
+//#pragma comment( lib, "ole32.lib" )
+//#pragma comment( lib, "oleaut32.lib" )
+//#pragma comment( lib, "uuid.lib" )
+//#pragma comment( lib, "odbc32.lib" )
+//#pragma comment( lib, "odbccp32.lib" )
+//#pragma comment( lib, "advapi32.lib")
+//#pragma comment( lib, "wsock32.lib" )
 
 #endif
 
@@ -58,25 +58,25 @@
 
 #include <cstdio>
 
-void utils::Tracer::sf_TraceDebug( const std::string& text )
+void utils::Tracer::sf_TraceDebug(const std::string &text)
 {
-  sf_TraceDebugPrintf( "%s", text.c_str() );
+    sf_TraceDebugPrintf("%s", text.c_str());
 }
 
-void utils::Tracer::sf_TraceDebugPrintf( const char* format, ... )
+void utils::Tracer::sf_TraceDebugPrintf(const char *format, ...)
 {
-  static char buf[ sc_nMaxTextSize ];
-  static const unsigned sc_nSizeWithoutEnd = sc_nMaxTextSize - 3;
+    static char buf[sc_nMaxTextSize];
+    static const unsigned sc_nSizeWithoutEnd = sc_nMaxTextSize - 3;
 
-  va_list args;
-  va_start( args, format );
-  const int n = _vsnprintf( buf, sc_nSizeWithoutEnd, format, args );
-  va_end( args );
+    va_list args;
+    va_start(args, format);
+    const int n = _vsnprintf(buf, sc_nSizeWithoutEnd, format, args);
+    va_end(args);
 
-  char* p = buf + ( ( n < 0 ) ? sc_nSizeWithoutEnd : n );
-  *p++ = '\r';
-  *p++ = '\n';
-  *p++ = '\0';
+    char *p = buf + ((n < 0) ? sc_nSizeWithoutEnd : n);
+    *p++ = '\r';
+    *p++ = '\n';
+    *p++ = '\0';
 
-  OutputDebugString( buf );
+    OutputDebugString(buf);
 }

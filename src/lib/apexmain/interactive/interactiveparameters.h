@@ -32,6 +32,8 @@ class XPathProcessor;
 
 class APEX_EXPORT InteractiveParameters
 {
+    Q_DECLARE_TR_FUNCTIONS(InteractiveParameters)
+
 public:
     InteractiveParameters(const QDomDocument &document);
 
@@ -43,16 +45,17 @@ public:
         ComboValue
     };
 
-    struct Entry
-    {
+    struct Entry {
         Entry(const QString &xpath, const ValueType type,
-                const QString &description, const QString &defaultvalue) :
-            xpath(xpath),
-            type(type),
-            description(description),
-            defaultvalue(defaultvalue),
-            result(QLatin1String("?")),
-            succeeded(false)
+              const QString &description, const QString &defaultvalue,
+              const QRegExp &constraint)
+            : xpath(xpath),
+              type(type),
+              description(description),
+              defaultvalue(defaultvalue),
+              result(QLatin1String("?")),
+              succeeded(false),
+              constraint(constraint)
         {
         }
 
@@ -62,16 +65,17 @@ public:
         QString defaultvalue;
         QString result;
         bool succeeded;
+        QRegExp constraint;
     };
 
-    struct Callback
-    {
+    struct Callback {
         virtual void warning(const QString &message) = 0;
     };
 
-    void apply(const QStringList &entryResults, Callback* callback = 0);
-    void applyExpressions(const QMap<QString, QString> &expressions);
-    data::ParameterDialogResults* results() const;
+    bool apply(const QStringList &entryResults, Callback *callback = 0);
+    data::ParameterDialogResults
+    applyExpressions(const QMap<QString, QString> &expressions);
+    data::ParameterDialogResults *results() const;
     QList<Entry> entries() const;
     QDomDocument document() const;
 
@@ -81,10 +85,10 @@ private:
     QDomDocument document_;
 
     QString tempFileName() const;
-    XPathProcessor* getXPathProcessor(QString *filename);
-    void finishXPathProcessor(XPathProcessor* xpathProcessor, const QString &filename);
+    XPathProcessor *getXPathProcessor(QString *filename);
+    void finishXPathProcessor(XPathProcessor *xpathProcessor,
+                              const QString &filename);
 };
-
 }
 
 #endif // _EXPORL_SRC_LIB_APEXMAIN_INTERACTIVE_INTERACTIVEPARAMETERS_H_

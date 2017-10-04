@@ -29,17 +29,17 @@ namespace apex
 namespace data
 {
 
-SliderElement::SliderElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent ),
-     hasDefault(true),
-         orient(Qt::Vertical),
-         value(0),
-         minimum(-20),
-         maximum(20),
-         tickPos(/*QSlider::TicksBothSides*/3), //FIXME
-         stepSize(1),
-         pageSize(5),
-         tickInt(0)
+SliderElement::SliderElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent),
+      hasDefault(true),
+      orient(Qt::Vertical),
+      value(0),
+      minimum(-20),
+      maximum(20),
+      tickPos(/*QSlider::TicksBothSides*/ 3), // FIXME
+      stepSize(1),
+      pageSize(5),
+      tickInt(0)
 {
 }
 
@@ -58,14 +58,14 @@ QString SliderElement::getText() const
     return text;
 }
 */
-void SliderElement::visit( ScreenElementVisitor* v )
+void SliderElement::visit(ScreenElementVisitor *v)
 {
-    v->visitSlider( this );
+    v->visitSlider(this);
 }
 
-void SliderElement::visit( ScreenElementVisitor* v ) const
+void SliderElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitSlider( this );
+    v->visitSlider(this);
 }
 
 ScreenElement::ElementTypeT SliderElement::elementType() const
@@ -73,23 +73,15 @@ ScreenElement::ElementTypeT SliderElement::elementType() const
     return Slider;
 }
 
-bool SliderElement::operator==(const SliderElement& other) const
+bool SliderElement::operator==(const SliderElement &other) const
 {
-    return  ScreenElement::operator==(other) &&
-            text == other.text &&
-            hasDefault == other.hasDefault &&
-            orient == other.orient &&
-            value == other.value &&
-            minimum == other.minimum &&
-            maximum == other.maximum &&
-            tickPos == other.tickPos &&
-            stepSize == other.stepSize &&
-            pageSize == other.pageSize &&
-            tickInt == other.tickInt &&
-            reset == other.reset &&
-            parameter == other.parameter;
-}
-
+    return ScreenElement::operator==(other) && text == other.text &&
+           hasDefault == other.hasDefault && orient == other.orient &&
+           value == other.value && minimum == other.minimum &&
+           maximum == other.maximum && tickPos == other.tickPos &&
+           stepSize == other.stepSize && pageSize == other.pageSize &&
+           tickInt == other.tickInt && reset == other.reset &&
+           parameter == other.parameter;
 }
 }
-
+}

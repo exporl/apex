@@ -26,21 +26,17 @@ namespace apex
 namespace stimulus
 {
 
-DataBlock::DataBlock(const apex::data::DatablockData& data, const QString& filename,
-                      const ExperimentRunDelegate* experiment) :
-                        filename(filename),
-                        data(data),
-                        experiment(experiment)
-{}
-
-DataBlock* DataBlock::GetCopy(QString id)
+DataBlock::DataBlock(const apex::data::DatablockData &data,
+                     const QString &filename,
+                     const ExperimentRunDelegate *experiment)
+    : filename(filename), data(data), experiment(experiment)
 {
-    //qCDebug(APEX_RS, "Copying datablock");
+}
+
+DataBlock *DataBlock::GetCopy(QString id)
+{
+    // qCDebug(APEX_RS, "Copying datablock");
     return new DataBlock(*this, id);
 }
-
-
-
 }
 }
-

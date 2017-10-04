@@ -35,17 +35,14 @@ class FilterData;
 /**
  * @author Tom Francart,,, <tom.francart@med.kuleuven.be>
  */
-class APEXDATA_EXPORT FiltersData : public QMap<QString, FilterData*>
+class APEXDATA_EXPORT FiltersData : public QMap<QString, FilterData *>
 {
-    public:
+public:
+    FilterData *filterData(const QString &name) const;
 
-        FilterData* filterData(const QString& name) const;
-
-        bool operator==(const FiltersData& other) const;
+    bool operator==(const FiltersData &other) const;
 };
-
 }
-
 }
 
 #endif

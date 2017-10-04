@@ -21,52 +21,50 @@
 
 using namespace spin::gui;
 
-SnrWidget::SnrWidget(QWidget* parent) :
-    QWidget(parent),
-    updatingSNR(false)
+SnrWidget::SnrWidget(QWidget *parent) : QWidget(parent), updatingSNR(false)
 {
     setupUi();
     setupConnections();
 
-    widgets.snrNoiseRadio->setChecked(true);//FIXME
+    widgets.snrNoiseRadio->setChecked(true); // FIXME
 }
 
 void SnrWidget::setupUi()
 {
     widgets.setupUi(this);
 
-    //center everything in the grid layout
+    // center everything in the grid layout
     for (int i = 0; i < widgets.snrLayout->count(); i++)
         widgets.snrLayout->itemAt(i)->setAlignment(Qt::AlignCenter);
 }
 
 void SnrWidget::setupConnections()
 {
-    //connections for enabling/disabling input fields
+    // connections for enabling/disabling input fields
     connect(widgets.snrSpeechRadio, SIGNAL(toggled(bool)),
             widgets.speechlevelLine, SLOT(setEnabled(bool)));
     connect(widgets.snrSpeechRadio, SIGNAL(toggled(bool)),
             widgets.snrSpeechLine, SLOT(setEnabled(bool)));
     connect(widgets.snrNoiseRadio, SIGNAL(toggled(bool)),
             widgets.noiselevelLine, SLOT(setEnabled(bool)));
-    connect(widgets.snrNoiseRadio, SIGNAL(toggled(bool)),
-            widgets.snrNoiseLine, SLOT(setEnabled(bool)));
+    connect(widgets.snrNoiseRadio, SIGNAL(toggled(bool)), widgets.snrNoiseLine,
+            SLOT(setEnabled(bool)));
 
-    //connection to lock the levels
-    connect(widgets.lockLevelsBtn, SIGNAL(clicked()),
-            this, SIGNAL(lockButtonClicked()));
+    // connection to lock the levels
+    connect(widgets.lockLevelsBtn, SIGNAL(clicked()), this,
+            SIGNAL(lockButtonClicked()));
 
-    //update connections
-    connect(widgets.speechlevelLine, SIGNAL(levelChanged(double)),
-            this, SLOT(updateSnr()));
-    connect(widgets.noiselevelLine, SIGNAL(levelChanged(double)),
-            this, SLOT(updateSnr()));
-    connect(widgets.snrSpeechLine, SIGNAL(levelChanged(double)),
-            this, SLOT(updateSnr()));
-    connect(widgets.snrNoiseLine, SIGNAL(levelChanged(double)),
-            this, SLOT(updateSnr()));
+    // update connections
+    connect(widgets.speechlevelLine, SIGNAL(levelChanged(double)), this,
+            SLOT(updateSnr()));
+    connect(widgets.noiselevelLine, SIGNAL(levelChanged(double)), this,
+            SLOT(updateSnr()));
+    connect(widgets.snrSpeechLine, SIGNAL(levelChanged(double)), this,
+            SLOT(updateSnr()));
+    connect(widgets.snrNoiseLine, SIGNAL(levelChanged(double)), this,
+            SLOT(updateSnr()));
 
-    //connections between corresponding level fields
+    // connections between corresponding level fields
     connect(widgets.snrSpeechLine, SIGNAL(levelChanged(double)),
             widgets.snrNoiseLine, SLOT(setLevel(double)));
     connect(widgets.snrNoiseLine, SIGNAL(levelChanged(double)),
@@ -114,12 +112,12 @@ double SnrWidget::calculateNoiselevel(double snr, double speech)
 
 void SnrWidget::updateSnr()
 {
-    //bool is set to true when updating snr. this to prevent this method to be
-    //called when updating (because of the connections)
+    // bool is set to true when updating snr. this to prevent this method to be
+    // called when updating (because of the connections)
     if (updatingSNR)
         return;
 
-    //check if we have enough data
+    // check if we have enough data
     bool enough = (widgets.snrSpeechRadio->isChecked() &&
                    widgets.snrSpeechLine->hasLevel() &&
                    widgets.speechlevelLine->hasLevel()) ||
@@ -130,22 +128,19 @@ void SnrWidget::updateSnr()
     if (!enough)
         return;
 
-    //ok we start updating
+    // ok we start updating
     updatingSNR = true;
 
     double speech, noise, snr;
 
-    if (widgets.snrSpeechRadio->isChecked())
-    {
+    if (widgets.snrSpeechRadio->isChecked()) {
         snr = widgets.snrSpeechLine->level();
         speech = widgets.speechlevelLine->level();
         noise = calculateNoiselevel(snr, speech);
 
         widgets.noiselevelLbl->setLevel(noise);
         widgets.noiselevelLine->setLevel(noise);
-    }
-    else
-    {
+    } else {
         snr = widgets.snrNoiseLine->level();
         noise = widgets.noiselevelLine->level();
         speech = calculateSpeechlevel(snr, noise);
@@ -153,31 +148,12 @@ void SnrWidget::updateSnr()
         widgets.speechlevelLbl->setLevel(speech);
         widgets.speechlevelLine->setLevel(speech);
     }
-/*    qCDebug(APEX_RS, "Setting snr to %f", snr);
-    widgets.snrSpeechLine->setLevel(snr);
-    widgets.snrNoiseLine->setLevel(snr);*/
+    /*    qCDebug(APEX_RS, "Setting snr to %f", snr);
+        widgets.snrSpeechLine->setLevel(snr);
+        widgets.snrNoiseLine->setLevel(snr);*/
 
     Q_EMIT levelsChanged(speech, noise);
 
-    //ok done updating
+    // ok done updating
     updatingSNR = false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -56,48 +56,48 @@ class StimulusControl;
  *
  * @author Tom Francart,,,
  */
-class APEX_EXPORT ApexControl :
-    public QObject
+class APEX_EXPORT ApexControl : public QObject
 {
     Q_OBJECT
 public:
-    ApexControl();
+    ApexControl(bool launchStandalone = false);
     ~ApexControl();
 
     static ApexControl &Get();
 
-    int exec();
-
-    const data::ExperimentData&             GetCurrentExperiment();
-    const ExperimentRunDelegate&  GetCurrentExperimentRunDelegate();
+    const data::ExperimentData &GetCurrentExperiment();
+    const ExperimentRunDelegate &GetCurrentExperimentRunDelegate();
+    const ExperimentControl &getCurrentExperimentControl();
 
     gui::ApexMainWindow *mainWindow();
 
-    QDateTime GetStartTime() const;  //! get time of experiment start
+    QDateTime GetStartTime() const; //! get time of experiment start
 
-    const QString& saveFilename() const;
+    const QString &saveFilename() const;
     bool isExperimentRunning() const;
 
-    public slots:
+public slots:
 
-        void StartUp(); // do one-time initialisations that should not occur in the constructor
+    void StartUp(); // do one-time initialisations that should not occur in the
+                    // constructor
     void StopOutput();
-    void setAutoAnswer(bool);
+    void enableAutoAnswer();
     void ShowStimulus();
     void calibrate();
 
     void fileExit();
-    void fileOpen(const QString& file = QString());
+    void fileOpen(const QString &file = QString());
     void saveExperiment();
     void startPluginRunner();
     void selectSoundcard();
     void createShortcut();
+    void startGdbServer();
 
-    bool newExperiment(data::ExperimentData* data);
+    bool newExperiment(data::ExperimentData *data);
 
     void editApexconfig();
     void showPluginDialog();
-    void errorMessage(const QString& source, const QString& message);
+    void errorMessage(const QString &source, const QString &message);
 
     void setResultsFilePath(QString filename);
 
@@ -106,17 +106,16 @@ private slots:
     void afterExperiment();
 
 private:
-
-    bool configure();         //parse mainconfig xml, configures apex
-    void parseCommandLine();      //parse cmd and load experiment if any
+    bool configure();        // parse mainconfig xml, configures apex
+    void parseCommandLine(); // parse cmd and load experiment if any
     void showStartupDialog();
     void makeModules();
     void deleteModules();
     void setupIo();
 
     QScopedPointer<ExperimentRunner> mod_experimentselector;
-    gui::ApexMainWindow* const m_Wnd;
-    QString mSaveFilename;            // parsed from commandline
+    gui::ApexMainWindow *const m_Wnd;
+    QString mSaveFilename; // parsed from commandline
     ExperimentControl::Flags flags;
 
     QScopedPointer<ExperimentControl> experimentControl;
@@ -132,10 +131,11 @@ private:
     bool noResults;
     bool autoSaveResults;
     bool exitAfter;
+    bool useBertha;
+    bool launchStandalone;
 
     static ApexControl *instance;
 };
-
 }
 
 #endif

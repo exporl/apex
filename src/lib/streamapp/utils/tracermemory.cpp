@@ -25,42 +25,41 @@
 
 using namespace utils;
 
-TracerMemory::TracerMemory( const unsigned ac_nInitSize /* = 1024 */, const unsigned ac_nMaxSize /* = 4096  */ ) :
-  m_Trace( ac_nInitSize ),
-  mv_bDebug( true ),
-  mv_nWritePoint( 0 ),
-  mc_nMaxSize( ac_nMaxSize )
+TracerMemory::TracerMemory(const unsigned ac_nInitSize /* = 1024 */,
+                           const unsigned ac_nMaxSize /* = 4096  */)
+    : m_Trace(ac_nInitSize),
+      mv_bDebug(true),
+      mv_nWritePoint(0),
+      mc_nMaxSize(ac_nMaxSize)
 {
-  Q_ASSERT( ( ac_nMaxSize % 2 ) == 0 );
+    Q_ASSERT((ac_nMaxSize % 2) == 0);
 }
 
 TracerMemory::~TracerMemory()
 {
 }
 
-void TracerMemory::mp_TraceOne( const String& ac_sMessage )
+void TracerMemory::mp_TraceOne(const String &ac_sMessage)
 {
-  const Lock L( mc_Lock );
+    const Lock L(mc_Lock);
 
 #ifdef S_C6X
-  const char* pMess = ac_sMessage;
+    const char *pMess = ac_sMessage;
 #else
-  const char* pMess = ac_sMessage.data();
+    const char *pMess = ac_sMessage.data();
 #endif
 
-  const unsigned nLen = (unsigned) strlen( pMess ) + 1; //don't forget the terminator
+    const unsigned nLen =
+        (unsigned)strlen(pMess) + 1; // don't forget the terminator
 
-  if( mv_nWritePoint + nLen < mc_nMaxSize )
-  {
-    m_Trace.mp_CopyFrom( pMess, mv_nWritePoint, nLen );
-    mv_nWritePoint += nLen;
-  }
-  else
-  {
-    const unsigned nShift = mc_nMaxSize / 2;
-    m_Trace.mp_ShiftDown( nShift, nShift );
-    mv_nWritePoint = nShift;
-    m_Trace.mp_CopyFrom( pMess, mv_nWritePoint, nLen );
-    mv_nWritePoint += nLen;
-  }
+    if (mv_nWritePoint + nLen < mc_nMaxSize) {
+        m_Trace.mp_CopyFrom(pMess, mv_nWritePoint, nLen);
+        mv_nWritePoint += nLen;
+    } else {
+        const unsigned nShift = mc_nMaxSize / 2;
+        m_Trace.mp_ShiftDown(nShift, nShift);
+        mv_nWritePoint = nShift;
+        m_Trace.mp_CopyFrom(pMess, mv_nWritePoint, nLen);
+        mv_nWritePoint += nLen;
+    }
 }

@@ -49,15 +49,15 @@ static QColor sf_SetColor(StatusItem::Level level)
     }
 }
 
-ScreenStatusReporter::ScreenStatusReporter() :
-    reportLevels(StatusItem::AllButDebug),
-    list(new QTreeWidget(this))
+ScreenStatusReporter::ScreenStatusReporter()
+    : reportLevels(StatusItem::AllButDebug), list(new QTreeWidget(this))
 {
     setAttribute(Qt::WA_DeleteOnClose, false);
     setAttribute(Qt::WA_QuitOnClose, false);
 
     list->setColumnCount(3);
-    list->setHeaderLabels(QStringList() << tr("Time") << tr("Source") << tr("Message"));
+    list->setHeaderLabels(QStringList() << tr("Time") << tr("Source")
+                                        << tr("Message"));
     list->setUniformRowHeights(false);
     list->setItemsExpandable(false);
     list->setIndentation(0);
@@ -67,38 +67,44 @@ ScreenStatusReporter::ScreenStatusReporter() :
     list->header()->resizeSection(1, 250);
     list->header()->resizeSection(2, 470);
 
-    QAction* copyAction = new QAction(tr("Copy all messages to clipboard"), this);
+    QAction *copyAction =
+        new QAction(tr("Copy all messages to clipboard"), this);
     connect(copyAction, SIGNAL(triggered()), this, SLOT(copyAllToClipboard()));
-    QShortcut* shortcut = new QShortcut(QKeySequence("Ctrl+C"), this);
-    connect(shortcut, SIGNAL( activated()), this, SLOT(copyAllToClipboard()));
+    QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+C"), this);
+    connect(shortcut, SIGNAL(activated()), this, SLOT(copyAllToClipboard()));
 
-    QAction* copyThisAction = new QAction(tr("Copy selected messages to clipboard"), this);
-    connect(copyThisAction, SIGNAL(triggered()), this, SLOT(copySelectedToClipboard()));
+    QAction *copyThisAction =
+        new QAction(tr("Copy selected messages to clipboard"), this);
+    connect(copyThisAction, SIGNAL(triggered()), this,
+            SLOT(copySelectedToClipboard()));
 
-    QAction* clearAction = new QAction(tr("Clear message window"), this);
+    QAction *clearAction = new QAction(tr("Clear message window"), this);
     connect(clearAction, SIGNAL(triggered()), list, SLOT(clear()));
 
-    QAction* hideWindowAction = new QAction(tr("Hide"), this);
+    QAction *hideWindowAction = new QAction(tr("Hide"), this);
     connect(hideWindowAction, SIGNAL(triggered()), this, SLOT(hide()));
 
-    QMenu* levelsMenu = new QMenu("Reporting Levels", this);
+    QMenu *levelsMenu = new QMenu("Reporting Levels", this);
     warningsAction = new QAction(tr("Warnings"), this);
     warningsAction->setCheckable(true);
     warningsAction->setChecked((reportLevels & StatusItem::Warning) > 0);
     levelsMenu->addAction(warningsAction);
-    connect(warningsAction, SIGNAL(triggered(bool)), this, SLOT(updateLevels()));
+    connect(warningsAction, SIGNAL(triggered(bool)), this,
+            SLOT(updateLevels()));
 
     infoMessagesAction = new QAction(tr("Info messages"), this);
     infoMessagesAction->setCheckable(true);
     infoMessagesAction->setChecked((reportLevels & StatusItem::Info) > 0);
     levelsMenu->addAction(infoMessagesAction);
-    connect(infoMessagesAction, SIGNAL(triggered(bool)), this, SLOT(updateLevels()));
+    connect(infoMessagesAction, SIGNAL(triggered(bool)), this,
+            SLOT(updateLevels()));
 
     debugMessagesAction = new QAction(tr("Debug messages"), this);
     debugMessagesAction->setCheckable(true);
     debugMessagesAction->setChecked((reportLevels & StatusItem::Debug) > 0);
     levelsMenu->addAction(debugMessagesAction);
-    connect(debugMessagesAction, SIGNAL(triggered(bool)), this, SLOT(updateLevels()));
+    connect(debugMessagesAction, SIGNAL(triggered(bool)), this,
+            SLOT(updateLevels()));
 
     QMenu *fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addMenu(levelsMenu);
@@ -121,17 +127,17 @@ ScreenStatusReporter::~ScreenStatusReporter()
 
 void ScreenStatusReporter::addItem(const StatusItem &item)
 {
-    QTreeWidgetItem *treeItem = new QTreeWidgetItem(QStringList()
-            << item.dateTime().time().toString()
-            << item.source()
-            << item.message());
+    QTreeWidgetItem *treeItem =
+        new QTreeWidgetItem(QStringList() << item.dateTime().time().toString()
+                                          << item.source() << item.message());
     for (unsigned i = 0; i < 3; ++i) {
         treeItem->setForeground(i, sf_SetColor(item.level()));
         treeItem->setTextAlignment(i, Qt::AlignTop);
     }
-    treeItem->setData(0, Qt::UserRole, (int) item.level());
+    treeItem->setData(0, Qt::UserRole, (int)item.level());
     treeItem->setData(0, Qt::UserRole + 1, item.dateTime().time().toString() +
-            "\t" + item.source() + "\t" + item.message());
+                                               "\t" + item.source() + "\t" +
+                                               item.message());
 
     list->addTopLevelItem(treeItem);
     treeItem->setHidden((reportLevels & item.level()) == 0);
@@ -145,7 +151,7 @@ void ScreenStatusReporter::addItem(const StatusItem &item)
 void ScreenStatusReporter::copyAllToClipboard()
 {
     QStringList result;
-    for (int i = 0; i< list->topLevelItemCount(); ++i)
+    for (int i = 0; i < list->topLevelItemCount(); ++i)
         result << list->topLevelItem(i)->data(0, Qt::UserRole + 1).toString();
     QApplication::clipboard()->setText(result.join(QL1S("\n")));
 }
@@ -169,9 +175,10 @@ void ScreenStatusReporter::updateLevels()
     if (debugMessagesAction->isChecked())
         reportLevels |= StatusItem::Debug;
 
-    for (int i = 0; i< list->topLevelItemCount(); ++i) {
+    for (int i = 0; i < list->topLevelItemCount(); ++i) {
         QTreeWidgetItem *item = list->topLevelItem(i);
-        StatusItem::Level level = (StatusItem::Level) item->data(0, Qt::UserRole).toInt();
+        StatusItem::Level level =
+            (StatusItem::Level)item->data(0, Qt::UserRole).toInt();
         item->setHidden((reportLevels & level) == 0);
     }
 }

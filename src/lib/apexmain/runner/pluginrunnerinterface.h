@@ -20,8 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_RUNNER_PLUGINRUNNERINTERFACE_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_RUNNER_PLUGINRUNNERINTERFACE_H_
 
-#include <QtPlugin>
 #include <QPushButton>
+#include <QtPlugin>
 
 /** @file
  * Plugin Runner interface for APEX.
@@ -30,9 +30,7 @@
 class PluginRunnerInterface
 {
 public:
-    PluginRunnerInterface(const QString &text) :
-        btnText(text),
-        btn(text)
+    PluginRunnerInterface(const QString &text) : btnText(text), btn(text)
     {
     }
 
@@ -52,7 +50,7 @@ public:
      * Return QPushButton that can be shown on screen to start the
      * pluginrunner
      */
-    virtual QPushButton* getButton()
+    virtual QPushButton *getButton()
     {
         return &btn;
     }
@@ -69,7 +67,6 @@ private:
     const QString btnText;
     QPushButton btn;
 };
-
 
 /** Plugin Runner creator interface. Each Runner library has to implement the
  * abstract functions in this class. It contains a list of all available plugins

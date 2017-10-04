@@ -1,5 +1,5 @@
 #!/bin/bash -e
-cd "$(dirname ${BASH_SOURCE[0]})/.."
+cd "$(dirname $(readlink -f ${BASH_SOURCE[0]}))/.."
 
 git submodule update --force --init --remote common
 common/tools/jenkins-linux-git-setup.sh

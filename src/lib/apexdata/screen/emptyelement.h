@@ -20,8 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_EMPTYELEMENT_H_
 #define _EXPORL_SRC_LIB_APEXDATA_SCREEN_EMPTYELEMENT_H_
 
-#include "screenelement.h"
 #include "apextools/apextypedefs.h"
+#include "screenelement.h"
 
 #include "apextools/global.h"
 
@@ -35,20 +35,18 @@ using gui::ScreenElementMap;
  * The EmptyElement is an implementation of a \ref ScreenElement
  * representing an empty place in a screen.
  */
-class APEXDATA_EXPORT EmptyElement
-            : public ScreenElement
+class APEXDATA_EXPORT EmptyElement : public ScreenElement
 {
-    public:
-        EmptyElement(const QString& id, ScreenElement* parent);
+public:
+    EmptyElement(const QString &id, ScreenElement *parent);
 
-        static QString findFreeID(const ScreenElementMap& takenIDs);
+    static QString findFreeID(const ScreenElementMap &takenIDs);
 
-        ElementTypeT elementType() const;
+    ElementTypeT elementType() const;
 
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 };
-
 }
 }
 #endif

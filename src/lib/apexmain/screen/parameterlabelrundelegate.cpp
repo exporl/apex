@@ -39,46 +39,38 @@ namespace apex
 namespace rundelegates
 {
 
-
 ParameterLabelRunDelegate::ParameterLabelRunDelegate(
-    ExperimentRunDelegate* p_exprd,
-    QWidget* parent, const ParameterLabelElement* e, const QFont& defaultFont ) :
-        LabelRunDelegateBase( p_exprd, parent, e, defaultFont ), element( e )
+    ExperimentRunDelegate *p_exprd, QWidget *parent,
+    const ParameterLabelElement *e, const QFont &defaultFont)
+    : LabelRunDelegateBase(p_exprd, parent, e, defaultFont), element(e)
 {
-    ParameterManager* mgr = p_exprd->GetParameterManager();
+    ParameterManager *mgr = p_exprd->GetParameterManager();
     setText(mgr->parameterValue(element->getParameter().id).toString());
 
-    connect(mgr, SIGNAL(parameterChanged(QString, QVariant)),
-            this, SLOT(updateParameter(QString, QVariant)));
+    connect(mgr, SIGNAL(parameterChanged(QString, QVariant)), this,
+            SLOT(updateParameter(QString, QVariant)));
 }
 
-
-
-const ScreenElement* ParameterLabelRunDelegate::getScreenElement() const
+const ScreenElement *ParameterLabelRunDelegate::getScreenElement() const
 {
     return element;
 }
 
-
-void ParameterLabelRunDelegate::connectSlots(gui::ScreenRunDelegate*)
+void ParameterLabelRunDelegate::connectSlots(gui::ScreenRunDelegate *)
 {
 }
 
-void ParameterLabelRunDelegate::updateParameter(const QString& id,
-                                                const QVariant& value)
+void ParameterLabelRunDelegate::updateParameter(const QString &id,
+                                                const QVariant &value)
 {
     if (id == element->getParameter().id) {
         setText(value.toString());
     }
 }
 
-void ParameterLabelRunDelegate::setEnabled( const bool e)
+void ParameterLabelRunDelegate::setEnabled(const bool e)
 {
-    QLabel::setEnabled( e );
-}
-
-
-
+    QLabel::setEnabled(e);
 }
 }
-
+}

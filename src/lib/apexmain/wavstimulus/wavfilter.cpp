@@ -40,80 +40,93 @@ using namespace appcore;
 using namespace apex;
 using namespace apex::stimulus;
 
-//!WavFilter
+//! WavFilter
 
-void WavFilter::SetBlockSize( unsigned bs )
+void WavFilter::SetBlockSize(unsigned bs)
 {
-        blockSize = bs;
+    blockSize = bs;
 }
 
 unsigned WavFilter::GetBlockSize()
 {
-        return blockSize;
+    return blockSize;
 }
 
-void WavFilter::SetSampleRate( unsigned long sr )
+void WavFilter::SetSampleRate(unsigned long sr)
 {
-        sampleRate = sr;
+    sampleRate = sr;
 }
 
 unsigned long WavFilter::GetSampleRate()
 {
-        return sampleRate;
+    return sampleRate;
 }
 
-//!WavAmplifier
-WavAmplifier::WavAmplifier ( const QString& ac_sID,
-                             data::FilterData* const ac_pParams,
-                             unsigned long sr, unsigned bs ) :
-                WavFilter ( ac_sID, ac_pParams, sr, bs )
+bool WavFilter::SetParameter(const QString &type, const int channel,
+                             const QVariant &value)
 {
-        data::WavFilterParameters* params = ( data::WavFilterParameters* ) ac_pParams;
-        m_StrProc = new Amplifier ( params->numberOfChannels(), GetBlockSize(), false );
+    Q_UNUSED(type);
+    Q_UNUSED(channel);
+    Q_UNUSED(value);
+    return true;
+}
 
-        RestoreParameters();
+bool WavFilter::mf_bIsRealFilter() const
+{
+    return false;
+}
+
+//! WavAmplifier
+WavAmplifier::WavAmplifier(const QString &ac_sID,
+                           data::FilterData *const ac_pParams, unsigned long sr,
+                           unsigned bs)
+    : WavFilter(ac_sID, ac_pParams, sr, bs)
+{
+    data::WavFilterParameters *params = (data::WavFilterParameters *)ac_pParams;
+    m_StrProc =
+        new Amplifier(params->numberOfChannels(), GetBlockSize(), false);
+
+    RestoreParameters();
 }
 
 WavAmplifier::~WavAmplifier()
 {
 }
 
-bool  WavAmplifier::SetParameter( const QString& type, const int channel, const QVariant& value )
+bool WavAmplifier::SetParameter(const QString &type, const int channel,
+                                const QVariant &value)
 {
-  if( type == "gain" )
-  {
-    const double dGain = ((data::WavFilterParameters*)m_Params)->baseGain() +
-        (((data::WavFilterParameters*)m_Params)->invertGain() ? -value.toDouble() : +value.toDouble());
+    if (type == "gain") {
+        const double dGain =
+            ((data::WavFilterParameters *)m_Params)->baseGain() +
+            (((data::WavFilterParameters *)m_Params)->invertGain()
+                 ? -value.toDouble()
+                 : +value.toDouble());
 
-//#ifdef PRINTWAVFILTER
-    qCDebug(APEX_RS, "new gain value for %s: %f", qPrintable (GetID()), dGain);
-//#endif
+        //#ifdef PRINTWAVFILTER
+        qCDebug(APEX_RS, "new gain value for %s: %f", qPrintable(GetID()),
+                dGain);
+        //#endif
 
+        if (channel != -1)
+            m_StrProc->mp_SetGain(channel, dGain);
+        else
+            m_StrProc->mp_SetGain(dGain);
 
-    if( channel != -1 )
-      m_StrProc->mp_SetGain( channel, dGain );
-    else
-      m_StrProc->mp_SetGain( dGain );
-
-    mp_NeedRestore();
-    return true;
-  }
-  return false;
+        mp_NeedRestore();
+        return true;
+    }
+    return false;
 }
 
-void WavAmplifier::Reset() {
-//    qCDebug(APEX_RS, "resetting gain for %s to %f", qPrintable (GetID()), 0.0);
-    m_StrProc->mp_SetGain( 0 );
-}
-
-
-IStreamProcessor* WavAmplifier::GetStrProc() const
+void WavAmplifier::Reset()
 {
-  return m_StrProc;
+    //    qCDebug(APEX_RS, "resetting gain for %s to %f", qPrintable (GetID()),
+    //    0.0);
+    m_StrProc->mp_SetGain(0);
 }
 
-
-
-
-
-
+IStreamProcessor *WavAmplifier::GetStrProc() const
+{
+    return m_StrProc;
+}

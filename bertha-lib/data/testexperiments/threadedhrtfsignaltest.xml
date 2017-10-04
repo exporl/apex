@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bertha:experiment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/bertha/1.0/experiment ../schema/experiment.xsd"
+    xmlns:bertha="http://med.kuleuven.be/exporl/bertha/1.0/experiment">
+    <blocks>
+        <block id="hrtfSignal">
+            <plugin>ThreadedFirFilter</plugin>
+            <parameter name="filePath">../testdata/freedome_hrtf_GHB_0_5s_0deg_16000Hz_right.bin</parameter>
+        </block>
+    </blocks>
+    <connections>
+        <connection>
+            <from id="device1" port="capture-1"/>
+            <to id="hrtfSignal" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="hrtfSignal" port="output-1"/>
+            <to id="device1" port="playback-1"/>
+        </connection>
+        <connection>
+            <from id="hrtfSignal" port="output-2"/>
+            <to id="device1" port="playback-2"/>
+        </connection>
+    </connections>
+    <device id="device1">
+        <driver>Files</driver>
+        <samplerate>16000</samplerate>
+        <blocksize>8192</blocksize>
+        <playbackports>2</playbackports>
+        <captureports>1</captureports>
+        <parameter name="inputFiles">"../../../bertha-lib/data/testdata/man001.wav"</parameter>
+        <parameter name="outputFiles">"../testdata/output_ch1.wav","../testdata/output_ch2.wav"</parameter>
+    </device>
+</bertha:experiment>

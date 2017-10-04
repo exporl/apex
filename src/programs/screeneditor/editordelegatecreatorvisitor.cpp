@@ -34,82 +34,83 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    EditorDelegateCreatorVisitor::EditorDelegateCreatorVisitor(
-      QWidget* p, ScreenWidget* w, elementToDelegateMapT& etdm )
-      : parent( p ), widget( w ), lastcreated( 0 ), elementToDelegateMap( etdm )
-    {
-    }
-
-    ScreenElementEditorDelegate* EditorDelegateCreatorVisitor::createEditorDelegate(
-      ScreenElement* e )
-    {
-      e->visit( this );
-      ScreenElementEditorDelegate* ret = lastcreated;
-      lastcreated = 0;
-      elementToDelegateMap[e] = ret;
-      return ret;
-    }
-
-    EditorDelegateCreatorVisitor::~EditorDelegateCreatorVisitor()
-    {
-    }
-
-    void EditorDelegateCreatorVisitor::visitAnswerLabel( AnswerLabelElement* e )
-    {
-      lastcreated = new AnswerLabelEditorDelegate( e, parent, widget );
-    }
-
-    void EditorDelegateCreatorVisitor::visitArcLayout( ArcLayoutElement* e)
-    {
-      lastcreated = new ArcLayoutEditorDelegate( e, parent, widget, elementToDelegateMap );
-    }
-
-    void EditorDelegateCreatorVisitor::visitButton( ButtonElement* e )
-    {
-      lastcreated = new ButtonEditorDelegate( e, parent, widget );
-    }
-
-    void EditorDelegateCreatorVisitor::visitEmpty( EmptyElement* e )
-    {
-      lastcreated = new EmptyElementEditorDelegate( e, parent, widget );
-    }
-
-    void EditorDelegateCreatorVisitor::visitFlashPlayer( FlashPlayerElement* e )
-    {
-      lastcreated = new FlashPlayerEditorDelegate( e, parent, widget );
-    }
-
-    void EditorDelegateCreatorVisitor::visitGridLayout( GridLayoutElement* e )
-    {
-      lastcreated = new GridLayoutEditorDelegate( e, parent, widget, elementToDelegateMap );
-    }
-
-    void EditorDelegateCreatorVisitor::visitLabel( LabelElement* e )
-    {
-      lastcreated = new LabelEditorDelegate( e, parent, widget );
-    }
-
-    void EditorDelegateCreatorVisitor::visitParameterList( ParameterListElement* e )
-    {
-      lastcreated = new ParameterListEditorDelegate( e, parent, widget );
-    }
-
-    void EditorDelegateCreatorVisitor::visitPicture( PictureElement* e )
-    {
-      lastcreated = new PictureEditorDelegate( e, parent, widget );
-    }
-
-    void EditorDelegateCreatorVisitor::visitPictureLabel( PictureLabelElement* e )
-    {
-      lastcreated = new PictureLabelEditorDelegate( e, parent, widget );
-    }
-
-    void EditorDelegateCreatorVisitor::visitTextEdit( TextEditElement* e )
-    {
-      lastcreated = new TextEditEditorDelegate( e, parent, widget );
-    }
-  }
+namespace editor
+{
+EditorDelegateCreatorVisitor::EditorDelegateCreatorVisitor(
+    QWidget *p, ScreenWidget *w, elementToDelegateMapT &etdm)
+    : parent(p), widget(w), lastcreated(0), elementToDelegateMap(etdm)
+{
 }
 
+ScreenElementEditorDelegate *
+EditorDelegateCreatorVisitor::createEditorDelegate(ScreenElement *e)
+{
+    e->visit(this);
+    ScreenElementEditorDelegate *ret = lastcreated;
+    lastcreated = 0;
+    elementToDelegateMap[e] = ret;
+    return ret;
+}
+
+EditorDelegateCreatorVisitor::~EditorDelegateCreatorVisitor()
+{
+}
+
+void EditorDelegateCreatorVisitor::visitAnswerLabel(AnswerLabelElement *e)
+{
+    lastcreated = new AnswerLabelEditorDelegate(e, parent, widget);
+}
+
+void EditorDelegateCreatorVisitor::visitArcLayout(ArcLayoutElement *e)
+{
+    lastcreated =
+        new ArcLayoutEditorDelegate(e, parent, widget, elementToDelegateMap);
+}
+
+void EditorDelegateCreatorVisitor::visitButton(ButtonElement *e)
+{
+    lastcreated = new ButtonEditorDelegate(e, parent, widget);
+}
+
+void EditorDelegateCreatorVisitor::visitEmpty(EmptyElement *e)
+{
+    lastcreated = new EmptyElementEditorDelegate(e, parent, widget);
+}
+
+void EditorDelegateCreatorVisitor::visitFlashPlayer(FlashPlayerElement *e)
+{
+    lastcreated = new FlashPlayerEditorDelegate(e, parent, widget);
+}
+
+void EditorDelegateCreatorVisitor::visitGridLayout(GridLayoutElement *e)
+{
+    lastcreated =
+        new GridLayoutEditorDelegate(e, parent, widget, elementToDelegateMap);
+}
+
+void EditorDelegateCreatorVisitor::visitLabel(LabelElement *e)
+{
+    lastcreated = new LabelEditorDelegate(e, parent, widget);
+}
+
+void EditorDelegateCreatorVisitor::visitParameterList(ParameterListElement *e)
+{
+    lastcreated = new ParameterListEditorDelegate(e, parent, widget);
+}
+
+void EditorDelegateCreatorVisitor::visitPicture(PictureElement *e)
+{
+    lastcreated = new PictureEditorDelegate(e, parent, widget);
+}
+
+void EditorDelegateCreatorVisitor::visitPictureLabel(PictureLabelElement *e)
+{
+    lastcreated = new PictureLabelEditorDelegate(e, parent, widget);
+}
+
+void EditorDelegateCreatorVisitor::visitTextEdit(TextEditElement *e)
+{
+    lastcreated = new TextEditEditorDelegate(e, parent, widget);
+}
+}
+}

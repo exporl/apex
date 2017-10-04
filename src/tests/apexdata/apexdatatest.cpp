@@ -31,12 +31,18 @@
 #include "apextools/apextools.h"
 #include "apextools/random.h"
 
+#include "common/debug.h"
 #include "common/testutils.h"
 
 #include "apexdatatest.h"
 
 using namespace apex;
 using namespace apex::data;
+
+void ApexDataTest::initTestCase()
+{
+    cmn::enableCoreDumps(QCoreApplication::applicationFilePath());
+}
 
 void ApexDataTest::testSimpleParameters()
 {
@@ -45,32 +51,32 @@ void ApexDataTest::testSimpleParameters()
     TEST_COPY(SimpleParameters);
 
     {
-    SimpleParameters params;
-    Parameter param0("", "foo", 0, 0, false);
-    params.addParameter(param0);
-    Parameter param1("", "foo", 0, 1, false);
-    params.addParameter(param1);
-    EXPECT_EXCEPTION(params.valueByType("foo"));
+        SimpleParameters params;
+        Parameter param0("", "foo", 0, 0, false);
+        params.addParameter(param0);
+        Parameter param1("", "foo", 0, 1, false);
+        params.addParameter(param1);
+        EXPECT_EXCEPTION(params.valueByType("foo"));
 
-    params.setId("job");
-    Q_FOREACH (Parameter param, params.parameters())
-    {
-        QVERIFY2(param.owner() == "job", "SimpleParameters::setId did not set "
-                                         "the owner of all parameters");
-    }
+        params.setId("job");
+        Q_FOREACH (Parameter param, params.parameters()) {
+            QVERIFY2(param.owner() == "job",
+                     "SimpleParameters::setId did not set "
+                     "the owner of all parameters");
+        }
     }
 
     {
-    SimpleParameters params;
-    Parameter param0("", "foo", 0, 0, false);
-    params.addParameter(param0);
-    QCOMPARE(params.valueByType("foo").toInt(), 0);
-    Parameter param1("", "foo", 1, NO_CHANNEL, false);
-    params.addParameter(param1); //this should replace param0
-    QCOMPARE(params.valueByType("foo").toInt(), 1);
-    Parameter param2("", "foo", 2, 2, false);
-    params.addParameter(param2); //and this should replace param1
-    QCOMPARE(params.valueByType("foo").toInt(), 2);
+        SimpleParameters params;
+        Parameter param0("", "foo", 0, 0, false);
+        params.addParameter(param0);
+        QCOMPARE(params.valueByType("foo").toInt(), 0);
+        Parameter param1("", "foo", 1, NO_CHANNEL, false);
+        params.addParameter(param1); // this should replace param0
+        QCOMPARE(params.valueByType("foo").toInt(), 1);
+        Parameter param2("", "foo", 2, 2, false);
+        params.addParameter(param2); // and this should replace param1
+        QCOMPARE(params.valueByType("foo").toInt(), 2);
     }
 
     TEST_EXCEPTIONS_CATCH
@@ -85,7 +91,7 @@ void ApexDataTest::testDatablockData()
     TEST_EXCEPTIONS_CATCH
 }
 
-void ApexDataTest::initDatablockData(DatablockData* data)
+void ApexDataTest::initDatablockData(DatablockData *data)
 {
     data->setDescription("dummy description");
     data->setDirectData("Some Direct DATA");
@@ -107,7 +113,7 @@ void ApexDataTest::testCalibrationParameterData()
 
     Random rand;
 
-    //test the non-standard ctor
+    // test the non-standard ctor
     double minimumParameter = rand.nextDouble();
     double maximumParameter = rand.nextDouble();
     double defaultParameter = rand.nextDouble();
@@ -115,12 +121,9 @@ void ApexDataTest::testCalibrationParameterData()
     double defaultTargetAmplitude = rand.nextDouble();
     double finalTargetAmplitude = rand.nextDouble();
 
-    CalibrationParameterData data(minimumParameter,
-                                  maximumParameter,
-                                  defaultParameter,
-                                  muteParameter,
-                                  defaultTargetAmplitude,
-                                  finalTargetAmplitude);
+    CalibrationParameterData data(minimumParameter, maximumParameter,
+                                  defaultParameter, muteParameter,
+                                  defaultTargetAmplitude, finalTargetAmplitude);
 
     QCOMPARE(data.minimumParameter(), minimumParameter);
     QCOMPARE(data.maximumParameter(), maximumParameter);
@@ -141,7 +144,7 @@ void ApexDataTest::testConnectionData()
     TEST_EXCEPTIONS_CATCH
 }
 
-void ApexDataTest::initConnectionData(ConnectionData* data)
+void ApexDataTest::initConnectionData(ConnectionData *data)
 {
     data->setMatchType(MATCH_REGEXP);
     data->setDevice("dummy");
@@ -158,7 +161,7 @@ void ApexDataTest::testCorrectorData()
     TEST_EXCEPTIONS_CATCH
 }
 
-void ApexDataTest::initCorrectorData(apex::data::CorrectorData* data)
+void ApexDataTest::initCorrectorData(apex::data::CorrectorData *data)
 {
     data->setLanguage(CorrectorData::ENGLISH);
 }
@@ -169,16 +172,16 @@ void ApexDataTest::testApexMap()
 
     TEST_COPY(ApexMap);
 
-    //test for isComplete. should return true if electrodes 1..22 are mapped
-    //and throw an exception otherwise
-    //insert electrodes 1..21
+    // test for isComplete. should return true if electrodes 1..22 are mapped
+    // and throw an exception otherwise
+    // insert electrodes 1..21
     ApexMap map;
     for (int i = 1; i <= 21; i++)
         map.insert(i, ChannelMap());
 
     EXPECT_EXCEPTION(map.isComplete());
 
-    //insert the last electrode to make the map complete
+    // insert the last electrode to make the map complete
     map.insert(22, ChannelMap());
     QVERIFY(map.isComplete());
 
@@ -233,11 +236,16 @@ void ApexDataTest::testSoundLevelMeterDataSupported_data()
     QTest::addColumn<double>("percentile");
     QTest::addColumn<int>("time");
 
-    QTest::newRow("good1") << "z" << "s" << "rms"  << 0.0 << 1;
-    QTest::newRow("good2") << "a" << "f" << "rms"  << 1.0 << 10;
-    QTest::newRow("good3") << "c" << "i" << "peak" << 0.5 << 9999;
+    QTest::newRow("good1") << "z"
+                           << "s"
+                           << "rms" << 0.0 << 1;
+    QTest::newRow("good2") << "a"
+                           << "f"
+                           << "rms" << 1.0 << 10;
+    QTest::newRow("good3") << "c"
+                           << "i"
+                           << "peak" << 0.5 << 9999;
 }
-
 
 void ApexDataTest::testSoundLevelMeterDataUnsupported()
 {
@@ -261,7 +269,6 @@ void ApexDataTest::testSoundLevelMeterDataUnsupported()
     TEST_EXCEPTIONS_CATCH
 }
 
-
 void ApexDataTest::testSoundLevelMeterDataUnsupported_data()
 {
     QTest::addColumn<QString>("frequency_weighting");
@@ -270,14 +277,28 @@ void ApexDataTest::testSoundLevelMeterDataUnsupported_data()
     QTest::addColumn<double>("percentile");
     QTest::addColumn<int>("time");
 
-    QTest::newRow("bad fw")    << "f" << "s" << "rms"  << 0.0  << 1;
-    QTest::newRow("bad tw")    << "a" << "t" << "rms"  << 1.0  << 10;
-    QTest::newRow("bad type")  << "c" << "i" << "type" << 0.5  << 9999;
-    QTest::newRow("bad perc")  << "z" << "s" << "rms"  << 1.1  << 1;
-    QTest::newRow("bad perc2") << "z" << "s" << "rms"  << -0.9 << 1;
-    QTest::newRow("bad time")  << "z" << "s" << "rms"  << 0.0  << -1;
-    QTest::newRow("bad time2") << "z" << "s" << "rms"  << 0.0  << 0;
+    QTest::newRow("bad fw") << "f"
+                            << "s"
+                            << "rms" << 0.0 << 1;
+    QTest::newRow("bad tw") << "a"
+                            << "t"
+                            << "rms" << 1.0 << 10;
+    QTest::newRow("bad type") << "c"
+                              << "i"
+                              << "type" << 0.5 << 9999;
+    QTest::newRow("bad perc") << "z"
+                              << "s"
+                              << "rms" << 1.1 << 1;
+    QTest::newRow("bad perc2") << "z"
+                               << "s"
+                               << "rms" << -0.9 << 1;
+    QTest::newRow("bad time") << "z"
+                              << "s"
+                              << "rms" << 0.0 << -1;
+    QTest::newRow("bad time2") << "z"
+                               << "s"
+                               << "rms" << 0.0 << 0;
 }
 
-//generate standalone binary for the test
+// generate standalone binary for the test
 QTEST_MAIN(ApexDataTest)

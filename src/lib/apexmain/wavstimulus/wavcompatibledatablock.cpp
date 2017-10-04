@@ -35,22 +35,22 @@ using namespace apex;
 using namespace stimulus;
 using namespace streamapp;
 
-WavCompatibleDataBlock::WavCompatibleDataBlock(const data::DatablockData& data,
-                                               const QString& filename,
-                                               const ExperimentRunDelegate* experiment) :
-    DataBlock(data, filename, experiment)
+WavCompatibleDataBlock::WavCompatibleDataBlock(
+    const data::DatablockData &data, const QString &filename,
+    const ExperimentRunDelegate *experiment)
+    : DataBlock(data, filename, experiment)
 {
 }
 
-WavCompatibleDataBlock::~WavCompatibleDataBlock() {}
-
-void WavCompatibleDataBlock::SetParameter( const QString& ac_sID, const QString& ac_sVal )
+WavCompatibleDataBlock::~WavCompatibleDataBlock()
 {
-  if( ac_sID == "loop" )
-    this->data.setNbLoops(ac_sVal.toUInt());
-  else
-    DataBlock::SetParameter( ac_sID, ac_sVal );
 }
 
-
-
+void WavCompatibleDataBlock::SetParameter(const QString &ac_sID,
+                                          const QString &ac_sVal)
+{
+    if (ac_sID == "loop")
+        this->data.setNbLoops(ac_sVal.toUInt());
+    else
+        DataBlock::SetParameter(ac_sID, ac_sVal);
+}

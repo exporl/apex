@@ -8,7 +8,7 @@
 #   make install
 #   make deploy
 
-cd "$(dirname ${BASH_SOURCE[0]})/.."
+cd "$(dirname $(readlink -f ${BASH_SOURCE[0]}))/.."
 
 ROOTDIR=$(pwd)
 APIDIR=$ROOTDIR/.build/api-android
@@ -21,6 +21,7 @@ BUILD_APK=false
 BUILD_TYPE=armv7
 ANDROID_PLATFORM=android-14
 JOBS=1
+VERSION_CODE=$(git show -s --format="%ct" HEAD)
 
 parsecmd() {
     while [ $# -gt 0 ]; do
@@ -64,6 +65,11 @@ parsecmd() {
             JOBS=$2
             shift
             ;;
+        -vc|--version-code) #
+            # specifies the version code, should be a natural number
+            VERSION_CODE=$2
+            shift
+            ;;
         -h|--help) #
             # this help
             echo "Usage: $0 [OPTION]..."
@@ -82,6 +88,11 @@ parsecmd() {
 }
 
 parsecmd "$@"
+
+if [[ ! $VERSION_CODE =~ ^-?[0-9]+$ ]]; then
+    echo "Version code $VERSION_CODE is not a natural number"
+    exit 1
+fi
 
 if [ "$CLEAN" = "true" ]; then
     rm -rf .build/android-$DEBUGRELEASE .build/android-$DEBUGRELEASE-installed bin/android-$DEBUGRELEASE
@@ -116,7 +127,11 @@ for i in $ROOTDIR/*/tests/*/*.pro; do
         | sed "s/-- %%INSERT_TEST_NAME%% --/${TARGET}/g;s/-- %%INSERT_TEST_ACTIVITY%% --/${TARGET^}Activity/g" \
         | sed ':a;N;$!ba;s/\n/\\n/g')"
 done
+
+APEX_SCHEMA_VERSION=$(cat "$ROOTDIR/src/lib/apextools/version.h" | grep '#define APEX_SCHEMA_VERSION' | cut -f 3 -d ' ' | sed 's/"//g')
 sed "s#-- %%INSERT_TEST_TEMPLATES%% --#$MANIFEST_TESTS#" "$ROOTDIR/tools/android-template/AndroidManifest.xml.in" \
+    | sed "s#-- %%INSERT_VERSION_NAME%% --#$APEX_SCHEMA_VERSION#" \
+    | sed "s#-- %%INSERT_VERSION_CODE%% --#$VERSION_CODE#" \
     > "$ROOTDIR/.build/android-$DEBUGRELEASE/template/AndroidManifest.xml"
 
 cp -r $ROOTDIR/src/java/* $ROOTDIR/.build/android-$DEBUGRELEASE/template/src/be/kuleuven/med/exporl/apex/
@@ -130,7 +145,7 @@ $QT_ROOT/bin/qmake -spec android-g++ $QMAKEARGS \
                     "QT_CONFIG -= no-pkg-config" \
                     "INCLUDEPATH += $CURRENT_PREFIX/include $QT_ROOT/include" \
                     "LIBS += -L$CURRENT_PREFIX/lib -L$QT_ROOT/lib" \
-                    "ANDROID_EXTRA_LIBS += $CURRENT_PREFIX/lib/libprotobuf-lite.so $CURRENT_PREFIX/lib/libxml2.so $CURRENT_PREFIX/lib/libportaudio.so $ROOTDIR/bin/android-$DEBUGRELEASE/libapexmain.so" \
+                    "ANDROID_EXTRA_LIBS += $CURRENT_PREFIX/lib/libprotobuf-lite.so $CURRENT_PREFIX/lib/libxml2.so $CURRENT_PREFIX/lib/libportaudio.so $CURRENT_PREFIX/lib/libsndfile.so $CURRENT_PREFIX/lib/libfftw3f.so $CURRENT_PREFIX/lib/libfftw3.so $ROOTDIR/bin/android-$DEBUGRELEASE/libapexmain.so $CURRENT_PREFIX/lib/libgit2.so" \
                     "ANDROID_PACKAGE_SOURCE_DIR=$ROOTDIR/.build/android-$DEBUGRELEASE/template"
 make -j "$JOBS" qmake_all
 make -j "$JOBS"

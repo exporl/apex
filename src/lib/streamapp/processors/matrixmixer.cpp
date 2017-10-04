@@ -23,28 +23,26 @@ using namespace streamapp;
 
 tStringVector MatrixMixer::mf_PrintMatrix() const
 {
-  const unsigned nIChan = mf_nGetNumInputChannels();
-  const unsigned nOChan = mf_nGetNumOutputChannels();
+    const unsigned nIChan = mf_nGetNumInputChannels();
+    const unsigned nOChan = mf_nGetNumOutputChannels();
 
-  tStringVector ret;
-  std::string tempLine( "__| " );
-  for( unsigned i = 0 ; i < nOChan ; ++i )
-    tempLine.append( toString( i ) + " " );
-  ret.push_back( tempLine + "\n" );
+    tStringVector ret;
+    std::string tempLine("__| ");
+    for (unsigned i = 0; i < nOChan; ++i)
+        tempLine.append(toString(i) + " ");
+    ret.push_back(tempLine + "\n");
 
-  for( unsigned i = 0 ; i < nIChan ; ++i )
-  {
-    tempLine.clear();
-    tempLine.append( toString( i ) + " | " );
-    for( unsigned j = 0 ; j < nOChan ; ++j )
-    {
-      const double d = mf_dGetMatrixNode( i, j );
-      if( d == sc_dMixerMin )
-        tempLine.append( "x " );
-      else
-        tempLine.append( toString( mf_dGetMatrixNode( i, j ) ) + " " );
+    for (unsigned i = 0; i < nIChan; ++i) {
+        tempLine.clear();
+        tempLine.append(toString(i) + " | ");
+        for (unsigned j = 0; j < nOChan; ++j) {
+            const double d = mf_dGetMatrixNode(i, j);
+            if (d == sc_dMixerMin)
+                tempLine.append("x ");
+            else
+                tempLine.append(toString(mf_dGetMatrixNode(i, j)) + " ");
+        }
+        ret.push_back(tempLine + "\n");
     }
-    ret.push_back( tempLine + "\n" );
-  }
-  return ret;
+    return ret;
 }

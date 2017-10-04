@@ -34,7 +34,8 @@
 
 S_NAMESPACE_BEGIN
 
-/*bool win32::automation::gf_bCLSIDToProgID( const CLSID& ac_ID, String& a_sProgID )// s_no_throw
+/*bool win32::automation::gf_bCLSIDToProgID( const CLSID& ac_ID, String&
+a_sProgID )// s_no_throw
 {
   LPOLESTR p;
   if( ProgIDFromCLSID( ac_ID, &p ) == S_OK )
@@ -42,7 +43,8 @@ S_NAMESPACE_BEGIN
   return false;
 }*/
 
-/*bool win32::automation::gf_bProgIDToCLSID( const char* ac_psProgID, CLSID& a_ID ) s_no_throw
+/*bool win32::automation::gf_bProgIDToCLSID( const char* ac_psProgID, CLSID&
+a_ID ) s_no_throw
 {
   LPOLESTR p = 0;
   if( wchars::gf_bCharToWChar( ac_psProgID, p ) )

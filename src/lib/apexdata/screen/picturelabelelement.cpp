@@ -26,8 +26,9 @@ namespace apex
 namespace data
 {
 
-PictureLabelElement::PictureLabelElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent )
+PictureLabelElement::PictureLabelElement(const QString &id,
+                                         ScreenElement *parent)
+    : ScreenElement(id, parent)
 {
 }
 
@@ -35,12 +36,12 @@ PictureLabelElement::~PictureLabelElement()
 {
 }
 
-void PictureLabelElement::setPicture( const QString& p )
+void PictureLabelElement::setPicture(const QString &p)
 {
     picturePath = p;
 }
 
-void PictureLabelElement::setPictureDisabled( const QString& p )
+void PictureLabelElement::setPictureDisabled(const QString &p)
 {
     pictureDisabledPath = p;
 }
@@ -55,14 +56,14 @@ QString PictureLabelElement::getPictureDisabled() const
     return pictureDisabledPath;
 }
 
-void PictureLabelElement::visit( ScreenElementVisitor* v )
+void PictureLabelElement::visit(ScreenElementVisitor *v)
 {
-    v->visitPictureLabel( this );
+    v->visitPictureLabel(this);
 }
 
-void PictureLabelElement::visit( ScreenElementVisitor* v ) const
+void PictureLabelElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitPictureLabel( this );
+    v->visitPictureLabel(this);
 }
 
 ScreenElement::ElementTypeT PictureLabelElement::elementType() const
@@ -70,11 +71,9 @@ ScreenElement::ElementTypeT PictureLabelElement::elementType() const
     return PictureLabel;
 }
 
-bool PictureLabelElement::operator==(const PictureLabelElement& other) const
+bool PictureLabelElement::operator==(const PictureLabelElement &other) const
 {
     return ScreenElement::operator==(other) && picturePath == other.picturePath;
 }
-
 }
 }
-

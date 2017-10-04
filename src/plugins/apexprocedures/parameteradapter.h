@@ -29,63 +29,60 @@ struct ParameterAdapterPrivate;
 
 class ParameterAdapter
 {
-    public:
+public:
+    ParameterAdapter(const data::AdaptiveProcedureData *parameters);
 
-        ParameterAdapter(const data::AdaptiveProcedureData* parameters);
+    ~ParameterAdapter();
 
-        ~ParameterAdapter();
+    /**
+     * Returns the current value of the parameter.
+     */
+    data::adapting_parameter currentParameter() const;
 
-        /**
-         * Returns the current value of the parameter.
-         */
-        data::adapting_parameter currentParameter() const;
+    float currentStepsize() const;
 
-        float currentStepsize() const;
+    /**
+      * Returns true if a reversal occured the previous trial
+      */
+    bool lastReversal() const;
 
-        /**
-          * Returns true if a reversal occured the previous trial
-          */
-        bool lastReversal() const;
+    int nReversals() const;
 
-        int nReversals() const;
+    /**
+     * Updates the current value of the parameter based on the
+     * given answer and the given parameter.
+     *
+     * @param answer        The answer given by the user on the last trial.
+     * @param trialNb       The number of the trial the answer was for.
+     * @param usedParameter The value of the parameter used in the last trial.
+     * @param keepStepSize  Keep the old stepsize (e.g. because this is the
+     *                      first trial, repeatFirstUntilCorrect is true and
+     *                      the answer was false)
+     */
+    void updateParameter(const QVariant &answer, int trialNb,
+                         data::adapting_parameter usedParameter,
+                         bool keepStepSize);
 
-        /**
-         * Updates the current value of the parameter based on the
-         * given answer and the given parameter.
-         *
-         * @param answer        The answer given by the user on the last trial.
-         * @param trialNb       The number of the trial the answer was for.
-         * @param usedParameter The value of the parameter used in the last trial.
-         * @param keepStepSize  Keep the old stepsize (e.g. because this is the
-         *                      first trial, repeatFirstUntilCorrect is true and
-         *                      the answer was false)
-         */
-        void updateParameter(const QVariant& answer,
-                             int trialNb,
-                             data::adapting_parameter usedParameter,
-                             bool keepStepSize);
+    /**
+     * Returns the number of reversals that have already occurred.
+     *
+     * NOTE: This method shouldn't be here since it is specific to the
+     *       current parameter updating strategy.
+     */
+    int numberOfReversals() const;
 
-        /**
-         * Returns the number of reversals that have already occurred.
-         *
-         * NOTE: This method shouldn't be here since it is specific to the
-         *       current parameter updating strategy.
-         */
-        int numberOfReversals() const;
+    /**
+     * Resets the adapter to its original state. Call this when a new
+     * procedure is started.
+     */
+    void reset();
 
-        /**
-         * Resets the adapter to its original state. Call this when a new
-         * procedure is started.
-         */
-        void reset();
+private:
+    void updateStepsize(int trialNb);
 
-    private:
-
-        void updateStepsize(int trialNb);
-
-        ParameterAdapterPrivate* const d;
+    ParameterAdapterPrivate *const d;
 };
 
-} //ns apex
+} // ns apex
 
 #endif

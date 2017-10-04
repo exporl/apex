@@ -22,31 +22,30 @@
 
 #include <QString>
 
-  /**
-    * namespace with system utilities
-    ********************************* */
+/**
+  * namespace with system utilities
+  ********************************* */
 namespace systemutils
 {
 
-    /**
-      * Make a binary copy of a file (without using system calls).
-      * @param ac_sInputFile the file to copy
-      * @param ac_sOutputFile the copy of the file
-      * @return true on succesfull copy
-      */
-  bool f_bCopyFile( const QString &ac_sInputFile, const QString &ac_sOutputFile );
+/**
+  * Make a binary copy of a file (without using system calls).
+  * @param ac_sInputFile the file to copy
+  * @param ac_sOutputFile the copy of the file
+  * @return true on succesfull copy
+  */
+bool f_bCopyFile(const QString &ac_sInputFile, const QString &ac_sOutputFile);
 
-    /**
-      * Check if a file exists.
-      * @return true if the file exists and can be opened for reading
-      */
-  bool f_bFileExists( const QString &ac_sFile );
+/**
+  * Check if a file exists.
+  * @return true if the file exists and can be opened for reading
+  */
+bool f_bFileExists(const QString &ac_sFile);
 
-    /**
-      * Clear an entire file.
-      */
-  bool f_bClearFile( const QString &ac_sFile );
-
+/**
+  * Clear an entire file.
+  */
+bool f_bClearFile(const QString &ac_sFile);
 }
 
 #endif //#ifndef __SYSTEMUTILS_H__

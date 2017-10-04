@@ -38,7 +38,7 @@ class ProcedureParsersParent : public ProcedureParserInterface
 public:
     ProcedureParsersParent();
 
-    void Parse(const QDomElement &p_base, data::ProcedureData* c);
+    void Parse(const QDomElement &p_base, data::ProcedureData *c);
 
 protected:
     /*!
@@ -50,13 +50,11 @@ protected:
     virtual bool trialsValid() = 0;
     virtual void ParseTrials(const QDomElement &p_parent);
 
-    data::ProcedureData* currentConfig;
+    data::ProcedureData *currentConfig;
 
     virtual void SetProcedureParameters(const QDomElement &p_base) = 0;
 };
-
 }
 }
 
 #endif
-

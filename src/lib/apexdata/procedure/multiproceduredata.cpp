@@ -25,8 +25,7 @@
 
 using namespace apex::data;
 
-MultiProcedureData::MultiProcedureData() :
-        ProcedureData()
+MultiProcedureData::MultiProcedureData() : ProcedureData()
 {
 }
 
@@ -41,11 +40,10 @@ MultiProcedureData::Type MultiProcedureData::type() const
 
 QString MultiProcedureData::name() const
 {
-     return QLatin1String("apex:multiProcedure");
+    return QLatin1String("apex:multiProcedure");
 }
 
-
-void MultiProcedureData::addProcedure(ProcedureData* procedure)
+void MultiProcedureData::addProcedure(ProcedureData *procedure)
 {
     m_procedureDatas.push_back(procedure);
 }
@@ -54,7 +52,7 @@ tProcConfigList MultiProcedureData::procedures() const
 {
     tProcConfigList result;
 
-    Q_FOREACH (const ProcedureData* pi, m_procedureDatas) {
+    Q_FOREACH (const ProcedureData *pi, m_procedureDatas) {
         result.push_back(pi);
     }
 

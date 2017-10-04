@@ -22,12 +22,13 @@
 
 #include <qstring.h>
 
-namespace r126{
+namespace r126
+{
 
-    //!R126 Patient Record
-  class R126PatientRecord
-  {
-  public:
+//! R126 Patient Record
+class R126PatientRecord
+{
+public:
     QString m_sGUID;
     QString m_sFirstName;
     QString m_sSurName;
@@ -35,8 +36,7 @@ namespace r126{
     QString m_sSex;
     QString m_sImplantDate;
     QString m_sImplant;
-  };
-
+};
 }
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_R126PATIENTRECORD_H_

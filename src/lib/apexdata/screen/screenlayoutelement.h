@@ -36,35 +36,33 @@ namespace data
  * element is a \ref ScreenElement which can have children, and
  * knows about how to layout them on screen.
  */
-class APEXDATA_EXPORT ScreenLayoutElement
-            : public ScreenElement
+class APEXDATA_EXPORT ScreenLayoutElement : public ScreenElement
 {
-    protected:
-        virtual void deleteChild(ScreenElement* child);
-    public:
-        ScreenLayoutElement(const QString& id, ScreenElement* parent);
-        ~ScreenLayoutElement();
+protected:
+    virtual void deleteChild(ScreenElement *child);
 
-        virtual int getNumberOfChildren() const;
-        virtual ScreenElement* getChild(int i);
-        virtual const ScreenElement* getChild(int i) const;
-        virtual void addChild(ScreenElement* child);
-        const std::vector<ScreenElement*>* getChildren() const;
-        std::vector<ScreenElement*>* getChildren();
-        /**
-         * check whether the x and y values of this child are valid..
-         * throw an ApexStringException if not...
-         */
-        virtual void checkChild(const ScreenElement* childel) const = 0;
+public:
+    ScreenLayoutElement(const QString &id, ScreenElement *parent);
+    ~ScreenLayoutElement();
 
-        bool operator==(const ScreenLayoutElement& other) const;
+    virtual int getNumberOfChildren() const;
+    virtual ScreenElement *getChild(int i);
+    virtual const ScreenElement *getChild(int i) const;
+    virtual void addChild(ScreenElement *child);
+    const std::vector<ScreenElement *> *getChildren() const;
+    std::vector<ScreenElement *> *getChildren();
+    /**
+     * check whether the x and y values of this child are valid..
+     * throw an ApexStringException if not...
+     */
+    virtual void checkChild(const ScreenElement *childel) const = 0;
 
-    private:
-        std::vector<ScreenElement*> children;
+    bool operator==(const ScreenLayoutElement &other) const;
+
+private:
+    std::vector<ScreenElement *> children;
 };
-
 }
-
 }
 
 #endif

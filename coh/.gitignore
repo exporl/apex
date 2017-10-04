@@ -1,0 +1,12 @@
+# Backup files
+*~
+.*.swp
+
+# Build related
+.build
+Makefile
+Makefile.*
+vc*0.[pi]db
+object_script.*
+pkg-config_wrapper.sh
+*.so-deployment-settings.json

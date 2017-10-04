@@ -20,138 +20,144 @@
 #ifdef R126
 
 #include "apexmapwizard.h"
-#include "r126settingsdialog.h"
 #include "apexpaths.h"
+#include "r126settingsdialog.h"
 
 #include "map/r126database.h"
 #include "map/r126dbasesetting.h"
-#include "map/r126patientrecord.h"
 #include "map/r126nucleusmaprecord.h"
+#include "map/r126patientrecord.h"
 
-#include <vector>
-#include <QListBox>
 #include <QLabel>
+#include <QListBox>
+#include <vector>
 
-namespace apex{
+namespace apex
+{
 
-  ApexMapWizard::ApexMapWizard()  :
-      MapWizardBase( 0, 0, TRUE ), //modal
-    m_pDataBase( new R126DataBase() )
-  {
-      //FIXME get default values from a config file
-    m_pDataBase->mf_SetDataBaseSettings( r126::R126VERSION_2_1, "TERPY" );
-    setNextEnabled( WizardPage, false );
-    setBackEnabled( WizardPage, false );
-    setFinishEnabled( WizardPage, false );
-    setNextEnabled( WizardPage_2, false );
-    setBackEnabled( WizardPage_2, true );
-    setFinishEnabled( WizardPage_2, false );
-  }
-
-  ApexMapWizard::~ApexMapWizard()
-  {
-    delete m_pDataBase;
-  }
-
-  void ApexMapWizard::FillPatientList()
-  {
-    listBoxPatient->clear();
-    std::vector<R126PatientRecord*>& Rec = m_pDataBase->mf_FillPatientRecords();
-    std::vector<R126PatientRecord*>::const_iterator it = Rec.begin();
-    while( it != Rec.end() )
-    {
-      QString sName = (*it)->m_sSurName + ", " + (*it)->m_sFirstName;
-      listBoxPatient->insertItem( sName );
-      it++;
-    }
-  }
-
-  void ApexMapWizard::FillMapList()
-  {
-    listBoxMap->clear();
-    std::vector<R126NucleusMAPRecord*>& Rec = m_pDataBase->mf_FillNucleusMapsInfo( m_sSelectedPatient );
-    std::vector<R126NucleusMAPRecord*>::const_iterator it = Rec.begin();
-    unsigned i = 0;
-    while( it != Rec.end() )
-    {
-      listBoxMap->insertItem( "Map " + QString::number( i+1 ) );
-      it++;
-      i++;
-    }
-  }
-
-    //!fill patients list and start wizarding
-  int ApexMapWizard::exec()
-  {
-    FillPatientList();
-    return MapWizardBase::exec();
-  }
-
-    //back clicked in second page
-  void ApexMapWizard::back()
-  {
-    //FillPatientList(); already there
-    setFinishEnabled( WizardPage_2, false );
-    MapWizardBase::back();
-  }
-
-    //next clicked in first page
-  void ApexMapWizard::next()
-  {
-    FillMapList();
-    MapWizardBase::next();
-  }
-
-  void ApexMapWizard::help()
-  {
-    QString sHelpText;
-    if( MapWizardBase::currentPage() == WizardPage )
-      sHelpText = "Select a Patient from the List or"
-                  "Change Settings for the Database connection";
-    else
-      sHelpText = "Select a Map from the List";
-    QMessageBox::information (NULL, "Help", sHelpText);
-  }
-
-  void ApexMapWizard::PatientSelected( QListBoxItem* )
-  {
-    std::vector<R126PatientRecord*>& Rec = m_pDataBase->mf_FillPatientRecords();
-    R126PatientRecord* pSel = Rec.at( listBoxPatient->currentItem() );
-    textLabelSex->setText( "Sex: " + pSel->m_sSex );
-    textLabelName->setText( "Name: " + pSel->m_sSurName + ", " + pSel->m_sFirstName );
-    textLabelDateBirth->setText( "Date of Birth: " + pSel->m_sBirth );
-    textLabelDateImplant->setText( "Date of Implantation: " + pSel->m_sImplantDate );
-    textLabelImplantType->setText( "Implant Type: " + pSel->m_sImplant );
-    m_sSelectedPatient = pSel->m_sGUID;
-    setNextEnabled( WizardPage, true );
-  }
-
-  void ApexMapWizard::MapSelected( QListBoxItem* )
-  {
-    std::vector<R126NucleusMAPRecord*>& Rec = m_pDataBase->mf_FillNucleusMapsInfo( m_sSelectedPatient );
-    R126NucleusMAPRecord* pSel = Rec.at( listBoxMap->currentItem() );
-    textLabelMaxima->setText( "Maxima: " + QString::number( pSel->m_nMaxima ) );
-    textLabelRateTotal->setText( "Total Rate: " + QString::number( pSel->m_nTotalRate ) );
-    textLabelNumberMode->setText( "Stimulation Mode: " + pSel->m_sStimulationMode );
-    textLabelDateCreation->setText( "Creation Date: " + pSel->m_sMAPDate );
-    textLabelNumberStrategy->setText( "Strategy: " + pSel->m_sStrategy );
-    textLabelRateStimulation->setText( "Stimulation Rate: " + QString::number( pSel->m_nStimulationRate ) );
-    m_sSelectedMap = pSel->m_sGUID;
-    setFinishEnabled( WizardPage_2, true );
-  }
-
-  void ApexMapWizard::R126SettingsClicked()
-  {
-    R126SettingsDialog* dlg = new R126SettingsDialog( m_pDataBase );
-    dlg->exec();
-  }
-
-  R126NucleusMAPRecord* ApexMapWizard::GetSelectedMap() const
-  {
-    return m_pDataBase->mf_pGetNucleusMap( m_sSelectedMap );
-  }
-
+ApexMapWizard::ApexMapWizard()
+    : MapWizardBase(0, 0, TRUE), // modal
+      m_pDataBase(new R126DataBase())
+{
+    // FIXME get default values from a config file
+    m_pDataBase->mf_SetDataBaseSettings(r126::R126VERSION_2_1, "TERPY");
+    setNextEnabled(WizardPage, false);
+    setBackEnabled(WizardPage, false);
+    setFinishEnabled(WizardPage, false);
+    setNextEnabled(WizardPage_2, false);
+    setBackEnabled(WizardPage_2, true);
+    setFinishEnabled(WizardPage_2, false);
 }
 
+ApexMapWizard::~ApexMapWizard()
+{
+    delete m_pDataBase;
+}
+
+void ApexMapWizard::FillPatientList()
+{
+    listBoxPatient->clear();
+    std::vector<R126PatientRecord *> &Rec =
+        m_pDataBase->mf_FillPatientRecords();
+    std::vector<R126PatientRecord *>::const_iterator it = Rec.begin();
+    while (it != Rec.end()) {
+        QString sName = (*it)->m_sSurName + ", " + (*it)->m_sFirstName;
+        listBoxPatient->insertItem(sName);
+        it++;
+    }
+}
+
+void ApexMapWizard::FillMapList()
+{
+    listBoxMap->clear();
+    std::vector<R126NucleusMAPRecord *> &Rec =
+        m_pDataBase->mf_FillNucleusMapsInfo(m_sSelectedPatient);
+    std::vector<R126NucleusMAPRecord *>::const_iterator it = Rec.begin();
+    unsigned i = 0;
+    while (it != Rec.end()) {
+        listBoxMap->insertItem("Map " + QString::number(i + 1));
+        it++;
+        i++;
+    }
+}
+
+//! fill patients list and start wizarding
+int ApexMapWizard::exec()
+{
+    FillPatientList();
+    return MapWizardBase::exec();
+}
+
+// back clicked in second page
+void ApexMapWizard::back()
+{
+    // FillPatientList(); already there
+    setFinishEnabled(WizardPage_2, false);
+    MapWizardBase::back();
+}
+
+// next clicked in first page
+void ApexMapWizard::next()
+{
+    FillMapList();
+    MapWizardBase::next();
+}
+
+void ApexMapWizard::help()
+{
+    QString sHelpText;
+    if (MapWizardBase::currentPage() == WizardPage)
+        sHelpText = "Select a Patient from the List or"
+                    "Change Settings for the Database connection";
+    else
+        sHelpText = "Select a Map from the List";
+    QMessageBox::information(NULL, "Help", sHelpText);
+}
+
+void ApexMapWizard::PatientSelected(QListBoxItem *)
+{
+    std::vector<R126PatientRecord *> &Rec =
+        m_pDataBase->mf_FillPatientRecords();
+    R126PatientRecord *pSel = Rec.at(listBoxPatient->currentItem());
+    textLabelSex->setText("Sex: " + pSel->m_sSex);
+    textLabelName->setText("Name: " + pSel->m_sSurName + ", " +
+                           pSel->m_sFirstName);
+    textLabelDateBirth->setText("Date of Birth: " + pSel->m_sBirth);
+    textLabelDateImplant->setText("Date of Implantation: " +
+                                  pSel->m_sImplantDate);
+    textLabelImplantType->setText("Implant Type: " + pSel->m_sImplant);
+    m_sSelectedPatient = pSel->m_sGUID;
+    setNextEnabled(WizardPage, true);
+}
+
+void ApexMapWizard::MapSelected(QListBoxItem *)
+{
+    std::vector<R126NucleusMAPRecord *> &Rec =
+        m_pDataBase->mf_FillNucleusMapsInfo(m_sSelectedPatient);
+    R126NucleusMAPRecord *pSel = Rec.at(listBoxMap->currentItem());
+    textLabelMaxima->setText("Maxima: " + QString::number(pSel->m_nMaxima));
+    textLabelRateTotal->setText("Total Rate: " +
+                                QString::number(pSel->m_nTotalRate));
+    textLabelNumberMode->setText("Stimulation Mode: " +
+                                 pSel->m_sStimulationMode);
+    textLabelDateCreation->setText("Creation Date: " + pSel->m_sMAPDate);
+    textLabelNumberStrategy->setText("Strategy: " + pSel->m_sStrategy);
+    textLabelRateStimulation->setText(
+        "Stimulation Rate: " + QString::number(pSel->m_nStimulationRate));
+    m_sSelectedMap = pSel->m_sGUID;
+    setFinishEnabled(WizardPage_2, true);
+}
+
+void ApexMapWizard::R126SettingsClicked()
+{
+    R126SettingsDialog *dlg = new R126SettingsDialog(m_pDataBase);
+    dlg->exec();
+}
+
+R126NucleusMAPRecord *ApexMapWizard::GetSelectedMap() const
+{
+    return m_pDataBase->mf_pGetNucleusMap(m_sSelectedMap);
+}
+}
 
 #endif //#ifdef R126

@@ -42,6 +42,7 @@
 #include "device/soundcardsettings.h"
 #include "gui/soundcardsdialog.h"
 
+#include "berthabuffer.h"
 #include "bufferdropcallback.h"
 #include "mixercallback.h"
 #include "seqstream.h"
@@ -51,8 +52,9 @@
 #include "wavdevice.h"
 #include "wavfilter.h"
 
-
 #include <QMessageBox>
+#include <QVariant>
+#include <QVariantList>
 
 #include <iostream>
 
@@ -61,53 +63,57 @@ using namespace apex::stimulus;
 using namespace apex::XMLKeys;
 using namespace streamapp;
 
-//!local definitions
+//! local definitions
 namespace
 {
 
-typedef std::pair<QString, ApexSeqStream*> tSeqPair;
+typedef std::pair<QString, ApexSeqStream *> tSeqPair;
 typedef tSeqMap::const_iterator tSeqCIt;
 typedef tSeqMap::iterator tSeqIt;
-typedef std::pair<QString, StreamGenerator*> tGenPair;
+typedef std::pair<QString, StreamGenerator *> tGenPair;
 typedef tGenMap::const_iterator tGenCIt;
 typedef tGenMap::iterator tGenIt;
 
-void sf_ShowCardError(const WavDeviceIO::mt_eOpenStatus ac_eErr, const QString& ac_sAddError)
+void sf_ShowCardError(const WavDeviceIO::mt_eOpenStatus ac_eErr,
+                      const QString &ac_sAddError)
 {
     QString sErr(WavDeviceIO::sf_sGetErrorString(ac_eErr));
     if (!ac_sAddError.isEmpty())
         sErr += "\n\nadditional soundcard info: " + ac_sAddError;
-    QMessageBox::critical (NULL, "Error", sErr);
+    QMessageBox::critical(NULL, "Error", sErr);
 }
 
 #if defined(WIN32)
-void sf_CheckDriverType(const QString& ac_sDriver, const gt_eDeviceType ac_eType)
+void sf_CheckDriverType(const QString &ac_sDriver,
+                        const gt_eDeviceType ac_eType)
 {
-    const QString sType(stimulus::fSndEnumToString< QString >(ac_eType));
+    const QString sType(stimulus::fSndEnumToString<QString>(ac_eType));
     if (sType == ac_sDriver)
-        throw ApexStringException("Driver \'" + sType + "\' not supported on this platform");
+        throw ApexStringException("Driver \'" + sType +
+                                  "\' not supported on this platform");
 }
 #endif
-
 }
 
 namespace XMLize
 {
-QString f_PutBetweenStartBrackets(const QString& ac_Src, const bool ac_bEOF = true)
+QString f_PutBetweenStartBrackets(const QString &ac_Src,
+                                  const bool ac_bEOF = true)
 {
     if (ac_bEOF)
         return QString("<" + ac_Src + ">\n");
     return QString("<" + ac_Src + ">");
 }
 
-QString f_PutBetweenEndBrackets(const QString& ac_Src, const bool ac_bEOF = true)
+QString f_PutBetweenEndBrackets(const QString &ac_Src,
+                                const bool ac_bEOF = true)
 {
     if (ac_bEOF)
         return QString("</" + ac_Src + ">\n");
     return QString("</" + ac_Src + ">");
 }
 
-QString f_SingleTag(const QString& ac_Src)
+QString f_SingleTag(const QString &ac_Src)
 {
     return QString("  <" + ac_Src + "/>");
 }
@@ -118,16 +124,18 @@ const QString sc_sClippedTag("clipped channel");
 const QString sc_sBufferDropTag("buffer underruns");
 }
 
-
-WavDevice::WavDevice( data::WavDeviceData* p_data):
-    OutputDevice(p_data),
-    data(p_data),
-    m_SilenceBefore(0),
-    m_IO(p_data)
+WavDevice::WavDevice(data::WavDeviceData *p_data,
+                     const bertha::ExperimentData &berthaData, bool useBertha)
+    : OutputDevice(p_data),
+      data(p_data),
+      m_SilenceBefore(0),
+      m_IO(p_data, berthaData, useBertha),
+      berthaData(berthaData),
+      useBertha(useBertha)
 {
     // Get driver/card name
-    //try validate drivername from device with mainconfig's name entries
-    QString driver(data->driverString());      //asio/portaudio
+    // try validate drivername from device with mainconfig's name entries
+    QString driver(data->driverString()); // asio/portaudio
     if (driver.isEmpty())
         driver = "portaudio";
 
@@ -138,24 +146,27 @@ WavDevice::WavDevice( data::WavDeviceData* p_data):
     }
 
     if (!driver.isEmpty() && !card.isEmpty()) {
-        QString name = MainConfigFileParser::Get().data().soundCardName(card, driver);
+        QString name =
+            MainConfigFileParser::Get().data().soundCardName(card, driver);
 
         if (name.isEmpty()) {
-            qCDebug(APEX_RS, "Card name not found in apexconfig, using literal string");
+            qCDebug(APEX_RS,
+                    "Card name not found in apexconfig, using literal string");
         }
     }
 
 // only one device and hostapi available on android, so just pick that one
 #ifndef Q_OS_ANDROID
     // Use portaudio and sound card dialog
-    if (driver=="portaudio" && card=="interactive") {
+    if (driver == "portaudio" && card == "interactive") {
         SoundcardSettings scs;
 
         if (!scs.hasData())
             WavDeviceIO::showSoundcardDialog(data->sampleRate());
 
-        if (scs.hasData())  {
-            card = QString::number(m_IO.deviceNameToPortaudioId(scs.hostApi(), scs.device()));
+        if (scs.hasData()) {
+            card = QString::number(
+                m_IO.deviceNameToPortaudioId(scs.hostApi(), scs.device()));
         } else {
             card = "default";
         }
@@ -164,39 +175,45 @@ WavDevice::WavDevice( data::WavDeviceData* p_data):
     card = "default";
 #endif
 
-    //parse non-default params
-    //QString sDriver = m_driver;
-    if (! driver.isEmpty()) {
-        //see if we support this driver
-#if !defined(WIN32 ) && !defined( __APPLE__)
+    // parse non-default params
+    // QString sDriver = m_driver;
+    if (!driver.isEmpty()) {
+// see if we support this driver
+#if !defined(WIN32) && !defined(__APPLE__)
         if (driver == "asio") {
-            qCWarning(APEX_RS, "WavDevice: ASIO driver not supported on this platform, falling back to portaudio");
+            qCWarning(APEX_RS, "WavDevice: ASIO driver not supported on this "
+                               "platform, falling back to portaudio");
             driver = "portaudio";
         }
 #endif
 #if defined(WIN32)
         if (driver == "jack") {
-            qCWarning(APEX_RS, "WavDevice: Jack driver not supported on this platform, falling back to portaudio");
+            qCWarning(APEX_RS, "WavDevice: Jack driver not supported on this "
+                               "platform, falling back to portaudio");
             driver = "portaudio";
         }
 #endif
     }
 
-
     QString sErr;
-    WavDeviceIO::mt_eOpenStatus nOk = m_IO.mp_eSetSoundcard(*p_data, driver, card, true, sErr);
-    if(nOk == WavDeviceIO::mc_eDefBufferSize) {
-        //issue a warning
-        nOk = WavDeviceIO::mc_eOK;  //fix this else an error gets thrown below
+    WavDeviceIO::mt_eOpenStatus nOk =
+        m_IO.mp_eSetSoundcard(*p_data, driver, card, true, sErr);
+    if (nOk == WavDeviceIO::mc_eDefBufferSize) {
+        // issue a warning
+        nOk = WavDeviceIO::mc_eOK; // fix this else an error gets thrown below
 
-        qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("WavDevice",
-                                       tr("The buffersize specified in the experiment file could not be used.\nUsing the systems default buffersize."))));
+        qCWarning(
+            APEX_RS, "%s",
+            qPrintable(QSL("%1: %2").arg(
+                "WavDevice",
+                tr("The buffersize specified in the experiment file could not "
+                   "be used.\nUsing the systems default buffersize."))));
     } else {
 
         while (nOk != WavDeviceIO::mc_eOK) {
             sf_ShowCardError(nOk, sErr);
 
-            if (driver == "portaudio") {      // use new soundcardsdialog
+            if (driver == "portaudio") { // use new soundcardsdialog
                 SoundcardsDialog d;
                 WavDeviceIO::addPortaudioDevicesToGui(&d, data->sampleRate());
                 d.displayHostApis();
@@ -206,11 +223,12 @@ WavDevice::WavDevice( data::WavDeviceData* p_data):
                     SoundcardSettings scs;
                     scs.saveDevice(d.hostApiName(), d.cardName());
                 } else {
-                    throw ApexStringException("Couldn't open soundcard, check your parameters" );
+                    throw ApexStringException(
+                        "Couldn't open soundcard, check your parameters");
                 }
 
                 nOk = m_IO.mp_eSetSoundcard(*p_data, driver, card, true, sErr);
-            } else {        // use ugly old streamapp soundcarddialog (TODO: remove)
+            } else { // use ugly old streamapp soundcarddialog (TODO: remove)
                 const QStringList list(m_IO.sf_saGetDriverNames());
                 QString sTemp(m_IO.sf_sGetDriverName(*p_data));
 
@@ -218,10 +236,12 @@ WavDevice::WavDevice( data::WavDeviceData* p_data):
                 if (dlg.exec() == QDialog::Accepted) {
                     sTemp = dlg.GetSelectedItem();
                     m_IO.sf_SetDriverName(sTemp, *p_data);
-                    nOk = m_IO.mp_eSetSoundcard(*p_data, driver, card, true, sErr);
+                    nOk = m_IO.mp_eSetSoundcard(*p_data, driver, card, true,
+                                                sErr);
 
                 } else {
-                    throw ApexStringException("Couldn't open soundcard, check your parameters" );
+                    throw ApexStringException(
+                        "Couldn't open soundcard, check your parameters");
                 }
             }
         }
@@ -230,22 +250,31 @@ WavDevice::WavDevice( data::WavDeviceData* p_data):
     mv_bNeedsRestore = true;
 
     //  synchronization connection (for outputdevices x controldevices)
-    connect( &m_IO, SIGNAL(stimulusStarted()), this, SIGNAL(stimulusStarted()));
+    connect(&m_IO, SIGNAL(stimulusStarted()), this, SIGNAL(stimulusStarted()));
 }
 
 WavDevice::~WavDevice()
-{}
+{
+}
 
-void WavDevice::AddFilter(Filter& ac_Filter)
+void WavDevice::AddFilter(Filter &ac_Filter)
 {
     Q_ASSERT(ac_Filter.GetDevice() == OutputDevice::GetID());
     const QString sID(ac_Filter.GetID().toLatin1().data());
 
-    WavFilter* pFilter = & dynamic_cast< WavFilter& >(ac_Filter);
+    WavFilter *pFilter = &dynamic_cast<WavFilter &>(ac_Filter);
+    if (useBertha) {
+        if (pFilter->mf_bWantsToKnowStreamLength())
+            m_InformFilters.push_back(pFilter);
+        WavGenerator *generator = dynamic_cast<WavGenerator *>(pFilter);
+        if (generator != nullptr && generator->GetStreamGen()->mf_bContinuous())
+            m_IO.mp_SetContinuous(true);
+        return;
+    }
 
     if (!pFilter->mf_bIsRealFilter()) {
-        //it's an inputstream
-        StreamGenerator* pS = ((WavGenerator*) pFilter)->GetStreamGen();
+        // it's an inputstream
+        StreamGenerator *pS = ((WavGenerator *)pFilter)->GetStreamGen();
 
         m_Generators.insert(tGenPair(sID, pS));
         if (pS->mf_bContinuous()) {
@@ -253,190 +282,235 @@ void WavDevice::AddFilter(Filter& ac_Filter)
         }
         m_IO.mp_AddConnectItem(pS, sID, false);
     } else {
-        IStreamProcessor* pP = ((WavFilter*) pFilter)->GetStrProc();
-        m_IO.mp_AddConnectItem(new ApexProcessorCallback(pP, WavDeviceIO::sc_nMaxBusInputs), sID);
+        IStreamProcessor *pP = ((WavFilter *)pFilter)->GetStrProc();
+        m_IO.mp_AddConnectItem(
+            new ApexProcessorCallback(pP, WavDeviceIO::sc_nMaxBusInputs), sID);
     }
     if (pFilter->mf_bWantsToKnowStreamLength())
         m_InformFilters.push_back(pFilter);
 }
 
-void WavDevice::AddInput(const DataBlock& ac_DataBlock)
+void WavDevice::AddInput(const DataBlock &ac_DataBlock)
 {
     Q_ASSERT(ac_DataBlock.GetDevice() == GetID());
 
-    qCDebug(APEX_RS, "WavDevice: AddInput %s", qPrintable(ac_DataBlock.GetID()));
+    qCDebug(APEX_RS, "WavDevice: AddInput %s",
+            qPrintable(ac_DataBlock.GetID()));
 
-    PosAudioFormatStream* p = ((WavDataBlock*) &ac_DataBlock )->
-        GetWavStream(m_IO.GetBlockSize(), data->sampleRate());
-    ApexSeqStream* pS = new ApexSeqStream(p, true);
+    PosAudioFormatStream *p =
+        ((WavDataBlock *)&ac_DataBlock)
+            ->GetWavStream(m_IO.GetBlockSize(), data->sampleRate());
+    ApexSeqStream *pS = new ApexSeqStream(p, true);
 
     mp_AddSeqStream(pS, ac_DataBlock.GetID());
 }
 
-void WavDevice::mp_AddSeqStream(ApexSeqStream* pStream, const QString& ac_sID)
+void WavDevice::mp_AddSeqStream(ApexSeqStream *pStream, const QString &ac_sID)
 {
     const QString sID(ac_sID.toLatin1().data());
     m_InputStreams.insert(tSeqPair(sID, pStream));
     m_IO.mp_AddConnectItem(pStream, sID, true);
 }
 
-bool WavDevice::AddConnection(const tConnection& ac_Connection)
+bool WavDevice::AddConnection(const tConnection &ac_Connection)
 {
-    m_IO.mp_AddConnection(ac_Connection, ac_Connection.m_sToID == OutputDevice::GetID());
+    m_IO.mp_AddConnection(ac_Connection,
+                          ac_Connection.m_sToID == OutputDevice::GetID());
 
     //    qCDebug(APEX_RS, "WavDevice::AddConnection");
 
-    //keep as param if stored
-    if (!ac_Connection.m_sFromChannelID.isEmpty() || !ac_Connection.m_sToChannelID.isEmpty())
+    // keep as param if stored
+    if (!ac_Connection.m_sFromChannelID.isEmpty() ||
+        !ac_Connection.m_sToChannelID.isEmpty())
         m_NamedConnections.push_back(ac_Connection);
 
     return true;
 }
 
-void WavDevice::SetSequence(const DataBlockMatrix* ac_pSequence)
+void WavDevice::SetSequence(const DataBlockMatrix *ac_pSequence)
 {
     const unsigned nSeq = ac_pSequence->mf_nGetBufferSize();
     const unsigned nPar = ac_pSequence->mf_nGetChannelCount();
 
-    //add..
-    //qCDebug(APEX_RS, "DatablockMatrix: ");
-    for (unsigned j = 0 ; j < nPar ; ++j) {
-        for (unsigned i = 0 ; i < nSeq ; ++i) {
-            DataBlock* pCur = ac_pSequence->operator()(j, i);
+    // add..
+    // qCDebug(APEX_RS, "DatablockMatrix: ");
+    for (unsigned j = 0; j < nPar; ++j) {
+        for (unsigned i = 0; i < nSeq; ++i) {
+            DataBlock *pCur = ac_pSequence->operator()(j, i);
             if (pCur) {
                 if (!m_IO.m_pConnMan->mf_bIsRegistered(pCur->GetID()))
                     AddInput(*pCur);
-                //                qCDebug(APEX_RS, "%s", qPrintable(pCur->GetID()));
+                //                qCDebug(APEX_RS, "%s",
+                //                qPrintable(pCur->GetID()));
             }
             //            else { qCDebug(APEX_RS, "**"); }
         }
     }
 
-    //see if we have to add an extra silence
-    ApexSeqStream* pZeroPad = 0;
-    if (data->valueByType( gc_sPadZero).toUInt()) {
-        //create inputstream with nZeroPads * buffersize samples to add after longest row
+    // see if we have to add an extra silence
+    ApexSeqStream *pZeroPad = 0;
+    if (!useBertha && data->valueByType(gc_sPadZero).toUInt()) {
+        // create inputstream with nZeroPads * buffersize samples to add after
+        // longest row
         const unsigned nZeroPads = data->valueByType(gc_sPadZero).toUInt();
         unsigned long padZeroSamples;
-        if (nZeroPads<16)
+        if (nZeroPads < 16)
             padZeroSamples = nZeroPads * 8192;
         else
             padZeroSamples = nZeroPads;
-        //qCDebug(APEX_RS, "Pad zero samples: %ld", padZeroSamples);
-        SilentReader* p = new SilentReader( 1, data->sampleRate(), padZeroSamples);
-        PosAudioFormatStream* ps = new PosAudioFormatStream(p,  GetBlockSize(), true);
+        // qCDebug(APEX_RS, "Pad zero samples: %ld", padZeroSamples);
+        SilentReader *p =
+            new SilentReader(1, data->sampleRate(), padZeroSamples);
+        PosAudioFormatStream *ps =
+            new PosAudioFormatStream(p, GetBlockSize(), true);
         pZeroPad = new ApexSeqStream(ps, true);
-        //add it
+        // add it
         mp_AddSeqStream(pZeroPad, gc_sPadZero);
     }
 
-    //qCDebug(APEX_RS) << "*****Checking if silence is needed" << m_SilenceBefore;
-    unsigned long startOffset = 0;          // the actual stimulus will begin after offset
-
+    // qCDebug(APEX_RS) << "*****Checking if silence is needed" <<
+    // m_SilenceBefore;
+    unsigned startOffset = 0; // the actual stimulus will begin after offset
     if (m_SilenceBefore) {
-        startOffset=(unsigned long) m_SilenceBefore*data->sampleRate();
-
-        qCDebug(APEX_RS) << "Adding extra silence of " + QString::number(m_SilenceBefore) + "s";
+        startOffset = (unsigned)m_SilenceBefore * data->sampleRate();
+        qCDebug(APEX_RS) << "Adding extra silence of " +
+                                QString::number(m_SilenceBefore) + "s";
     }
 
-    //this will contain the total length of the entire matrix
+    // this will contain the total length of the entire matrix
     unsigned long nLongestRowLength = 0;
 
-    //setup sequencing per row
-    for (unsigned j = 0 ; j < nPar ; ++j) {
-        for (unsigned i = 0 ; i < nSeq ; ++i) {
-            DataBlock* pCur = ac_pSequence->operator()(j, i);
+    QStringList activeBlocks;
+    QMap<QString, QVariantList> triggersPerBlock;
+    // setup sequencing per row
+    for (unsigned j = 0; j < nPar; ++j) {
+        for (unsigned i = 0; i < nSeq; ++i) {
+            DataBlock *pCur = ac_pSequence->operator()(j, i);
             if (pCur) {
-                const QString& c_sCur(ac_pSequence->operator()(j, i)->GetID());
+                const QString &c_sCur(ac_pSequence->operator()(j, i)->GetID());
                 if (!c_sCur.isEmpty()) {
-                    const QString sCur(c_sCur);
-                    tSeqCIt itCur = m_InputStreams.find(sCur);
+                    const QString blockId(c_sCur);
+                    if (!activeBlocks.contains(blockId)) {
+                        activeBlocks << blockId;
+                    }
+                    tSeqCIt itCur = m_InputStreams.find(blockId);
                     if (i == 0) {
                         Q_ASSERT(itCur != m_InputStreams.end());
-                        (*itCur).second->mp_SetStartAt(startOffset);  //first element always starts at position 0
-
-                        if ((*itCur).second->mf_lTotalSamples() > nLongestRowLength)
-                            nLongestRowLength = (*itCur).second->mf_lTotalSamples();
+                        (*itCur).second->mp_SetStartAt(
+                            startOffset); // first element always starts at
+                                          // position 0
+                        triggersPerBlock[blockId] << QVariant(startOffset);
+                        if ((*itCur).second->mf_lTotalSamples() >
+                            nLongestRowLength)
+                            nLongestRowLength =
+                                (*itCur).second->mf_lTotalSamples();
                     } else {
-                        DataBlock* d =0;
-                        for (unsigned q=0; q<=j; ++q) {
-                            d = ac_pSequence->operator()(j-q, i - 1);
+                        DataBlock *d = 0;
+                        for (unsigned q = 0; q <= j; ++q) {
+                            d = ac_pSequence->operator()(j - q, i - 1);
                             if (d) {
                                 const QString sPre = d->GetID();
                                 tSeqCIt itPre = m_InputStreams.find(sPre);
-                                if (itCur != m_InputStreams.end() && itPre != m_InputStreams.end()) {
-                                    unsigned long nOff = (*itPre).second->mf_lTotalSamples();
-                                    (*itCur).second->mp_SetStartAt(nOff); //start right after the previous item
-
-                                    if ((*itCur).second->mf_lTotalSamples() > nLongestRowLength)
-                                        nLongestRowLength = (*itCur).second->mf_lTotalSamples();
+                                if (itCur != m_InputStreams.end() &&
+                                    itPre != m_InputStreams.end()) {
+                                    unsigned nOff =
+                                        (unsigned)(*itPre)
+                                            .second->mf_lTotalSamples();
+                                    (*itCur).second->mp_SetStartAt(
+                                        nOff); // start right after the previous
+                                               // item
+                                    triggersPerBlock[blockId] << QVariant(nOff);
+                                    if ((*itCur).second->mf_lTotalSamples() >
+                                        nLongestRowLength)
+                                        nLongestRowLength =
+                                            (*itCur).second->mf_lTotalSamples();
                                 } else {
-                                    Q_ASSERT(0 && "cannot get length; no wavdatablock");
+                                    Q_ASSERT(
+                                        0 &&
+                                        "cannot get length; no wavdatablock");
                                 }
                                 break;
                             }
                         }
-                        Q_ASSERT ( d && "Can't find any prevous datablock");
-                    }
 
+                        Q_ASSERT(d && "Can't find any prevous datablock");
+                    }
                 }
             }
         }
     }
 
-    //set stream length for filters needing it
-    const tWavFilters::size_type nFilters = m_InformFilters.size();
-    for (tWavFilters::size_type i = 0 ; i < nFilters ; ++i)
-        m_InformFilters[ i ]->mp_SetStreamLength(nLongestRowLength);
+    if (useBertha) {
+        QMapIterator<QString, QVariantList> it(triggersPerBlock);
+        m_IO.berthaBuffer->setActiveDataBlocks(activeBlocks);
+        while (it.hasNext()) {
+            it.next();
+            m_IO.berthaBuffer->queueParameter(it.key(), QSL("triggers"),
+                                              QVariant(it.value()));
+        }
 
-    //connect extra silence to soundcard output
-    if (pZeroPad) {
-        //start as last
-        pZeroPad->mp_SetStartAt(nLongestRowLength);
-        tConnection con;
-        con.m_nFromChannel = 0;
-        con.m_nToChannel = 0;
-        con.m_sFromID = gc_sPadZero;
-        con.m_sToID = OutputDevice::GetID();
-        AddConnection(con);
+        QVariantList param = QVariantList()
+                             << QSL("longestrowlength") << -1
+                             << QVariant((unsigned)nLongestRowLength);
+        const tWavFilters::size_type nFilters = m_InformFilters.size();
+        for (tWavFilters::size_type i = 0; i < nFilters; ++i)
+            m_IO.berthaBuffer->queueParameter(
+                m_InformFilters[i]->GetID(), QSL("parameter"), QVariant(param));
+
+    } else {
+        // set stream length for filters needing it
+        const tWavFilters::size_type nFilters = m_InformFilters.size();
+        for (tWavFilters::size_type i = 0; i < nFilters; ++i)
+            m_InformFilters[i]->mp_SetStreamLength(nLongestRowLength);
+
+        // connect extra silence to soundcard output
+        if (pZeroPad) {
+            // start as last
+            pZeroPad->mp_SetStartAt(nLongestRowLength);
+            tConnection con;
+            con.m_nFromChannel = 0;
+            con.m_nToChannel = 0;
+            con.m_sFromID = gc_sPadZero;
+            con.m_sToID = OutputDevice::GetID();
+            AddConnection(con);
+        }
+
+        /*    if (m_SilenceBefore) {
+
+              }*/
     }
-
-    /*    if (m_SilenceBefore) {
-
-          }*/
-
     delete ac_pSequence;
 }
 
 void WavDevice::RemoveAll()
 {
     //[ stijn 29/11/2008 ] moved this before the loop that
-    //deletes the inputs: else WavDeviceIO:m_pEofCheck
-    //tries to access items that are already deleted..
+    // deletes the inputs: else WavDeviceIO:m_pEofCheck
+    // tries to access items that are already deleted..
     m_IO.mp_RemoveCheckedInputs();
 
-    //get rid of inputstreams
+    // get rid of inputstreams
     tSeqIt itB = m_InputStreams.begin();
     tSeqCIt itE = m_InputStreams.end();
     while (itB != itE) {
-        const QString& sCur((*itB).first);
-        //remove connections
+        const QString &sCur((*itB).first);
+        // remove connections
         m_IO.mp_RemoveConnection(sCur);
         mp_RemoveNamedConnection(QString(sCur.data()));
-        //delete the stream
-        ApexSeqStream* pCur = (*itB).second;
+        // delete the stream
+        ApexSeqStream *pCur = (*itB).second;
         delete pCur;
         ++itB;
     }
     m_InputStreams.clear();
 
-    //pause non-continuous generators
+    // pause non-continuous generators
     tGenIt itGB = m_Generators.begin();
     tGenCIt itGE = m_Generators.end();
     while (itGB != itGE) {
-        const QString& sCur((*itGB).first);
-        StreamGenerator* pCur = (*itGB).second;
-        if (!pCur->mf_bContinuous() || m_bContinuousModeEnabled==false)
+        const QString &sCur((*itGB).first);
+        StreamGenerator *pCur = (*itGB).second;
+        if (!pCur->mf_bContinuous() || m_bContinuousModeEnabled == false)
             m_IO.mp_PausePlay(sCur);
         ++itGB;
     }
@@ -462,7 +536,7 @@ bool WavDevice::AllDone()
     m_IO.mf_WaitUntilDone();
     m_IO.mp_Stop();
 
-    m_SilenceBefore=0;
+    m_SilenceBefore = 0;
 
     // check for clipping
     CheckClipping();
@@ -470,16 +544,25 @@ bool WavDevice::AllDone()
     return true;
 }
 
-void WavDevice::CheckClipping() {
-    const streamapp::tUnsignedBoolMap& zork = m_IO.m_pSoundcardWriterStream->mf_GetClippedChannels();
+void WavDevice::CheckClipping()
+{
+    const streamapp::tUnsignedBoolMap &zork =
+        m_IO.m_pSoundcardWriterStream->mf_GetClippedChannels();
     streamapp::tUnsignedBoolMapCIt itE = zork.end();
-    for (streamapp::tUnsignedBoolMapCIt it = zork.begin() ; it != itE ; ++it) {
+    for (streamapp::tUnsignedBoolMapCIt it = zork.begin(); it != itE; ++it) {
         if ((*it).second) {
-            xmlresults.append(XMLize::f_SingleTag(XMLize::sc_sClippedTag + XMLize::sc_sEqualTag + QString::number((*it).first) + XMLize::sc_sEndTag));     //<clipped channel ="0"/>
+            xmlresults.append(XMLize::f_SingleTag(
+                XMLize::sc_sClippedTag + XMLize::sc_sEqualTag +
+                QString::number((*it).first) +
+                XMLize::sc_sEndTag)); //<clipped channel ="0"/>
             qCCritical(APEX_RS, "WavDevice: Soundcard output clipped");
         }
     }
-    xmlresults.append(XMLize::f_SingleTag(XMLize::sc_sBufferDropTag + XMLize::sc_sEqualTag + QString::number(m_IO.m_pSoundcardbufferDroppedCallback->mf_nGetNumDrops()) + XMLize::sc_sEndTag));  //<buffer underruns="0"/>
+    xmlresults.append(XMLize::f_SingleTag(
+        XMLize::sc_sBufferDropTag + XMLize::sc_sEqualTag +
+        QString::number(
+            m_IO.m_pSoundcardbufferDroppedCallback->mf_nGetNumDrops()) +
+        XMLize::sc_sEndTag)); //<buffer underruns="0"/>
 
     m_IO.m_pSoundcardWriterStream->mp_ResetClipped();
 }
@@ -487,28 +570,27 @@ void WavDevice::CheckClipping() {
 void WavDevice::StopAll()
 {
     m_IO.mp_Stop();
-    m_SilenceBefore=0;
+    m_SilenceBefore = 0;
 }
 
 void WavDevice::Finish()
 {
     m_IO.mp_Finish();
-    m_SilenceBefore=0;
+    m_SilenceBefore = 0;
 }
 
-bool WavDevice::HasParameter(const QString& ac_ParamID) const
+bool WavDevice::HasParameter(const QString &ac_ParamID) const
 {
     if (OutputDevice::HasParameter(ac_ParamID))
         return true;
     return mf_bIsNamedConnection(ac_ParamID);
 }
 
-
-bool WavDevice::mf_bIsNamedConnection(const QString& ac_sID) const
+bool WavDevice::mf_bIsNamedConnection(const QString &ac_sID) const
 {
     const tConnections::size_type c_nSize = m_NamedConnections.size();
-    for (tConnections::size_type i = 0 ; i < c_nSize ; ++i) {
-        const tConnection& cur = m_NamedConnections[ i ];
+    for (tConnections::size_type i = 0; i < c_nSize; ++i) {
+        const tConnection &cur = m_NamedConnections[i];
         if (QString::compare(cur.m_sFromChannelID, ac_sID) == 0)
             return true;
         else if (QString::compare(cur.m_sToChannelID, ac_sID) == 0)
@@ -517,16 +599,15 @@ bool WavDevice::mf_bIsNamedConnection(const QString& ac_sID) const
     return false;
 }
 
-void WavDevice::mp_RemoveNamedConnection(const QString& ac_sFromID)
+void WavDevice::mp_RemoveNamedConnection(const QString &ac_sFromID)
 {
     tConnections::iterator it = m_NamedConnections.begin();
     while (it != m_NamedConnections.end()) {
-        const tConnection& cur = *it;
+        const tConnection &cur = *it;
         if (QString::compare(cur.m_sFromID, ac_sFromID) == 0) {
             m_NamedConnections.erase(it);
             it = m_NamedConnections.begin();
-        }
-        else
+        } else
             ++it;
     }
 }
@@ -536,35 +617,64 @@ void WavDevice::mp_RemoveNamedConnection(const QString& ac_sFromID)
   IApexDevice::SetParameters(pm);
 
   // also set parameters for connections
-  tParameterValueMap params = pm->GetParametersForOwner (m_NamedConnections.GetID());
+  tParameterValueMap params = pm->GetParametersForOwner
+  (m_NamedConnections.GetID());
 
-  for (tParameterValueMap::const_iterator it=params.begin(); it!=params.end(); ++it) {
-  qCDebug(APEX_RS) << "WavDevice: Setting parameter " + it.key().GetType() + " to value " + it.value().toString();
+  for (tParameterValueMap::const_iterator it=params.begin(); it!=params.end();
+  ++it) {
+  qCDebug(APEX_RS) << "WavDevice: Setting parameter " + it.key().GetType() + "
+  to value " + it.value().toString();
   SetParameter (it.key().GetType(), it.key().GetChannel(), it.value());
   }
   }*/
 
-
-bool WavDevice::SetParameter (const QString& type, const int channel, const QVariant& value)
+bool WavDevice::SetParameter(const QString &type, const int channel,
+                             const QVariant &value)
 {
     /*    qCDebug(APEX_RS, qPrintable("WavDevice::SetParameter " + type +
           "channel " + QString::number(channel) +
           " to value " + value.toString()));*/
 
-    if (type=="gain") {
-        if (channel==-1)
+    if (type == "gain") {
+        if (channel == -1)
             m_IO.mp_SetOutputGain(value.toDouble());
         else
             m_IO.mp_SetOutputGain(value.toDouble(), channel);
-    }
-    else if (type.startsWith("connection")) {
+    } else if (type.startsWith("connection")) {
 
         // Get default parameter value:
         /*        data::ParameterName p(
                   m_pParameters->GetParameterByType(type.mid(11,-1)));
                   Q_ASSERT(!p.GetType().isEmpty());
-                  qCDebug(APEX_RS, "Original parameter value: %d", p.GetDefaultValue().toInt());*/
-        m_connection_param_cache[type]=value;
+                  qCDebug(APEX_RS, "Original parameter value: %d",
+           p.GetDefaultValue().toInt());*/
+        m_connection_param_cache[type] = value;
+
+        if (useBertha) {
+            QString blockId = type.split(QL1C('-')).last();
+            unsigned channels = 0;
+            unsigned newChannel = value.toUInt();
+            QVector<QVector<double>> matrix;
+
+            if (berthaData.block(blockId).inputPorts() == 1) { // to param
+                channels = berthaData.block(blockId).outputPorts();
+                matrix.resize(channels);
+                for (int i = 0; i < matrix.size(); ++i)
+                    matrix[i].append(0.0);
+                matrix[newChannel][0] = 1;
+            } else if (berthaData.block(blockId).outputPorts() ==
+                       1) { // from param
+                channels = berthaData.block(blockId).inputPorts();
+                matrix.append(QVector<double>(channels, 0.0));
+                matrix[0][newChannel] = 1;
+            } else {
+                return false;
+            }
+            m_IO.berthaBuffer->queueParameter(
+                blockId, QSL("matrix"),
+                qVariantFromValue<QVector<QVector<double>>>(matrix));
+        }
+
     } else {
         return false;
     }
@@ -576,88 +686,91 @@ bool WavDevice::SetParameter (const QString& type, const int channel, const QVar
  * Read connections parameters from cache and change connections
  * appropriately. Cache is cleared afterwards.
  */
-void WavDevice::SetConnectionParams() {
+void WavDevice::SetConnectionParams()
+{
 
     // The type of a connection parameter is set to "connection-<ID>"
-    //find the connection subject to change
-    //TODO ConnectionManager::mp_Rewire
+    // find the connection subject to change
+    // TODO ConnectionManager::mp_Rewire
 
-
-    for (QMap<QString,QVariant>::const_iterator it=m_connection_param_cache.begin();
-         it!=m_connection_param_cache.end(); ++it) {
+    for (QMap<QString, QVariant>::const_iterator it =
+             m_connection_param_cache.begin();
+         it != m_connection_param_cache.end(); ++it) {
 
         QString type(it.key());
         QVariant value(it.value());
 
-
-        QString connectionID(type.mid(11,-1));
-        //qCDebug(APEX_RS, qPrintable("WavDevice::SetParameter: Setting parameter for connection with id " + connectionID));
+        QString connectionID(type.mid(11, -1));
+        // qCDebug(APEX_RS, qPrintable("WavDevice::SetParameter: Setting
+        // parameter for connection with id " + connectionID));
 
         const tConnections::size_type c_nSize = m_NamedConnections.size();
-        for (tConnections::size_type i = 0 ; i < c_nSize ; ++i) {
-            tConnection& cur = m_NamedConnections[ i ];
+        for (tConnections::size_type i = 0; i < c_nSize; ++i) {
+            tConnection &cur = m_NamedConnections[i];
             if (QString::compare(cur.m_sFromChannelID, connectionID) == 0) {
                 const int nNewFromChannel = value.toInt();
 
-                qCDebug(APEX_RS, "Reconnecting %s from channel %d to channel %d",
-                        qPrintable(cur.m_sFromChannelID),
-                        cur.m_nFromChannel, nNewFromChannel);
+                qCDebug(APEX_RS,
+                        "Reconnecting %s from channel %d to channel %d",
+                        qPrintable(cur.m_sFromChannelID), cur.m_nFromChannel,
+                        nNewFromChannel);
 
-                if (nNewFromChannel != cur.m_nFromChannel) //don't change if it's the same
+                if (nNewFromChannel !=
+                    cur.m_nFromChannel) // don't change if it's the same
                     m_IO.mp_RewireConnection(cur, nNewFromChannel, true);
-            } else if (QString::compare(cur.m_sToChannelID, connectionID) == 0) {
+            } else if (QString::compare(cur.m_sToChannelID, connectionID) ==
+                       0) {
                 const int nNewToChannel = value.toInt();
 
-                qCDebug(APEX_RS, "Reconnecting %s from channel %d to channel %d",
-                        qPrintable(cur.m_sToChannelID),
-                        cur.m_nToChannel, nNewToChannel);
+                qCDebug(APEX_RS,
+                        "Reconnecting %s from channel %d to channel %d",
+                        qPrintable(cur.m_sToChannelID), cur.m_nToChannel,
+                        nNewToChannel);
 
                 if (nNewToChannel != cur.m_nToChannel)
                     m_IO.mp_RewireConnection(cur, nNewToChannel, false);
             }
         }
-
-
     }
 
-    //now check if we can run
-    if(!m_IO.mf_bAllInputsConnected()) {
-        qCCritical(APEX_RS, "WavDevice: Some datablocks scheduled to play are not connected. "
-                "Check your connections (that may be changed by a parameter)");
+    // now check if we can run
+    if (!m_IO.mf_bAllInputsConnected()) {
+        qCCritical(
+            APEX_RS,
+            "WavDevice: Some datablocks scheduled to play are not connected. "
+            "Check your connections (that may be changed by a parameter)");
     }
 
     m_connection_param_cache.clear();
 }
 
-
-
-
-//only soundcard output is checked for clipping, and this is *always* the first
-//stream
+// only soundcard output is checked for clipping, and this is *always* the first
+// stream
 QString WavDevice::GetResultXML() const
 {
-    QString res( "<device id=\"" + GetID() +"\">\n");
+    QString res("<device id=\"" + GetID() + "\">\n");
 
-    res.append( xmlresults.join("\n"));
+    res.append(xmlresults.join("\n"));
     xmlresults.clear();
 
-    res.append("\n</device>\n");                                 //</wavdevice>
+    res.append("\n</device>\n"); //</wavdevice>
 
     return res;
 }
 
-bool WavDevice::GetInfo(const unsigned ac_nType, void* a_pInfo) const
+bool WavDevice::GetInfo(const unsigned ac_nType, void *a_pInfo) const
 {
     if (ac_nType != IApexDevice::mc_eClipping)
         return false;
 
-    streamapp::tUnsignedBoolMap* p = (streamapp::tUnsignedBoolMap*) a_pInfo;
+    streamapp::tUnsignedBoolMap *p = (streamapp::tUnsignedBoolMap *)a_pInfo;
 
-    //just copy all samples
-    const streamapp::tUnsignedBoolMap& zork = m_IO.m_pSoundcardWriterStream->mf_GetClippedChannels();
+    // just copy all samples
+    const streamapp::tUnsignedBoolMap &zork =
+        m_IO.m_pSoundcardWriterStream->mf_GetClippedChannels();
     streamapp::tUnsignedBoolMapCIt itE = zork.end();
-    for (streamapp::tUnsignedBoolMapCIt it = zork.begin() ; it != itE ; ++it) {
-        p->operator [] ((*it).first) = (*it).second;
+    for (streamapp::tUnsignedBoolMapCIt it = zork.begin(); it != itE; ++it) {
+        p->operator[]((*it).first) = (*it).second;
     }
 
     m_IO.m_pSoundcardWriterStream->mp_ResetClipped();
@@ -672,7 +785,8 @@ void WavDevice::Reset()
 
 void WavDevice::Prepare()
 {
-    SetConnectionParams();
+    if (!useBertha)
+        SetConnectionParams();
     m_IO.Prepare();
 }
 
@@ -681,7 +795,7 @@ int WavDevice::GetBlockSize() const
     return m_IO.GetBlockSize();
 }
 
-WavDeviceIO* WavDevice::getWavDeviceIo()
+WavDeviceIO *WavDevice::getWavDeviceIo()
 {
     return &(this->m_IO);
 }

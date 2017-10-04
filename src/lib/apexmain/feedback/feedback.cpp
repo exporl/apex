@@ -7,44 +7,42 @@
 
 #include <QDebug>
 
-namespace apex {
+namespace apex
+{
 
 class FeedbackPrivate
 {
-    public:
-
-        QList<PluginFeedbackInterface*> plugins;
-
+public:
+    QList<PluginFeedbackInterface *> plugins;
 };
 
-
-Feedback::Feedback(const apex::data::ScreensData* data):
-    d(new FeedbackPrivate)
+Feedback::Feedback(const apex::data::ScreensData *data) : d(new FeedbackPrivate)
 {
-    const QList<data::FeedbackPluginPair>& l( data->feedbackPlugins());
+    const QList<data::FeedbackPluginPair> &l(data->feedbackPlugins());
 
-    Q_FOREACH(data::FeedbackPluginPair p, l) {
-        qCDebug(APEX_RS)<< "Loading feedback plugin " << p.first;
+    Q_FOREACH (data::FeedbackPluginPair p, l) {
+        qCDebug(APEX_RS) << "Loading feedback plugin " << p.first;
         loadPlugin(p.first, p.second);
     }
 };
 
 Feedback::~Feedback()
 {
-    Q_FOREACH( PluginFeedbackInterface* i, d->plugins) {
+    Q_FOREACH (PluginFeedbackInterface *i, d->plugins) {
         delete i;
     }
     delete d;
 }
 
-void Feedback::loadPlugin(const QString& name,
-                          const data::FeedbackPluginParameters& params)
+void Feedback::loadPlugin(const QString &name,
+                          const data::FeedbackPluginParameters &params)
 {
-    PluginFeedbackCreator* creator = createPluginCreator<PluginFeedbackCreator>(name);
-    d->plugins.push_back (creator->createPluginFeedback (name, params));
-    QString err( d->plugins.last()->errorString() );
-    if (! err.isEmpty()) {
-        throw ApexStringException( err );
+    PluginFeedbackCreator *creator =
+        createPluginCreator<PluginFeedbackCreator>(name);
+    d->plugins.push_back(creator->createPluginFeedback(name, params));
+    QString err(d->plugins.last()->errorString());
+    if (!err.isEmpty()) {
+        throw ApexStringException(err);
     }
     return;
 }
@@ -55,34 +53,32 @@ void Feedback::initialize()
     clear();
 }
 
-void Feedback::highLight(const QString& element)
+void Feedback::highLight(const QString &element)
 {
-    Q_FOREACH( PluginFeedbackInterface* i, d->plugins) {
+    Q_FOREACH (PluginFeedbackInterface *i, d->plugins) {
         i->highLight(element);
     }
 }
 
 void Feedback::showPositive()
 {
-    Q_FOREACH( PluginFeedbackInterface* i, d->plugins) {
+    Q_FOREACH (PluginFeedbackInterface *i, d->plugins) {
         i->showPositive();
     }
 }
 
 void Feedback::showNegative()
 {
-    Q_FOREACH( PluginFeedbackInterface* i, d->plugins) {
+    Q_FOREACH (PluginFeedbackInterface *i, d->plugins) {
         i->showNegative();
     }
 }
 
 void Feedback::clear()
 {
-    Q_FOREACH( PluginFeedbackInterface* i, d->plugins) {
+    Q_FOREACH (PluginFeedbackInterface *i, d->plugins) {
         i->clear();
     }
 }
 
-
-
-};              // ns apex
+}; // ns apex

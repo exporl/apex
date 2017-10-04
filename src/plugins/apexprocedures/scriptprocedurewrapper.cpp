@@ -23,20 +23,21 @@ using namespace apex;
 
 const QString ScriptProcedureWrapper::INSTANCENAME("pluginINTERFACE");
 
-QScriptValue ScriptProcedureWrapper::executeLine(const QString& line, const QScriptValueList& params) const {
+QScriptValue
+ScriptProcedureWrapper::executeLine(const QString &line,
+                                    const QScriptValueList &params) const
+{
     QString nline = INSTANCENAME + "." + line;
-    QScriptValue result = engine->evaluate (nline).call(*classname, params);
+    QScriptValue result = engine->evaluate(nline).call(*classname, params);
     if (engine->hasUncaughtException()) {
-        throw ApexStringException( "Error executing " + nline + ": " + result.toString());
+        throw ApexStringException("Error executing " + nline + ": " +
+                                  result.toString());
     }
     return result;
 }
 
-
-ScriptProcedureWrapper::ScriptProcedureWrapper(QObject *parent):
-    ScriptProcedureInterface(parent),
-    engine(0),
-    classname(0)
+ScriptProcedureWrapper::ScriptProcedureWrapper(QObject *parent)
+    : ScriptProcedureInterface(parent), engine(0), classname(0)
 {
 }
 
@@ -44,30 +45,31 @@ ScriptProcedureWrapper::~ScriptProcedureWrapper()
 {
 }
 
-void ScriptProcedureWrapper::setEngine(QScriptEngine* p_engine)
+void ScriptProcedureWrapper::setEngine(QScriptEngine *p_engine)
 {
-    engine=p_engine;
+    engine = p_engine;
 }
 
-void ScriptProcedureWrapper::setClassname(QScriptValue* p_classname)
+void ScriptProcedureWrapper::setClassname(QScriptValue *p_classname)
 {
-    classname=p_classname;
+    classname = p_classname;
 }
 
 bool ScriptProcedureWrapper::isValid()
 {
-    return (engine!=0 && classname!=0 );
+    return (engine != 0 && classname != 0);
 }
 
 data::Trial ScriptProcedureWrapper::setupNextTrial()
 {
     QScriptValue r = executeLine("setupNextTrial", QScriptValueList());
 
-    data::Trial* result = qobject_cast<data::Trial*>(r.toQObject());
+    data::Trial *result = qobject_cast<data::Trial *>(r.toQObject());
 
     if (result)
-      return *(result);
-    throw ApexStringException(tr("Method setupNextTrial in scriptprocedure should return an object of type Trial."));
+        return *(result);
+    throw ApexStringException(tr("Method setupNextTrial in scriptprocedure "
+                                 "should return an object of type Trial."));
 }
 
 QString ScriptProcedureWrapper::firstScreen()
@@ -90,23 +92,23 @@ double ScriptProcedureWrapper::progress()
     return executeLine("progress", QScriptValueList()).toNumber();
 }
 
-
-
-ResultHighlight ScriptProcedureWrapper::processResult(const ScreenResult* screenResult) const
+ResultHighlight
+ScriptProcedureWrapper::processResult(const ScreenResult *screenResult) const
 {
     QVariantMap mapS;
     QMapIterator<QString, QString> i(screenResult->get());
 
-    for(ScreenResult::const_iterator it = screenResult->begin(); it != screenResult->end(); ++it) {
+    for (ScreenResult::const_iterator it = screenResult->begin();
+         it != screenResult->end(); ++it) {
         mapS.insert(it.key(), it.value());
     }
 
-    QScriptValue r = executeLine("processResult", QScriptValueList()<<engine->toScriptValue(mapS));
-    return *( dynamic_cast<ResultHighlight*>( r.toQObject() ) );
+    QScriptValue r = executeLine(
+        "processResult", QScriptValueList() << engine->toScriptValue(mapS));
+    return *(dynamic_cast<ResultHighlight *>(r.toQObject()));
 }
 
 QString ScriptProcedureWrapper::checkParameters() const
 {
     return executeLine("checkParameters", QScriptValueList()).toString();
 }
-

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.5/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.5/experiment">
 
     <xs:include schemaLocation="datablocks.xsd"/>
     <xs:include schemaLocation="procedure.xsd"/>
@@ -587,6 +587,12 @@
                             <xs:documentation>Default value for the
                                 replacement.</xs:documentation>
                         </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="constraint" type="xs:string">
+                      <xs:annotation>
+                        <xs:documentation>Regex against which the value
+                        should match.</xs:documentation>
+                      </xs:annotation>
                     </xs:attribute>
                 </xs:complexType>
             </xs:element>

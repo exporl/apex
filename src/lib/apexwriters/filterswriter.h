@@ -47,7 +47,8 @@ public:
      *
      *@return the created element
      */
-    static QDomElement addElement(QDomDocument *doc, const data::FiltersData& data);
+    static QDomElement addElement(QDomDocument *doc,
+                                  const data::FiltersData &data);
 
 private:
     /**
@@ -56,9 +57,9 @@ private:
      *@param data  the data to fill the element with
      *@param theElement the element to fill
      */
-    static void fillFilterElement(const data::FilterData& data, QDomElement *theElement);
+    static void fillFilterElement(const data::FilterData &data,
+                                  QDomElement *theElement);
 };
-
 }
 }
 

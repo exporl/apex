@@ -1,0 +1,5 @@
+Sequence: repeats 1
+  Codacs: amplitude -2048 period 51.0 trigger 1
+  Codacs: amplitude -1 period 51.0 trigger 0
+  Codacs: amplitude 2047 period 51.0 trigger 0
+  Codacs: amplitude 1 period 51.0 trigger 0

@@ -30,20 +30,21 @@ namespace data
 
 ScreenLayoutElement::~ScreenLayoutElement()
 {
-    Q_ASSERT( getNumberOfChildren() == 0 );
+    Q_ASSERT(getNumberOfChildren() == 0);
 }
 
-ScreenLayoutElement::ScreenLayoutElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent )
+ScreenLayoutElement::ScreenLayoutElement(const QString &id,
+                                         ScreenElement *parent)
+    : ScreenElement(id, parent)
 {
 }
 
-const std::vector<ScreenElement*>* ScreenLayoutElement::getChildren() const
+const std::vector<ScreenElement *> *ScreenLayoutElement::getChildren() const
 {
     return &children;
 }
 
-std::vector<ScreenElement*>* ScreenLayoutElement::getChildren()
+std::vector<ScreenElement *> *ScreenLayoutElement::getChildren()
 {
     return &children;
 }
@@ -53,38 +54,35 @@ int ScreenLayoutElement::getNumberOfChildren() const
     return children.size();
 }
 
-ScreenElement* ScreenLayoutElement::getChild( int i )
+ScreenElement *ScreenLayoutElement::getChild(int i)
 {
     return children[i];
 }
 
-const ScreenElement* ScreenLayoutElement::getChild( int i ) const
+const ScreenElement *ScreenLayoutElement::getChild(int i) const
 {
     return children[i];
 }
 
-void ScreenLayoutElement::addChild( ScreenElement* child )
+void ScreenLayoutElement::addChild(ScreenElement *child)
 {
-    children.push_back( child );
+    children.push_back(child);
 }
 
-void ScreenLayoutElement::deleteChild( ScreenElement* child )
+void ScreenLayoutElement::deleteChild(ScreenElement *child)
 {
-    for ( std::vector<ScreenElement*>::iterator i = children.begin();
-          i != children.end(); ++i )
-        if ( *i == child )
-        {
-            children.erase( i );
+    for (std::vector<ScreenElement *>::iterator i = children.begin();
+         i != children.end(); ++i)
+        if (*i == child) {
+            children.erase(i);
             break;
         }
 }
 
-bool ScreenLayoutElement::operator==(const ScreenLayoutElement& other) const
+bool ScreenLayoutElement::operator==(const ScreenLayoutElement &other) const
 {
-    return  ScreenElement::operator==(other) &&
-            ApexTools::haveSameContents(children, other.children);
-}
-
+    return ScreenElement::operator==(other) &&
+           ApexTools::haveSameContents(children, other.children);
 }
 }
-
+}

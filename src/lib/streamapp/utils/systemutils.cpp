@@ -19,8 +19,8 @@
 
 #include "systemutils.h"
 
-#include <QString>
 #include <QFile>
+#include <QString>
 
 using namespace std;
 
@@ -29,9 +29,10 @@ namespace
 const int sc_nBufferSize = 4096;
 }
 
-bool systemutils::f_bCopyFile(const QString& ac_sInputFile, const QString &ac_sOutputFile)
+bool systemutils::f_bCopyFile(const QString &ac_sInputFile,
+                              const QString &ac_sOutputFile)
 {
-    //try open files
+    // try open files
     QFile inFile(ac_sInputFile);
 
     if (!inFile.open(QIODevice::ReadOnly))
@@ -42,8 +43,8 @@ bool systemutils::f_bCopyFile(const QString& ac_sInputFile, const QString &ac_sO
     if (!outFile.open(QIODevice::WriteOnly))
         return false;
 
-    //copy
-    char buff[ sc_nBufferSize ];
+    // copy
+    char buff[sc_nBufferSize];
     qint64 readBytes = sc_nBufferSize;
 
     while (readBytes == sc_nBufferSize) {

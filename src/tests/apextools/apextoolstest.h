@@ -35,10 +35,12 @@ class ApexToolsTest : public QObject
     Q_OBJECT
 
 private slots:
+    void initTestCase();
     void testXmlRichText();
     void testXmlCreateRichText();
     void testIirFilter();
     void testPeakFilter();
+    void testRecursiveCopy();
 };
 
 #endif

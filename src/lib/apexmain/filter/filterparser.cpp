@@ -54,19 +54,18 @@ FilterParser::FilterParser()
 {
 }
 
-
 FilterParser::~FilterParser()
 {
 }
 
-
-data::FilterData* FilterParser::ParseFilter(const QDomElement &a_pBase,
-        data::ParameterManagerData* parameterManagerData )
+data::FilterData *
+FilterParser::ParseFilter(const QDomElement &a_pBase,
+                          data::ParameterManagerData *parameterManagerData)
 {
     const QString type(a_pBase.attribute(XMLKeys::gc_sType));
 
     // new structure
-    data::FilterData* data;
+    data::FilterData *data;
     QScopedPointer<parser::SimpleParametersParser> parser;
 
     if (type == sc_sFilterPluginFilterType) {
@@ -86,9 +85,13 @@ data::FilterData* FilterParser::ParseFilter(const QDomElement &a_pBase,
         else if (sGenType == sc_sFilterSineGenType)
             data = new data::SineGeneratorParameters();
         else
-            throw ApexStringException("WavDeviceFactory::CreateFilterParameters: Unknown filtertype" + sGenType);
+            throw ApexStringException(
+                "WavDeviceFactory::CreateFilterParameters: Unknown filtertype" +
+                sGenType);
     } else {
-        throw ApexStringException("WavDeviceFactory::CreateFilterParameters: Unknown filtertype" + type);
+        throw ApexStringException(
+            "WavDeviceFactory::CreateFilterParameters: Unknown filtertype" +
+            type);
     }
 
     if (!parser)
@@ -99,6 +102,5 @@ data::FilterData* FilterParser::ParseFilter(const QDomElement &a_pBase,
 
     return data;
 }
-
 }
 }

@@ -36,13 +36,12 @@ public:
     TrialParser();
     ~TrialParser();
 
-    data::TrialData* GetTrial(const QDomElement &p_base);
+    data::TrialData *GetTrial(const QDomElement &p_base);
 
 private:
-    data::TrialData* MakeTrial();
+    data::TrialData *MakeTrial();
     QString GetAnswer(const QDomElement &p_base);
 };
-
 }
 
 #endif

@@ -25,21 +25,21 @@ namespace apex
 namespace data
 {
 
-struct ParameterPrivate
-{
-    QString  owner;
-    QString  type;
+struct ParameterPrivate {
+    QString owner;
+    QString type;
     QVariant defaultValue;
-    int      channel;
-    QString  id;
+    int channel;
+    QString id;
 
-    //! true if the parameter has an ID and can thus be changed during the experiment
+    //! true if the parameter has an ID and can thus be changed during the
+    //! experiment
     bool hasID;
 };
 
-}//ns data
+} // ns data
 
-}//ns apex
+} // ns apex
 
 using namespace apex::data;
 
@@ -53,18 +53,14 @@ Parameter::~Parameter()
     delete d;
 }
 
-Parameter::Parameter(const Parameter& other) :
-                                        d(new ParameterPrivate(*other.d))
+Parameter::Parameter(const Parameter &other) : d(new ParameterPrivate(*other.d))
 {
 }
 
-
-Parameter::Parameter(const QString& owner,
-                             const QString& type,
-                             const QVariant& defaultValue,
-                             int channel,
-                             bool hasId,
-                             const QString& id) : d(new ParameterPrivate())
+Parameter::Parameter(const QString &owner, const QString &type,
+                     const QVariant &defaultValue, int channel, bool hasId,
+                     const QString &id)
+    : d(new ParameterPrivate())
 {
     d->owner = owner;
     d->type = type;
@@ -84,24 +80,23 @@ QString Parameter::type() const
     return d->type;
 }
 
-
-void Parameter::setDefaultValue(const QVariant& value)
+void Parameter::setDefaultValue(const QVariant &value)
 {
     d->defaultValue = value;
 }
 
-void Parameter::setId(const QString& id)
+void Parameter::setId(const QString &id)
 {
     d->id = id;
     d->hasID = true;
 }
 
-void Parameter::setOwner(const QString& owner)
+void Parameter::setOwner(const QString &owner)
 {
     d->owner = owner;
 }
 
-void Parameter::setType(const QString& type)
+void Parameter::setType(const QString &type)
 {
     d->type = type;
 }
@@ -118,7 +113,7 @@ int Parameter::channel() const
 
 bool Parameter::hasChannel() const
 {
-     return d->channel != NO_CHANNEL;
+    return d->channel != NO_CHANNEL;
 }
 
 bool Parameter::hasId() const
@@ -136,7 +131,7 @@ QString Parameter::toString() const
     QString c;
 
     if (hasChannel())
-        c="-" + QString::number(d->channel);
+        c = "-" + QString::number(d->channel);
 
     return d->owner + "-" + d->type + c;
 }
@@ -146,8 +141,7 @@ bool Parameter::isValid() const
     return !d->type.isEmpty() && !(d->channel < NO_CHANNEL);
 }
 
-
-Parameter& Parameter::operator=(const Parameter& other)
+Parameter &Parameter::operator=(const Parameter &other)
 {
     if (this != &other)
         *d = *other.d;
@@ -155,25 +149,23 @@ Parameter& Parameter::operator=(const Parameter& other)
     return *this;
 }
 
-
-bool Parameter::operator<(const Parameter& p) const
+bool Parameter::operator<(const Parameter &p) const
 {
-    return toString() < p.toString();           // FIXME: not efficient?
+    return toString() < p.toString(); // FIXME: not efficient?
 }
 
-bool Parameter::operator==(const Parameter& other) const
+bool Parameter::operator==(const Parameter &other) const
 {
-    return  d->owner == other.d->owner &&
-            d->type == other.d->type &&
-            d->defaultValue == other.d->defaultValue &&
-            d->channel == other.d->channel &&
-            d->hasID == other.d->hasID &&
-            d->id == other.d->id;
+    return d->owner == other.d->owner && d->type == other.d->type &&
+           d->defaultValue == other.d->defaultValue &&
+           d->channel == other.d->channel && d->hasID == other.d->hasID &&
+           d->id == other.d->id;
 }
-
 
 ValueReset::ValueReset() : reset(true)
-{}
+{
+}
 
-ValueReset::ValueReset(const QVariant& v, bool r) : value(v), reset(r)
-{}
+ValueReset::ValueReset(const QVariant &v, bool r) : value(v), reset(r)
+{
+}

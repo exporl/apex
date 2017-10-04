@@ -34,41 +34,38 @@ class QFont;
 namespace apex
 {
 
-    class ExperimentRunDelegate;
+class ExperimentRunDelegate;
 
-  namespace data
-  {
-    class ArcLayoutElement;
-    class ScreenElement;
-  }
-  namespace rundelegates
-  {
-    using data::ArcLayoutElement;
-    using data::ScreenElement;
+namespace data
+{
+class ArcLayoutElement;
+class ScreenElement;
+}
+namespace rundelegates
+{
+using data::ArcLayoutElement;
+using data::ScreenElement;
 
-    /**
-     * The ArcLayoutRunDelegate class is an implementation of
-     * ScreenElementRunDelegate representing a ArcLayoutElement.
-     */
-    class ArcLayoutRunDelegate
-      :  public ScreenElementRunDelegate,
-         public ArcLayout
-    {
-      const ArcLayoutElement* element;
-    public:
-      ArcLayoutRunDelegate(
-        ExperimentRunDelegate* p_parent,
-        const ArcLayoutElement* e,
-        QWidget* parent,
-        ElementToRunningMap& elementToRunningMap,
-        const QFont& font );
+/**
+ * The ArcLayoutRunDelegate class is an implementation of
+ * ScreenElementRunDelegate representing a ArcLayoutElement.
+ */
+class ArcLayoutRunDelegate : public ScreenElementRunDelegate, public ArcLayout
+{
+    const ArcLayoutElement *element;
 
-      const ScreenElement* getScreenElement() const;
-      QWidget* getWidget();
+public:
+    ArcLayoutRunDelegate(ExperimentRunDelegate *p_parent,
+                         const ArcLayoutElement *e, QWidget *parent,
+                         ElementToRunningMap &elementToRunningMap,
+                         const QFont &font);
 
-      virtual QLayout* getLayout();
-    };
-  }
+    const ScreenElement *getScreenElement() const;
+    QWidget *getWidget();
+
+    virtual QLayout *getLayout();
+};
+}
 }
 
 #endif

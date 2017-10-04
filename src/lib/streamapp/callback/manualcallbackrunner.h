@@ -20,98 +20,98 @@
 #ifndef __MANUALCALLBACKRUNNER_H__
 #define __MANUALCALLBACKRUNNER_H__
 
-#include "eofcheck.h"
 #include "callbackrunner.h"
+#include "eofcheck.h"
 
 namespace streamapp
 {
 
+/**
+  * ManualCallbackRunner
+  *   class to manually call a Callback in a loop.
+  *   Very handy for testing without a soundcard.
+  *   Requires EofCheck, since it doesn't make much sense
+  *   just putting a Callback in an infinite loop
+  ******************************************************* */
+class ManualCallbackRunner : public CallbackRunner
+{
+public:
     /**
-      * ManualCallbackRunner
-      *   class to manually call a Callback in a loop.
-      *   Very handy for testing without a soundcard.
-      *   Requires EofCheck, since it doesn't make much sense
-      *   just putting a Callback in an infinite loop
-      ******************************************************* */
-  class ManualCallbackRunner : public CallbackRunner
-  {
-  public:
-      /**
-        * Constructor.
-        * @param a_Checker the IEofCheck to use.
-        */
-    ManualCallbackRunner( IEofCheck& a_Checker );
+      * Constructor.
+      * @param a_Checker the IEofCheck to use.
+      */
+    ManualCallbackRunner(IEofCheck &a_Checker);
 
-      /**
-        * Destructor.
-        */
+    /**
+      * Destructor.
+      */
     ~ManualCallbackRunner();
 
-      /**
-        * Implementation of the CallbackRunner method.
-        * Runs until EofCheck's end.
-        */
-    bool mp_bStart( Callback& a_Callback );
+    /**
+      * Implementation of the CallbackRunner method.
+      * Runs until EofCheck's end.
+      */
+    bool mp_bStart(Callback &a_Callback);
 
-      /**
-        * Run a specified number of times.
-        * Or, until EofCheck's end
-        * @param a_Callback the Callback to run
-        * @param nTimes the number of times
-        * @return always true
-        */
-    bool mp_bStart( Callback& a_Callback, const unsigned nTimes );
+    /**
+      * Run a specified number of times.
+      * Or, until EofCheck's end
+      * @param a_Callback the Callback to run
+      * @param nTimes the number of times
+      * @return always true
+      */
+    bool mp_bStart(Callback &a_Callback, const unsigned nTimes);
 
-      /**
-        * Set the period.
-        * Sets the number of milliseconds to Sleep() between calls of Callback.
-        * @param ac_nMillisSeconds the time
-        */
-    INLINE void mp_SetPeriod( const unsigned ac_nMillisSeconds )
+    /**
+      * Set the period.
+      * Sets the number of milliseconds to Sleep() between calls of Callback.
+      * @param ac_nMillisSeconds the time
+      */
+    INLINE void mp_SetPeriod(const unsigned ac_nMillisSeconds)
     {
-      mv_nMillisSeconds = ac_nMillisSeconds;
+        mv_nMillisSeconds = ac_nMillisSeconds;
     }
 
-      /**
-        * Get the current period.
-        * @return the period
-        */
-    INLINE const unsigned& mf_nGetPeriod() const
+    /**
+      * Get the current period.
+      * @return the period
+      */
+    INLINE const unsigned &mf_nGetPeriod() const
     {
-      return mv_nMillisSeconds;
+        return mv_nMillisSeconds;
     }
 
-      /**
-        * Implementation of the CallbackRunner method.
-        */
+    /**
+      * Implementation of the CallbackRunner method.
+      */
     INLINE bool mp_bStop()
     {
-      return false;
+        return false;
     }
 
-      /**
-        * Implementation of the CallbackRunner method.
-        */
+    /**
+      * Implementation of the CallbackRunner method.
+      */
     INLINE bool mf_bIsRunning() const
     {
-      return false;
+        return false;
     }
 
-      /**
-        * Implementation of the CallbackRunner method.
-        */
+    /**
+      * Implementation of the CallbackRunner method.
+      */
     INLINE bool mf_bIsBlocking() const
     {
-      return true;
+        return true;
     }
 
-  private:
-    IEofCheck*  m_Checker;
-    unsigned    mv_nMillisSeconds;
+private:
+    IEofCheck *m_Checker;
+    unsigned mv_nMillisSeconds;
 
-    ManualCallbackRunner( const ManualCallbackRunner& );
-    ManualCallbackRunner& operator = ( const ManualCallbackRunner& );
-  };
+    ManualCallbackRunner(const ManualCallbackRunner &);
+    ManualCallbackRunner &operator=(const ManualCallbackRunner &);
+};
 }
 
 #endif //#ifndef __MANUALCALLBACKRUNNER_H__

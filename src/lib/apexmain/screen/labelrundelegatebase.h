@@ -28,39 +28,38 @@ class QFont;
 
 namespace apex
 {
-    class ExperimentRunDelegate;
+class ExperimentRunDelegate;
 namespace rundelegates
 {
-    using data::ScreenElement;
+using data::ScreenElement;
 
-    /**
-     * The LabelRunDelegateBase class is a common base class for
-     * ScreenElementRunDelegate classes representing their
-     * ScreenElement using a QLabel. It contains functions that are
-     * common to such subclasses.
-     */
-    class LabelRunDelegateBase
-        : public QLabel, public ScreenElementRunDelegate
-    {
-        Q_OBJECT
-    public:
-        LabelRunDelegateBase( ExperimentRunDelegate* p_exprd,
-                              QWidget* parent, const ScreenElement* se,
-                              const QFont& defaultFont );
+/**
+ * The LabelRunDelegateBase class is a common base class for
+ * ScreenElementRunDelegate classes representing their
+ * ScreenElement using a QLabel. It contains functions that are
+ * common to such subclasses.
+ */
+class LabelRunDelegateBase : public QLabel, public ScreenElementRunDelegate
+{
+    Q_OBJECT
+public:
+    LabelRunDelegateBase(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                         const ScreenElement *se, const QFont &defaultFont);
 
-        QLabel* getWidget();
+    QLabel *getWidget();
 
-        bool hasText() const;
-        bool hasInterestingText() const;
-        const QString getText() const;
-        void setText( const QString& text );
+    bool hasText() const;
+    bool hasInterestingText() const;
+    const QString getText() const;
+    void setText(const QString &text);
 
-        void resizeEvent( QResizeEvent* e );
-        virtual void setEnabled( const bool );
-    private:
-        QString text;
-        QFont initialFont;
-    };
+    void resizeEvent(QResizeEvent *e);
+    virtual void setEnabled(const bool);
+
+private:
+    QString text;
+    QFont initialFont;
+};
 }
 }
 #endif

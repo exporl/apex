@@ -36,25 +36,25 @@ namespace data
  */
 class APEXDATA_EXPORT DatablocksData : public DatablockDataMap
 {
-    public:
+public:
+    DatablocksData();
+    ~DatablocksData();
 
-        DatablocksData();
-        ~DatablocksData();
+    void setPrefix(const FilePrefix &prefix);
+    const FilePrefix &prefix() const;
 
-        void setPrefix(const FilePrefix& prefix);
-        const FilePrefix& prefix() const;
+    DatablockData *datablockData(const QString &name) const;
 
-        DatablockData* datablockData(const QString& name) const;
+    void setHasPluginDatablocks(bool s);
+    bool hasPluginDatablocks() const;
 
-        bool operator==(const DatablocksData& other) const;
+    bool operator==(const DatablocksData &other) const;
 
-    private:
-
-        FilePrefix filePrefix;
+private:
+    FilePrefix filePrefix;
+    bool m_hasPluginDatablocks;
 };
-
 }
-
 }
 
 #endif

@@ -35,31 +35,30 @@ namespace apex
 namespace rundelegates
 {
 
-PictureLabelRunDelegate::PictureLabelRunDelegate(
-        ExperimentRunDelegate* p_exprd,
-    QWidget* parent, const PictureLabelElement* e ) :
-        QLabel( parent ),
-        ScreenElementRunDelegate(p_exprd, e),
-        element( e ),
-        pixmap( 0 ),
-        pixmapDisabled( 0 )
+PictureLabelRunDelegate::PictureLabelRunDelegate(ExperimentRunDelegate *p_exprd,
+                                                 QWidget *parent,
+                                                 const PictureLabelElement *e)
+    : QLabel(parent),
+      ScreenElementRunDelegate(p_exprd, e),
+      element(e),
+      pixmap(0),
+      pixmapDisabled(0)
 {
-    setAlignment (Qt::AlignCenter);
+    setAlignment(Qt::AlignCenter);
 
-  pixmap = new QPixmap(ApexTools::addPrefix(element->getPicture(),
-                       FilePrefixConvertor::convert(element->prefix())));
-  if ( pixmap->isNull() )
-      Q_ASSERT( element->getPicture().isEmpty() );
-  else
-      QLabel::setPixmap( *pixmap );
+    pixmap = new QPixmap(
+        ApexTools::addPrefix(element->getPicture(),
+                             FilePrefixConvertor::convert(element->prefix())));
+    if (pixmap->isNull())
+        Q_ASSERT(element->getPicture().isEmpty());
+    else
+        QLabel::setPixmap(*pixmap);
 
-
-  if (!element->getPictureDisabled().isEmpty()) {
-      pixmapDisabled =
-              new QPixmap(ApexTools::addPrefix(element->getPictureDisabled(),
-                    FilePrefixConvertor::convert(element->prefix())));
-  }
-
+    if (!element->getPictureDisabled().isEmpty()) {
+        pixmapDisabled = new QPixmap(ApexTools::addPrefix(
+            element->getPictureDisabled(),
+            FilePrefixConvertor::convert(element->prefix())));
+    }
 }
 
 PictureLabelRunDelegate::~PictureLabelRunDelegate()
@@ -67,27 +66,25 @@ PictureLabelRunDelegate::~PictureLabelRunDelegate()
     delete pixmap;
 }
 
-const ScreenElement* PictureLabelRunDelegate::getScreenElement() const
+const ScreenElement *PictureLabelRunDelegate::getScreenElement() const
 {
     return element;
 }
-
 }
 }
 
-QWidget* apex::rundelegates::PictureLabelRunDelegate::getWidget()
+QWidget *apex::rundelegates::PictureLabelRunDelegate::getWidget()
 {
     return this;
 }
 
-void apex::rundelegates::PictureLabelRunDelegate::setEnabled( const bool enabled)
+void apex::rundelegates::PictureLabelRunDelegate::setEnabled(const bool enabled)
 {
-    if ( pixmapDisabled ) {
+    if (pixmapDisabled) {
         if (enabled) {
-            QLabel::setPixmap( *pixmap );
+            QLabel::setPixmap(*pixmap);
         } else {
-            QLabel::setPixmap( *pixmapDisabled );
+            QLabel::setPixmap(*pixmapDisabled);
         }
     }
 }
-

@@ -17,94 +17,91 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include <iostream>
 #include <QString>
+#include <iostream>
 
 #include "dummydevice.h"
-#include "stimulus/filter.h"
 #include "stimulus/datablock.h"
+#include "stimulus/filter.h"
 
-namespace apex{
-  namespace stimulus{
+namespace apex
+{
+namespace stimulus
+{
 
-DummyDevice::DummyDevice( data::DeviceData& a_Params )
- : OutputDevice(  &a_Params )
+DummyDevice::DummyDevice(data::DeviceData &a_Params) : OutputDevice(&a_Params)
 {
 }
-
 
 DummyDevice::~DummyDevice()
 {
 }
 
-
 bool DummyDevice::HasError() const
 {
-  Say(QString("HasError = false"));
-  return false;
+    Say(QString("HasError = false"));
+    return false;
 }
 
-const QString& DummyDevice::GetID() const
+const QString &DummyDevice::GetID() const
 {
-  Say( QString("GetID") + OutputDevice::GetID());
+    Say(QString("GetID") + OutputDevice::GetID());
     return OutputDevice::GetID();
 }
 
 bool DummyDevice::AllDone()
 {
-  Say("AllDone");
-  return true;
+    Say("AllDone");
+    return true;
 }
 
-void DummyDevice::AddFilter(Filter& ac_Filter)
+void DummyDevice::AddFilter(Filter &ac_Filter)
 {
-  Say("AddFilter: " + ac_Filter.GetID());
-  Say("warning potential mem leak!");
+    Say("AddFilter: " + ac_Filter.GetID());
+    Say("warning potential mem leak!");
 }
 
-void DummyDevice::AddInput(const DataBlock& ac_DataBlock)
+void DummyDevice::AddInput(const DataBlock &ac_DataBlock)
 {
-  Say("AddInput: " + ac_DataBlock.GetID());
+    Say("AddInput: " + ac_DataBlock.GetID());
 }
 
 void DummyDevice::PlayAll()
 {
-  Say("PlayAll");
+    Say("PlayAll");
 }
 
 void DummyDevice::RemoveAll()
 {
-  Say("RemoveAll");
+    Say("RemoveAll");
 }
 
 void DummyDevice::StopAll()
 {
-  Say("StopAll");
+    Say("StopAll");
 }
 
-void DummyDevice::Say( const QString & message ) const
+void DummyDevice::Say(const QString &message) const
 {
-  std::cout<<"DummyDevice: "<<message.toLocal8Bit().data()<<std::endl;
+    std::cout << "DummyDevice: " << message.toLocal8Bit().data() << std::endl;
 }
 
-void DummyDevice::SetSequence( const apex::stimulus::DataBlockMatrix* p )
+void DummyDevice::SetSequence(const apex::stimulus::DataBlockMatrix *p)
 {
-  OutputDevice::SetSequence( p ); //delete it
-  Say( "SetSequence" );
+    OutputDevice::SetSequence(p); // delete it
+    Say("SetSequence");
 }
 
- bool DummyDevice::SetParameter ( const QString& type, const int, const QVariant& value )
+bool DummyDevice::SetParameter(const QString &type, const int,
+                               const QVariant &value)
 {
-  Say( "SetParameter " + type + " to " + value.toString() );
-  return true;
+    Say("SetParameter " + type + " to " + value.toString());
+    return true;
 }
 
 void DummyDevice::RestoreParameters()
 {
-  Say( "RestoreParameters" );
+    Say("RestoreParameters");
 }
-
-  }
 }
-
-
+}

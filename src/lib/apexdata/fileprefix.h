@@ -30,40 +30,29 @@ namespace apex
 namespace data
 {
 
-
 /**
  * Represents a prefix as found in the experiment file
  * can be inline or from mainconfig
  */
 class APEXDATA_EXPORT FilePrefix
 {
-    public:
+public:
+    enum Type { PREFIX_INLINE, PREFIX_MAINCONFIG };
 
-        enum Type
-        {
-            PREFIX_INLINE,
-            PREFIX_MAINCONFIG
-        };
+    FilePrefix();
 
-        FilePrefix();
+    QString value() const;
+    void setValue(const QString &v);
+    Type type() const;
+    void setType(Type t);
 
-        QString value() const;
-        void setValue(const QString& v);
-        Type type() const;
-        void setType(Type t);
+    bool operator==(const FilePrefix &other) const;
 
-        bool operator==(const FilePrefix& other) const;
-
-    private:
-        Type mType;
-        QString mValue;
+private:
+    Type mType;
+    QString mValue;
 };
-
-
 }
-
 }
-
-
 
 #endif

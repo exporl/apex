@@ -32,135 +32,132 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    using gui::sc_nDefaultFontSize;
-    using gui::sc_DefaultBGColor;
+namespace editor
+{
+using gui::sc_nDefaultFontSize;
+using gui::sc_DefaultBGColor;
 
-    ScreenElement* LabelEditorDelegate::getScreenElement()
-    {
-      return element;
-    }
-
-    int LabelEditorDelegate::getPropertyCount()
-    {
-      return LabelEditorDelegateBase::getPropertyCount() + 2;
-    }
-
-    QString LabelEditorDelegate::getPropertyName( int nr )
-    {
-      if ( nr < LabelEditorDelegateBase::getPropertyCount() )
-        return LabelEditorDelegateBase::getPropertyName( nr );
-      switch( nr - LabelEditorDelegateBase::getPropertyCount() )
-      {
-      case 0:
-        return tr( "Text" );
-      case 1:
-        return tr( "Font Size" );
-      default:
-        qFatal( "unknown parameter number" );
-        return QString();
-      }
-    }
-
-    QVariant LabelEditorDelegate::getPropertyData( int nr, int role )
-    {
-      if ( nr < LabelEditorDelegateBase::getPropertyCount() )
-        return LabelEditorDelegateBase::getPropertyData( nr, role );
-      switch( nr - LabelEditorDelegateBase::getPropertyCount() )
-      {
-      case 0:
-        if ( role == Qt::DisplayRole )
-          return element->getText();
-        break;
-      case 1:
-        if ( role == Qt::DisplayRole )
-          return element->getFontSize();
-        break;
-      default:
-        qFatal( "unknown parameter number" );
-        return QVariant();
-      }
-      return QVariant();
-    }
-
-    PropertyType LabelEditorDelegate::getPropertyType( int nr )
-    {
-      if ( nr < LabelEditorDelegateBase::getPropertyCount() )
-        return LabelEditorDelegateBase::getPropertyType( nr );
-      switch( nr - LabelEditorDelegateBase::getPropertyCount() ) {
-      case 0: return StringPropertyType;
-      case 1: return FontSizePropertyType;
-      default:
-        qFatal( "unknown parameter number" );
-        return IntPropertyType;
-
-      }
-    }
-
-    bool LabelEditorDelegate::setProperty( int nr, const QVariant& v )
-    {
-      if ( nr < LabelEditorDelegateBase::getPropertyCount() )
-        return LabelEditorDelegateBase::setProperty( nr, v );
-      int fs;
-      QFont font;
-      switch( nr - LabelEditorDelegateBase::getPropertyCount() )
-      {
-      case 0:
-        if ( v.type() != QVariant::String ) return false;
-        setText( v.toString() );
-        return true;
-      case 1:
-        if ( v.type() != QVariant::Int ) return false;
-        fs = v.toInt();
-        if ( fs <= 0 )
-          fs = sc_nDefaultFontSize;
-        element->setFontSize( v.toInt() );
-        resetText();
-        return true;
-      default:
-        qFatal( "unknown parameter number" );
-        return false;
-      }
-    }
-
-    LabelEditorDelegate::LabelEditorDelegate( LabelElement* e, QWidget* parent, ScreenWidget* w )
-      : LabelEditorDelegateBase( e, parent, w ),
-        element( e )
-    {
-      resetText();
-    }
-
-    const QString LabelEditorDelegate::getText() const
-    {
-      return element->getText();
-    }
-
-    void LabelEditorDelegate::setText( const QString& s )
-    {
-      element->setText( s );
-      resetText();
-    }
-
-    void LabelEditorDelegate::mouseDoubleClickEvent( QMouseEvent * )
-    {
-      bool ok = false;
-      QString text = QInputDialog::getText(
-        this,
-        tr( "Label Text" ),
-        tr( "Enter the text for the label with id %1." ).arg( element->getID() ),
-        QLineEdit::Normal, element->getText(), &ok);
-      if (ok)
-      {
-        setText( text );
-        screenWidget->getEditor()->selectWidget( getWidget(), this );
-      }
-    }
-
-    LabelEditorDelegate::~LabelEditorDelegate()
-    {
-      screenWidget->delegateDeleted( this );
-    }
-  }
+ScreenElement *LabelEditorDelegate::getScreenElement()
+{
+    return element;
 }
 
+int LabelEditorDelegate::getPropertyCount()
+{
+    return LabelEditorDelegateBase::getPropertyCount() + 2;
+}
+
+QString LabelEditorDelegate::getPropertyName(int nr)
+{
+    if (nr < LabelEditorDelegateBase::getPropertyCount())
+        return LabelEditorDelegateBase::getPropertyName(nr);
+    switch (nr - LabelEditorDelegateBase::getPropertyCount()) {
+    case 0:
+        return tr("Text");
+    case 1:
+        return tr("Font Size");
+    default:
+        qFatal("unknown parameter number");
+        return QString();
+    }
+}
+
+QVariant LabelEditorDelegate::getPropertyData(int nr, int role)
+{
+    if (nr < LabelEditorDelegateBase::getPropertyCount())
+        return LabelEditorDelegateBase::getPropertyData(nr, role);
+    switch (nr - LabelEditorDelegateBase::getPropertyCount()) {
+    case 0:
+        if (role == Qt::DisplayRole)
+            return element->getText();
+        break;
+    case 1:
+        if (role == Qt::DisplayRole)
+            return element->getFontSize();
+        break;
+    default:
+        qFatal("unknown parameter number");
+        return QVariant();
+    }
+    return QVariant();
+}
+
+PropertyType LabelEditorDelegate::getPropertyType(int nr)
+{
+    if (nr < LabelEditorDelegateBase::getPropertyCount())
+        return LabelEditorDelegateBase::getPropertyType(nr);
+    switch (nr - LabelEditorDelegateBase::getPropertyCount()) {
+    case 0:
+        return StringPropertyType;
+    case 1:
+        return FontSizePropertyType;
+    default:
+        qFatal("unknown parameter number");
+        return IntPropertyType;
+    }
+}
+
+bool LabelEditorDelegate::setProperty(int nr, const QVariant &v)
+{
+    if (nr < LabelEditorDelegateBase::getPropertyCount())
+        return LabelEditorDelegateBase::setProperty(nr, v);
+    int fs;
+    QFont font;
+    switch (nr - LabelEditorDelegateBase::getPropertyCount()) {
+    case 0:
+        if (v.type() != QVariant::String)
+            return false;
+        setText(v.toString());
+        return true;
+    case 1:
+        if (v.type() != QVariant::Int)
+            return false;
+        fs = v.toInt();
+        if (fs <= 0)
+            fs = sc_nDefaultFontSize;
+        element->setFontSize(v.toInt());
+        resetText();
+        return true;
+    default:
+        qFatal("unknown parameter number");
+        return false;
+    }
+}
+
+LabelEditorDelegate::LabelEditorDelegate(LabelElement *e, QWidget *parent,
+                                         ScreenWidget *w)
+    : LabelEditorDelegateBase(e, parent, w), element(e)
+{
+    resetText();
+}
+
+const QString LabelEditorDelegate::getText() const
+{
+    return element->getText();
+}
+
+void LabelEditorDelegate::setText(const QString &s)
+{
+    element->setText(s);
+    resetText();
+}
+
+void LabelEditorDelegate::mouseDoubleClickEvent(QMouseEvent *)
+{
+    bool ok = false;
+    QString text = QInputDialog::getText(
+        this, tr("Label Text"),
+        tr("Enter the text for the label with id %1.").arg(element->getID()),
+        QLineEdit::Normal, element->getText(), &ok);
+    if (ok) {
+        setText(text);
+        screenWidget->getEditor()->selectWidget(getWidget(), this);
+    }
+}
+
+LabelEditorDelegate::~LabelEditorDelegate()
+{
+    screenWidget->delegateDeleted(this);
+}
+}
+}

@@ -26,51 +26,50 @@
 
 namespace apex
 {
-  namespace data
-  {
-    class ScreenElement;
-    class ParameterListElement;
-  }
+namespace data
+{
+class ScreenElement;
+class ParameterListElement;
+}
 
-  namespace stimulus
-  {
-    class Stimulus;
-  }
+namespace stimulus
+{
+class Stimulus;
+}
 
-  namespace rundelegates
-  {
-    using data::ParameterListElement;
-    using data::ScreenElement;
+namespace rundelegates
+{
+using data::ParameterListElement;
+using data::ScreenElement;
 
-    /**
-     * The ParameterListRunDelegate class is an implementation of
-     * ScreenElementRunDelegate representing a ParameterListElement.
-     */
-    class ParameterListRunDelegate
-      : public QTableView,
-        public ScreenElementRunDelegate,
-        public ParametersContainerRunDelegate
-    {
-      Q_OBJECT
-    public:
-        ParameterListRunDelegate( ExperimentRunDelegate* p_exprd,
-                                  const ParameterListElement* e, QWidget* parent );
-      ~ParameterListRunDelegate();
+/**
+ * The ParameterListRunDelegate class is an implementation of
+ * ScreenElementRunDelegate representing a ParameterListElement.
+ */
+class ParameterListRunDelegate : public QTableView,
+                                 public ScreenElementRunDelegate,
+                                 public ParametersContainerRunDelegate
+{
+    Q_OBJECT
+public:
+    ParameterListRunDelegate(ExperimentRunDelegate *p_exprd,
+                             const ParameterListElement *e, QWidget *parent);
+    ~ParameterListRunDelegate();
 
-      const ScreenElement* getScreenElement() const;
+    const ScreenElement *getScreenElement() const;
 
-      QWidget* getWidget();
-      //void connectSlots( gui::ScreenRunDelegate* d );
-    public slots:
-      //void newStimulus( stimulus::Stimulus* stimulus );
-      void updateParameter(const QString& id, const QVariant& value);
+    QWidget *getWidget();
+    // void connectSlots( gui::ScreenRunDelegate* d );
+public slots:
+    // void newStimulus( stimulus::Stimulus* stimulus );
+    void updateParameter(const QString &id, const QVariant &value);
 
-    private:
-      class Model;
-      const ParameterListElement* element;
-      Model* model;
-    };
-  }
+private:
+    class Model;
+    const ParameterListElement *element;
+    Model *model;
+};
+}
 }
 
 #endif

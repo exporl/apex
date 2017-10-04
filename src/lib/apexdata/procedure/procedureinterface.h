@@ -17,35 +17,35 @@ namespace apex
 class ResultHighlight
 {
 public:
-    ResultHighlight():
-        overrideCorrectFalse(false),
-        showCorrectFalse(true)  { }
+    ResultHighlight() : overrideCorrectFalse(false), showCorrectFalse(true)
+    {
+    }
 
-    ResultHighlight (bool isCorrect, QString hlElement):
-        correct(isCorrect),
-        highlightElement(hlElement),
-        overrideCorrectFalse(false),
-        showCorrectFalse(true) {}
+    ResultHighlight(bool isCorrect, QString hlElement)
+        : correct(isCorrect),
+          highlightElement(hlElement),
+          overrideCorrectFalse(false),
+          showCorrectFalse(true)
+    {
+    }
 
-    bool    correct;
+    bool correct;
     QString highlightElement;
     /**
       * Override showfeedback from experiment file
       **/
-    bool    overrideCorrectFalse;
+    bool overrideCorrectFalse;
     /**
      * @brief Only used when overrideCorrectFalse==true
      * 0: do not show correct/false feedback
      * 1: do show correct/false feedback
      */
-    bool     showCorrectFalse;
-
+    bool showCorrectFalse;
 };
 
 class ProcedureInterface
 {
 public:
-
     /**
      * Create the interface of a Procedure given the ProcedureApi and the
      * ProcedureData. This is done for every procedure, even for the
@@ -54,15 +54,17 @@ public:
      * This corrector will be needed from the ProcedureApi when the answer needs
      * to be processed.
      */
-    ProcedureInterface(ProcedureApi* a, const data::ProcedureData* d) :
-                                                        api(a), data(d)
+    ProcedureInterface(ProcedureApi *a, const data::ProcedureData *d)
+        : api(a), data(d)
     {
         Q_ASSERT(api != 0);
         Q_ASSERT(data != 0);
         makeCorrector();
     }
 
-    virtual ~ProcedureInterface() {}
+    virtual ~ProcedureInterface()
+    {
+    }
 
     /**
      * Return the first screen; this is the screen that should be shown
@@ -85,7 +87,7 @@ public:
      * Process the result from the last trial
      * return whether the answer was correct or incorrect
      */
-    virtual ResultHighlight processResult(const ScreenResult* screenResult) = 0;
+    virtual ResultHighlight processResult(const ScreenResult *screenResult) = 0;
 
     /**
      * Return XML for the results file
@@ -93,7 +95,8 @@ public:
     virtual QString resultXml() const = 0;
 
     /**
-     * Return XML for the results file, is called once after the experiment has finished
+     * Return XML for the results file, is called once after the experiment has
+     * finished
      */
     virtual QString finalResultXml() const = 0;
 
@@ -101,41 +104,45 @@ public:
      * Create the corrector from the ProcedureData and store it somewhere
      * accessible for the ProcedureApi.
      */
-    virtual void makeCorrector() {
+    virtual void makeCorrector()
+    {
         api->makeCorrector(data);
     }
 
 protected:
-
-    ProcedureApi* api;
-    const data::ProcedureData* data;
+    ProcedureApi *api;
+    const data::ProcedureData *data;
 };
-
 
 class ProcedureParserInterface
 {
 public:
-    virtual ~ProcedureParserInterface() {}
+    virtual ~ProcedureParserInterface()
+    {
+    }
 
-    virtual data::ProcedureData* parse(const QDomElement &base) = 0;
+    virtual data::ProcedureData *parse(const QDomElement &base) = 0;
 };
 
 class ProcedureCreatorInterface
 {
 public:
-
-    virtual ~ProcedureCreatorInterface() {}
+    virtual ~ProcedureCreatorInterface()
+    {
+    }
 
     virtual QStringList availablePlugins() const = 0;
 
-    virtual ProcedureInterface* createProcedure(const QString& name,
-                                                ProcedureApi* api,
-                                                const data::ProcedureData *config) = 0;
+    virtual ProcedureInterface *
+    createProcedure(const QString &name, ProcedureApi *api,
+                    const data::ProcedureData *config) = 0;
 
-    virtual ProcedureParserInterface* createProcedureParser(const QString& name) = 0;
+    virtual ProcedureParserInterface *
+    createProcedureParser(const QString &name) = 0;
 };
 }
 
-Q_DECLARE_INTERFACE(apex::ProcedureCreatorInterface, "be.exporl.apex.procedure/1.0")
+Q_DECLARE_INTERFACE(apex::ProcedureCreatorInterface,
+                    "be.exporl.apex.procedure/1.0")
 
 #endif

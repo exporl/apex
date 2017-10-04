@@ -27,37 +27,35 @@
 #include <QDateTime>
 #include <QString>
 
-namespace apex {
-
+namespace apex
+{
 
 /**
 Contains the complete result of a single trial
 
 @author Tom Francart,,,
 */
-class TrialResult{
+class TrialResult
+{
 public:
     TrialResult();
 
     ~TrialResult();
 
-    public:                 // we make it a simple struct
-
+public: // we make it a simple struct
     QString name;
     QString stimulus;
-    QString extra;                          // extra xml data
+    QString extra; // extra xml data
     ScreenResult screenResult;
     QDateTime timestamp;
     bool correctorResult;
-    int answerTime;                         // # of ms before answer
-    int correctAnswer;                      // the correct answer if defined by procedure
+    int answerTime;    // # of ms before answer
+    int correctAnswer; // the correct answer if defined by procedure
     data::adapting_parameter targetParam;
-    bool defTargetParam;            // is target parameter defined?
+    bool defTargetParam; // is target parameter defined?
 
     QString toXML() const;
-
 };
-
 }
 
 #endif

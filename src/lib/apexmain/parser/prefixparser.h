@@ -46,7 +46,6 @@ public:
 
     static data::FilePrefix Parse(const QDomElement &currentNode);
 };
-
 }
 }
 

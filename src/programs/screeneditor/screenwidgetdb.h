@@ -26,24 +26,25 @@ class QAction;
 
 namespace apex
 {
-  namespace editor
-  {
-    class ScreenEditor;
+namespace editor
+{
+class ScreenEditor;
 
-    /**
-     * The ScreenWidgetDB class contains information about the
-     * possible "add widget" and "add layout" actions in a
-     * ScreenEditor.  It keeps a list of both kinds of actions.
-     */
-    class ScreenWidgetDB
-    {
-      QList<QAction*> addWidgetActions;
-      QList<QAction*> addLayoutActions;
-    public:
-      ScreenWidgetDB( ScreenEditor* e );
-      QList<QAction*> getAddWidgetActions();
-      QList<QAction*> getAddLayoutActions();
-    };
-  }
+/**
+ * The ScreenWidgetDB class contains information about the
+ * possible "add widget" and "add layout" actions in a
+ * ScreenEditor.  It keeps a list of both kinds of actions.
+ */
+class ScreenWidgetDB
+{
+    QList<QAction *> addWidgetActions;
+    QList<QAction *> addLayoutActions;
+
+public:
+    ScreenWidgetDB(ScreenEditor *e);
+    QList<QAction *> getAddWidgetActions();
+    QList<QAction *> getAddLayoutActions();
+};
+}
 }
 #endif

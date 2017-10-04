@@ -84,10 +84,7 @@ private:
     unsigned mv_nDrops;
     QString dropSource;
 };
-
 }
-
 }
-
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_BUFFERDROPCALLBACK_H_

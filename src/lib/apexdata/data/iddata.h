@@ -37,22 +37,18 @@ namespace data
   */
 class APEXDATA_EXPORT IdData
 {
-    public:
-        IdData();
+public:
+    IdData();
 
-        ~IdData();
+    ~IdData();
 
-        const QString& id() const;
-        void setId(const QString& id);
+    const QString &id() const;
+    void setId(const QString &id);
 
-    private:
-
-        QString identification;
-
+private:
+    QString identification;
 };
-
 }
-
 }
 
 #endif

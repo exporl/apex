@@ -39,19 +39,17 @@ using data::ScreenElement;
  * The LabelRunDelegate class is an implementation of
  * ScreenElementRunDelegate representing a LabelElement.
  */
-class LabelRunDelegate
-            : public LabelRunDelegateBase
+class LabelRunDelegate : public LabelRunDelegateBase
 {
     Q_OBJECT
 
-    const LabelElement* element;
-public:
-    LabelRunDelegate(ExperimentRunDelegate* p_exprd,
-                     QWidget* parent, const LabelElement* e,
-                     const QFont& font);
-    const ScreenElement* getScreenElement() const;
-};
+    const LabelElement *element;
 
+public:
+    LabelRunDelegate(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                     const LabelElement *e, const QFont &font);
+    const ScreenElement *getScreenElement() const;
+};
 }
 }
 

@@ -34,8 +34,9 @@ WavDeviceData::WavDeviceData() : DeviceData(TYPE_WAVDEVICE)
     setValueByType("channels", 2);
     setValueByType("samplerate", 44100);
     setValueByType("buffersize", -1);
-//    setValueByType("defaultbuffersize", 8192);
-    setValueByType("blocksize", 8192);      // Note: if set to -1, the sound card buffer size will be used by default
+    //    setValueByType("defaultbuffersize", 8192);
+    setValueByType("blocksize", 8192); // Note: if set to -1, the sound card
+                                       // buffer size will be used by default
     setValueByType("buffersize_apex", 1);
     setValueByType("padzero", 0);
 }
@@ -46,37 +47,37 @@ WavDeviceData::~WavDeviceData()
 
 QString WavDeviceData::driverString() const
 {
-    return valueByType ("driver").toString();
+    return valueByType("driver").toString();
 }
 
-void WavDeviceData::setDriverString(const QString& driver)
+void WavDeviceData::setDriverString(const QString &driver)
 {
     setValueByType("driver", driver);
 }
 
 double WavDeviceData::internalBufferSize() const
 {
-    return valueByType ("buffersize_apex").toDouble();
+    return valueByType("buffersize_apex").toDouble();
 }
 
-void WavDeviceData::setInternalBufferSize (double bs)
+void WavDeviceData::setInternalBufferSize(double bs)
 {
-    setValueByType ("buffersize_apex", bs);
+    setValueByType("buffersize_apex", bs);
 }
 
 int WavDeviceData::blockSize() const
 {
-    return valueByType ("blocksize").toInt();
+    return valueByType("blocksize").toInt();
 }
 
 void WavDeviceData::setBlockSize(unsigned bs)
 {
-    setValueByType ("blocksize", bs);
+    setValueByType("blocksize", bs);
 }
 
 int WavDeviceData::bufferSize() const
 {
-    return valueByType ("buffersize").toInt();
+    return valueByType("buffersize").toInt();
 }
 
 /*unsigned WavDeviceData::defaultBufferSize() const
@@ -86,17 +87,17 @@ int WavDeviceData::bufferSize() const
 
 void WavDeviceData::setBufferSize(int bs)
 {
-    setValueByType ("buffersize", bs);
+    setValueByType("buffersize", bs);
 }
 
 unsigned long WavDeviceData::sampleRate() const
 {
-    return valueByType ("samplerate").toUInt();
+    return valueByType("samplerate").toUInt();
 }
 
-void WavDeviceData::setSampleRate (unsigned long fs)
+void WavDeviceData::setSampleRate(unsigned long fs)
 {
-    setValueByType ("samplerate", unsigned (fs));
+    setValueByType("samplerate", unsigned(fs));
 }
 
 QString WavDeviceData::cardName() const
@@ -104,6 +105,6 @@ QString WavDeviceData::cardName() const
     return valueByType("card").toString();
 }
 
-}//ns data
+} // ns data
 
-}//ns apex
+} // ns apex

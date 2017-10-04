@@ -49,8 +49,14 @@
     <cohdriver id="nic3-l34-cic4-mp12-1">protoslave: slave=nic3slave,verbose; platform=L34,implant=CIC4,auto_pufs=off,go_live=on,min_pulse_width_us=25.0,flagged_electrodes=,latency_ms=1000,mode=MP1+2</cohdriver>
   </cohdrivers>
   <prefixes>
-    <prefix id="regression">file:../stimuli</prefix>
-    <prefix id="speechmaterials">file:j:/speechmaterials</prefix>
+    <prefix id="regression">../stimuli</prefix>
+    <prefix id="speechmaterials">j:/speechmaterials</prefix>
     <prefix id="pictures">../../pictures</prefix>
   </prefixes>
+  <bertha>true</bertha>
+  <interactive>
+    <constraints>
+      <constraint expression="apex:apex/results[1]/subject[1]">[a-zA-Z][0-3][0-9][a-zA-Z][0-9][0-9][a-zA-Z]</constraint>
+    </constraints>
+  </interactive>
 </apex:apex>

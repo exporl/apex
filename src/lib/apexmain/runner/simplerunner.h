@@ -22,31 +22,33 @@
 
 #include "experimentrunner.h"
 
+#include "../resultsink/resultviewer.h"
+#include "flowrunner.h"
+
 namespace apex
 {
-
-class FlowRunner;
 
 class SimpleRunner : public ExperimentRunner
 {
     Q_OBJECT
 public:
     SimpleRunner();
-    virtual bool select(const QString& path) Q_DECL_OVERRIDE;
-    void selectFromDir(const QString& path) Q_DECL_OVERRIDE;
+    virtual bool select(const QString &path) Q_DECL_OVERRIDE;
+    void selectFromDir(const QString &path) Q_DECL_OVERRIDE;
     virtual void makeVisible() Q_DECL_OVERRIDE;
 
 public slots:
-    void setExpressions(const QMap<QString, QString>& expressions);
+    void setExpressions(const QMap<QString, QString> &expressions);
 
 private:
     QString path;
-    FlowRunner* flowRunner;
+    QScopedPointer<FlowRunner> flowRunner;
+    QScopedPointer<ResultViewer> resultViewer;
 
 signals:
-    void errorMessage(const QString& source, const QString& message);
-    void setResultsFilePath(const QString& filePath);
-    void savedFile(const QString& filePath);
+    void errorMessage(const QString &source, const QString &message);
+    void setResultsFilePath(const QString &filePath);
+    void savedFile(const QString &filePath);
 };
 }
 

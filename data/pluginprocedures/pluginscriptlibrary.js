@@ -16,10 +16,11 @@ xml.stimulus = function(id, db, fp, v) {
                 xml.tag("parameter", {"id" : fp}, v)));
 };
 
-xml.trial = function(id, sc, st) {
+xml.trial = function(id, sc, st, an) {
     return xml.tag("trial", {"id" : id},
-            xml.tag("screen", {"id" : sc}),
-            st);
+                   (!an ? '' : xml.tag("answer", {}, an)) +
+                       xml.tag("screen", {"id" : sc}),
+                   st);
 };
 
 xml.datablock = function (id, device, file, data) {

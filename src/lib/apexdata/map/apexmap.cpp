@@ -28,12 +28,11 @@ namespace apex
 namespace data
 {
 
-struct ApexMapPrivate
-{
+struct ApexMapPrivate {
     ApexMapPrivate();
 
-    int nbElec;             /// number of electrodes
-    ChannelMap defaultMap;  /// default parameters, when not defined in child map
+    int nbElec;            /// number of electrodes
+    ChannelMap defaultMap; /// default parameters, when not defined in child map
 };
 
 ApexMapPrivate::ApexMapPrivate() : nbElec(0)
@@ -51,13 +50,10 @@ ApexMap::ApexMap() : d(new ApexMapPrivate())
     insert(0, dummyMap);
 }
 
-
-ApexMap::ApexMap(const ApexMap& other) : QMap<int, ChannelMap>(other),
-                                         d(new ApexMapPrivate(*other.d))
+ApexMap::ApexMap(const ApexMap &other)
+    : QMap<int, ChannelMap>(other), d(new ApexMapPrivate(*other.d))
 {
-
 }
-
 
 ApexMap::~ApexMap()
 {
@@ -69,7 +65,7 @@ ChannelMap ApexMap::defaultMap() const
     return d->defaultMap;
 }
 
-void ApexMap::setDefaultMap(const ChannelMap& map)
+void ApexMap::setDefaultMap(const ChannelMap &map)
 {
     d->defaultMap = map;
 }
@@ -96,17 +92,17 @@ const QString ApexMap::toXml() const
     for (const_iterator it = begin(); it != end(); ++it) {
         if (it.key() == 0)
             continue;
-        result+= "<channelmap id=\"";
-        result+= QString::number(it.key());
-        result+= "\">\n";
-        result+= it.value().toXml();
-        result+= "</channelmap>\n";
+        result += "<channelmap id=\"";
+        result += QString::number(it.key());
+        result += "\">\n";
+        result += it.value().toXml();
+        result += "</channelmap>\n";
     }
 
     return result;
 }
 
-//FIXME false is never returned...
+// FIXME false is never returned...
 bool ApexMap::isComplete() const
 {
     const unsigned electrodes = 22;
@@ -117,7 +113,7 @@ bool ApexMap::isComplete() const
         okarray[i + 1] = false;
 
     for (const_iterator it = begin(); it != end(); ++it) {
-        if (okarray[it.key()] && it.key()!=0)
+        if (okarray[it.key()] && it.key() != 0)
             qCDebug(APEX_RS, "Error: duplicate map entry: %i", it.key());
         okarray[it.key()] = true;
     }
@@ -129,10 +125,9 @@ bool ApexMap::isComplete() const
     return true;
 }
 
-ApexMap& ApexMap::operator=(const ApexMap& other)
+ApexMap &ApexMap::operator=(const ApexMap &other)
 {
-    if (this != &other)
-    {
+    if (this != &other) {
         QMap<int, ChannelMap>::operator=(other);
         *d = *other.d;
     }
@@ -140,12 +135,11 @@ ApexMap& ApexMap::operator=(const ApexMap& other)
     return *this;
 }
 
-bool ApexMap::operator==(const ApexMap& other)
+bool ApexMap::operator==(const ApexMap &other)
 {
     return QMap<int, ChannelMap>::operator==(other) &&
-           d->defaultMap == other.d->defaultMap &&
-           d->nbElec == other.d->nbElec;
+           d->defaultMap == other.d->defaultMap && d->nbElec == other.d->nbElec;
 }
 
-}//ns data
-}//ns apex
+} // ns data
+} // ns apex

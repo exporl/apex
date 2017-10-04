@@ -1,0 +1,14 @@
+package cmn;
+
+option optimize_for = LITE_RUNTIME;
+
+message ProtoSlaveReply {
+    optional bytes result = 1;
+    optional bytes error = 2;
+}
+
+message ProtoSlaveRequest {
+    required bytes function = 1;
+    required bool output = 2;
+    repeated bytes parameter = 3;
+}

@@ -44,7 +44,10 @@ public:
     CohDeviceParser();
     ~CohDeviceParser();
 
-    virtual void AddParameter(data::SimpleParameters* p, const QDomElement &e, const QString& owner, const QString& type, const QString& id, const QVariant& value, const int channel) Q_DECL_OVERRIDE;
+    virtual void AddParameter(data::SimpleParameters *p, const QDomElement &e,
+                              const QString &owner, const QString &type,
+                              const QString &id, const QVariant &value,
+                              const int channel) Q_DECL_OVERRIDE;
 };
 
 } // namespace parser

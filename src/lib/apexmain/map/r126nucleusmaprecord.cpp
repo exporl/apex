@@ -23,19 +23,16 @@
 
 #include "r126nucleusmaprecord.h"
 
-namespace r126 {
+namespace r126
+{
 
-        int R126NucleusMAPRecord::GetStimulationMode() const {
-                if (m_sStimulationMode == "LRD_MapStimulationMode_MP1Plus2") {
-                        return MP1_2;
-                } else {
-                        throw ApexStringException("Unsupported stimulation mode: "+ m_sStimulationMode);
-                }
-
-        }
-
-
-
-
+int R126NucleusMAPRecord::GetStimulationMode() const
+{
+    if (m_sStimulationMode == "LRD_MapStimulationMode_MP1Plus2") {
+        return MP1_2;
+    } else {
+        throw ApexStringException("Unsupported stimulation mode: " +
+                                  m_sStimulationMode);
+    }
 }
-
+}

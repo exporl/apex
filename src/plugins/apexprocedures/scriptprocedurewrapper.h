@@ -33,7 +33,8 @@
 #include <QScriptContext>
 #include <QScriptEngine>
 
-namespace apex {
+namespace apex
+{
 class ScreenResult;
 }
 
@@ -42,9 +43,9 @@ class ScreenResult;
  * Calls the relevant methods from the script
  */
 
-class ScriptProcedureWrapper: public ScriptProcedureInterface {
+class ScriptProcedureWrapper : public ScriptProcedureInterface
+{
     Q_OBJECT
-
 
 public:
     static const QString INSTANCENAME;
@@ -53,8 +54,8 @@ public:
 
     virtual ~ScriptProcedureWrapper();
 
-    void setEngine(QScriptEngine* p_engine);
-    void setClassname(QScriptValue* p_classname);
+    void setEngine(QScriptEngine *p_engine);
+    void setClassname(QScriptValue *p_classname);
 
     bool isValid();
 
@@ -83,28 +84,25 @@ public slots:
         */
     virtual double progress();
 
-    virtual apex::ResultHighlight processResult(const apex::ScreenResult* screenResult) const Q_DECL_OVERRIDE;
+    virtual apex::ResultHighlight
+    processResult(const apex::ScreenResult *screenResult) const Q_DECL_OVERRIDE;
 
     /**
       * Is called before the procedure starts, can be used to check
       * whether all required parameters are present and valid
       * Return empty QString if OK, otherwise error message
       */
-    virtual QString checkParameters () const Q_DECL_OVERRIDE;
-
+    virtual QString checkParameters() const Q_DECL_OVERRIDE;
 
 private:
-    QScriptEngine*  engine;
-    QScriptValue* classname;
+    QScriptEngine *engine;
+    QScriptValue *classname;
 
-    QScriptValue executeLine(const QString& line, const QScriptValueList& params) const;
-
+    QScriptValue executeLine(const QString &line,
+                             const QScriptValueList &params) const;
 };
 
-
-
-Q_DECLARE_METATYPE(ScriptProcedureWrapper*)
-Q_SCRIPT_DECLARE_QMETAOBJECT (ScriptProcedureWrapper, QObject*)
+Q_DECLARE_METATYPE(ScriptProcedureWrapper *)
+Q_SCRIPT_DECLARE_QMETAOBJECT(ScriptProcedureWrapper, QObject *)
 
 #endif
-

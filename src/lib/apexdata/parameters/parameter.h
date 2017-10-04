@@ -20,11 +20,11 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_PARAMETER_H_
 #define _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_PARAMETER_H_
 
-#include <QString>
 #include <QMap>
+#include <QString>
 #include <QVariant>
 
-//from libtools
+// from libtools
 #include "apextools/global.h"
 
 namespace apex
@@ -43,18 +43,14 @@ class APEXDATA_EXPORT Parameter
 {
 
 public:
-
     Parameter();
-    Parameter(const Parameter& other);
-    Parameter(const QString& owner,
-              const QString& type,
-              const QVariant& defaultValue,
-              int channel,
-              bool hasID,
-              const QString& id = QString());
+    Parameter(const Parameter &other);
+    Parameter(const QString &owner, const QString &type,
+              const QVariant &defaultValue, int channel, bool hasID,
+              const QString &id = QString());
     ~Parameter();
 
-    //getters
+    // getters
     QString owner() const;
     QString type() const;
     QVariant defaultValue() const;
@@ -63,40 +59,36 @@ public:
     bool hasId() const;
     QString id() const;
 
-    //setters
-    void setDefaultValue(const QVariant& value);
-    void setId(const QString& id);
-    void setOwner(const QString& owner);
-    void setType(const QString& type);
+    // setters
+    void setDefaultValue(const QVariant &value);
+    void setId(const QString &id);
+    void setOwner(const QString &owner);
+    void setType(const QString &type);
 
     QString toString() const;
     bool isValid() const;
 
-    Parameter& operator=(const Parameter& other);
-    bool operator<(const Parameter& p) const;
-    bool operator==(const Parameter& other) const;
+    Parameter &operator=(const Parameter &other);
+    bool operator<(const Parameter &p) const;
+    bool operator==(const Parameter &other) const;
 
 private:
-
-    ParameterPrivate* d;
+    ParameterPrivate *d;
 };
 
-
-struct APEXDATA_EXPORT ValueReset
-{
+struct APEXDATA_EXPORT ValueReset {
     QVariant value;
-    bool    reset;
+    bool reset;
 
     ValueReset();
 
-    ValueReset(const QVariant& v, bool r);
+    ValueReset(const QVariant &v, bool r);
 };
 
 typedef QMap<Parameter, QVariant> ParameterValueMap;
 typedef QMap<Parameter, ValueReset> PMRuntimeSettings;
 
-}// ns data
-}        // ns apex
-
+} // ns data
+} // ns apex
 
 #endif

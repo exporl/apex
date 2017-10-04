@@ -29,75 +29,75 @@ class QString;
 
 namespace apex
 {
-    namespace data {
-        class MixerParameters;
-    }
-  namespace device
-  {
+namespace data
+{
+class MixerParameters;
+}
+namespace device
+{
 
+/**
+  * Pa5Device
+  *   TDT's Pa5 attenuator abstraction.
+  *   @TODO implement multiple PA5s.
+  ************************************* */
+class Pa5Device : public IMixer
+{
+public:
+    /**
+      * Constructor.
+      * @param ac_sID unique ID
+      * @param a_pParameters the default initial parameters
+      */
+    Pa5Device(data::MixerParameters *a_pParameters);
 
+    /**
+      * Destructor.
+      */
+    ~Pa5Device();
 
-      /**
-        * Pa5Device
-        *   TDT's Pa5 attenuator abstraction.
-        *   @TODO implement multiple PA5s.
-        ************************************* */
-    class Pa5Device : public IMixer
+    /**
+      * Implementation of the IMixer method.
+      */
+    double mf_dGetMaxGain() const;
+
+    /**
+      * Implementation of the IMixer method.
+      */
+    double mf_dGetMinGain() const;
+
+    /**
+      * Implementation of the IMixer method.
+      * Note that Pa5 itself sets attenuation instead of amplification,
+      * so the ac_dGainIndB is inverted here.
+      * @param ac_dGainIndB the attenuation in dB
+      */
+    void mp_SetGain(const double ac_dGainIndB);
+
+    /**
+      * Implementation of the IMixer method.
+      * @see mp_SetGain( const double ac_dGainIndB )
+      */
+    void mp_SetGain(const double ac_dGainIndB, const unsigned ac_nChannel);
+
+    /**
+      * Implementation of the IMixer method.
+      */
+    double mf_dGetGain(const unsigned ac_nChannel) const;
+
+    /**
+      * Implementation of the IMixer method.
+      */
+    unsigned mf_nGetNumChannels() const
     {
-    public:
-        /**
-          * Constructor.
-          * @param ac_sID unique ID
-          * @param a_pParameters the default initial parameters
-          */
-        Pa5Device(  data::MixerParameters* a_pParameters );
+        return m_nNumPA5s;
+    }
 
-        /**
-          * Destructor.
-          */
-      ~Pa5Device();
-
-        /**
-          * Implementation of the IMixer method.
-          */
-      double mf_dGetMaxGain() const;
-
-        /**
-          * Implementation of the IMixer method.
-          */
-      double mf_dGetMinGain() const;
-
-        /**
-          * Implementation of the IMixer method.
-          * Note that Pa5 itself sets attenuation instead of amplification,
-          * so the ac_dGainIndB is inverted here.
-          * @param ac_dGainIndB the attenuation in dB
-          */
-      void mp_SetGain( const double ac_dGainIndB );
-
-        /**
-          * Implementation of the IMixer method.
-          * @see mp_SetGain( const double ac_dGainIndB )
-          */
-      void mp_SetGain( const double ac_dGainIndB, const unsigned ac_nChannel );
-
-        /**
-          * Implementation of the IMixer method.
-          */
-      double mf_dGetGain( const unsigned ac_nChannel ) const;
-
-        /**
-          * Implementation of the IMixer method.
-          */
-      unsigned mf_nGetNumChannels() const
-      { return m_nNumPA5s; }
-
-    private:
-      Pa5ActX*  m_pActXObj;
-      unsigned  m_nNumPA5s;
-    };
-
-  }
+private:
+    Pa5ActX *m_pActXObj;
+    unsigned m_nNumPA5s;
+};
+}
 }
 
 #endif //#ifdef PA5

@@ -29,28 +29,22 @@ namespace apex
 namespace data
 {
 
-
-class APEXDATA_EXPORT SoundLevelMeterData: public SimpleParameters
+class APEXDATA_EXPORT SoundLevelMeterData : public SimpleParameters
 {
-    public:
-        SoundLevelMeterData();
+public:
+    SoundLevelMeterData();
 
-        bool containsSupportedData() const;
+    bool containsSupportedData() const;
 
-        QString measurementType() const;
-        QString frequencyWeightingType() const;
-        QString timeWeightingType() const;
-        const QString& errorString() const;
-    private:
-        mutable QString error;
+    QString measurementType() const;
+    QString frequencyWeightingType() const;
+    QString timeWeightingType() const;
+    const QString &errorString() const;
 
+private:
+    mutable QString error;
 };
-
-
 }
 }
-
-
-
 
 #endif

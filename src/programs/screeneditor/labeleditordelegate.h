@@ -24,44 +24,43 @@
 
 namespace apex
 {
-  namespace data
-  {
-    class LabelElement;
-    class ScreenElement;
-  }
+namespace data
+{
+class LabelElement;
+class ScreenElement;
+}
 
-  namespace editor
-  {
-    using data::LabelElement;
-    using data::ScreenElement;
+namespace editor
+{
+using data::LabelElement;
+using data::ScreenElement;
 
-    /**
-     * This class is an ScreenElementEditorDelegate representing a
-     * LabelElement.
-     */
-    class LabelEditorDelegate
-      : public LabelEditorDelegateBase
-    {
-      Q_OBJECT
+/**
+ * This class is an ScreenElementEditorDelegate representing a
+ * LabelElement.
+ */
+class LabelEditorDelegate : public LabelEditorDelegateBase
+{
+    Q_OBJECT
 
-      LabelElement* element;
-    public:
-      LabelEditorDelegate( LabelElement* e, QWidget* parent, ScreenWidget* w );
-      ~LabelEditorDelegate();
-      ScreenElement* getScreenElement();
+    LabelElement *element;
 
-      const QString getText() const;
-      void setText( const QString& s );
+public:
+    LabelEditorDelegate(LabelElement *e, QWidget *parent, ScreenWidget *w);
+    ~LabelEditorDelegate();
+    ScreenElement *getScreenElement();
 
-      int getPropertyCount();
-      QString getPropertyName( int nr );
-      QVariant getPropertyData( int nr, int role );
-      PropertyType getPropertyType( int nr );
-      bool setProperty( int nr, const QVariant& v );
+    const QString getText() const;
+    void setText(const QString &s);
 
-      void mouseDoubleClickEvent ( QMouseEvent * event );
-    };
+    int getPropertyCount();
+    QString getPropertyName(int nr);
+    QVariant getPropertyData(int nr, int role);
+    PropertyType getPropertyType(int nr);
+    bool setProperty(int nr, const QVariant &v);
 
-  }
+    void mouseDoubleClickEvent(QMouseEvent *event);
+};
+}
 }
 #endif

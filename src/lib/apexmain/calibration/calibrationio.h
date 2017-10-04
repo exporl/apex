@@ -30,7 +30,7 @@ class ExperimentRunDelegate;
 
 namespace stimulus
 {
-    class StimulusOutput;
+class StimulusOutput;
 }
 
 class CalibrationIOPrivate;
@@ -46,28 +46,28 @@ class CalibrationIO : public QObject
     Q_OBJECT
 public:
     // window is not used for ownership
-    CalibrationIO (ExperimentRunDelegate *runDelegate, bool checkClipping);
+    CalibrationIO(ExperimentRunDelegate *runDelegate, bool checkClipping);
     ~CalibrationIO();
 
 public Q_SLOTS:
     // Sets the next stimulus. If already playing, the stimulus is changed and *
     // the output restarted
-    void setStimulus (const QString &name);
+    void setStimulus(const QString &name);
 
     void startOutput();
     void stopOutput();
 
-
     // Sets a parameter to the given value. Has immediate effect.
-    void setParameter (const QString &name, double value);
+    void setParameter(const QString &name, double value);
+    void queueParameter(const QString &name, double value);
 
     // If true, loop the current stimulus infinitely, else stop after one
     // presentation.
-    void setLooping (bool loop);
+    void setLooping(bool loop);
 
 Q_SIGNALS:
-    void playingChanged (bool value);
-    void clippingOccured (bool clipping);
+    void playingChanged(bool value);
+    void clippingOccured(bool clipping);
 
 private:
     const QScopedPointer<CalibrationIOPrivate> d;

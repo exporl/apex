@@ -19,116 +19,112 @@
 
 #include "picturelabeleditordelegate.h"
 
-#include "screenwidget.h"
 #include "functions.h"
+#include "screenwidget.h"
 
 #include "apexdata/screen/picturelabelelement.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QString>
 #include <QVBoxLayout>
 #include <QVariant>
-#include <QString>
 
 namespace apex
 {
-  namespace editor
-  {
-    ScreenElement* PictureLabelEditorDelegate::getScreenElement()
-    {
-      return element;
-    }
-
-
-    PictureLabelEditorDelegate::PictureLabelEditorDelegate(
-      PictureLabelElement* e, QWidget* parent, ScreenWidget* w )
-      : LabelEditorDelegateBase( e, parent, w ),
-        element( e )
-    {
-      resetText();
-    }
-
-    int PictureLabelEditorDelegate::getPropertyCount()
-    {
-      return ScreenElementEditorDelegate::getPropertyCount() + 1;
-    }
-
-    QString PictureLabelEditorDelegate::getPropertyName( int nr )
-    {
-      if ( nr < ScreenElementEditorDelegate::getPropertyCount() )
-        return ScreenElementEditorDelegate::getPropertyName( nr );
-      switch( nr - ScreenElementEditorDelegate::getPropertyCount() )
-      {
-      case 0: // picture
-        return tr( "picture" );
-      default:
-        return QString();
-      }
-    }
-
-    QVariant PictureLabelEditorDelegate::getPropertyData( int nr, int role )
-    {
-      if ( nr < ScreenElementEditorDelegate::getPropertyCount() )
-        return ScreenElementEditorDelegate::getPropertyData( nr, role );
-      switch( nr - ScreenElementEditorDelegate::getPropertyCount() )
-      {
-      case 0: // picture
-        if ( role == Qt::DisplayRole )
-          return element->getPicture();
-      default:
-        return QVariant();
-      }
-    }
-
-    PropertyType PictureLabelEditorDelegate::getPropertyType( int nr )
-    {
-      if ( nr < ScreenElementEditorDelegate::getPropertyCount() )
-        return ScreenElementEditorDelegate::getPropertyType( nr );
-      switch( nr - ScreenElementEditorDelegate::getPropertyCount() )
-      {
-      case 0: // picture
-        return ImagePropertyType;
-      default:
-        return IntPropertyType;
-      }
-    }
-
-    bool PictureLabelEditorDelegate::setProperty( int nr, const QVariant& v )
-    {
-      if ( nr < ScreenElementEditorDelegate::getPropertyCount() )
-        return ScreenElementEditorDelegate::setProperty( nr, v );
-      QString s;
-      switch( nr - ScreenElementEditorDelegate::getPropertyCount() )
-      {
-      case 0: // default
-        if ( v.type() != QVariant::String ) return false;
-        s = v.toString();
-        element->setPicture( s );
-        resetText();
-        return true;
-      default: return false;
-      }
-    }
-
-    void PictureLabelEditorDelegate::mouseReleaseEvent( QMouseEvent* ev )
-    {
-      handleMouseReleaseEvent( ev, this );
-    }
-
-    const QString PictureLabelEditorDelegate::getText() const
-    {
-      QString def = element->getPicture();
-      if ( def.isEmpty() ) def = tr( "Not set" );
-      def = shortenString( def, 30 );
-      return tr( "PictureLabel\n"
-                 "Picture:\n%1" )
-        .arg( def )
-        ;
-    }
-    PictureLabelEditorDelegate::~PictureLabelEditorDelegate()
-    {
-      screenWidget->delegateDeleted( this );
-    }
-  }
+namespace editor
+{
+ScreenElement *PictureLabelEditorDelegate::getScreenElement()
+{
+    return element;
 }
 
+PictureLabelEditorDelegate::PictureLabelEditorDelegate(PictureLabelElement *e,
+                                                       QWidget *parent,
+                                                       ScreenWidget *w)
+    : LabelEditorDelegateBase(e, parent, w), element(e)
+{
+    resetText();
+}
+
+int PictureLabelEditorDelegate::getPropertyCount()
+{
+    return ScreenElementEditorDelegate::getPropertyCount() + 1;
+}
+
+QString PictureLabelEditorDelegate::getPropertyName(int nr)
+{
+    if (nr < ScreenElementEditorDelegate::getPropertyCount())
+        return ScreenElementEditorDelegate::getPropertyName(nr);
+    switch (nr - ScreenElementEditorDelegate::getPropertyCount()) {
+    case 0: // picture
+        return tr("picture");
+    default:
+        return QString();
+    }
+}
+
+QVariant PictureLabelEditorDelegate::getPropertyData(int nr, int role)
+{
+    if (nr < ScreenElementEditorDelegate::getPropertyCount())
+        return ScreenElementEditorDelegate::getPropertyData(nr, role);
+    switch (nr - ScreenElementEditorDelegate::getPropertyCount()) {
+    case 0: // picture
+        if (role == Qt::DisplayRole)
+            return element->getPicture();
+    default:
+        return QVariant();
+    }
+}
+
+PropertyType PictureLabelEditorDelegate::getPropertyType(int nr)
+{
+    if (nr < ScreenElementEditorDelegate::getPropertyCount())
+        return ScreenElementEditorDelegate::getPropertyType(nr);
+    switch (nr - ScreenElementEditorDelegate::getPropertyCount()) {
+    case 0: // picture
+        return ImagePropertyType;
+    default:
+        return IntPropertyType;
+    }
+}
+
+bool PictureLabelEditorDelegate::setProperty(int nr, const QVariant &v)
+{
+    if (nr < ScreenElementEditorDelegate::getPropertyCount())
+        return ScreenElementEditorDelegate::setProperty(nr, v);
+    QString s;
+    switch (nr - ScreenElementEditorDelegate::getPropertyCount()) {
+    case 0: // default
+        if (v.type() != QVariant::String)
+            return false;
+        s = v.toString();
+        element->setPicture(s);
+        resetText();
+        return true;
+    default:
+        return false;
+    }
+}
+
+void PictureLabelEditorDelegate::mouseReleaseEvent(QMouseEvent *ev)
+{
+    handleMouseReleaseEvent(ev, this);
+}
+
+const QString PictureLabelEditorDelegate::getText() const
+{
+    QString def = element->getPicture();
+    if (def.isEmpty())
+        def = tr("Not set");
+    def = shortenString(def, 30);
+    return tr("PictureLabel\n"
+              "Picture:\n%1")
+        .arg(def);
+}
+PictureLabelEditorDelegate::~PictureLabelEditorDelegate()
+{
+    screenWidget->delegateDeleted(this);
+}
+}
+}

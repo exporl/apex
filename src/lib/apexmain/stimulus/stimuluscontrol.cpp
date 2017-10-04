@@ -7,44 +7,53 @@
 
 using namespace apex::stimulus;
 
-//class WaitSignaler **********************************************************
+// class WaitSignaler **********************************************************
 
 class WaitSignaler : public QThread
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    WaitSignaler(QObject *parent, const appcore::WaitableObject &o);
+    ~WaitSignaler();
 
-        WaitSignaler(const appcore::WaitableObject& o);
+    void run();
 
-        void run();
+Q_SIGNALS:
 
-    Q_SIGNALS:
+    void waitDone();
 
-        void waitDone();
-    private:
-
-        const appcore::WaitableObject& object;
+private:
+    const appcore::WaitableObject &object;
 };
 
-WaitSignaler::WaitSignaler(const appcore::WaitableObject& o) : object(o)
+WaitSignaler::WaitSignaler(QObject *parent, const appcore::WaitableObject &o)
+    : QThread(parent), object(o)
 {
+    qCDebug(APEX_THREADS, "Constructing WaitSignaler thread");
     connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
 
+WaitSignaler::~WaitSignaler()
+{
+    qCDebug(APEX_THREADS, "Destroying WaitSignaler thread");
+    this->quit();
+    this->wait();
+}
 void WaitSignaler::run()
 {
     object.mf_eWaitForSignal();
     Q_EMIT waitDone();
 }
 
-//class StimulusControl *******************************************************
+// class StimulusControl *******************************************************
 
-StimulusControl::StimulusControl(StimulusOutput* o) : output(o)
+StimulusControl::StimulusControl(StimulusOutput *o) : output(o)
 {
 }
 
-void StimulusControl::playStimulus(const QString& stimulus, double silenceBefore)
+void StimulusControl::playStimulus(const QString &stimulus,
+                                   double silenceBefore)
 {
     output->UnLoadStimulus();
 
@@ -63,15 +72,15 @@ void StimulusControl::playStimulus(const QString& stimulus, double silenceBefore
     }
 }
 
-void StimulusControl::signalWhenDone(const appcore::WaitableObject& o,
-                                     const char* signal)
+void StimulusControl::signalWhenDone(const appcore::WaitableObject &o,
+                                     const char *signal)
 {
     if (signal == 0)
         return;
 
-    WaitSignaler* s = new WaitSignaler(o);
-    connect(s, SIGNAL(waitDone()), this, signal);
-    s->start(); //auto deletes
+    WaitSignaler *waitSignaler = new WaitSignaler(this, o);
+    connect(waitSignaler, SIGNAL(waitDone()), this, signal);
+    waitSignaler->start();
 }
 
 #include "stimuluscontrol.moc"

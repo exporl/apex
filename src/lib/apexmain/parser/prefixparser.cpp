@@ -63,6 +63,5 @@ FilePrefix PrefixParser::Parse(const QDomElement &currentNode)
     }
     return prefix;
 }
-
 }
 }

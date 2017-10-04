@@ -33,9 +33,9 @@ ScriptProcedureParser::ScriptProcedureParser()
 {
 }
 
-data::ProcedureData* ScriptProcedureParser::parse(const QDomElement &base)
+data::ProcedureData *ScriptProcedureParser::parse(const QDomElement &base)
 {
-    data::ScriptProcedureData* data = new data::ScriptProcedureData();
+    data::ScriptProcedureData *data = new data::ScriptProcedureData();
     ProcedureParsersParent::Parse(base, data);
     return data;
 }
@@ -47,12 +47,12 @@ bool ScriptProcedureParser::trialsValid()
 
 void ScriptProcedureParser::SetProcedureParameters(const QDomElement &p_base)
 {
-    data::ScriptProcedureData* param = dynamic_cast<data::ScriptProcedureData*>(currentConfig);
+    data::ScriptProcedureData *param =
+        dynamic_cast<data::ScriptProcedureData *>(currentConfig);
     parser::ScriptProcedureDataParser parser;
     parser.Parse(p_base, param);
 
     currentConfig = param;
 }
-
 }
 }

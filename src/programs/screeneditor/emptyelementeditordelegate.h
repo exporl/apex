@@ -26,37 +26,37 @@
 
 namespace apex
 {
-  namespace data
-  {
-    class EmptyElement;
-  }
+namespace data
+{
+class EmptyElement;
+}
 
-  namespace editor
-  {
-    using namespace apex::data;
+namespace editor
+{
+using namespace apex::data;
 
-    /**
-     * This class is an ScreenElementEditorDelegate representing a
-     * EmptyElement.
-     */
-    class EmptyElementEditorDelegate
-      : public LabelEditorDelegateBase
-    {
-      EmptyElement* element;
-    public:
-      EmptyElementEditorDelegate( EmptyElement* e, QWidget* parent, ScreenWidget* w );
-      ~EmptyElementEditorDelegate();
-      ScreenElement* getScreenElement();
+/**
+ * This class is an ScreenElementEditorDelegate representing a
+ * EmptyElement.
+ */
+class EmptyElementEditorDelegate : public LabelEditorDelegateBase
+{
+    EmptyElement *element;
 
-      const QString getText() const;
+public:
+    EmptyElementEditorDelegate(EmptyElement *e, QWidget *parent,
+                               ScreenWidget *w);
+    ~EmptyElementEditorDelegate();
+    ScreenElement *getScreenElement();
 
-      int getPropertyCount();
-      QString getPropertyName( int nr );
-      QVariant getPropertyData( int nr, int role );
-      PropertyType getPropertyType( int nr );
-      bool setProperty( int nr, const QVariant& v );
-    };
+    const QString getText() const;
 
-  }
+    int getPropertyCount();
+    QString getPropertyName(int nr);
+    QVariant getPropertyData(int nr, int role);
+    PropertyType getPropertyType(int nr);
+    bool setProperty(int nr, const QVariant &v);
+};
+}
 }
 #endif

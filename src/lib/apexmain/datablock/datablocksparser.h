@@ -42,20 +42,20 @@ public:
     /**
      * parent: parent widget for showing dialogs, if 0 no dialogs will be shown
      */
-    DatablocksParser(QWidget* parent = NULL);
+    DatablocksParser(QWidget *parent = NULL);
     ~DatablocksParser();
 
     data::DatablocksData Parse(const QString &fileName, const QDomElement &dom,
                                const QString &scriptLibraryFile,
-                               const QVariantMap &scriptParameters);
+                               const QVariantMap &scriptParameters,
+                               bool expand);
 
 private:
-    data::DatablockData* ParseDatablock(const QDomElement &p_datablock,
-            const data::FilePrefix p_prefix);
+    data::DatablockData *ParseDatablock(const QDomElement &p_datablock,
+                                        const data::FilePrefix p_prefix);
 
-    QWidget* m_parent;
+    QWidget *m_parent;
 };
-
 }
 }
 

@@ -36,30 +36,33 @@ QDomElement StimuliWriter::addElement(QDomDocument *doc,
 {
     QDomElement rootElem = doc->documentElement();
 
-    QDomElement  stimuli = doc->createElement(QSL("stimuli"));
+    QDomElement stimuli = doc->createElement(QSL("stimuli"));
     rootElem.appendChild(stimuli);
 
-    //fixed_parameters
+    // fixed_parameters
     QStringList fixed_parameters = data.GetFixedParameters();
 
     if (fixed_parameters.count() > 0)
         stimuli.appendChild(addFixedParameters(doc, fixed_parameters));
 
-    //add all stimuli
-    Q_FOREACH(data::StimulusData stimulus, data)
+    // add all stimuli
+    Q_FOREACH (data::StimulusData stimulus, data)
         stimuli.appendChild(addStimulus(doc, stimulus));
+
+    if (data.hasPluginStimuli())
+        stimuli.appendChild(doc->createElement(QSL("pluginstimuli")));
 
     return stimuli;
 }
 
 QDomElement StimuliWriter::addFixedParameters(QDomDocument *doc,
-        const QStringList& params)
+                                              const QStringList &params)
 {
     Q_ASSERT(params.count() > 0);
 
     QDomElement fixed_parameters = doc->createElement(QSL("fixed_parameters"));
 
-    Q_FOREACH(QString parameter, params) {
+    Q_FOREACH (QString parameter, params) {
         QDomElement param = doc->createElement(QSL("parameter"));
         param.setAttribute(QSL("id"), parameter);
         fixed_parameters.appendChild(param);
@@ -69,125 +72,96 @@ QDomElement StimuliWriter::addFixedParameters(QDomDocument *doc,
 }
 
 QDomElement StimuliWriter::addStimulus(QDomDocument *doc,
-                                       const data::StimulusData& data)
+                                       const data::StimulusData &data)
 {
     QDomElement stimulus = doc->createElement(QSL("stimulus"));
     stimulus.setAttribute(QSL("id"), data.GetID());
 
-    //description
+    // description
     QString description = data.description();
-    if (!description.isEmpty())
-    {
-        stimulus.appendChild(XmlUtils::createTextElement(doc, "description",
-                              description));
+    if (!description.isEmpty()) {
+        stimulus.appendChild(
+            XmlUtils::createTextElement(doc, "description", description));
     }
 
-    //datablocks
+    // datablocks
     stimulus.appendChild(addDatablocks(doc, data.GetDatablocksContainer()));
 
-    //variableParameters
+    // variableParameters
     StimulusParameters varParams = data.GetVariableParameters();
 
-    if (!varParams.isEmpty())
-    {
-        stimulus.appendChild(addParameters(doc, varParams,
-                              "variableParameters"));
+    if (!varParams.isEmpty()) {
+        stimulus.appendChild(
+            addParameters(doc, varParams, "variableParameters"));
     }
 
-    //fixedParameters
+    // fixedParameters
     StimulusParameters fixedParams = data.GetFixedParameters();
 
-    if (!fixedParams.isEmpty())
-    {
-        stimulus.appendChild(addParameters(doc, fixedParams,
-                              "fixedParameters"));
+    if (!fixedParams.isEmpty()) {
+        stimulus.appendChild(
+            addParameters(doc, fixedParams, "fixedParameters"));
     }
 
     return stimulus;
 }
 
-QDomElement StimuliWriter::addDatablocks(QDomDocument *doc,
-        const data::StimulusDatablocksContainer& data)
+QDomElement
+StimuliWriter::addDatablocks(QDomDocument *doc,
+                             const data::StimulusDatablocksContainer &data)
 {
     using data::StimulusDatablocksContainer;
 
     QDomElement element = doc->createElement(data.typeName());
 
-    switch (data.type)
-    {
-        case StimulusDatablocksContainer::DATABLOCKS:
+    switch (data.type) {
+    case StimulusDatablocksContainer::DATABLOCKS:
 
-            Q_ASSERT(data.count() <= 1);
-            Q_ASSERT(data.id.isEmpty());
+        Q_ASSERT(data.count() <= 1);
+        Q_ASSERT(data.id.isEmpty());
 
-            if (!data.isEmpty())
-                element.appendChild(addDatablocks(doc, data[0]));
+        if (!data.isEmpty())
+            element.appendChild(addDatablocks(doc, data[0]));
 
-            break;
+        break;
 
-        case StimulusDatablocksContainer::DATABLOCK:
+    case StimulusDatablocksContainer::DATABLOCK:
 
-            Q_ASSERT(!data.id.isEmpty());
+        Q_ASSERT(!data.id.isEmpty());
 
-            element.setAttribute(QSL("id"), data.id);
-            break;
+        element.setAttribute(QSL("id"), data.id);
+        break;
 
-        case StimulusDatablocksContainer::SEQUENTIAL:
-        case StimulusDatablocksContainer::SIMULTANEOUS:
+    case StimulusDatablocksContainer::SEQUENTIAL:
+    case StimulusDatablocksContainer::SIMULTANEOUS:
 
-            Q_ASSERT(data.id.isEmpty());
+        Q_ASSERT(data.id.isEmpty());
 
-            Q_FOREACH(StimulusDatablocksContainer datablock, data)
-                element.appendChild(addDatablocks(doc, datablock));
+        Q_FOREACH (StimulusDatablocksContainer datablock, data)
+            element.appendChild(addDatablocks(doc, datablock));
 
-            break;
+        break;
 
-        default:
-            qFatal("stimulus writer: unknown datablocks type");
+    default:
+        qFatal("stimulus writer: unknown datablocks type");
     }
 
     return element;
 }
 
 QDomElement StimuliWriter::addParameters(QDomDocument *doc,
-                                    const data::StimulusParameters& params,
-                                    const QString& name)
+                                         const data::StimulusParameters &params,
+                                         const QString &name)
 {
     QDomElement element = doc->createElement(name);
 
-    QMap<QString,QVariant>::const_iterator it;
-    for (it = params.map().begin(); it != params.map().end(); it++)
-    {
-        QDomElement parameter = XmlUtils::createRichTextElement(doc,
-                "parameter", it.value().toString());
+    QMap<QString, QVariant>::const_iterator it;
+    for (it = params.map().begin(); it != params.map().end(); it++) {
+        QDomElement parameter = XmlUtils::createRichTextElement(
+            doc, "parameter", it.value().toString());
         parameter.setAttribute(QSL("id"), it.key());
         element.appendChild(parameter);
     }
 
     return element;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

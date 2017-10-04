@@ -20,144 +20,141 @@
 #ifndef __READWRITELOCK_H__
 #define __READWRITELOCK_H__
 
+#include "containers/dynarray.h"
+#include "criticalsection.h"
 #include "defines.h"
 #include "waitableobject.h"
-#include "criticalsection.h"
-#include "containers/dynarray.h"
 using namespace streamapp;
 
 namespace appcore
 {
 
+/**
+  * ReadWriteLock
+  *   a CriticalSection that allows multiple readers at once.
+  *   -# Multiple readers can have the lock at once, but only one
+  *   writer is allowed at any time.
+  *   -# A writer can only enter the lock if all other readers
+  *   and writers have left it.
+  *   -# Writers have higher priority then readers when obtaining
+  *   -# If a thread has a read lock it can get a write lock if
+  *   there are no other readers
+  *   -# If a thread has a write lock it can get a read lock.
+  *   -# Recursive locking is allowed
+  **************************************************************** */
+class ReadWriteLock
+{
+public:
     /**
-      * ReadWriteLock
-      *   a CriticalSection that allows multiple readers at once.
-      *   -# Multiple readers can have the lock at once, but only one
-      *   writer is allowed at any time.
-      *   -# A writer can only enter the lock if all other readers
-      *   and writers have left it.
-      *   -# Writers have higher priority then readers when obtaining
-      *   -# If a thread has a read lock it can get a write lock if
-      *   there are no other readers
-      *   -# If a thread has a write lock it can get a read lock.
-      *   -# Recursive locking is allowed
-      **************************************************************** */
-  class ReadWriteLock
-  {
-  public:
-      /**
-        * Constructor.
-        */
+      * Constructor.
+      */
     ReadWriteLock();
 
-      /**
-        * Destructor.
-        * Results are undefined if lock is being held.
-        */
+    /**
+      * Destructor.
+      * Results are undefined if lock is being held.
+      */
     ~ReadWriteLock();
 
-      /**
-        * Lock for reading.
-        * Every call must have a matching mf_LeaveRead() call.
-        */
+    /**
+      * Lock for reading.
+      * Every call must have a matching mf_LeaveRead() call.
+      */
     void mf_EnterRead() const;
 
-      /**
-        * Unlock from reading.
-        * Result undefined if not locked.
-        */
+    /**
+      * Unlock from reading.
+      * Result undefined if not locked.
+      */
     void mf_LeaveRead() const;
 
-      /**
-        * Lock for writing.
-        * Every call must have a matching mf_LeaveWrite() call.
-        */
+    /**
+      * Lock for writing.
+      * Every call must have a matching mf_LeaveWrite() call.
+      */
     void mf_EnterWrite() const;
 
-      /**
-        * Unlock from writing.
-        * Result undefined if not locked.
-        */
+    /**
+      * Unlock from writing.
+      * Result undefined if not locked.
+      */
     void mf_LeaveWrite() const;
 
-  private:
-    mutable unsigned                m_nWriters;
-    mutable unsigned                m_nWritersWaiting;
-    mutable int                     m_nWriterID;
-    mutable DynamicArray<int>       m_ReaderIDs;
-    mutable DynamicArray<unsigned>  m_Readers;
+private:
+    mutable unsigned m_nWriters;
+    mutable unsigned m_nWritersWaiting;
+    mutable int m_nWriterID;
+    mutable DynamicArray<int> m_ReaderIDs;
+    mutable DynamicArray<unsigned> m_Readers;
 
-    const WaitableObject            mc_Waiter;
-    const CriticalSection           mc_Lock;
+    const WaitableObject mc_Waiter;
+    const CriticalSection mc_Lock;
 
-    ReadWriteLock ( const ReadWriteLock& );
-    const ReadWriteLock& operator= ( const ReadWriteLock& );
-  };
+    ReadWriteLock(const ReadWriteLock &);
+    const ReadWriteLock &operator=(const ReadWriteLock &);
+};
+
+/**
+  * ReadLock
+  *   obtains read from a ReadWriteLock.
+  ************************************** */
+class ReadLock
+{
+public:
+    /**
+      * Constructor.
+      * Enters the lock for reading.
+      * @param ac_Lock the one to enter
+      */
+    INLINE ReadLock(const ReadWriteLock &ac_Lock) : mc_Lock(ac_Lock)
+    {
+        mc_Lock.mf_EnterRead();
+    }
 
     /**
-      * ReadLock
-      *   obtains read from a ReadWriteLock.
-      ************************************** */
-  class ReadLock
-  {
-  public:
-      /**
-        * Constructor.
-        * Enters the lock for reading.
-        * @param ac_Lock the one to enter
-        */
-    INLINE ReadLock( const ReadWriteLock& ac_Lock ) :
-      mc_Lock( ac_Lock )
-    {
-      mc_Lock.mf_EnterRead();
-    }
-
-      /**
-        * Destructor.
-        * Leaves the lock from reading.
-        */
+      * Destructor.
+      * Leaves the lock from reading.
+      */
     INLINE ~ReadLock()
     {
-      mc_Lock.mf_LeaveRead();
+        mc_Lock.mf_LeaveRead();
     }
 
-  private:
-    const ReadWriteLock& mc_Lock;
+private:
+    const ReadWriteLock &mc_Lock;
 
-    ReadLock( const ReadLock& );
-    const ReadLock& operator= ( const ReadLock& );
-  };
+    ReadLock(const ReadLock &);
+    const ReadLock &operator=(const ReadLock &);
+};
 
-  class WriteLock
-  {
-  public:
-      /**
-        * Constructor.
-        * Enters the lock for write access.
-        * @param ac_Lock the one to enter
-        */
-    INLINE WriteLock( const ReadWriteLock& ac_Lock ) :
-      mc_Lock( ac_Lock )
+class WriteLock
+{
+public:
+    /**
+      * Constructor.
+      * Enters the lock for write access.
+      * @param ac_Lock the one to enter
+      */
+    INLINE WriteLock(const ReadWriteLock &ac_Lock) : mc_Lock(ac_Lock)
     {
-      mc_Lock.mf_EnterWrite();
+        mc_Lock.mf_EnterWrite();
     }
 
-      /**
-        * Destructor.
-        * Leaves the lock from writing.
-        */
+    /**
+      * Destructor.
+      * Leaves the lock from writing.
+      */
     INLINE ~WriteLock()
     {
-      mc_Lock.mf_LeaveWrite();
+        mc_Lock.mf_LeaveWrite();
     }
 
-  private:
-    const ReadWriteLock& mc_Lock;
+private:
+    const ReadWriteLock &mc_Lock;
 
-    WriteLock( const WriteLock& );
-    const WriteLock& operator= ( const WriteLock& );
-  };
-
+    WriteLock(const WriteLock &);
+    const WriteLock &operator=(const WriteLock &);
+};
 }
 
 #endif //#ifndef __READWRITELOCK_H__

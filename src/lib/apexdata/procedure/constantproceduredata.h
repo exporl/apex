@@ -29,19 +29,17 @@ namespace data
 /**
 @author Tom Francart,,,
 */
-    class APEXDATA_EXPORT ConstantProcedureData : public ProcedureData
+class APEXDATA_EXPORT ConstantProcedureData : public ProcedureData
 {
-    public:
-        ConstantProcedureData();
-        ~ConstantProcedureData();
+public:
+    ConstantProcedureData();
+    ~ConstantProcedureData();
 
-        virtual Type type() const;
-        virtual QString name() const;         //! plugin name
+    virtual Type type() const;
+    virtual QString name() const; //! plugin name
 
-    private:
-
+private:
 };
-
 }
 }
 

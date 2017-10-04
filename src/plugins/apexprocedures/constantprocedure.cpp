@@ -17,7 +17,6 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-
 #include "apexdata/procedure/constantproceduredata.h"
 
 #include "apexdata/screen/screen.h"
@@ -36,19 +35,18 @@ using namespace cmn;
 namespace apex
 {
 
-ConstantProcedure::ConstantProcedure(ProcedureApi* api,
-                                     const data::ProcedureData* data):
-        ProcedureInterface(api, data),
-        data(dynamic_cast<const data::ConstantProcedureData*>(data)),
-        currentTrial(-1),
-        trialSetup(false),
-        lastResult(false)
+ConstantProcedure::ConstantProcedure(ProcedureApi *api,
+                                     const data::ProcedureData *data)
+    : ProcedureInterface(api, data),
+      data(dynamic_cast<const data::ConstantProcedureData *>(data)),
+      currentTrial(-1),
+      trialSetup(false),
+      lastResult(false)
 {
     Q_ASSERT(data);
 
     trialList = api->makeTrialList(data, true);
 }
-
 
 double ConstantProcedure::progress() const
 {
@@ -58,14 +56,14 @@ double ConstantProcedure::progress() const
     return 100 * (double)(currentTrial + 1) / trialList.size();
 }
 
-ResultHighlight ConstantProcedure::processResult(const ScreenResult* screenResult)
+ResultHighlight
+ConstantProcedure::processResult(const ScreenResult *screenResult)
 {
     Q_ASSERT(trialSetup);
     trialSetup = false;
 
-    AnswerInfo info =  api->processAnswer(data, screenResult,
-                                          trialList[currentTrial],
-                                          stimulusPosition);
+    AnswerInfo info = api->processAnswer(
+        data, screenResult, trialList[currentTrial], stimulusPosition);
 
     Q_ASSERT(info.correctness.canConvert(QVariant::Bool));
     lastResult = info.correctness.toBool();
@@ -86,33 +84,49 @@ QString ConstantProcedure::resultXml() const
 
     QStringList result;
 
-    if(data->GetID().isEmpty()) {
-        result.append(QLatin1String("<procedure type=\"apex:constantProcedure\">"));
+    if (data->GetID().isEmpty()) {
+        result.append(
+            QLatin1String("<procedure type=\"apex:constantProcedure\">"));
     } else {
-        result.append(QString("<procedure type=\"apex:constantProcedure\" id=\"%1\">").arg(data->GetID()));
+        result.append(
+            QString("<procedure type=\"apex:constantProcedure\" id=\"%1\">")
+                .arg(data->GetID()));
     }
 
-    result.append(QSL("<%1>%2</%1>").arg(QSL("answer"), xmlEscapedText(lastAnswer)));
-    result.append(QSL("<%1>%2</%1>").arg(QSL("correct_answer"), xmlEscapedText(lastCorrectAnswer)));
+    result.append(
+        QSL("<%1>%2</%1>").arg(QSL("answer"), xmlEscapedText(lastAnswer)));
+    result.append(
+        QSL("<%1>%2</%1>")
+            .arg(QSL("correct_answer"), xmlEscapedText(lastCorrectAnswer)));
 
     if (data->choices().hasMultipleIntervals()) {
-        result.append(QSL("<%1>%2</%1>").arg(QSL("correct_interval")).arg(stimulusPosition + 1));
-        result.append(QSL("<%1>%2</%1>").arg(QSL("answer_interval")).arg(data->choices().interval(lastAnswer) + 1));
+        result.append(QSL("<%1>%2</%1>")
+                          .arg(QSL("correct_interval"))
+                          .arg(stimulusPosition + 1));
+        result.append(QSL("<%1>%2</%1>")
+                          .arg(QSL("answer_interval"))
+                          .arg(data->choices().interval(lastAnswer) + 1));
     }
 
     if (currentTrial < data->skip())
         result.append("<skip/>");
 
     if (!data->choices().hasMultipleIntervals()) {
-        result.append(QSL("<%1>%2</%1>").arg(QSL("stimulus"), xmlEscapedText(lastTrial.stimulus(0, 0))));
+        result.append(QSL("<%1>%2</%1>")
+                          .arg(QSL("stimulus"),
+                               xmlEscapedText(lastTrial.stimulus(0, 0))));
     } else {
         for (int i = 0; i < lastTrial.stimulusCount(0); ++i) {
-            result.append(QSL("<%1>%2</%1>").arg(i == stimulusPosition ? QSL("stimulus") : QSL("standard"),
-                    xmlEscapedText(lastTrial.stimulus(0, i))));
+            result.append(QSL("<%1>%2</%1>")
+                              .arg(i == stimulusPosition ? QSL("stimulus")
+                                                         : QSL("standard"),
+                                   xmlEscapedText(lastTrial.stimulus(0, i))));
         }
     }
 
-    result.append(QSL("<%1>%2</%1>").arg(QSL("correct")).arg(ApexTools::boolToString(lastResult)));
+    result.append(QSL("<%1>%2</%1>")
+                      .arg(QSL("correct"))
+                      .arg(ApexTools::boolToString(lastResult)));
 
     result.append(QLatin1String("</procedure>"));
 
@@ -133,10 +147,10 @@ data::Trial ConstantProcedure::setupNextTrial()
 {
     data::Trial trial;
 
-    if (++currentTrial >= trialList.size())     // finished
+    if (++currentTrial >= trialList.size()) // finished
         return trial;
 
-    data::TrialData* trialData = data->GetTrial(trialList.at(currentTrial));
+    data::TrialData *trialData = data->GetTrial(trialList.at(currentTrial));
     trial.setId(trialData->GetID());
     trial.setAnswer(trialData->GetAnswer());
     trial.addScreen(trialData->GetScreen(), true, 0);
@@ -145,17 +159,15 @@ data::Trial ConstantProcedure::setupNextTrial()
 
     QStringList standards;
     if (trialData->GetStandards().isEmpty())
-        standards = api->makeStandardList(data,QStringList()<< data->defaultStandard());
+        standards = api->makeStandardList(data, QStringList()
+                                                    << data->defaultStandard());
     else
         standards = api->makeStandardList(data, trialData->GetStandards());
 
-    QStringList outputlist = api->makeOutputList(data,
-                                                 trialData->GetRandomStimulus(),
-                                                 standards,
-                                                 stimulusPosition);
+    QStringList outputlist = api->makeOutputList(
+        data, trialData->GetRandomStimulus(), standards, stimulusPosition);
 
-    for (int i = 0; i < outputlist.size(); ++i)
-    {
+    for (int i = 0; i < outputlist.size(); ++i) {
         double waitAfter; // time to wait after stimulus
 
         if (i < outputlist.size() - 1)
@@ -163,20 +175,18 @@ data::Trial ConstantProcedure::setupNextTrial()
         else
             waitAfter = 0;
 
-        trial.addStimulus(outputlist[i], QMap<QString, QVariant>(),
-                          api->highlightedElement(data, trialData->GetAnswer(), i), waitAfter);
+        trial.addStimulus(
+            outputlist[i], QMap<QString, QVariant>(),
+            api->highlightedElement(data, trialData->GetAnswer(), i),
+            waitAfter);
     }
 
     lastTrial = trial;
     trialSetup = true;
 
-
-    qCDebug(APEX_RS) << "Setting up trial in constant procedure " << currentTrial;
-
+    qCDebug(APEX_RS) << "Setting up trial in constant procedure "
+                     << currentTrial;
 
     return trial;
 }
-
-
 }
-

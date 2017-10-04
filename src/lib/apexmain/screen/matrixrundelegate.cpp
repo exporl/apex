@@ -38,12 +38,12 @@ namespace apex
 namespace rundelegates
 {
 
-const ScreenElement* MatrixRunDelegate::getScreenElement() const
+const ScreenElement *MatrixRunDelegate::getScreenElement() const
 {
     return element;
 }
 
-QWidget* MatrixRunDelegate::getWidget()
+QWidget *MatrixRunDelegate::getWidget()
 {
     return this;
 }
@@ -65,25 +65,26 @@ const QString MatrixRunDelegate::getText() const
 
     for (unsigned i = 0, size = m_groups.size(); i < size; ++i) {
         const int id = m_groups[i]->checkedId();
-        result << "<answer>" + (id < 0 ?
-                QString() : element->buttons()[i][id].name) + "</answer>";
+        result << "<answer>" +
+                      (id < 0 ? QString() : element->buttons()[i][id].name) +
+                      "</answer>";
     }
 
     return result.join("\n");
 }
 
-void MatrixRunDelegate::connectSlots(gui::ScreenRunDelegate* d)
+void MatrixRunDelegate::connectSlots(gui::ScreenRunDelegate *d)
 {
-    connect(this, SIGNAL(answered(ScreenElementRunDelegate*)),
-            d, SIGNAL(answered(ScreenElementRunDelegate*)));
+    connect(this, SIGNAL(answered(ScreenElementRunDelegate *)), d,
+            SIGNAL(answered(ScreenElementRunDelegate *)));
 }
 
 void MatrixRunDelegate::sendAnsweredSignal(int button)
 {
     Q_UNUSED(button);
 
-    //qCDebug(APEX_RS, "MatrixRunDelegate::sendAnsweredSignal");
-    //qCDebug(APEX_RS, "Number of buttongroups: %d", m_groups.size());
+    // qCDebug(APEX_RS, "MatrixRunDelegate::sendAnsweredSignal");
+    // qCDebug(APEX_RS, "Number of buttongroups: %d", m_groups.size());
 
     if (element->autoContinue() == false)
         return;
@@ -91,8 +92,8 @@ void MatrixRunDelegate::sendAnsweredSignal(int button)
     // check whether each buttongroup has an answer
     bool ok = true;
     for (unsigned i = 0, size = m_groups.size(); i < size; ++i) {
-        //qCDebug(APEX_RS, "buttongroup %d: checkedid=%d",
-               //i, m_groups[i]->checkedId());
+        // qCDebug(APEX_RS, "buttongroup %d: checkedid=%d",
+        // i, m_groups[i]->checkedId());
         if (m_groups[i]->checkedId() == -1) {
             ok = false;
             break;
@@ -107,10 +108,9 @@ void MatrixRunDelegate::sendAnsweredSignal(int button)
 }
 
 MatrixRunDelegate::MatrixRunDelegate(ExperimentRunDelegate *p_rd,
-        QWidget *parent, const data::MatrixElement *e) :
-      QWidget(parent),
-      ScreenElementRunDelegate(p_rd, e),
-      element(e)
+                                     QWidget *parent,
+                                     const data::MatrixElement *e)
+    : QWidget(parent), ScreenElementRunDelegate(p_rd, e), element(e)
 {
     setObjectName(element->getID());
 
@@ -118,11 +118,11 @@ MatrixRunDelegate::MatrixRunDelegate(ExperimentRunDelegate *p_rd,
 
     if (!e->getFGColor().isEmpty()) {
         QPalette palette;
-        palette.setColor(QPalette::Active, QPalette::Button, QColor(e->getFGColor()));
+        palette.setColor(QPalette::Active, QPalette::Button,
+                         QColor(e->getFGColor()));
         setPalette(palette);
     }
 }
-
 
 void MatrixRunDelegate::makeMatrix()
 {
@@ -140,15 +140,18 @@ void MatrixRunDelegate::makeMatrix()
         m_groups[col] = bg;
         bg->setExclusive(true);
 
-        connect(bg, SIGNAL(buttonClicked(int)),
-                this, SLOT(sendAnsweredSignal(int)));
+        connect(bg, SIGNAL(buttonClicked(int)), this,
+                SLOT(sendAnsweredSignal(int)));
 
         for (unsigned row = 0, rowSize = buttons[col].size(); row < rowSize;
-                ++row) {
+             ++row) {
             QPushButton *b = new QPushButton(buttons[col][row].text, this);
             b->setCheckable(true);
             // col_row as that makes the most sense for matrix tests
-            b->setObjectName(QSL("%1_%2_%3").arg(element->getID()).arg(col + 1).arg(row + 1));
+            b->setObjectName(QSL("%1_%2_%3")
+                                 .arg(element->getID())
+                                 .arg(col + 1)
+                                 .arg(row + 1));
             b->setStyleSheet(element->getStyle());
             setCommonProperties(b);
             QFont font(b->font());
@@ -172,6 +175,5 @@ void MatrixRunDelegate::clearText()
         }
     }
 }
-
 }
 }

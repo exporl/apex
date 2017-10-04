@@ -55,23 +55,22 @@ public:
      *          be sure they are valid!
      */
     static QDomElement addElement(QDomDocument *doc,
-            const data::ScreensData &data, const QStringList& screens = QStringList());
+                                  const data::ScreensData &data,
+                                  const QStringList &screens = QStringList());
     static QDomElement addScreen(QDomDocument *doc, const data::Screen &data);
 
 private:
-
     static QDomElement screenElementToXml(QDomDocument *doc,
-            const data::ScreenElement &e);
+                                          const data::ScreenElement &e);
     static QDomElement buttonGroupToXml(QDomDocument *doc,
-            const data::ButtonGroup &g);
+                                        const data::ButtonGroup &g);
     static QDomElement addReinforcement(QDomDocument *doc,
-            const data::ScreensData &data);
+                                        const data::ScreensData &data);
     static QDomElement addGeneral(QDomDocument *doc,
-            const data::ScreensData &data);
+                                  const data::ScreensData &data);
     static QDomElement addChildmode(QDomDocument *doc,
-            const data::ScreensData &data);
+                                    const data::ScreensData &data);
 };
-
 }
 }
 

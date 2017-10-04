@@ -22,22 +22,22 @@
 
 #include <QString>
 
-namespace apex{
-  namespace stimulus{
+namespace apex
+{
+namespace stimulus
+{
 
-      //filter types
-    static const QString sc_sFilterAmplifierType        ( "apex:amplifier"      );
-    static const QString sc_sFilterFaderType            ( "apex:fader"          );
-    static const QString sc_sFilterGeneratorType        ( "apex:generator"      );
-    static const QString sc_sFilterDataLoopType         ( "apex:dataloop"       );
-    static const QString sc_sFilterHrtffiltersumType    ( "apex:hrtffiltersum"  );
-    static const QString sc_sFilterPluginFilterType     ( "apex:pluginfilter"   );
-    static const QString sc_sFilterNoiseGeneratorType   ( "noise"               );
-    static const QString sc_sFilterSinglePulseGenType   ( "singlepulse"         );
-    static const QString sc_sFilterSineGenType          ( "sinus"               );
-
-
-  }
+// filter types
+static const QString sc_sFilterAmplifierType("apex:amplifier");
+static const QString sc_sFilterFaderType("apex:fader");
+static const QString sc_sFilterGeneratorType("apex:generator");
+static const QString sc_sFilterDataLoopType("apex:dataloop");
+static const QString sc_sFilterHrtffiltersumType("apex:hrtffiltersum");
+static const QString sc_sFilterPluginFilterType("apex:pluginfilter");
+static const QString sc_sFilterNoiseGeneratorType("noise");
+static const QString sc_sFilterSinglePulseGenType("singlepulse");
+static const QString sc_sFilterSineGenType("sinus");
+}
 }
 
 #endif

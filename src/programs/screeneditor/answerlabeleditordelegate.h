@@ -24,40 +24,39 @@
 
 namespace apex
 {
-  namespace data
-  {
-    class AnswerLabelElement;
-  }
+namespace data
+{
+class AnswerLabelElement;
+}
 
-  using apex::data::AnswerLabelElement;
+using apex::data::AnswerLabelElement;
 
-  namespace editor
-  {
-    /**
-     * This class is an ScreenElementEditorDelegate representing a
-     * AnswerLabelElement.
-     */
-    class AnswerLabelEditorDelegate
-      : public LabelEditorDelegateBase
-    {
-      Q_OBJECT
+namespace editor
+{
+/**
+ * This class is an ScreenElementEditorDelegate representing a
+ * AnswerLabelElement.
+ */
+class AnswerLabelEditorDelegate : public LabelEditorDelegateBase
+{
+    Q_OBJECT
 
-      AnswerLabelElement* element;
-    public:
-      AnswerLabelEditorDelegate(
-        AnswerLabelElement* e, QWidget* parent, ScreenWidget* w );
-      ~AnswerLabelEditorDelegate();
+    AnswerLabelElement *element;
 
-      const QString getText() const;
+public:
+    AnswerLabelEditorDelegate(AnswerLabelElement *e, QWidget *parent,
+                              ScreenWidget *w);
+    ~AnswerLabelEditorDelegate();
 
-      ScreenElement* getScreenElement();
-      int getPropertyCount();
-      QString getPropertyName( int nr );
-      QVariant getPropertyData( int nr, int role );
-      PropertyType getPropertyType( int nr );
-      bool setProperty( int nr, const QVariant& v );
-    };
+    const QString getText() const;
 
-  }
+    ScreenElement *getScreenElement();
+    int getPropertyCount();
+    QString getPropertyName(int nr);
+    QVariant getPropertyData(int nr, int role);
+    PropertyType getPropertyType(int nr);
+    bool setProperty(int nr, const QVariant &v);
+};
+}
 }
 #endif

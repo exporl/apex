@@ -31,12 +31,14 @@
 #include <memory>
 #include <vector>
 
+Q_DECLARE_LOGGING_CATEGORY(proceduredata)
+
 namespace apex
 {
 
 namespace parser
 {
-    class ProcedureDataParser;
+class ProcedureDataParser;
 }
 
 namespace data
@@ -47,37 +49,36 @@ namespace data
  */
 class APEXDATA_EXPORT Choices
 {
-    public:
-        Choices(bool deterministic=false);
+public:
+    Choices(bool deterministic = false);
 
-        void setChoices(int c);
-        int nChoices() const;
-        bool operator==(const Choices& other) const;
-        void addStimulusInterval(int i);
+    void setChoices(int c);
+    int nChoices() const;
+    bool operator==(const Choices &other) const;
+    void addStimulusInterval(int i);
 
-        //! return a random valid stimulus position, 0 based
-        int randomPosition() const;
+    //! return a random valid stimulus position, 0 based
+    int randomPosition() const;
 
-        const QStringList& intervals() const;
+    const QStringList &intervals() const;
 
-        /**
-         * Get interval number for given element id
-         */
-        int interval(const QString& element) const;
-        QString element(int interval) const;
-        void setInterval(int number, QString id);
-        //QList<int> unassociatedIntervals() const;
-        QList<int> selectedIntervals() const;
+    /**
+     * Get interval number for given element id
+     */
+    int interval(const QString &element) const;
+    QString element(int interval) const;
+    void setInterval(int number, QString id);
+    // QList<int> unassociatedIntervals() const;
+    QList<int> selectedIntervals() const;
 
-        bool isValid() const;
-        bool hasMultipleIntervals() const;
+    bool isValid() const;
+    bool hasMultipleIntervals() const;
 
-    private:
-
-        mutable Random mRandom;
-        QStringList mIntervals;
-        int m_nChoices;
-        QList<int> stimulusIntervals;
+private:
+    mutable Random mRandom;
+    QStringList mIntervals;
+    int m_nChoices;
+    QList<int> stimulusIntervals;
 };
 
 /**
@@ -92,84 +93,82 @@ proceduredata takes ownership of the trials
 class APEXDATA_EXPORT ProcedureData
 {
 
-    public:
-        enum Order
-        {
-            RandomOrder,
-            SequentialOrder,
-            OneByOneOrder
-        };
+public:
+    enum Order { RandomOrder, SequentialOrder, OneByOneOrder };
 
-        enum Type
-        {
-            AdaptiveType,
-            ConstantType,
-            TrainingType,
-            MultiType,
-            PluginType
-        };
+    enum Type {
+        AdaptiveType,
+        ConstantType,
+        TrainingType,
+        MultiType,
+        PluginType
+    };
 
-        ProcedureData();
-        virtual ~ProcedureData();
+    ProcedureData();
+    virtual ~ProcedureData();
 
-        //! we take ownership of the given trial
-        virtual bool AddTrial(TrialData* p_trial);
-        virtual TrialData* GetTrial(const QString& p_name) const;
-        virtual const tTrialList& GetTrials() const {return m_trials;};
+    //! we take ownership of the given trial
+    virtual bool AddTrial(TrialData *p_trial);
+    virtual TrialData *GetTrial(const QString &p_name) const;
+    virtual const tTrialList &GetTrials() const
+    {
+        return m_trials;
+    };
 
+    void SetID(const QString &p_id);
+    const QString &GetID() const;
 
-        void SetID(const QString& p_id);
-        const QString& GetID() const;
+    const Choices &choices() const;
+    int presentations() const;
+    QString defaultStandard() const /*{ return m_defaultstandard; }*/;
+    Order order() const;
+    bool uniqueStandard() const /*{ return m_uniquestandard; }*/;
+    int skip() const;
+    int pauseBetweenStimuli() const;
+    int timeBeforeFirstStimulus() const;
+    bool inputDuringStimulus() const;
+    // const QString& GetID() const {return m_id;};
+    data::CorrectorData *correctorData() const;
+    bool hasPluginTrials() const;
 
-        const Choices& choices() const;
-        int presentations() const;
-        QString defaultStandard() const /*{ return m_defaultstandard; }*/;
-        Order order() const;
-        bool uniqueStandard() const /*{ return m_uniquestandard; }*/;
-        int skip() const;
-        int pauseBetweenStimuli() const;
-        int timeBeforeFirstStimulus() const;
-        bool inputDuringStimulus() const;
-        //const QString& GetID() const {return m_id;};
-        data::CorrectorData* correctorData() const;
+    void setPresentations(int presentations);
+    void setSkip(int skip);
+    void setNumberOfChoices(int nb);
+    void setDefaultStandard(const QString &defStd);
+    void setUniqueStandard(bool u);
+    void setOrder(Order order);
+    void setInputDuringStimulus(bool ids);
+    void setTimeBeforeFirstStimulus(int tbfs);
+    void setPauseBetweenStimuli(int pause);
+    void addStimulusInterval(int i);
+    void setInterval(int number, QString id);
+    void setCorrectorData(data::CorrectorData *correctorData);
+    void setHasPluginTrials(bool h);
 
-        void setPresentations(int presentations);
-        void setSkip(int skip);
-        void setNumberOfChoices(int nb);
-        void setDefaultStandard(const QString& defStd);
-        void setUniqueStandard(bool u);
-        void setOrder(Order order);
-        void setInputDuringStimulus(bool ids);
-        void setTimeBeforeFirstStimulus(int tbfs);
-        void setPauseBetweenStimuli(int pause);
-        void addStimulusInterval(int i);
-        void setInterval(int number, QString id);
-        void setCorrectorData(data::CorrectorData* correctorData);
+    virtual Type type() const = 0;
+    virtual QString name() const = 0; //! plugin name
 
-        virtual Type type() const = 0;
-        virtual QString name() const = 0;         //! plugin name
+    virtual bool operator==(const ProcedureData &other) const;
 
-        virtual bool operator==(const ProcedureData& other) const;
+protected:
+    tTrialList m_trials;
+    QString m_id;
+    bool m_hasPluginTrials;
 
-    protected:
-        tTrialList m_trials;
-        QString m_id;
-
-    private:
-        // parameters
-        int m_presentations;
-        int m_skip;
-        //int m_choices;
-        Choices m_choices;
-        QString m_defaultstandard;
-        Order m_order;
-        bool m_input_during_stimulus;           // get user input during the stimulus output
-        int m_pause_between_stimuli;
-        double m_time_before_first_stimulus;
-        bool m_uniquestandard;
-        QScopedPointer<data::CorrectorData> m_correctorData;
+private:
+    // parameters
+    int m_presentations;
+    int m_skip;
+    // int m_choices;
+    Choices m_choices;
+    QString m_defaultstandard;
+    Order m_order;
+    bool m_input_during_stimulus; // get user input during the stimulus output
+    int m_pause_between_stimuli;
+    double m_time_before_first_stimulus;
+    bool m_uniquestandard;
+    QScopedPointer<data::CorrectorData> m_correctorData;
 };
-
 }
 }
 #endif

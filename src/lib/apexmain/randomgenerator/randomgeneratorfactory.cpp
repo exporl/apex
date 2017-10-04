@@ -27,15 +27,21 @@
 #include "randomgenerators.h"
 #include "uniformrandomgenerator.h"
 
-namespace apex {
+namespace apex
+{
 
-RandomGenerators* RandomGeneratorFactory::GetRandomGenerators(ExperimentRunDelegate& p_rd, QMap<QString,data::RandomGeneratorParameters*> p_param) {
-    RandomGenerators* rgs = new RandomGenerators(p_rd);
+RandomGenerators *RandomGeneratorFactory::GetRandomGenerators(
+    ExperimentRunDelegate &p_rd,
+    QMap<QString, data::RandomGeneratorParameters *> p_param)
+{
+    RandomGenerators *rgs = new RandomGenerators(p_rd);
 
-    for (QMap<QString,data::RandomGeneratorParameters*>::const_iterator it=p_param.begin();
-            it!= p_param.end(); ++it) {
-        RandomGenerator* rg = NULL;
-        qCDebug(APEX_RS, "Creating random generator with id=%s", qPrintable (it.key()));
+    for (QMap<QString, data::RandomGeneratorParameters *>::const_iterator it =
+             p_param.begin();
+         it != p_param.end(); ++it) {
+        RandomGenerator *rg = NULL;
+        qCDebug(APEX_RS, "Creating random generator with id=%s",
+                qPrintable(it.key()));
 
         switch (it.value()->m_nType) {
         case data::RandomGeneratorParameters::TYPE_UNIFORM:
@@ -53,5 +59,4 @@ RandomGenerators* RandomGeneratorFactory::GetRandomGenerators(ExperimentRunDeleg
     }
     return rgs;
 }
-
 }

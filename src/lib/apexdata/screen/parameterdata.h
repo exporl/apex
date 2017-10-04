@@ -29,42 +29,32 @@ namespace apex
 namespace data
 {
 
-//FIXME [job refactory] make this a class with private data
-struct APEXDATA_EXPORT ParameterData
-{
-    ParameterData(
-        const QString& p_id,
-        const QString& p_name,
-        const QString& p_expression)
-            : id(p_id),
-            name(p_name),
-            expression(p_expression)
-    {
-    };
+// FIXME [job refactory] make this a class with private data
+struct APEXDATA_EXPORT ParameterData {
+    ParameterData(const QString &p_id, const QString &p_name,
+                  const QString &p_expression)
+        : id(p_id), name(p_name), expression(p_expression){};
 
-    ParameterData() {};
+    ParameterData(){};
 
     const QString GetName() const
     {
-        if (name.isEmpty()) return id;
-        else return name;
+        if (name.isEmpty())
+            return id;
+        else
+            return name;
     }
     QString id;
     QString name;
     QString expression;
 
-    bool operator==(const ParameterData& other) const
+    bool operator==(const ParameterData &other) const
     {
-        return  id == other.id &&
-                name == other.name &&
-                expression == other.expression;
+        return id == other.id && name == other.name &&
+               expression == other.expression;
     }
 };
-
-
 }
 }
-
-
 
 #endif

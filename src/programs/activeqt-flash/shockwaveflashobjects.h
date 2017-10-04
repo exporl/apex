@@ -20,26 +20,26 @@
 
 struct IDispatch;
 
-
 // Referenced namespace
 
-namespace ShockwaveFlashObjects {
+namespace ShockwaveFlashObjects
+{
 
 // forward declarations
-    class IFlashFactory;
-    class IFlashObjectInterface;
-    class IDispatchEx;
-    class IServiceProvider;
-    class IFlashFactory;
-    class IFlashObjectInterface;
-    class IDispatchEx;
-    class IServiceProvider;
+class IFlashFactory;
+class IFlashObjectInterface;
+class IDispatchEx;
+class IServiceProvider;
+class IFlashFactory;
+class IFlashObjectInterface;
+class IDispatchEx;
+class IServiceProvider;
 
 class SHOCKWAVEFLASHOBJECTS_EXPORT IShockwaveFlash : public QAxObject
 {
 public:
     IShockwaveFlash(IDispatch *subobject = 0, QAxObject *parent = 0)
-    : QAxObject((IUnknown*)subobject, parent)
+        : QAxObject((IUnknown *)subobject, parent)
     {
         internalRelease();
     }
@@ -50,8 +50,9 @@ public:
     property AlignMode
 
     */
-    inline int AlignMode() const; //Returns the value of AlignMode
-    inline void SetAlignMode(int value); //Sets the value of the AlignMode property
+    inline int AlignMode() const; // Returns the value of AlignMode
+    inline void
+    SetAlignMode(int value); // Sets the value of the AlignMode property
 
     /*
     Property AllowScriptAccess
@@ -59,8 +60,12 @@ public:
     property AllowScriptAccess
 
     */
-    inline QString AllowScriptAccess() const; //Returns the value of AllowScriptAccess
-    inline void SetAllowScriptAccess(const QString& value); //Sets the value of the AllowScriptAccess property
+    inline QString
+    AllowScriptAccess() const; // Returns the value of AllowScriptAccess
+    inline void SetAllowScriptAccess(const QString &value); // Sets the value of
+                                                            // the
+                                                            // AllowScriptAccess
+                                                            // property
 
     /*
     Property BGColor
@@ -68,8 +73,9 @@ public:
     property BGColor
 
     */
-    inline QString BGColor() const; //Returns the value of BGColor
-    inline void SetBGColor(const QString& value); //Sets the value of the BGColor property
+    inline QString BGColor() const; // Returns the value of BGColor
+    inline void
+    SetBGColor(const QString &value); // Sets the value of the BGColor property
 
     /*
     Property BackgroundColor
@@ -77,8 +83,9 @@ public:
     property BackgroundColor
 
     */
-    inline int BackgroundColor() const; //Returns the value of BackgroundColor
-    inline void SetBackgroundColor(int value); //Sets the value of the BackgroundColor property
+    inline int BackgroundColor() const; // Returns the value of BackgroundColor
+    inline void SetBackgroundColor(
+        int value); // Sets the value of the BackgroundColor property
 
     /*
     Property Base
@@ -86,8 +93,9 @@ public:
     property Base
 
     */
-    inline QString Base() const; //Returns the value of Base
-    inline void SetBase(const QString& value); //Sets the value of the Base property
+    inline QString Base() const; // Returns the value of Base
+    inline void
+    SetBase(const QString &value); // Sets the value of the Base property
 
     /*
     Property DeviceFont
@@ -95,8 +103,9 @@ public:
     property DeviceFont
 
     */
-    inline bool DeviceFont() const; //Returns the value of DeviceFont
-    inline void SetDeviceFont(bool value); //Sets the value of the DeviceFont property
+    inline bool DeviceFont() const; // Returns the value of DeviceFont
+    inline void
+    SetDeviceFont(bool value); // Sets the value of the DeviceFont property
 
     /*
     Property EmbedMovie
@@ -104,8 +113,9 @@ public:
     property EmbedMovie
 
     */
-    inline bool EmbedMovie() const; //Returns the value of EmbedMovie
-    inline void SetEmbedMovie(bool value); //Sets the value of the EmbedMovie property
+    inline bool EmbedMovie() const; // Returns the value of EmbedMovie
+    inline void
+    SetEmbedMovie(bool value); // Sets the value of the EmbedMovie property
 
     /*
     Property FlashVars
@@ -113,8 +123,9 @@ public:
     property FlashVars
 
     */
-    inline QString FlashVars() const; //Returns the value of FlashVars
-    inline void SetFlashVars(const QString& value); //Sets the value of the FlashVars property
+    inline QString FlashVars() const; // Returns the value of FlashVars
+    inline void SetFlashVars(
+        const QString &value); // Sets the value of the FlashVars property
 
     /*
     Property FrameNum
@@ -122,8 +133,9 @@ public:
     property FrameNum
 
     */
-    inline int FrameNum() const; //Returns the value of FrameNum
-    inline void SetFrameNum(int value); //Sets the value of the FrameNum property
+    inline int FrameNum() const; // Returns the value of FrameNum
+    inline void
+    SetFrameNum(int value); // Sets the value of the FrameNum property
 
     /*
     Property Loop
@@ -131,8 +143,8 @@ public:
     property Loop
 
     */
-    inline bool Loop() const; //Returns the value of Loop
-    inline void SetLoop(bool value); //Sets the value of the Loop property
+    inline bool Loop() const;        // Returns the value of Loop
+    inline void SetLoop(bool value); // Sets the value of the Loop property
 
     /*
     Property Menu
@@ -140,8 +152,8 @@ public:
     property Menu
 
     */
-    inline bool Menu() const; //Returns the value of Menu
-    inline void SetMenu(bool value); //Sets the value of the Menu property
+    inline bool Menu() const;        // Returns the value of Menu
+    inline void SetMenu(bool value); // Sets the value of the Menu property
 
     /*
     Property Movie
@@ -149,8 +161,9 @@ public:
     property Movie
 
     */
-    inline QString Movie() const; //Returns the value of Movie
-    inline void SetMovie(const QString& value); //Sets the value of the Movie property
+    inline QString Movie() const; // Returns the value of Movie
+    inline void
+    SetMovie(const QString &value); // Sets the value of the Movie property
 
     /*
     Property Playing
@@ -158,8 +171,9 @@ public:
     property Playing
 
     */
-    inline bool Playing() const; //Returns the value of Playing
-    inline void SetPlaying(bool value); //Sets the value of the Playing property
+    inline bool Playing() const;        // Returns the value of Playing
+    inline void SetPlaying(bool value); // Sets the value of the Playing
+                                        // property
 
     /*
     Property Quality
@@ -167,8 +181,8 @@ public:
     property Quality
 
     */
-    inline int Quality() const; //Returns the value of Quality
-    inline void SetQuality(int value); //Sets the value of the Quality property
+    inline int Quality() const;        // Returns the value of Quality
+    inline void SetQuality(int value); // Sets the value of the Quality property
 
     /*
     Property Quality2
@@ -176,8 +190,9 @@ public:
     property Quality2
 
     */
-    inline QString Quality2() const; //Returns the value of Quality2
-    inline void SetQuality2(const QString& value); //Sets the value of the Quality2 property
+    inline QString Quality2() const; // Returns the value of Quality2
+    inline void SetQuality2(
+        const QString &value); // Sets the value of the Quality2 property
 
     /*
     Property ReadyState
@@ -185,7 +200,7 @@ public:
     property ReadyState
 
     */
-    inline int ReadyState() const; //Returns the value of ReadyState
+    inline int ReadyState() const; // Returns the value of ReadyState
 
     /*
     Property SAlign
@@ -193,8 +208,9 @@ public:
     property SAlign
 
     */
-    inline QString SAlign() const; //Returns the value of SAlign
-    inline void SetSAlign(const QString& value); //Sets the value of the SAlign property
+    inline QString SAlign() const; // Returns the value of SAlign
+    inline void
+    SetSAlign(const QString &value); // Sets the value of the SAlign property
 
     /*
     Property SWRemote
@@ -202,8 +218,9 @@ public:
     property SWRemote
 
     */
-    inline QString SWRemote() const; //Returns the value of SWRemote
-    inline void SetSWRemote(const QString& value); //Sets the value of the SWRemote property
+    inline QString SWRemote() const; // Returns the value of SWRemote
+    inline void SetSWRemote(
+        const QString &value); // Sets the value of the SWRemote property
 
     /*
     Property Scale
@@ -211,8 +228,9 @@ public:
     property Scale
 
     */
-    inline QString Scale() const; //Returns the value of Scale
-    inline void SetScale(const QString& value); //Sets the value of the Scale property
+    inline QString Scale() const; // Returns the value of Scale
+    inline void
+    SetScale(const QString &value); // Sets the value of the Scale property
 
     /*
     Property ScaleMode
@@ -220,8 +238,9 @@ public:
     property ScaleMode
 
     */
-    inline int ScaleMode() const; //Returns the value of ScaleMode
-    inline void SetScaleMode(int value); //Sets the value of the ScaleMode property
+    inline int ScaleMode() const; // Returns the value of ScaleMode
+    inline void
+    SetScaleMode(int value); // Sets the value of the ScaleMode property
 
     /*
     Property TotalFrames
@@ -229,7 +248,7 @@ public:
     property TotalFrames
 
     */
-    inline int TotalFrames() const; //Returns the value of TotalFrames
+    inline int TotalFrames() const; // Returns the value of TotalFrames
 
     /*
     Property WMode
@@ -237,8 +256,9 @@ public:
     property WMode
 
     */
-    inline QString WMode() const; //Returns the value of WMode
-    inline void SetWMode(const QString& value); //Sets the value of the WMode property
+    inline QString WMode() const; // Returns the value of WMode
+    inline void
+    SetWMode(const QString &value); // Sets the value of the WMode property
 
     /*
     Method Back
@@ -286,7 +306,7 @@ public:
     method GetVariable
 
     */
-    inline QString GetVariable(const QString& name);
+    inline QString GetVariable(const QString &name);
 
     /*
     Method GotoFrame
@@ -310,7 +330,7 @@ public:
     method LoadMovie
 
     */
-    inline void LoadMovie(int layer, const QString& url);
+    inline void LoadMovie(int layer, const QString &url);
 
     /*
     Method Pan
@@ -350,7 +370,7 @@ public:
     method SetVariable
 
     */
-    inline void SetVariable(const QString& name, const QString& value);
+    inline void SetVariable(const QString &name, const QString &value);
 
     /*
     Method SetZoomRect
@@ -382,7 +402,7 @@ public:
     method TCallFrame
 
     */
-    inline void TCallFrame(const QString& target, int FrameNum);
+    inline void TCallFrame(const QString &target, int FrameNum);
 
     /*
     Method TCallLabel
@@ -390,7 +410,7 @@ public:
     method TCallLabel
 
     */
-    inline void TCallLabel(const QString& target, const QString& label);
+    inline void TCallLabel(const QString &target, const QString &label);
 
     /*
     Method TCurrentFrame
@@ -398,7 +418,7 @@ public:
     method TCurrentFrame
 
     */
-    inline int TCurrentFrame(const QString& target);
+    inline int TCurrentFrame(const QString &target);
 
     /*
     Method TCurrentLabel
@@ -406,7 +426,7 @@ public:
     method TCurrentLabel
 
     */
-    inline QString TCurrentLabel(const QString& target);
+    inline QString TCurrentLabel(const QString &target);
 
     /*
     Method TGetProperty
@@ -414,7 +434,7 @@ public:
     method TGetProperty
 
     */
-    inline QString TGetProperty(const QString& target, int property);
+    inline QString TGetProperty(const QString &target, int property);
 
     /*
     Method TGetPropertyAsNumber
@@ -422,7 +442,7 @@ public:
     method TGetPropertyAsNumber
 
     */
-    inline double TGetPropertyAsNumber(const QString& target, int property);
+    inline double TGetPropertyAsNumber(const QString &target, int property);
 
     /*
     Method TGetPropertyNum
@@ -430,7 +450,7 @@ public:
     method TGetPropertyNum
 
     */
-    inline double TGetPropertyNum(const QString& target, int property);
+    inline double TGetPropertyNum(const QString &target, int property);
 
     /*
     Method TGotoFrame
@@ -438,7 +458,7 @@ public:
     method TGotoFrame
 
     */
-    inline void TGotoFrame(const QString& target, int FrameNum);
+    inline void TGotoFrame(const QString &target, int FrameNum);
 
     /*
     Method TGotoLabel
@@ -446,7 +466,7 @@ public:
     method TGotoLabel
 
     */
-    inline void TGotoLabel(const QString& target, const QString& label);
+    inline void TGotoLabel(const QString &target, const QString &label);
 
     /*
     Method TPlay
@@ -454,7 +474,7 @@ public:
     method TPlay
 
     */
-    inline void TPlay(const QString& target);
+    inline void TPlay(const QString &target);
 
     /*
     Method TSetProperty
@@ -462,7 +482,8 @@ public:
     method TSetProperty
 
     */
-    inline void TSetProperty(const QString& target, int property, const QString& value);
+    inline void TSetProperty(const QString &target, int property,
+                             const QString &value);
 
     /*
     Method TSetPropertyNum
@@ -470,7 +491,8 @@ public:
     method TSetPropertyNum
 
     */
-    inline void TSetPropertyNum(const QString& target, int property, double value);
+    inline void TSetPropertyNum(const QString &target, int property,
+                                double value);
 
     /*
     Method TStopPlay
@@ -478,7 +500,7 @@ public:
     method TStopPlay
 
     */
-    inline void TStopPlay(const QString& target);
+    inline void TStopPlay(const QString &target);
 
     /*
     Method Zoom
@@ -488,38 +510,48 @@ public:
     */
     inline void Zoom(int factor);
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
+    virtual const QMetaObject *metaObject() const
+    {
+        return &staticMetaObject;
+    }
     virtual void *qt_metacast(const char *);
 };
 
 // skipping event interface _IShockwaveFlashEvents
 
 // stub for vtable-only interface
-class IFlashFactory : public QAxObject {};
+class IFlashFactory : public QAxObject
+{
+};
 
 // stub for vtable-only interface
-class IFlashObjectInterface : public QAxObject {};
+class IFlashObjectInterface : public QAxObject
+{
+};
 
 // stub for vtable-only interface
-class IDispatchEx : public QAxObject {};
+class IDispatchEx : public QAxObject
+{
+};
 
 // stub for vtable-only interface
-class IServiceProvider : public QAxObject {};
+class IServiceProvider : public QAxObject
+{
+};
 
 // Actual coclasses
 class SHOCKWAVEFLASHOBJECTS_EXPORT ShockwaveFlash : public QAxWidget
 {
 public:
     ShockwaveFlash(QWidget *parent = 0, Qt::WindowFlags f = 0)
-    : QAxWidget(parent, f)
+        : QAxWidget(parent, f)
     {
         setControl("{d27cdb6e-ae6d-11cf-96b8-444553540000}");
     }
 
-    ShockwaveFlash(IShockwaveFlash *iface)
-    : QAxWidget()
+    ShockwaveFlash(IShockwaveFlash *iface) : QAxWidget()
     {
         initializeFrom(iface);
         delete iface;
@@ -531,8 +563,9 @@ public:
     property AlignMode
 
     */
-    inline int AlignMode() const; //Returns the value of AlignMode
-    inline void SetAlignMode(int value); //Sets the value of the AlignMode property
+    inline int AlignMode() const; // Returns the value of AlignMode
+    inline void
+    SetAlignMode(int value); // Sets the value of the AlignMode property
 
     /*
     Property AllowScriptAccess
@@ -540,8 +573,12 @@ public:
     property AllowScriptAccess
 
     */
-    inline QString AllowScriptAccess() const; //Returns the value of AllowScriptAccess
-    inline void SetAllowScriptAccess(const QString& value); //Sets the value of the AllowScriptAccess property
+    inline QString
+    AllowScriptAccess() const; // Returns the value of AllowScriptAccess
+    inline void SetAllowScriptAccess(const QString &value); // Sets the value of
+                                                            // the
+                                                            // AllowScriptAccess
+                                                            // property
 
     /*
     Property BGColor
@@ -549,8 +586,9 @@ public:
     property BGColor
 
     */
-    inline QString BGColor() const; //Returns the value of BGColor
-    inline void SetBGColor(const QString& value); //Sets the value of the BGColor property
+    inline QString BGColor() const; // Returns the value of BGColor
+    inline void
+    SetBGColor(const QString &value); // Sets the value of the BGColor property
 
     /*
     Property BackgroundColor
@@ -558,8 +596,9 @@ public:
     property BackgroundColor
 
     */
-    inline int BackgroundColor() const; //Returns the value of BackgroundColor
-    inline void SetBackgroundColor(int value); //Sets the value of the BackgroundColor property
+    inline int BackgroundColor() const; // Returns the value of BackgroundColor
+    inline void SetBackgroundColor(
+        int value); // Sets the value of the BackgroundColor property
 
     /*
     Property Base
@@ -567,8 +606,9 @@ public:
     property Base
 
     */
-    inline QString Base() const; //Returns the value of Base
-    inline void SetBase(const QString& value); //Sets the value of the Base property
+    inline QString Base() const; // Returns the value of Base
+    inline void
+    SetBase(const QString &value); // Sets the value of the Base property
 
     /*
     Property DeviceFont
@@ -576,8 +616,9 @@ public:
     property DeviceFont
 
     */
-    inline bool DeviceFont() const; //Returns the value of DeviceFont
-    inline void SetDeviceFont(bool value); //Sets the value of the DeviceFont property
+    inline bool DeviceFont() const; // Returns the value of DeviceFont
+    inline void
+    SetDeviceFont(bool value); // Sets the value of the DeviceFont property
 
     /*
     Property EmbedMovie
@@ -585,8 +626,9 @@ public:
     property EmbedMovie
 
     */
-    inline bool EmbedMovie() const; //Returns the value of EmbedMovie
-    inline void SetEmbedMovie(bool value); //Sets the value of the EmbedMovie property
+    inline bool EmbedMovie() const; // Returns the value of EmbedMovie
+    inline void
+    SetEmbedMovie(bool value); // Sets the value of the EmbedMovie property
 
     /*
     Property FlashVars
@@ -594,8 +636,9 @@ public:
     property FlashVars
 
     */
-    inline QString FlashVars() const; //Returns the value of FlashVars
-    inline void SetFlashVars(const QString& value); //Sets the value of the FlashVars property
+    inline QString FlashVars() const; // Returns the value of FlashVars
+    inline void SetFlashVars(
+        const QString &value); // Sets the value of the FlashVars property
 
     /*
     Property FrameNum
@@ -603,8 +646,9 @@ public:
     property FrameNum
 
     */
-    inline int FrameNum() const; //Returns the value of FrameNum
-    inline void SetFrameNum(int value); //Sets the value of the FrameNum property
+    inline int FrameNum() const; // Returns the value of FrameNum
+    inline void
+    SetFrameNum(int value); // Sets the value of the FrameNum property
 
     /*
     Property Loop
@@ -612,8 +656,8 @@ public:
     property Loop
 
     */
-    inline bool Loop() const; //Returns the value of Loop
-    inline void SetLoop(bool value); //Sets the value of the Loop property
+    inline bool Loop() const;        // Returns the value of Loop
+    inline void SetLoop(bool value); // Sets the value of the Loop property
 
     /*
     Property Menu
@@ -621,8 +665,8 @@ public:
     property Menu
 
     */
-    inline bool Menu() const; //Returns the value of Menu
-    inline void SetMenu(bool value); //Sets the value of the Menu property
+    inline bool Menu() const;        // Returns the value of Menu
+    inline void SetMenu(bool value); // Sets the value of the Menu property
 
     /*
     Property Movie
@@ -630,8 +674,9 @@ public:
     property Movie
 
     */
-    inline QString Movie() const; //Returns the value of Movie
-    inline void SetMovie(const QString& value); //Sets the value of the Movie property
+    inline QString Movie() const; // Returns the value of Movie
+    inline void
+    SetMovie(const QString &value); // Sets the value of the Movie property
 
     /*
     Property Playing
@@ -639,8 +684,9 @@ public:
     property Playing
 
     */
-    inline bool Playing() const; //Returns the value of Playing
-    inline void SetPlaying(bool value); //Sets the value of the Playing property
+    inline bool Playing() const;        // Returns the value of Playing
+    inline void SetPlaying(bool value); // Sets the value of the Playing
+                                        // property
 
     /*
     Property Quality
@@ -648,8 +694,8 @@ public:
     property Quality
 
     */
-    inline int Quality() const; //Returns the value of Quality
-    inline void SetQuality(int value); //Sets the value of the Quality property
+    inline int Quality() const;        // Returns the value of Quality
+    inline void SetQuality(int value); // Sets the value of the Quality property
 
     /*
     Property Quality2
@@ -657,8 +703,9 @@ public:
     property Quality2
 
     */
-    inline QString Quality2() const; //Returns the value of Quality2
-    inline void SetQuality2(const QString& value); //Sets the value of the Quality2 property
+    inline QString Quality2() const; // Returns the value of Quality2
+    inline void SetQuality2(
+        const QString &value); // Sets the value of the Quality2 property
 
     /*
     Property ReadyState
@@ -666,7 +713,7 @@ public:
     property ReadyState
 
     */
-    inline int ReadyState() const; //Returns the value of ReadyState
+    inline int ReadyState() const; // Returns the value of ReadyState
 
     /*
     Property SAlign
@@ -674,8 +721,9 @@ public:
     property SAlign
 
     */
-    inline QString SAlign() const; //Returns the value of SAlign
-    inline void SetSAlign(const QString& value); //Sets the value of the SAlign property
+    inline QString SAlign() const; // Returns the value of SAlign
+    inline void
+    SetSAlign(const QString &value); // Sets the value of the SAlign property
 
     /*
     Property SWRemote
@@ -683,8 +731,9 @@ public:
     property SWRemote
 
     */
-    inline QString SWRemote() const; //Returns the value of SWRemote
-    inline void SetSWRemote(const QString& value); //Sets the value of the SWRemote property
+    inline QString SWRemote() const; // Returns the value of SWRemote
+    inline void SetSWRemote(
+        const QString &value); // Sets the value of the SWRemote property
 
     /*
     Property Scale
@@ -692,8 +741,9 @@ public:
     property Scale
 
     */
-    inline QString Scale() const; //Returns the value of Scale
-    inline void SetScale(const QString& value); //Sets the value of the Scale property
+    inline QString Scale() const; // Returns the value of Scale
+    inline void
+    SetScale(const QString &value); // Sets the value of the Scale property
 
     /*
     Property ScaleMode
@@ -701,8 +751,9 @@ public:
     property ScaleMode
 
     */
-    inline int ScaleMode() const; //Returns the value of ScaleMode
-    inline void SetScaleMode(int value); //Sets the value of the ScaleMode property
+    inline int ScaleMode() const; // Returns the value of ScaleMode
+    inline void
+    SetScaleMode(int value); // Sets the value of the ScaleMode property
 
     /*
     Property TotalFrames
@@ -710,7 +761,7 @@ public:
     property TotalFrames
 
     */
-    inline int TotalFrames() const; //Returns the value of TotalFrames
+    inline int TotalFrames() const; // Returns the value of TotalFrames
 
     /*
     Property WMode
@@ -718,8 +769,9 @@ public:
     property WMode
 
     */
-    inline QString WMode() const; //Returns the value of WMode
-    inline void SetWMode(const QString& value); //Sets the value of the WMode property
+    inline QString WMode() const; // Returns the value of WMode
+    inline void
+    SetWMode(const QString &value); // Sets the value of the WMode property
 
     /*
     Method Back
@@ -767,7 +819,7 @@ public:
     method GetVariable
 
     */
-    inline QString GetVariable(const QString& name);
+    inline QString GetVariable(const QString &name);
 
     /*
     Method GotoFrame
@@ -791,7 +843,7 @@ public:
     method LoadMovie
 
     */
-    inline void LoadMovie(int layer, const QString& url);
+    inline void LoadMovie(int layer, const QString &url);
 
     /*
     Method Pan
@@ -831,7 +883,7 @@ public:
     method SetVariable
 
     */
-    inline void SetVariable(const QString& name, const QString& value);
+    inline void SetVariable(const QString &name, const QString &value);
 
     /*
     Method SetZoomRect
@@ -863,7 +915,7 @@ public:
     method TCallFrame
 
     */
-    inline void TCallFrame(const QString& target, int FrameNum);
+    inline void TCallFrame(const QString &target, int FrameNum);
 
     /*
     Method TCallLabel
@@ -871,7 +923,7 @@ public:
     method TCallLabel
 
     */
-    inline void TCallLabel(const QString& target, const QString& label);
+    inline void TCallLabel(const QString &target, const QString &label);
 
     /*
     Method TCurrentFrame
@@ -879,7 +931,7 @@ public:
     method TCurrentFrame
 
     */
-    inline int TCurrentFrame(const QString& target);
+    inline int TCurrentFrame(const QString &target);
 
     /*
     Method TCurrentLabel
@@ -887,7 +939,7 @@ public:
     method TCurrentLabel
 
     */
-    inline QString TCurrentLabel(const QString& target);
+    inline QString TCurrentLabel(const QString &target);
 
     /*
     Method TGetProperty
@@ -895,7 +947,7 @@ public:
     method TGetProperty
 
     */
-    inline QString TGetProperty(const QString& target, int property);
+    inline QString TGetProperty(const QString &target, int property);
 
     /*
     Method TGetPropertyAsNumber
@@ -903,7 +955,7 @@ public:
     method TGetPropertyAsNumber
 
     */
-    inline double TGetPropertyAsNumber(const QString& target, int property);
+    inline double TGetPropertyAsNumber(const QString &target, int property);
 
     /*
     Method TGetPropertyNum
@@ -911,7 +963,7 @@ public:
     method TGetPropertyNum
 
     */
-    inline double TGetPropertyNum(const QString& target, int property);
+    inline double TGetPropertyNum(const QString &target, int property);
 
     /*
     Method TGotoFrame
@@ -919,7 +971,7 @@ public:
     method TGotoFrame
 
     */
-    inline void TGotoFrame(const QString& target, int FrameNum);
+    inline void TGotoFrame(const QString &target, int FrameNum);
 
     /*
     Method TGotoLabel
@@ -927,7 +979,7 @@ public:
     method TGotoLabel
 
     */
-    inline void TGotoLabel(const QString& target, const QString& label);
+    inline void TGotoLabel(const QString &target, const QString &label);
 
     /*
     Method TPlay
@@ -935,7 +987,7 @@ public:
     method TPlay
 
     */
-    inline void TPlay(const QString& target);
+    inline void TPlay(const QString &target);
 
     /*
     Method TSetProperty
@@ -943,7 +995,8 @@ public:
     method TSetProperty
 
     */
-    inline void TSetProperty(const QString& target, int property, const QString& value);
+    inline void TSetProperty(const QString &target, int property,
+                             const QString &value);
 
     /*
     Method TSetPropertyNum
@@ -951,7 +1004,8 @@ public:
     method TSetPropertyNum
 
     */
-    inline void TSetPropertyNum(const QString& target, int property, double value);
+    inline void TSetPropertyNum(const QString &target, int property,
+                                double value);
 
     /*
     Method TStopPlay
@@ -959,7 +1013,7 @@ public:
     method TStopPlay
 
     */
-    inline void TStopPlay(const QString& target);
+    inline void TStopPlay(const QString &target);
 
     /*
     Method Zoom
@@ -969,46 +1023,52 @@ public:
     */
     inline void Zoom(int factor);
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
+    virtual const QMetaObject *metaObject() const
+    {
+        return &staticMetaObject;
+    }
     virtual void *qt_metacast(const char *);
 };
 
 class SHOCKWAVEFLASHOBJECTS_EXPORT FlashProp : public QAxObject
 {
 public:
-    FlashProp(QObject *parent = 0)
-    : QAxObject(parent)
+    FlashProp(QObject *parent = 0) : QAxObject(parent)
     {
         setControl("{1171a62f-05d2-11d1-83fc-00a0c9089c5a}");
     }
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
+    virtual const QMetaObject *metaObject() const
+    {
+        return &staticMetaObject;
+    }
     virtual void *qt_metacast(const char *);
 };
 
 class SHOCKWAVEFLASHOBJECTS_EXPORT FlashObjectInterface : public QAxObject
 {
 public:
-    FlashObjectInterface(QObject *parent = 0)
-    : QAxObject(parent)
+    FlashObjectInterface(QObject *parent = 0) : QAxObject(parent)
     {
         setControl("{d27cdb71-ae6d-11cf-96b8-444553540000}");
     }
 
-    FlashObjectInterface(IFlashObjectInterface *iface)
-    : QAxObject()
+    FlashObjectInterface(IFlashObjectInterface *iface) : QAxObject()
     {
         initializeFrom(iface);
         delete iface;
     }
 
-// meta object functions
+    // meta object functions
     static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const { return &staticMetaObject; }
+    virtual const QMetaObject *metaObject() const
+    {
+        return &staticMetaObject;
+    }
     virtual void *qt_metacast(const char *);
 };
 
@@ -1018,175 +1078,235 @@ inline int IShockwaveFlash::AlignMode() const
 {
     QVariant qax_result = property("AlignMode");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetAlignMode(int value){ setProperty("AlignMode", QVariant(value)); }
+inline void IShockwaveFlash::SetAlignMode(int value)
+{
+    setProperty("AlignMode", QVariant(value));
+}
 
 inline QString IShockwaveFlash::AllowScriptAccess() const
 {
     QVariant qax_result = property("AllowScriptAccess");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetAllowScriptAccess(const QString& value){ setProperty("AllowScriptAccess", QVariant(value)); }
+inline void IShockwaveFlash::SetAllowScriptAccess(const QString &value)
+{
+    setProperty("AllowScriptAccess", QVariant(value));
+}
 
 inline QString IShockwaveFlash::BGColor() const
 {
     QVariant qax_result = property("BGColor");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetBGColor(const QString& value){ setProperty("BGColor", QVariant(value)); }
+inline void IShockwaveFlash::SetBGColor(const QString &value)
+{
+    setProperty("BGColor", QVariant(value));
+}
 
 inline int IShockwaveFlash::BackgroundColor() const
 {
     QVariant qax_result = property("BackgroundColor");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetBackgroundColor(int value){ setProperty("BackgroundColor", QVariant(value)); }
+inline void IShockwaveFlash::SetBackgroundColor(int value)
+{
+    setProperty("BackgroundColor", QVariant(value));
+}
 
 inline QString IShockwaveFlash::Base() const
 {
     QVariant qax_result = property("Base");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetBase(const QString& value){ setProperty("Base", QVariant(value)); }
+inline void IShockwaveFlash::SetBase(const QString &value)
+{
+    setProperty("Base", QVariant(value));
+}
 
 inline bool IShockwaveFlash::DeviceFont() const
 {
     QVariant qax_result = property("DeviceFont");
     Q_ASSERT(qax_result.isValid());
-    return *(bool*)qax_result.constData();
+    return *(bool *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetDeviceFont(bool value){ setProperty("DeviceFont", QVariant(value)); }
+inline void IShockwaveFlash::SetDeviceFont(bool value)
+{
+    setProperty("DeviceFont", QVariant(value));
+}
 
 inline bool IShockwaveFlash::EmbedMovie() const
 {
     QVariant qax_result = property("EmbedMovie");
     Q_ASSERT(qax_result.isValid());
-    return *(bool*)qax_result.constData();
+    return *(bool *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetEmbedMovie(bool value){ setProperty("EmbedMovie", QVariant(value)); }
+inline void IShockwaveFlash::SetEmbedMovie(bool value)
+{
+    setProperty("EmbedMovie", QVariant(value));
+}
 
 inline QString IShockwaveFlash::FlashVars() const
 {
     QVariant qax_result = property("FlashVars");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetFlashVars(const QString& value){ setProperty("FlashVars", QVariant(value)); }
+inline void IShockwaveFlash::SetFlashVars(const QString &value)
+{
+    setProperty("FlashVars", QVariant(value));
+}
 
 inline int IShockwaveFlash::FrameNum() const
 {
     QVariant qax_result = property("FrameNum");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetFrameNum(int value){ setProperty("FrameNum", QVariant(value)); }
+inline void IShockwaveFlash::SetFrameNum(int value)
+{
+    setProperty("FrameNum", QVariant(value));
+}
 
 inline bool IShockwaveFlash::Loop() const
 {
     QVariant qax_result = property("Loop");
     Q_ASSERT(qax_result.isValid());
-    return *(bool*)qax_result.constData();
+    return *(bool *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetLoop(bool value){ setProperty("Loop", QVariant(value)); }
+inline void IShockwaveFlash::SetLoop(bool value)
+{
+    setProperty("Loop", QVariant(value));
+}
 
 inline bool IShockwaveFlash::Menu() const
 {
     QVariant qax_result = property("Menu");
     Q_ASSERT(qax_result.isValid());
-    return *(bool*)qax_result.constData();
+    return *(bool *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetMenu(bool value){ setProperty("Menu", QVariant(value)); }
+inline void IShockwaveFlash::SetMenu(bool value)
+{
+    setProperty("Menu", QVariant(value));
+}
 
 inline QString IShockwaveFlash::Movie() const
 {
     QVariant qax_result = property("Movie");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetMovie(const QString& value){ setProperty("Movie", QVariant(value)); }
+inline void IShockwaveFlash::SetMovie(const QString &value)
+{
+    setProperty("Movie", QVariant(value));
+}
 
 inline bool IShockwaveFlash::Playing() const
 {
     QVariant qax_result = property("Playing");
     Q_ASSERT(qax_result.isValid());
-    return *(bool*)qax_result.constData();
+    return *(bool *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetPlaying(bool value){ setProperty("Playing", QVariant(value)); }
+inline void IShockwaveFlash::SetPlaying(bool value)
+{
+    setProperty("Playing", QVariant(value));
+}
 
 inline int IShockwaveFlash::Quality() const
 {
     QVariant qax_result = property("Quality");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetQuality(int value){ setProperty("Quality", QVariant(value)); }
+inline void IShockwaveFlash::SetQuality(int value)
+{
+    setProperty("Quality", QVariant(value));
+}
 
 inline QString IShockwaveFlash::Quality2() const
 {
     QVariant qax_result = property("Quality2");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetQuality2(const QString& value){ setProperty("Quality2", QVariant(value)); }
+inline void IShockwaveFlash::SetQuality2(const QString &value)
+{
+    setProperty("Quality2", QVariant(value));
+}
 
 inline int IShockwaveFlash::ReadyState() const
 {
     QVariant qax_result = property("ReadyState");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
 
 inline QString IShockwaveFlash::SAlign() const
 {
     QVariant qax_result = property("SAlign");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetSAlign(const QString& value){ setProperty("SAlign", QVariant(value)); }
+inline void IShockwaveFlash::SetSAlign(const QString &value)
+{
+    setProperty("SAlign", QVariant(value));
+}
 
 inline QString IShockwaveFlash::SWRemote() const
 {
     QVariant qax_result = property("SWRemote");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetSWRemote(const QString& value){ setProperty("SWRemote", QVariant(value)); }
+inline void IShockwaveFlash::SetSWRemote(const QString &value)
+{
+    setProperty("SWRemote", QVariant(value));
+}
 
 inline QString IShockwaveFlash::Scale() const
 {
     QVariant qax_result = property("Scale");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetScale(const QString& value){ setProperty("Scale", QVariant(value)); }
+inline void IShockwaveFlash::SetScale(const QString &value)
+{
+    setProperty("Scale", QVariant(value));
+}
 
 inline int IShockwaveFlash::ScaleMode() const
 {
     QVariant qax_result = property("ScaleMode");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetScaleMode(int value){ setProperty("ScaleMode", QVariant(value)); }
+inline void IShockwaveFlash::SetScaleMode(int value)
+{
+    setProperty("ScaleMode", QVariant(value));
+}
 
 inline int IShockwaveFlash::TotalFrames() const
 {
     QVariant qax_result = property("TotalFrames");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
 
 inline QString IShockwaveFlash::WMode() const
 {
     QVariant qax_result = property("WMode");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void IShockwaveFlash::SetWMode(const QString& value){ setProperty("WMode", QVariant(value)); }
+inline void IShockwaveFlash::SetWMode(const QString &value)
+{
+    setProperty("WMode", QVariant(value));
+}
 
 inline void IShockwaveFlash::Back()
 {
@@ -1197,7 +1317,7 @@ inline void IShockwaveFlash::Back()
 inline int IShockwaveFlash::CurrentFrame()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void *_a[] = {(void *)&qax_result};
     qt_metacall(QMetaObject::InvokeMetaMethod, 8, _a);
     return qax_result;
 }
@@ -1205,7 +1325,7 @@ inline int IShockwaveFlash::CurrentFrame()
 inline int IShockwaveFlash::FlashVersion()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void *_a[] = {(void *)&qax_result};
     qt_metacall(QMetaObject::InvokeMetaMethod, 9, _a);
     return qax_result;
 }
@@ -1219,49 +1339,49 @@ inline void IShockwaveFlash::Forward()
 inline bool IShockwaveFlash::FrameLoaded(int FrameNum)
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&FrameNum};
+    void *_a[] = {(void *)&qax_result, (void *)&FrameNum};
     qt_metacall(QMetaObject::InvokeMetaMethod, 11, _a);
     return qax_result;
 }
 
-inline QString IShockwaveFlash::GetVariable(const QString& name)
+inline QString IShockwaveFlash::GetVariable(const QString &name)
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&name};
+    void *_a[] = {(void *)&qax_result, (void *)&name};
     qt_metacall(QMetaObject::InvokeMetaMethod, 12, _a);
     return qax_result;
 }
 
 inline void IShockwaveFlash::GotoFrame(int FrameNum)
 {
-    void *_a[] = {0, (void*)&FrameNum};
+    void *_a[] = {0, (void *)&FrameNum};
     qt_metacall(QMetaObject::InvokeMetaMethod, 13, _a);
 }
 
 inline bool IShockwaveFlash::IsPlaying()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void *_a[] = {(void *)&qax_result};
     qt_metacall(QMetaObject::InvokeMetaMethod, 14, _a);
     return qax_result;
 }
 
-inline void IShockwaveFlash::LoadMovie(int layer, const QString& url)
+inline void IShockwaveFlash::LoadMovie(int layer, const QString &url)
 {
-    void *_a[] = {0, (void*)&layer, (void*)&url};
+    void *_a[] = {0, (void *)&layer, (void *)&url};
     qt_metacall(QMetaObject::InvokeMetaMethod, 15, _a);
 }
 
 inline void IShockwaveFlash::Pan(int x, int y, int mode)
 {
-    void *_a[] = {0, (void*)&x, (void*)&y, (void*)&mode};
+    void *_a[] = {0, (void *)&x, (void *)&y, (void *)&mode};
     qt_metacall(QMetaObject::InvokeMetaMethod, 16, _a);
 }
 
 inline int IShockwaveFlash::PercentLoaded()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void *_a[] = {(void *)&qax_result};
     qt_metacall(QMetaObject::InvokeMetaMethod, 17, _a);
     return qax_result;
 }
@@ -1278,15 +1398,18 @@ inline void IShockwaveFlash::Rewind()
     qt_metacall(QMetaObject::InvokeMetaMethod, 19, _a);
 }
 
-inline void IShockwaveFlash::SetVariable(const QString& name, const QString& value)
+inline void IShockwaveFlash::SetVariable(const QString &name,
+                                         const QString &value)
 {
-    void *_a[] = {0, (void*)&name, (void*)&value};
+    void *_a[] = {0, (void *)&name, (void *)&value};
     qt_metacall(QMetaObject::InvokeMetaMethod, 39, _a);
 }
 
-inline void IShockwaveFlash::SetZoomRect(int left, int top, int right, int bottom)
+inline void IShockwaveFlash::SetZoomRect(int left, int top, int right,
+                                         int bottom)
 {
-    void *_a[] = {0, (void*)&left, (void*)&top, (void*)&right, (void*)&bottom};
+    void *_a[] = {0, (void *)&left, (void *)&top, (void *)&right,
+                  (void *)&bottom};
     qt_metacall(QMetaObject::InvokeMetaMethod, 41, _a);
 }
 
@@ -1302,274 +1425,340 @@ inline void IShockwaveFlash::StopPlay()
     qt_metacall(QMetaObject::InvokeMetaMethod, 43, _a);
 }
 
-inline void IShockwaveFlash::TCallFrame(const QString& target, int FrameNum)
+inline void IShockwaveFlash::TCallFrame(const QString &target, int FrameNum)
 {
-    void *_a[] = {0, (void*)&target, (void*)&FrameNum};
+    void *_a[] = {0, (void *)&target, (void *)&FrameNum};
     qt_metacall(QMetaObject::InvokeMetaMethod, 44, _a);
 }
 
-inline void IShockwaveFlash::TCallLabel(const QString& target, const QString& label)
+inline void IShockwaveFlash::TCallLabel(const QString &target,
+                                        const QString &label)
 {
-    void *_a[] = {0, (void*)&target, (void*)&label};
+    void *_a[] = {0, (void *)&target, (void *)&label};
     qt_metacall(QMetaObject::InvokeMetaMethod, 45, _a);
 }
 
-inline int IShockwaveFlash::TCurrentFrame(const QString& target)
+inline int IShockwaveFlash::TCurrentFrame(const QString &target)
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&target};
+    void *_a[] = {(void *)&qax_result, (void *)&target};
     qt_metacall(QMetaObject::InvokeMetaMethod, 46, _a);
     return qax_result;
 }
 
-inline QString IShockwaveFlash::TCurrentLabel(const QString& target)
+inline QString IShockwaveFlash::TCurrentLabel(const QString &target)
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&target};
+    void *_a[] = {(void *)&qax_result, (void *)&target};
     qt_metacall(QMetaObject::InvokeMetaMethod, 47, _a);
     return qax_result;
 }
 
-inline QString IShockwaveFlash::TGetProperty(const QString& target, int property)
+inline QString IShockwaveFlash::TGetProperty(const QString &target,
+                                             int property)
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&target, (void*)&property};
+    void *_a[] = {(void *)&qax_result, (void *)&target, (void *)&property};
     qt_metacall(QMetaObject::InvokeMetaMethod, 48, _a);
     return qax_result;
 }
 
-inline double IShockwaveFlash::TGetPropertyAsNumber(const QString& target, int property)
+inline double IShockwaveFlash::TGetPropertyAsNumber(const QString &target,
+                                                    int property)
 {
     double qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&target, (void*)&property};
+    void *_a[] = {(void *)&qax_result, (void *)&target, (void *)&property};
     qt_metacall(QMetaObject::InvokeMetaMethod, 49, _a);
     return qax_result;
 }
 
-inline double IShockwaveFlash::TGetPropertyNum(const QString& target, int property)
+inline double IShockwaveFlash::TGetPropertyNum(const QString &target,
+                                               int property)
 {
     double qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&target, (void*)&property};
+    void *_a[] = {(void *)&qax_result, (void *)&target, (void *)&property};
     qt_metacall(QMetaObject::InvokeMetaMethod, 50, _a);
     return qax_result;
 }
 
-inline void IShockwaveFlash::TGotoFrame(const QString& target, int FrameNum)
+inline void IShockwaveFlash::TGotoFrame(const QString &target, int FrameNum)
 {
-    void *_a[] = {0, (void*)&target, (void*)&FrameNum};
+    void *_a[] = {0, (void *)&target, (void *)&FrameNum};
     qt_metacall(QMetaObject::InvokeMetaMethod, 51, _a);
 }
 
-inline void IShockwaveFlash::TGotoLabel(const QString& target, const QString& label)
+inline void IShockwaveFlash::TGotoLabel(const QString &target,
+                                        const QString &label)
 {
-    void *_a[] = {0, (void*)&target, (void*)&label};
+    void *_a[] = {0, (void *)&target, (void *)&label};
     qt_metacall(QMetaObject::InvokeMetaMethod, 52, _a);
 }
 
-inline void IShockwaveFlash::TPlay(const QString& target)
+inline void IShockwaveFlash::TPlay(const QString &target)
 {
-    void *_a[] = {0, (void*)&target};
+    void *_a[] = {0, (void *)&target};
     qt_metacall(QMetaObject::InvokeMetaMethod, 53, _a);
 }
 
-inline void IShockwaveFlash::TSetProperty(const QString& target, int property, const QString& value)
+inline void IShockwaveFlash::TSetProperty(const QString &target, int property,
+                                          const QString &value)
 {
-    void *_a[] = {0, (void*)&target, (void*)&property, (void*)&value};
+    void *_a[] = {0, (void *)&target, (void *)&property, (void *)&value};
     qt_metacall(QMetaObject::InvokeMetaMethod, 54, _a);
 }
 
-inline void IShockwaveFlash::TSetPropertyNum(const QString& target, int property, double value)
+inline void IShockwaveFlash::TSetPropertyNum(const QString &target,
+                                             int property, double value)
 {
-    void *_a[] = {0, (void*)&target, (void*)&property, (void*)&value};
+    void *_a[] = {0, (void *)&target, (void *)&property, (void *)&value};
     qt_metacall(QMetaObject::InvokeMetaMethod, 55, _a);
 }
 
-inline void IShockwaveFlash::TStopPlay(const QString& target)
+inline void IShockwaveFlash::TStopPlay(const QString &target)
 {
-    void *_a[] = {0, (void*)&target};
+    void *_a[] = {0, (void *)&target};
     qt_metacall(QMetaObject::InvokeMetaMethod, 56, _a);
 }
 
 inline void IShockwaveFlash::Zoom(int factor)
 {
-    void *_a[] = {0, (void*)&factor};
+    void *_a[] = {0, (void *)&factor};
     qt_metacall(QMetaObject::InvokeMetaMethod, 57, _a);
 }
-
 
 inline int ShockwaveFlash::AlignMode() const
 {
     QVariant qax_result = property("AlignMode");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetAlignMode(int value){ setProperty("AlignMode", QVariant(value)); }
+inline void ShockwaveFlash::SetAlignMode(int value)
+{
+    setProperty("AlignMode", QVariant(value));
+}
 
 inline QString ShockwaveFlash::AllowScriptAccess() const
 {
     QVariant qax_result = property("AllowScriptAccess");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetAllowScriptAccess(const QString& value){ setProperty("AllowScriptAccess", QVariant(value)); }
+inline void ShockwaveFlash::SetAllowScriptAccess(const QString &value)
+{
+    setProperty("AllowScriptAccess", QVariant(value));
+}
 
 inline QString ShockwaveFlash::BGColor() const
 {
     QVariant qax_result = property("BGColor");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetBGColor(const QString& value){ setProperty("BGColor", QVariant(value)); }
+inline void ShockwaveFlash::SetBGColor(const QString &value)
+{
+    setProperty("BGColor", QVariant(value));
+}
 
 inline int ShockwaveFlash::BackgroundColor() const
 {
     QVariant qax_result = property("BackgroundColor");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetBackgroundColor(int value){ setProperty("BackgroundColor", QVariant(value)); }
+inline void ShockwaveFlash::SetBackgroundColor(int value)
+{
+    setProperty("BackgroundColor", QVariant(value));
+}
 
 inline QString ShockwaveFlash::Base() const
 {
     QVariant qax_result = property("Base");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetBase(const QString& value){ setProperty("Base", QVariant(value)); }
+inline void ShockwaveFlash::SetBase(const QString &value)
+{
+    setProperty("Base", QVariant(value));
+}
 
 inline bool ShockwaveFlash::DeviceFont() const
 {
     QVariant qax_result = property("DeviceFont");
     Q_ASSERT(qax_result.isValid());
-    return *(bool*)qax_result.constData();
+    return *(bool *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetDeviceFont(bool value){ setProperty("DeviceFont", QVariant(value)); }
+inline void ShockwaveFlash::SetDeviceFont(bool value)
+{
+    setProperty("DeviceFont", QVariant(value));
+}
 
 inline bool ShockwaveFlash::EmbedMovie() const
 {
     QVariant qax_result = property("EmbedMovie");
     Q_ASSERT(qax_result.isValid());
-    return *(bool*)qax_result.constData();
+    return *(bool *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetEmbedMovie(bool value){ setProperty("EmbedMovie", QVariant(value)); }
+inline void ShockwaveFlash::SetEmbedMovie(bool value)
+{
+    setProperty("EmbedMovie", QVariant(value));
+}
 
 inline QString ShockwaveFlash::FlashVars() const
 {
     QVariant qax_result = property("FlashVars");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetFlashVars(const QString& value){ setProperty("FlashVars", QVariant(value)); }
+inline void ShockwaveFlash::SetFlashVars(const QString &value)
+{
+    setProperty("FlashVars", QVariant(value));
+}
 
 inline int ShockwaveFlash::FrameNum() const
 {
     QVariant qax_result = property("FrameNum");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetFrameNum(int value){ setProperty("FrameNum", QVariant(value)); }
+inline void ShockwaveFlash::SetFrameNum(int value)
+{
+    setProperty("FrameNum", QVariant(value));
+}
 
 inline bool ShockwaveFlash::Loop() const
 {
     QVariant qax_result = property("Loop");
     Q_ASSERT(qax_result.isValid());
-    return *(bool*)qax_result.constData();
+    return *(bool *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetLoop(bool value){ setProperty("Loop", QVariant(value)); }
+inline void ShockwaveFlash::SetLoop(bool value)
+{
+    setProperty("Loop", QVariant(value));
+}
 
 inline bool ShockwaveFlash::Menu() const
 {
     QVariant qax_result = property("Menu");
     Q_ASSERT(qax_result.isValid());
-    return *(bool*)qax_result.constData();
+    return *(bool *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetMenu(bool value){ setProperty("Menu", QVariant(value)); }
+inline void ShockwaveFlash::SetMenu(bool value)
+{
+    setProperty("Menu", QVariant(value));
+}
 
 inline QString ShockwaveFlash::Movie() const
 {
     QVariant qax_result = property("Movie");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetMovie(const QString& value){ setProperty("Movie", QVariant(value)); }
+inline void ShockwaveFlash::SetMovie(const QString &value)
+{
+    setProperty("Movie", QVariant(value));
+}
 
 inline bool ShockwaveFlash::Playing() const
 {
     QVariant qax_result = property("Playing");
     Q_ASSERT(qax_result.isValid());
-    return *(bool*)qax_result.constData();
+    return *(bool *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetPlaying(bool value){ setProperty("Playing", QVariant(value)); }
+inline void ShockwaveFlash::SetPlaying(bool value)
+{
+    setProperty("Playing", QVariant(value));
+}
 
 inline int ShockwaveFlash::Quality() const
 {
     QVariant qax_result = property("Quality");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetQuality(int value){ setProperty("Quality", QVariant(value)); }
+inline void ShockwaveFlash::SetQuality(int value)
+{
+    setProperty("Quality", QVariant(value));
+}
 
 inline QString ShockwaveFlash::Quality2() const
 {
     QVariant qax_result = property("Quality2");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetQuality2(const QString& value){ setProperty("Quality2", QVariant(value)); }
+inline void ShockwaveFlash::SetQuality2(const QString &value)
+{
+    setProperty("Quality2", QVariant(value));
+}
 
 inline int ShockwaveFlash::ReadyState() const
 {
     QVariant qax_result = property("ReadyState");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
 
 inline QString ShockwaveFlash::SAlign() const
 {
     QVariant qax_result = property("SAlign");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetSAlign(const QString& value){ setProperty("SAlign", QVariant(value)); }
+inline void ShockwaveFlash::SetSAlign(const QString &value)
+{
+    setProperty("SAlign", QVariant(value));
+}
 
 inline QString ShockwaveFlash::SWRemote() const
 {
     QVariant qax_result = property("SWRemote");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetSWRemote(const QString& value){ setProperty("SWRemote", QVariant(value)); }
+inline void ShockwaveFlash::SetSWRemote(const QString &value)
+{
+    setProperty("SWRemote", QVariant(value));
+}
 
 inline QString ShockwaveFlash::Scale() const
 {
     QVariant qax_result = property("Scale");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetScale(const QString& value){ setProperty("Scale", QVariant(value)); }
+inline void ShockwaveFlash::SetScale(const QString &value)
+{
+    setProperty("Scale", QVariant(value));
+}
 
 inline int ShockwaveFlash::ScaleMode() const
 {
     QVariant qax_result = property("ScaleMode");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetScaleMode(int value){ setProperty("ScaleMode", QVariant(value)); }
+inline void ShockwaveFlash::SetScaleMode(int value)
+{
+    setProperty("ScaleMode", QVariant(value));
+}
 
 inline int ShockwaveFlash::TotalFrames() const
 {
     QVariant qax_result = property("TotalFrames");
     Q_ASSERT(qax_result.isValid());
-    return *(int*)qax_result.constData();
+    return *(int *)qax_result.constData();
 }
 
 inline QString ShockwaveFlash::WMode() const
 {
     QVariant qax_result = property("WMode");
     Q_ASSERT(qax_result.isValid());
-    return *(QString*)qax_result.constData();
+    return *(QString *)qax_result.constData();
 }
-inline void ShockwaveFlash::SetWMode(const QString& value){ setProperty("WMode", QVariant(value)); }
+inline void ShockwaveFlash::SetWMode(const QString &value)
+{
+    setProperty("WMode", QVariant(value));
+}
 
 inline void ShockwaveFlash::Back()
 {
@@ -1580,7 +1769,7 @@ inline void ShockwaveFlash::Back()
 inline int ShockwaveFlash::CurrentFrame()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void *_a[] = {(void *)&qax_result};
     qt_metacall(QMetaObject::InvokeMetaMethod, 34, _a);
     return qax_result;
 }
@@ -1588,7 +1777,7 @@ inline int ShockwaveFlash::CurrentFrame()
 inline int ShockwaveFlash::FlashVersion()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void *_a[] = {(void *)&qax_result};
     qt_metacall(QMetaObject::InvokeMetaMethod, 35, _a);
     return qax_result;
 }
@@ -1602,49 +1791,49 @@ inline void ShockwaveFlash::Forward()
 inline bool ShockwaveFlash::FrameLoaded(int FrameNum)
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&FrameNum};
+    void *_a[] = {(void *)&qax_result, (void *)&FrameNum};
     qt_metacall(QMetaObject::InvokeMetaMethod, 37, _a);
     return qax_result;
 }
 
-inline QString ShockwaveFlash::GetVariable(const QString& name)
+inline QString ShockwaveFlash::GetVariable(const QString &name)
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&name};
+    void *_a[] = {(void *)&qax_result, (void *)&name};
     qt_metacall(QMetaObject::InvokeMetaMethod, 38, _a);
     return qax_result;
 }
 
 inline void ShockwaveFlash::GotoFrame(int FrameNum)
 {
-    void *_a[] = {0, (void*)&FrameNum};
+    void *_a[] = {0, (void *)&FrameNum};
     qt_metacall(QMetaObject::InvokeMetaMethod, 39, _a);
 }
 
 inline bool ShockwaveFlash::IsPlaying()
 {
     bool qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void *_a[] = {(void *)&qax_result};
     qt_metacall(QMetaObject::InvokeMetaMethod, 40, _a);
     return qax_result;
 }
 
-inline void ShockwaveFlash::LoadMovie(int layer, const QString& url)
+inline void ShockwaveFlash::LoadMovie(int layer, const QString &url)
 {
-    void *_a[] = {0, (void*)&layer, (void*)&url};
+    void *_a[] = {0, (void *)&layer, (void *)&url};
     qt_metacall(QMetaObject::InvokeMetaMethod, 41, _a);
 }
 
 inline void ShockwaveFlash::Pan(int x, int y, int mode)
 {
-    void *_a[] = {0, (void*)&x, (void*)&y, (void*)&mode};
+    void *_a[] = {0, (void *)&x, (void *)&y, (void *)&mode};
     qt_metacall(QMetaObject::InvokeMetaMethod, 42, _a);
 }
 
 inline int ShockwaveFlash::PercentLoaded()
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result};
+    void *_a[] = {(void *)&qax_result};
     qt_metacall(QMetaObject::InvokeMetaMethod, 43, _a);
     return qax_result;
 }
@@ -1661,15 +1850,18 @@ inline void ShockwaveFlash::Rewind()
     qt_metacall(QMetaObject::InvokeMetaMethod, 45, _a);
 }
 
-inline void ShockwaveFlash::SetVariable(const QString& name, const QString& value)
+inline void ShockwaveFlash::SetVariable(const QString &name,
+                                        const QString &value)
 {
-    void *_a[] = {0, (void*)&name, (void*)&value};
+    void *_a[] = {0, (void *)&name, (void *)&value};
     qt_metacall(QMetaObject::InvokeMetaMethod, 65, _a);
 }
 
-inline void ShockwaveFlash::SetZoomRect(int left, int top, int right, int bottom)
+inline void ShockwaveFlash::SetZoomRect(int left, int top, int right,
+                                        int bottom)
 {
-    void *_a[] = {0, (void*)&left, (void*)&top, (void*)&right, (void*)&bottom};
+    void *_a[] = {0, (void *)&left, (void *)&top, (void *)&right,
+                  (void *)&bottom};
     qt_metacall(QMetaObject::InvokeMetaMethod, 67, _a);
 }
 
@@ -1685,107 +1877,107 @@ inline void ShockwaveFlash::StopPlay()
     qt_metacall(QMetaObject::InvokeMetaMethod, 69, _a);
 }
 
-inline void ShockwaveFlash::TCallFrame(const QString& target, int FrameNum)
+inline void ShockwaveFlash::TCallFrame(const QString &target, int FrameNum)
 {
-    void *_a[] = {0, (void*)&target, (void*)&FrameNum};
+    void *_a[] = {0, (void *)&target, (void *)&FrameNum};
     qt_metacall(QMetaObject::InvokeMetaMethod, 70, _a);
 }
 
-inline void ShockwaveFlash::TCallLabel(const QString& target, const QString& label)
+inline void ShockwaveFlash::TCallLabel(const QString &target,
+                                       const QString &label)
 {
-    void *_a[] = {0, (void*)&target, (void*)&label};
+    void *_a[] = {0, (void *)&target, (void *)&label};
     qt_metacall(QMetaObject::InvokeMetaMethod, 71, _a);
 }
 
-inline int ShockwaveFlash::TCurrentFrame(const QString& target)
+inline int ShockwaveFlash::TCurrentFrame(const QString &target)
 {
     int qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&target};
+    void *_a[] = {(void *)&qax_result, (void *)&target};
     qt_metacall(QMetaObject::InvokeMetaMethod, 72, _a);
     return qax_result;
 }
 
-inline QString ShockwaveFlash::TCurrentLabel(const QString& target)
+inline QString ShockwaveFlash::TCurrentLabel(const QString &target)
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&target};
+    void *_a[] = {(void *)&qax_result, (void *)&target};
     qt_metacall(QMetaObject::InvokeMetaMethod, 73, _a);
     return qax_result;
 }
 
-inline QString ShockwaveFlash::TGetProperty(const QString& target, int property)
+inline QString ShockwaveFlash::TGetProperty(const QString &target, int property)
 {
     QString qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&target, (void*)&property};
+    void *_a[] = {(void *)&qax_result, (void *)&target, (void *)&property};
     qt_metacall(QMetaObject::InvokeMetaMethod, 74, _a);
     return qax_result;
 }
 
-inline double ShockwaveFlash::TGetPropertyAsNumber(const QString& target, int property)
+inline double ShockwaveFlash::TGetPropertyAsNumber(const QString &target,
+                                                   int property)
 {
     double qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&target, (void*)&property};
+    void *_a[] = {(void *)&qax_result, (void *)&target, (void *)&property};
     qt_metacall(QMetaObject::InvokeMetaMethod, 75, _a);
     return qax_result;
 }
 
-inline double ShockwaveFlash::TGetPropertyNum(const QString& target, int property)
+inline double ShockwaveFlash::TGetPropertyNum(const QString &target,
+                                              int property)
 {
     double qax_result;
-    void *_a[] = {(void*)&qax_result, (void*)&target, (void*)&property};
+    void *_a[] = {(void *)&qax_result, (void *)&target, (void *)&property};
     qt_metacall(QMetaObject::InvokeMetaMethod, 76, _a);
     return qax_result;
 }
 
-inline void ShockwaveFlash::TGotoFrame(const QString& target, int FrameNum)
+inline void ShockwaveFlash::TGotoFrame(const QString &target, int FrameNum)
 {
-    void *_a[] = {0, (void*)&target, (void*)&FrameNum};
+    void *_a[] = {0, (void *)&target, (void *)&FrameNum};
     qt_metacall(QMetaObject::InvokeMetaMethod, 77, _a);
 }
 
-inline void ShockwaveFlash::TGotoLabel(const QString& target, const QString& label)
+inline void ShockwaveFlash::TGotoLabel(const QString &target,
+                                       const QString &label)
 {
-    void *_a[] = {0, (void*)&target, (void*)&label};
+    void *_a[] = {0, (void *)&target, (void *)&label};
     qt_metacall(QMetaObject::InvokeMetaMethod, 78, _a);
 }
 
-inline void ShockwaveFlash::TPlay(const QString& target)
+inline void ShockwaveFlash::TPlay(const QString &target)
 {
-    void *_a[] = {0, (void*)&target};
+    void *_a[] = {0, (void *)&target};
     qt_metacall(QMetaObject::InvokeMetaMethod, 79, _a);
 }
 
-inline void ShockwaveFlash::TSetProperty(const QString& target, int property, const QString& value)
+inline void ShockwaveFlash::TSetProperty(const QString &target, int property,
+                                         const QString &value)
 {
-    void *_a[] = {0, (void*)&target, (void*)&property, (void*)&value};
+    void *_a[] = {0, (void *)&target, (void *)&property, (void *)&value};
     qt_metacall(QMetaObject::InvokeMetaMethod, 80, _a);
 }
 
-inline void ShockwaveFlash::TSetPropertyNum(const QString& target, int property, double value)
+inline void ShockwaveFlash::TSetPropertyNum(const QString &target, int property,
+                                            double value)
 {
-    void *_a[] = {0, (void*)&target, (void*)&property, (void*)&value};
+    void *_a[] = {0, (void *)&target, (void *)&property, (void *)&value};
     qt_metacall(QMetaObject::InvokeMetaMethod, 81, _a);
 }
 
-inline void ShockwaveFlash::TStopPlay(const QString& target)
+inline void ShockwaveFlash::TStopPlay(const QString &target)
 {
-    void *_a[] = {0, (void*)&target};
+    void *_a[] = {0, (void *)&target};
     qt_metacall(QMetaObject::InvokeMetaMethod, 82, _a);
 }
 
 inline void ShockwaveFlash::Zoom(int factor)
 {
-    void *_a[] = {0, (void*)&factor};
+    void *_a[] = {0, (void *)&factor};
     qt_metacall(QMetaObject::InvokeMetaMethod, 83, _a);
 }
 
-
-
-
-
 #endif
-
 }
 
 #endif
-

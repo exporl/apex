@@ -24,20 +24,20 @@
 
 namespace apex
 {
-  namespace data
-  {
-    class ScreenElement;
-  }
+namespace data
+{
+class ScreenElement;
+}
 
-  namespace editor
-  {
+namespace editor
+{
 
-    class ScreenElementEditorDelegate;
+class ScreenElementEditorDelegate;
 
-    using data::ScreenElement;
+using data::ScreenElement;
 
-    typedef std::map<ScreenElement*, ScreenElementEditorDelegate*> elementToDelegateMapT;
-
-  }
+typedef std::map<ScreenElement *, ScreenElementEditorDelegate *>
+    elementToDelegateMapT;
+}
 }
 #endif

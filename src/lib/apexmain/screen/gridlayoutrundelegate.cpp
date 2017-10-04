@@ -27,52 +27,47 @@ namespace apex
 namespace rundelegates
 {
 
-const ScreenElement* GridLayoutRunDelegate::getScreenElement() const
+const ScreenElement *GridLayoutRunDelegate::getScreenElement() const
 {
     return element;
 }
 
-QLayout* GridLayoutRunDelegate::getLayout()
+QLayout *GridLayoutRunDelegate::getLayout()
 {
     return this;
 }
 
-QWidget* GridLayoutRunDelegate::getWidget()
+QWidget *GridLayoutRunDelegate::getWidget()
 {
     return 0;
 }
 
 GridLayoutRunDelegate::GridLayoutRunDelegate(
-    ExperimentRunDelegate* p_exprd,
-    const GridLayoutElement* e, QWidget* parent,
-    ElementToRunningMap& elementToRunningMap,
-    const QFont& font ) :
-      QGridLayout(),
-      ScreenElementRunDelegate(p_exprd, e),
-      element( e )
+    ExperimentRunDelegate *p_exprd, const GridLayoutElement *e, QWidget *parent,
+    ElementToRunningMap &elementToRunningMap, const QFont &font)
+    : QGridLayout(), ScreenElementRunDelegate(p_exprd, e), element(e)
 {
     setMargin(5);
     setObjectName(element->getID());
 
-//    qCDebug(APEX_RS, "Creating gridlayout with parent %p", parent);
+    //    qCDebug(APEX_RS, "Creating gridlayout with parent %p", parent);
 
-    for ( int i = 0; i < element->getNumberOfChildren(); ++i )
-    {
-        const ScreenElement* child = element->getChild( i );
-        RunDelegateCreatorVisitor delcreator( p_exprd, parent, elementToRunningMap, font );
-        ScreenElementRunDelegate* childdel = delcreator.createRunDelegate( child );
-        if ( childdel )
-            childdel->addToGridLayout( this );
+    for (int i = 0; i < element->getNumberOfChildren(); ++i) {
+        const ScreenElement *child = element->getChild(i);
+        RunDelegateCreatorVisitor delcreator(p_exprd, parent,
+                                             elementToRunningMap, font);
+        ScreenElementRunDelegate *childdel =
+            delcreator.createRunDelegate(child);
+        if (childdel)
+            childdel->addToGridLayout(this);
     }
 
-    for (int i=0; i< element->getColumnStretches().size();++i) {
+    for (int i = 0; i < element->getColumnStretches().size(); ++i) {
         setColumnStretch(i, element->getColumnStretches().at(i));
     }
-    for (int i=0; i< element->getRowStretches().size();++i) {
+    for (int i = 0; i < element->getRowStretches().size(); ++i) {
         setRowStretch(i, element->getRowStretches().at(i));
     }
 }
-
 }
 }
-

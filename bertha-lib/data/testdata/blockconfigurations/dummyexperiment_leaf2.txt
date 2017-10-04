@@ -1,0 +1,4 @@
+device:capture-1 summation:input-1
+summation:output-1 device:playback-1
+leaf2:output-1 amplifier:input-1
+amplifier:output-1 device:playback-2

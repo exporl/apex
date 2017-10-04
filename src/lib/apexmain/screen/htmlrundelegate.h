@@ -20,69 +20,73 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_SCREEN_HTMLRUNDELEGATE_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_SCREEN_HTMLRUNDELEGATE_H_
 
-#include "screenelementrundelegate.h"
 #include "htmlapi.h"
+#include "screenelementrundelegate.h"
 
-#include <QWebView>
+#include <QResizeEvent>
 #include <QScopedPointer>
-
 
 // TODO: move code from rtresultsink into apexwebpage and reuse here
 
 namespace apex
 {
-    class ExperimentRunDelegate;
-  namespace data
-  {
-    class ScreenElement;
-    class HtmlElement;
-  }
+class ExperimentRunDelegate;
+namespace data
+{
+class ScreenElement;
+class HtmlElement;
+}
 
-  namespace rundelegates
-  {
-    using data::HtmlElement;
-    using data::ScreenElement;
+namespace rundelegates
+{
+using data::HtmlElement;
+using data::ScreenElement;
 
-    /**
-     * The HtmlRunDelegate class is an implementation of
-     * ScreenElementRunDelegate representing a HtmlElement.
-     */
-    class HtmlRunDelegate
-      : public QWebView, public ScreenElementRunDelegate
-    {
-      Q_OBJECT
+class HtmlRunDelegatePrivate;
 
-      QFont initialFont;
-      const HtmlElement* element;
-      QScopedPointer<HtmlAPI> api;
-      bool hasEnabledWaiting;
-      bool hasFinishedLoading;
+/**
+ * The HtmlRunDelegate class is an implementation of
+ * ScreenElementRunDelegate representing a HtmlElement.
+ */
+class HtmlRunDelegate : public QObject, public ScreenElementRunDelegate
+{
+    Q_OBJECT
 
-      void enable();
+public:
+    HtmlRunDelegate(ExperimentRunDelegate *p_rd, QWidget *parent,
+                    const HtmlElement *e);
+    virtual ~HtmlRunDelegate();
 
-    public:
-        HtmlRunDelegate( ExperimentRunDelegate* p_rd,
-                         QWidget* parent, const HtmlElement* e);
+    const ScreenElement *getScreenElement() const Q_DECL_OVERRIDE;
 
-      const ScreenElement* getScreenElement() const;
+    QWidget *getWidget() Q_DECL_OVERRIDE;
+    bool hasText() const Q_DECL_OVERRIDE;
+    bool hasInterestingText() const Q_DECL_OVERRIDE;
+    const QString getText() const Q_DECL_OVERRIDE;
+    void connectSlots(gui::ScreenRunDelegate *d) Q_DECL_OVERRIDE;
+    void feedBack(const FeedbackMode &mode) Q_DECL_OVERRIDE;
+    void enable();
 
-      QWidget* getWidget();
-      bool hasText() const;
-      bool hasInterestingText() const;
-      const QString getText() const;
-      void connectSlots( gui::ScreenRunDelegate* d );
-      void feedBack(const FeedbackMode& mode);
-    signals:
-      void answered( ScreenElementRunDelegate* );
-    protected:
-      void resizeEvent( QResizeEvent* e );
-      void changeEvent ( QEvent * event );
-    public slots:
-      void sendAnsweredSignal();
-    private slots:
-      void loadFinished(bool ok);
-    };
-  }
+    void setEnabled(bool enable) Q_DECL_OVERRIDE;
+Q_SIGNALS:
+    void answered(ScreenElementRunDelegate *);
+
+protected:
+    void resizeEvent(QResizeEvent *e);
+    void changeEvent(QEvent *event);
+public Q_SLOTS:
+    void sendAnsweredSignal();
+private Q_SLOTS:
+    void parameterChanged(QString, QVariant);
+    void setup();
+
+public:
+    const HtmlElement *element;
+
+protected:
+    HtmlRunDelegatePrivate *const d;
+};
+}
 }
 
 #endif

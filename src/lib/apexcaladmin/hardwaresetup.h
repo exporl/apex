@@ -29,18 +29,20 @@ class HardwareSetup;
 
 typedef NameList<HardwareSetup> HardwareSetups;
 
-class CALIBRATIONADMIN_EXPORT HardwareSetup {
+class CALIBRATIONADMIN_EXPORT HardwareSetup
+{
 public:
     HardwareSetup();
     bool isLocal() const;
     bool isGlobal() const;
     QString name() const;
 
-    bool operator==(const HardwareSetup& other) const;
+    bool operator==(const HardwareSetup &other) const;
 
     QStringList profiles() const;
+
 private:
-    explicit HardwareSetup(const QString& name, bool isLocal);
+    explicit HardwareSetup(const QString &name, bool isLocal);
 
     QString name_;
     bool isLocal_;

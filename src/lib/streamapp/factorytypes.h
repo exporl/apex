@@ -23,20 +23,19 @@
 namespace streamapp
 {
 
-    /**
-      * Devictypes for soundcards
-      */
-  enum gt_eDeviceType
-  {
-    NODEV,      //!< TODO implement this for testing
-    ASIO,       //!< SteinBerg ASIO; see www.steinberg.net/Steinberg/Developers.asp for the license !!!
-    PORTAUDIO,  //!< PortAudio
-    JACK,       //!< Jack
-    COREAUDIO,  //!< OsX CoreAudio
-    QTAUDIO,    //!< Qt Multimedia framework
-    DUMMY       //!< Dummy soundcard
-  };
-
+/**
+  * Devictypes for soundcards
+  */
+enum gt_eDeviceType {
+    NODEV, //!< TODO implement this for testing
+    ASIO,  //!< SteinBerg ASIO; see www.steinberg.net/Steinberg/Developers.asp
+           //! for the license !!!
+    PORTAUDIO, //!< PortAudio
+    JACK,      //!< Jack
+    COREAUDIO, //!< OsX CoreAudio
+    QTAUDIO,   //!< Qt Multimedia framework
+    DUMMY      //!< Dummy soundcard
+};
 }
 
 #endif //#ifndef _APEX_SRC_LIB_STREAMAPP_FACTORYTYPES_H__

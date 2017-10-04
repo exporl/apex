@@ -30,12 +30,11 @@ apex::data::SoundLevelMeterData::SoundLevelMeterData()
 
 QString apex::data::SoundLevelMeterData::measurementType() const
 {
-    QString type = valueByType ( "type" ).toString().toUpper();
+    QString type = valueByType("type").toString().toUpper();
 
-    if ( type == "RMS" || type =="PEAK" )
+    if (type == "RMS" || type == "PEAK")
         return type;
-    else
-    {
+    else {
         error = "Unsupported measurement type";
         return "";
     }
@@ -46,8 +45,7 @@ QString apex::data::SoundLevelMeterData::frequencyWeightingType() const
 
     if (fw == "Z" || fw == "A" || fw == "C")
         return fw;
-    else
-    {
+    else {
         error = "Unsupported frequency weighting type";
         return "";
     }
@@ -59,8 +57,7 @@ QString apex::data::SoundLevelMeterData::timeWeightingType() const
 
     if (tw == "S" || tw == "F" || tw == "I")
         return tw;
-    else
-    {
+    else {
         error = "Unsupported time weighting type";
         return "";
     }
@@ -69,28 +66,24 @@ QString apex::data::SoundLevelMeterData::timeWeightingType() const
 bool apex::data::SoundLevelMeterData::containsSupportedData() const
 {
 
-        if(valueByType("time").toInt() <= 0)
-        {
-                error = "Time must be an integer greater than zero";
-                return false;
-        }
-        if(!(valueByType("percentile").toDouble() <= 1 &&
-                valueByType("percentile").toDouble() >= 0))
-        {
-                error = "Percentile must be between 0 and 1";
-                return false;
-        }
-        if(measurementType() == "")
-                return false;
-        if(frequencyWeightingType() == "")
-                return false;
-        if(timeWeightingType() == "")
-                return false;
-        return true;
+    if (valueByType("time").toInt() <= 0) {
+        error = "Time must be an integer greater than zero";
+        return false;
+    }
+    if (!(valueByType("percentile").toDouble() <= 1 &&
+          valueByType("percentile").toDouble() >= 0)) {
+        error = "Percentile must be between 0 and 1";
+        return false;
+    }
+    if (measurementType() == "")
+        return false;
+    if (frequencyWeightingType() == "")
+        return false;
+    if (timeWeightingType() == "")
+        return false;
+    return true;
 }
-const QString& apex::data::SoundLevelMeterData::errorString() const
+const QString &apex::data::SoundLevelMeterData::errorString() const
 {
-        return error;
+    return error;
 }
-
-

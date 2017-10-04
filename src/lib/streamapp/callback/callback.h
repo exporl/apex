@@ -23,35 +23,36 @@
 namespace streamapp
 {
 
+/**
+  * Callback
+  *   defines what a callback should look like.
+  *   A callback is just a function; A callback object is
+  *   much handier however, since subclasses can store whatever
+  *   they need in the object in order to access it when called back.
+  ******************************************************************* */
+class Callback
+{
+protected:
     /**
-      * Callback
-      *   defines what a callback should look like.
-      *   A callback is just a function; A callback object is
-      *   much handier however, since subclasses can store whatever
-      *   they need in the object in order to access it when called back.
-      ******************************************************************* */
-  class Callback
-  {
-  protected:
-      /**
-        * Protected Constructor.
-        */
+      * Protected Constructor.
+      */
     Callback()
-    {}
+    {
+    }
 
-  public:
-      /**
-        * Destructor.
-        */
+public:
+    /**
+      * Destructor.
+      */
     virtual ~Callback()
-    {}
+    {
+    }
 
-      /**
-        * The callback function.
-        */
+    /**
+      * The callback function.
+      */
     virtual void mf_Callback() = 0;
-  };
-
+};
 }
 
 #endif //#ifndef __CALLBACK_H_

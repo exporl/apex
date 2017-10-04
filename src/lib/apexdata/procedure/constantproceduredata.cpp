@@ -21,8 +21,7 @@
 
 using namespace apex::data;
 
-ConstantProcedureData::ConstantProcedureData() :
-    ProcedureData()
+ConstantProcedureData::ConstantProcedureData() : ProcedureData()
 {
 }
 

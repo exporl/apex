@@ -40,13 +40,13 @@ class APEX_EXPORT ExperimentControl : public QObject
 {
     Q_OBJECT
     friend class ExperimentControlPrivate;
+
 public:
-    enum Flag
-    {
-        NoFlags         = 0,
-        AutoStart       = 1 << 0,
-        NoResults       = 1 << 1,
-        Deterministic   = 1 << 2
+    enum Flag {
+        NoFlags = 0,
+        AutoStart = 1 << 0,
+        NoResults = 1 << 1,
+        Deterministic = 1 << 2
     };
 
     Q_DECLARE_FLAGS(Flags, Flag);
@@ -55,7 +55,7 @@ public:
 
     ~ExperimentControl();
 
-    void loadExperiment(ExperimentRunDelegate* runDelegate);
+    void loadExperiment(ExperimentRunDelegate *runDelegate);
 
     /**
      * Starts the loaded experiment.
@@ -74,8 +74,8 @@ public:
      */
     QDateTime startTime() const;
 
-    ExperimentIo* io() const;
-    const QStateMachine* machine() const;
+    ExperimentIo *io() const;
+    const QStateMachine *machine() const;
 
 Q_SIGNALS:
     /**
@@ -84,15 +84,13 @@ Q_SIGNALS:
     void experimentDone();
     void savedResults(QString filename);
 
-    void errorMessage(const QString& source, const QString& message);
+    void errorMessage(const QString &source, const QString &message);
 
 private:
-
-    ExperimentControlPrivate* const d;
+    ExperimentControlPrivate *const d;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(ExperimentControl::Flags)
-
-    }
+}
 
 #endif

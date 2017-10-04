@@ -77,18 +77,19 @@ class FilePrefix;
  *
  * @author Tom Francart,,,
  */
-class APEX_EXPORT ExperimentParser: public UpgradableXmlParser
+class APEX_EXPORT ExperimentParser : public UpgradableXmlParser
 {
     Q_OBJECT
 public:
-
-    // FIXME: this should (together with interactive) probably be moved to a separate class
-    ExperimentParser(const QString& configFilename,
-            const QMap<QString, QString> &expressions = QMap<QString, QString>());
+    // FIXME: this should (together with interactive) probably be moved to a
+    // separate class
+    ExperimentParser(
+        const QString &configFilename,
+        const QMap<QString, QString> &expressions = QMap<QString, QString>());
     ~ExperimentParser();
 
     // if interactive==true, the parse will interact with the user via a GUI
-    data::ExperimentData* parse(bool interactive);
+    data::ExperimentData *parse(bool interactive, bool expand = false);
 
 private Q_SLOTS:
     void upgrade3_0_2();
@@ -99,24 +100,24 @@ private Q_SLOTS:
 private:
     bool ApplyXpathModifications();
 
-    bool Parsefile ();
+    bool Parsefile(bool expand);
     bool ParseDescription(const QDomElement &p_base);
     bool ParseFilters(const QDomElement &p_filters);
     bool ParseFilter(const QDomElement &p_filter);
-    bool ParseDatablocks(const QDomElement &p_datablocks);
+    bool ParseDatablocks(const QDomElement &p_datablocks, bool expand);
     bool ParseDevices(const QDomElement &p_base);
-    device::IApexDevice* ParseExtDevice(const QDomElement &a_pDdevice);
+    device::IApexDevice *ParseExtDevice(const QDomElement &a_pDdevice);
     bool ParseScreens(const QDomElement &p_base);
-    bool ParseProcedure(const QDomElement &p_base);
-    bool ParseStimuli(const QDomElement &p_base);
+    bool ParseProcedure(const QDomElement &p_base, bool expand);
+    bool ParseStimuli(const QDomElement &p_base, bool expand);
     bool ParseConnections(const QDomElement &p_connections);
-    QString GetDeviceForConnection(data::ConnectionData* cd);
+    QString GetDeviceForConnection(data::ConnectionData *cd);
 
     bool ParseRandomGenerators(const QDomElement &p_base);
     bool ParseRandomGenerator(const QDomElement &p_base);
 
     bool ParseResults(const QDomElement &p_base);
-    bool ParseCalibration( const QDomElement &p_base);
+    bool ParseCalibration(const QDomElement &p_base);
     bool ParseGeneral(const QDomElement &p_base);
 
     bool DoExtraValidation();
@@ -126,7 +127,8 @@ private:
     bool CheckShowResults();
     bool CheckTrials();
     bool CheckStimuli();
-    bool CheckStimulusDatablocks(data::StimulusDatablocksContainer datablocks, QString trial/*just for error message*/);
+    bool CheckStimulusDatablocks(data::StimulusDatablocksContainer datablocks,
+                                 QString trial /*just for error message*/);
     bool CheckDatablocks();
     bool CheckFilters();
     bool CreateMissing();
@@ -141,14 +143,15 @@ private:
     void StatusMessageDone();
 
 private:
-    bool            m_interactive;
-    QString         m_description;      // experiment description
+    bool m_interactive;
+    QString m_description; // experiment description
 
-    //has to be kept since StimulusOutput is not constructed at the time of parsing it
-    //would be nicer to have a struct with filters, devices, xtra info
+    // has to be kept since StimulusOutput is not constructed at the time of
+    // parsing it
+    // would be nicer to have a struct with filters, devices, xtra info
     QString m_sMasterDevice;
 
-    //FIXME should all be QScopedPointer
+    // FIXME should all be QScopedPointer
     QScopedPointer<data::ScreensData> screens;
     QScopedPointer<data::ProcedureData> procedureData;
     QScopedPointer<data::ConnectionsData> connectionDatas;
@@ -156,7 +159,7 @@ private:
     QScopedPointer<data::GeneralParameters> m_generalParameters;
     QScopedPointer<data::ResultParameters> m_resultParameters;
     QScopedPointer<data::ParameterDialogResults> m_parameterDialogResults;
-    QMap<QString, data::RandomGeneratorParameters*> m_randomgenerators;
+    QMap<QString, data::RandomGeneratorParameters *> m_randomgenerators;
     data::DevicesData m_devicesdata;
     data::FiltersData m_filtersdata;
     data::DevicesData m_controldevicesdata;
@@ -166,7 +169,6 @@ private:
 
     QMap<QString, QString> expressions;
 };
-
 }
 
 #endif

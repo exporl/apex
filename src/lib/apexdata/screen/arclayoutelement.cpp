@@ -29,27 +29,26 @@ namespace apex
 namespace data
 {
 
-ArcLayoutElement::ArcLayoutElement(
-    const QString& id, ScreenElement* parent, int w, /*ArcLayout::ArcType*/int t)
-        : ScreenLayoutElement(id, parent), width(w), arctype(t)
+ArcLayoutElement::ArcLayoutElement(const QString &id, ScreenElement *parent,
+                                   int w, /*ArcLayout::ArcType*/ int t)
+    : ScreenLayoutElement(id, parent), width(w), arctype(t)
 {
-
 }
 
-void ArcLayoutElement::checkChild(const ScreenElement* childel) const
+void ArcLayoutElement::checkChild(const ScreenElement *childel) const
 {
     int x = childel->getX();
     if (x < -1 || x >= getWidth())
-        throw ApexStringException("x value for element '" + childel->getID() + "' out of range.");
-
+        throw ApexStringException("x value for element '" + childel->getID() +
+                                  "' out of range.");
 }
 
-void ArcLayoutElement::visit(ScreenElementVisitor* v)
+void ArcLayoutElement::visit(ScreenElementVisitor *v)
 {
     v->visitArcLayout(this);
 }
 
-void ArcLayoutElement::visit(ScreenElementVisitor* v) const
+void ArcLayoutElement::visit(ScreenElementVisitor *v) const
 {
     v->visitArcLayout(this);
 }
@@ -59,37 +58,37 @@ int ArcLayoutElement::getNumberOfChildPlaces() const
     return getWidth() + 1;
 }
 
-ArcLayoutElement::ArcLayoutElement(const QString& id, ScreenElement* parent)
-        : ScreenLayoutElement(id, parent), width(5), arctype(/*ArcLayout::ARC_TOP*/0x0001)
+ArcLayoutElement::ArcLayoutElement(const QString &id, ScreenElement *parent)
+    : ScreenLayoutElement(id, parent),
+      width(5),
+      arctype(/*ArcLayout::ARC_TOP*/ 0x0001)
 {
 }
 
-void ArcLayoutElement::fillChildrenWithEmpties(Screen* screen)
+void ArcLayoutElement::fillChildrenWithEmpties(Screen *screen)
 {
-    const ScreenElementMap& takenIDs = screen->idToElementMap();
+    const ScreenElementMap &takenIDs = screen->idToElementMap();
     bool centertaken = false;
     std::vector<bool> filled(getWidth(), false);
 
-    for (int i = 0; i < getNumberOfChildren(); ++i)
-    {
-        ScreenElement* child = getChild(i);
+    for (int i = 0; i < getNumberOfChildren(); ++i) {
+        ScreenElement *child = getChild(i);
         int x = child->getX();
         if (x < 0)
             centertaken = true;
         else
             filled[x] = true;
     }
-    if (!centertaken)
-    {
-        EmptyElement* e = new EmptyElement(EmptyElement::findFreeID(takenIDs), this);
+    if (!centertaken) {
+        EmptyElement *e =
+            new EmptyElement(EmptyElement::findFreeID(takenIDs), this);
         e->setX(-1);
         screen->addElement(e);
     }
-    for (int i = 0; i < getWidth(); ++ i)
-    {
-        if (!filled[i])
-        {
-            EmptyElement* e = new EmptyElement(EmptyElement::findFreeID(takenIDs), this);
+    for (int i = 0; i < getWidth(); ++i) {
+        if (!filled[i]) {
+            EmptyElement *e =
+                new EmptyElement(EmptyElement::findFreeID(takenIDs), this);
             e->setX(i);
             screen->addElement(e);
         }
@@ -111,13 +110,10 @@ ScreenElement::ElementTypeT ArcLayoutElement::elementType() const
     return ArcLayout;
 }
 
-bool ArcLayoutElement::operator==(const ArcLayoutElement& other) const
+bool ArcLayoutElement::operator==(const ArcLayoutElement &other) const
 {
-    return  ScreenLayoutElement::operator==(other) &&
-            width == other.width &&
-            arctype == other.arctype;
-}
-
+    return ScreenLayoutElement::operator==(other) && width == other.width &&
+           arctype == other.arctype;
 }
 }
-
+}

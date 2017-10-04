@@ -74,7 +74,8 @@ int main(int argc, char *argv[])
             else if (schema == QUrl(QL1S(SPIN_SCHEMA_URL)).fileName())
                 parser.reset(new SpinConfigFileParser(xmlFile));
             else
-                throw Exception(app.tr("Unknown format %1: %2").arg(schema, xmlFile));
+                throw Exception(
+                    app.tr("Unknown format %1: %2").arg(schema, xmlFile));
 
             XmlUtils::writeDocument(parser->loadAndUpgradeDom(false), target);
 

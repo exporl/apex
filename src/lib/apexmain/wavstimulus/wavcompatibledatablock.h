@@ -24,7 +24,7 @@
 
 namespace streamapp
 {
-  class PositionableAudioFormatReaderStream;
+class PositionableAudioFormatReaderStream;
 }
 
 namespace apex
@@ -45,9 +45,9 @@ public:
     /**
         * Constructor.
         */
-    WavCompatibleDataBlock(const data::DatablockData& data,
-                           const QString& filename,
-                           const ExperimentRunDelegate* experiment);
+    WavCompatibleDataBlock(const data::DatablockData &data,
+                           const QString &filename,
+                           const ExperimentRunDelegate *experiment);
 
     /**
         * Destructor.
@@ -61,17 +61,17 @@ public:
         * @param ac_lFs the samplerate, used to calculate silence length
         * @return new'd pointer or 0 for error
         */
-    virtual streamapp::PositionableAudioFormatReaderStream* GetWavStream( const unsigned ac_nBufferSize, const unsigned long ac_nFs ) const = 0;
+    virtual streamapp::PositionableAudioFormatReaderStream *
+    GetWavStream(const unsigned ac_nBufferSize,
+                 const unsigned long ac_nFs) const = 0;
 
     /**
         * Implementation of the DataBlock method.
         * Sets number of loops if ac_sName == "loop",
         * else calls DataBlock::SetParameter()
         */
-    virtual void SetParameter( const QString& ac_sName, const QString& ac_sVal );
+    virtual void SetParameter(const QString &ac_sName, const QString &ac_sVal);
 };
-
 }
 }
-#endif //WAVDATABLOCK_H
-
+#endif // WAVDATABLOCK_H

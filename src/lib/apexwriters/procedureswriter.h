@@ -51,10 +51,9 @@ public:
      *@return the created element
      */
     static QDomElement addElement(QDomDocument *doc,
-            const data::ProcedureData& data);
+                                  const data::ProcedureData &data);
 
 private:
-
     /**
      *Appends a <procedure> element to the given DOMElement.
      *
@@ -62,7 +61,7 @@ private:
      *@param data the data to fill this element with
      */
     static void fillProcedure(QDomElement *into,
-            const data::ProcedureData& data);
+                              const data::ProcedureData &data);
 
     /**
      *Appends a <procedure> element to the given DOMElement.
@@ -74,7 +73,7 @@ private:
      *@return the created element
      */
     static void fillMultiProcedure(QDomElement *into,
-            const data::MultiProcedureData& data);
+                                   const data::MultiProcedureData &data);
 
     /**
      *Fills a <parameters> element with the given parameters.
@@ -82,10 +81,11 @@ private:
      *@param data  the parameters to fill the element with
      *@param theElement the element to fill
      */
-    static void fillParametersElement(const data::ProcedureData& data,
-            QDomElement *theElement);
+    static void fillParametersElement(const data::ProcedureData &data,
+                                      QDomElement *theElement);
 
-    static void fillCorrector(const data::CorrectorData& data, QDomElement *corrector);
+    static void fillCorrector(const data::CorrectorData &data,
+                              QDomElement *corrector);
 
     /**
      * Finishes the given element as an adaptive parameters alement with the
@@ -94,8 +94,8 @@ private:
      * @param data  the parameters to finish the element with
      * @param theElement the element to finish
      */
-    static void finishAsAdaptive(const data::AdaptiveProcedureData& data,
-            QDomElement *toFinish);
+    static void finishAsAdaptive(const data::AdaptiveProcedureData &data,
+                                 QDomElement *toFinish);
 
     /**
      * Finishes the given element as aplugin parameters alement with the
@@ -104,8 +104,8 @@ private:
      * @param data  the parameters to finish the element with
      * @param theElement the element to finish
      */
-    static void finishAsPlugin(const data::ScriptProcedureData& data,
-            QDomElement *toFinish);
+    static void finishAsPlugin(const data::ScriptProcedureData &data,
+                               QDomElement *toFinish);
 
     /**
      *Fills a <trials> element with the given vector of trials.
@@ -113,13 +113,14 @@ private:
      *@param trials  a vector with all the trials to fill this element with
      *@param theElement the element to fill
      */
-    static void fillTrialsElement(const QList<data::TrialData*>& trials,
-            QDomElement *theElement);
+    static void fillTrialsElement(const data::ProcedureData &data,
+                                  QDomElement *theElement);
 
     /**
      *Gives a string representation of the procedure type
      *
-     *@param type The type to get a representation for. It is an element of an enum
+     *@param type The type to get a representation for. It is an element of an
+     *enum
      *
      *@return The string representation of the given type
      */
@@ -128,7 +129,8 @@ private:
     /**
      *Gives a string representation of the order
      *
-     *@param order The order to get a representation for. It is an element of an enum
+     *@param order The order to get a representation for. It is an element of an
+     *enum
      *
      *@return The string representation of the given order
      */
@@ -141,18 +143,22 @@ private:
      *@return true if the given config is the config of  multiprocedure,
      *  false otherwise
      */
-    static bool isMultiProcedure(const data::ProcedureData& data);
+    static bool isMultiProcedure(const data::ProcedureData &data);
 
     /**
      * Create a stepsize DOM element from the given information
      * @param doc the document where the stepsize element will be placed in
-     * @param begin information about the stepsize (see procedure.xsd for more information)
-     * @param size information about the stepsize (see procedure.xsd for more information)
-     * @param direction information about the stepsize (see procedure.xsd for more information)
+     * @param begin information about the stepsize (see procedure.xsd for more
+     * information)
+     * @param size information about the stepsize (see procedure.xsd for more
+     * information)
+     * @param direction information about the stepsize (see procedure.xsd for
+     * more information)
      * @return The stepsize DOM element with the given information
      */
-    static QDomElement createStepsizeElement(QDomDocument *doc,
-            int begin, float size, QString direction = "");
+    static QDomElement createStepsizeElement(QDomDocument *doc, int begin,
+                                             float size,
+                                             QString direction = "");
 };
 }
 }

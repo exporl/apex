@@ -65,59 +65,67 @@ class APEX_EXPORT ScreenParser
 {
     Q_DECLARE_TR_FUNCTIONS(ScreenParser)
 public:
-    static QString f_CheckPath( const QString& ac_sBasePath, const QString& ac_sRelativePath );
-    static QString f_CheckPath(data::FilePrefix p, const QString& ac_sRelativePath);
+    static QString f_CheckPath(const QString &ac_sBasePath,
+                               const QString &ac_sRelativePath);
+    static QString f_CheckPath(data::FilePrefix p,
+                               const QString &ac_sRelativePath);
 
     /**
     * Create a new ScreenParser, that will store its created
     * screens in the given \ref ScreensData instance.
     */
-    ScreenParser(data::ScreensData* screens, data::ParameterManagerData* pmd=0);
+    ScreenParser(data::ScreensData *screens,
+                 data::ParameterManagerData *pmd = 0);
 
     /**
     * Set the base path for relative paths.
     * @param ac_sPath the path
     */
-    void mp_SetBasePath( const data::FilePrefix& ac_sPath )
+    void mp_SetBasePath(const data::FilePrefix &ac_sPath)
     {
         m_sPath = ac_sPath;
     }
 
     const QString GetBasePath() const
     {
-        return  FilePrefixConvertor::convert( m_sPath );
+        return FilePrefixConvertor::convert(m_sPath);
     }
 
     /**
     * Create a Screen.
     * @param a_pElement the DOMElement
-    * @return the newly created screen ( dynamically allocated with new ), or 0 for error (call GetError() for description)
+    * @return the newly created screen ( dynamically allocated with new ), or 0
+    * for error (call GetError() for description)
     */
-    data::Screen* createScreen(const QDomElement &a_pElement);
+    data::Screen *createScreen(const QDomElement &a_pElement);
 
     /**
     * Create a test Screen.
     * Creates a Screen with a GridLayout and two buttons.
     * @return the screen ( dynamically allocated with new )
     */
-    data::Screen* createTestScreen();
+    data::Screen *createTestScreen();
 
 private:
     /**
     * Create a ScreenElement with the given parent.
     * @return a Button.
     */
-    ScreenElement* createTestScreenElement(ScreenElement* parent);
+    ScreenElement *createTestScreenElement(ScreenElement *parent);
 
-    ScreenLayoutElement* createLayout(const QDomElement &e, ScreenElement* parent, ScreenElementMap& elements );
-    ScreenElement* createElement(const QDomElement &e, ScreenElement* parent, ScreenElementMap& elements );
-    ScreenElement* createNonLayoutElement(const QDomElement &e, ScreenElement* parent, ScreenElementMap& elements);
+    ScreenLayoutElement *createLayout(const QDomElement &e,
+                                      ScreenElement *parent,
+                                      ScreenElementMap &elements);
+    ScreenElement *createElement(const QDomElement &e, ScreenElement *parent,
+                                 ScreenElementMap &elements);
+    ScreenElement *createNonLayoutElement(const QDomElement &e,
+                                          ScreenElement *parent,
+                                          ScreenElementMap &elements);
 
     /**
     * Struct for parsing feedback media paths
     */
-    struct mt_FeedBackPaths
-    {
+    struct mt_FeedBackPaths {
         QString m_sPositive;
         QString m_sNegative;
         QString m_sHighLight;
@@ -131,7 +139,8 @@ private:
     * @param ac_sElementID the ID of the element the paths are parsed for
     * @return the struct, or 0 when one of the paths doesn't exist
     */
-    mt_FeedBackPaths* parseFeedBackPaths(const QDomElement &a_pElement, const QString& ac_sElementID );
+    mt_FeedBackPaths *parseFeedBackPaths(const QDomElement &a_pElement,
+                                         const QString &ac_sElementID);
 
     /**
     * parse columnstretch or rowstretch into tStretchList
@@ -142,26 +151,28 @@ private:
     * Create a ButtonGroup.
     * @param a_pElement the DOMElement
     * @param idToElementMap Used for input validation
-    * @return the newly created ButtonGroup, or 0 for error (call GetError() for description)
+    * @return the newly created ButtonGroup, or 0 for error (call GetError() for
+    * description)
     */
-    data::ButtonGroup* createButtonGroup(const QDomElement &a_pElement, const ScreenElementMap& p_idToElementMap );
+    data::ButtonGroup *
+    createButtonGroup(const QDomElement &a_pElement,
+                      const ScreenElementMap &p_idToElementMap);
 
     /**
     * Shortcut for adding 'Unknown Tag' error
     * @param ac_sSource the method
     * @param ac_sTag the unknown tag
     */
-    void addUnknownTag(const QString& ac_sSource, const QString& ac_sTag);
+    void addUnknownTag(const QString &ac_sSource, const QString &ac_sTag);
 
     //! Check whether the given string is a valid color
-    bool checkColor(const QString& value, const QString& element="") const;
+    bool checkColor(const QString &value, const QString &element = "") const;
 
 private:
-    data::ScreensData* screens;
-    data::ParameterManagerData* parameterManagerData;
+    data::ScreensData *screens;
+    data::ParameterManagerData *parameterManagerData;
     data::FilePrefix m_sPath;
 };
-
 }
 }
 

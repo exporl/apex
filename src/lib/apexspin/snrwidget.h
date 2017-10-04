@@ -29,81 +29,79 @@ namespace gui
 
 class SnrWidget : public QWidget
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    SnrWidget(QWidget *parent = 0);
 
-        SnrWidget(QWidget* parent = 0);
+public slots:
 
-    public slots:
+    /**
+     * Shows the SNR calculation tool.
+     */
+    void showSnr();
 
-        /**
-         * Shows the SNR calculation tool.
-         */
-        void showSnr();
+    /**
+     * Shows a warning telling that all levels have to be locked together
+     * with a button to do just that.
+     */
+    void showWarning();
 
-        /**
-         * Shows a warning telling that all levels have to be locked together
-         * with a button to do just that.
-         */
-        void showWarning();
+    /**
+     * Sets the speechlevel. Connect this to a "contents changed" signal
+     * of the input field of the speaker levels widget.
+     */
+    void setSpeechlevel(double level);
 
-        /**
-         * Sets the speechlevel. Connect this to a "contents changed" signal
-         * of the input field of the speaker levels widget.
-         */
-        void setSpeechlevel(double level);
+    /**
+     * Sets the noiselevel. Connect this to a "contents changed" signal
+     * of the input field of the speaker levels widget.
+     */
+    void setNoiselevel(double level);
 
-        /**
-         * Sets the noiselevel. Connect this to a "contents changed" signal
-         * of the input field of the speaker levels widget.
-         */
-        void setNoiselevel(double level);
+signals:
 
-    signals:
+    /**
+     * Emitted when the "lock levels" button has been clicked.
+     */
+    void lockButtonClicked();
 
-        /**
-         * Emitted when the "lock levels" button has been clicked.
-         */
-        void lockButtonClicked();
+    /**
+     * Emitted when the levels changed.
+     */
+    void levelsChanged(double speech, double noise);
 
-        /**
-         * Emitted when the levels changed.
-         */
-        void levelsChanged(double speech, double noise);
+private:
+    void setupUi();
+    void setupConnections();
 
-    private:
+    /**
+     * Calculates the SNR given speech and noiselevels.
+     */
+    double calculateSnr(double speech, double noise);
 
-        void setupUi();
-        void setupConnections();
+    /**
+     * Calculates the speechlevel given the SNR and noiselevel.
+     */
+    double calculateSpeechlevel(double snr, double noise);
 
-        /**
-         * Calculates the SNR given speech and noiselevels.
-         */
-        double calculateSnr(double speech, double noise);
+    /**
+     * Calculates the noiselevel given the SNR and speechlevel.
+     */
+    double calculateNoiselevel(double snr, double speech);
 
-        /**
-         * Calculates the speechlevel given the SNR and noiselevel.
-         */
-        double calculateSpeechlevel(double snr, double noise);
+    Ui::SnrWidget widgets;
 
-        /**
-         * Calculates the noiselevel given the SNR and speechlevel.
-         */
-        double calculateNoiselevel(double snr, double speech);
+    enum { SNR, WARNING };
 
-        Ui::SnrWidget widgets;
+    bool updatingSNR;
 
-        enum {SNR, WARNING};
+private slots:
 
-        bool updatingSNR;
-
-    private slots:
-
-        void updateSnr();
+    void updateSnr();
 };
 
-}//ns gui
-}//ns spin
+} // ns gui
+} // ns spin
 
 #endif

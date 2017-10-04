@@ -32,8 +32,7 @@ public:
     QString errorMessage();
 
 private:
-    LedControllerPrivate* d;
+    LedControllerPrivate *d;
 };
-
 
 #endif

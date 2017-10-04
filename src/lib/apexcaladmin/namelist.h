@@ -29,32 +29,39 @@
 
 /*!
  * \brief The NameList class.
- * A list where one can get the elements by name. The name is a function of the item in the list.
+ * A list where one can get the elements by name. The name is a function of the
+ * item in the list.
  */
 template <typename T>
-class NameList : public QList<T>{
+class NameList : public QList<T>
+{
     Q_DECLARE_TR_FUNCTIONS(NameList)
 public:
-    NameList() {}
+    NameList()
+    {
+    }
 
-    bool contains(const QString& name) const {
-        for(int i=0; i<this->count(); ++i){
+    bool contains(const QString &name) const
+    {
+        for (int i = 0; i < this->count(); ++i) {
             const T e = this->at(i);
-            if(e.name() == name) {
+            if (e.name() == name) {
                 return true;
             }
         }
         return false;
     }
 
-    T get(const QString& name) const {
-        for(int i=0; i<this->count(); ++i){
+    T get(const QString &name) const
+    {
+        for (int i = 0; i < this->count(); ++i) {
             const T e = this->at(i);
-            if(e.name() == name) {
+            if (e.name() == name) {
                 return e;
             }
         }
-        throw std::range_error(tr("No element with name %1").arg(name).toStdString());
+        throw std::range_error(
+            tr("No element with name %1").arg(name).toStdString());
     }
 };
 

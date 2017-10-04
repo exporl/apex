@@ -1,12 +1,11 @@
 #ifndef _EXPORL_SRC_LIB_APEXTOOLS_SIGNALPROCESSING_IIRFILTER_H_
 #define _EXPORL_SRC_LIB_APEXTOOLS_SIGNALPROCESSING_IIRFILTER_H_
 
-
 #include "../global.h"
 
+#include <QFile>
 #include <QList>
 #include <QString>
-#include <QFile>
 
 /**
  * IIR filter, identical to Matlab implementation (filter.m)
@@ -28,22 +27,19 @@ public:
      *    If a(1) is not equal to 1, FILTER normalizes the filter
      * coefficients by a(1).
      */
-    void setCoefficients(const QVector<double>& B, const QVector<double> &A);
+    void setCoefficients(const QVector<double> &B, const QVector<double> &A);
 
-    void process(double* const data, unsigned count);
+    void process(double *const data, unsigned count);
 
     /* Load IIR filters from file (1 separate filter per channel) */
-    static QList<IirFilter* > load (const QString &filePath,
-            unsigned maximumLength = 0);
+    static QList<IirFilter *> load(const QString &filePath,
+                                   unsigned maximumLength = 0);
 
 private:
     QVector<double> B;
     QVector<double> A;
 
-    QVector<double> delayX,delayY;
-
+    QVector<double> delayX, delayY;
 };
-
-
 
 #endif

@@ -2,6 +2,7 @@
 
 cd `dirname $0`/..
 
+ROOTDIR=$(pwd)
 VERSION_H="src/lib/apextools/version.h"
 LAST_MODIFIED=$(stat -c "%Y" "$VERSION_H")
 
@@ -18,3 +19,5 @@ APEX_SCHEMA_VERSION=$(cat "$VERSION_H" | grep '#define APEX_SCHEMA_VERSION' | cu
 NS="http://med.kuleuven.be/exporl/apex/$APEX_SCHEMA_VERSION/experiment"
 
 find data/schemas -name "*.xsd" -print -exec sed -ri 's#(targetNamespace="|xmlns:apex=")[^"]*#\1'"$NS"'#g' {} \+
+
+"$ROOTDIR"/tools/apex-schema-documentation.sh "$@"

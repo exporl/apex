@@ -40,9 +40,10 @@ public:
     FilterParser();
     ~FilterParser();
 
-    data::FilterData* ParseFilter(const QDomElement &a_pBase, data::ParameterManagerData* parameterManagerData);
+    data::FilterData *
+    ParseFilter(const QDomElement &a_pBase,
+                data::ParameterManagerData *parameterManagerData);
 };
-
 }
 }
 

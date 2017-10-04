@@ -24,7 +24,8 @@
 
 #include "apextools/global.h"
 
-namespace apex {
+namespace apex
+{
 
 class ApexControl;
 class ApexErrorHandler;
@@ -33,19 +34,20 @@ class ExperimentRunDelegate;
 /**
 Apex module interface, every apex module should inherit from this class
 */
-class APEX_EXPORT ApexModule: public QObject {
+class APEX_EXPORT ApexModule : public QObject
+{
     Q_OBJECT
 
-    public:
-        ApexModule(ExperimentRunDelegate& p_rd);
 public:
-  virtual QString GetResultXML() const;
-  virtual QString GetEndXML() const;
+    ApexModule(ExperimentRunDelegate &p_rd);
 
-    protected:
-        ExperimentRunDelegate& m_rd;
+public:
+    virtual QString GetResultXML() const;
+    virtual QString GetEndXML() const;
+
+protected:
+    ExperimentRunDelegate &m_rd;
 };
-
 }
 
 #endif

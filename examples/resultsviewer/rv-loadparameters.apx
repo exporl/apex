@@ -142,7 +142,7 @@
 <connections/>
 
 <results>
-    <page>apex:rv-loadparameters.html</page>
+    <page>rv-loadparameters.html</page>
     <showduringexperiment>true</showduringexperiment>
 </results>
 </apex:apex>

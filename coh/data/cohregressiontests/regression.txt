@@ -1,0 +1,10 @@
+Sequence: repeats 1
+  Meta: key string type string value Gänsefüßchen
+  Meta: key int type int value 5
+  Meta: key int type int value 10
+  Meta: key double type double value 10.83
+  Meta: key bool type bool value true
+  Biphasic: active 10 reference -1 level 22 width 25.0 gap 8.0 period 110.0 channel nan magnitude nan trigger 0
+  Biphasic: active 11 reference -1 level 23 width 25.0 gap 8.0 period 120.0 channel nan magnitude nan trigger 0
+  Biphasic: active 12 reference -1 level 24 width 25.0 gap 8.0 period 130.0 channel nan magnitude nan trigger 0
+  Biphasic: active 13 reference -1 level 25 width 25.0 gap 8.0 period 140.0 channel nan magnitude nan trigger 0

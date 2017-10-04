@@ -34,9 +34,9 @@ const QString organizationDomain = QSL("exporl.med.kuleuven.be");
 }
 
 #ifdef APEX_MAKEDLL
-    #define APEX_EXPORT Q_DECL_EXPORT
+#define APEX_EXPORT Q_DECL_EXPORT
 #else
-    #define APEX_EXPORT Q_DECL_IMPORT
+#define APEX_EXPORT Q_DECL_IMPORT
 #endif
 
 #ifdef APEXWRITERS_MAKEDLL
@@ -102,7 +102,7 @@ const QString organizationDomain = QSL("exporl.med.kuleuven.be");
  * @sa DUMMY_QHASH_FUNCTION
  */
 #ifdef Q_CC_MSVC
-    #define FULL_TEMPLATE_EXPORT_INSTANTIATION
+#define FULL_TEMPLATE_EXPORT_INSTANTIATION
 #endif
 
 /**
@@ -123,31 +123,30 @@ const QString organizationDomain = QSL("exporl.med.kuleuven.be");
  * @sa DUMMY_QHASH_FUNCTION
  */
 
-//example:
-//class APEXDATA_EXPORT Foo : public QList<Bar> {...}; -> error
-//add DUMMY_QHASH_FUNCTION(Bar) to the global namespace
-//and DUMMY_COMPARISON_OPERATOR(Bar) to Bar's definition
+// example:
+// class APEXDATA_EXPORT Foo : public QList<Bar> {...}; -> error
+// add DUMMY_QHASH_FUNCTION(Bar) to the global namespace
+// and DUMMY_COMPARISON_OPERATOR(Bar) to Bar's definition
 #ifdef FULL_TEMPLATE_EXPORT_INSTANTIATION
-    #define DUMMY_QHASH_FUNCTION(C)                                     \
-        inline uint qHash(const C)                                                   \
-        {                                                               \
-            qFatal("Dummy inline uint qHash(const "#C") was called");   \
-            return 0;                                                   \
-        }
+#define DUMMY_QHASH_FUNCTION(C)                                                \
+    inline uint qHash(const C)                                                 \
+    {                                                                          \
+        qFatal("Dummy inline uint qHash(const " #C ") was called");            \
+        return 0;                                                              \
+    }
 
-    #define DUMMY_COMPARISON_OPERATOR(C)                                \
-        bool operator==(const C&) const                                 \
-        {                                                               \
-            qFatal("Dummy "#C"::operator==(const "#C"&) was called");   \
-            return false;                                               \
-        }
+#define DUMMY_COMPARISON_OPERATOR(C)                                           \
+    bool operator==(const C &) const                                           \
+    {                                                                          \
+        qFatal("Dummy " #C "::operator==(const " #C "&) was called");          \
+        return false;                                                          \
+    }
 #else
-    #define DUMMY_QHASH_FUNCTION(C)
-    #define DUMMY_COMPARISON_OPERATOR(C)
+#define DUMMY_QHASH_FUNCTION(C)
+#define DUMMY_COMPARISON_OPERATOR(C)
 #endif
 
 // Q_DECLARE_LOGGING_CATEGORY
 extern APEXTOOLS_EXPORT const QLoggingCategory &APEX_RS();
-
+extern APEXTOOLS_EXPORT const QLoggingCategory &APEX_THREADS();
 #endif
-

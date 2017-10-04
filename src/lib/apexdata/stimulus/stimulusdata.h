@@ -41,23 +41,25 @@ class StimuliParser;
 namespace data
 {
 
-struct APEXDATA_EXPORT StimulusDatablocksContainer : public QList<StimulusDatablocksContainer>
-{
+struct APEXDATA_EXPORT StimulusDatablocksContainer
+    : public QList<StimulusDatablocksContainer> {
     QString id;
     enum Type { DATABLOCKS, DATABLOCK, SEQUENTIAL, SIMULTANEOUS } type;
 
-    StimulusDatablocksContainer(Type type = DATABLOCKS) : type(type){}
+    StimulusDatablocksContainer(Type type = DATABLOCKS) : type(type)
+    {
+    }
     QString typeName() const;
 
     QString toString() const;
     QStringList toStringList() const;
 
-    bool operator==(const StimulusDatablocksContainer& other) const;
+    bool operator==(const StimulusDatablocksContainer &other) const;
 };
 
 #ifdef Q_CC_MSVC
-//needed because (dum) MSVC expands QList to all methods and somehow it does
-//not find template qHash to use for StimulusDatablocksContainer
+// needed because (dum) MSVC expands QList to all methods and somehow it does
+// not find template qHash to use for StimulusDatablocksContainer
 inline uint qHash(const StimulusDatablocksContainer)
 {
     qFatal("qHash called for StimulusDatablocksContainer");
@@ -68,44 +70,41 @@ inline uint qHash(const StimulusDatablocksContainer)
 // must be QObject to be used from javascript
 class APEXDATA_EXPORT StimulusData
 {
-   friend class parser::StimuliParser;
+    friend class parser::StimuliParser;
 
-    public:
-        StimulusData();
-        StimulusData(const StimulusData&);
+public:
+    StimulusData();
+    StimulusData(const StimulusData &);
 
-        const StimulusParameters& GetFixedParameters() const;
+    const StimulusParameters &GetFixedParameters() const;
 
-        const StimulusParameters& GetVariableParameters() const
-        {
-            return m_varParams;
-        }
+    const StimulusParameters &GetVariableParameters() const
+    {
+        return m_varParams;
+    }
 
-        const StimulusDatablocksContainer GetDatablocksContainer() const
-        {
-            return m_datablocksContainer;
-        }
+    const StimulusDatablocksContainer GetDatablocksContainer() const
+    {
+        return m_datablocksContainer;
+    }
 
-        void setFixedParameters(const StimulusParameters& parameters);
-        void setDatablocksContainer(const StimulusDatablocksContainer& cont);
-        void setId(const QString& id);
+    void setFixedParameters(const StimulusParameters &parameters);
+    void setDatablocksContainer(const StimulusDatablocksContainer &cont);
+    void setId(const QString &id);
 
-        const QString GetID() const;
-        const QString description() const;
+    const QString GetID() const;
+    const QString description() const;
 
-        bool operator==(const StimulusData & other) const;
+    bool operator==(const StimulusData &other) const;
 
-    private:
-        QString     m_description;
-        StimulusParameters     m_fixParams;
-        StimulusParameters     m_varParams;
-        StimulusDatablocksContainer m_datablocksContainer;
-        QString m_id;
-
+private:
+    QString m_description;
+    StimulusParameters m_fixParams;
+    StimulusParameters m_varParams;
+    StimulusDatablocksContainer m_datablocksContainer;
+    QString m_id;
 };
 }
 }
-
-
 
 #endif

@@ -26,50 +26,50 @@
 
 namespace apex
 {
-    class ExperimentRunDelegate;
-  namespace data
-  {
-    class ScreenElement;
-    class ButtonElement;
-  }
+class ExperimentRunDelegate;
+namespace data
+{
+class ScreenElement;
+class ButtonElement;
+}
 
-  namespace rundelegates
-  {
-    using data::ButtonElement;
-    using data::ScreenElement;
+namespace rundelegates
+{
+using data::ButtonElement;
+using data::ScreenElement;
 
-    /**
-     * The ButtonRunDelegate class is an implementation of
-     * ScreenElementRunDelegate representing a ButtonElement.
-     */
-    class ButtonRunDelegate
-      : public QPushButton, public ScreenElementRunDelegate
-    {
-      Q_OBJECT
+/**
+ * The ButtonRunDelegate class is an implementation of
+ * ScreenElementRunDelegate representing a ButtonElement.
+ */
+class ButtonRunDelegate : public QPushButton, public ScreenElementRunDelegate
+{
+    Q_OBJECT
 
-      QFont initialFont;
-      const ButtonElement* element;
-    public:
-        ButtonRunDelegate( ExperimentRunDelegate* p_rd,
-                         QWidget* parent, const ButtonElement* e,
-                         const QFont& defaultFont );
+    QFont initialFont;
+    const ButtonElement *element;
 
-      const ScreenElement* getScreenElement() const;
+public:
+    ButtonRunDelegate(ExperimentRunDelegate *p_rd, QWidget *parent,
+                      const ButtonElement *e, const QFont &defaultFont);
 
-      QWidget* getWidget();
-      bool hasText() const;
-      bool hasInterestingText() const;
-      const QString getText() const;
-      void connectSlots( gui::ScreenRunDelegate* d );
-      void feedBack(const FeedbackMode& mode);
-    signals:
-      void answered( ScreenElementRunDelegate* );
-    protected:
-      void resizeEvent( QResizeEvent* e );
-    public slots:
-      void sendAnsweredSignal();
-    };
-  }
+    const ScreenElement *getScreenElement() const;
+
+    QWidget *getWidget();
+    bool hasText() const;
+    bool hasInterestingText() const;
+    const QString getText() const;
+    void connectSlots(gui::ScreenRunDelegate *d);
+    void feedBack(const FeedbackMode &mode);
+signals:
+    void answered(ScreenElementRunDelegate *);
+
+protected:
+    void resizeEvent(QResizeEvent *e);
+public slots:
+    void sendAnsweredSignal();
+};
+}
 }
 
 #endif

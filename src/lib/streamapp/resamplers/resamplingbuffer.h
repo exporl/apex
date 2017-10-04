@@ -20,34 +20,33 @@
 #ifndef __RESAMPLINGBUF_H_
 #define __RESAMPLINGBUF_H_
 
-#include "processors/buffer.h"
 #include "containers/matrix.h"
+#include "processors/buffer.h"
 
 namespace streamapp
 {
 
-  class IResampler;
+class IResampler;
 
-    /**
-      * Class to resample and buffer in one go
-      * in order to reduce mem usage
-      * Callback will most likely be the EpochProcessor
-      * ps don't forget to set BasicBuffer's buffer to fill!
-      ****************************************************** */
-  class ResamplingBuffer : public streamapp::BasicBuffer
-  {
-  public:
-    ResamplingBuffer( IResampler& a_Resampler, const unsigned ac_nOutputSize );
+/**
+  * Class to resample and buffer in one go
+  * in order to reduce mem usage
+  * Callback will most likely be the EpochProcessor
+  * ps don't forget to set BasicBuffer's buffer to fill!
+  ****************************************************** */
+class ResamplingBuffer : public streamapp::BasicBuffer
+{
+public:
+    ResamplingBuffer(IResampler &a_Resampler, const unsigned ac_nOutputSize);
     ~ResamplingBuffer();
 
-    virtual const Stream& mf_DoProcessing( const Stream& ac_StrToProc );
+    virtual const Stream &mf_DoProcessing(const Stream &ac_StrToProc);
 
-    //getters
+    // getters
 
-  private:
-    IResampler& m_Resampler;
-  };
-
+private:
+    IResampler &m_Resampler;
+};
 }
 
 #endif //__RESAMPLINGBUF_H_

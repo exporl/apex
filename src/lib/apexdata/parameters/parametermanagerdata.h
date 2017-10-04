@@ -32,36 +32,23 @@ namespace data
 
 class Parameter;
 
-typedef QMap<QString,Parameter> IdParameterMap;
+typedef QMap<QString, Parameter> IdParameterMap;
 
 class APEXDATA_EXPORT ParameterManagerData
 {
-    public:
+public:
+    void registerParameter(const QString &id, const Parameter &pn);
+    Parameter parameterById(const QString &id) const;
 
-        void registerParameter(const QString& id, const Parameter& pn);
-        Parameter parameterById(const QString& id) const;
+    void showContents() const;
 
-        void showContents() const;
+    bool operator==(const ParameterManagerData &other) const;
 
-        bool operator==(const ParameterManagerData& other) const;
-
-    private:
-
-        //! Connects parameter IDs to internal unique parameter names
-        IdParameterMap idMap;
+private:
+    //! Connects parameter IDs to internal unique parameter names
+    IdParameterMap idMap;
 };
-
-
 }
-
-
-
-
-
 }
-
-
-
 
 #endif
-

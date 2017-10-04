@@ -24,13 +24,14 @@
 #include "plugincontroller.h"
 #include "plugincontrollerinterface.h"
 
-namespace apex {
+namespace apex
+{
 
-namespace device {
+namespace device
+{
 
-PluginController::PluginController( data::PluginControllerData* p_parameters ):
-        ControlDevice(p_parameters),
-        m_param(p_parameters)
+PluginController::PluginController(data::PluginControllerData *p_parameters)
+    : ControlDevice(p_parameters), m_param(p_parameters)
 {
     MakePlugin();
 }
@@ -41,17 +42,19 @@ PluginController::~PluginController()
 
 } // ns device
 
-
 } // ns apex
 
 void apex::device::PluginController::MakePlugin()
 {
-    PluginControllerCreator* creator = createPluginCreator<PluginControllerCreator>(m_param->plugin());
-    m_plugin.reset (creator->createController (m_param->plugin()));
+    PluginControllerCreator *creator =
+        createPluginCreator<PluginControllerCreator>(m_param->plugin());
+    m_plugin.reset(creator->createController(m_param->plugin()));
     return;
 }
 
-bool apex::device::PluginController::SetParameter(const QString& type, const int channel, const QVariant& value)
+bool apex::device::PluginController::SetParameter(const QString &type,
+                                                  const int channel,
+                                                  const QVariant &value)
 {
     Q_ASSERT(m_plugin);
     return m_plugin->setParameter(type, channel, value.toString());
@@ -69,8 +72,14 @@ void apex::device::PluginController::Prepare()
     m_plugin->prepare();
 }
 
+void apex::device::PluginController::release()
+{
+    Q_ASSERT(m_plugin);
+    m_plugin->release();
+}
+
 void apex::device::PluginController::syncControlDeviceOutput()
 {
     RETURN_IF_FAIL(m_plugin);
-    m_plugin->playStimulus ();
+    m_plugin->playStimulus();
 }

@@ -37,13 +37,13 @@ class AdaptiveProcedureParser : public ProcedureParsersParent
 public:
     AdaptiveProcedureParser();
 
-    virtual data::ProcedureData* parse(const QDomElement &base) Q_DECL_OVERRIDE;
+    virtual data::ProcedureData *parse(const QDomElement &base) Q_DECL_OVERRIDE;
 
 protected:
     virtual bool trialsValid() Q_DECL_OVERRIDE;
-    virtual void SetProcedureParameters(const QDomElement &p_base) Q_DECL_OVERRIDE;
+    virtual void
+    SetProcedureParameters(const QDomElement &p_base) Q_DECL_OVERRIDE;
 };
-
 }
 }
 

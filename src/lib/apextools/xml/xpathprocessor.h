@@ -26,7 +26,8 @@
 
 #include <stdexcept>
 
-namespace apex {
+namespace apex
+{
 class APEXTOOLS_EXPORT XPathProcessor
 {
 public:
@@ -34,12 +35,14 @@ public:
     virtual ~XPathProcessor();
     bool transform(QString xpath, QString newValue);
     void save(QString filename);
+
 private:
     xmlDocPtr doc;
 
     void changeNode(xmlNodePtr node, QString newValue);
     xmlNodeSetPtr getNodes(xmlDocPtr doc, QString xpath);
-    void registerNamespaces(xmlXPathContextPtr xpathContext, QString prefix, QString href);
+    void registerNamespaces(xmlXPathContextPtr xpathContext, QString prefix,
+                            QString href);
 };
 
 struct XPathException : public std::invalid_argument {
@@ -47,13 +50,14 @@ struct XPathException : public std::invalid_argument {
         : std::invalid_argument(QString(title + ": " + message).toStdString()),
           title(title),
           message(message)
-    {}
-    virtual ~XPathException() throw() {}
+    {
+    }
+    virtual ~XPathException() throw()
+    {
+    }
     const QString title;
     const QString message;
 };
-
-
 }
 
 #endif // _EXPORL_SRC_LIB_APEXTOOLS_XML_XPATHPROCESSOR_H_

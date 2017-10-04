@@ -24,7 +24,7 @@
 
 namespace streamapp
 {
-  class Gate;
+class Gate;
 }
 
 namespace apex
@@ -33,80 +33,78 @@ namespace data
 {
 class WavFaderParameters;
 }
-  namespace stimulus
-  {
+namespace stimulus
+{
 
-      /**
-        * WavFader
-        *   processor for fading in/out.
-        ******************************** */
-    class WavFader : public WavFilter
+/**
+  * WavFader
+  *   processor for fading in/out.
+  ******************************** */
+class WavFader : public WavFilter
+{
+public:
+    /**
+      * Constructor.
+      * @param ac_sID filter's ID
+      * @param a_pParams parameters
+      */
+    WavFader(const QString &ac_sID, data::WavFaderParameters *a_pParams,
+             unsigned long sr, unsigned bs);
+
+    /**
+      * Destructor.
+      */
+    ~WavFader();
+
+    /**
+      * Implementation of the WavFilter method.
+      */
+    INLINE bool mf_bIsRealFilter() const
     {
-    public:
-        /**
-          * Constructor.
-          * @param ac_sID filter's ID
-          * @param a_pParams parameters
-          */
-      WavFader( const QString& ac_sID, data::WavFaderParameters* a_pParams,
-                unsigned long sr, unsigned bs);
-
-        /**
-          * Destructor.
-          */
-      ~WavFader();
-
-
-        /**
-          * Implementation of the WavFilter method.
-          */
-      INLINE bool mf_bIsRealFilter() const
-      {
         return true;
-      }
+    }
 
-        /**
-          * Implementation of the WavFilter method.
-          */
-      bool SetParameter( const QString& type, const int channel, const QVariant& value ) ;
+    /**
+      * Implementation of the WavFilter method.
+      */
+    bool SetParameter(const QString &type, const int channel,
+                      const QVariant &value);
 
-        /**
-          * Implementation of the WavFilter method.
-          */
-      INLINE void Reset();
+    /**
+      * Implementation of the WavFilter method.
+      */
+    INLINE void Reset();
 
-      virtual void Prepare();
+    virtual void Prepare();
 
+    /**
+      * Implementation of the WavFilter method.
+      */
+    streamapp::IStreamProcessor *GetStrProc() const;
 
-        /**
-          * Implementation of the WavFilter method.
-          */
-      streamapp::IStreamProcessor* GetStrProc() const;
-
-        /**
-          * Implementation of the WavFilter method.
-          */
-      bool mf_bWantsToKnowStreamLength() const
-      {
+    /**
+      * Implementation of the WavFilter method.
+      */
+    bool mf_bWantsToKnowStreamLength() const
+    {
         return true;
-      }
+    }
 
-        /**
-          * Implementation of the WavFilter method.
-          */
-      void mp_SetStreamLength( const unsigned long ac_nSamples );
+    /**
+      * Implementation of the WavFilter method.
+      */
+    void mp_SetStreamLength(const unsigned long ac_nSamples);
 
-    private:
-      void mp_Init();
-      void mp_SetFadeLength( const double ac_dMSec );
+private:
+    void mp_Init();
+    void mp_SetFadeLength(const double ac_dMSec);
 
-      double              m_dFadeLength;
-      bool                m_bFadeIn;
-      streamapp::Gate*    m_pProc;
-      data::WavFaderParameters* m_Params;
-    };
-
-  }
+    double m_dFadeLength;
+    bool m_bFadeIn;
+    streamapp::Gate *m_pProc;
+    data::WavFaderParameters *m_Params;
+};
+}
 }
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_WAVFADER_H_

@@ -30,25 +30,23 @@ namespace apex
 namespace data
 {
 
-//struct SimpleParametersPrivate
+// struct SimpleParametersPrivate
 
-struct SimpleParametersPrivate
-{
+struct SimpleParametersPrivate {
     ParameterList parameters;
     QString id;
     QString xsiType;
 
-    ParameterList parametersByType(const QString& type) const;
+    ParameterList parametersByType(const QString &type) const;
     void printParameters() const;
 };
 
-
-ParameterList SimpleParametersPrivate::parametersByType(const QString& type) const
+ParameterList
+SimpleParametersPrivate::parametersByType(const QString &type) const
 {
     ParameterList result;
 
-    Q_FOREACH (Parameter param, parameters)
-    {
+    Q_FOREACH (Parameter param, parameters) {
         if (param.type() == type)
             result << param;
     }
@@ -62,69 +60,61 @@ void SimpleParametersPrivate::printParameters() const
         qCDebug(APEX_RS) << param.type() << param.defaultValue();
 }
 
-
-//class SimpleParameters
-
+// class SimpleParameters
 
 SimpleParameters::SimpleParameters() : d(new SimpleParametersPrivate())
 {
 }
 
-
-SimpleParameters::SimpleParameters(const SimpleParameters& other) :
-                                       d(new SimpleParametersPrivate(*other.d))
+SimpleParameters::SimpleParameters(const SimpleParameters &other)
+    : d(new SimpleParametersPrivate(*other.d))
 {
 }
-
 
 SimpleParameters::~SimpleParameters()
 {
     delete d;
 }
 
-QVariant SimpleParameters::valueByType(const QString& type) const
+QVariant SimpleParameters::valueByType(const QString &type) const
 {
     return parameterByType(type).defaultValue();
 }
 
-Parameter SimpleParameters::parameterByType(const QString& type) const
+Parameter SimpleParameters::parameterByType(const QString &type) const
 {
     Parameter result;
     ParameterList params = d->parametersByType(type);
 
     if (params.size() == 1)
         result = params.first();
-    else if (params.size() > 1)
-    {
-        throw ApexStringException(QObject::tr(
-                    "Error: found more than one value for parameter type %1")
-                            .arg(type));
+    else if (params.size() > 1) {
+        throw ApexStringException(
+            QObject::tr(
+                "Error: found more than one value for parameter type %1")
+                .arg(type));
     }
 
     return result;
-
 }
 
-void SimpleParameters::setValueByType(const QString& type, const QVariant& value)
+void SimpleParameters::setValueByType(const QString &type,
+                                      const QVariant &value)
 {
-    //qCDebug(APEX_RS) << "setValueByType" << type << value;
+    // qCDebug(APEX_RS) << "setValueByType" << type << value;
 
-    if (hasParameter(type))
-    {
-        int i = d->parameters.indexOf(parameterByType(type)); //can throw
+    if (hasParameter(type)) {
+        int i = d->parameters.indexOf(parameterByType(type)); // can throw
         d->parameters[i].setDefaultValue(value);
-    }
-    else
-    {
-        //qCDebug(APEX_RS) << this << ": adding parameter (set) " << type;
+    } else {
+        // qCDebug(APEX_RS) << this << ": adding parameter (set) " << type;
         d->parameters.append(Parameter(id(), type, value, NO_CHANNEL, false));
     }
 }
 
-bool SimpleParameters::hasParameter(const QString& type) const
+bool SimpleParameters::hasParameter(const QString &type) const
 {
-    Q_FOREACH (Parameter param, d->parameters)
-    {
+    Q_FOREACH (Parameter param, d->parameters) {
         if (param.type() == type)
             return true;
     }
@@ -137,29 +127,26 @@ ParameterList SimpleParameters::parameters() const
     return d->parameters;
 }
 
-
-void SimpleParameters::addParameter(const Parameter& param)
+void SimpleParameters::addParameter(const Parameter &param)
 {
-    //qCDebug(APEX_RS) << "addParameter" << param.type() << param.defaultValue();
-    Parameter newParam = param; //copy to set owner
+    // qCDebug(APEX_RS) << "addParameter" << param.type() <<
+    // param.defaultValue();
+    Parameter newParam = param; // copy to set owner
     newParam.setOwner(id());
 
-    if (!hasParameter(newParam.type()))
-    {
-        //qCDebug(APEX_RS) << this << ": adding parameter (add)" << param.type() << param.defaultValue();
+    if (!hasParameter(newParam.type())) {
+        // qCDebug(APEX_RS) << this << ": adding parameter (add)" <<
+        // param.type() << param.defaultValue();
         d->parameters.append(newParam);
-    }
-    else
-    {
+    } else {
         ParameterList params = d->parametersByType(newParam.type());
         Q_ASSERT(!params.isEmpty());
 
         bool added = false;
 
-        //if the given parameter has channel NO_CHANNEL, remove all existing
-        //parameters of its type and add the parameter
-        if (newParam.channel() == NO_CHANNEL)
-        {
+        // if the given parameter has channel NO_CHANNEL, remove all existing
+        // parameters of its type and add the parameter
+        if (newParam.channel() == NO_CHANNEL) {
             Q_FOREACH (Parameter param, params)
                 d->parameters.removeAll(param);
 
@@ -167,44 +154,40 @@ void SimpleParameters::addParameter(const Parameter& param)
             added = true;
         }
 
-        for (int i = 0; i < params.size() && !added; i++)
-        {
+        for (int i = 0; i < params.size() && !added; i++) {
             int channel = params[i].channel();
 
-            if (channel == NO_CHANNEL || channel == newParam.channel())
-            {
+            if (channel == NO_CHANNEL || channel == newParam.channel()) {
                 if (channel == NO_CHANNEL)
                     Q_ASSERT(params.size() == 1);
 
-                //if channel == NO_CHANNEL we have to overwrite it since for
-                //a given param type there cannot be a param global to all
-                //channels and a param for one specific channel.
-                //if channel == newParam.channel() we have to overwrite it too
-                //since there cannot be two params of the same type and for
-                //the same channel.
+                // if channel == NO_CHANNEL we have to overwrite it since for
+                // a given param type there cannot be a param global to all
+                // channels and a param for one specific channel.
+                // if channel == newParam.channel() we have to overwrite it too
+                // since there cannot be two params of the same type and for
+                // the same channel.
                 d->parameters.removeAll(params[i]);
                 d->parameters.append(newParam);
                 added = true;
             }
         }
 
-        if (!added)
-        {
-            //none of the parameters of the same type as the given parameter
-            //have the same channel; append the given parameter
+        if (!added) {
+            // none of the parameters of the same type as the given parameter
+            // have the same channel; append the given parameter
             d->parameters.append(newParam);
         }
     }
 }
 
-
-void SimpleParameters::removeParameter(const Parameter& param)
+void SimpleParameters::removeParameter(const Parameter &param)
 {
-    //qCDebug(APEX_RS) << this << ": removing parameter " << param.type();
+    // qCDebug(APEX_RS) << this << ": removing parameter " << param.type();
     d->parameters.removeAll(param);
 }
 
-SimpleParameters& SimpleParameters::operator=(const SimpleParameters& other)
+SimpleParameters &SimpleParameters::operator=(const SimpleParameters &other)
 {
     if (this != &other)
         *d = *other.d;
@@ -212,21 +195,19 @@ SimpleParameters& SimpleParameters::operator=(const SimpleParameters& other)
     return *this;
 }
 
-
-bool SimpleParameters::operator==(const SimpleParameters& other) const
+bool SimpleParameters::operator==(const SimpleParameters &other) const
 {
-    return  ApexTools::haveSameContents(d->parameters, other.d->parameters) &&
-            d->id == other.d->id &&
-            d->xsiType == other.d->xsiType;
+    return ApexTools::haveSameContents(d->parameters, other.d->parameters) &&
+           d->id == other.d->id && d->xsiType == other.d->xsiType;
 }
 
 QString SimpleParameters::id() const
 {
-    //Q_ASSERT(!d->id.isEmpty());
+    // Q_ASSERT(!d->id.isEmpty());
     return d->id;
 }
 
-void SimpleParameters::setId(const QString& id)
+void SimpleParameters::setId(const QString &id)
 {
     d->id = id;
 
@@ -234,7 +215,7 @@ void SimpleParameters::setId(const QString& id)
         d->parameters[i].setOwner(id);
 }
 
-void SimpleParameters::setXsiType(const QString& type)
+void SimpleParameters::setXsiType(const QString &type)
 {
     d->xsiType = type;
 }
@@ -244,8 +225,5 @@ QString SimpleParameters::xsiType() const
     Q_ASSERT(!d->xsiType.isEmpty());
     return d->xsiType;
 }
-
 }
 }
-
-

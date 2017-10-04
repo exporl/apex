@@ -24,7 +24,8 @@
 
 #include "apexmodule.h"
 
-namespace apex {
+namespace apex
+{
 
 class ApexControl;
 
@@ -33,25 +34,28 @@ class ApexControl;
 */
 class ApexScreen : public ApexModule
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
-        ApexScreen(ExperimentRunDelegate& p_rd): ApexModule(p_rd) {};
 public:
-        virtual QString GetResultXML() const;
-        const ScreenResult* GetLastResult() const {return &m_lastResult;};
+    ApexScreen(ExperimentRunDelegate &p_rd) : ApexModule(p_rd){};
 
+public:
+    virtual QString GetResultXML() const;
+    const ScreenResult *GetLastResult() const
+    {
+        return &m_lastResult;
+    };
 
-        public slots:
-                void iAnswered(const ScreenResult* result);
+public slots:
+    void iAnswered(const ScreenResult *result);
 
-        signals:
-                void Answered(const ScreenResult* result);                  // FIXME: moet ScreenAnswer class of zo worden
+signals:
+    void Answered(const ScreenResult
+                      *result); // FIXME: moet ScreenAnswer class of zo worden
 
-        private:
-                ScreenResult m_lastResult;
+private:
+    ScreenResult m_lastResult;
 };
-
 }
 
 #endif

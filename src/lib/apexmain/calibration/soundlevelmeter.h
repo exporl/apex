@@ -20,9 +20,9 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_CALIBRATION_SOUNDLEVELMETER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_CALIBRATION_SOUNDLEVELMETER_H_
 
-#include <QtPlugin>
 #include <QString>
 #include <QStringList>
+#include <QtPlugin>
 
 /**
  * Interface to sound level meters. Modelled based on B&K meters.
@@ -78,20 +78,29 @@ public:
     virtual bool setInstrument(const QString &name) = 0;
 
     virtual bool startMeasurement(int type_measurement, int frequency_weighting,
-            int time_weighting, double percentile = 0) = 0;
+                                  int time_weighting,
+                                  double percentile = 0) = 0;
     virtual bool stopMeasurement() = 0;
 
-    virtual bool measure(int type_measurement,int frequency_weighting,int time_weighting) = 0;
+    virtual bool measure(int type_measurement, int frequency_weighting,
+                         int time_weighting) = 0;
     virtual bool measure(const QString &what) = 0;
     virtual bool measure() = 0;
 
     virtual double result() const = 0;
 
-    enum type_measurement{SPL_Measurement=0,pkSPL_Measurement=1};
-    enum frequency_weighting{A_Weighting=0,C_Weighting=1,Z_Weighting=2};
-    enum time_weighting{FastWeighting=0,SlowWeighting=1,ImpulseWeighting=2};
+    enum type_measurement { SPL_Measurement = 0, pkSPL_Measurement = 1 };
+    enum frequency_weighting {
+        A_Weighting = 0,
+        C_Weighting = 1,
+        Z_Weighting = 2
+    };
+    enum time_weighting {
+        FastWeighting = 0,
+        SlowWeighting = 1,
+        ImpulseWeighting = 2
+    };
 };
-
 
 class SoundLevelMeterPluginCreator
 {
@@ -101,20 +110,24 @@ public:
     {
     }
 
-    /** Returns the available soundlevelmeters in the library. A soundlevelmeter can be
+    /** Returns the available soundlevelmeters in the library. A soundlevelmeter
+     * can be
      * instantiated with #create().
      *
      * @return list of all available soundlevelmeter plugins
      */
     virtual QStringList availablePlugins() const = 0;
 
-    /** Creates a soundlevelmeter. The caller takes ownership of the created instance and
+    /** Creates a soundlevelmeter. The caller takes ownership of the created
+     * instance and
      * must free it after use. If it is not possible to create a filter
      * instance, returns @c NULL.
      */
-    virtual SoundLevelMeter *createSoundLevelMeter(const QString &name) const = 0;
+    virtual SoundLevelMeter *
+    createSoundLevelMeter(const QString &name) const = 0;
 };
 
-Q_DECLARE_INTERFACE (SoundLevelMeterPluginCreator, "be.exporl.apex.soundlevelmeterplugin/1.0")
+Q_DECLARE_INTERFACE(SoundLevelMeterPluginCreator,
+                    "be.exporl.apex.soundlevelmeterplugin/1.0")
 
 #endif

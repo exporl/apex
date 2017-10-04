@@ -27,84 +27,80 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    ScreenElement* AnswerLabelEditorDelegate::getScreenElement()
-    {
-      return element;
-    }
+namespace editor
+{
+ScreenElement *AnswerLabelEditorDelegate::getScreenElement()
+{
+    return element;
+}
 
-    int AnswerLabelEditorDelegate::getPropertyCount()
-    {
-      return LabelEditorDelegateBase::getPropertyCount() + 1;
-    }
+int AnswerLabelEditorDelegate::getPropertyCount()
+{
+    return LabelEditorDelegateBase::getPropertyCount() + 1;
+}
 
-    QString AnswerLabelEditorDelegate::getPropertyName( int nr )
-    {
-      if ( nr < LabelEditorDelegateBase::getPropertyCount() )
-        return LabelEditorDelegateBase::getPropertyName( nr );
-      switch( nr - LabelEditorDelegateBase::getPropertyCount() )
-      {
-      case 0:
-        return tr( "Font size" );
-      default:
+QString AnswerLabelEditorDelegate::getPropertyName(int nr)
+{
+    if (nr < LabelEditorDelegateBase::getPropertyCount())
+        return LabelEditorDelegateBase::getPropertyName(nr);
+    switch (nr - LabelEditorDelegateBase::getPropertyCount()) {
+    case 0:
+        return tr("Font size");
+    default:
         return QString();
-      };
-    }
+    };
+}
 
-    QVariant AnswerLabelEditorDelegate::getPropertyData( int nr, int role )
-    {
-      if ( nr < LabelEditorDelegateBase::getPropertyCount() )
-        return LabelEditorDelegateBase::getPropertyData( nr, role );
-      switch( nr - LabelEditorDelegateBase::getPropertyCount() )
-      {
-      case 0: // font size
-        if ( role == Qt::DisplayRole )
-          return element->getFontSize();
-      }
-      return QVariant();
+QVariant AnswerLabelEditorDelegate::getPropertyData(int nr, int role)
+{
+    if (nr < LabelEditorDelegateBase::getPropertyCount())
+        return LabelEditorDelegateBase::getPropertyData(nr, role);
+    switch (nr - LabelEditorDelegateBase::getPropertyCount()) {
+    case 0: // font size
+        if (role == Qt::DisplayRole)
+            return element->getFontSize();
     }
+    return QVariant();
+}
 
-    PropertyType AnswerLabelEditorDelegate::getPropertyType( int nr )
-    {
-      if ( nr < LabelEditorDelegateBase::getPropertyCount() )
-        return LabelEditorDelegateBase::getPropertyType( nr );
-      return FontSizePropertyType;
-    }
+PropertyType AnswerLabelEditorDelegate::getPropertyType(int nr)
+{
+    if (nr < LabelEditorDelegateBase::getPropertyCount())
+        return LabelEditorDelegateBase::getPropertyType(nr);
+    return FontSizePropertyType;
+}
 
-    bool AnswerLabelEditorDelegate::setProperty( int nr, const QVariant& v )
-    {
-      if ( nr < LabelEditorDelegateBase::getPropertyCount() )
-        return LabelEditorDelegateBase::setProperty( nr, v );
-      switch( nr - LabelEditorDelegateBase::getPropertyCount() )
-      {
-      case 0:
-        if ( v.type() == QVariant::Int )
-        {
-          element->setFontSize( v.toInt() );
-          resetText();
-          return true;
+bool AnswerLabelEditorDelegate::setProperty(int nr, const QVariant &v)
+{
+    if (nr < LabelEditorDelegateBase::getPropertyCount())
+        return LabelEditorDelegateBase::setProperty(nr, v);
+    switch (nr - LabelEditorDelegateBase::getPropertyCount()) {
+    case 0:
+        if (v.type() == QVariant::Int) {
+            element->setFontSize(v.toInt());
+            resetText();
+            return true;
         }
-      }
-      return false;
     }
+    return false;
+}
 
-    AnswerLabelEditorDelegate::AnswerLabelEditorDelegate(
-      AnswerLabelElement* e, QWidget* parent, ScreenWidget* w )
-      : LabelEditorDelegateBase( e, parent, w ),
-        element( e )
-    {
-      resetText();
-    }
+AnswerLabelEditorDelegate::AnswerLabelEditorDelegate(AnswerLabelElement *e,
+                                                     QWidget *parent,
+                                                     ScreenWidget *w)
+    : LabelEditorDelegateBase(e, parent, w), element(e)
+{
+    resetText();
+}
 
-    const QString AnswerLabelEditorDelegate::getText() const
-    {
-      return tr( "Answer label" );
-    }
+const QString AnswerLabelEditorDelegate::getText() const
+{
+    return tr("Answer label");
+}
 
-    AnswerLabelEditorDelegate::~AnswerLabelEditorDelegate()
-    {
-      screenWidget->delegateDeleted( this );
-    }
-  }
+AnswerLabelEditorDelegate::~AnswerLabelEditorDelegate()
+{
+    screenWidget->delegateDeleted(this);
+}
+}
 }

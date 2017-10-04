@@ -18,51 +18,59 @@
  *****************************************************************************/
 
 #include "flowapi.h"
-#include "apextools/apexpaths.h"
 #include "accessmanager.h"
+#include "apextools/apexpaths.h"
 
 #include <QFile>
+#include <QUrl>
 
 using namespace apex;
 
-FlowApi::FlowApi(FlowRunner *fr, const QDir& baseDir)
-    : fr(fr)
-    , baseDir(baseDir)
+FlowApi::FlowApi(FlowRunner *fr, const QDir &baseDir) : fr(fr), baseDir(baseDir)
 {
     sr = new SimpleRunner;
 
-    connect(sr, SIGNAL(selected(data::ExperimentData*)),
-            fr, SLOT(select(data::ExperimentData*)));
-    connect(fr, SIGNAL(savedFile(QString)),
-            this, SIGNAL(savedFile(QString)));
-    connect(this, SIGNAL(setResultsFilePath(QString)),
-            fr, SIGNAL(setResultsFilePath(QString)));
+    connect(sr, SIGNAL(selected(data::ExperimentData *)), fr,
+            SLOT(select(data::ExperimentData *)));
+    connect(this, SIGNAL(setResultsFilePath(QString)), fr,
+            SIGNAL(setResultsFilePath(QString)));
 }
 
-void FlowApi::runExperiment(const QString& filePath, const QVariantMap& expressions, const QString& results) {
-    if(!results.isEmpty()) {
-        Q_EMIT setResultsFilePath(results);
-    }
-    if(!expressions.isEmpty()) {
-        QMap<QString, QString> m;
-        foreach(QString key, expressions.keys()) {
-            QString value = expressions.value(key).toString();
-            m.insert(key, value);
-        }
-        sr->setExpressions(m);
-    }
+bool FlowApi::runExperiment(const QString &filePath,
+                            const QString &resultsFilePath)
+{
+    if (!resultsFilePath.isEmpty())
+        Q_EMIT setResultsFilePath(resultsFilePath);
 
     AccessManager am;
     QUrl url = am.transformApexUrl(QUrl(filePath));
 
-    sr->select(url.toLocalFile());
+    sr->setExpressions(savedExpressions);
+    savedExpressions.clear();
+    bool result = sr->select(url.toLocalFile());
+    if (!result)
+        fr->makeVisible();
+    return result;
 }
 
-QString FlowApi::readFile(const QString& fileName) {
+QString FlowApi::readFile(const QString &fileName)
+{
     QFile file(fileName);
+    file.open(QIODevice::ReadOnly);
     return file.readAll();
 }
 
-QString FlowApi::fromCurrentDir(const QString& fileName) {
+QString FlowApi::absoluteFilePath(const QString &fileName)
+{
     return baseDir.absoluteFilePath(fileName);
+}
+
+void FlowApi::clearExpressions()
+{
+    savedExpressions.clear();
+}
+
+void FlowApi::addExpression(const QString &key, const QString &value)
+{
+    savedExpressions.insert(key, value);
 }

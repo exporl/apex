@@ -28,10 +28,10 @@ namespace apex
 namespace data
 {
 
-CheckBoxElement::CheckBoxElement(const QString& id, ScreenElement* parent) :
-    ScreenElement(id, parent),
-    text(QObject::tr("<No text set>")),
-    isChecked(Qt::Unchecked)
+CheckBoxElement::CheckBoxElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent),
+      text(QObject::tr("<No text set>")),
+      isChecked(Qt::Unchecked)
 {
 }
 
@@ -39,7 +39,7 @@ CheckBoxElement::~CheckBoxElement()
 {
 }
 
-void CheckBoxElement::setText(const QString& t)
+void CheckBoxElement::setText(const QString &t)
 {
     text = t;
 }
@@ -51,15 +51,15 @@ QString CheckBoxElement::getText() const
 
 Qt::CheckState CheckBoxElement::getChecked() const
 {
-        return isChecked;
+    return isChecked;
 }
 
-void CheckBoxElement::visit(ScreenElementVisitor* v)
+void CheckBoxElement::visit(ScreenElementVisitor *v)
 {
     v->visitCheckBox(this);
 }
 
-void CheckBoxElement::visit(ScreenElementVisitor* v) const
+void CheckBoxElement::visit(ScreenElementVisitor *v) const
 {
     v->visitCheckBox(this);
 }
@@ -69,11 +69,9 @@ ScreenElement::ElementTypeT CheckBoxElement::elementType() const
     return CheckBox;
 }
 
-bool CheckBoxElement::operator==(const CheckBoxElement& other) const
+bool CheckBoxElement::operator==(const CheckBoxElement &other) const
 {
     return ScreenElement::operator==(other) && text == other.text;
 }
-
 }
 }
-

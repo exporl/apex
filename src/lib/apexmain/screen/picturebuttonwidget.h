@@ -28,27 +28,24 @@
 #include <QPointF>
 #include <QPushButton>
 
-class APEX_EXPORT PictureButtonWidget: public QPushButton {
+class APEX_EXPORT PictureButtonWidget : public QPushButton
+{
     Q_OBJECT
 
-    public:
-        PictureButtonWidget(QWidget* parent=0);
-        void paintEvent(QPaintEvent*);
-        virtual void mousePressEvent( QMouseEvent* ev );
-        void setPixmap(QPixmap p);
-        void setBorderSize(int s);
+public:
+    PictureButtonWidget(QWidget *parent = 0);
+    void paintEvent(QPaintEvent *);
+    virtual void mousePressEvent(QMouseEvent *ev);
+    void setPixmap(QPixmap p);
+    void setBorderSize(int s);
 
-    signals:
-        // QPointF are the relative coordinates of the point where the user clicked
-        void mousePressed( const QPointF& );
+signals:
+    // QPointF are the relative coordinates of the point where the user clicked
+    void mousePressed(const QPointF &);
 
-
-    private:
-        QPixmap pixmap;
-        int bordersize;
+private:
+    QPixmap pixmap;
+    int bordersize;
 };
 
-
-
 #endif
-

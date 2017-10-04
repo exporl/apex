@@ -20,57 +20,59 @@
 #ifndef _APEX_SRC_PROGRAMS_SCREENEDITOR_SCREENELEMENTCREATORTEMPLATE_H_
 #define _APEX_SRC_PROGRAMS_SCREENEDITOR_SCREENELEMENTCREATORTEMPLATE_H_
 
-#include "screenelementcreator.h"
 #include "functions.h"
+#include "screenelementcreator.h"
 
 namespace apex
 {
-  namespace editor
-  {
-    /**
-     * The ScreenElementCreatorTemplate class is a template
-     * implementation of the \ref ScreenElementCreator abstract base
-     * class.  It will create an instance of type ElementType in its
-     * create method.  The ElementType should be a subclass of
-     * ScreenElement.
-     */
-    template <typename ElementType>
-    class ScreenElementCreatorTemplate
-      : public ScreenElementCreator
+namespace editor
+{
+/**
+ * The ScreenElementCreatorTemplate class is a template
+ * implementation of the \ref ScreenElementCreator abstract base
+ * class.  It will create an instance of type ElementType in its
+ * create method.  The ElementType should be a subclass of
+ * ScreenElement.
+ */
+template <typename ElementType>
+class ScreenElementCreatorTemplate : public ScreenElementCreator
+{
+    const QString elName;
+
+public:
+    ScreenElementCreatorTemplate(const QString &name);
+    ScreenElement *create(ScreenElement *parent, Screen *screen) const;
+    const QString getElementName() const
     {
-      const QString elName;
-    public:
-      ScreenElementCreatorTemplate( const QString& name );
-      ScreenElement* create( ScreenElement* parent, Screen* screen ) const;
-      const QString getElementName() const
-        {
-          return elName;
-        };
-      const QString getFreeID( const ScreenElementMap& takenIDs ) const;
+        return elName;
     };
+    const QString getFreeID(const ScreenElementMap &takenIDs) const;
+};
 
-    template <typename ElementType>
-    ScreenElementCreatorTemplate<ElementType>::ScreenElementCreatorTemplate( const QString& name )
-      : elName( name )
-    {
-    }
+template <typename ElementType>
+ScreenElementCreatorTemplate<ElementType>::ScreenElementCreatorTemplate(
+    const QString &name)
+    : elName(name)
+{
+}
 
-    template <typename ElementType>
-    ScreenElement* ScreenElementCreatorTemplate<ElementType>::create(
-      ScreenElement* parent, Screen* screen ) const
-    {
-      ElementType* ret = new ElementType( getFreeID( screen->idToElementMap() ), parent );
-      ret->fillChildrenWithEmpties( screen );
-      return ret;
-    }
+template <typename ElementType>
+ScreenElement *
+ScreenElementCreatorTemplate<ElementType>::create(ScreenElement *parent,
+                                                  Screen *screen) const
+{
+    ElementType *ret =
+        new ElementType(getFreeID(screen->idToElementMap()), parent);
+    ret->fillChildrenWithEmpties(screen);
+    return ret;
+}
 
-    template <typename ElementType>
-    const QString ScreenElementCreatorTemplate<ElementType>::getFreeID(
-      const ScreenElementMap& takenIDs ) const
-    {
-      return findFreeID( getElementName(), takenIDs );
-    }
-
-  }
+template <typename ElementType>
+const QString ScreenElementCreatorTemplate<ElementType>::getFreeID(
+    const ScreenElementMap &takenIDs) const
+{
+    return findFreeID(getElementName(), takenIDs);
+}
+}
 }
 #endif

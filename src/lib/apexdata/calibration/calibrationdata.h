@@ -35,28 +35,29 @@ namespace data
 class CalibrationParameterDataPrivate;
 class SoundLevelMeterData;
 
-//FIXME why doesn't this inherit SimpleParameters?
+// FIXME why doesn't this inherit SimpleParameters?
 class APEXDATA_EXPORT CalibrationParameterData
 {
 public:
     CalibrationParameterData();
-    CalibrationParameterData (double minimumParameter, double maximumParameter,
-            double defaultParameter, double muteParameter,
-            double defaultTargetAmplitude, double finalTargetAmplitude);
+    CalibrationParameterData(double minimumParameter, double maximumParameter,
+                             double defaultParameter, double muteParameter,
+                             double defaultTargetAmplitude,
+                             double finalTargetAmplitude);
     ~CalibrationParameterData();
-    CalibrationParameterData (const CalibrationParameterData &other);
-    CalibrationParameterData &operator= (const CalibrationParameterData &other);
+    CalibrationParameterData(const CalibrationParameterData &other);
+    CalibrationParameterData &operator=(const CalibrationParameterData &other);
 
     double minimumParameter() const;
     double maximumParameter() const;
     double defaultParameter() const;
     double muteParameter() const;
-    double defaultTargetAmplitude() const; //calibration
-    double finalTargetAmplitude() const; //target
+    double defaultTargetAmplitude() const; // calibration
+    double finalTargetAmplitude() const;   // target
 
     void setFinalTargetAmplitude(const double a);
 
-    bool operator==(const CalibrationParameterData& other) const;
+    bool operator==(const CalibrationParameterData &other) const;
 
 private:
     QSharedDataPointer<CalibrationParameterDataPrivate> d;
@@ -73,26 +74,27 @@ public:
     CalibrationData();
     ~CalibrationData();
 
-    void setCalibrationProfile (const QString &value);
+    void setCalibrationProfile(const QString &value);
     QString calibrationProfile() const;
 
-    void addAvailableStimulus (const QString &value);
+    void addAvailableStimulus(const QString &value);
     QStringList availableStimuli() const;
 
-    void addParameter (const QString &name, const CalibrationParameterData &value);
+    void addParameter(const QString &name,
+                      const CalibrationParameterData &value);
     QMap<QString, CalibrationParameterData> parameters() const;
 
-    void setSoundLevelMeterData(data::SoundLevelMeterData* d);
-    const SoundLevelMeterData* soundLevelMeterData() const;
+    void setSoundLevelMeterData(data::SoundLevelMeterData *d);
+    const SoundLevelMeterData *soundLevelMeterData() const;
 
-    bool operator==(const CalibrationData& other) const;
+    bool operator==(const CalibrationData &other) const;
 
 private:
-    CalibrationDataPrivate* d;
+    CalibrationDataPrivate *d;
 
-    //prevent copying
-    CalibrationData(const CalibrationData&);
-    CalibrationData& operator=(const CalibrationData&);
+    // prevent copying
+    CalibrationData(const CalibrationData &);
+    CalibrationData &operator=(const CalibrationData &);
 };
 
 } // namespace data

@@ -55,53 +55,51 @@ using gui::ScreenElementMap;
  */
 class APEXDATA_EXPORT Screen
 {
-    public:
-        /**
-         * Create a new screen.  rootElement and buttonGroup must have
-         * been allocated with new, and this Screen takes ownership of
-         * them.  That is, it will delete them in its destructor.
-         * Consistency between the idToElementMap and the real
-         * ScreenElements beneath rootElement is assumed.  It is also
-         * assumed that the rootElement is some kind of layout element.
-         *
-         * The root element is the base of the ScreenElement tree.
-         *
-         * Normally this is only called by the parser.
-         */
-        Screen(const QString& id, ScreenElement* rootElement,
-               const ScreenElementMap& idToElementMap,
-               ButtonGroup* buttonGroup = 0,
-               const QString& defaultAnswer = QString());
-        virtual ~Screen();
+public:
+    /**
+     * Create a new screen.  rootElement and buttonGroup must have
+     * been allocated with new, and this Screen takes ownership of
+     * them.  That is, it will delete them in its destructor.
+     * Consistency between the idToElementMap and the real
+     * ScreenElements beneath rootElement is assumed.  It is also
+     * assumed that the rootElement is some kind of layout element.
+     *
+     * The root element is the base of the ScreenElement tree.
+     *
+     * Normally this is only called by the parser.
+     */
+    Screen(const QString &id, ScreenElement *rootElement,
+           const ScreenElementMap &idToElementMap, ButtonGroup *buttonGroup = 0,
+           const QString &defaultAnswer = QString());
+    virtual ~Screen();
 
-        const ScreenElementMap& idToElementMap() const;
-        const QString getDefaultAnswerElement() const;
-        ScreenElement* getRootElement();
-        const ScreenElement* getRootElement() const;
-        void setRootElement(ScreenElement* e);
-        ButtonGroup* getButtonGroup();
-        const ButtonGroup* getButtonGroup() const;
-        const QString getID() const;
-        void setElementID(ScreenElement* e, const QString& id);
-        const ScreenElement* elementById(const QString& id) const;
-        QString elementTextById(const QString& id) const;
-        /**
-         * Let the Screen know about a newly created ScreenElement.
-         */
-        void addElement(ScreenElement* e);
-        void deleteElement(ScreenElement* e);
+    const ScreenElementMap &idToElementMap() const;
+    const QString getDefaultAnswerElement() const;
+    ScreenElement *getRootElement();
+    const ScreenElement *getRootElement() const;
+    void setRootElement(ScreenElement *e);
+    ButtonGroup *getButtonGroup();
+    const ButtonGroup *getButtonGroup() const;
+    const QString getID() const;
+    void setElementID(ScreenElement *e, const QString &id);
+    const ScreenElement *elementById(const QString &id) const;
+    QString elementTextById(const QString &id) const;
+    /**
+     * Let the Screen know about a newly created ScreenElement.
+     */
+    void addElement(ScreenElement *e);
+    void deleteElement(ScreenElement *e);
 
-        bool operator==(const Screen& other) const;
-        bool operator!=(const Screen& other) const;
+    bool operator==(const Screen &other) const;
+    bool operator!=(const Screen &other) const;
 
-    private:
-        ScreenElementMap m_idToElementMap;
-        ScreenElement* rootElement;
-        ButtonGroup* buttonGroup;
-        QString defaultAnswer;
-        QString id;
+private:
+    ScreenElementMap m_idToElementMap;
+    ScreenElement *rootElement;
+    ButtonGroup *buttonGroup;
+    QString defaultAnswer;
+    QString id;
 };
-
 }
 }
 

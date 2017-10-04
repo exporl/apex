@@ -35,43 +35,42 @@ namespace data
  * The PictureElement is an implementation of a \ref
  * ScreenElement representing a "picture".
  */
-class APEXDATA_EXPORT PictureElement
-            : public ScreenElement
+class APEXDATA_EXPORT PictureElement : public ScreenElement
 {
-        QString defaultPath;
-        QString highlightPath;
-        QString positivePath;
-        QString negativePath;
-        QString disabledPath;
-        QString fileId;
+    QString defaultPath;
+    QString highlightPath;
+    QString positivePath;
+    QString negativePath;
+    QString disabledPath;
+    QString fileId;
 
-        bool overrideFeedback;
-    public:
-        PictureElement(const QString& id, ScreenElement* parent);
-        ~PictureElement();
+    bool overrideFeedback;
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+public:
+    PictureElement(const QString &id, ScreenElement *parent);
+    ~PictureElement();
 
-        QString getDefault() const;
-        QString getHighlight() const;
-        QString getPositive() const;
-        QString getNegative() const;
-        QString getDisabled() const;
-        QString getFileId() const;
-        bool getOverrideFeedback() const;
-        void setDefault(const QString& p);
-        void setFileId(const QString& p);
-        void setPositive(const QString& p);
-        void setNegative(const QString& p);
-        void setHighlight(const QString& p);
-        void setDisabled(const QString& p);
-        void setOverrideFeedback(bool o);
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
-        bool operator==(const PictureElement& other) const;
+    QString getDefault() const;
+    QString getHighlight() const;
+    QString getPositive() const;
+    QString getNegative() const;
+    QString getDisabled() const;
+    QString getFileId() const;
+    bool getOverrideFeedback() const;
+    void setDefault(const QString &p);
+    void setFileId(const QString &p);
+    void setPositive(const QString &p);
+    void setNegative(const QString &p);
+    void setHighlight(const QString &p);
+    void setDisabled(const QString &p);
+    void setOverrideFeedback(bool o);
+
+    bool operator==(const PictureElement &other) const;
 };
-
 }
 }
 

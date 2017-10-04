@@ -32,33 +32,31 @@ class AdaptiveProcedure : public ProcedureInterface
 {
     Q_DECLARE_TR_FUNCTIONS(AdaptiveProcedure)
 
-    public:
+public:
+    AdaptiveProcedure(ProcedureApi *a, const data::ProcedureData *data);
+    ~AdaptiveProcedure();
 
-        AdaptiveProcedure(ProcedureApi* a, const data::ProcedureData* data);
-        ~AdaptiveProcedure();
+    data::Trial setupNextTrial();
+    QString firstScreen();
+    ResultHighlight processResult(const ScreenResult *screenResult);
+    double progress() const;
+    QString resultXml() const;
+    QString finalResultXml() const;
 
-        data::Trial setupNextTrial();
-        QString firstScreen();
-        ResultHighlight processResult(const ScreenResult* screenResult);
-        double progress() const;
-        QString resultXml() const;
-        QString finalResultXml() const;
+private:
+    void setNewParameter();
+    void updateMinMaxValues(const data::TrialData *trial);
+    bool doNextTrial() const;
+    QMap<QString, QVariant> createParameters(const QString &stimulus) const;
+    data::adapting_parameter
+    fixedParameterValue(const QString &stimulusId) const;
+    QString findStimulus(const data::TrialData *trial) const;
+    QStringList findStimuli(const QStringList &list) const;
+    QString resultXml(bool isVirtual) const;
 
-    private:
-
-        void setNewParameter();
-        void updateMinMaxValues(const data::TrialData* trial);
-        bool doNextTrial() const;
-        QMap<QString, QVariant> createParameters(const QString& stimulus) const;
-        data::adapting_parameter fixedParameterValue(const QString& stimulusId) const;
-        QString findStimulus(const data::TrialData* trial) const;
-        QStringList findStimuli(const QStringList& list) const;
-        QString resultXml(bool isVirtual) const;
-
-        AdaptiveProcedurePrivate* const d;
-        bool started;
+    AdaptiveProcedurePrivate *const d;
+    bool started;
 };
-
 }
 
 #endif

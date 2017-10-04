@@ -31,25 +31,24 @@ class ScriptProcedureData;
 namespace parser
 {
 
-class ScriptProcedureDataParser: public ProcedureDataParser
+class ScriptProcedureDataParser : public ProcedureDataParser
 {
 public:
-
     ScriptProcedureDataParser();
-    virtual ~ScriptProcedureDataParser() {};
+    virtual ~ScriptProcedureDataParser(){};
 
     /**
     * Parse the given xml data structure into the given data structure
     * does not take ownership of p_data
         */
-    virtual void Parse(const QDomElement &p_base, data::ScriptProcedureData* p_data);
+    virtual void Parse(const QDomElement &p_base,
+                       data::ScriptProcedureData *p_data);
 
 protected:
     virtual bool SetParameter(const QString &tag, const QString &id,
-            const QString &value, const QDomElement &node,
-            data::ProcedureData* data) Q_DECL_OVERRIDE;
+                              const QString &value, const QDomElement &node,
+                              data::ProcedureData *data) Q_DECL_OVERRIDE;
 };
-
 }
 }
 

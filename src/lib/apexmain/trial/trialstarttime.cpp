@@ -21,14 +21,14 @@
 
 #include <QDateTime>
 
-namespace apex {
+namespace apex
+{
 
-TrialStartTime::TrialStartTime(ExperimentRunDelegate& p_rd) :
-    ApexModule(p_rd)
+TrialStartTime::TrialStartTime(ExperimentRunDelegate &p_rd) : ApexModule(p_rd)
 {
 }
 
-QString TrialStartTime::GetResultXML( ) const
+QString TrialStartTime::GetResultXML() const
 {
     QString temp("<trial_start_time>%1</trial_start_time>");
     temp = temp.arg(startTime.toString(Qt::ISODate));
@@ -40,5 +40,4 @@ void TrialStartTime::setDateTime()
 {
     startTime = QDateTime::currentDateTime();
 }
-
 }

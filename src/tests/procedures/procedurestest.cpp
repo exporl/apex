@@ -66,6 +66,7 @@
 
 #include "apextools/xml/xmltools.h"
 
+#include "common/debug.h"
 #include "common/paths.h"
 #include "common/testutils.h"
 
@@ -75,18 +76,26 @@ using namespace apex;
 using namespace apex::data;
 using namespace cmn;
 
+void ProceduresTest::initTestCase()
+{
+    enableCoreDumps(QCoreApplication::applicationFilePath());
+}
+
 QString ProceduresTest::name() const
 {
     return "procedures";
 }
 
 struct ProcedureAttributes {
-    ProcedureAttributes(const QString& type = "", const QString& id = "") : id(id), type(type) {}
+    ProcedureAttributes(const QString &type = "", const QString &id = "")
+        : id(id), type(type)
+    {
+    }
     const QString id;
     const QString type;
-} constantProcedureAttributes("apex:constantProcedure", "1")
-, trainingProcedureAttributes("apex:trainingProcedure", "2")
-, adaptiveProcedureAttributes("apex:adaptiveProcedure");
+} constantProcedureAttributes("apex:constantProcedure", "1"),
+    trainingProcedureAttributes("apex:trainingProcedure", "2"),
+    adaptiveProcedureAttributes("apex:adaptiveProcedure");
 
 void ProceduresTest::testProcedureApi()
 {
@@ -97,23 +106,20 @@ void ProceduresTest::testProcedureApi()
     QScopedPointer<ExperimentData> d(makeDummyExperimentData());
     QString defaultAnswerElement("dae");
     d->screensData()->getScreens()["screen"] =
-        new data::Screen("screen",
-                         new ButtonElement("button", 0),
-                         ScreenElementMap(),
-                         0,
-                         defaultAnswerElement);
+        new data::Screen("screen", new ButtonElement("button", 0),
+                         ScreenElementMap(), 0, defaultAnswerElement);
 
-    QScopedPointer<ExperimentRunDelegate> rd(new ExperimentRunDelegate(*d, mcd, 0));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        new ExperimentRunDelegate(*d, mcd, 0));
     ProcedureApiImplementation api(*rd);
 
-    data::ConstantProcedureData *params =
-        new ConstantProcedureData();
+    data::ConstantProcedureData *params = new ConstantProcedureData();
     params->setPresentations(2);
     params->setSkip(2);
     params->setNumberOfChoices(1);
     params->setOrder(ProcedureData::SequentialOrder);
 
-    data::TrialData* trial = new TrialData();
+    data::TrialData *trial = new TrialData();
     trial->SetID("trial1");
     trial->AddStimulus("stimulus1_1");
     trial->AddStimulus("stimulus1_2");
@@ -130,25 +136,27 @@ void ProceduresTest::testProcedureApi()
     trial->SetAnswerElement("trial2_answerelement");
     params->AddTrial(trial);
 
-
     // Single interval
     {
         QStringList r1(api.makeTrialList(params, 1));
         QStringList r1_target;
-        r1_target <<  "trial1" << "trial2" <<  "trial1" << "trial2" <<  "trial1" <<
-        "trial2" ;
+        r1_target << "trial1"
+                  << "trial2"
+                  << "trial1"
+                  << "trial2"
+                  << "trial1"
+                  << "trial2";
         QCOMPARE(r1, r1_target);
 
         QStringList standardList;
-        standardList << "standard1" << "standard2" << "standard3";
+        standardList << "standard1"
+                     << "standard2"
+                     << "standard3";
         QStringList r2(api.makeStandardList(params, standardList));
         QStringList r2_target;
         QCOMPARE(r2.size(), 0);
 
-        QStringList r3(api.makeOutputList(params,
-                                          "stimulus",
-                                          standardList,
-                                          0));
+        QStringList r3(api.makeOutputList(params, "stimulus", standardList, 0));
         QStringList r3_target;
         r3_target << "stimulus";
         QCOMPARE(r3, r3_target);
@@ -158,27 +166,25 @@ void ProceduresTest::testProcedureApi()
     params->setNumberOfChoices(3);
     params->setUniqueStandard(true);
 
-
     {
         QStringList standardList;
-        standardList << "standard1" << "standard2";
+        standardList << "standard1"
+                     << "standard2";
         QStringList r2(api.makeStandardList(params, standardList));
-        //qCDebug(APEX_RS) <<r2;
+        // qCDebug(APEX_RS) <<r2;
         QStringList r2_target;
         r2.sort();
         QCOMPARE(r2, standardList);
 
-        QStringList r3(api.makeOutputList(params,
-                                          "stimulus",
-                                          standardList,
-                                          0));
+        QStringList r3(api.makeOutputList(params, "stimulus", standardList, 0));
         QStringList r3_target;
-        r3_target << "stimulus" << "standard1" << "standard2";
+        r3_target << "stimulus"
+                  << "standard1"
+                  << "standard2";
         r3.sort();
         r3_target.sort();
         QCOMPARE(r3, r3_target);
     }
-
 
     {
         // test default answer element
@@ -192,10 +198,8 @@ void ProceduresTest::testProcedureApi()
         QCOMPARE(answerElement, QString("trial2_answerelement"));
     }
 
-
     TEST_EXCEPTIONS_CATCH
 }
-
 
 void ProceduresTest::testConstantProcedureParser()
 {
@@ -203,38 +207,38 @@ void ProceduresTest::testConstantProcedureParser()
 
     MainConfigFileData mcd;
 
-    ProcedureCreatorInterface *creator = createPluginCreator
-        <ProcedureCreatorInterface>(QSL("apex:constantProcedure"));
-    QScopedPointer<ProcedureParserInterface> parser(creator->createProcedureParser
-            (QSL("apex:constantProcedure")));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(
+            QSL("apex:constantProcedure"));
+    QScopedPointer<ProcedureParserInterface> parser(
+        creator->createProcedureParser(QSL("apex:constantProcedure")));
 
     QVERIFY(parser.data());
 
-    ExperimentParser expParser(Paths::searchFile(QL1S("examples/procedure/idn1.apx"), Paths::dataDirectories()));
+    ExperimentParser expParser(Paths::searchFile(
+        QL1S("examples/procedure/idn1.apx"), Paths::dataDirectories()));
     QDomDocument doc = expParser.loadAndUpgradeDom();
 
-    QScopedPointer<data::ProcedureData> data(parser->parse(doc.documentElement()
-                .firstChildElement(QSL("procedure"))));
+    QScopedPointer<data::ProcedureData> data(parser->parse(
+        doc.documentElement().firstChildElement(QSL("procedure"))));
 
     QCOMPARE(data->GetTrials().size(), 6);
 
     QCOMPARE(data->skip(), 0);
 
-    QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeDummyExperimentRunDelegate(mcd));
 
-    QScopedPointer<ProcedureApiImplementation> api(new
-            ProcedureApiImplementation(*rd));
+    QScopedPointer<ProcedureApiImplementation> api(
+        new ProcedureApiImplementation(*rd));
 
-    QScopedPointer<ProcedureInterface> proc(creator->
-                                           createProcedure("apex:constantProcedure",
-                                                           api.data(),
-                                                           data.data()));
-
+    QScopedPointer<ProcedureInterface> proc(creator->createProcedure(
+        "apex:constantProcedure", api.data(), data.data()));
 
     TEST_EXCEPTIONS_CATCH
 }
 
-ListIt ProceduresTest::indexOf(const QString& text, QList<QStringList>& list)
+ListIt ProceduresTest::indexOf(const QString &text, QList<QStringList> &list)
 {
     ListIt it = list.begin();
     while (it != list.end() && !it->contains(text.trimmed())) {
@@ -250,11 +254,10 @@ void ProceduresTest::checkResultXml(QString xml, QSet<QString> elements,
     QStringList xmlLines = xml.split("\n");
 
     QString procedureTag = "procedure";
-    if(!type.isEmpty())
+    if (!type.isEmpty())
         procedureTag += " type=\"" + type + "\"";
     if (!id.isEmpty())
         procedureTag += " id=\"" + id + "\"";
-
 
     QCOMPARE(xmlLines.front(), QString("<" + procedureTag + ">"));
     QCOMPARE(xmlLines.back(), QString("</procedure>"));
@@ -263,10 +266,10 @@ void ProceduresTest::checkResultXml(QString xml, QSet<QString> elements,
     xmlLines.erase(xmlLines.end() - 1);
 
     foreach (QString line, xmlLines) {
-        if(!elements.remove(line.trimmed())){
+        if (!elements.remove(line.trimmed())) {
             ListIt it2 = indexOf(line, alternatives);
 
-            if(it2 == alternatives.constEnd()){
+            if (it2 == alternatives.constEnd()) {
                 QString message = "Unexpected line " + line;
                 QFAIL(message.toStdString().c_str());
             } else {
@@ -284,7 +287,8 @@ void ProceduresTest::testConstantProcedure()
     TEST_EXCEPTIONS_TRY
 
     MainConfigFileData mcd;
-    QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeDummyExperimentRunDelegate(mcd));
 
     data::ConstantProcedureData *params = new ConstantProcedureData();
     params->setPresentations(2);
@@ -292,9 +296,9 @@ void ProceduresTest::testConstantProcedure()
     params->setNumberOfChoices(1);
     params->setOrder(ProcedureData::SequentialOrder);
 
-    QString ae("button1");      // answerelement
+    QString ae("button1"); // answerelement
 
-    data::TrialData* trial = new TrialData();
+    data::TrialData *trial = new TrialData();
     trial->SetID("trial1");
     trial->AddStimulus("stimulus1");
     //    trial->AddStimulus("stimulus1_2");
@@ -312,31 +316,35 @@ void ProceduresTest::testConstantProcedure()
     trial->SetAnswer("answer2");
     params->AddTrial(trial);
 
-    QScopedPointer<ProcedureApiImplementation> api(new
-            ProcedureApiImplementation(*rd));
+    QScopedPointer<ProcedureApiImplementation> api(
+        new ProcedureApiImplementation(*rd));
 
     QStringList expectedStimuli;
 
-    expectedStimuli << "stimulus1" << "stimulus2" << "stimulus1"
-                    << "stimulus2" << "stimulus1" << "stimulus2";
+    expectedStimuli << "stimulus1"
+                    << "stimulus2"
+                    << "stimulus1"
+                    << "stimulus2"
+                    << "stimulus1"
+                    << "stimulus2";
 
-    ProcedureCreatorInterface *creator = createPluginCreator
-        <ProcedureCreatorInterface>(QSL("apex:constantProcedure"));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(
+            QSL("apex:constantProcedure"));
 
     // Test correct answers
     {
-        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-                (QSL("apex:constantProcedure"), api.data(), params));
+        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+            QSL("apex:constantProcedure"), api.data(), params));
 
         QVERIFY(procedure.data() != 0);
         int count;
 
-        for (count = 0;; ++count)
-        {
+        for (count = 0;; ++count) {
             Trial newTrial = procedure->setupNextTrial();
 
-            qCDebug(APEX_RS) << "New trial " << count << ": " << newTrial.id() << " -> " << newTrial.isValid();
-
+            qCDebug(APEX_RS) << "New trial " << count << ": " << newTrial.id()
+                             << " -> " << newTrial.isValid();
 
             if (newTrial.screenCount() == 0)
                 break;
@@ -361,7 +369,7 @@ void ProceduresTest::testConstantProcedure()
             QSet<QString> elements;
             elements << "<correct>true</correct>";
 
-            if(count % 2 == 0) {
+            if (count % 2 == 0) {
                 elements << "<correct_answer>answer1</correct_answer>";
                 elements << "<answer>answer1</answer>";
                 elements << "<stimulus>stimulus1</stimulus>";
@@ -375,7 +383,6 @@ void ProceduresTest::testConstantProcedure()
                 elements << "<skip/>";
 
             checkResultXml(xml, elements, constantProcedureAttributes.type);
-
         }
 
         QCOMPARE(count, expectedStimuli.size());
@@ -383,13 +390,12 @@ void ProceduresTest::testConstantProcedure()
 
     // Test incorrect answers
     {
-        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-                (QSL("apex:constantProcedure"), api.data(), params));
+        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+            QSL("apex:constantProcedure"), api.data(), params));
         QVERIFY(procedure.data());
         int count;
 
-        for (count = 0;; ++count)
-        {
+        for (count = 0;; ++count) {
             Trial newTrial = procedure->setupNextTrial();
 
             if (newTrial.screenCount() == 0)
@@ -416,7 +422,7 @@ void ProceduresTest::testConstantProcedure()
             QSet<QString> elements;
             elements << "<correct>false</correct>";
 
-            if(count % 2 == 0) {
+            if (count % 2 == 0) {
                 elements << "<correct_answer>answer1</correct_answer>";
                 elements << "<answer>answer2</answer>";
                 elements << "<stimulus>stimulus1</stimulus>";
@@ -430,7 +436,6 @@ void ProceduresTest::testConstantProcedure()
                 elements << "<skip/>";
 
             checkResultXml(xml, elements, constantProcedureAttributes.type);
-
         }
 
         QCOMPARE(count, expectedStimuli.size());
@@ -444,34 +449,37 @@ void ProceduresTest::testScriptProcedureInvalidTrial()
     TEST_EXCEPTIONS_TRY
 
     MainConfigFileData mcd;
-    QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeDummyExperimentRunDelegate(mcd));
 
     data::ScriptProcedureData *params = new ScriptProcedureData();
-    params->setScript(Paths::searchFile(QSL("tests/libapex/testprocedureinvalidtrial.js"),
-                Paths::dataDirectories()));
+    params->setScript(
+        Paths::searchFile(QSL("tests/libapex/testprocedureinvalidtrial.js"),
+                          Paths::dataDirectories()));
     params->setDebugger(false);
     params->setPresentations(1);
     params->setSkip(0);
     params->setNumberOfChoices(1);
     params->setOrder(ProcedureData::SequentialOrder);
 
-    for (int i=1; i<=6; ++i) {
-        data::TrialData* trial = new TrialData();
+    for (int i = 1; i <= 6; ++i) {
+        data::TrialData *trial = new TrialData();
         trial->SetID(QString("trial%1").arg(i));
         trial->AddStimulus(QString("stimulus%1").arg(i));
         trial->SetAnswer(QString("button%1").arg(i));
         params->AddTrial(trial);
     }
 
-    QScopedPointer<ProcedureApiImplementation> api(new
-            ProcedureApiImplementation(*rd));
-    ProcedureCreatorInterface *creator = createPluginCreator
-        <ProcedureCreatorInterface>(QSL("apex:pluginProcedure"));
+    QScopedPointer<ProcedureApiImplementation> api(
+        new ProcedureApiImplementation(*rd));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(
+            QSL("apex:pluginProcedure"));
 
     // Test if the procedure throws an error when setupNextTrial is executed
     {
-        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-                (QSL("apex:pluginProcedure"), api.data(), params));
+        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+            QSL("apex:pluginProcedure"), api.data(), params));
         QVERIFY(procedure.data());
 
         try {
@@ -491,7 +499,8 @@ void ProceduresTest::testScriptProcedure()
 
     qCDebug(APEX_RS) << "Testing plugin procedure";
     MainConfigFileData mcd;
-    QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeDummyExperimentRunDelegate(mcd));
 
     data::ScriptProcedureData *params = new ScriptProcedureData();
     params->setScript("testprocedure.js");
@@ -501,36 +510,40 @@ void ProceduresTest::testScriptProcedure()
     params->setNumberOfChoices(1);
     params->setOrder(ProcedureData::SequentialOrder);
 
-    QString ae("button1");      // answerelement
+    QString ae("button1"); // answerelement
 
-    for (int i=1; i<=6; ++i) {
-        data::TrialData* trial = new TrialData();
+    for (int i = 1; i <= 6; ++i) {
+        data::TrialData *trial = new TrialData();
         trial->SetID(QString("trial%1").arg(i));
         trial->AddStimulus(QString("stimulus%1").arg(i));
         trial->SetAnswer(QString("button%1").arg(i));
         params->AddTrial(trial);
     }
 
-    QScopedPointer<ProcedureApiImplementation> api(new
-            ProcedureApiImplementation(*rd));
+    QScopedPointer<ProcedureApiImplementation> api(
+        new ProcedureApiImplementation(*rd));
 
     QStringList expectedStimuli;
 
-    expectedStimuli << "stimulus1" << "stimulus2" << "stimulus3"
-                    << "stimulus4" << "stimulus5" << "stimulus6";
+    expectedStimuli << "stimulus1"
+                    << "stimulus2"
+                    << "stimulus3"
+                    << "stimulus4"
+                    << "stimulus5"
+                    << "stimulus6";
 
     qCDebug(APEX_RS) << "Test correct anwers";
     // Test correct answers
     {
-        ProcedureCreatorInterface *creator = createPluginCreator
-            <ProcedureCreatorInterface>(QSL("apex:pluginProcedure"));
-        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-                (QSL("apex:pluginProcedure"), api.data(), params));
+        ProcedureCreatorInterface *creator =
+            createPluginCreator<ProcedureCreatorInterface>(
+                QSL("apex:pluginProcedure"));
+        QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+            QSL("apex:pluginProcedure"), api.data(), params));
         QVERIFY(procedure.data());
         int count;
 
-        for (count = 0;; ++count)
-        {
+        for (count = 0;; ++count) {
             Trial newTrial = procedure->setupNextTrial();
             if (newTrial.screenCount() == 0)
                 break;
@@ -541,7 +554,7 @@ void ProceduresTest::testScriptProcedure()
                      (double)100 * (count) / expectedStimuli.size());
 
             ScreenResult sr;
-            sr["buttongroup1"] = "button" + QString::number(count+1);
+            sr["buttongroup1"] = "button" + QString::number(count + 1);
             bool result = procedure->processResult(&sr).correct;
 
             QVERIFY(result);
@@ -549,19 +562,17 @@ void ProceduresTest::testScriptProcedure()
 
             QSet<QString> elements;
 
-            elements << "<correct_answer>" +sr.value("buttongroup1") + "</correct_answer>";
+            elements << "<correct_answer>" + sr.value("buttongroup1") +
+                            "</correct_answer>";
             elements << "<correct>true</correct>";
-            elements << "<answer>" +sr.value("buttongroup1") + "</answer>";
+            elements << "<answer>" + sr.value("buttongroup1") + "</answer>";
 
             elements << "Result from testprocedure";
             checkResultXml(xml, elements);
-
         }
 
         QCOMPARE(count, expectedStimuli.size());
     }
-
-
 
     TEST_EXCEPTIONS_CATCH
 }
@@ -571,20 +582,21 @@ void ProceduresTest::testDummyProcedure()
     TEST_EXCEPTIONS_TRY
 
     MainConfigFileData mcd;
-    QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd)) ;
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeDummyExperimentRunDelegate(mcd));
 
-    ProcedureCreatorInterface *creator = createPluginCreator
-        <ProcedureCreatorInterface>(QSL("dummyprocedure"));
-    QScopedPointer<ProcedureParserInterface> parser(creator->createProcedureParser
-            (QSL("dummyprocedure")));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(QSL("dummyprocedure"));
+    QScopedPointer<ProcedureParserInterface> parser(
+        creator->createProcedureParser(QSL("dummyprocedure")));
 
     QScopedPointer<data::ProcedureData> data(parser->parse(QDomElement()));
 
     QScopedPointer<ProcedureApiImplementation> api(
         new ProcedureApiImplementation(*rd));
 
-    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-            (QSL("dummyprocedure"), api.data(), data.data()));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+        QSL("dummyprocedure"), api.data(), data.data()));
 
     Trial trial = procedure->setupNextTrial();
 
@@ -608,9 +620,10 @@ void ProceduresTest::testTrainingProcedure()
     TEST_EXCEPTIONS_TRY
 
     MainConfigFileData mcd;
-    QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeDummyExperimentRunDelegate(mcd));
 
-    TrainingProcedureData* params = new TrainingProcedureData();
+    TrainingProcedureData *params = new TrainingProcedureData();
     params->setPresentations(3);
     params->setSkip(0);
     params->setNumberOfChoices(1);
@@ -618,11 +631,12 @@ void ProceduresTest::testTrainingProcedure()
 
     QString answerElement("button1");
 
-    data::TrialData* trialData = new TrialData();
+    data::TrialData *trialData = new TrialData();
     trialData->SetID("trial1");
 
     QStringList trial1Stimuli;
-    trial1Stimuli << "stimulus1_1" << "stimulus1_2";
+    trial1Stimuli << "stimulus1_1"
+                  << "stimulus1_2";
     Q_FOREACH (QString stimulus, trial1Stimuli)
         trialData->AddStimulus(stimulus);
 
@@ -644,20 +658,22 @@ void ProceduresTest::testTrainingProcedure()
     trialData->SetAnswer("answer3");
     params->AddTrial(trialData);
 
-    QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-    ProcedureCreatorInterface *creator = createPluginCreator
-        <ProcedureCreatorInterface>(QSL("apex:trainingProcedure"));
-    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-            (QSL("apex:trainingProcedure"), api.data(), params));
+    QScopedPointer<ProcedureApiImplementation> api(
+        new ProcedureApiImplementation(*rd));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(
+            QSL("apex:trainingProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+        QSL("apex:trainingProcedure"), api.data(), params));
 
-    //generate first trial. there should not be any stimuli
+    // generate first trial. there should not be any stimuli
     data::Trial trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
     QVERIFY(trial.acceptResponse(0));
     QCOMPARE(trial.id(), params->GetTrials().first()->GetID());
     QCOMPARE(trial.stimulusCount(0), 0);
 
-    //generate answers and check if the correct trial is played next
+    // generate answers and check if the correct trial is played next
     ScreenResult result;
     result[answerElement] = "answer3";
     procedure->processResult(&result);
@@ -705,7 +721,8 @@ void ProceduresTest::testTrainingProcedure()
         stimulusAlternatives.append("<stimulus>" + s + "</stimulus>");
     }
     alternatives.append(stimulusAlternatives);
-    checkResultXml(xml, elements, trainingProcedureAttributes.type, "", alternatives);
+    checkResultXml(xml, elements, trainingProcedureAttributes.type, "",
+                   alternatives);
 
     trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
@@ -714,7 +731,7 @@ void ProceduresTest::testTrainingProcedure()
     QCOMPARE(trial.stimulusCount(0), 1);
     QCOMPARE(trial.stimulus(0, 0), QString("stimulus2"));
 
-    result[answerElement] = "answer2";  //last answer
+    result[answerElement] = "answer2"; // last answer
     procedure->processResult(&result);
 
     xml = procedure->resultXml();
@@ -728,12 +745,12 @@ void ProceduresTest::testTrainingProcedure()
 
     trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
-    QVERIFY(!trial.acceptResponse(0)); //no response on last trial
+    QVERIFY(!trial.acceptResponse(0)); // no response on last trial
     QCOMPARE(trial.id(), QString("trial2"));
     QCOMPARE(trial.stimulusCount(0), 0);
     QVERIFY(procedure->resultXml().isEmpty());
 
-    //procedure should be done now (presentations == 3)
+    // procedure should be done now (presentations == 3)
     QCOMPARE(procedure->progress(), 100.0);
     QVERIFY(!procedure->setupNextTrial().isValid());
 
@@ -745,9 +762,10 @@ void ProceduresTest::testKaernbachProcedure()
     TEST_EXCEPTIONS_TRY
 
     MainConfigFileData mcd;
-    QScopedPointer<ExperimentRunDelegate> rd(makeStimulusExperimentRunDelegate(mcd));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeStimulusExperimentRunDelegate(mcd));
 
-    AdaptiveProcedureData* params = new AdaptiveProcedureData();
+    AdaptiveProcedureData *params = new AdaptiveProcedureData();
     params->setPresentations(6);
     params->setOrder(ProcedureData::SequentialOrder);
     params->setNUp(1);
@@ -765,18 +783,20 @@ void ProceduresTest::testKaernbachProcedure()
 
     QString answerElement("button1");
 
-    data::TrialData* trialData = new TrialData();
+    data::TrialData *trialData = new TrialData();
     trialData->SetID("trial1");
     trialData->SetAnswer("answer1");
     trialData->SetAnswerElement(answerElement);
     trialData->AddStimulus("stimulus1");
     params->AddTrial(trialData);
 
-    QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-    ProcedureCreatorInterface *creator = createPluginCreator
-        <ProcedureCreatorInterface>(QSL("apex:adaptiveProcedure"));
-    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-            (QSL("apex:adaptiveProcedure"), api.data(), params));
+    QScopedPointer<ProcedureApiImplementation> api(
+        new ProcedureApiImplementation(*rd));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(
+            QSL("apex:adaptiveProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+        QSL("apex:adaptiveProcedure"), api.data(), params));
 
     data::Trial trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
@@ -939,7 +959,8 @@ void ProceduresTest::testKaernbachProcedure()
 
     QStringList lines = xml.split("\n");
 
-    QCOMPARE(lines.first().toStdString().c_str(), "<trial id=\"VIRTUAL_TRIAL\" type=\"virtual\">" );
+    QCOMPARE(lines.first().toStdString().c_str(),
+             "<trial id=\"VIRTUAL_TRIAL\" type=\"virtual\">");
     lines.removeFirst();
     lines.removeFirst();
 
@@ -955,7 +976,8 @@ void ProceduresTest::testKaernbachProcedure()
     elements << "<saturation>false</saturation>";
     elements << "<presentations>6</presentations>";
 
-    checkResultXml(lines.join("\n"), elements, adaptiveProcedureAttributes.type);
+    checkResultXml(lines.join("\n"), elements,
+                   adaptiveProcedureAttributes.type);
 
     trial = procedure->setupNextTrial();
     QVERIFY(!trial.isValid());
@@ -968,9 +990,10 @@ void ProceduresTest::testAdaptiveProcedure()
     TEST_EXCEPTIONS_TRY
 
     MainConfigFileData mcd;
-    QScopedPointer<ExperimentRunDelegate> rd(makeStimulusExperimentRunDelegate(mcd));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeStimulusExperimentRunDelegate(mcd));
 
-    AdaptiveProcedureData* params = new AdaptiveProcedureData();
+    AdaptiveProcedureData *params = new AdaptiveProcedureData();
     params->setPresentations(3);
     params->setOrder(ProcedureData::SequentialOrder);
     params->setNUp(2);
@@ -987,7 +1010,7 @@ void ProceduresTest::testAdaptiveProcedure()
 
     QString answerElement("button1");
 
-    data::TrialData* trialData = new TrialData();
+    data::TrialData *trialData = new TrialData();
     trialData->SetID("trial1");
     trialData->SetAnswer("answer1");
     trialData->SetAnswerElement(answerElement);
@@ -1001,11 +1024,13 @@ void ProceduresTest::testAdaptiveProcedure()
     trialData->AddStimulus("stimulus2");
     params->AddTrial(trialData);
 
-    QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-    ProcedureCreatorInterface *creator = createPluginCreator
-        <ProcedureCreatorInterface>(QSL("apex:adaptiveProcedure"));
-    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-            (QSL("apex:adaptiveProcedure"), api.data(), params));
+    QScopedPointer<ProcedureApiImplementation> api(
+        new ProcedureApiImplementation(*rd));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(
+            QSL("apex:adaptiveProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+        QSL("apex:adaptiveProcedure"), api.data(), params));
 
     data::Trial trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
@@ -1166,7 +1191,8 @@ void ProceduresTest::testAdaptiveProcedure()
 
     QStringList lines = xml.split("\n");
 
-    QCOMPARE(lines.first().toStdString().c_str(), "<trial id=\"VIRTUAL_TRIAL\" type=\"virtual\">" );
+    QCOMPARE(lines.first().toStdString().c_str(),
+             "<trial id=\"VIRTUAL_TRIAL\" type=\"virtual\">");
     lines.removeFirst();
     lines.removeFirst();
 
@@ -1182,7 +1208,8 @@ void ProceduresTest::testAdaptiveProcedure()
     elements << "<saturation>false</saturation>";
     elements << "<presentations>6</presentations>";
 
-    checkResultXml(lines.join("\n"), elements, adaptiveProcedureAttributes.type);
+    checkResultXml(lines.join("\n"), elements,
+                   adaptiveProcedureAttributes.type);
 
     trial = procedure->setupNextTrial();
     QVERIFY(!trial.isValid());
@@ -1190,8 +1217,8 @@ void ProceduresTest::testAdaptiveProcedure()
     TEST_EXCEPTIONS_CATCH
 }
 
-void ProceduresTest::createConstantProcedure(ConstantProcedureData*& data,
-                                             QStringList& expectedStimuli)
+void ProceduresTest::createConstantProcedure(ConstantProcedureData *&data,
+                                             QStringList &expectedStimuli)
 {
     data = new ConstantProcedureData();
     data->setPresentations(2);
@@ -1199,9 +1226,9 @@ void ProceduresTest::createConstantProcedure(ConstantProcedureData*& data,
     data->setNumberOfChoices(1);
     data->setOrder(ProcedureData::SequentialOrder);
 
-    QString ae1("button1");      // answerelement
+    QString ae1("button1"); // answerelement
 
-    data::TrialData* trial = new TrialData();
+    data::TrialData *trial = new TrialData();
     trial->SetID("trial1");
     trial->AddStimulus("stimulus1");
     trial->AddStandard("standard1_1");
@@ -1219,13 +1246,17 @@ void ProceduresTest::createConstantProcedure(ConstantProcedureData*& data,
 
     data->SetID(constantProcedureAttributes.id);
 
-    expectedStimuli << "stimulus1" << "stimulus2" << "stimulus1"
-                    << "stimulus2" << "stimulus1" << "stimulus2";
+    expectedStimuli << "stimulus1"
+                    << "stimulus2"
+                    << "stimulus1"
+                    << "stimulus2"
+                    << "stimulus1"
+                    << "stimulus2";
 }
 
-void ProceduresTest::createTrainingProcedure(TrainingProcedureData*& data,
-                                             QString& answerElement,
-                                             QStringList& trial1Stimuli)
+void ProceduresTest::createTrainingProcedure(TrainingProcedureData *&data,
+                                             QString &answerElement,
+                                             QStringList &trial1Stimuli)
 {
     data = new TrainingProcedureData();
     data->setPresentations(3);
@@ -1235,10 +1266,11 @@ void ProceduresTest::createTrainingProcedure(TrainingProcedureData*& data,
 
     answerElement = "button1";
 
-    data::TrialData* trialData = new TrialData();
+    data::TrialData *trialData = new TrialData();
     trialData->SetID("trial1");
 
-    trial1Stimuli << "stimulus1_1" << "stimulus1_2";
+    trial1Stimuli << "stimulus1_1"
+                  << "stimulus1_2";
     Q_FOREACH (QString stimulus, trial1Stimuli)
         trialData->AddStimulus(stimulus);
 
@@ -1263,7 +1295,8 @@ void ProceduresTest::createTrainingProcedure(TrainingProcedureData*& data,
     data->SetID(trainingProcedureAttributes.id);
 }
 
-void ProceduresTest::testTrial(const data::Trial& trial, const QString id, const int count) const
+void ProceduresTest::testTrial(const data::Trial &trial, const QString id,
+                               const int count) const
 {
     TEST_EXCEPTIONS_TRY
 
@@ -1280,16 +1313,17 @@ void ProceduresTest::testMultiProcedureOneByOne()
     TEST_EXCEPTIONS_TRY
 
     MainConfigFileData mcd;
-    QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeDummyExperimentRunDelegate(mcd));
 
-    MultiProcedureData* params = new MultiProcedureData();
+    MultiProcedureData *params = new MultiProcedureData();
     params->setOrder(ProcedureData::OneByOneOrder);
 
-    ConstantProcedureData* data1 = 0;
+    ConstantProcedureData *data1 = 0;
     QStringList expectedStimuli;
     createConstantProcedure(data1, expectedStimuli);
 
-    TrainingProcedureData* data2 = 0;
+    TrainingProcedureData *data2 = 0;
     QString answerElement;
     QStringList trial1Stimuli;
     createTrainingProcedure(data2, answerElement, trial1Stimuli);
@@ -1297,20 +1331,23 @@ void ProceduresTest::testMultiProcedureOneByOne()
     params->addProcedure(data1);
     params->addProcedure(data2);
 
-    QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-    ProcedureCreatorInterface *creator = createPluginCreator
-        <ProcedureCreatorInterface>(QSL("apex:multiProcedure"));
-    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-            (QSL("apex:multiProcedure"), api.data(), params));
+    QScopedPointer<ProcedureApiImplementation> api(
+        new ProcedureApiImplementation(*rd));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(
+            QSL("apex:multiProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+        QSL("apex:multiProcedure"), api.data(), params));
     QVERIFY(procedure.data());
 
-    QString ae("button1");      // answerelement
+    QString ae("button1"); // answerelement
 
-    //Procedure 1
+    // Procedure 1
     {
         for (int count = 0; count < expectedStimuli.size(); ++count) {
             Trial newTrial = procedure->setupNextTrial();
-            qCDebug(APEX_RS) << "New trial " << count << ": " << newTrial.id() << " -> " << newTrial.isValid();
+            qCDebug(APEX_RS) << "New trial " << count << ": " << newTrial.id()
+                             << " -> " << newTrial.isValid();
 
             QCOMPARE(newTrial.stimulus(0, 0), expectedStimuli.at(count));
 
@@ -1335,7 +1372,7 @@ void ProceduresTest::testMultiProcedureOneByOne()
             QSet<QString> elements;
             elements << "<correct>true</correct>";
 
-            if(count % 2 == 0) {
+            if (count % 2 == 0) {
                 elements << "<correct_answer>answer1</correct_answer>";
                 elements << "<answer>answer1</answer>";
                 elements << "<stimulus>stimulus1</stimulus>";
@@ -1348,18 +1385,19 @@ void ProceduresTest::testMultiProcedureOneByOne()
             if (count < 2)
                 elements << "<skip/>";
 
-            checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+            checkResultXml(xml, elements, constantProcedureAttributes.type,
+                           constantProcedureAttributes.id);
         }
     }
 
     qCDebug(APEX_RS) << "Start procedure 2 ";
 
-    //Procedure 2
+    // Procedure 2
     {
         data::Trial trial = procedure->setupNextTrial();
         testTrial(trial, "trial1", 0);
 
-        //generate answers and check if the correct trial is played next
+        // generate answers and check if the correct trial is played next
         ScreenResult result;
         result[answerElement] = "answer3";
         procedure->processResult(&result);
@@ -1380,7 +1418,8 @@ void ProceduresTest::testMultiProcedureOneByOne()
         elements << "<correct>true</correct>";
         elements << "<answer>answer3</answer>";
         elements << "<correct_answer>answer3</correct_answer>";
-        checkResultXml(xml, elements, trainingProcedureAttributes.type, trainingProcedureAttributes.id);
+        checkResultXml(xml, elements, trainingProcedureAttributes.type,
+                       trainingProcedureAttributes.id);
 
         trial = procedure->setupNextTrial();
         testTrial(trial, "trial1", 1);
@@ -1401,7 +1440,8 @@ void ProceduresTest::testMultiProcedureOneByOne()
             stimulusAlternatives.append("<stimulus>" + s + "</stimulus>");
         }
         alternatives.append(stimulusAlternatives);
-        checkResultXml(xml, elements, trainingProcedureAttributes.type, trainingProcedureAttributes.id, alternatives);
+        checkResultXml(xml, elements, trainingProcedureAttributes.type,
+                       trainingProcedureAttributes.id, alternatives);
 
         trial = procedure->setupNextTrial();
         QVERIFY(trial.isValid());
@@ -1419,16 +1459,17 @@ void ProceduresTest::testMultiProcedureOneByOne()
         elements << "<correct>true</correct>";
         elements << "<answer>answer2</answer>";
         elements << "<correct_answer>answer2</correct_answer>";
-        checkResultXml(xml, elements, trainingProcedureAttributes.type, trainingProcedureAttributes.id);
+        checkResultXml(xml, elements, trainingProcedureAttributes.type,
+                       trainingProcedureAttributes.id);
 
         trial = procedure->setupNextTrial();
         QVERIFY(trial.isValid());
-        QVERIFY(!trial.acceptResponse(0)); //no response on last trial
+        QVERIFY(!trial.acceptResponse(0)); // no response on last trial
         QCOMPARE(trial.id(), QString("trial2"));
         QCOMPARE(trial.stimulusCount(0), 0);
         QVERIFY(procedure->resultXml().isEmpty());
 
-        //procedure should be done now (presentations == 3)
+        // procedure should be done now (presentations == 3)
         QVERIFY(procedure->progress() >= 100.0);
         QVERIFY(!procedure->setupNextTrial().isValid());
     }
@@ -1441,16 +1482,17 @@ void ProceduresTest::testMultiProcedureSequential()
     TEST_EXCEPTIONS_TRY
 
     MainConfigFileData mcd;
-    QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeDummyExperimentRunDelegate(mcd));
 
-    MultiProcedureData* params = new MultiProcedureData();
+    MultiProcedureData *params = new MultiProcedureData();
     params->setOrder(ProcedureData::SequentialOrder);
 
-    ConstantProcedureData* data1 = 0;
+    ConstantProcedureData *data1 = 0;
     QStringList expectedStimuli;
     createConstantProcedure(data1, expectedStimuli);
 
-    TrainingProcedureData* data2 = 0;
+    TrainingProcedureData *data2 = 0;
     QString answerElement;
     QStringList trial1Stimuli;
     createTrainingProcedure(data2, answerElement, trial1Stimuli);
@@ -1458,16 +1500,18 @@ void ProceduresTest::testMultiProcedureSequential()
     params->addProcedure(data1);
     params->addProcedure(data2);
 
-    QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-    ProcedureCreatorInterface *creator = createPluginCreator
-        <ProcedureCreatorInterface>(QSL("apex:multiProcedure"));
-    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-            (QSL("apex:multiProcedure"), api.data(), params));
+    QScopedPointer<ProcedureApiImplementation> api(
+        new ProcedureApiImplementation(*rd));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(
+            QSL("apex:multiProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+        QSL("apex:multiProcedure"), api.data(), params));
     QVERIFY(procedure.data());
 
-    QString ae("button1");      // answerelement
+    QString ae("button1"); // answerelement
 
-    //Test
+    // Test
     Trial trial = procedure->setupNextTrial();
     testTrial(trial, "trial1", 1);
     QCOMPARE(trial.stimulus(0, 0), expectedStimuli.at(0));
@@ -1483,7 +1527,8 @@ void ProceduresTest::testMultiProcedureSequential()
     elements << "<answer>answer1</answer>";
     elements << "<stimulus>stimulus1</stimulus>";
     elements << "<skip/>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial1", 0);
@@ -1507,7 +1552,8 @@ void ProceduresTest::testMultiProcedureSequential()
     elements << "<answer>answer2</answer>";
     elements << "<stimulus>stimulus2</stimulus>";
     elements << "<skip/>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial3", 1);
@@ -1520,7 +1566,8 @@ void ProceduresTest::testMultiProcedureSequential()
     elements << "<correct>true</correct>";
     elements << "<answer>answer3</answer>";
     elements << "<correct_answer>answer3</correct_answer>";
-    checkResultXml(xml, elements, trainingProcedureAttributes.type, trainingProcedureAttributes.id);
+    checkResultXml(xml, elements, trainingProcedureAttributes.type,
+                   trainingProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial1", 1);
@@ -1535,7 +1582,8 @@ void ProceduresTest::testMultiProcedureSequential()
     elements << "<correct_answer>answer1</correct_answer>";
     elements << "<answer>answer1</answer>";
     elements << "<stimulus>stimulus1</stimulus>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial1", 1);
@@ -1554,7 +1602,8 @@ void ProceduresTest::testMultiProcedureSequential()
         stimulusAlternatives.append("<stimulus>" + s + "</stimulus>");
     }
     alternatives.append(stimulusAlternatives);
-    checkResultXml(xml, elements, trainingProcedureAttributes.type, trainingProcedureAttributes.id, alternatives);
+    checkResultXml(xml, elements, trainingProcedureAttributes.type,
+                   trainingProcedureAttributes.id, alternatives);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial2", 1);
@@ -1569,7 +1618,8 @@ void ProceduresTest::testMultiProcedureSequential()
     elements << "<correct_answer>answer2</correct_answer>";
     elements << "<answer>answer2</answer>";
     elements << "<stimulus>stimulus2</stimulus>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
@@ -1587,7 +1637,8 @@ void ProceduresTest::testMultiProcedureSequential()
     elements << "<correct>true</correct>";
     elements << "<answer>answer2</answer>";
     elements << "<correct_answer>answer2</correct_answer>";
-    checkResultXml(xml, elements, trainingProcedureAttributes.type, trainingProcedureAttributes.id);
+    checkResultXml(xml, elements, trainingProcedureAttributes.type,
+                   trainingProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial1", 1);
@@ -1602,7 +1653,8 @@ void ProceduresTest::testMultiProcedureSequential()
     elements << "<correct_answer>answer1</correct_answer>";
     elements << "<answer>answer1</answer>";
     elements << "<stimulus>stimulus1</stimulus>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
@@ -1624,9 +1676,10 @@ void ProceduresTest::testMultiProcedureSequential()
     elements << "<correct_answer>answer2</correct_answer>";
     elements << "<answer>answer2</answer>";
     elements << "<stimulus>stimulus2</stimulus>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
-    //procedure should be done now
+    // procedure should be done now
     QVERIFY(procedure->progress() >= 100.0);
     QVERIFY(!procedure->setupNextTrial().isValid());
 
@@ -1640,16 +1693,17 @@ void ProceduresTest::testMultiProcedureRandom()
     cmn::Random::setDeterministic(true);
 
     MainConfigFileData mcd;
-    QScopedPointer<ExperimentRunDelegate> rd(makeDummyExperimentRunDelegate(mcd));
+    QScopedPointer<ExperimentRunDelegate> rd(
+        makeDummyExperimentRunDelegate(mcd));
 
-    MultiProcedureData* params = new MultiProcedureData();
+    MultiProcedureData *params = new MultiProcedureData();
     params->setOrder(ProcedureData::RandomOrder);
 
-    ConstantProcedureData* data1 = 0;
+    ConstantProcedureData *data1 = 0;
     QStringList expectedStimuli;
     createConstantProcedure(data1, expectedStimuli);
 
-    TrainingProcedureData* data2 = 0;
+    TrainingProcedureData *data2 = 0;
     QString answerElement;
     QStringList trial1Stimuli;
     createTrainingProcedure(data2, answerElement, trial1Stimuli);
@@ -1657,16 +1711,18 @@ void ProceduresTest::testMultiProcedureRandom()
     params->addProcedure(data1);
     params->addProcedure(data2);
 
-    QScopedPointer<ProcedureApiImplementation> api(new ProcedureApiImplementation(*rd));
-    ProcedureCreatorInterface *creator = createPluginCreator
-        <ProcedureCreatorInterface>(QSL("apex:multiProcedure"));
-    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure
-            (QSL("apex:multiProcedure"), api.data(), params));
+    QScopedPointer<ProcedureApiImplementation> api(
+        new ProcedureApiImplementation(*rd));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(
+            QSL("apex:multiProcedure"));
+    QScopedPointer<ProcedureInterface> procedure(creator->createProcedure(
+        QSL("apex:multiProcedure"), api.data(), params));
     QVERIFY(procedure.data());
 
-    QString ae("button1");      // answerelement
+    QString ae("button1"); // answerelement
 
-    //Test
+    // Test
     Trial trial = procedure->setupNextTrial();
     testTrial(trial, "trial1", 1);
     QCOMPARE(trial.stimulus(0, 0), expectedStimuli.at(0));
@@ -1682,7 +1738,8 @@ void ProceduresTest::testMultiProcedureRandom()
     elements << "<answer>answer1</answer>";
     elements << "<stimulus>stimulus1</stimulus>";
     elements << "<skip/>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial2", 1);
@@ -1698,7 +1755,8 @@ void ProceduresTest::testMultiProcedureRandom()
     elements << "<answer>answer2</answer>";
     elements << "<stimulus>stimulus2</stimulus>";
     elements << "<skip/>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial1", 1);
@@ -1713,7 +1771,8 @@ void ProceduresTest::testMultiProcedureRandom()
     elements << "<correct_answer>answer1</correct_answer>";
     elements << "<answer>answer1</answer>";
     elements << "<stimulus>stimulus1</stimulus>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial2", 1);
@@ -1728,7 +1787,8 @@ void ProceduresTest::testMultiProcedureRandom()
     elements << "<correct_answer>answer2</correct_answer>";
     elements << "<answer>answer2</answer>";
     elements << "<stimulus>stimulus2</stimulus>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial1", 1);
@@ -1743,7 +1803,8 @@ void ProceduresTest::testMultiProcedureRandom()
     elements << "<correct_answer>answer1</correct_answer>";
     elements << "<answer>answer1</answer>";
     elements << "<stimulus>stimulus1</stimulus>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial2", 1);
@@ -1758,7 +1819,8 @@ void ProceduresTest::testMultiProcedureRandom()
     elements << "<correct_answer>answer2</correct_answer>";
     elements << "<answer>answer2</answer>";
     elements << "<stimulus>stimulus2</stimulus>";
-    checkResultXml(xml, elements, constantProcedureAttributes.type, constantProcedureAttributes.id);
+    checkResultXml(xml, elements, constantProcedureAttributes.type,
+                   constantProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial1", 0);
@@ -1779,7 +1841,8 @@ void ProceduresTest::testMultiProcedureRandom()
     elements << "<correct>true</correct>";
     elements << "<answer>answer3</answer>";
     elements << "<correct_answer>answer3</correct_answer>";
-    checkResultXml(xml, elements, trainingProcedureAttributes.type, trainingProcedureAttributes.id);
+    checkResultXml(xml, elements, trainingProcedureAttributes.type,
+                   trainingProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     testTrial(trial, "trial1", 1);
@@ -1798,7 +1861,8 @@ void ProceduresTest::testMultiProcedureRandom()
         stimulusAlternatives.append("<stimulus>" + s + "</stimulus>");
     }
     alternatives.append(stimulusAlternatives);
-    checkResultXml(xml, elements, trainingProcedureAttributes.type, trainingProcedureAttributes.id, alternatives);
+    checkResultXml(xml, elements, trainingProcedureAttributes.type,
+                   trainingProcedureAttributes.id, alternatives);
 
     trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
@@ -1816,16 +1880,17 @@ void ProceduresTest::testMultiProcedureRandom()
     elements << "<correct>true</correct>";
     elements << "<answer>answer2</answer>";
     elements << "<correct_answer>answer2</correct_answer>";
-    checkResultXml(xml, elements, trainingProcedureAttributes.type, trainingProcedureAttributes.id);
+    checkResultXml(xml, elements, trainingProcedureAttributes.type,
+                   trainingProcedureAttributes.id);
 
     trial = procedure->setupNextTrial();
     QVERIFY(trial.isValid());
-    QVERIFY(!trial.acceptResponse(0)); //no response on last trial
+    QVERIFY(!trial.acceptResponse(0)); // no response on last trial
     QCOMPARE(trial.id(), QString("trial2"));
     QCOMPARE(trial.stimulusCount(0), 0);
     QVERIFY(procedure->resultXml().isEmpty());
 
-    //procedure should be done now
+    // procedure should be done now
     QVERIFY(procedure->progress() >= 100.0);
     QVERIFY(!procedure->setupNextTrial().isValid());
 
@@ -1850,7 +1915,7 @@ void ProceduresTest::testEqualCorrector()
     TEST_EXCEPTIONS_CATCH
 }
 
-ExperimentData* ProceduresTest::makeDummyExperimentData()
+ExperimentData *ProceduresTest::makeDummyExperimentData()
 {
     QString configFile("dummy.apx");
     QScopedPointer<data::ScreensData> screens(new ScreensData);
@@ -1862,36 +1927,25 @@ ExperimentData* ProceduresTest::makeDummyExperimentData()
     QScopedPointer<data::GeneralParameters> genParam;
     QScopedPointer<data::ResultParameters> resParam;
     QScopedPointer<data::ParameterDialogResults> paramDlg;
-    QScopedPointer<QMap<QString, data::RandomGeneratorParameters*> >
-        rndGen(new QMap<QString, data::RandomGeneratorParameters*>() );
+    QScopedPointer<QMap<QString, data::RandomGeneratorParameters *>> rndGen(
+        new QMap<QString, data::RandomGeneratorParameters *>());
     QScopedPointer<data::DevicesData> devices(new DevicesData);
     QScopedPointer<data::FiltersData> filters(new FiltersData);
     QScopedPointer<data::DevicesData> controlDevices(new DevicesData);
     QScopedPointer<data::DatablocksData> datablocks(new DatablocksData);
     QScopedPointer<data::StimuliData> stimuli(new StimuliData);
     QString description;
-    QScopedPointer<data::ParameterManagerData> paramMngr(new ParameterManagerData);
+    QScopedPointer<data::ParameterManagerData> paramMngr(
+        new ParameterManagerData);
 
-    return new data::ExperimentData(configFile,
-                                    screens.take(),
-                                    procedures.take(),
-                                    connections.take(),
-                                    calibration.take(),
-                                    genParam.take(),
-                                    resParam.take(),
-                                    paramDlg.take(),
-                                    rndGen.take(),
-                                    devices.take(),
-                                    filters.take(),
-                                    controlDevices.take(),
-                                    datablocks.take(),
-                                    stimuli.take(),
-                                    description,
-                                    paramMngr.take());
-
+    return new data::ExperimentData(
+        configFile, screens.take(), procedures.take(), connections.take(),
+        calibration.take(), genParam.take(), resParam.take(), paramDlg.take(),
+        rndGen.take(), devices.take(), filters.take(), controlDevices.take(),
+        datablocks.take(), stimuli.take(), description, paramMngr.take());
 }
 
-ExperimentData* ProceduresTest::makeStimulusExperimentData()
+ExperimentData *ProceduresTest::makeStimulusExperimentData()
 {
     QString configFile("dummy.apx");
     QScopedPointer<data::ScreensData> screens(new ScreensData);
@@ -1903,8 +1957,8 @@ ExperimentData* ProceduresTest::makeStimulusExperimentData()
     QScopedPointer<data::GeneralParameters> genParam(0);
     QScopedPointer<data::ResultParameters> resParam(0);
     QScopedPointer<data::ParameterDialogResults> paramDlg(0);
-    QScopedPointer<QMap<QString, data::RandomGeneratorParameters*> >
-        rndGen(new QMap<QString, data::RandomGeneratorParameters*>() );
+    QScopedPointer<QMap<QString, data::RandomGeneratorParameters *>> rndGen(
+        new QMap<QString, data::RandomGeneratorParameters *>());
     QScopedPointer<data::DevicesData> devices(new DevicesData);
     QScopedPointer<data::FiltersData> filters(new FiltersData);
     QScopedPointer<data::DevicesData> controlDevices(new DevicesData);
@@ -1921,47 +1975,26 @@ ExperimentData* ProceduresTest::makeStimulusExperimentData()
     stimuli->insert("stimulus2", stimulus2);
 
     QString description;
-    QScopedPointer<data::ParameterManagerData> paramMngr(new ParameterManagerData);
+    QScopedPointer<data::ParameterManagerData> paramMngr(
+        new ParameterManagerData);
 
-    return new data::ExperimentData(configFile,
-                                    screens.take(),
-                                    procedures.take(),
-                                    connections.take(),
-                                    calibration.take(),
-                                    genParam.take(),
-                                    resParam.take(),
-                                    paramDlg.take(),
-                                    rndGen.take(),
-                                    devices.take(),
-                                    filters.take(),
-                                    controlDevices.take(),
-                                    datablocks.take(),
-                                    stimuli.take(),
-                                    description,
-                                    paramMngr.take());
-
+    return new data::ExperimentData(
+        configFile, screens.take(), procedures.take(), connections.take(),
+        calibration.take(), genParam.take(), resParam.take(), paramDlg.take(),
+        rndGen.take(), devices.take(), filters.take(), controlDevices.take(),
+        datablocks.take(), stimuli.take(), description, paramMngr.take());
 }
 
-ExperimentRunDelegate* ProceduresTest::makeDummyExperimentRunDelegate(const MainConfigFileData& mcd)
+ExperimentRunDelegate *
+ProceduresTest::makeDummyExperimentRunDelegate(const MainConfigFileData &mcd)
 {
-    return new ExperimentRunDelegate( *makeDummyExperimentData(), mcd, 0);
+    return new ExperimentRunDelegate(*makeDummyExperimentData(), mcd, 0);
 }
 
-ExperimentRunDelegate* ProceduresTest::makeStimulusExperimentRunDelegate(const MainConfigFileData& mcd)
+ExperimentRunDelegate *
+ProceduresTest::makeStimulusExperimentRunDelegate(const MainConfigFileData &mcd)
 {
-    return new ExperimentRunDelegate( *makeStimulusExperimentData(), mcd, 0);
+    return new ExperimentRunDelegate(*makeStimulusExperimentData(), mcd, 0);
 }
-
 
 QTEST_MAIN(ProceduresTest)
-
-
-
-
-
-
-
-
-
-
-

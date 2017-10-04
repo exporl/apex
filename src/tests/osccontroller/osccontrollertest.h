@@ -24,19 +24,20 @@
 
 #include <QtTest>
 
-namespace apex{
+namespace apex
+{
 
-namespace device{
-
+namespace device
+{
 }
-
 }
 
 class OscControllerTest : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 private Q_SLOTS:
+    void initTestCase();
     void testPluginLoader();
 };
 

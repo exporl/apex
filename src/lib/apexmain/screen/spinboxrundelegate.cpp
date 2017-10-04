@@ -33,12 +33,12 @@ namespace apex
 namespace rundelegates
 {
 
-const ScreenElement* SpinBoxRunDelegate::getScreenElement() const
+const ScreenElement *SpinBoxRunDelegate::getScreenElement() const
 {
     return element;
 }
 
-QWidget* SpinBoxRunDelegate::getWidget()
+QWidget *SpinBoxRunDelegate::getWidget()
 {
     return this;
 }
@@ -58,68 +58,64 @@ const QString SpinBoxRunDelegate::getText() const
     return text();
 }
 
-void SpinBoxRunDelegate::resizeEvent( QResizeEvent* e )
+void SpinBoxRunDelegate::resizeEvent(QResizeEvent *e)
 {
-    QSpinBox::resizeEvent (e);
-    setFont (initialFont);
-    ApexTools::shrinkTillItFits (this, text(), QSize (2, 2));
+    QSpinBox::resizeEvent(e);
+    setFont(initialFont);
+    ApexTools::shrinkTillItFits(this, text(), QSize(2, 2));
 
-  if (element->GetReset()) {
-    if (element->HasDefault())
-        QSpinBox::setValue((int)element->GetValue());
-    else
-        QSpinBox::clear();
-  }
+    if (element->GetReset()) {
+        if (element->HasDefault())
+            QSpinBox::setValue((int)element->GetValue());
+        else
+            QSpinBox::clear();
+    }
 }
 
-void SpinBoxRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
+void SpinBoxRunDelegate::connectSlots(gui::ScreenRunDelegate *d)
 {
-    connect( this, SIGNAL( answered( ScreenElementRunDelegate* ) ),
-             d, SIGNAL( answered( ScreenElementRunDelegate* ) ) );
+    connect(this, SIGNAL(answered(ScreenElementRunDelegate *)), d,
+            SIGNAL(answered(ScreenElementRunDelegate *)));
 }
-
 }
 }
 
 void apex::rundelegates::SpinBoxRunDelegate::sendAnsweredSignal()
 {
-    Q_EMIT answered( this );
+    Q_EMIT answered(this);
 }
 
 apex::rundelegates::SpinBoxRunDelegate::SpinBoxRunDelegate(
-        ExperimentRunDelegate* p_exprd,
-    QWidget* parent, const SpinBoxElement* e, const QFont& defaultFont ) :
-      QSpinBox( parent ),
-      ScreenElementRunDelegate(p_exprd, e),
-      element(  e )
+    ExperimentRunDelegate *p_exprd, QWidget *parent, const SpinBoxElement *e,
+    const QFont &defaultFont)
+    : QSpinBox(parent), ScreenElementRunDelegate(p_exprd, e), element(e)
 {
     setObjectName(element->getID());
     setStyleSheet(element->getStyle());
 
-    if (! e->getShortCut("up").isEmpty()) {
-        QShortcut* sc = new QShortcut(  e->getShortCut("up"), this );
+    if (!e->getShortCut("up").isEmpty()) {
+        QShortcut *sc = new QShortcut(e->getShortCut("up"), this);
         connect(sc, SIGNAL(activated()), this, SLOT(stepUp()));
     }
-    if (! e->getShortCut("down").isEmpty()) {
-        QShortcut* sc = new QShortcut(  e->getShortCut("down"), this );
+    if (!e->getShortCut("down").isEmpty()) {
+        QShortcut *sc = new QShortcut(e->getShortCut("down"), this);
         connect(sc, SIGNAL(activated()), this, SLOT(stepDown()));
     }
 
-
     QFont font = defaultFont;
-    if ( element->getFontSize() != -1 )
-        font.setPointSize( element->getFontSize() );
-    QSpinBox::setFont( font );
+    if (element->getFontSize() != -1)
+        font.setPointSize(element->getFontSize());
+    QSpinBox::setFont(font);
     initialFont = font;
 
-    // QSpinBox only implements int, not float, this is restricted by the apex schema
+    // QSpinBox only implements int, not float, this is restricted by the apex
+    // schema
     QSpinBox::setMinimum((int)element->GetMin());
     QSpinBox::setMaximum((int)element->GetMax());
     if (element->HasDefault())
         QSpinBox::setValue((int)element->GetValue());
     QSpinBox::setSingleStep((int)element->GetStep());
-    if (! element->GetParameter().isEmpty()) {
-        QSpinBox::setToolTip( element->GetParameter() );
+    if (!element->GetParameter().isEmpty()) {
+        QSpinBox::setToolTip(element->GetParameter());
     }
 }
-

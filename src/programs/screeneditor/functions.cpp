@@ -21,31 +21,29 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    QString findFreeID( const QString& base, const ScreenElementMap& takenIDs )
-    {
-      QString s = base;
-      s.replace( ' ', QString() );
-      int i = 1;
-      while ( true )
-      {
-        QString testId = s + QString::number( i++ );
-        if ( takenIDs.find( testId ) == takenIDs.end() )
-          return testId;
-      }
+namespace editor
+{
+QString findFreeID(const QString &base, const ScreenElementMap &takenIDs)
+{
+    QString s = base;
+    s.replace(' ', QString());
+    int i = 1;
+    while (true) {
+        QString testId = s + QString::number(i++);
+        if (takenIDs.find(testId) == takenIDs.end())
+            return testId;
     }
+}
 
-    QString shortenString( const QString& s, int l )
-    {
-      int oldlen = s.length();
-      if ( oldlen <= l )
+QString shortenString(const QString &s, int l)
+{
+    int oldlen = s.length();
+    if (oldlen <= l)
         return s;
-      else
-      {
-        QString ret = s.right( l - 3 );
+    else {
+        QString ret = s.right(l - 3);
         return "..." + ret;
-      }
     }
-  }
+}
+}
 }

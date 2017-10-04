@@ -11,22 +11,22 @@
 Q_DECLARE_LOGGING_CATEGORY(APEX_RESULTSCHECKER)
 Q_LOGGING_CATEGORY(APEX_RESULTSCHECKER, "apex.resultschecker")
 
-template<typename T>
+template <typename T>
 bool compare(T l, T r)
 {
     return l == r;
 }
 
-template<>
+template <>
 bool compare(double l, double r)
 {
-    return qFuzzyCompare(l+1, r+1);
+    return qFuzzyCompare(l + 1, r + 1);
 }
 
-template<>
+template <>
 bool compare(float l, float r)
 {
-    return qFuzzyCompare(l+1, r+1);
+    return qFuzzyCompare(l + 1, r + 1);
 }
 
 QStringList trainingProcedureNames()
@@ -39,71 +39,69 @@ QStringList trainingProcedureNames()
     return result;
 }
 
-template<typename T>
+template <typename T>
 class Value
 {
-    public:
+public:
+    Value() : set(false)
+    {
+    }
+    Value(const T &v) : set(true), val(v)
+    {
+    }
 
-        Value() : set(false) {}
-        Value(const T& v) : set(true), val(v) {}
+    bool isSet() const
+    {
+        return set;
+    }
 
-        bool isSet() const
-        {
-            return set;
-        }
+    operator T() const
+    {
+        return val;
+    }
 
-        operator T() const
-        {
-            return val;
-        }
+    bool operator==(const Value &other) const
+    {
+        if (set != other.set)
+            return false;
+        if (set && !compare(val, other.val))
+            return false;
+        return true;
+    }
 
-        bool operator==(const Value& other) const
-        {
-            if (set!=other.set)
-                return false;
-            if (set && ! compare(val, other.val))
-                return false;
-            return true;
-        }
+    bool operator!=(const Value &other) const
+    {
+        return !(*this == other);
+    }
 
-        bool operator!=(const Value& other) const
-        {
-            return !(*this == other);
-        }
+    Value &operator=(const Value &other)
+    {
+        if (other.set) {
+            val = other.val;
+            set = true;
+        } else
+            set = false;
 
-        Value& operator=(const Value& other)
-        {
-            if (other.set)
-            {
-                val = other.val;
-                set = true;
-            }
-            else
-                set = false;
+        return *this;
+    }
 
-            return *this;
-        }
-
-    private:
-
-        bool set;
-        T val;
+private:
+    bool set;
+    T val;
 };
 
-struct DeviceResult
-{
+struct DeviceResult {
     Value<int> bufferUnderruns;
     Value<int> clippedChannel;
 
-    bool operator==(const DeviceResult& other) const
+    bool operator==(const DeviceResult &other) const
     {
-        return bufferUnderruns == other.bufferUnderruns
-                && clippedChannel == other.clippedChannel;
+        return bufferUnderruns == other.bufferUnderruns &&
+               clippedChannel == other.clippedChannel;
     }
 };
 
-struct TrialResult
-{
+struct TrialResult {
     QString procedureType;
     QString id;
     Value<QString> answer;
@@ -111,7 +109,7 @@ struct TrialResult
     Value<QString> correct_answer;
     Value<QString> correctInterval;
     Value<QString> answerInterval;
-    //Value<QString> stimulus;
+    // Value<QString> stimulus;
     Value<bool> correct;
     Value<int> responseTime;
     QMap<QString, QString> screenResults;
@@ -126,11 +124,11 @@ struct TrialResult
     Value<int> presentations;
     QString startTime;
 
-    bool operator==(const TrialResult& other) const
+    bool operator==(const TrialResult &other) const
     {
-        bool isTrainingProcedure
-                = trainingProcedureNames().contains(other.procedureType)
-                || trainingProcedureNames().contains(procedureType);
+        bool isTrainingProcedure =
+            trainingProcedureNames().contains(other.procedureType) ||
+            trainingProcedureNames().contains(procedureType);
 
         QString errMsg = QString(" -> trial (%1) -> ").arg(id);
 
@@ -138,12 +136,14 @@ struct TrialResult
 
         if (correctInterval.isSet()) {
             if (correctInterval != other.correct_answer) {
-                qCDebug(APEX_RESULTSCHECKER) << errMsg << "correctInterval != correct_answer";
-                ret =  false;
+                qCDebug(APEX_RESULTSCHECKER)
+                    << errMsg << "correctInterval != correct_answer";
+                ret = false;
             }
         } else if (other.correctInterval.isSet()) {
             if (other.correctInterval != correct_answer) {
-                qCDebug(APEX_RESULTSCHECKER) << errMsg << "correctInterval != correct_answer";
+                qCDebug(APEX_RESULTSCHECKER)
+                    << errMsg << "correctInterval != correct_answer";
                 ret = false;
             }
         }
@@ -152,16 +152,14 @@ struct TrialResult
         QStringList b(other.stimuli);
         a.sort();
         b.sort();
-        if (a != b)
-        {
+        if (a != b) {
             qCDebug(APEX_RESULTSCHECKER) << errMsg << "stimulus";
-            ret =  false;
+            ret = false;
         }
 
-        if (!isTrainingProcedure && correct != other.correct)
-        {
+        if (!isTrainingProcedure && correct != other.correct) {
             qCDebug(APEX_RESULTSCHECKER) << errMsg << "correct";
-            ret =  false;
+            ret = false;
         }
 
         /*if (!(responseTime.isSet() && other.responseTime.isSet()))
@@ -170,18 +168,15 @@ struct TrialResult
             ret =  false;
         }*/
 
-        if (!isTrainingProcedure && screenResults != other.screenResults)
-        {
+        if (!isTrainingProcedure && screenResults != other.screenResults) {
             qCDebug(APEX_RESULTSCHECKER) << errMsg << "screenResults";
-            ret =  false;
+            ret = false;
         }
 
-        if (deviceResults != other.deviceResults)
-        {
+        if (deviceResults != other.deviceResults) {
             qCDebug(APEX_RESULTSCHECKER) << errMsg << "deviceResults";
-            ret =  false;
+            ret = false;
         }
-
 
         /*if (stepSize != other.stepSize)
         {
@@ -189,12 +184,10 @@ struct TrialResult
             ret =  false;
         }*/
 
-        if (parameter != other.parameter)
-        {
+        if (parameter != other.parameter) {
             qCDebug(APEX_RESULTSCHECKER) << errMsg << "parameter";
-            ret =  false;
+            ret = false;
         }
-
 
         // Reversals in trunk are off by one (reported one trial too late)
         /*if (reversals != other.reversals)
@@ -209,70 +202,64 @@ struct TrialResult
             ret =  false;
         }*/
 
-        if (saturation != other.saturation)
-        {
+        if (saturation != other.saturation) {
             qCDebug(APEX_RESULTSCHECKER) << errMsg << "saturation";
-            ret =  false;
+            ret = false;
         }
 
-        if (presentations != other.presentations)
-        {
+        if (presentations != other.presentations) {
             qCDebug(APEX_RESULTSCHECKER) << errMsg << "presentations";
-            ret =  false;
+            ret = false;
         }
 
-        if (skip != other.skip)
-        {
+        if (skip != other.skip) {
             qCDebug(APEX_RESULTSCHECKER) << errMsg << "skip";
-            ret =  false;
+            ret = false;
         }
 
         return ret;
 
-//         return answer == other.answer &&
-//                correctAnswer == other.correctAnswer &&
-//                stimulus == other.stimulus &&
-//                correct == other.correct &&
-//                responseTime.isSet() && other.responseTime.isSet() &&
-//                screenResults == other.screenResults &&
-//                deviceResults == other.deviceResults;
+        //         return answer == other.answer &&
+        //                correctAnswer == other.correctAnswer &&
+        //                stimulus == other.stimulus &&
+        //                correct == other.correct &&
+        //                responseTime.isSet() && other.responseTime.isSet() &&
+        //                screenResults == other.screenResults &&
+        //                deviceResults == other.deviceResults;
     }
 };
 
-struct Results
-{
+struct Results {
     Value<QDateTime> startDate;
     Value<QDateTime> endDate;
     Value<int> duration;
     QList<TrialResult> trialResults;
     QString procedureType;
 
-    bool operator==(const Results& other) const
+    bool operator==(const Results &other) const
     {
-        if (!(startDate.isSet() && other.startDate.isSet()))
-        {
+        if (!(startDate.isSet() && other.startDate.isSet())) {
             qCDebug(APEX_RESULTSCHECKER) << "-> startDate";
             return false;
         }
 
-        if (!(endDate.isSet() && other.endDate.isSet()))
-        {
+        if (!(endDate.isSet() && other.endDate.isSet())) {
             qCDebug(APEX_RESULTSCHECKER) << "-> endDate";
             return false;
         }
 
-        if (!(duration.isSet() && other.duration.isSet()))
-        {
+        if (!(duration.isSet() && other.duration.isSet())) {
             qCDebug(APEX_RESULTSCHECKER) << "-> duration";
             return false;
         }
 
-        bool isTrainingProcedure
-                = trainingProcedureNames().contains(other.procedureType)
-                || trainingProcedureNames().contains(procedureType);
+        bool isTrainingProcedure =
+            trainingProcedureNames().contains(other.procedureType) ||
+            trainingProcedureNames().contains(procedureType);
 
-        if(isTrainingProcedure){
-            if(std::abs(trialResults.size() - other.trialResults.size()) == 1) {
+        if (isTrainingProcedure) {
+            if (std::abs(trialResults.size() - other.trialResults.size()) ==
+                1) {
 
                 QList<TrialResult>::const_iterator it1;
                 QList<TrialResult>::const_iterator it2;
@@ -303,30 +290,31 @@ struct Results
             }
         }
 
-
-
         return true;
-//         return startDate.isSet() && other.startDate.isSet() &&
-//                endDate.isSet() && other.endDate.isSet() &&
-//                duration.isSet() && other.duration.isSet() &&
-//                trialResults == other.trialResults;
+        //         return startDate.isSet() && other.startDate.isSet() &&
+        //                endDate.isSet() && other.endDate.isSet() &&
+        //                duration.isSet() && other.duration.isSet() &&
+        //                trialResults == other.trialResults;
     }
 };
 
 class StringException
 {
-    public:
+public:
+    StringException(const QString &m) : msg(m)
+    {
+    }
 
-        StringException(const QString& m) : msg(m) {}
+    QString message() const
+    {
+        return msg;
+    }
 
-        QString message() const {return msg;}
-
-    private:
-
-        QString msg;
+private:
+    QString msg;
 };
 
-QDomElement getRootElement(const QString& fileName)
+QDomElement getRootElement(const QString &fileName)
 {
     QFile file(fileName);
 
@@ -341,12 +329,12 @@ QDomElement getRootElement(const QString& fileName)
     return doc.documentElement();
 }
 
-void unknownTag(const QString& tag)
+void unknownTag(const QString &tag)
 {
     throw StringException(QString("Unknown tag %1").arg(tag));
 }
 
-bool stringToBool(const QString& s)
+bool stringToBool(const QString &s)
 {
     if (s.compare("true", Qt::CaseInsensitive) == 0)
         return true;
@@ -356,14 +344,12 @@ bool stringToBool(const QString& s)
         throw StringException(QString("Invalid boolean value \"%1\"").arg(s));
 }
 
-void parseGeneral(QDomElement general, Results* results)
+void parseGeneral(QDomElement general, Results *results)
 {
     QDomElement child;
 
-    for (child = general.firstChildElement();
-         !child.isNull();
-         child = child.nextSiblingElement())
-    {
+    for (child = general.firstChildElement(); !child.isNull();
+         child = child.nextSiblingElement()) {
         QString tag = child.tagName();
 
         if (tag == "startdate") {
@@ -388,7 +374,7 @@ void parseGeneral(QDomElement general, Results* results)
     }
 }
 
-Results parseRefactoryResults(const QString& file)
+Results parseRefactoryResults(const QString &file)
 {
     Results ret;
 
@@ -398,14 +384,14 @@ Results parseRefactoryResults(const QString& file)
     QString experimentFile = root.attribute("experiment_file");
     experimentFile.remove("file:");
     QFile f(experimentFile);
-    if(f.open(QIODevice::ReadOnly | QIODevice::Text)){
+    if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QXmlStreamReader xmlReader;
         xmlReader.setDevice(&f);
         xmlReader.readNext();
 
-        while(!xmlReader.atEnd()) {
-            if(xmlReader.isStartElement()) {
-                if(xmlReader.name() == "procedure") {
+        while (!xmlReader.atEnd()) {
+            if (xmlReader.isStartElement()) {
+                if (xmlReader.name() == "procedure") {
                     QXmlStreamAttributes attributes = xmlReader.attributes();
 
                     ret.procedureType.append(attributes.value("xsi:type"));
@@ -418,17 +404,13 @@ Results parseRefactoryResults(const QString& file)
         qCDebug(APEX_RESULTSCHECKER) << "Couldn't open experiment file";
     }
 
-
-    for (child = root.firstChildElement();
-         !child.isNull();
-         child = child.nextSiblingElement())
-    {
+    for (child = root.firstChildElement(); !child.isNull();
+         child = child.nextSiblingElement()) {
         QString tag = child.tagName();
 
         if (tag == "general")
             parseGeneral(child, &ret);
-        else if (tag == "trial")
-        {
+        else if (tag == "trial") {
             QString id = child.attribute("id");
             TrialResult t;
             t.id = id;
@@ -436,16 +418,13 @@ Results parseRefactoryResults(const QString& file)
 
             for (QDomElement trialChild = child.firstChildElement();
                  !trialChild.isNull();
-                 trialChild = trialChild.nextSiblingElement())
-            {
+                 trialChild = trialChild.nextSiblingElement()) {
                 QString tag = trialChild.tagName();
 
-                if (tag == "procedure")
-                {
+                if (tag == "procedure") {
                     for (QDomElement procChild = trialChild.firstChildElement();
                          !procChild.isNull();
-                         procChild = procChild.nextSiblingElement())
-                    {
+                         procChild = procChild.nextSiblingElement()) {
                         QString tag = procChild.tagName();
 
                         if (tag == "correct_answer")
@@ -457,9 +436,9 @@ Results parseRefactoryResults(const QString& file)
                         else if (tag == "answer")
                             t.answer = procChild.text();
                         else if (tag == "stimulus")
-                            t.stimuli.push_back( procChild.text() );
+                            t.stimuli.push_back(procChild.text());
                         else if (tag == "standard")
-                            t.stimuli.push_back( procChild.text() );
+                            t.stimuli.push_back(procChild.text());
                         else if (tag == "correct")
                             t.correct = stringToBool(procChild.text());
                         else if (tag == "parameter")
@@ -479,36 +458,30 @@ Results parseRefactoryResults(const QString& file)
                         else
                             unknownTag(tag);
                     }
-                }
-                else if (tag == "screenresult")
-                {
+                } else if (tag == "screenresult") {
                     for (QDomElement element = trialChild.firstChildElement();
                          !element.isNull();
-                         element = element.nextSiblingElement())
-                    {
+                         element = element.nextSiblingElement()) {
                         if (element.tagName() != "element")
                             unknownTag(element.tagName());
 
-                        t.screenResults[element.attribute("id")]
-                            = element.text();
+                        t.screenResults[element.attribute("id")] =
+                            element.text();
                     }
-                }
-                else if (tag == "output")
-                {
-                    for (QDomElement outputChild = trialChild.firstChildElement();
+                } else if (tag == "output") {
+                    for (QDomElement outputChild =
+                             trialChild.firstChildElement();
                          !outputChild.isNull();
-                         outputChild = outputChild.nextSiblingElement())
-                    {
+                         outputChild = outputChild.nextSiblingElement()) {
                         QString tag = outputChild.tagName();
 
-                        if (tag == "device")
-                        {
+                        if (tag == "device") {
                             QString devId = outputChild.attribute("id");
 
-                            for (QDomElement devChild = outputChild.firstChildElement();
+                            for (QDomElement devChild =
+                                     outputChild.firstChildElement();
                                  !devChild.isNull();
-                                 devChild = devChild.nextSiblingElement())
-                            {
+                                 devChild = devChild.nextSiblingElement()) {
                                 QString tag = devChild.tagName();
 
                                 if (tag == "buffer") {
@@ -516,8 +489,9 @@ Results parseRefactoryResults(const QString& file)
                                     bool ok = false;
 
                                     if (devChild.hasAttribute(underruns))
-                                        t.deviceResults[devId].bufferUnderruns
-                                                = devChild.attribute(underruns).toInt(&ok);
+                                        t.deviceResults[devId].bufferUnderruns =
+                                            devChild.attribute(underruns).toInt(
+                                                &ok);
 
                                     if (!ok)
                                         unknownTag(tag);
@@ -526,8 +500,9 @@ Results parseRefactoryResults(const QString& file)
                                     bool ok = false;
 
                                     if (devChild.hasAttribute(channel))
-                                        t.deviceResults[devId].clippedChannel
-                                                = devChild.attribute(channel).toInt(&ok);
+                                        t.deviceResults[devId].clippedChannel =
+                                            devChild.attribute(channel).toInt(
+                                                &ok);
 
                                     if (!ok)
                                         unknownTag(tag);
@@ -536,18 +511,13 @@ Results parseRefactoryResults(const QString& file)
                             }
                         }
                     }
-                }
-                else if (tag == "responsetime")
-                {
+                } else if (tag == "responsetime") {
                     t.responseTime = trialChild.text().toInt();
-                }
-                else if (tag == "randomgenerators")
-                {
-                    //TODO
+                } else if (tag == "randomgenerators") {
+                    // TODO
                 } else if (tag == "trial_start_time") {
                     t.startTime = trialChild.text();
-                }
-                else
+                } else
                     unknownTag(tag);
             }
 
@@ -558,50 +528,43 @@ Results parseRefactoryResults(const QString& file)
     return ret;
 }
 
-Results parseTrunkResults(const QString& file)
+Results parseTrunkResults(const QString &file)
 {
     Results ret;
 
     QDomElement root = getRootElement(file);
     QDomElement child;
 
-    for (child = root.firstChildElement();
-         !child.isNull();
-         child = child.nextSiblingElement())
-    {
+    for (child = root.firstChildElement(); !child.isNull();
+         child = child.nextSiblingElement()) {
         QString tag = child.tagName();
 
         if (tag == "general")
             parseGeneral(child, &ret);
-        else if (tag == "trial")
-        {
+        else if (tag == "trial") {
             QString id = child.attribute("id");
             TrialResult t;
             t.id = id;
 
             for (QDomElement trialChild = child.firstChildElement();
                  !trialChild.isNull();
-                 trialChild = trialChild.nextSiblingElement())
-            {
+                 trialChild = trialChild.nextSiblingElement()) {
                 QString tag = trialChild.tagName();
 
-                if (tag == "procedure")
-                {
+                if (tag == "procedure") {
                     for (QDomElement procChild = trialChild.firstChildElement();
                          !procChild.isNull();
-                         procChild = procChild.nextSiblingElement())
-                    {
+                         procChild = procChild.nextSiblingElement()) {
                         QString tag = procChild.tagName();
-
 
                         if (tag == "correct_answer")
                             t.correct_answer = procChild.text();
                         else if (tag == "answer")
                             t.answer = procChild.text();
                         else if (tag == "stimulus")
-                            t.stimuli.push_back( procChild.text() );
+                            t.stimuli.push_back(procChild.text());
                         else if (tag == "standard")
-                            t.stimuli.push_back( procChild.text() );
+                            t.stimuli.push_back(procChild.text());
                         else if (tag == "correct")
                             t.correct = stringToBool(procChild.text());
                         else if (tag == "parameter")
@@ -623,57 +586,46 @@ Results parseTrunkResults(const QString& file)
                         else
                             unknownTag(tag);
                     }
-                }
-                else if (tag == "screenresult")
-                {
+                } else if (tag == "screenresult") {
                     for (QDomElement element = trialChild.firstChildElement();
                          !element.isNull();
-                         element = element.nextSiblingElement())
-                    {
+                         element = element.nextSiblingElement()) {
                         if (element.tagName() != "element")
                             unknownTag(element.tagName());
 
-                        t.screenResults[element.attribute("id")]
-                        = element.text();
+                        t.screenResults[element.attribute("id")] =
+                            element.text();
                     }
-                }
-                else if (tag == "corrector")
-                {
-                    for (QDomElement correctorChild = trialChild.firstChildElement();
+                } else if (tag == "corrector") {
+                    for (QDomElement correctorChild =
+                             trialChild.firstChildElement();
                          !correctorChild.isNull();
-                         correctorChild = correctorChild.nextSiblingElement())
-                    {
+                         correctorChild = correctorChild.nextSiblingElement()) {
                         QString tag = correctorChild.tagName();
 
-                        if (tag == "result")
-                        {
-                            t.correct =
-                                stringToBool(correctorChild.text());
-                        }
-                        else if (tag == "answer")
+                        if (tag == "result") {
+                            t.correct = stringToBool(correctorChild.text());
+                        } else if (tag == "answer")
                             t.answer = correctorChild.text();
                         else if (tag == "correctanswer")
                             t.correctAnswer = correctorChild.text();
                         else
                             unknownTag(tag);
                     }
-                }
-                else if (tag == "output")
-                {
-                    for (QDomElement outputChild = trialChild.firstChildElement();
+                } else if (tag == "output") {
+                    for (QDomElement outputChild =
+                             trialChild.firstChildElement();
                          !outputChild.isNull();
-                         outputChild = outputChild.nextSiblingElement())
-                    {
+                         outputChild = outputChild.nextSiblingElement()) {
                         QString tag = outputChild.tagName();
 
-                        if (tag == "device")
-                        {
+                        if (tag == "device") {
                             QString devId = outputChild.attribute("id");
 
-                            for (QDomElement devChild = outputChild.firstChildElement();
+                            for (QDomElement devChild =
+                                     outputChild.firstChildElement();
                                  !devChild.isNull();
-                                 devChild = devChild.nextSiblingElement())
-                            {
+                                 devChild = devChild.nextSiblingElement()) {
                                 QString tag = devChild.tagName();
 
                                 if (tag == "buffer") {
@@ -681,8 +633,9 @@ Results parseTrunkResults(const QString& file)
                                     bool ok = false;
 
                                     if (devChild.hasAttribute(underruns))
-                                        t.deviceResults[devId].bufferUnderruns
-                                                = devChild.attribute(underruns).toInt(&ok);
+                                        t.deviceResults[devId].bufferUnderruns =
+                                            devChild.attribute(underruns).toInt(
+                                                &ok);
 
                                     if (!ok)
                                         unknownTag(tag);
@@ -691,8 +644,9 @@ Results parseTrunkResults(const QString& file)
                                     bool ok = false;
 
                                     if (devChild.hasAttribute(channel))
-                                        t.deviceResults[devId].clippedChannel
-                                                = devChild.attribute(channel).toInt(&ok);
+                                        t.deviceResults[devId].clippedChannel =
+                                            devChild.attribute(channel).toInt(
+                                                &ok);
 
                                     if (!ok)
                                         unknownTag(tag);
@@ -701,16 +655,13 @@ Results parseTrunkResults(const QString& file)
                             }
                         }
                     }
-                }
-                else if (tag == "responsetime")
-                {
+                } else if (tag == "responsetime") {
                     t.responseTime = trialChild.text().toInt();
-                }
-                else if (tag == "randomgenerators")
-                {
-                    //TODO
-                }
-                else
+                } else if (tag == "randomgenerators") {
+                    // TODO
+                } else if (tag == "trial_start_time") {
+                    t.startTime = trialChild.text();
+                } else
                     unknownTag(tag);
             }
             ret.trialResults.push_back(t);
@@ -720,34 +671,30 @@ Results parseTrunkResults(const QString& file)
     return ret;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-    if (argc != 3)
-    {
-        qCDebug(APEX_RESULTSCHECKER) << "Usage:" << argv[0] << "<trunk results> <refactory results>";
+    if (argc != 3) {
+        qCDebug(APEX_RESULTSCHECKER) << "Usage:" << argv[0]
+                                     << "<trunk results> <refactory results>";
         return 1;
     }
 
     Results trunkResults;
     Results refactoryResults;
 
-    try
-    {
+    try {
         trunkResults = parseTrunkResults(argv[1]);
-    }
-    catch (const StringException& e)
-    {
-        qCWarning(APEX_RESULTSCHECKER, "Error parsing %s: %s", argv[1], qPrintable(e.message()));
+    } catch (const StringException &e) {
+        qCWarning(APEX_RESULTSCHECKER, "Error parsing %s: %s", argv[1],
+                  qPrintable(e.message()));
         return 1;
     }
 
-    try
-    {
+    try {
         refactoryResults = parseRefactoryResults(argv[2]);
-    }
-    catch (const StringException& e)
-    {
-        qCWarning(APEX_RESULTSCHECKER, "Error parsing %s: %s", argv[2], qPrintable(e.message()));
+    } catch (const StringException &e) {
+        qCWarning(APEX_RESULTSCHECKER, "Error parsing %s: %s", argv[2],
+                  qPrintable(e.message()));
         return 1;
     }
 

@@ -25,12 +25,11 @@
 
 using namespace apex::data;
 
-namespace apex {
+namespace apex
+{
 
-RandomGeneratorParameters::RandomGeneratorParameters() :
-    ApexParameters(),
-    m_dMin(0),
-    m_dMax(0)
+RandomGeneratorParameters::RandomGeneratorParameters()
+    : ApexParameters(), m_dMin(0), m_dMax(0)
 {
 }
 
@@ -38,21 +37,24 @@ RandomGeneratorParameters::~RandomGeneratorParameters()
 {
 }
 
-bool RandomGeneratorParameters::SetParameter(const QString& p_name, const QString& /*p_id*/, const QString& p_value, const QDomElement &)
+bool RandomGeneratorParameters::SetParameter(const QString &p_name,
+                                             const QString & /*p_id*/,
+                                             const QString &p_value,
+                                             const QDomElement &)
 {
-    if (p_name=="min") {
-        m_dMin=p_value.toDouble();
-    } else if (p_name=="max") {
-        m_dMax=p_value.toDouble();
-    } else if (p_name=="parameter") {
-        m_sParam=p_value;
-    } else if (p_name=="type") {
-        if (p_value=="int") {
-            m_nValueType=VALUE_INT;
-        } else if (p_value=="double"){
-            m_nValueType=VALUE_DOUBLE;
+    if (p_name == "min") {
+        m_dMin = p_value.toDouble();
+    } else if (p_name == "max") {
+        m_dMax = p_value.toDouble();
+    } else if (p_name == "parameter") {
+        m_sParam = p_value;
+    } else if (p_name == "type") {
+        if (p_value == "int") {
+            m_nValueType = VALUE_INT;
+        } else if (p_value == "double") {
+            m_nValueType = VALUE_DOUBLE;
         } else {
-            Q_ASSERT(( "invalid value " + p_value, false ));
+            Q_ASSERT(("invalid value " + p_value, false));
             return false;
         }
     } else {
@@ -62,14 +64,13 @@ bool RandomGeneratorParameters::SetParameter(const QString& p_name, const QStrin
     return true;
 }
 
-
 bool RandomGeneratorParameters::Parse(const QDomElement &p_paramElement)
 {
     QString type = p_paramElement.attribute(QSL("xsi:type"));
 
-    if (type=="apex:uniform") {
-        m_nType= TYPE_UNIFORM;
-    } else if (type=="apex:gaussian") {
+    if (type == "apex:uniform") {
+        m_nType = TYPE_UNIFORM;
+    } else if (type == "apex:gaussian") {
         m_nType = TYPE_GAUSSIAN;
     } else {
         Q_ASSERT(0 && "Unknown type");
@@ -79,14 +80,11 @@ bool RandomGeneratorParameters::Parse(const QDomElement &p_paramElement)
     return ApexParameters::Parse(p_paramElement);
 }
 
-bool RandomGeneratorParameters::operator==(const RandomGeneratorParameters& other) const
+bool RandomGeneratorParameters::
+operator==(const RandomGeneratorParameters &other) const
 {
-    return  ApexParameters::operator==(other) &&
-            m_dMin == other.m_dMin &&
-            m_dMax == other.m_dMax &&
-            m_sParam == other.m_sParam &&
-            m_nType == other.m_nType &&
-            m_nValueType == other.m_nValueType;
+    return ApexParameters::operator==(other) && m_dMin == other.m_dMin &&
+           m_dMax == other.m_dMax && m_sParam == other.m_sParam &&
+           m_nType == other.m_nType && m_nValueType == other.m_nValueType;
 }
-
 }

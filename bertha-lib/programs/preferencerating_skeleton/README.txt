@@ -1,0 +1,1 @@
+Example program that shows how to write a preference rating application using bertha

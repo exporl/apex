@@ -4,10 +4,14 @@
 
 using namespace apex;
 
-MultiProcedure::MultiProcedure(ProcedureApi *api, const data::ProcedureData *data)
+MultiProcedure::MultiProcedure(ProcedureApi *api,
+                               const data::ProcedureData *data)
     : ProcedureInterface(api, data),
-      indexCurrentProcedure(-1), indexPreviousProcedure(-1),
-      numberOfProcedures(dynamic_cast<const data::MultiProcedureData*>(data)->procedures().count()),
+      indexCurrentProcedure(-1),
+      indexPreviousProcedure(-1),
+      numberOfProcedures(dynamic_cast<const data::MultiProcedureData *>(data)
+                             ->procedures()
+                             .count()),
       valid(QVector<bool>(numberOfProcedures, true))
 {
     initProcedures();
@@ -23,11 +27,11 @@ QString MultiProcedure::firstScreen()
 double MultiProcedure::progress() const
 {
     double sum = 0;
-    for(int i = 0; i < numberOfProcedures; ++i) {
+    for (int i = 0; i < numberOfProcedures; ++i) {
         sum += procedures.at(i)->progress();
     }
 
-    return sum/numberOfProcedures;
+    return sum / numberOfProcedures;
 }
 
 ResultHighlight MultiProcedure::processResult(const ScreenResult *screenResult)
@@ -50,10 +54,11 @@ ResultHighlight MultiProcedure::processResult(const ScreenResult *screenResult)
  */
 void MultiProcedure::nextIndex()
 {
-    if(data->order() == data::ProcedureData::RandomOrder) {
+    if (data->order() == data::ProcedureData::RandomOrder) {
         indexCurrentProcedure = r(numberOfProcedures);
     } else {
-        indexCurrentProcedure = (indexCurrentProcedure + 1) % numberOfProcedures;
+        indexCurrentProcedure =
+            (indexCurrentProcedure + 1) % numberOfProcedures;
     }
 }
 
@@ -69,7 +74,8 @@ void MultiProcedure::nextIndex()
  * nothing happens.
  * If the order is sequential, the next procedure is selected.
  * If the order is random, the next procedure is randomly selected from the
- * procedures that are still valid. If no such procedure exists, nothing happens.
+ * procedures that are still valid. If no such procedure exists, nothing
+ happens.
  */
 void MultiProcedure::setNextProcedure()
 {
@@ -78,10 +84,10 @@ void MultiProcedure::setNextProcedure()
         if (!valid.at(indexCurrentProcedure)) {
             nextIndex();
         }
-    } else if (data->order() == data::ProcedureData::SequentialOrder){
+    } else if (data->order() == data::ProcedureData::SequentialOrder) {
         nextIndex();
-    } else if(data->order() == data::ProcedureData::RandomOrder) {
-        if(valid.contains(true)) {
+    } else if (data->order() == data::ProcedureData::RandomOrder) {
+        if (valid.contains(true)) {
             do {
                 nextIndex();
             } while (!valid.at(indexCurrentProcedure));
@@ -94,7 +100,8 @@ void MultiProcedure::setNextProcedure()
  *
  * Sets up the trial of the current procedure. If the trial is invalid, the next
  * trial will be generated (possibly from an other procedure). Also if the
- * trial is invalid, the current procedure is marked as invalid, so this procedure
+ * trial is invalid, the current procedure is marked as invalid, so this
+ * procedure
  * won't be used anymore.
  */
 data::Trial MultiProcedure::setupNextTrial()
@@ -102,13 +109,13 @@ data::Trial MultiProcedure::setupNextTrial()
     data::Trial result = procedures.at(indexCurrentProcedure)->setupNextTrial();
 
     int startIndex = indexCurrentProcedure;
-    while(!result.isValid()) {
+    while (!result.isValid()) {
         valid.replace(indexCurrentProcedure, false);
 
         setNextProcedure();
         result = procedures.at(indexCurrentProcedure)->setupNextTrial();
 
-        if(startIndex == indexCurrentProcedure) {
+        if (startIndex == indexCurrentProcedure) {
             break;
         }
     }
@@ -119,13 +126,13 @@ data::Trial MultiProcedure::setupNextTrial()
 
 void MultiProcedure::initProcedures()
 {
-    const data::MultiProcedureData* params
-            = dynamic_cast<const data::MultiProcedureData*>(data);
+    const data::MultiProcedureData *params =
+        dynamic_cast<const data::MultiProcedureData *>(data);
 
     data::tProcConfigList datas = params->procedures();
 
-    for(int i=0; i<datas.count(); ++i){
-          procedures.push_back(api->makeProcedure(datas.at(i)));
+    for (int i = 0; i < datas.count(); ++i) {
+        procedures.push_back(api->makeProcedure(datas.at(i)));
     }
 }
 
@@ -138,8 +145,8 @@ QString MultiProcedure::finalResultXml() const
 {
     QString results;
 
-    const data::MultiProcedureData* params
-            = dynamic_cast<const data::MultiProcedureData*>(data);
+    const data::MultiProcedureData *params =
+        dynamic_cast<const data::MultiProcedureData *>(data);
 
     data::tProcConfigList datas = params->procedures();
 

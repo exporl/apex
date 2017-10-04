@@ -25,8 +25,8 @@
 
 using namespace spin::gui;
 
-NoiseStartpointDialog::NoiseStartpointDialog(QWidget* parent,
-                                             StartLevelWidget* slw,
+NoiseStartpointDialog::NoiseStartpointDialog(QWidget *parent,
+                                             StartLevelWidget *slw,
                                              double value)
     : QDialog(parent)
 {
@@ -38,36 +38,33 @@ void NoiseStartpointDialog::setupUi(double value)
 {
     widgets.setupUi(this);
 
-    if (value >= 0)
-    {
+    if (value >= 0) {
         widgets.fixedRadio->setChecked(true);
         widgets.startpointLine->setText(QString::number(value));
-    }
-    else
-    {
+    } else {
         widgets.randomRadio->setChecked(true);
         widgets.startpointLine->setVisible(false);
         widgets.sLbl->setVisible(false);
     }
 
-    QDoubleValidator* v = new QDoubleValidator(0, 1000, 2,
-                                               widgets.startpointLine);
+    QDoubleValidator *v =
+        new QDoubleValidator(0, 1000, 2, widgets.startpointLine);
     widgets.startpointLine->setValidator(v);
 }
 
-void NoiseStartpointDialog::setupConnections(StartLevelWidget* slw)
+void NoiseStartpointDialog::setupConnections(StartLevelWidget *slw)
 {
-    connect(widgets.fixedRadio, SIGNAL(toggled(bool)),
-            widgets.startpointLine, SLOT(setVisible(bool)));
-    connect(widgets.fixedRadio, SIGNAL(toggled(bool)),
-            widgets.startpointLine, SLOT(setFocus()));
-    connect(widgets.fixedRadio, SIGNAL(toggled(bool)),
-            widgets.sLbl, SLOT(setVisible(bool)));
+    connect(widgets.fixedRadio, SIGNAL(toggled(bool)), widgets.startpointLine,
+            SLOT(setVisible(bool)));
+    connect(widgets.fixedRadio, SIGNAL(toggled(bool)), widgets.startpointLine,
+            SLOT(setFocus()));
+    connect(widgets.fixedRadio, SIGNAL(toggled(bool)), widgets.sLbl,
+            SLOT(setVisible(bool)));
 
     connect(widgets.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 
-    connect(this, SIGNAL(startpointChosen(double)),
-            slw, SLOT(updateNoiseStartPoint(double)));
+    connect(this, SIGNAL(startpointChosen(double)), slw,
+            SLOT(updateNoiseStartPoint(double)));
 }
 
 void NoiseStartpointDialog::accept()
@@ -79,19 +76,3 @@ void NoiseStartpointDialog::accept()
 
     QDialog::accept();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

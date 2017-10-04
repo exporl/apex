@@ -23,13 +23,14 @@
 #include <QDateTime>
 #include <apexmodule.h>
 
-namespace apex {
+namespace apex
+{
 
 class TrialStartTime : public ApexModule
 {
     Q_OBJECT
 public:
-    TrialStartTime(ExperimentRunDelegate& p_rd);
+    TrialStartTime(ExperimentRunDelegate &p_rd);
 
     virtual QString GetResultXML() const;
     void setDateTime();
@@ -37,7 +38,6 @@ public:
 private:
     QDateTime startTime;
 };
-
 }
 
-#endif //APEXTRIALSTARTTIME_H
+#endif // APEXTRIALSTARTTIME_H

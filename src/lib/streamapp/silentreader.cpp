@@ -24,19 +24,22 @@
 
 using namespace streamapp;
 
-SilentReader::SilentReader( const unsigned  ac_nChan, const unsigned ac_nFs, const unsigned long ac_nToGenerate ) :
-  mc_lSampleRate( ac_nFs ),
-  mc_lSamples( ac_nToGenerate ),
-  mc_nChannels( ac_nChan ),
-  mv_lGenerated( 0l )
+SilentReader::SilentReader(const unsigned ac_nChan, const unsigned ac_nFs,
+                           const unsigned long ac_nToGenerate)
+    : mc_lSampleRate(ac_nFs),
+      mc_lSamples(ac_nToGenerate),
+      mc_nChannels(ac_nChan),
+      mv_lGenerated(0l)
 {
 }
 
-SilentReader::SilentReader( const unsigned  ac_nChan, const unsigned ac_nFs, const double ac_dMsec ) :
-  mc_lSampleRate( ac_nFs ),
-  mc_lSamples( dataconversion::gf_nSamplesFromMsec< unsigned long >( (double) ac_nFs, ac_dMsec ) ),
-  mc_nChannels( ac_nChan ),
-  mv_lGenerated( 0l )
+SilentReader::SilentReader(const unsigned ac_nChan, const unsigned ac_nFs,
+                           const double ac_dMsec)
+    : mc_lSampleRate(ac_nFs),
+      mc_lSamples(dataconversion::gf_nSamplesFromMsec<unsigned long>(
+          (double)ac_nFs, ac_dMsec)),
+      mc_nChannels(ac_nChan),
+      mv_lGenerated(0l)
 {
 }
 
@@ -44,41 +47,41 @@ SilentReader::~SilentReader()
 {
 }
 
-unsigned long SilentReader::Read( void** a_pBuf, const unsigned ac_nSamples )
+unsigned long SilentReader::Read(void **a_pBuf, const unsigned ac_nSamples)
 {
-  if( mv_lGenerated >= mc_lSamples )
-    return 0L;
+    if (mv_lGenerated >= mc_lSamples)
+        return 0L;
 
-  for( unsigned i = 0 ; i < mc_nChannels ; ++i )
-    memset( a_pBuf[ i ], 0, ac_nSamples * sizeof( int ) ); //redundant most of the time...
-  mv_lGenerated += ac_nSamples;
-  if( mv_lGenerated < mc_lSamples )
-    return ac_nSamples;
-  else
-  {
-    const unsigned long ret = mc_lSamples - ( mv_lGenerated - ac_nSamples );
-    mv_lGenerated = mc_lSamples;
-    return ret;
-  }
+    for (unsigned i = 0; i < mc_nChannels; ++i)
+        memset(a_pBuf[i], 0,
+               ac_nSamples * sizeof(int)); // redundant most of the time...
+    mv_lGenerated += ac_nSamples;
+    if (mv_lGenerated < mc_lSamples)
+        return ac_nSamples;
+    else {
+        const unsigned long ret = mc_lSamples - (mv_lGenerated - ac_nSamples);
+        mv_lGenerated = mc_lSamples;
+        return ret;
+    }
 }
 
 unsigned long SilentReader::mf_lSamplesLeft() const
 {
-  return mf_lTotalSamples() - mf_lCurrentPosition();
+    return mf_lTotalSamples() - mf_lCurrentPosition();
 }
 
 unsigned long SilentReader::mf_lTotalSamples() const
 {
-//    qCDebug(APEX_SA, "SilentReader::mf_lTotalSamples(): %u", mc_lSamples);
-  return mc_lSamples;
+    //    qCDebug(APEX_SA, "SilentReader::mf_lTotalSamples(): %u", mc_lSamples);
+    return mc_lSamples;
 }
 
 unsigned long SilentReader::mf_lCurrentPosition() const
 {
-  return mv_lGenerated;
+    return mv_lGenerated;
 }
 
-void SilentReader::mp_SeekPosition( const unsigned long ac_nPosition )
+void SilentReader::mp_SeekPosition(const unsigned long ac_nPosition)
 {
-  mv_lGenerated = ac_nPosition;
+    mv_lGenerated = ac_nPosition;
 }

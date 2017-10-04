@@ -17,28 +17,26 @@ class StimulusOutput;
 
 class StimulusControl : public QObject
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    StimulusControl(StimulusOutput *o);
 
-        StimulusControl(StimulusOutput* o);
+public Q_SLOTS:
 
-    public Q_SLOTS:
+    void playStimulus(const QString &stimulus, double silenceBefore = 0.0);
 
-        void playStimulus(const QString& stimulus, double silenceBefore = 0.0);
+Q_SIGNALS:
 
-    Q_SIGNALS:
+    void stimulusPlayed();
 
-        void stimulusPlayed();
+private:
+    void signalWhenDone(const appcore::WaitableObject &o, const char *signal);
 
-    private:
-
-        void signalWhenDone(const appcore::WaitableObject& o, const char* signal);
-
-        StimulusOutput* output;
+    StimulusOutput *output;
 };
 
-} //ns stimulus
-} //ns apex
+} // ns stimulus
+} // ns apex
 
 #endif

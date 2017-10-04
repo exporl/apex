@@ -1,45 +1,76 @@
- <!-- @doc
-  @what: Example HTML file for the flow runner
-  @description: The flow runner allows to chain multiple experiments together. When first started this HTML page will be shown, and after the experiment the user will be returned to this page.
-  @how: the function api.runExperiment allows to start a new experiment. When the experiment is finished, the function callback will be called by APEX, with as argument the name of the results file.
+<!-- @doc
+     @what: Example HTML file for the flow runner
+     @description: The flow runner allows to chain multiple experiments together. When first started this HTML page will be shown, and after the experiment the user will be returned to this page.
+     @how: the function api.runExperiment allows to start a new experiment. When the experiment is finished, the function callback will be called by APEX, with as argument the name of the results file. The api is only accessible from within functions that are called by buttons. The api returns promises, for more information on promises: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
   -->
 <html>
-        <head>
-                <title>Flow runner</title>
+  <head>
+    <title>Flow runner</title>
+    <script src="external/jquery-3.1.1.min.js"></script>
+    <script src="js/polyfill.js" type="text/javascript"> </script>
+    <script src="js/commonwebsocket.js" type="text/javascript"> </script>
+    <script src="js/flowapi.js" type="text/javascript"> </script>
+    <script>
 
-                <script src="apex:rtresults.js"></script>
+      /* This function is called once the api is available */
+      function initialize() {
+          api.on("savedFile", callback);
+      }
 
-                <script>
-                function callback(filename) {
-                        var xml = api.getFile(filename);
-                }
-                api.savedFile.connect(callback);
+      function callback(filename) {
+          api.readFile(filename).then(function(content) {
+              console.log(content);
+          });
+      }
 
-                function exp1() {
-                        api.runExperiment("apex:examples/procedure/extrasimple.apx");
-                }
-                function exp2() {
-                        api.runExperiment("../../examples/procedure/adaptive-1up-1down.apx");
-                }
-                function exp3() {
-                        expressions = {
-                        "apex:apex/results[1]/subject[1]": "Piet Snot"
-                };
-                        api.runExperiment("apex:examples/interactive/extrasimple.apx", expressions);
-                }
-                function exp4() {
-                        api.runExperiment("apex:examples/procedure/extrasimple.apx", {}, "results.apr");
-                }
-                function exp5() {
-                        api.runExperiment(api.fromCurrentDir("../procedure/extrasimple.apx"));
-                }
-                </script>
-        </head>
-        <body>
-                <button onclick="exp1()">Extra simple</button>
-                <button onclick="exp2()">Adaptive</button>
-                <button onclick="exp3()">Interactive</button>
-                <button onclick="exp4()">Extra simple with results</button>
-                <button onclick="exp5()">Relative paths</button>
-        <body>
+      function exp1() {
+          /* Change the colour after runExperiment has returned */
+          api.absoluteFilePath("../procedure/extrasimple.apx").then(
+              function(filePath) {
+                  return api.runExperiment(filePath);
+              }).then(function(result) {
+                  if (result) /* experiment was found and started */
+                      $("#exp1").css("background-color", "green"); /* jQuery is available */
+                  else
+                      $("#exp1").css("background-color", "red");
+              });
+      }
+
+      function exp2() {
+          api.absoluteFilePath("../../examples/procedure/adaptive-1up-1down.apx").then(
+              function(filePath) {
+                  api.runExperiment(filePath);
+              });
+      }
+
+      function exp3() {
+          api.absoluteFilePath("../procedure/extrasimple.apx").then(
+              function(filePath) {
+                  expressions = {"apex:apex/results[1]/subject[1]" : "Piet Snot"};
+                  api.runExperiment(filePath, expressions);
+              });
+      }
+
+      function exp4() {
+          api.absoluteFilePath("../procedure/extrasimple.apx").then(
+              function(filePath) {
+                  api.runExperiment(filePath, {}, "results.apr");
+              });
+      }
+
+      function exp5() {
+          api.absoluteFilePath("../procedure/extrasimple.apx").then(
+              function(filePath) {
+                  api.runExperiment(filePath);
+              });
+      }
+    </script>
+  </head>
+  <body>
+    <button id="exp1" onclick="exp1()">Extra simple</button>
+    <button onclick="exp2()">Adaptive</button>
+    <button onclick="exp3()">Interactive</button>
+    <button onclick="exp4()">Extra simple with results</button>
+    <button onclick="exp5()">Relative paths</button>
+  </body>
 </html>

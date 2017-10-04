@@ -41,24 +41,23 @@ using data::ScreenElement;
  * The PictureLabelRunDelegate class is an implementation of
  * ScreenElementRunDelegate representing a PictureLabelElement.
  */
-class PictureLabelRunDelegate
-            : public QLabel, public ScreenElementRunDelegate
+class PictureLabelRunDelegate : public QLabel, public ScreenElementRunDelegate
 {
     Q_OBJECT
 
-    const PictureLabelElement* element;
-    const QPixmap* pixmap, *pixmapDisabled;
+    const PictureLabelElement *element;
+    const QPixmap *pixmap, *pixmapDisabled;
+
 public:
-    PictureLabelRunDelegate(ExperimentRunDelegate* p_exprd,
-                            QWidget* parent, const PictureLabelElement* e);
+    PictureLabelRunDelegate(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                            const PictureLabelElement *e);
     ~PictureLabelRunDelegate();
 
-    const ScreenElement* getScreenElement() const;
+    const ScreenElement *getScreenElement() const;
 
-    QWidget* getWidget();
+    QWidget *getWidget();
 
     void setEnabled(const bool e);
-
 };
 }
 }

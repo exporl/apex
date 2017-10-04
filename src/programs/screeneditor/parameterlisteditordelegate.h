@@ -22,56 +22,56 @@
 
 #include "screenelementeditordelegate.h"
 
-#include <QFrame>
 #include <QAbstractTableModel>
+#include <QFrame>
 
 class QTableView;
 
 namespace apex
 {
-  namespace data
-  {
-    class ParameterListElement;
-  }
+namespace data
+{
+class ParameterListElement;
+}
 
-  namespace editor
-  {
-    using data::ParameterListElement;
+namespace editor
+{
+using data::ParameterListElement;
 
-    class ParameterListEditorDelegate;
-    class ParameterListModel;
+class ParameterListEditorDelegate;
+class ParameterListModel;
 
-    /**
-     * This class is an ScreenElementEditorDelegate representing a
-     * ParameterListElement.
-     */
-    class ParameterListEditorDelegate
-      : public QFrame, public ScreenElementEditorDelegate
-    {
-      Q_OBJECT
-    public:
-      ParameterListEditorDelegate( ParameterListElement* e, QWidget* parent, ScreenWidget* w );
-      ~ParameterListEditorDelegate();
-      QFrame* getWidget();
-      ScreenElement* getScreenElement();
+/**
+ * This class is an ScreenElementEditorDelegate representing a
+ * ParameterListElement.
+ */
+class ParameterListEditorDelegate : public QFrame,
+                                    public ScreenElementEditorDelegate
+{
+    Q_OBJECT
+public:
+    ParameterListEditorDelegate(ParameterListElement *e, QWidget *parent,
+                                ScreenWidget *w);
+    ~ParameterListEditorDelegate();
+    QFrame *getWidget();
+    ScreenElement *getScreenElement();
 
-      int getPropertyCount();
-      QString getPropertyName( int nr );
-      QVariant getPropertyData( int nr, int role );
-      PropertyType getPropertyType( int nr );
-      bool setProperty( int nr, const QVariant& v );
+    int getPropertyCount();
+    QString getPropertyName(int nr);
+    QVariant getPropertyData(int nr, int role);
+    PropertyType getPropertyType(int nr);
+    bool setProperty(int nr, const QVariant &v);
 
-      void mouseReleaseEvent( QMouseEvent* e );
-    private slots:
-      void addButtonClicked();
-      void removeButtonClicked();
+    void mouseReleaseEvent(QMouseEvent *e);
+private slots:
+    void addButtonClicked();
+    void removeButtonClicked();
 
-    private:
-      QTableView* table;
-      ParameterListElement* element;
-      ParameterListModel* model;
-    };
-
-  }
+private:
+    QTableView *table;
+    ParameterListElement *element;
+    ParameterListModel *model;
+};
+}
 }
 #endif

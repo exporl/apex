@@ -26,37 +26,35 @@ class QString;
 
 namespace apex
 {
-  namespace data
-  {
-    class ScreenElement;
-    class Screen;
-  }
+namespace data
+{
+class ScreenElement;
+class Screen;
+}
 
-  namespace editor
-  {
-    using data::ScreenElement;
-    using data::Screen;
-    using gui::ScreenElementMap;
+namespace editor
+{
+using data::ScreenElement;
+using data::Screen;
+using gui::ScreenElementMap;
 
-    /**
-     * The ScreenElementCreator class is a simple abstract base class.
-     * It represents an object that knows how to create a new \ref
-     * ScreenElement of a certain type, given a parent \ref
-     * ScreenElement and a parent \ref Screen.
-     *
-     * There is a template implementation of this class, called
-     * \ref ScreenElementCreatorTemplate.
-     */
-    class ScreenElementCreator
-    {
-    public:
-      virtual ScreenElement* create(
-        ScreenElement* parent,
-        Screen* screen ) const = 0;
-      virtual ~ScreenElementCreator();
-      virtual const QString getElementName() const = 0;
-    };
-
-  }
+/**
+ * The ScreenElementCreator class is a simple abstract base class.
+ * It represents an object that knows how to create a new \ref
+ * ScreenElement of a certain type, given a parent \ref
+ * ScreenElement and a parent \ref Screen.
+ *
+ * There is a template implementation of this class, called
+ * \ref ScreenElementCreatorTemplate.
+ */
+class ScreenElementCreator
+{
+public:
+    virtual ScreenElement *create(ScreenElement *parent,
+                                  Screen *screen) const = 0;
+    virtual ~ScreenElementCreator();
+    virtual const QString getElementName() const = 0;
+};
+}
 }
 #endif

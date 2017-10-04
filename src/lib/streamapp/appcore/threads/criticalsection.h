@@ -23,7 +23,7 @@
 #include "../../defines.h"
 
 #if defined S_WIN32
-//nothing to include here
+// nothing to include here
 #elif defined S_C6X
 #include "c6x_headers.h"
 #elif defined S_POSIX
@@ -31,108 +31,120 @@
 #elif defined S_PSP
 #include "psp_headers.h"
 #else
-#ERROR !no platform defined!
+#ERROR !no platform defined !
 #endif
 
 namespace appcore
 {
 
+/**
+  * CriticalSection
+  *   prevents simultaneous access to an object shared between different
+  *threads.
+  *   Implemented in the platfrom-specific code.
+  *   See google for a complete criticalsection manual.
+  *   @see Lock
+  *******************************************************************************
+  */
+class CriticalSection
+{
+public:
     /**
-      * CriticalSection
-      *   prevents simultaneous access to an object shared between different threads.
-      *   Implemented in the platfrom-specific code.
-      *   See google for a complete criticalsection manual.
-      *   @see Lock
-      ******************************************************************************* */
-  class CriticalSection
-  {
-  public:
-      /**
-        * Constructor.
-        */
+      * Constructor.
+      */
     CriticalSection();
 
-      /**
-        * Destructor.
-        */
+    /**
+      * Destructor.
+      */
     ~CriticalSection();
 
-      /**
-        * Enters the CriticalSection.
-        * If another thread has entered before, the method
-        * blocks until that thread leaves it again.
-        * Else the method returns immedeately.
-        */
+    /**
+      * Enters the CriticalSection.
+      * If another thread has entered before, the method
+      * blocks until that thread leaves it again.
+      * Else the method returns immedeately.
+      */
     void mf_Enter() const;
 
-      /**
-        * Trie to enter the CriticalSection.immedeately.
-        * If another thread has entered before, the method
-        * returns false and doe not enter, else it returns true
-        * after entering.
-        * @return false if the CriticalSection isn't free
-        */
+    /**
+      * Trie to enter the CriticalSection.immedeately.
+      * If another thread has entered before, the method
+      * returns false and doe not enter, else it returns true
+      * after entering.
+      * @return false if the CriticalSection isn't free
+      */
     bool mf_bTryEnter() const;
 
-      /**
-        * Leave the CriticalSection.
-        * Make sure not to call this on a CriticalSection that
-        * has not been entered.
-        */
+    /**
+      * Leave the CriticalSection.
+      * Make sure not to call this on a CriticalSection that
+      * has not been entered.
+      */
     void mf_Leave() const;
 
-  private:
-  #if defined S_WIN32
-    char m_hMutex[ 24 ];     //!< aka win32 CriticalSection
-  #elif defined S_C6X
+private:
+#if defined S_WIN32
+    char m_hMutex[24]; //!< aka win32 CriticalSection
+#elif defined S_C6X
     LCK_Handle m_hMutex;
-  #elif defined S_POSIX
+#elif defined S_POSIX
     mutable pthread_mutex_t m_hMutex;
-  #elif defined S_PSP
+#elif defined S_PSP
     SceUID m_hMutex;
-  #endif
+#endif
 
-    CriticalSection (const CriticalSection&);
-    const CriticalSection& operator= (const CriticalSection&);
-  };
+    CriticalSection(const CriticalSection &);
+    const CriticalSection &operator=(const CriticalSection &);
+};
+
+/**
+  * DummyCriticalSection
+  *   empty CriticalSection class.
+  *   Gets completely optimized away by the compiler.
+  *   Used to allow choosing for a real CriticalSection
+  *   or none at all.
+  *   @see RawMemory for an example
+  ***************************************************** */
+class DummyCriticalSection
+{
+public:
+    /**
+      * Empty.
+      */
+    INLINE DummyCriticalSection()
+    {
+    }
 
     /**
-      * DummyCriticalSection
-      *   empty CriticalSection class.
-      *   Gets completely optimized away by the compiler.
-      *   Used to allow choosing for a real CriticalSection
-      *   or none at all.
-      *   @see RawMemory for an example
-      ***************************************************** */
-  class DummyCriticalSection
-  {
-  public:
-      /**
-        * Empty.
-        */
-    INLINE DummyCriticalSection()     {}
+      * Empty.
+      */
+    INLINE ~DummyCriticalSection()
+    {
+    }
 
-      /**
-        * Empty.
-        */
-    INLINE ~DummyCriticalSection()    {}
+    /**
+      * Empty.
+      */
+    INLINE void mf_Enter() const
+    {
+    }
 
-      /**
-        * Empty.
-        */
-    INLINE void mf_Enter() const      {}
+    /**
+      * Always returns true.
+      */
+    INLINE bool mf_bTryEnter() const
+    {
+        return true;
+    }
 
-      /**
-        * Always returns true.
-        */
-    INLINE bool mf_bTryEnter() const  { return true; }
-
-      /**
-        * Empty.
-        */
-    INLINE void mf_Leave() const      {}
-  };
-
+    /**
+      * Empty.
+      */
+    INLINE void mf_Leave() const
+    {
+    }
+};
 }
 
 #endif //#ifndef __CRITICALSECTION_H__

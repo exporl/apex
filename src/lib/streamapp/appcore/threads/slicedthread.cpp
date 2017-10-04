@@ -22,108 +22,98 @@
 
 using namespace appcore;
 
-SlicedThread::SlicedThread( const String& ac_sName ) :
-    IThread( ac_sName ),
-  mv_bNotify( false ),
-  mv_nCurIndex( 0 ),
-  mv_nIdleTime( 500 ),
-  mv_pCurTask( 0 )
+SlicedThread::SlicedThread(const String &ac_sName)
+    : IThread(ac_sName),
+      mv_bNotify(false),
+      mv_nCurIndex(0),
+      mv_nIdleTime(500),
+      mv_pCurTask(0)
 {
 }
 
 SlicedThread::~SlicedThread()
 {
-  IThread::mp_Stop( 10000 );
+    IThread::mp_Stop(10000);
 }
 
-void SlicedThread::mp_RegisterClientTask( SlicedThreadTask* const ac_pTask )
+void SlicedThread::mp_RegisterClientTask(SlicedThreadTask *const ac_pTask)
 {
-  const Lock L( mc_ListLock );
-  m_TaskList.mp_AddItemIfNotThere( ac_pTask );
-  mv_bNotify = true;
-  IThread::mf_NotifyWait();
+    const Lock L(mc_ListLock);
+    m_TaskList.mp_AddItemIfNotThere(ac_pTask);
+    mv_bNotify = true;
+    IThread::mf_NotifyWait();
 }
 
-void SlicedThread::mp_UnRegisterClientTask( SlicedThreadTask* const ac_pTask )
+void SlicedThread::mp_UnRegisterClientTask(SlicedThreadTask *const ac_pTask)
 {
-  mc_ListLock.mf_Enter();
-  if( mv_pCurTask == ac_pTask )
-  {
-    mc_ListLock.mf_Leave();
-    const Lock L1( mc_TaskLock );
-    const Lock L2( mc_ListLock );
-    m_TaskList.mp_RemoveItem( ac_pTask );
-  }
-  else
-  {
-    m_TaskList.mp_RemoveItem( ac_pTask );
-    mc_ListLock.mf_Leave();
-  }
-  mv_bNotify = true;
+    mc_ListLock.mf_Enter();
+    if (mv_pCurTask == ac_pTask) {
+        mc_ListLock.mf_Leave();
+        const Lock L1(mc_TaskLock);
+        const Lock L2(mc_ListLock);
+        m_TaskList.mp_RemoveItem(ac_pTask);
+    } else {
+        m_TaskList.mp_RemoveItem(ac_pTask);
+        mc_ListLock.mf_Leave();
+    }
+    mv_bNotify = true;
 }
 
 unsigned SlicedThread::mf_nGetNumTasks() const
 {
-  return m_TaskList.mf_nGetNumItems();
+    return m_TaskList.mf_nGetNumItems();
 }
 
-SlicedThreadTask* SlicedThread::mf_pGetTask(const unsigned ac_nIndex )
+SlicedThreadTask *SlicedThread::mf_pGetTask(const unsigned ac_nIndex)
 {
-  const Lock L( mc_ListLock );
-  return m_TaskList.mf_GetItem( ac_nIndex );
+    const Lock L(mc_ListLock);
+    return m_TaskList.mf_GetItem(ac_nIndex);
 }
 
-void SlicedThread::mp_SetMaxIdleTime(const unsigned ac_nTimeInMilliSeconds )
+void SlicedThread::mp_SetMaxIdleTime(const unsigned ac_nTimeInMilliSeconds)
 {
-  const Lock L( mc_TaskLock );
-  mv_nIdleTime = ac_nTimeInMilliSeconds;
+    const Lock L(mc_TaskLock);
+    mv_nIdleTime = ac_nTimeInMilliSeconds;
 }
 
 void SlicedThread::mp_Run()
 {
-  unsigned nCalled = 0;
-  unsigned nWaitTime = mv_nIdleTime;
-  while( !IThread::mf_bThreadShouldStop() )
-  {
-    const Lock L( mc_TaskLock );
+    unsigned nCalled = 0;
+    unsigned nWaitTime = mv_nIdleTime;
+    while (!IThread::mf_bThreadShouldStop()) {
+        const Lock L(mc_TaskLock);
 
-    mc_ListLock.mf_Enter();
-    if( m_TaskList.mf_nGetNumItems() == 0 )
-    {
-      mv_nCurIndex = 0;
-      mv_pCurTask = 0;
+        mc_ListLock.mf_Enter();
+        if (m_TaskList.mf_nGetNumItems() == 0) {
+            mv_nCurIndex = 0;
+            mv_pCurTask = 0;
+        } else {
+            mv_pCurTask = m_TaskList.mf_GetItem(mv_nCurIndex);
+        }
+
+        if (mv_bNotify) {
+            mv_bNotify = false;
+            nCalled = 0;
+        }
+        mc_ListLock.mf_Leave();
+
+        if (mv_pCurTask) {
+            if (mv_pCurTask->mf_bWork())
+                nCalled = 0;
+            else
+                ++nCalled;
+            if (++mv_nCurIndex == m_TaskList.mf_nGetNumItems())
+                mv_nCurIndex = 0;
+        }
+
+        if (nCalled >= m_TaskList.mf_nGetNumItems())
+            nWaitTime = mv_nIdleTime;
+        else if (mv_nCurIndex == 0)
+            nWaitTime = 5;
+        else
+            nWaitTime = 0;
+
+        if (nWaitTime)
+            IThread::mf_bWait(nWaitTime);
     }
-    else
-    {
-      mv_pCurTask = m_TaskList.mf_GetItem( mv_nCurIndex );
-    }
-
-    if( mv_bNotify )
-    {
-      mv_bNotify = false;
-      nCalled = 0;
-    }
-    mc_ListLock.mf_Leave();
-
-    if( mv_pCurTask )
-    {
-      if( mv_pCurTask->mf_bWork() )
-        nCalled = 0;
-      else
-        ++nCalled;
-      if( ++mv_nCurIndex == m_TaskList.mf_nGetNumItems() )
-        mv_nCurIndex = 0;
-    }
-
-    if( nCalled >= m_TaskList.mf_nGetNumItems() )
-      nWaitTime = mv_nIdleTime;
-    else if( mv_nCurIndex == 0 )
-      nWaitTime = 5;
-    else
-      nWaitTime = 0;
-
-    if( nWaitTime )
-      IThread::mf_bWait( nWaitTime );
-  }
 }
-

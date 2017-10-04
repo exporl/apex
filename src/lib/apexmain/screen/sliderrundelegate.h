@@ -26,62 +26,47 @@
 
 namespace apex
 {
-  namespace data
-  {
-    class ScreenElement;
-    class SliderElement;
-  }
+namespace data
+{
+class ScreenElement;
+class SliderElement;
+}
 namespace rundelegates
-  {
-    using data::SliderElement;
-    using data::ScreenElement;
+{
+using data::SliderElement;
+using data::ScreenElement;
 
-    /**
-     * The SliderRunDelegate class is an implementation of
-     * ScreenElementRunDelegate representing a SliderElement.
-     */
-    class SliderRunDelegate
-      : public QSlider, public ScreenElementRunDelegate
-    {
-      Q_OBJECT
+/**
+ * The SliderRunDelegate class is an implementation of
+ * ScreenElementRunDelegate representing a SliderElement.
+ */
+class SliderRunDelegate : public QSlider, public ScreenElementRunDelegate
+{
+    Q_OBJECT
 
-          QFont initialFont;
-      const SliderElement* element;
-    public:
-        SliderRunDelegate( ExperimentRunDelegate* p_exprd,
-                           QWidget* parent, const SliderElement* e,
-                         const QFont& defaultFont );
+    QFont initialFont;
+    const SliderElement *element;
 
-      const ScreenElement* getScreenElement() const;
+public:
+    SliderRunDelegate(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                      const SliderElement *e, const QFont &defaultFont);
 
-      QWidget* getWidget();
-      bool hasText() const;
-      bool hasInterestingText() const;
-      const QString getText() const;
-      void connectSlots( gui::ScreenRunDelegate* d );
-    signals:
-      void answered( ScreenElementRunDelegate* );
-    protected:
-      void resizeEvent( QResizeEvent* e );
-    public slots:
-      void sendAnsweredSignal();
-    };
-  }
+    const ScreenElement *getScreenElement() const;
+
+    QWidget *getWidget();
+    bool hasText() const;
+    bool hasInterestingText() const;
+    const QString getText() const;
+    void connectSlots(gui::ScreenRunDelegate *d);
+signals:
+    void answered(ScreenElementRunDelegate *);
+
+protected:
+    void resizeEvent(QResizeEvent *e);
+public slots:
+    void sendAnsweredSignal();
+};
+}
 }
 
-
 #endif // {:-o)= Milo was here
-
-
-
-
-
-
-
-
-
-
-
-
-
-

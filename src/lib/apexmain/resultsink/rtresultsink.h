@@ -1,85 +1,82 @@
-//
-// C++ Interface: rtresultsink
-//
-// Description:
-//
-//
-// Author: Tom Francart,,, <tom.francart@med.kuleuven.be>, (C) 2009
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
+/******************************************************************************
+ * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
+ *                                                                            *
+ * This file is part of APEX 3.                                               *
+ *                                                                            *
+ * APEX 3 is free software: you can redistribute it and/or modify             *
+ * it under the terms of the GNU General Public License as published by       *
+ * the Free Software Foundation, either version 2 of the License, or          *
+ * (at your option) any later version.                                        *
+ *                                                                            *
+ * APEX 3 is distributed in the hope that it will be useful,                  *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
+ * GNU General Public License for more details.                               *
+ *                                                                            *
+ * You should have received a copy of the GNU General Public License          *
+ * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ *****************************************************************************/
+
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_RTRESULTSINK_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_RTRESULTSINK_H_
 
 #include "apextools/global.h"
 
-#include <QString>
+#include "commongui/webview.h"
+#include "common/paths.h"
+
 #include <QObject>
+#include <QString>
 #include <QUrl>
 #include <QWidget>
-#include <QWebFrame>
 
-class QWebView;
+namespace apex
+{
 
-namespace apex {
+class ApexScreenResult;
+class RTResultSinkPrivate;
 
-    class ApexScreenResult;
-    //class ExperimentRunDelegate;
-    class RTResultSinkPrivate;
-
-
-/**
-        @author Tom Francart,,, <tom.francart@med.kuleuven.be>
-*/
-class APEX_EXPORT RTResultSink:
-    public QObject{
+class APEX_EXPORT RTResultSink : public QObject
+{
 
     Q_OBJECT
 public:
-    /**
-     * If webview is 0, RTResultSink will create a webview and take ownership
-     * of it. Otherwise it will not take ownership
-     */
-    RTResultSink(QUrl page, QMap<QString,QString> resultParameters = QMap<QString, QString>(), QString extraScript =  0, QWebView* webview=0);
+    RTResultSink(QUrl page, QMap<QString, QString> resultParameters =
+                                QMap<QString, QString>(),
+                 QString extraScript = 0);
 
     ~RTResultSink();
 
-    void show(bool visible=true);
-
-    /**
-     * @brief
-     * @return HTML code for current state of page
-     */
-    QString currentHtml() const;
-
     QVariant evaluateJavascript(QString script);
+    void setJavascriptParameters(QMap<QString, QString> resultParameters) const;
+    void executeJavaScript(QString JScode) const;
 
-    QWebFrame* mainWebFrame() const;     // needed for unit test
+    static QByteArray createCSVtext(const QString &resultFilePath);
 
-    //void newAnswer ( const ApexScreenResult* r, bool correct);
+public Q_SLOTS:
+    void show();
+    void hide();
 
-    void setJavascriptParameters (QMap<QString,QString> resultParameters) const;
-    void executeJavaScript (QString JScode) const;
-
-public slots:
-    //! Add a single <trial> block to the results
-    void newAnswer( QString xml, bool doPlot=true);
+    void newAnswer(QString xml, bool doPlot = true);
     void plot();
 
-    //! Add a whole results file to the results <apex:results>
-    void newResults ( QString xml );
+    void newResults(QString xml);
 
     void trialStarted();
     void stimulusStarted();
-    void newStimulusParameters ( const QVariantMap& params );
+    void newStimulusParameters(const QVariantMap &params);
+
+Q_SIGNALS:
+    void loadingFinished(bool ok);
+    void viewClosed();
 
 protected:
-    //ExperimentRunDelegate& m_rd;
-    RTResultSinkPrivate* d;
+    RTResultSinkPrivate *d;
 
+private Q_SLOTS:
+    void setup();
+    void exportToPdf();
 };
-
 }
 
 #endif

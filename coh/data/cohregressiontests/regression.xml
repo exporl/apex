@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE cisequence>
+<cisequence version="1.0">
+    <sequence>
+        <metadata>
+            <key>string</key>
+            <value type="string">Gänsefüßchen</value>
+        </metadata>
+        <metadata>
+            <key>int</key>
+            <value type="int">5</value>
+        </metadata>
+        <metadata>
+            <key>int</key>
+            <value type="int">10</value>
+        </metadata>
+        <metadata>
+            <key>double</key>
+            <value type="double">10.83</value>
+        </metadata>
+        <metadata>
+            <key>bool</key>
+            <value type="bool">true</value>
+        </metadata>
+        <stimulus type="biphasic">
+            <parameter name="trigger">false</parameter>
+            <parameter name="active">10</parameter>
+            <parameter name="reference">-1</parameter>
+            <parameter name="currentlevel">22</parameter>
+            <parameter name="phasewidth">25.0</parameter>
+            <parameter name="phasegap">8.0</parameter>
+            <parameter name="period">110.0</parameter>
+        </stimulus>
+        <stimulus type="biphasic">
+            <parameter name="trigger">false</parameter>
+            <parameter name="active">11</parameter>
+            <parameter name="reference">-1</parameter>
+            <parameter name="currentlevel">23</parameter>
+            <parameter name="phasewidth">25.0</parameter>
+            <parameter name="phasegap">8.0</parameter>
+            <parameter name="period">120.0</parameter>
+        </stimulus>
+        <stimulus type="biphasic">
+            <parameter name="trigger">false</parameter>
+            <parameter name="active">12</parameter>
+            <parameter name="reference">-1</parameter>
+            <parameter name="currentlevel">24</parameter>
+            <parameter name="phasewidth">25.0</parameter>
+            <parameter name="phasegap">8.0</parameter>
+            <parameter name="period">130.0</parameter>
+        </stimulus>
+        <stimulus type="biphasic">
+            <parameter name="trigger">false</parameter>
+            <parameter name="active">13</parameter>
+            <parameter name="reference">-1</parameter>
+            <parameter name="currentlevel">25</parameter>
+            <parameter name="phasewidth">25.0</parameter>
+            <parameter name="phasegap">8.0</parameter>
+            <parameter name="period">140.0</parameter>
+        </stimulus>
+    </sequence>
+</cisequence>

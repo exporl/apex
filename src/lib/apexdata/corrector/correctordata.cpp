@@ -19,8 +19,8 @@
 
 #include "correctordata.h"
 
-#include <QString>
 #include <QDebug>
+#include <QString>
 
 namespace apex
 {
@@ -28,30 +28,26 @@ namespace apex
 namespace data
 {
 
-struct CorrectorDataPrivate
-{
-    CorrectorData::Type      type;
-    CorrectorData::Language  language;
+struct CorrectorDataPrivate {
+    CorrectorData::Type type;
+    CorrectorData::Language language;
 };
 
-}//ns data
+} // ns data
 
-}//ns apex
+} // ns apex
 
 using namespace apex::data;
-
 
 CorrectorData::CorrectorData() : d(new CorrectorDataPrivate())
 {
     d->language = DUTCH;
 }
 
-
-CorrectorData::CorrectorData(const CorrectorData& other) :
-                                    d(new CorrectorDataPrivate(*other.d))
+CorrectorData::CorrectorData(const CorrectorData &other)
+    : d(new CorrectorDataPrivate(*other.d))
 {
 }
-
 
 CorrectorData::~CorrectorData()
 {
@@ -79,8 +75,7 @@ void CorrectorData::setLanguage(const CorrectorData::Language language)
     d->language = language;
 }
 
-
-CorrectorData& CorrectorData::operator=(const CorrectorData& other)
+CorrectorData &CorrectorData::operator=(const CorrectorData &other)
 {
     if (this != &other)
         *d = *other.d;
@@ -88,11 +83,9 @@ CorrectorData& CorrectorData::operator=(const CorrectorData& other)
     return *this;
 }
 
-bool CorrectorData::operator==(const CorrectorData& other)
+bool CorrectorData::operator==(const CorrectorData &other)
 {
     qCDebug(APEX_RS) << d->type << other.d->type;
     qCDebug(APEX_RS) << d->language << other.d->language;
-    return  d->type == other.d->type &&
-            d->language == other.d->language;
-
+    return d->type == other.d->type && d->language == other.d->language;
 }

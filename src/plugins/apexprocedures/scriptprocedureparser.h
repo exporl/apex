@@ -37,13 +37,12 @@ class ScriptProcedureParser : public ProcedureParsersParent
 public:
     ScriptProcedureParser();
 
-    data::ProcedureData* parse(const QDomElement &base);
+    data::ProcedureData *parse(const QDomElement &base);
 
 protected:
     virtual bool trialsValid();
     virtual void SetProcedureParameters(const QDomElement &p_base);
 };
-
 }
 }
 

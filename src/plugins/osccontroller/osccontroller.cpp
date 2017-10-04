@@ -24,36 +24,32 @@
 
 #include <lo/lo.h>
 
-#include <QObject>
+#include <QDateTime>
 #include <QDebug>
 #include <QLoggingCategory>
+#include <QObject>
 #include <QStringList>
-#include <QDateTime>
 
 Q_DECLARE_LOGGING_CATEGORY(APEX_OSC)
 Q_LOGGING_CATEGORY(APEX_OSC, "apex.osc")
 
-class OscControllerCreator :
-    public QObject,
-    public PluginControllerCreator
+class OscControllerCreator : public QObject, public PluginControllerCreator
 {
-Q_OBJECT
-Q_INTERFACES(PluginControllerCreator)
+    Q_OBJECT
+    Q_INTERFACES(PluginControllerCreator)
 
-Q_PLUGIN_METADATA(IID "apex.osccontroller")
+    Q_PLUGIN_METADATA(IID "apex.osccontroller")
 
 public:
     virtual QStringList availablePlugins() const;
 
-    virtual PluginControllerInterface *createController
-        (const QString &name ) const;
+    virtual PluginControllerInterface *
+    createController(const QString &name) const;
 };
 
-class OscController:
-        public QObject,
-        public PluginControllerInterface
+class OscController : public QObject, public PluginControllerInterface
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     OscController();
     ~OscController();
@@ -79,7 +75,6 @@ private:
      * e.g.: "SPIN"
      */
     QString outputTrigger;
-
 };
 
 // OscController ===============================================================
@@ -130,7 +125,8 @@ bool OscController::setParameter(const QString &type, int channel,
     if (type == QL1S("plugin")) {
         return false;
     }
-    qCDebug(APEX_OSC, "Saving OSC parameter %s: %s", qPrintable(type), qPrintable(value));
+    qCDebug(APEX_OSC, "Saving OSC parameter %s: %s", qPrintable(type),
+            qPrintable(value));
     parameters[type] = value;
     return true;
 }
@@ -141,13 +137,14 @@ bool OscController::prepare()
     while (i.hasNext()) {
         i.next();
         if (i.key().contains(QL1S("prepare")) &&
-                i.key().contains(parameters[QL1S("stimulustype")])) {
+            i.key().contains(parameters[QL1S("stimulustype")])) {
             if (!send(i.key(), i.value()))
                 return false;
         }
     }
 
-    return send(QL1S("prepareFinished"), QString::number(QDateTime::currentMSecsSinceEpoch()));
+    return send(QL1S("prepareFinished"),
+                QString::number(QDateTime::currentMSecsSinceEpoch()));
 }
 
 void OscController::playStimulus()
@@ -156,27 +153,34 @@ void OscController::playStimulus()
     if (parameters[QL1S("stimulustype")] != outputTrigger)
         return;
 
-    //  Sending all message that do not contain the keyword 'prepare' in the OSC address
+    //  Sending all message that do not contain the keyword 'prepare' in the OSC
+    //  address
     QMapIterator<QString, QString> i(parameters);
     while (i.hasNext()) {
         i.next();
-        if(!i.key().contains(QL1S("prepare")))
-        {
-            if (!send(i.key(), i.value()))  qCDebug(APEX_OSC, "OSC message send failed");
+        if (!i.key().contains(QL1S("prepare"))) {
+            if (!send(i.key(), i.value()))
+                qCDebug(APEX_OSC, "OSC message send failed");
         }
     }
 
-    send(QL1S("playStimulusFinished"), QString::number(QDateTime::currentMSecsSinceEpoch()));
+    send(QL1S("playStimulusFinished"),
+         QString::number(QDateTime::currentMSecsSinceEpoch()));
 }
 
 bool OscController::send(const QString &address, const QString &message)
 {
-    qCDebug(APEX_OSC, "Calling OSC SEND at time: %s", qPrintable(QString::number(QDateTime::currentMSecsSinceEpoch())));
+    qCDebug(APEX_OSC, "Calling OSC SEND at time: %s",
+            qPrintable(QString::number(QDateTime::currentMSecsSinceEpoch())));
     QString modifiedAddress = address;
-    modifiedAddress.replace(QL1S("-"),QL1S("/"));
-    if (!lo_send(oscAddress, QString::fromLatin1("/%1/%2").arg(prefix, modifiedAddress).toUtf8().data(),
+    modifiedAddress.replace(QL1S("-"), QL1S("/"));
+    if (!lo_send(oscAddress, QString::fromLatin1("/%1/%2")
+                                 .arg(prefix, modifiedAddress)
+                                 .toUtf8()
+                                 .data(),
                  "s", message.toUtf8().data())) {
-        qCWarning(APEX_OSC, "OSC error %d: %s", lo_address_errno(oscAddress), lo_address_errstr(oscAddress));
+        qCWarning(APEX_OSC, "OSC error %d: %s", lo_address_errno(oscAddress),
+                  lo_address_errstr(oscAddress));
         return false;
     }
     return true;
@@ -189,8 +193,8 @@ QStringList OscControllerCreator::availablePlugins() const
     return QStringList() << QL1S("osccontroller");
 }
 
-PluginControllerInterface *OscControllerCreator::createController
-(const QString &name) const
+PluginControllerInterface *
+OscControllerCreator::createController(const QString &name) const
 {
     try {
         if (name == QL1S("osccontroller"))

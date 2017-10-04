@@ -1,12 +1,10 @@
 #include "htmlapi.h"
 
-namespace apex {
+namespace apex
+{
 
-HtmlAPI::HtmlAPI(QObject *parent) :
-    QObject(parent)
+HtmlAPI::HtmlAPI(QObject *parent) : QObject(parent)
 {
 }
-
-
 
 } // ns apex

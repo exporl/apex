@@ -4,4 +4,4 @@ tools/jenkins-linux-build.sh "$@"
 
 tools/linux-upgrade-examples.sh
 
-tools/linux-experimenttests.sh
+tools/linux-experimenttests.sh --parameters "--disable-bertha"

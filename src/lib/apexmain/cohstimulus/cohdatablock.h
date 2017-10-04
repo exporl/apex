@@ -53,11 +53,11 @@ class APEX_EXPORT CohDataBlock : public DataBlock
 {
     Q_DECLARE_TR_FUNCTIONS(CohDataBlock)
 public:
-    CohDataBlock(const data::DatablockData& data, const QString& fileName,
-                 const ExperimentRunDelegate* experiment);
+    CohDataBlock(const data::DatablockData &data, const QString &fileName,
+                 const ExperimentRunDelegate *experiment);
     virtual ~CohDataBlock();
 
-    coh::CohSequence* mappedData(data::ApexMap* pMap, float volume) const;
+    coh::CohSequence *mappedData(data::ApexMap *pMap, float volume) const;
 
 private:
     DECLARE_PRIVATE(CohDataBlock)
@@ -65,7 +65,6 @@ private:
 protected:
     DECLARE_PRIVATE_DATA(CohDataBlock)
 };
-
 }
 }
 

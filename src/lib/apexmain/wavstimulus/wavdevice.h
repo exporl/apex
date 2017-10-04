@@ -30,23 +30,27 @@
 
 #include "wavdeviceio.h"
 
-namespace apex {
+#include "bertha/experimentdata.h"
 
-namespace data {
+namespace apex
+{
+
+namespace data
+{
 
 class WavDeviceData;
 }
 
-namespace stimulus {
+namespace stimulus
+{
 
 class WavFilter;
 
 class ApexSeqStream;
 
-typedef std::map<QString, ApexSeqStream*> tSeqMap;
-typedef std::map<QString, StreamGenerator*> tGenMap;
-typedef std::vector< WavFilter* > tWavFilters;
-
+typedef std::map<QString, ApexSeqStream *> tSeqMap;
+typedef std::map<QString, StreamGenerator *> tGenMap;
+typedef std::vector<WavFilter *> tWavFilters;
 
 /**
  * WavDevice
@@ -54,13 +58,15 @@ typedef std::vector< WavFilter* > tWavFilters;
  *   or generated stimuli.
  ************************************************ */
 
-class WavDevice : public OutputDevice {
+class WavDevice : public OutputDevice
+{
     Q_OBJECT
 public:
     /**
      * Constructor.
      */
-    WavDevice( data::WavDeviceData* p_data );       // FIXME make const
+    WavDevice(data::WavDeviceData *p_data,
+              const bertha::ExperimentData &berthaData, bool useBertha);
 
     /**
      * Destructor.
@@ -70,12 +76,12 @@ public:
     /**
      * Implementation of the Device method.
      */
-    virtual void AddFilter( Filter& a_Filter ) Q_DECL_OVERRIDE;
+    virtual void AddFilter(Filter &a_Filter) Q_DECL_OVERRIDE;
 
     /**
      * Implementation of the Device method.
      */
-    virtual void AddInput( const DataBlock&  ac_DataBlock ) Q_DECL_OVERRIDE;
+    virtual void AddInput(const DataBlock &ac_DataBlock) Q_DECL_OVERRIDE;
 
     /**
      * Implementation of the Device method.
@@ -85,12 +91,14 @@ public:
     /**
      * Implementation of the Device method.
      */
-    virtual bool AddConnection( const tConnection& ac_pConnection ) Q_DECL_OVERRIDE;
+    virtual bool
+    AddConnection(const tConnection &ac_pConnection) Q_DECL_OVERRIDE;
 
     /**
      * Implementation of the Device method.
      */
-    virtual void SetSequence  ( const DataBlockMatrix* ac_pSequence ) Q_DECL_OVERRIDE;
+    virtual void
+    SetSequence(const DataBlockMatrix *ac_pSequence) Q_DECL_OVERRIDE;
 
     /**
      * Implementation of the Device method.
@@ -100,7 +108,7 @@ public:
     /**
      * Implementation of the Device method.
      */
-    //OutputDevice* CreateOffLineCopy();
+    // OutputDevice* CreateOffLineCopy();
 
     /**
      * Implementation of the Device method.
@@ -119,11 +127,12 @@ public:
      */
     virtual bool AllDone() Q_DECL_OVERRIDE;
 
-    virtual bool SetParameter ( const QString& type, int channel, const QVariant& value ) Q_DECL_OVERRIDE;
-
+    virtual bool SetParameter(const QString &type, int channel,
+                              const QVariant &value) Q_DECL_OVERRIDE;
 
     /**
-     * Reset the filter to its initial state and set all internal parameters to built in
+     * Reset the filter to its initial state and set all internal parameters to
+     * built in
      * default values
      * throw exception if problem
      */
@@ -135,37 +144,44 @@ public:
      */
     virtual void Prepare() Q_DECL_OVERRIDE;
 
-    //FIXME: [job refactory] move implementations to cpp
-
+    // FIXME: [job refactory] move implementations to cpp
 
     /**
      * Implementation of the Device method.
      */
-    virtual bool HasParameter( const QString& ac_ParamID ) const Q_DECL_OVERRIDE;
+    virtual bool HasParameter(const QString &ac_ParamID) const Q_DECL_OVERRIDE;
 
     /**
      * Implementation of the Device method.
      */
     virtual bool CanConnect() const Q_DECL_OVERRIDE
-    { return true; }
+    {
+        return true;
+    }
 
     /**
      * Implementation of the Device method.
      */
     virtual bool CanSequence() const Q_DECL_OVERRIDE
-    { return true; }
+    {
+        return true;
+    }
 
     /**
      * Implementation of the Device method.
      */
     virtual bool CanOffLine() const Q_DECL_OVERRIDE
-    { return true; }
+    {
+        return true;
+    }
 
     /**
      * Implementation of the Device method.
      */
     virtual bool IsOffLine() const Q_DECL_OVERRIDE
-    { return false; }
+    {
+        return false;
+    }
 
     /**
      * Implementation of the Device method.
@@ -176,49 +192,51 @@ public:
      * Implementation of the Device method.
      * Gets clipping info.
      */
-    virtual bool GetInfo( const unsigned ac_nType, void* a_pInfo ) const Q_DECL_OVERRIDE;
+    virtual bool GetInfo(const unsigned ac_nType,
+                         void *a_pInfo) const Q_DECL_OVERRIDE;
 
     int GetBlockSize() const;
 
-    virtual void SetSilenceBefore( double time ) Q_DECL_OVERRIDE
-    { m_SilenceBefore=time; }
+    virtual void SetSilenceBefore(double time) Q_DECL_OVERRIDE
+    {
+        m_SilenceBefore = time;
+    }
 
-    WavDeviceIO* getWavDeviceIo();
+    WavDeviceIO *getWavDeviceIo();
 
 private:
     void SetConnectionParams();
     void CheckClipping();
 
 private:
-    bool mf_bIsNamedConnection( const QString& ac_sID ) const;
-    void mp_RemoveNamedConnection( const QString& ac_sFromID );
-    void mp_AddSeqStream( ApexSeqStream* pStream, const QString& ac_sID );
+    bool mf_bIsNamedConnection(const QString &ac_sID) const;
+    void mp_RemoveNamedConnection(const QString &ac_sFromID);
+    void mp_AddSeqStream(ApexSeqStream *pStream, const QString &ac_sID);
 
-    data::WavDeviceData*    data;       // FIXME make const
-    QString         mv_sOffLine;//temp
-    float              m_SilenceBefore;
-    tSeqMap             m_InputStreams;
-    tGenMap             m_Generators;
-    tWavFilters         m_InformFilters;
-    tConnections        m_NamedConnections;
+    data::WavDeviceData *data; // FIXME make const
+    QString mv_sOffLine;       // temp
+    float m_SilenceBefore;
+    tSeqMap m_InputStreams;
+    tGenMap m_Generators;
+    tWavFilters m_InformFilters;
+    tConnections m_NamedConnections;
     /**
      * Cache for parameters that refer to connections
      * They have to be cached until the Prepare call because
      * connections cannot be set before they are made (when
      * a stimulus is loaded
      */
-    QMap<QString,QVariant> m_connection_param_cache;
+    QMap<QString, QVariant> m_connection_param_cache;
 
-    WavDeviceIO         m_IO;
+    WavDeviceIO m_IO;
 
+    // QString m_driver;       // real driver and card name, as looked
+    // QString m_card;         // up in mainconfig
 
-    //QString m_driver;       // real driver and card name, as looked
-    //QString m_card;         // up in mainconfig
-
-    mutable QStringList xmlresults;     // cache for GetResultXML()
-
+    mutable QStringList xmlresults; // cache for GetResultXML()
+    bertha::ExperimentData berthaData;
+    bool useBertha;
 };
-
 }
 }
 

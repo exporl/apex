@@ -35,69 +35,66 @@ namespace apex
 namespace rundelegates
 {
 
-ParametersContainerRunDelegate::ParametersContainerRunDelegate( ) {
-
+ParametersContainerRunDelegate::ParametersContainerRunDelegate()
+{
 }
 
 ParametersContainerRunDelegate::~ParametersContainerRunDelegate()
-{}
-
-
-
-double ParametersContainerRunDelegate::ParseExpression(
-    const QString& p_expr, double value)
 {
-    QRegExp re( ParametersContainerElement::parameterExpressionRegexpData );
+}
+
+double ParametersContainerRunDelegate::ParseExpression(const QString &p_expr,
+                                                       double value)
+{
+    QRegExp re(ParametersContainerElement::parameterExpressionRegexpData);
 
     bool re_exactMatch = re.exactMatch(p_expr);
     Q_UNUSED(re_exactMatch);
-    Q_ASSERT( re_exactMatch );
+    Q_ASSERT(re_exactMatch);
 
     QStringList list = re.capturedTexts();
     double a;
-    if ((list.at(1))=="-") a=-1;
-    else a= (list.at(1)).toDouble();
+    if ((list.at(1)) == "-")
+        a = -1;
+    else
+        a = (list.at(1)).toDouble();
     QString sign = list.at(2);
-    double b= list.at(3).toDouble();
+    double b = list.at(3).toDouble();
 #ifdef PRINTPARAMETERLIST
     qCDebug(APEX_RS, "expr=" + p_expr);
     qCDebug(APEX_RS, "list(1)=" + list.at(1));
     qCDebug(APEX_RS, "list(2)=" + list.at(2));
     qCDebug(APEX_RS, "list(3)=" + list.at(3));
 
-    qCDebug(APEX_RS, "a=" + QString::number(a) + ", b=" + QString::number(b) + ", sign=" + sign);
+    qCDebug(APEX_RS, "a=" + QString::number(a) + ", b=" + QString::number(b) +
+                         ", sign=" + sign);
 #endif
 
-    if (sign=="-")
-        b=-b;
-    return a*value+b;
+    if (sign == "-")
+        b = -b;
+    return a * value + b;
 }
 
-QVariant ParametersContainerRunDelegate::parameterValue(stimulus::Stimulus* stimulus, ParameterManager* pm, const QString& id )
+QVariant ParametersContainerRunDelegate::parameterValue(
+    stimulus::Stimulus *stimulus, ParameterManager *pm, const QString &id)
 {
     QVariant value;
-    const data::StimulusParameters* varParam = stimulus->GetVarParameters();
-    const data::StimulusParameters* fixParam = stimulus->GetFixParameters();
+    const data::StimulusParameters *varParam = stimulus->GetVarParameters();
+    const data::StimulusParameters *fixParam = stimulus->GetFixParameters();
 
+    QVariant pmvalue(pm->parameterValue(id));
 
-    QVariant pmvalue( pm->parameterValue(id));
-
-    if (pmvalue.isValid()){
-        value=pmvalue.toString();
-    } else if ( varParam->contains(id))  {
-        value=varParam->value(id).toString();
+    if (pmvalue.isValid()) {
+        value = pmvalue.toString();
+    } else if (varParam->contains(id)) {
+        value = varParam->value(id).toString();
     } else if (fixParam->contains(id)) {
-        value=fixParam->value(id).toString();
+        value = fixParam->value(id).toString();
     } else {
         qCDebug(APEX_RS) << "Could not find parameter " << id;
     }
 
-
     return value;
 }
-
-
-
-
 }
 }

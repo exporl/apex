@@ -28,7 +28,7 @@
 
 #include "streamapptypedefs.h"
 
-//FIXME: [job refactory] move implementations to cpp
+// FIXME: [job refactory] move implementations to cpp
 namespace apex
 {
 namespace stimulus
@@ -42,27 +42,27 @@ struct tConnection;
   * Device
   *   Interface for all devices producing audible stimuli.
   ******************************************************** */
-class OutputDevice : public QObject,
-                     public device::IApexDevice
+class OutputDevice : public QObject, public device::IApexDevice
 {
-Q_OBJECT
+    Q_OBJECT
 protected:
     /**
       * Constructor.
       * @param ac_sID a unique identifier
       * @param a_pParameters the parameters
       */
-  OutputDevice( data::DeviceData* a_pParameters ) :
-    IApexDevice( a_pParameters ),
-    m_bContinuousModeEnabled(true)
+    OutputDevice(data::DeviceData *a_pParameters)
+        : IApexDevice(a_pParameters), m_bContinuousModeEnabled(true)
     {
     }
+
 public:
     /**
      * Destructor.
      */
     virtual ~OutputDevice()
-    {}
+    {
+    }
 
     /**
      * Add a filter.
@@ -73,7 +73,7 @@ public:
      * filters after they're added
      * @param a_Filter the filter
      */
-    virtual void AddFilter    ( Filter&    a_Filter              ) = 0;
+    virtual void AddFilter(Filter &a_Filter) = 0;
 
     /**
      * Add a datablock for playing.
@@ -81,34 +81,39 @@ public:
      * All datablocks added through this function must be played simultaneously.
      * @param ac_DataBlock the datablock
      */
-    virtual void AddInput     ( const DataBlock& ac_DataBlock    ) = 0;
+    virtual void AddInput(const DataBlock &ac_DataBlock) = 0;
 
     /**
      * Remove all datablocks added.
      */
-    virtual void RemoveAll    () = 0;
+    virtual void RemoveAll() = 0;
 
     /**
      * Start playing.
      * Must return immedeately.
      */
-    virtual void PlayAll      () = 0;
+    virtual void PlayAll() = 0;
 
     /**
      * Stop playing.
      * Must return immedeately.
      */
-    virtual void StopAll      () = 0;
+    virtual void StopAll() = 0;
 
     /**
      * Stop playing and any background processing
      */
-    virtual void Finish() { StopAll(); };
+    virtual void Finish()
+    {
+        StopAll();
+    };
 
     /**
      * Wait until all datablocks are played.
-     * This must be a blocking call, returning true when all datablocks are played.
-     * The device is supposed, but not required, to call it's StopAll before returning.
+     * This must be a blocking call, returning true when all datablocks are
+     * played.
+     * The device is supposed, but not required, to call it's StopAll before
+     * returning.
      */
     virtual bool AllDone() = 0;
 
@@ -118,45 +123,57 @@ public:
      * @return false: there is only one signal path possible for the device
      */
     virtual bool CanConnect() const
-    { return false; }
+    {
+        return false;
+    }
 
     /**
      * Get sequence.
      * StimulusOutput requires this so Devices better override this.
      * @return true if the device supports loading a sequence of datablocks.
-     * All datablocks in the rows of the sequence have to be played right after each other,
+     * All datablocks in the rows of the sequence have to be played right after
+     * each other,
      * unrelated to what happens in other rows
      */
     virtual bool CanSequence() const
-    { return false; }
+    {
+        return false;
+    }
 
     /**
      * Get offline capabilities.
      * @return true if the device implements the CreateOffLine() method
      */
     virtual bool CanOffLine() const
-    { return false; }
+    {
+        return false;
+    }
 
     /**
      * Get offline status.
-     * @return true if the device is set to work in offline mode in the experiment file
+     * @return true if the device is set to work in offline mode in the
+     * experiment file
      */
     virtual bool IsOffLine() const
-    { return false; }
+    {
+        return false;
+    }
 
     /**
      * Setup connection between elements.
      * Elements are: datablocks, filters and the device itself.
      * @param ac_pConnection a connection
      */
-    virtual bool AddConnection( const tConnection& /*ac_pConnection*/ )
-    { return false; }
+    virtual bool AddConnection(const tConnection & /*ac_pConnection*/)
+    {
+        return false;
+    }
 
     /**
      * Load any number of simultaneous/sequential datablocks.
      * @param the matrix; must be deleted by the device!
      */
-    virtual void SetSequence( const DataBlockMatrix* ac_pSequence )
+    virtual void SetSequence(const DataBlockMatrix *ac_pSequence)
     {
         delete ac_pSequence;
         return;
@@ -164,30 +181,38 @@ public:
 
     /**
       * Create an offline DataBlock.
-      * Given the currently loaded datablocks and filters, create a single datablock
-      * containing all the data that would normally be played; eg if normally 2 datablocks are mixed
-      * and then processed through a filter, this method returns a datablock pointing to the result
-      * of the last filter. Use when the processing load is too heavy for the cpu.
+      * Given the currently loaded datablocks and filters, create a single
+     * datablock
+      * containing all the data that would normally be played; eg if normally 2
+     * datablocks are mixed
+      * and then processed through a filter, this method returns a datablock
+     * pointing to the result
+      * of the last filter. Use when the processing load is too heavy for the
+     * cpu.
       * The datablock ID must be unique.
-      * The device can safely assume that this function will not be called during playing.
+      * The device can safely assume that this function will not be called
+     * during playing.
       * @return the offline DataBlock
       */
-//       virtual DataBlock* CreateOffLine()
-//       { return 0; }
+    //       virtual DataBlock* CreateOffLine()
+    //       { return 0; }
 
     /**
-      * Create a self-copy that does not open/contain the (hardware) device itself.
+      * Create a self-copy that does not open/contain the (hardware) device
+     * itself.
       * @return the copy
       */
-    virtual OutputDevice* CreateOffLineCopy()
-    { return 0; }
+    virtual OutputDevice *CreateOffLineCopy()
+    {
+        return 0;
+    }
 
     /**
     * Play silence of length time (s) before the next stimulus
     * only operates on the next stimulus
     * @param time time in seconds
     */
-    virtual void SetSilenceBefore(double time) =0;
+    virtual void SetSilenceBefore(double time) = 0;
 
     /**
     * If continuous mode is enabled, a device can decide to keep on playing
@@ -195,18 +220,20 @@ public:
     * that the device WILL do this, but that is CAN do this.
     */
     virtual void EnableContinuousMode(bool e)
-    { m_bContinuousModeEnabled=e; }
+    {
+        m_bContinuousModeEnabled = e;
+    }
 
 Q_SIGNALS:
     /**
-    * is emitted by the device when the IO layer sends its stimulusStarted signal
+    * is emitted by the device when the IO layer sends its stimulusStarted
+    * signal
     */
     void stimulusStarted();
 
 protected:
     bool m_bContinuousModeEnabled;
 };
-
 }
 }
 

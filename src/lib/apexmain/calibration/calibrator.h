@@ -43,13 +43,13 @@ class CalibratorPrivate;
 class APEX_EXPORT Calibrator : public ApexModule
 {
 public:
-    Calibrator (ExperimentRunDelegate *runDelegate,
-            const data::CalibrationData &data);
+    Calibrator(ExperimentRunDelegate *runDelegate,
+               const data::CalibrationData &data);
     ~Calibrator();
 
     /* Tries to load the calibration data from the calibration database. If not
      * found or recalibration is forced, shows the calibration dialog. */
-    bool calibrate (bool forceRecalibration = false);
+    bool calibrate(bool forceRecalibration = false);
 
     /* Send values of calibrated parameters for current profile to the
      * parameter manager. Must only be used after a call to calibrate() that

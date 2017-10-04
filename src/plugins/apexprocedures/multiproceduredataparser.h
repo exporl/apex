@@ -32,25 +32,25 @@ class MultiProcedureData;
 namespace parser
 {
 
-class MultiProcedureDataParser: public ProcedureDataParser
+class MultiProcedureDataParser : public ProcedureDataParser
 {
 public:
     MultiProcedureDataParser();
 
-    virtual ~MultiProcedureDataParser() {};
+    virtual ~MultiProcedureDataParser(){};
 
     /**
      * Parse the given xml data structure into the given parameters structure
      * does not take ownership of p_parameters
      */
-    virtual void Parse(const QDomElement &p_base, data::MultiProcedureData* p_data);
+    virtual void Parse(const QDomElement &p_base,
+                       data::MultiProcedureData *p_data);
 
 protected:
     virtual bool SetParameter(const QString &tag, const QString &id,
-            const QString &value, const QDomElement &node,
-            data::ProcedureData* data) Q_DECL_OVERRIDE;
+                              const QString &value, const QDomElement &node,
+                              data::ProcedureData *data) Q_DECL_OVERRIDE;
 };
-
 }
 }
 

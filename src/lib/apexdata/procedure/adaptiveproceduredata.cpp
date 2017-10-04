@@ -28,17 +28,16 @@
 using namespace apex::data;
 
 AdaptiveProcedureData::AdaptiveProcedureData()
-        : ProcedureData(),
-        m_defMinValue(false),
-        m_defMaxValue(false),
-        m_bFirstUntilCorrect(false),
-        m_changestepsize_type(ChangeAfterTrials),
-        m_bStopAfterType(StopAfterPresentations),
-        m_nStop(1),
-        m_bLargerIsEasier(true)
+    : ProcedureData(),
+      m_defMinValue(false),
+      m_defMaxValue(false),
+      m_bFirstUntilCorrect(false),
+      m_changestepsize_type(ChangeAfterTrials),
+      m_bStopAfterType(StopAfterPresentations),
+      m_nStop(1),
+      m_bLargerIsEasier(true)
 {
 }
-
 
 AdaptiveProcedureData::~AdaptiveProcedureData()
 {
@@ -72,13 +71,17 @@ AdaptiveProcedureData::StopAfter AdaptiveProcedureData::stopAfterType() const
 QString AdaptiveProcedureData::stopAfterTypeString() const
 {
     switch (m_bStopAfterType) {
-    case StopAfterReversals:     return "reversals";
-    case StopAfterTrials:        return "trials";
-    case StopAfterPresentations: return "presentations";
-    default: qFatal("unknown stop-after type");
+    case StopAfterReversals:
+        return "reversals";
+    case StopAfterTrials:
+        return "trials";
+    case StopAfterPresentations:
+        return "presentations";
+    default:
+        qFatal("unknown stop-after type");
     }
 
-    return QString(); //keep compiler happy
+    return QString(); // keep compiler happy
 }
 
 int AdaptiveProcedureData::stopAfter() const
@@ -113,9 +116,8 @@ bool AdaptiveProcedureData::repeatFirstUntilCorrect() const
 
 void AdaptiveProcedureData::setRepeatFirstUntilCorrect(const bool rfuc)
 {
-     m_bFirstUntilCorrect=rfuc;
+    m_bFirstUntilCorrect = rfuc;
 }
-
 
 bool AdaptiveProcedureData::largerIsEasier() const
 {
@@ -129,35 +131,38 @@ void AdaptiveProcedureData::setLargerIsEasier(bool value)
 
 AdaptiveProcedureData::Type AdaptiveProcedureData::type() const
 {
-        return AdaptiveType;
+    return AdaptiveType;
 }
 
-const QMap<int, float>& AdaptiveProcedureData::upStepsizes() const
+const QMap<int, float> &AdaptiveProcedureData::upStepsizes() const
 {
     return m_upStepsizes;
 }
 
-const QMap<int, float>& AdaptiveProcedureData::downStepsizes() const
+const QMap<int, float> &AdaptiveProcedureData::downStepsizes() const
 {
     return m_downStepsizes;
 }
 
-AdaptiveProcedureData::ChangeStepsizeAfter AdaptiveProcedureData::changeStepsizeAfter() const
+AdaptiveProcedureData::ChangeStepsizeAfter
+AdaptiveProcedureData::changeStepsizeAfter() const
 {
     return m_changestepsize_type;
 }
 
 QString AdaptiveProcedureData::changeStepsizeAfterString() const
 {
-    switch (m_changestepsize_type)
-    {
-        case ChangeAfterTrials:    return "trials";
-        case ChangeAfterReversals: return "reversals";
+    switch (m_changestepsize_type) {
+    case ChangeAfterTrials:
+        return "trials";
+    case ChangeAfterReversals:
+        return "reversals";
 
-        default: qFatal("unknown change-after type");
+    default:
+        qFatal("unknown change-after type");
     }
 
-    return QString();//keep compiler happy
+    return QString(); // keep compiler happy
 }
 
 void AdaptiveProcedureData::addUpStepsize(int trial, float stepsize)
@@ -208,7 +213,7 @@ void AdaptiveProcedureData::addAdaptingParameter(QString param)
     m_adapt_parameters.append(param);
 }
 
-bool AdaptiveProcedureData::operator==(const AdaptiveProcedureData& other) const
+bool AdaptiveProcedureData::operator==(const AdaptiveProcedureData &other) const
 {
     if (m_defMinValue != other.m_defMinValue)
         return false;
@@ -220,22 +225,20 @@ bool AdaptiveProcedureData::operator==(const AdaptiveProcedureData& other) const
     if (m_defMaxValue && (m_maxValue != other.m_maxValue))
         return false;
 
-    return  m_nUp == other.m_nUp &&
-            m_nDown == other.m_nDown &&
-            m_startValue == other.m_startValue &&
-            ApexTools::haveSameContents(m_adapt_parameters,
-                                        other.m_adapt_parameters) &&
-            m_nStop == other.m_nStop &&
-            m_bLargerIsEasier == other.m_bLargerIsEasier &&
-            m_bFirstUntilCorrect == other.m_bFirstUntilCorrect &&
-            m_bStopAfterType == other.m_bStopAfterType &&
-            m_upStepsizes == other.m_upStepsizes &&
-            m_downStepsizes == other.m_downStepsizes &&
-            m_changestepsize_type == other.m_changestepsize_type;
+    return m_nUp == other.m_nUp && m_nDown == other.m_nDown &&
+           m_startValue == other.m_startValue &&
+           ApexTools::haveSameContents(m_adapt_parameters,
+                                       other.m_adapt_parameters) &&
+           m_nStop == other.m_nStop &&
+           m_bLargerIsEasier == other.m_bLargerIsEasier &&
+           m_bFirstUntilCorrect == other.m_bFirstUntilCorrect &&
+           m_bStopAfterType == other.m_bStopAfterType &&
+           m_upStepsizes == other.m_upStepsizes &&
+           m_downStepsizes == other.m_downStepsizes &&
+           m_changestepsize_type == other.m_changestepsize_type;
 }
 
 QString AdaptiveProcedureData::name() const
 {
-     return QLatin1String("apex:adaptiveProcedure");
+    return QLatin1String("apex:adaptiveProcedure");
 }
-

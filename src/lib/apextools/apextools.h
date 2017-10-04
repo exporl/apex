@@ -24,24 +24,22 @@
 
 #include <string>
 
-#include <QMap>
 #include <QBitArray>
 #include <QDebug>
+#include <QSize>
+#include <QStringList>
 #include <QUuid>
 
 class QString;
+class QDialog;
 class QWidget;
 class QChar;
-class QSize;
 class QFont;
 class QScriptEngine;
 class QScriptValue;
 
-#include <QStringList>
-
 namespace apex
 {
-
 
 /**
 Misc tools
@@ -50,145 +48,147 @@ Misc tools
 */
 class APEXTOOLS_EXPORT ApexTools
 {
-    private:
-        ApexTools();
+private:
+    ApexTools();
 
-        ~ApexTools();
+    ~ApexTools();
 
-    public:
-        static void connectSlotsByNameToPrivate(QObject *publicObject,
-                QObject *privateObject);
+public:
+    static void connectSlotsByNameToPrivate(QObject *publicObject,
+                                            QObject *privateObject);
 
-        static QUuid getApexGUID();
-        static QString MakeDirEnd(QString);
-        static QString addPrefix(const QString& base, const QString& prefix);
-        static QString absolutePath(const QString& path);
-        static QString boolToString(bool b);
-        static void InitRand(long seed=-1);
-        static bool bQStringToBoolean( const QString& ac_sBoolean );
-        static QString removeXmlTags(const QString& str);
-        static void milliSleep (unsigned millis);
+    static QUuid getApexGUID();
+    static QString MakeDirEnd(QString);
+    static QString addPrefix(const QString &base, const QString &prefix);
+    static QString absolutePath(const QString &path);
+    static QString boolToString(bool b);
+    static void InitRand(long seed = -1);
+    static bool bQStringToBoolean(const QString &ac_sBoolean);
+    static QString removeXmlTags(const QString &str);
+    static void milliSleep(unsigned millis);
 
-        static void ReplaceCharInString( QString& a_StringToSearch, const QChar& ac_ToReplace, const QString& ac_ReplaceWith );
-        static QString escapeJavascriptString(const QString& s);
+    static bool recursiveCopy(const QString &sourcePath,
+                              const QString &destinationPath,
+                              bool force = false);
 
-        /** Returns the maximum font size possible for fitting the string into
-         * the given box.
-         */
-        static int maximumFontPointSize (const QString &text, const QSize &box,
-                const QFont &originalFont);
+    static void ReplaceCharInString(QString &a_StringToSearch,
+                                    const QChar &ac_ToReplace,
+                                    const QString &ac_ReplaceWith);
+    static QString escapeJavascriptString(const QString &s);
 
-        static void shrinkTillItFits (QWidget *widget, const QString &text,
-                const QSize &border);
+    /** Returns the maximum font size possible for fitting the string into
+     * the given box.
+     */
+    static int maximumFontPointSize(const QString &text, const QSize &box,
+                                    const QFont &originalFont);
 
-        /*
-         * Remove doubles from QStringList
-         */
-        static QStringList unique(const QStringList& list);
+    static void shrinkTillItFits(QWidget *widget, const QString &text,
+                                 const QSize &border);
 
-        static QStringList toStringList(const QList<int> intList);
+    static void expandWidgetToWindow(QWidget *widget);
 
-        static QString fetchDiffstat();
-        static QString fetchVersion();
+    /*
+     * Remove doubles from QStringList
+     */
+    static QStringList unique(const QStringList &list);
 
-        /**
-         * Workaround for buggy Qt function
-         */
-        static QScriptValue QVariant2ScriptValue(QScriptEngine *e, QVariant var);
+    static QStringList toStringList(const QList<int> intList);
 
-        /**
-         * This method does the same as QMap's operator== but it dereferences
-         * the pointer values.
-         */
-        template <class K, class V>
-        static bool areEqualPointerMaps(const QMap<K, V*>& first,
-                                        const QMap<K, V*>& second)
-        {
-            if (first.size() != second.size())
+    static QString fetchDiffstat();
+    static QString fetchVersion();
+
+    /**
+     * Workaround for buggy Qt function
+     */
+    static QScriptValue QVariant2ScriptValue(QScriptEngine *e, QVariant var);
+
+    /**
+     * This method does the same as QMap's operator== but it dereferences
+     * the pointer values.
+     */
+    template <class K, class V>
+    static bool areEqualPointerMaps(const QMap<K, V *> &first,
+                                    const QMap<K, V *> &second)
+    {
+        if (first.size() != second.size())
+            return false;
+
+        typename QMap<K, V *>::const_iterator it;
+        for (it = first.begin(); it != first.end(); it++) {
+            if (!(*second[it.key()] == *it.value()))
                 return false;
-
-            typename QMap<K, V*>::const_iterator it;
-            for (it = first.begin(); it != first.end(); it++)
-            {
-                if (!(*second[it.key()] == *it.value()))
-                    return false;
-            }
-
-            return true;
         }
 
-        template <class K, class V>
-        static bool areEqualPointerMaps(const std::map<K, V*> first,
-                                        const std::map<K, V*> second)
-        {
-            return areEqualPointerMaps(QMap<K, V*>(first), QMap<K, V*>(second));
-        }
+        return true;
+    }
 
-        /**
-         * This template function is used to check if two vectors or lists have the
-         * same contents. It does not care about the order of the contents. If the
-         * contents of the given containers are pointers, the pointers will be
-         * dereferenced when comparing.
-         *
-         * @note    The contents of the containers should have an operator==.
-         * @note    It should work with all index-based containers that have a
-         *          const_iterator and a size() method.
-         * @note    Because it does not work with maps, first.front() is called
-         *          to generate a compile error if T is a map. If you  want
-         *          to use this method with other containers than lists or vectors,
-         *          make sure they have a front() method.
-         */
-        template<class T>
-        static bool haveSameContents(const T& first, const T& second)
-        {
-            if (false)
-                first.front(); //gives a compile error if T is a map
+    template <class K, class V>
+    static bool areEqualPointerMaps(const std::map<K, V *> first,
+                                    const std::map<K, V *> second)
+    {
+        return areEqualPointerMaps(QMap<K, V *>(first), QMap<K, V *>(second));
+    }
 
-            if (first.size() != second.size())
-                return false;
+    /**
+     * This template function is used to check if two vectors or lists have the
+     * same contents. It does not care about the order of the contents. If the
+     * contents of the given containers are pointers, the pointers will be
+     * dereferenced when comparing.
+     *
+     * @note    The contents of the containers should have an operator==.
+     * @note    It should work with all index-based containers that have a
+     *          const_iterator and a size() method.
+     * @note    Because it does not work with maps, first.front() is called
+     *          to generate a compile error if T is a map. If you  want
+     *          to use this method with other containers than lists or vectors,
+     *          make sure they have a front() method.
+     */
+    template <class T>
+    static bool haveSameContents(const T &first, const T &second)
+    {
+        if (false)
+            first.front(); // gives a compile error if T is a map
 
-            int size = first.size();
-            QBitArray used(size);
+        if (first.size() != second.size())
+            return false;
 
-            typename T::const_iterator it1, it2;
-            for (it1 = first.begin(); it1 != first.end(); it1++)
-            {
-                int i = 0; //holds index of it2 in second
-                for (it2 = second.begin(); it2 != second.end(); it2++, i++)
-                {
-                    if (used[i])
-                        continue;
+        int size = first.size();
+        QBitArray used(size);
 
-                    if (areEqual(*it1, *it2))
-                    {
-                        used[i] = true;
-                        break;
-                    }
+        typename T::const_iterator it1, it2;
+        for (it1 = first.begin(); it1 != first.end(); it1++) {
+            int i = 0; // holds index of it2 in second
+            for (it2 = second.begin(); it2 != second.end(); it2++, i++) {
+                if (used[i])
+                    continue;
+
+                if (areEqual(*it1, *it2)) {
+                    used[i] = true;
+                    break;
                 }
             }
-
-            for (int i = 0; i < size; i++)
-            {
-                if (!used[i])
-                    return false;
-            }
-
-            return true;
         }
 
-        template <typename T>
-        static bool areEqual(T* const& first, T* const& second)
-        {
-            return *first == *second;
+        for (int i = 0; i < size; i++) {
+            if (!used[i])
+                return false;
         }
 
-        template <typename T>
-        static bool areEqual(T const& first, T const& second)
-        {
-            return first == second;
-        }
+        return true;
+    }
+
+    template <typename T>
+    static bool areEqual(T *const &first, T *const &second)
+    {
+        return *first == *second;
+    }
+
+    template <typename T>
+    static bool areEqual(T const &first, T const &second)
+    {
+        return first == second;
+    }
 };
-
 }
 
 #endif

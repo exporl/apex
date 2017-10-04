@@ -20,41 +20,40 @@
 #ifndef _APEX_SRC_PROGRAMS_SCREENEDITOR_PROPERTIESEDITOR_H_
 #define _APEX_SRC_PROGRAMS_SCREENEDITOR_PROPERTIESEDITOR_H_
 
-#include <QTreeView>
-#include <QItemDelegate>
 #include <QAbstractTableModel>
+#include <QItemDelegate>
+#include <QTreeView>
 
 namespace apex
 {
-  namespace editor
-  {
-    class ScreenElementEditorDelegate;
-    class ObjectPropertiesModel;
+namespace editor
+{
+class ScreenElementEditorDelegate;
+class ObjectPropertiesModel;
 
-    class ObjectPropertiesModel;
-    class ObjectPropertiesItemDelegate;
+class ObjectPropertiesModel;
+class ObjectPropertiesItemDelegate;
 
-    /**
-     * This class is a widget showing the properties of a certain \ref
-     * ScreenElementEditorDelegate.  It also supports modifying the
-     * properties.
-     */
-    class PropertiesEditor
-      : public QTreeView
-    {
-      Q_OBJECT
+/**
+ * This class is a widget showing the properties of a certain \ref
+ * ScreenElementEditorDelegate.  It also supports modifying the
+ * properties.
+ */
+class PropertiesEditor : public QTreeView
+{
+    Q_OBJECT
 
-      ScreenElementEditorDelegate* selectedRep;
-      ObjectPropertiesModel* model;
-    public:
-      PropertiesEditor( QWidget* parent );
-      ~PropertiesEditor();
+    ScreenElementEditorDelegate *selectedRep;
+    ObjectPropertiesModel *model;
 
-      void selectWidget( ScreenElementEditorDelegate* rep );
-    signals:
-      void modified();
-    };
+public:
+    PropertiesEditor(QWidget *parent);
+    ~PropertiesEditor();
 
-  }
+    void selectWidget(ScreenElementEditorDelegate *rep);
+signals:
+    void modified();
+};
+}
 }
 #endif

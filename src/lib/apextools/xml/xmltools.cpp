@@ -37,11 +37,13 @@
 namespace apex
 {
 
-class MessageHandler: public QAbstractMessageHandler
+class MessageHandler : public QAbstractMessageHandler
 {
 protected:
-    virtual void handleMessage(QtMsgType type, const QString &description,
-            const QUrl &identifier, const QSourceLocation &sourceLocation) Q_DECL_OVERRIDE;
+    virtual void
+    handleMessage(QtMsgType type, const QString &description,
+                  const QUrl &identifier,
+                  const QSourceLocation &sourceLocation) Q_DECL_OVERRIDE;
 };
 
 // MessageHandler ==============================================================
@@ -49,21 +51,22 @@ protected:
 Q_LOGGING_CATEGORY(APEX_XML, "apex.xml")
 
 void MessageHandler::handleMessage(QtMsgType type, const QString &description,
-        const QUrl &identifier, const QSourceLocation &sourceLocation)
+                                   const QUrl &identifier,
+                                   const QSourceLocation &sourceLocation)
 {
     Q_UNUSED(identifier);
     QTextDocument doc;
     doc.setHtml(description);
-    switch(type) {
+    switch (type) {
     case QtWarningMsg:
         qCWarning(APEX_XML, "%s:%lld: %s",
-                qPrintable(sourceLocation.uri().toString()),
-                sourceLocation.line(), qPrintable(doc.toPlainText()));
+                  qPrintable(sourceLocation.uri().toString()),
+                  sourceLocation.line(), qPrintable(doc.toPlainText()));
         break;
     case QtFatalMsg:
         qCCritical(APEX_XML, "%s:%lld: %s",
-                qPrintable(sourceLocation.uri().toString()),
-                sourceLocation.line(), qPrintable(doc.toPlainText()));
+                   qPrintable(sourceLocation.uri().toString()),
+                   sourceLocation.line(), qPrintable(doc.toPlainText()));
         break;
     case QtCriticalMsg:
     case QtDebugMsg:
@@ -84,6 +87,15 @@ bool XmlUtils::writeDocument(const QDomDocument &doc, const QString &fileName)
     file.write(doc.toByteArray(2));
     file.commit();
     return true;
+}
+
+bool XmlUtils::appendDocument(const QDomDocument &doc, const QString &fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QFile::Append | QFile::Text))
+        return false;
+    QByteArray data = doc.toByteArray(2);
+    return file.write(data) == data.size();
 }
 
 QString XmlUtils::nodeToString(const QDomNode &node)
@@ -123,22 +135,26 @@ void XmlUtils::removeComments(QDomDocument *doc)
 }
 
 QDomDocument XmlUtils::parseString(const QString &s, const QUrl &schemaUrl,
-                                   const QString &fileName, bool doRemoveComments)
+                                   const QString &fileName,
+                                   bool doRemoveComments)
 {
     if (schemaUrl.isValid()) {
         MessageHandler handler;
         QNetworkAccessManager accessManager;
-        accessManager.setNetworkAccessible(QNetworkAccessManager::NotAccessible);
+        accessManager.setNetworkAccessible(
+            QNetworkAccessManager::NotAccessible);
         QXmlSchema schema;
         schema.setMessageHandler(&handler);
         schema.setNetworkAccessManager(&accessManager);
         if (!schema.load(schemaUrl))
-            throw ApexStringException(tr("Unable to load schema: %1").arg(schemaUrl.toString()));
+            throw ApexStringException(
+                tr("Unable to load schema: %1").arg(schemaUrl.toString()));
         QXmlSchemaValidator validator(schema);
         validator.setMessageHandler(&handler);
         validator.setNetworkAccessManager(&accessManager);
         if (!validator.validate(s.toUtf8(), QUrl::fromLocalFile(fileName)))
-            throw ApexStringException(tr("Unable to validate XML document: %1").arg(schemaUrl.toString()));
+            throw ApexStringException(tr("Unable to validate XML document: %1")
+                                          .arg(schemaUrl.toString()));
     }
 
     QDomDocument doc;
@@ -147,7 +163,9 @@ QDomDocument XmlUtils::parseString(const QString &s, const QUrl &schemaUrl,
     int errorColumn = 0;
     if (!doc.setContent(s, false, &errorMsg, &errorLine, &errorColumn))
         throw ApexStringException(tr("Parsing XML document failed at %1:%2: %3")
-                .arg(errorLine).arg(errorColumn).arg(errorMsg));
+                                      .arg(errorLine)
+                                      .arg(errorColumn)
+                                      .arg(errorMsg));
 
     if (doRemoveComments)
         removeComments(&doc);
@@ -155,7 +173,8 @@ QDomDocument XmlUtils::parseString(const QString &s, const QUrl &schemaUrl,
     return doc;
 }
 
-QDomDocument XmlUtils::parseDocument(const QString &fileName, const QUrl &schemaUrl)
+QDomDocument XmlUtils::parseDocument(const QString &fileName,
+                                     const QUrl &schemaUrl)
 {
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly))
@@ -164,19 +183,22 @@ QDomDocument XmlUtils::parseDocument(const QString &fileName, const QUrl &schema
                        false);
 }
 
-QDomElement XmlUtils::createTextElement(QDomDocument *doc, const QString &tag, const QString &value)
+QDomElement XmlUtils::createTextElement(QDomDocument *doc, const QString &tag,
+                                        const QString &value)
 {
     QDomElement result = doc->createElement(tag);
     result.appendChild(doc->createTextNode(value));
     return result;
 }
 
-QDomElement XmlUtils::createTextElement(QDomDocument *doc, const QString &tag, double value)
+QDomElement XmlUtils::createTextElement(QDomDocument *doc, const QString &tag,
+                                        double value)
 {
     return createTextElement(doc, tag, QString::number(value));
 }
 
-QDomElement XmlUtils::createTextElement(QDomDocument *doc, const QString &tag, const QDateTime &value)
+QDomElement XmlUtils::createTextElement(QDomDocument *doc, const QString &tag,
+                                        const QDateTime &value)
 {
     return createTextElement(doc, tag, value.toString(Qt::ISODate));
 }
@@ -195,5 +217,4 @@ void XmlUtils::setText(QDomElement *element, const QString &value)
         element->removeChild(element->childNodes().at(i));
     element->appendChild(element->ownerDocument().createTextNode(value));
 }
-
 }

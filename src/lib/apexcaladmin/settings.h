@@ -28,19 +28,19 @@ struct CALIBRATIONADMIN_EXPORT DatabaseNames {
     static const QString hardwareSetup;
     static const QString currentHardwareSetup;
 
-    static
-    QString prepare (const QString &value);
+    static QString prepare(const QString &value);
 
-    static
-    QString data (const QString &setup = QString(),
-            const QString &profile = QString(),
-            const QString &name = QString(), const QString &key = QString());
+    static QString data(const QString &setup = QString(),
+                        const QString &profile = QString(),
+                        const QString &name = QString(),
+                        const QString &key = QString());
 };
 
-class CALIBRATIONADMIN_EXPORT Settings {
+class CALIBRATIONADMIN_EXPORT Settings
+{
 public:
-    QSettings* local();
-    QSettings* global();
+    QSettings *local();
+    QSettings *global();
 };
 
 #endif // _APEX_SRC_LIB_APEXCALADMIN_SETTINGS_H_

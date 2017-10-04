@@ -4,19 +4,21 @@
 #include "apextools/global.h"
 #include <QSettings>
 
-namespace apex{
+namespace apex
+{
 
 /**
  * @brief The SoundcardSettings class stores a portaudio device and hostapi name
- * Note that strings are stored because DeviceIDs could change when hardware is changed
+ * Note that strings are stored because DeviceIDs could change when hardware is
+ * changed
  * */
 class APEX_EXPORT SoundcardSettings
 {
 public:
     SoundcardSettings();
 
-    void saveDevice( const QString& hostApi, const QString& device);
-    void removeSavedSettings ();
+    void saveDevice(const QString &hostApi, const QString &device);
+    void removeSavedSettings();
 
     QString device();
     QString hostApi();
@@ -28,9 +30,8 @@ public:
     bool hasData();
 
 private:
-    QSettings * getSettings();
+    QSettings *getSettings();
 };
-
 
 } // ns apex
 

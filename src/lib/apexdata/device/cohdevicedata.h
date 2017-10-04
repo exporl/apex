@@ -22,7 +22,7 @@
 
 #include "devicedata.h"
 
-//from libtools
+// from libtools
 #include "apextools/global.h"
 
 namespace apex
@@ -31,7 +31,7 @@ namespace apex
 namespace data
 {
 
-enum {TRIGGER_NONE, TRIGGER_IN, TRIGGER_OUT};
+enum { TRIGGER_NONE, TRIGGER_IN, TRIGGER_OUT };
 
 class ApexMap;
 
@@ -44,19 +44,18 @@ public:
     CohDeviceData();
     ~CohDeviceData();
 
-    ApexMap* map() const;
+    ApexMap *map() const;
     QString device() const;
     int triggerType() const;
     float volume() const;
     int powerupCount() const;
 
     // takes ownership
-    void setMap(ApexMap* map);
+    void setMap(ApexMap *map);
 
 private:
     QScopedPointer<ApexMap> apexMap;
 };
-
 }
 }
 

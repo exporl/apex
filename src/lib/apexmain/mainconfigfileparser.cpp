@@ -46,19 +46,16 @@ namespace apex
 
 using namespace stimulus;
 
-MainConfigFileParser::MainConfigFileParser() :
-    UpgradableXmlParser(ApexPaths::GetApexConfigFilePath(),
-            ApexPaths::GetApexConfigSchemaPath(),
-            QL1S(CONFIG_SCHEMA_URL),
-            QL1S(APEX_NAMESPACE))
+MainConfigFileParser::MainConfigFileParser()
+    : UpgradableXmlParser(ApexPaths::GetApexConfigFilePath(),
+                          ApexPaths::GetApexConfigSchemaPath(),
+                          QL1S(CONFIG_SCHEMA_URL), QL1S(APEX_NAMESPACE))
 {
 }
 
-MainConfigFileParser::MainConfigFileParser(const QString &fileName) :
-    UpgradableXmlParser(fileName,
-            ApexPaths::GetApexConfigSchemaPath(),
-            QL1S(CONFIG_SCHEMA_URL),
-            QL1S(APEX_NAMESPACE))
+MainConfigFileParser::MainConfigFileParser(const QString &fileName)
+    : UpgradableXmlParser(fileName, ApexPaths::GetApexConfigSchemaPath(),
+                          QL1S(CONFIG_SCHEMA_URL), QL1S(APEX_NAMESPACE))
 {
 }
 
@@ -77,40 +74,58 @@ bool MainConfigFileParser::parse()
 
     QDomElement root = document.documentElement();
 
-    QDomElement scriptnode = root.firstChildElement(QSL("paths")).firstChildElement(QSL("pluginscriptlibrary"));
+    QDomElement scriptnode = root.firstChildElement(QSL("paths"))
+                                 .firstChildElement(QSL("pluginscriptlibrary"));
     if (!scriptnode.isNull()) {
-        m_data.setPluginScriptLibrary(ApexPaths::GetNonBinaryPluginPath() + '/' + scriptnode.text());
+        m_data.setPluginScriptLibrary(ApexPaths::GetNonBinaryPluginPath() +
+                                      '/' + scriptnode.text());
     }
 
-    for (QDomElement j = root.firstChildElement(QSL("soundcards")).firstChildElement(QSL("card"));
-            !j.isNull(); j = j.nextSiblingElement(QSL("card"))) {
+    for (QDomElement j = root.firstChildElement(QSL("soundcards"))
+                             .firstChildElement(QSL("card"));
+         !j.isNull(); j = j.nextSiblingElement(QSL("card"))) {
         for (QDomElement i = j.firstChildElement(QSL("drivername"));
-                !i.isNull(); i = i.nextSiblingElement(QSL("drivername"))) {
-            m_data.addSoundDriver(j.attribute(QSL("id")), i.attribute(QSL("driver")), i.text());
+             !i.isNull(); i = i.nextSiblingElement(QSL("drivername"))) {
+            m_data.addSoundDriver(j.attribute(QSL("id")),
+                                  i.attribute(QSL("driver")), i.text());
         }
     }
 
-    for (QDomElement i = root.firstChildElement(QSL("cohdrivers")).firstChildElement(QSL("cohdriver"));
-            !i.isNull(); i = i.nextSiblingElement(QSL("cohdriver"))) {
+    for (QDomElement i = root.firstChildElement(QSL("cohdrivers"))
+                             .firstChildElement(QSL("cohdriver"));
+         !i.isNull(); i = i.nextSiblingElement(QSL("cohdriver"))) {
         m_data.addCohDriverName(i.attribute(QSL("id")), i.text());
     }
 
-    for (QDomElement i = root.firstChildElement(QSL("prefixes")).firstChildElement(QSL("prefix"));
-            !i.isNull(); i = i.nextSiblingElement(QSL("prefix"))) {
+    for (QDomElement i = root.firstChildElement(QSL("prefixes"))
+                             .firstChildElement(QSL("prefix"));
+         !i.isNull(); i = i.nextSiblingElement(QSL("prefix"))) {
         m_data.addPrefix(i.attribute(QSL("id")), i.text());
+    }
+
+    QDomElement berthaNode = root.firstChildElement(QSL("bertha"));
+    m_data.setBertha(berthaNode.isNull() || berthaNode.text() == QL1S("true"));
+
+    for (QDomElement constraintNode = root.firstChildElement(QSL("interactive"))
+                                          .firstChildElement(QSL("constraints"))
+                                          .firstChildElement(QSL("constraint"));
+         !constraintNode.isNull();
+         constraintNode =
+             constraintNode.nextSiblingElement(QSL("constraint"))) {
+        m_data.addInteractiveConstraint(
+            constraintNode.attribute(QSL("expression")), constraintNode.text());
     }
 
     return true;
 }
 
-
-const data::MainConfigFileData& MainConfigFileParser::data() const
+const data::MainConfigFileData &MainConfigFileParser::data() const
 {
     return m_data;
 }
 
 static void fixUri(const QDomDocument &document, const QString &from,
-        const QString &to)
+                   const QString &to)
 {
     QDomNodeList list = document.elementsByTagName(from);
     // walk backwards as the list is updated dynamically
@@ -133,7 +148,8 @@ void MainConfigFileParser::upgrade3_1_3()
     pathsnode.removeChild(pathsnode.firstChildElement(QSL("perl")));
 
     // fix js extension of library javascript files
-    QDomElement scriptnode = pathsnode.firstChildElement(QSL("pluginscriptlibrary"));
+    QDomElement scriptnode =
+        pathsnode.firstChildElement(QSL("pluginscriptlibrary"));
     if (!scriptnode.isNull() && !scriptnode.text().endsWith(QSL(".js")))
         XmlUtils::setText(&scriptnode, scriptnode.text() + QSL(".js"));
 
@@ -141,12 +157,11 @@ void MainConfigFileParser::upgrade3_1_3()
     QDomElement nicdrivers = root.firstChildElement(QSL("nicdrivers"));
     nicdrivers.setTagName(QSL("cohdrivers"));
     for (QDomElement i = nicdrivers.firstChildElement(QSL("nicdriver"));
-            !i.isNull(); i = i.nextSiblingElement(QSL("nicdriver"))) {
+         !i.isNull(); i = i.nextSiblingElement(QSL("nicdriver"))) {
         i.setTagName(QSL("cohdriver"));
     }
 
     // uri -> file
     fixUri(document, QSL("prefix"), QSL("prefix"));
 }
-
 }

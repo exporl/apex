@@ -19,166 +19,179 @@
 
 #include "screenelementvisitor.h"
 
-void apex::data::ScreenElementVisitor::visitAnswerLabel( AnswerLabelElement* e )
+void apex::data::ScreenElementVisitor::visitAnswerLabel(AnswerLabelElement *e)
 {
-    visitAnswerLabel( const_cast<const AnswerLabelElement*>( e ) );
+    visitAnswerLabel(const_cast<const AnswerLabelElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitArcLayout( ArcLayoutElement* e )
+void apex::data::ScreenElementVisitor::visitArcLayout(ArcLayoutElement *e)
 {
-    visitArcLayout( const_cast<const ArcLayoutElement*>( e ) );
+    visitArcLayout(const_cast<const ArcLayoutElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitButton( ButtonElement* e )
+void apex::data::ScreenElementVisitor::visitButton(ButtonElement *e)
 {
-    visitButton( const_cast<const ButtonElement*>( e ) );
+    visitButton(const_cast<const ButtonElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitMatrix( MatrixElement* e )
+void apex::data::ScreenElementVisitor::visitMatrix(MatrixElement *e)
 {
-    visitMatrix( const_cast<const MatrixElement*>( e ) );
+    visitMatrix(const_cast<const MatrixElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitSpinBox( SpinBoxElement* e )
+void apex::data::ScreenElementVisitor::visitSpinBox(SpinBoxElement *e)
 {
-    visitSpinBox( const_cast<const SpinBoxElement*>( e ) );
+    visitSpinBox(const_cast<const SpinBoxElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitSlider( SliderElement* e )
+void apex::data::ScreenElementVisitor::visitSlider(SliderElement *e)
 {
-    visitSlider( const_cast<const SliderElement*>( e ) );
+    visitSlider(const_cast<const SliderElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitCheckBox( CheckBoxElement* e )
+void apex::data::ScreenElementVisitor::visitCheckBox(CheckBoxElement *e)
 {
-    visitCheckBox( const_cast<const CheckBoxElement*>( e ) );
+    visitCheckBox(const_cast<const CheckBoxElement *>(e));
 }
-void apex::data::ScreenElementVisitor::visitEmpty( EmptyElement* e )
+void apex::data::ScreenElementVisitor::visitEmpty(EmptyElement *e)
 {
-    visitEmpty( const_cast<const EmptyElement*>( e ) );
-}
-
-void apex::data::ScreenElementVisitor::visitFlashPlayer( FlashPlayerElement* e )
-{
-    visitFlashPlayer( const_cast<const FlashPlayerElement*>( e ) );
+    visitEmpty(const_cast<const EmptyElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitGridLayout( GridLayoutElement* e )
+void apex::data::ScreenElementVisitor::visitFlashPlayer(FlashPlayerElement *e)
 {
-    visitGridLayout( const_cast<const GridLayoutElement*>( e ) );
+    visitFlashPlayer(const_cast<const FlashPlayerElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitLabel( LabelElement* e )
+void apex::data::ScreenElementVisitor::visitGridLayout(GridLayoutElement *e)
 {
-    visitLabel( const_cast<const LabelElement*>( e ) );
+    visitGridLayout(const_cast<const GridLayoutElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitParameterList( ParameterListElement* e )
+void apex::data::ScreenElementVisitor::visitLabel(LabelElement *e)
 {
-    visitParameterList( const_cast<const ParameterListElement*>( e ) );
+    visitLabel(const_cast<const LabelElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitParameterLabel( ParameterLabelElement* e )
+void apex::data::ScreenElementVisitor::visitParameterList(
+    ParameterListElement *e)
 {
-    visitParameterLabel( const_cast<const ParameterLabelElement*>( e ) );
+    visitParameterList(const_cast<const ParameterListElement *>(e));
 }
 
-
-void apex::data::ScreenElementVisitor::visitPicture( PictureElement* e )
+void apex::data::ScreenElementVisitor::visitParameterLabel(
+    ParameterLabelElement *e)
 {
-    visitPicture( const_cast<const PictureElement*>( e ) );
+    visitParameterLabel(const_cast<const ParameterLabelElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitPictureLabel( PictureLabelElement* e )
+void apex::data::ScreenElementVisitor::visitPicture(PictureElement *e)
 {
-    visitPictureLabel( const_cast<const PictureLabelElement*>( e ) );
+    visitPicture(const_cast<const PictureElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitTextEdit( TextEditElement* e )
+void apex::data::ScreenElementVisitor::visitPictureLabel(PictureLabelElement *e)
 {
-    visitTextEdit( const_cast<const TextEditElement*>( e ) );
+    visitPictureLabel(const_cast<const PictureLabelElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitTwoPartLayout( TwoPartLayoutElement* e )
+void apex::data::ScreenElementVisitor::visitTextEdit(TextEditElement *e)
 {
-    visitTwoPartLayout( const_cast<const TwoPartLayoutElement*>( e ) );
+    visitTextEdit(const_cast<const TextEditElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitHtml( HtmlElement* e )
+void apex::data::ScreenElementVisitor::visitTwoPartLayout(
+    TwoPartLayoutElement *e)
 {
-    visitHtml( const_cast<const HtmlElement*>( e ) );
+    visitTwoPartLayout(const_cast<const TwoPartLayoutElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitAnswerLabel( const AnswerLabelElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitHtml(HtmlElement *e)
 {
+    visitHtml(const_cast<const HtmlElement *>(e));
 }
 
-void apex::data::ScreenElementVisitor::visitArcLayout( const ArcLayoutElement* /*e*/ )
-{
-}
-
-void apex::data::ScreenElementVisitor::visitButton( const ButtonElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitAnswerLabel(
+    const AnswerLabelElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitHtml( const HtmlElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitArcLayout(
+    const ArcLayoutElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitMatrix( const MatrixElement* /*e*/ )
-{
-
-}
-
-void apex::data::ScreenElementVisitor::visitSpinBox( const SpinBoxElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitButton(const ButtonElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitSlider( const SliderElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitHtml(const HtmlElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitCheckBox( const CheckBoxElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitMatrix(const MatrixElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitEmpty( const EmptyElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitSpinBox(
+    const SpinBoxElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitFlashPlayer( const FlashPlayerElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitSlider(const SliderElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitGridLayout( const GridLayoutElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitCheckBox(
+    const CheckBoxElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitLabel( const LabelElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitEmpty(const EmptyElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitParameterList( const ParameterListElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitFlashPlayer(
+    const FlashPlayerElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitParameterLabel( const ParameterLabelElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitGridLayout(
+    const GridLayoutElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitPicture( const PictureElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitLabel(const LabelElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitPictureLabel( const PictureLabelElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitParameterList(
+    const ParameterListElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitTextEdit( const TextEditElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitParameterLabel(
+    const ParameterLabelElement * /*e*/)
 {
 }
 
-void apex::data::ScreenElementVisitor::visitTwoPartLayout( const TwoPartLayoutElement* /*e*/ )
+void apex::data::ScreenElementVisitor::visitPicture(
+    const PictureElement * /*e*/)
+{
+}
+
+void apex::data::ScreenElementVisitor::visitPictureLabel(
+    const PictureLabelElement * /*e*/)
+{
+}
+
+void apex::data::ScreenElementVisitor::visitTextEdit(
+    const TextEditElement * /*e*/)
+{
+}
+
+void apex::data::ScreenElementVisitor::visitTwoPartLayout(
+    const TwoPartLayoutElement * /*e*/)
 {
 }
 

@@ -25,8 +25,9 @@
 #include <QDoubleValidator>
 #include <QWidget>
 
-namespace Ui {
-    class StartLevelWidget;
+namespace Ui
+{
+class StartLevelWidget;
 }
 
 namespace spin
@@ -36,134 +37,118 @@ namespace gui
 
 class StartLevelWidget : public QWidget
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    StartLevelWidget(QWidget *parent);
+    virtual ~StartLevelWidget();
 
-        StartLevelWidget(QWidget *parent);
-        virtual ~StartLevelWidget();
+    void showAngle(uint angle);
+    bool hasSpeechLevel() const;
+    bool hasNoiseLevel() const;
+    bool hasLevels() const;
 
-        void showAngle(uint angle);
-        bool hasSpeechLevel() const;
-        bool hasNoiseLevel() const;
-        bool hasLevels() const;
+    /**
+     * Returns the filled in value of the speech line edit.
+     * Will assert if hasSpeechLevel() returns false.
+     */
+    double speechLevel() const;
 
-        /**
-         * Returns the filled in value of the speech line edit.
-         * Will assert if hasSpeechLevel() returns false.
-         */
-        double speechLevel() const;
+    /**
+     * Returns the filled in value of the noise line edit.
+     * Will assert if hasNoiseLevel() returns false.
+     */
+    double noiseLevel() const;
 
-        /**
-         * Returns the filled in value of the noise line edit.
-         * Will assert if hasNoiseLevel() returns false.
-         */
-        double noiseLevel() const;
+    /**
+     * Returns the speaker levels filled in in this widget.
+     * If there are none filled in, hasLevels will be set to false.
+     */
+    data::SpeakerLevels speakerLevels(bool *hasLevels) const;
 
-        /**
-         * Returns the speaker levels filled in in this widget.
-         * If there are none filled in, hasLevels will be set to false.
-         */
-        data::SpeakerLevels speakerLevels(bool *hasLevels) const;
+    /**
+     * Fills the widget with the given speaker levels.
+     */
+    void setSpeakerLevels(const data::SpeakerLevels &levels);
 
-        /**
-         * Fills the widget with the given speaker levels.
-         */
-        void setSpeakerLevels(const data::SpeakerLevels &levels);
+    /**
+     * Checks whether all obliged fields are filled in, if not, w will
+     * be set to the first found widget that was not filled in.
+     */
+    bool hasAllObligedFields(QWidget **w);
 
-        /**
-         * Checks whether all obliged fields are filled in, if not, w will
-         * be set to the first found widget that was not filled in.
-         */
-        bool hasAllObligedFields(QWidget **w);
+public slots:
 
-    public slots:
+    /**
+     * Clears all widgets:
+     *  * Unchecks QCheckBoxes
+     *  * Clears QLineEdits
+     */
+    void clear();
 
-        /**
-         * Clears all widgets:
-         *  * Unchecks QCheckBoxes
-         *  * Clears QLineEdits
-         */
-        void clear();
+    /**
+     * Shows/hides the widgets conecerning oncorrelated noises
+     */
+    void setUncorrelatedNoisesVisible(bool visible);
 
-        /**
-         * Shows/hides the widgets conecerning oncorrelated noises
-         */
-        void setUncorrelatedNoisesVisible(bool visible);
+    /**
+     * Sets the noise startlevel if the checkbox is checked.
+     */
+    void setNoiseStartlevel(double level);
 
-        /**
-         * Sets the noise startlevel if the checkbox is checked.
-         */
-        void setNoiseStartlevel(double level);
+    /**
+     * Sets the speech startlevel if the checkbox is checked.
+     */
+    void setSpeechStartlevel(double level);
 
-        /**
-         * Sets the speech startlevel if the checkbox is checked.
-         */
-        void setSpeechStartlevel(double level);
+    /**
+     * Returns the start point of the noise that has been set in this
+     * widget. Will return spin::data::RANDOM if random;
+     */
+    double noiseStartPoint() const;
 
-        /**
-         * Returns the start point of the noise that has been set in this
-         * widget. Will return spin::data::RANDOM if random;
-         */
-        double noiseStartPoint() const;
+signals:
 
-    signals:
+    /**
+     * Emitted when something has changed in one of the widgets.
+     */
+    void contentsChanged();
 
-        /**
-         * Emitted when something has changed in one of the widgets.
-         */
-        void contentsChanged();
+    void speechlevelChanged(double level);
+    void noiselevelChanged(double level);
 
-        void speechlevelChanged(double level);
-        void noiselevelChanged(double level);
+    /**
+     * Emitted when the user checks/unchecks the speech checkbox.
+     */
+    void speechUsedChanged(bool used);
 
-        /**
-         * Emitted when the user checks/unchecks the speech checkbox.
-         */
-        void speechUsedChanged(bool used);
+    /**
+     * Emitted when the user checks/unchecks the noise checkbox.
+     */
+    void noiseUsedChanged(bool used);
 
-        /**
-         * Emitted when the user checks/unchecks the noise checkbox.
-         */
-        void noiseUsedChanged(bool used);
+private slots:
 
-    private slots:
+    void updateNoiseStartPoint(double to);
+    void showNoiseStartPointDialog();
+    void noiselevelChanged(QString level);
+    void speechlevelChanged(QString level);
 
-        void updateNoiseStartPoint(double to);
-        void showNoiseStartPointDialog();
-        void noiselevelChanged(QString level);
-        void speechlevelChanged(QString level);
+    void printChange(QString to);
 
-        void printChange(QString to);
+private:
+    void setupUi();
+    void setupConnections();
+    void setupValidators();
 
-    private:
-        void setupUi();
-        void setupConnections();
-        void setupValidators();
+    Ui::StartLevelWidget *widgets;
+    QDoubleValidator dBVal;
 
-        Ui::StartLevelWidget *widgets;
-        QDoubleValidator dBVal;
+    double noiseJump;
 
-        double noiseJump;
-
-        enum { RANDOM = data::RANDOM };
-
+    enum { RANDOM = data::RANDOM };
 };
 }
 }
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-

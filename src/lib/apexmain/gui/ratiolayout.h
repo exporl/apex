@@ -32,36 +32,35 @@ class RatioLayoutPrivate;
  * - take spacing and margins into account
  * - take maximum sizes and size policies into account
  */
-class RatioLayout: public QLayout {
+class RatioLayout : public QLayout
+{
 public:
-
     /**
      * ratio = height/width
      */
-    RatioLayout (double ratio, QWidget *parent = NULL);
+    RatioLayout(double ratio, QWidget *parent = NULL);
     ~RatioLayout();
 
     // element 0 is the center element
-    void addItem (QLayoutItem *item);
-    void insertWidget (int index, QWidget *item);
-    void insertItem (int index, QLayoutItem *item);
+    void addItem(QLayoutItem *item);
+    void insertWidget(int index, QWidget *item);
+    void insertItem(int index, QLayoutItem *item);
     Qt::Orientations expandingDirections() const;
     bool hasHeightForWidth() const;
-    int heightForWidth (int width) const;
+    int heightForWidth(int width) const;
     int count() const;
-    QLayoutItem *itemAt (int index) const;
+    QLayoutItem *itemAt(int index) const;
     QSize minimumSize() const;
-    void setGeometry (const QRect &rect);
+    void setGeometry(const QRect &rect);
     QSize sizeHint() const;
-    QLayoutItem *takeAt (int index);
+    QLayoutItem *takeAt(int index);
 
 public Q_SLOTS:
-    void setRatio (double ratio);
+    void setRatio(double ratio);
     double ratio() const;
 
 private:
     QScopedPointer<RatioLayoutPrivate> d;
 };
-
 
 #endif

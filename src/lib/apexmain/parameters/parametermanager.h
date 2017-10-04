@@ -37,80 +37,80 @@ namespace apex
 
 class ParameterManager : public QObject
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    ParameterManager(const data::ParameterManagerData &d);
 
-        ParameterManager(const data::ParameterManagerData& d);
+    /**
+     * Set parameter to value. If canReset is false, the parameter will never be
+     * reset to the default value.
+     */
+    void setParameter(const QString &id, const QVariant &value, bool canReset);
 
-        /**
-         * Set parameter to value. If canReset is false, the parameter will never be
-         * reset to the default value.
-         */
-        void setParameter(const QString& id, const QVariant& value, bool canReset);
+    void registerParameter(const QString &id, const data::Parameter &name);
 
-        void registerParameter(const QString& id, const data::Parameter& name);
+    /**
+     * Reset parameter to its default value, if available.
+     */
+    void resetParameter(const QString &id);
 
-        /**
-         * Reset parameter to its default value, if available.
-         */
-        void resetParameter(const QString& id);
+    QVariant parameterValue(const QString &id) const;
 
-        QVariant parameterValue(const QString& id) const;
+    /**
+     * This function in conjunction with @ref setInternalState can be used
+     * to store and restore the state of the parametermanager
+     */
+    data::PMRuntimeSettings internalState() const;
 
-        /**
-         * This function in conjunction with @ref setInternalState can be used
-         * to store and restore the state of the parametermanager
-         */
-        data::PMRuntimeSettings internalState() const;
+    /**
+     * This function in conjunction with @ref internalState can be used
+     * to store and restore the state of the parametermanager
+     */
+    void setInternalState(data::PMRuntimeSettings n);
 
-        /**
-         * This function in conjunction with @ref internalState can be used
-         * to store and restore the state of the parametermanager
-         */
-        void setInternalState(data::PMRuntimeSettings n);
+    data::ParameterValueMap parametersForOwner(const QString &owner) const;
 
-        data::ParameterValueMap parametersForOwner(const QString &owner) const;
+    /**
+     * Return the parameter associated with an ID
+     * returns a default constructed parameter if it is not found
+     */
+    data::Parameter parameter(const QString &id) const;
 
-        /**
-         * Return the parameter associated with an ID
-         * returns a default constructed parameter if it is not found
-         */
-        data::Parameter parameter(const QString& id) const;
+    /**
+     * Reset parameters to their initial values, unless they are permanently
+     * set by SetParameter
+     */
+    void reset();
 
-        /**
-         * Reset parameters to their initial values, unless they are permanently
-         * set by SetParameter
-         */
-        void reset();
+    /**
+     * Reset parameters to their initial values, no matter what
+     */
+    void forceReset();
 
-        /**
-         * Reset parameters to their initial values, no matter what
-         */
-        void forceReset();
+    /**
+     * @brief Explicitly set all parameters that have ever been set to their
+     * default value.
+     * This is different from reset in that reset will remove a parameter from
+     * the list of parameters,
+     * while this function will keep in in the list and set it to the default
+     * value.
+     * @param force if true, ignore the "cannot reset" flag
+     */
+    void setAllToDefaultValue(bool force);
 
-        /**
-         * @brief Explicitly set all parameters that have ever been set to their default value.
-         * This is different from reset in that reset will remove a parameter from the list of parameters,
-         * while this function will keep in in the list and set it to the default value.
-         * @param force if true, ignore the "cannot reset" flag
-         */
-        void setAllToDefaultValue(bool force);
+    void showContents() const;
 
-        void showContents() const;
+Q_SIGNALS:
 
-    Q_SIGNALS:
+    void parameterChanged(QString id, QVariant value);
 
-        void parameterChanged(QString id, QVariant value);
+private:
+    data::ParameterManagerData data;
 
-    private:
-
-        data::ParameterManagerData data;
-
-        /// keeps current parameter values
-        data::PMRuntimeSettings paramValues;
+    /// keeps current parameter values
+    data::PMRuntimeSettings paramValues;
 };
-
 }
 
 #endif

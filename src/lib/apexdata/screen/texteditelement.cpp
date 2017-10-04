@@ -26,8 +26,8 @@ namespace apex
 namespace data
 {
 
-TextEditElement::TextEditElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent )
+TextEditElement::TextEditElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent)
 {
 }
 
@@ -35,7 +35,7 @@ TextEditElement::~TextEditElement()
 {
 }
 
-void TextEditElement::setText( const QString& t )
+void TextEditElement::setText(const QString &t)
 {
     text = t;
 }
@@ -45,7 +45,7 @@ const QString TextEditElement::getText() const
     return text;
 }
 
-void TextEditElement::setInputMask( const QString& t )
+void TextEditElement::setInputMask(const QString &t)
 {
     inputMask = t;
 }
@@ -55,14 +55,14 @@ const QString TextEditElement::getInputMask() const
     return inputMask;
 }
 
-void TextEditElement::visit( ScreenElementVisitor* v )
+void TextEditElement::visit(ScreenElementVisitor *v)
 {
-    v->visitTextEdit( this );
+    v->visitTextEdit(this);
 }
 
-void TextEditElement::visit( ScreenElementVisitor* v ) const
+void TextEditElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitTextEdit( this );
+    v->visitTextEdit(this);
 }
 
 ScreenElement::ElementTypeT TextEditElement::elementType() const
@@ -70,13 +70,10 @@ ScreenElement::ElementTypeT TextEditElement::elementType() const
     return TextEdit;
 }
 
-bool TextEditElement::operator==(const TextEditElement& other) const
+bool TextEditElement::operator==(const TextEditElement &other) const
 {
-    return  ScreenElement::operator==(other) &&
-            text == other.text &&
-            inputMask == other.inputMask;
-}
-
+    return ScreenElement::operator==(other) && text == other.text &&
+           inputMask == other.inputMask;
 }
 }
-
+}

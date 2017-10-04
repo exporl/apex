@@ -22,7 +22,7 @@
 
 #include "devicedata.h"
 
-//from libtools
+// from libtools
 #include "apextools/apextypedefs.h"
 
 namespace apex
@@ -39,30 +39,25 @@ namespace data
  */
 class APEXDATA_EXPORT DevicesData : public DeviceDataMap
 {
-    public:
+public:
+    DevicesData();
+    ~DevicesData();
 
-        DevicesData();
-        ~DevicesData();
+    // getters
 
-        //getters
+    const QString &masterDevice() const;
+    DeviceData *deviceData(const QString &name) const;
 
-        const QString& masterDevice() const;
-        DeviceData* deviceData(const QString& name) const;
+    // setters
 
-        //setters
+    void setMasterDevice(const QString &device);
 
-        void setMasterDevice(const QString& device);
+    bool operator==(const DevicesData &other) const;
 
-        bool operator==(const DevicesData& other) const;
-
-    private:
-
-        QString masterDev;
-
+private:
+    QString masterDev;
 };
-
 }
-
 }
 
 #endif

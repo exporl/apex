@@ -18,23 +18,24 @@
 
 #include "exceptions.h"
 
-ApexStringException::ApexStringException(const QString &message) :
-message(message.toLocal8Bit())
+ApexStringException::ApexStringException(const QString &message)
+    : message(message.toLocal8Bit())
 {
 }
 
-const char* ApexStringException::what() const throw()
+const char *ApexStringException::what() const throw()
 {
     return message;
 }
 
-const char* TrialDataNotFoundException::what() const throw()
+const char *TrialDataNotFoundException::what() const throw()
 {
     return "TrialDataNotFoundException";
 }
 
-ApexConnectionBetweenDifferentDevicesException::ApexConnectionBetweenDifferentDevicesException(const QString& message) :
-    ApexStringException(message)
+ApexConnectionBetweenDifferentDevicesException::
+    ApexConnectionBetweenDifferentDevicesException(const QString &message)
+    : ApexStringException(message)
 {
 }
 
@@ -42,5 +43,3 @@ const char *ParseException::what() const throw()
 {
     return "ParseException";
 }
-
-

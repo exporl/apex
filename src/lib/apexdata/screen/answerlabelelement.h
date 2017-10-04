@@ -33,17 +33,15 @@ namespace data
  * The AnswerLabelElement is an implementation of a \ref
  * ScreenElement representing an "answerlabel".
  */
-class APEXDATA_EXPORT AnswerLabelElement
-            : public ScreenElement
+class APEXDATA_EXPORT AnswerLabelElement : public ScreenElement
 {
-    public:
-        AnswerLabelElement(const QString& id, ScreenElement* parent);
+public:
+    AnswerLabelElement(const QString &id, ScreenElement *parent);
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 };
-
 }
 }
 #endif

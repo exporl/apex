@@ -9,19 +9,17 @@ class QStringList;
 
 class StateMachineVisualizer
 {
-    public:
+public:
+    void draw(const QStateMachine *machine, const QString &fileName);
 
-        void draw(const QStateMachine* machine, const QString& fileName);
+private:
+    void drawChildStates(const QAbstractState *abstractParent,
+                         const QString &fileName);
 
-    private:
-
-        void drawChildStates(const QAbstractState* abstractParent,
-                             const QString& fileName);
-
-        QString label(const QAbstractState* state);
-        QString id(const QAbstractState* state, const QStringList& existingIds);
-        QString nodeAttributes(const QAbstractState* state);
-        QString edgeAttributes(const QAbstractTransition* transition);
+    QString label(const QAbstractState *state);
+    QString id(const QAbstractState *state, const QStringList &existingIds);
+    QString nodeAttributes(const QAbstractState *state);
+    QString edgeAttributes(const QAbstractTransition *transition);
 };
 
 #endif

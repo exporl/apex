@@ -12,11 +12,11 @@
     <rms>-37.3229</rms>
     <list id="1">
       <speechtoken id="ship">
-        <file>CASPA/english/T1E/List 01/44k/44k/qt010170.wav</file>
+        <file>english/CASPA/T1E/List 01/44k/qt010170.wav</file>
         <text>ship</text>
       </speechtoken>
       <speechtoken id="rug">
-        <file>CASPA/english/T1E/List 01/44k/qt010270.wav</file>
+        <file>english/CASPA/T1E/List 01/44k/qt010270.wav</file>
         <text>rug</text>
       </speechtoken>
       <speechtoken id="fan">

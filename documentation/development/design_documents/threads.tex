@@ -1,0 +1,268 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{a4wide}
+%\usepackage[landscape]{geometry}
+%\usepackage{rotating}
+\usepackage{lscape}
+
+
+\usepackage[dutch]{babel}
+\usepackage[latin1]{inputenc}
+\selectlanguage{dutch}
+
+\usepackage{graphicx}
+
+% kleinere lists
+\usepackage[normalsections,,normalmargins,normalfloats,normalindent,normalleading,normaltitle,normalbib,normalbibnotes]{savetrees}
+
+%opening
+\title{Threads in Apex}
+\author{Stijn Verstraeten}
+
+\setlength{\itemsep}{0pt}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Main}
+:
+there are 3 threads of interest, but a lot more of them are actually
+running.
+These 3 and their task are:
+
+\begin{description}
+\item[Main] main application thread (QApplication's): every object created runs in
+this thread,
+  it also runs the gui
+\item[Control] ApexControlThread: used to wait asynchroneously on certain events in
+order not to
+  obstruct the main thread. Events are queued.
+\item[Stimulus] DeviceCheckThread: waits for all devices to play their stimuli,
+signals an object
+  when this is done.
+\end{description}
+
+The other threads are eg the audio thread, the L34 thread, dialog threads etc.
+
+Some definitions:
+\begin{description}
+\item[sync] a normal, blocking function call
+\item[async] a non-blocking call, that is: the call returns immedeately after
+triggering some event
+         to do the actual wrk in another thread
+\item[event] a data structure containing at least some kind of opcode and eventually
+data (void*)
+\end{description}
+
+Note on signals/slots:
+
+these are just function calls but about 10 times slower. Although the name
+might give the impression it's something async, it is not.
+
+\begin{verbatim}
+connect( a( int ), b( int ) );
+emit( a( 5) );
+\end{verbatim}
+
+
+is exactly the same as
+
+\begin{verbatim}
+b( 5 )
+\end{verbatim}
+
+but slower.
+
+The cooperation between the 3 threads is quite simple:
+Main starts up and starts Control and Stimulus. They are now waiting for things
+to happen.
+ApexMainWindow emits signals which are catched by slots in ApexControl.
+These slots, instead of doing everything sync, tell Control to start waiting on
+an event.
+This is the most important reason for using Control: if it wasn't there,
+everything had to
+happen sync in Main so the screen was not repainted and user input was not
+possible.
+The event has 3 members: an event code from the tState enum, the time to wait
+and eventually
+the object to wait on.
+Control adds the event to it's queue. If the queue was emtpy, Control signals
+it's waitobject
+to start the thread function; if there were already events in the queue, it does
+nothing.
+In Control's thread function events are dequeued and processed. If the event has
+a waitobject,
+the thread just waits for the object to be signaled, else it sleeps for the
+given period.
+When the wait is done, Control posts a QCustomEvent to ApexControl. See
+QObject's docs for how
+this is done. In response to the post, ApexControl's customEvent() is called,
+the event code is resolved and appropriate actions are taken.
+The only thing Stimulus does, is waiting for all devices. This waiting is
+triggered by StimulusOutput
+shen PlayStimulus(0 is called. When the devices are done, Stimulus signals it's
+waitobject, which is at that time waited for in Control.
+
+
+
+\section{Example Experiment Sequence}
+This is an example sequence for ApexControl and ApexControlThread when an identification experiment runs.
+No matter what kind of eperiment is used, it will mimic this sequence very close.
+First an experiment is parsed and loaded in some way. When this succeeds, everything starts by calling
+PrepareExperiment.
+See figure~\ref{main} for the main signal flow of what happens next.
+
+The first row lists the main participants.
+Rows below list function calls, or descriptions of functions called (with a -)
+An arrow (-> or <-) means a function call (direct, via signal/slot or through event loop).
+Three dots (...) means idle time.
+
+
+\begin{landscape}
+\label{main}
+\begin{verbatim}
+
+ApexControl                                    ApexControlThread                          MainWindow
+PrepareExperiment
+-set intro screen if any
+                            --->        StartWaitOnTimer( mc_eWaitingOnIntroTimer )
+
+                                        ...
+
+                            <---
+
+CustomEvent( mc_eWaitingOnIntroTimer )
+- clear screen
+- call FirstTrial on procedure -------------------------------------------------------> SetScreen(..)
+- enable start button          -------------------------------------------------------> ExperimentLoaded()
+
+
+...
+
+                            <---------------------------------------------------------   start signal
+Start()
+
+                            --->        StartWaitOnTimer( mc_eWaitingOnStart )
+
+                                        ...
+
+                            <---
+
+CustomEvent( mc_eWaitingOnStart )
+- emit NewAnswer (why?? load first stimulus in some cases?? TODO)
+- set start time
+- call Start on procedure       -------------------------------------------------------> EnableScreen(..)
+
+...
+
+                            <---------------------------------------------------------   button clicked
+Answered()
+- stop timer
+- set feedback if needed       -------------------------------------------------------> Feedback(..)
+
+                            --->        StartWaitOnTimer( mc_eWatingOnFeedbackTimer )
+
+                                        ...
+
+                            <---
+
+CustomEvent( mc_eWatingOnFeedbackTimer )
+- end feedback if needed       -------------------------------------------------------> EndFeedback(..)
+- disable/enable appropriate buttons
+- set iti screen if needed
+
+                            --->        StartWaitOnTimer( mc_eWatingOnItiTimer )
+
+                                        ...
+
+                            <---
+
+CustomEvent( mc_eWatingOnItiTimer  )
+- clear screen if needed
+- call NextTrial on procedure --
+                                |
+NewStimulus( id )             <--
+- call LoadStimulus on StimulusOutput
+- call PlayStimulus on StimulusOutput
+  (this starts DeviceCheckThread)
+
+                            --->        StartWaitOnObject( mc_eWaitingOnStimulusDone )
+
+                                        ...
+
+                            <---        object signaled in DeviceCheckThread
+
+CustomEvent( mc_eWaitingOnStimulusDone  )
+- call UnLoadStimulus on StimulusOutput
+- disable/enable appropriate buttons
+- call StimulusDone on procedure  ----------------------------------------------------> EnableScreen(..)
+
+...
+
+[ button clicked -> Answered etc sequence is repeated here until experiment is finished ]
+
+...
+
+CustomEvent( mc_eWatingOnItiTimer  )
+- clear screen if needed
+- call NextTrial on procedure --
+                                |
+Finished                     <--
+- set outro screen if needed
+
+                            --->        StartWaitOnTimer( mc_eWaitingOnOutroTimer )
+
+                                        ...
+
+                            <---
+
+CustomEvent( mc_eWatingOnItiTimer  )
+DoFinished
+- call Save on ApexResultSink --
+                                |
+ExperimentFinished           <--
+- resets state
+- disables entire screen
+
+...
+
+[ PrepareExperiment can be called again now by opening a new experiment ]
+
+\end{verbatim}
+\end{landscape}
+
+\begin{landscape}
+This happens when the experiment is stopped before it's finished: (figure~\ref{stop})
+
+\begin{verbatim}
+
+Stop()
+- enable/disable appropriate buttons
+
+                            --->        StartWaitOnTimer( mc_eWaitingOnStop )
+
+                                        ...
+
+                            <---
+
+CustomEvent( mc_eWaitingOnStop )
+- call Stop on StimulusOutput
+- call Stop on procedure     --
+                                |
+Finished                    <--
+[ see above for what goes next ]
+
+\end{verbatim}
+\end{landscape}
+
+
+
+%\bibliographystyle{plainnat}
+%\bibliography{/home/tom/bib/total.bib}
+
+
+
+\end{document}

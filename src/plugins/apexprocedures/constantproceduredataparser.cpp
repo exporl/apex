@@ -36,17 +36,18 @@ ConstantProcedureDataParser::ConstantProcedureDataParser()
 }
 
 void ConstantProcedureDataParser::Parse(const QDomElement &p_base,
-        data::ConstantProcedureData* p_data)
+                                        data::ConstantProcedureData *p_data)
 {
     ProcedureDataParser::Parse(p_base, p_data);
 }
 
 bool ConstantProcedureDataParser::SetParameter(const QString &p_name,
-        const QString &id, const QString &p_value,
-        const QDomElement &node, data::ProcedureData *data)
+                                               const QString &id,
+                                               const QString &p_value,
+                                               const QDomElement &node,
+                                               data::ProcedureData *data)
 {
-    return ProcedureDataParser::SetParameter(p_name,id, p_value, node, data);
+    return ProcedureDataParser::SetParameter(p_name, id, p_value, node, data);
 }
-
 }
 }

@@ -25,35 +25,29 @@
 
 namespace apex
 {
-    namespace stimulus
-    {
+namespace stimulus
+{
 
-        void Filter::SetParameters ( ParameterManager* pm )
-        {
-            // TODO:
-            // get our own parametrs from parametermanager
-            // call setparameter for each
+void Filter::SetParameters(ParameterManager *pm)
+{
+    // TODO:
+    // get our own parametrs from parametermanager
+    // call setparameter for each
 
-            data::ParameterValueMap params = pm->parametersForOwner ( GetID() );
+    data::ParameterValueMap params = pm->parametersForOwner(GetID());
 
-            for ( data::ParameterValueMap::const_iterator it=params.begin(); it!=params.end(); ++it )
-            {
-                SetParameter ( it.key().type(), it.key().channel(), it.value() );
-            }
-        }
-
-
-        bool Filter::SetParameter ( data::Parameter name, QVariant value) {
-            if (name.owner()!=GetID())
-                return false;
-            SetParameter(name.type(), name.channel(), value);
-            return true;
-
-
-        }
-
-
+    for (data::ParameterValueMap::const_iterator it = params.begin();
+         it != params.end(); ++it) {
+        SetParameter(it.key().type(), it.key().channel(), it.value());
     }
 }
 
-
+bool Filter::SetParameter(data::Parameter name, QVariant value)
+{
+    if (name.owner() != GetID())
+        return false;
+    SetParameter(name.type(), name.channel(), value);
+    return true;
+}
+}
+}

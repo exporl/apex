@@ -39,7 +39,7 @@ namespace parser
 class APEX_EXPORT ScreensParser
 {
 public:
-    ScreensParser(QWidget* parent = 0);
+    ScreensParser(QWidget *parent = 0);
 
     data::ScreensData *ParseScreens(const QString &fileName,
                                     const QDomElement &p_base,
@@ -48,11 +48,9 @@ public:
                                     data::ParameterManagerData *pmd);
 
 private:
-    QWidget*  m_parent;
+    QWidget *m_parent;
 };
-
 }
 }
 
 #endif
-

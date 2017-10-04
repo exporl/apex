@@ -28,24 +28,24 @@ namespace apex
 {
 namespace data
 {
-ScreensData::ScreensData() :
-        m_eMode(gc_eNormal),
-        standardFontSize(-1),
-        showFeedback(false),
-        showCurrent(false),
-        fullScreen(false),
-        showFeedbackOn(HIGHLIGHT_CORRECT),
-        showMenu(true),
-        beforeLength(0),
-        afterLength(0),
-        betweenTrialsLength(0),
-        lengthOfFeedback(1000),
-        feedbackLengthDefined(false),
-        showPanel(true),
-        showProgress(true),
-        showStopButton(false),
-        showRepeatButton(false),
-        showStatusPicture(false)
+ScreensData::ScreensData()
+    : m_eMode(gc_eNormal),
+      standardFontSize(-1),
+      showFeedback(false),
+      showCurrent(false),
+      fullScreen(false),
+      showFeedbackOn(HIGHLIGHT_CORRECT),
+      showMenu(true),
+      beforeLength(0),
+      afterLength(0),
+      betweenTrialsLength(0),
+      lengthOfFeedback(1000),
+      feedbackLengthDefined(false),
+      showPanel(true),
+      showProgress(true),
+      showStopButton(false),
+      showRepeatButton(false),
+      showStatusPicture(false)
 {
 }
 
@@ -56,20 +56,20 @@ ScreensData::~ScreensData()
         delete it->second;
 }
 
-const Screen& ScreensData::GetScreen (const QString& id) const
+const Screen &ScreensData::GetScreen(const QString &id) const
 {
-    ScreenMap::const_iterator i = screens.find( id );
-    Q_ASSERT( i != screens.end() );
+    ScreenMap::const_iterator i = screens.find(id);
+    Q_ASSERT(i != screens.end());
     return *i->second;
 }
 
-void ScreensData::manageScreen( Screen* s )
+void ScreensData::manageScreen(Screen *s)
 {
     screens[s->getID()] = s;
-    //keep( s );
+    // keep( s );
 }
 
-const FilePrefix& ScreensData::prefix() const
+const FilePrefix &ScreensData::prefix() const
 {
     return filePrefix;
 }
@@ -94,12 +94,12 @@ bool ScreensData::hasDefaultFontSize() const
     return standardFontSize > 0;
 }
 
-void ScreensData::setDefaultFontSize( int fs )
+void ScreensData::setDefaultFontSize(int fs)
 {
     standardFontSize = fs;
 }
 
-void ScreensData::setDefaultFont( const QString& font )
+void ScreensData::setDefaultFont(const QString &font)
 {
     standardFont = font;
 }
@@ -114,21 +114,21 @@ QString ScreensData::defaultFont() const
     return standardFont;
 }
 
-const ScreensData::ScreenMap& ScreensData::getScreens() const
+const ScreensData::ScreenMap &ScreensData::getScreens() const
 {
     return screens;
 }
 
-Screen& ScreensData::GetScreen(const QString& id)
+Screen &ScreensData::GetScreen(const QString &id)
 {
-    ScreenMap::iterator i = screens.find( id );
-    if ( i == screens.end() ) {
+    ScreenMap::iterator i = screens.find(id);
+    if (i == screens.end()) {
         throw ApexStringException(tr("Screen not found: %1").arg(id));
     }
     return *i->second;
 }
 
-ScreensData::ScreenMap& ScreensData::getScreens()
+ScreensData::ScreenMap &ScreensData::getScreens()
 {
     return screens;
 }
@@ -140,7 +140,7 @@ bool ScreensData::hasStyle() const
 
 void ScreensData::setStyle(const QString s)
 {
-    styleSheet=s;
+    styleSheet = s;
 };
 
 QString ScreensData::style() const
@@ -155,7 +155,7 @@ bool ScreensData::hasApexStyle() const
 
 void ScreensData::setApexStyle(const QString s)
 {
-    apexStyleSheet=s;
+    apexStyleSheet = s;
 };
 QString ScreensData::apexStyle() const
 {
@@ -205,14 +205,13 @@ tFeedbackOn ScreensData::feedbackOn() const
 
 QString ScreensData::feedbackOnString() const
 {
-    switch (showFeedbackOn)
-    {
-        case HIGHLIGHT_NONE:
-            return "none";
-        case HIGHLIGHT_CORRECT:
-            return "correct";
-        case HIGHLIGHT_ANSWER:
-            return "clicked";
+    switch (showFeedbackOn) {
+    case HIGHLIGHT_NONE:
+        return "none";
+    case HIGHLIGHT_CORRECT:
+        return "correct";
+    case HIGHLIGHT_ANSWER:
+        return "clicked";
     }
 
     Q_ASSERT(false);
@@ -296,7 +295,7 @@ bool ScreensData::hasStatusPictureEnabled() const
 
 QString ScreensData::statusAnsweringPicture() const
 {
-    return QString();     // FIXME: add to experiment file
+    return QString(); // FIXME: add to experiment file
 }
 
 QString ScreensData::statusListeningPicture() const
@@ -357,13 +356,13 @@ void ScreensData::setInterTrialLength(unsigned length)
 bool ScreensData::hasGeneralScreenData() const
 {
     return fullScreen || showPanel || showRepeatButton || showMenu ||
-            showStopButton || !betweenTrialsScreen.isEmpty();
+           showStopButton || !betweenTrialsScreen.isEmpty();
 }
 
 bool ScreensData::hasReinforcement() const
 {
     return hasProgressbarEnabled() || hasFeedbackEnabled() ||
-            hasFeedbackLengthDefined() || hasShowCurrentEnabled();
+           hasFeedbackLengthDefined() || hasShowCurrentEnabled();
 }
 
 bool ScreensData::hasIntroScreen() const
@@ -431,17 +430,15 @@ void ScreensData::setPanelMovie(QString movie)
     movieOfPanel = movie;
 }
 
-const QList<FeedbackPluginPair>& ScreensData::feedbackPlugins() const
+const QList<FeedbackPluginPair> &ScreensData::feedbackPlugins() const
 {
     return feedbackPluginList;
 }
 
-
-void ScreensData::addFeedbackPlugin(const QString& name,
-                                    const FeedbackPluginParameters& params)
+void ScreensData::addFeedbackPlugin(const QString &name,
+                                    const FeedbackPluginParameters &params)
 {
-    feedbackPluginList.push_back(
-        FeedbackPluginPair(name, params) );
+    feedbackPluginList.push_back(FeedbackPluginPair(name, params));
 }
 
 bool ScreensData::hasChildmode() const
@@ -449,68 +446,35 @@ bool ScreensData::hasChildmode() const
     return hasIntroScreen() || hasOutroScreen() || hasPanelMovie();
 }
 
-bool ScreensData::operator==(const ScreensData& other)
+bool ScreensData::operator==(const ScreensData &other)
 {
-    if (!ApexTools::areEqualPointerMaps(screens, other.screens))
-    {
+    if (!ApexTools::areEqualPointerMaps(screens, other.screens)) {
         qCDebug(APEX_RS, "screenmaps are not equal");
         return false;
     }
 
-    return  standardFont == other.standardFont &&
-            standardFontSize == other.standardFontSize &&
-            showFeedback == other.showFeedback &&
-            showCurrent == other.showCurrent &&
-            fullScreen == other.fullScreen &&
-            showFeedbackOn == other.showFeedbackOn &&
-            showMenu == other.showMenu &&
-            beforeLength == other.beforeLength &&
-            afterLength == other.afterLength &&
-            betweenTrialsLength == other.betweenTrialsLength &&
-            lengthOfFeedback == other.lengthOfFeedback &&
-            feedbackLengthDefined == other.feedbackLengthDefined &&
-            showPanel == other.showPanel &&
-            showProgress == other.showProgress &&
-            showStopButton == other.showStopButton &&
-            showRepeatButton == other.showRepeatButton &&
-            beforeScreen == other.beforeScreen &&
-            afterScreen == other.afterScreen &&
-            betweenTrialsScreen == other.betweenTrialsScreen &&
-            styleSheet == other.styleSheet &&
-            apexStyleSheet == other.apexStyleSheet &&
-            movieOfPanel == other.movieOfPanel &&
-            feedbackPositive == other.feedbackPositive &&
-            feedbackNegative == other.feedbackNegative &&
-            filePrefix == other.filePrefix;
-}
-
+    return standardFont == other.standardFont &&
+           standardFontSize == other.standardFontSize &&
+           showFeedback == other.showFeedback &&
+           showCurrent == other.showCurrent && fullScreen == other.fullScreen &&
+           showFeedbackOn == other.showFeedbackOn &&
+           showMenu == other.showMenu && beforeLength == other.beforeLength &&
+           afterLength == other.afterLength &&
+           betweenTrialsLength == other.betweenTrialsLength &&
+           lengthOfFeedback == other.lengthOfFeedback &&
+           feedbackLengthDefined == other.feedbackLengthDefined &&
+           showPanel == other.showPanel && showProgress == other.showProgress &&
+           showStopButton == other.showStopButton &&
+           showRepeatButton == other.showRepeatButton &&
+           beforeScreen == other.beforeScreen &&
+           afterScreen == other.afterScreen &&
+           betweenTrialsScreen == other.betweenTrialsScreen &&
+           styleSheet == other.styleSheet &&
+           apexStyleSheet == other.apexStyleSheet &&
+           movieOfPanel == other.movieOfPanel &&
+           feedbackPositive == other.feedbackPositive &&
+           feedbackNegative == other.feedbackNegative &&
+           filePrefix == other.filePrefix;
 }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}

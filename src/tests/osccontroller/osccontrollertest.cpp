@@ -1,5 +1,6 @@
 #include "../lib/apexmain/device/plugincontrollerinterface.h"
 
+#include "common/debug.h"
 #include "common/global.h"
 
 #include "osccontrollertest.h"
@@ -8,16 +9,21 @@
 #include <QPluginLoader>
 
 using namespace apex;
-//using namespace device;
+// using namespace device;
 
-
-QString libraryName(const QString& base)
+void OscControllerTest::initTestCase()
 {
-    QString path(  QCoreApplication::applicationDirPath() );
+    cmn::enableCoreDumps(QCoreApplication::applicationFilePath());
+}
+
+QString libraryName(const QString &base)
+{
+    QString path(QCoreApplication::applicationDirPath());
 #ifdef Q_OS_WIN32
-    return path + QLatin1String("\\") +  base + QLatin1String(".dll");
+    return path + QLatin1String("\\") + base + QLatin1String(".dll");
 #else
-    return path + QLatin1String("/") + QLatin1String("lib") + base + QLatin1String(".so");
+    return path + QLatin1String("/") + QLatin1String("lib") + base +
+           QLatin1String(".so");
 #endif
 }
 
@@ -30,12 +36,13 @@ void OscControllerTest::testPluginLoader()
     QVERIFY(loader.isLoaded());
     QVERIFY(plugin);
 
-    PluginControllerCreator* creator = qobject_cast<PluginControllerCreator*>(plugin);
+    PluginControllerCreator *creator =
+        qobject_cast<PluginControllerCreator *>(plugin);
 
     QVERIFY(creator);
 
 #endif
 }
 
-//generate standalone binary for the test
+// generate standalone binary for the test
 QTEST_MAIN(OscControllerTest)

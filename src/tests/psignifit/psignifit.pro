@@ -1,4 +1,4 @@
-CLEBS *= psignifit apextools asciicast
+CLEBS *= psignifit apextools asciicast common
 TARGET = psignifittest
 
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)

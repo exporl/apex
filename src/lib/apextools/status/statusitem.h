@@ -48,42 +48,41 @@ struct StatusItemPrivate;
  */
 class APEXTOOLS_EXPORT StatusItem
 {
-    public:
+public:
+    enum Level {
+        Unused = 0x00, // use when there's nothing to report
+        Debug = 0x01,
+        Info = 0x02,
+        Warning = 0x04,
+        Critical = 0x08,
+        Fatal = 0x10,
+        AllButDebug = 0x1E,
+        All = 0x1F
+    };
+    Q_DECLARE_FLAGS(Levels, Level);
 
-        enum Level {
-            Unused      = 0x00,   //use when there's nothing to report
-            Debug       = 0x01,
-            Info        = 0x02,
-            Warning     = 0x04,
-            Critical    = 0x08,
-            Fatal       = 0x10,
-            AllButDebug = 0x1E,
-            All         = 0x1F
-        };
-        Q_DECLARE_FLAGS(Levels, Level);
+    StatusItem(Level level = Unused, const QString &source = QString(),
+               const QString &message = QString());
+    StatusItem(const StatusItem &other);
+    ~StatusItem();
 
-        StatusItem(Level level = Unused, const QString& source  = QString(),
-                                         const QString& message = QString());
-        StatusItem(const StatusItem& other);
-        ~StatusItem();
+    Level level() const;
+    const QString &source() const;
+    const QString &message() const;
+    const QDateTime &dateTime() const;
 
-        Level level() const;
-        const QString& source() const;
-        const QString& message() const;
-        const QDateTime& dateTime() const;
+    StatusItem &setLevel(Level level);
+    StatusItem &setSource(const QString &source);
+    StatusItem &setMessage(const QString &message);
 
-        StatusItem& setLevel(Level level);
-        StatusItem& setSource(const QString& source);
-        StatusItem& setMessage(const QString& message);
+    StatusItem &operator=(const StatusItem &other);
+    bool operator==(const StatusItem &other) const;
 
-        StatusItem& operator=(const StatusItem& other);
-        bool operator==(const StatusItem& other) const;
-
-    private:
-        StatusItemPrivate* d;
+private:
+    StatusItemPrivate *d;
 };
 
-}//ns apex
+} // ns apex
 
 Q_DECLARE_METATYPE(apex::StatusItem)
 Q_DECLARE_OPERATORS_FOR_FLAGS(apex::StatusItem::Levels);

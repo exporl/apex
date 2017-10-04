@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bertha:experiment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/bertha/1.0/experiment ../schema/experiment.xsd"
+    xmlns:bertha="http://med.kuleuven.be/exporl/bertha/1.0/experiment">
+    <blocks>
+        <block id="beamformer">
+            <plugin>Beamformer</plugin>
+            <parameter name="filePath">../testdata/FB_freedom_10.bin</parameter>
+        </block>
+        <block id="beamformersnr">
+            <plugin>Beamformer</plugin>
+            <parameter name="filePath">../testdata/FB_freedom_10.bin</parameter>
+        </block>
+        <block id="deemphasissignal">
+            <plugin>Emphasis</plugin>
+            <parameter name="filePath">../testdata/filter_deemph.bin</parameter>
+        </block>
+        <block id="deemphasisvad">
+            <plugin>Emphasis</plugin>
+            <parameter name="filePath">../testdata/filter_deemph.bin</parameter>
+        </block>
+        <block id="vad">
+            <plugin>Vad</plugin>
+            <parameter name="length">512</parameter>
+        </block>
+        <block id="amplifier">
+            <plugin>Amplifier</plugin>
+            <inputports>2</inputports>
+            <outputports>2</outputports>
+            <parameter name="baseGain">15.7378580971083245</parameter>
+            <parameter name="gain">-10</parameter>
+        </block>
+        <block id="offsetamplifier">
+            <plugin>Amplifier</plugin>
+            <inputports>2</inputports>
+            <outputports>2</outputports>
+            <parameter name="gain">10</parameter>
+        </block>
+        <block id="adaptivewiener">
+            <plugin>AdaptiveWienerFilter</plugin>
+            <parameter name="length">64</parameter>
+            <parameter name="muInv">0</parameter>
+        </block>
+        <block id="summation1">
+            <plugin>Summation</plugin>
+        </block>
+        <block id="summation2">
+            <plugin>Summation</plugin>
+        </block>
+        <block id="summation3">
+            <plugin>Summation</plugin>
+        </block>
+        <block id="summation4">
+            <plugin>Summation</plugin>
+        </block>
+    </blocks>
+    <connections>
+        <connection>
+            <from id="device1" port="capture-1"/>
+            <to id="amplifier" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="device1" port="capture-2"/>
+            <to id="amplifier" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="amplifier" port="output-1"/>
+            <to id="offsetamplifier" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="amplifier" port="output-2"/>
+            <to id="offsetamplifier" port="input-2"/>
+        </connection>
+
+        <connection>
+            <from id="amplifier" port="output-1"/>
+            <to id="summation1" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="amplifier" port="output-2"/>
+            <to id="summation2" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="offsetamplifier" port="output-1"/>
+            <to id="summation3" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="offsetamplifier" port="output-2"/>
+            <to id="summation4" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="device1" port="capture-3"/>
+            <to id="summation1" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="device1" port="capture-4"/>
+            <to id="summation2" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="device1" port="capture-3"/>
+            <to id="summation3" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="device1" port="capture-4"/>
+            <to id="summation4" port="input-2"/>
+        </connection>
+
+        <connection>
+            <from id="summation1" port="output-1"/>
+            <to id="beamformer" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="summation2" port="output-1"/>
+            <to id="beamformer" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="summation3" port="output-1"/>
+            <to id="beamformersnr" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="summation4" port="output-1"/>
+            <to id="beamformersnr" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="beamformersnr" port="output-1"/>
+            <to id="deemphasisvad" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="beamformersnr" port="output-2"/>
+            <to id="deemphasisvad" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="deemphasisvad" port="output-1"/>
+            <to id="vad" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="deemphasisvad" port="output-2"/>
+            <to id="vad" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="beamformer" port="output-1"/>
+            <to id="adaptivewiener" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="beamformer" port="output-2"/>
+            <to id="adaptivewiener" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="beamformersnr" port="output-1"/>
+            <to id="adaptivewiener" port="input-3"/>
+        </connection>
+        <connection>
+            <from id="beamformersnr" port="output-2"/>
+            <to id="adaptivewiener" port="input-4"/>
+        </connection>
+        <connection>
+            <from id="vad" port="output-1"/>
+            <to id="adaptivewiener" port="input-5"/>
+        </connection>
+        <connection>
+            <from id="adaptivewiener" port="output-1"/>
+            <to id="deemphasissignal" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="adaptivewiener" port="output-2"/>
+            <to id="deemphasissignal" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="deemphasissignal" port="output-1"/>
+            <to id="device1" port="playback-1"/>
+        </connection>
+        <connection>
+            <from id="deemphasissignal" port="output-2"/>
+            <to id="device1" port="playback-2"/>
+        </connection>
+    </connections>
+    <device id="device1">
+        <driver>Files</driver>
+        <samplerate>16000</samplerate>
+        <blocksize>8192</blocksize>
+        <playbackports>2</playbackports>
+        <captureports>4</captureports>
+        <parameter name="inputFiles">../testdata/adept_signal_ch1.wav,../testdata/adept_signal_ch2.wav,../testdata/adept_noise_ch1.wav,../testdata/adept_noise_ch2.wav</parameter>
+        <parameter name="outputFiles">../testdata/output_ch1.wav,../testdata/output_ch2.wav</parameter>
+    </device>
+</bertha:experiment>

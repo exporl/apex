@@ -25,39 +25,42 @@
 class CCPUTicker
 {
 public:
-  CCPUTicker();
-  CCPUTicker(const CCPUTicker& ticker);
+    CCPUTicker();
+    CCPUTicker(const CCPUTicker &ticker);
 
-  inline CCPUTicker& operator=(const CCPUTicker& ticker);
+    inline CCPUTicker &operator=(const CCPUTicker &ticker);
 
-    //perform the actual measurement
-  void Measure();
+    // perform the actual measurement
+    void Measure();
 
-    //accessors to the actual measurement value
-  double GetTickCountAsSeconds() const;
-  inline qint64 GetTickCount() const { return m_TickCount; };
+    // accessors to the actual measurement value
+    double GetTickCountAsSeconds() const;
+    inline qint64 GetTickCount() const
+    {
+        return m_TickCount;
+    };
 
-    //static methods
-  static bool GetCPUFrequency(double& frequency, double& target_ave_dev,
-                              unsigned long interval = 1000,
-                              unsigned int max_loops = 20);
+    // static methods
+    static bool GetCPUFrequency(double &frequency, double &target_ave_dev,
+                                unsigned long interval = 1000,
+                                unsigned int max_loops = 20);
 
-    //Is high resolution available on this CPU
-  bool IsAvailable() const;
+    // Is high resolution available on this CPU
+    bool IsAvailable() const;
 
 protected:
-  qint64 m_TickCount;
+    qint64 m_TickCount;
 
-   static bool m_bHasRDTSC;
-  static bool m_bRunningOnNT;
-  static bool m_bStaticsCalculated;
+    static bool m_bHasRDTSC;
+    static bool m_bRunningOnNT;
+    static bool m_bStaticsCalculated;
 
-  static double m_deviation;
-  static double m_freq;
-  static bool m_bFrequencyCalculated;
+    static double m_deviation;
+    static double m_freq;
+    static bool m_bFrequencyCalculated;
 
-  static bool CheckHasRDTSC();
-  static bool RunningOnNT();
+    static bool CheckHasRDTSC();
+    static bool RunningOnNT();
 };
 
 #endif //__CPUTICKER_H__

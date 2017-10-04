@@ -27,10 +27,8 @@ namespace apex
 namespace data
 {
 
-PictureElement::PictureElement(
-    const QString& id, ScreenElement* parent)
-        : ScreenElement(id, parent),
-        overrideFeedback(false)
+PictureElement::PictureElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent), overrideFeedback(false)
 {
 }
 
@@ -65,10 +63,10 @@ QString PictureElement::getDisabled() const
 
 QString PictureElement::getFileId() const
 {
-       return fileId;
+    return fileId;
 }
 
-void PictureElement::setDefault(const QString& p)
+void PictureElement::setDefault(const QString &p)
 {
     defaultPath = p;
 }
@@ -78,22 +76,22 @@ void PictureElement::setFileId(const QString &p)
     fileId = p;
 }
 
-void PictureElement::setPositive(const QString& p)
+void PictureElement::setPositive(const QString &p)
 {
     positivePath = p;
 }
 
-void PictureElement::setNegative(const QString& p)
+void PictureElement::setNegative(const QString &p)
 {
     negativePath = p;
 }
 
-void PictureElement::setHighlight(const QString& p)
+void PictureElement::setHighlight(const QString &p)
 {
     highlightPath = p;
 }
 
-void PictureElement::setDisabled(const QString& p)
+void PictureElement::setDisabled(const QString &p)
 {
     disabledPath = p;
 }
@@ -108,12 +106,12 @@ void PictureElement::setOverrideFeedback(bool o)
     overrideFeedback = o;
 }
 
-void PictureElement::visit(ScreenElementVisitor* v)
+void PictureElement::visit(ScreenElementVisitor *v)
 {
     v->visitPicture(this);
 }
 
-void PictureElement::visit(ScreenElementVisitor* v) const
+void PictureElement::visit(ScreenElementVisitor *v) const
 {
     v->visitPicture(this);
 }
@@ -123,16 +121,14 @@ ScreenElement::ElementTypeT PictureElement::elementType() const
     return Picture;
 }
 
-bool PictureElement::operator==(const PictureElement& other) const
+bool PictureElement::operator==(const PictureElement &other) const
 {
-    return  ScreenElement::operator==(other) &&
-            defaultPath == other.defaultPath &&
-            highlightPath == other.highlightPath &&
-            positivePath == other.positivePath &&
-            negativePath == other.negativePath &&
-            overrideFeedback == other.overrideFeedback;
-}
-
+    return ScreenElement::operator==(other) &&
+           defaultPath == other.defaultPath &&
+           highlightPath == other.highlightPath &&
+           positivePath == other.positivePath &&
+           negativePath == other.negativePath &&
+           overrideFeedback == other.overrideFeedback;
 }
 }
-
+}

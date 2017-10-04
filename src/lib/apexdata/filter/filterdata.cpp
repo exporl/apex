@@ -29,7 +29,6 @@ FilterData::FilterData()
 {
 }
 
-
 FilterData::~FilterData()
 {
 }
@@ -54,7 +53,6 @@ bool FilterData::isGenerator() const
     return false;
 }
 
+} // ns data
 
-}//ns data
-
-}//ns apex
+} // ns apex

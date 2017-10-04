@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE cisequence>
+<cisequence version="1.0">
+    <sequence>
+        <stimulus type="codacs">
+            <parameter name="trigger">true</parameter>
+            <parameter name="amplitude">-2048</parameter>
+            <parameter name="period">51.0</parameter>
+        </stimulus>
+        <stimulus type="codacs">
+            <parameter name="trigger">false</parameter>
+            <parameter name="amplitude">-1</parameter>
+            <parameter name="period">51.0</parameter>
+        </stimulus>
+        <stimulus type="codacs">
+            <parameter name="trigger">false</parameter>
+            <parameter name="amplitude">2047</parameter>
+            <parameter name="period">51.0</parameter>
+        </stimulus>
+        <stimulus type="codacs">
+            <parameter name="trigger">false</parameter>
+            <parameter name="amplitude">1</parameter>
+            <parameter name="period">51.0</parameter>
+        </stimulus>
+    </sequence>
+</cisequence>

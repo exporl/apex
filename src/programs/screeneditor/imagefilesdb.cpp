@@ -22,7 +22,7 @@ ImageFilesDB::ImageFilesDB()
 {
 }
 
-ImageFilesDB& ImageFilesDB::instance()
+ImageFilesDB &ImageFilesDB::instance()
 {
     static ImageFilesDB i;
     return i;

@@ -102,20 +102,19 @@ using namespace apex::device;
 using namespace apex::XMLKeys;
 using namespace cmn;
 
-apex::ExperimentParser::ExperimentParser(const QString &configFilename,
-        const QMap<QString, QString> &expressions) :
-    UpgradableXmlParser(configFilename,
-            ApexPaths::GetExperimentSchemaPath(),
-            QL1S(EXPERIMENT_SCHEMA_URL),
-            QL1S(APEX_NAMESPACE)),
-    m_interactive(true),
-    connectionDatas(new data::ConnectionsData()),
-    m_resultParameters(new data::ResultParameters()),
-    expressions(expressions)
+apex::ExperimentParser::ExperimentParser(
+    const QString &configFilename, const QMap<QString, QString> &expressions)
+    : UpgradableXmlParser(configFilename, ApexPaths::GetExperimentSchemaPath(),
+                          QL1S(EXPERIMENT_SCHEMA_URL), QL1S(APEX_NAMESPACE)),
+      m_interactive(true),
+      connectionDatas(new data::ConnectionsData()),
+      m_resultParameters(new data::ResultParameters()),
+      expressions(expressions)
 {
 }
 
-data::ExperimentData* apex::ExperimentParser::parse(bool interactive)
+data::ExperimentData *apex::ExperimentParser::parse(bool interactive,
+                                                    bool expand)
 {
     loadAndUpgradeDom();
 
@@ -123,25 +122,20 @@ data::ExperimentData* apex::ExperimentParser::parse(bool interactive)
 
     qCDebug(APEX_RS, "ExperimentParser: parsing...");
 
-    if (!(!interactive || ApplyXpathModifications()) || !Parsefile())
+    if (!(!interactive || ApplyXpathModifications()) || !Parsefile(expand))
         throw ParseException();
 
-    return new data::ExperimentData(fileName,
-                                    screens.take(),
-                                    procedureData.take(),
-                                    connectionDatas.take(),
-                                    m_CalibrationData.take(),
-                                    m_generalParameters.take(),
-                                    m_resultParameters.take(),
-                                    m_parameterDialogResults.take(),
-                                    new QMap<QString, data::RandomGeneratorParameters*>(m_randomgenerators),
-                                    new data::DevicesData(m_devicesdata),
-                                    new data::FiltersData(m_filtersdata),
-                                    new data::DevicesData(m_controldevicesdata),
-                                    new data::DatablocksData(m_datablocksdata),
-                                    m_stimuli.take(),
-                                    m_description,
-                                    parameterManagerData.take());
+    return new data::ExperimentData(
+        fileName, screens.take(), procedureData.take(), connectionDatas.take(),
+        m_CalibrationData.take(), m_generalParameters.take(),
+        m_resultParameters.take(), m_parameterDialogResults.take(),
+        new QMap<QString, data::RandomGeneratorParameters *>(
+            m_randomgenerators),
+        new data::DevicesData(m_devicesdata),
+        new data::FiltersData(m_filtersdata),
+        new data::DevicesData(m_controldevicesdata),
+        new data::DatablocksData(m_datablocksdata), m_stimuli.take(),
+        m_description, parameterManagerData.take());
 }
 
 /**apex::ExperimentParser::
@@ -150,35 +144,45 @@ data::ExperimentData* apex::ExperimentParser::parse(bool interactive)
  */
 bool apex::ExperimentParser::ApplyXpathModifications()
 {
-    gui::ApexMainWindow* mwp = 0;
+    gui::ApexMainWindow *mwp = 0;
     if (m_interactive)
         mwp = ApexControl::Get().mainWindow();
 
-    InteractiveParameters* ip = new InteractiveParameters(document);
-    if(!expressions.isEmpty()) {
-        ip->applyExpressions(expressions);
-        document = ip->document();
+    InteractiveParameters ip(document);
+    if (!expressions.isEmpty()) {
+        /* Add the expressions to the interactive results.
+         * That way they will be visible in the results file regardless.
+         */
+        m_parameterDialogResults.reset(new data::ParameterDialogResults);
+        m_parameterDialogResults->append(ip.applyExpressions(expressions));
+        document = ip.document();
     }
 
+    bool result = false;
+    do {
+        InteractiveParametersDialog ipd(&ip, mwp);
+        if (ip.entries().isEmpty())
+            return true;
+        result = ipd.exec();
 
-    InteractiveParametersDialog ipd(ip, mwp);
-
-    if (ip->entries().isEmpty())
-        return true;
-    bool result = ipd.exec();
-
-    if (result) {
-        ipd.apply();
-        document = ip->document();
-    } else {
-        result = QMessageBox::warning(mwp,
-                tr("Interactive changes not applied"),
-                tr("Warning: no changes were applied, do you want to continue"
-                   " with the unmodified document?"),
-                QMessageBox::No, QMessageBox::Yes) == QMessageBox::Yes;
-    }
-
-    m_parameterDialogResults.reset(ip->results());
+        if (result) {
+            if (!ipd.apply()) {
+                result = false;
+                continue;
+            }
+            document = ip.document();
+        } else {
+            result = QMessageBox::warning(
+                         mwp, tr("Interactive changes not applied"),
+                         tr("Warning: no changes were applied, do you want to "
+                            "continue"
+                            " with the unmodified document?"),
+                         QMessageBox::No, QMessageBox::Yes) == QMessageBox::Yes;
+        }
+        if (!m_parameterDialogResults)
+            m_parameterDialogResults.reset(new data::ParameterDialogResults);
+        m_parameterDialogResults->append(*ip.results());
+    } while (!result);
 
     return result;
 }
@@ -187,7 +191,7 @@ apex::ExperimentParser::~ExperimentParser()
 {
 }
 
-bool apex::ExperimentParser::Parsefile ()
+bool apex::ExperimentParser::Parsefile(bool expand)
 {
     // set current path to experiment file path
     QDir::setCurrent(QFileInfo(fileName).path());
@@ -206,8 +210,9 @@ bool apex::ExperimentParser::Parsefile ()
     else
         m_generalParameters.reset(new data::GeneralParameters());
 
-    for (QDomElement currentNode = baseNode.firstChildElement(); !currentNode.isNull() && bSuccess;
-            currentNode = currentNode.nextSiblingElement()) {
+    for (QDomElement currentNode = baseNode.firstChildElement();
+         !currentNode.isNull() && bSuccess;
+         currentNode = currentNode.nextSiblingElement()) {
         currentTag = currentNode.tagName();
         qCDebug(APEX_RS, "Parsing %s", qPrintable(currentTag));
 
@@ -216,42 +221,52 @@ bool apex::ExperimentParser::Parsefile ()
         else if (currentTag == "filters")
             bSuccess = ParseFilters(currentNode);
         else if (currentTag == "datablocks")
-            bSuccess = ParseDatablocks(currentNode);
+            bSuccess = ParseDatablocks(currentNode, expand);
         else if (currentTag == "procedure")
-            bSuccess = ParseProcedure(currentNode);
+            bSuccess = ParseProcedure(currentNode, expand);
         else if (currentTag == "stimuli")
-            bSuccess = ParseStimuli(currentNode);
+            bSuccess = ParseStimuli(currentNode, expand);
         else if (currentTag == "devices")
             bSuccess = ParseDevices(currentNode);
         else if (currentTag == "screens")
             bSuccess = ParseScreens(currentNode);
         else if (currentTag == "connections")
-            bSuccess = ParseConnections(currentNode);         // connections should be parsed AFTER datablocks, devices and filters because they need to lookup their device
+            bSuccess =
+                ParseConnections(currentNode); // connections should be parsed
+                                               // AFTER datablocks, devices and
+                                               // filters because they need to
+                                               // lookup their device
         else if (currentTag == "randomgenerators")
             bSuccess = ParseRandomGenerators(currentNode);
         else if (currentTag == "calibration")
             bSuccess = ParseCalibration(currentNode);
         else if (currentTag == "results")
             bSuccess = ParseResults(currentNode);
-        else if (currentTag == "general");
+        else if (currentTag == "general")
+            ;
         // skipping, already parsed before
-        else if (currentTag == "interactive");
+        else if (currentTag == "interactive")
+            ;
         // NOP
         else {
-            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ExperimentParser::Parsefile",
-                                  tr("Unknown tag \"%1\"").arg(currentTag))));
+            qCWarning(APEX_RS, "%s",
+                      qPrintable(QSL("%1: %2").arg(
+                          "ExperimentParser::Parsefile",
+                          tr("Unknown tag \"%1\"").arg(currentTag))));
         }
     }
 
     if (!bSuccess) {
-        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ExperimentParser::Parsefile",
-                            tr("Error parsing element \"%1\"").arg(currentTag))));
+        qCCritical(APEX_RS, "%s",
+                   qPrintable(QSL("%1: %2").arg(
+                       "ExperimentParser::Parsefile",
+                       tr("Error parsing element \"%1\"").arg(currentTag))));
 
         return false;
     }
 
-    //register fixed parameters of stimuli
-    //FIXME find a better place to do this
+    // register fixed parameters of stimuli
+    // FIXME find a better place to do this
     Q_FOREACH (QString fixedParameter, m_stimuli->GetFixedParameters()) {
         data::Parameter parameter;
         parameter.setId(fixedParameter);
@@ -271,40 +286,48 @@ bool apex::ExperimentParser::Parsefile ()
 
 bool apex::ExperimentParser::ParseConnections(const QDomElement &p_base)
 {
-    AddStatusMessage (tr ("Processing Connections"));
+    AddStatusMessage(tr("Processing Connections"));
 
     parser::ConnectionParser parser;
 
-    for (QDomElement currentNode = p_base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement())
-    {
-        const QString tag (currentNode.tagName());
+    for (QDomElement currentNode = p_base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
+        const QString tag(currentNode.tagName());
 
         if (tag == "connection") {
-            data::ConnectionData* cd = parser.Parse(currentNode);
+            data::ConnectionData *cd = parser.Parse(currentNode);
             QString dev(GetDeviceForConnection(cd));
             cd->setDevice(dev);
 
             QString id = cd->fromChannelId();
-            if ( ! id.isEmpty() )
-                parameterManagerData->registerParameter(id, data::Parameter(dev, "connection-" + id, cd->fromChannel(), -1, true));
+            if (!id.isEmpty())
+                parameterManagerData->registerParameter(
+                    id, data::Parameter(dev, "connection-" + id,
+                                        cd->fromChannel(), -1, true));
             id = cd->toChannelId();
-            if ( ! id.isEmpty() )
-                parameterManagerData->registerParameter(id, data::Parameter(dev, "connection-" + id, cd->toChannel(), -1, true));
-
+            if (!id.isEmpty())
+                parameterManagerData->registerParameter(
+                    id, data::Parameter(dev, "connection-" + id,
+                                        cd->toChannel(), -1, true));
 
             // check if this connection already exists
-            for (data::ConnectionsData::const_iterator it=connectionDatas->begin(); it!=connectionDatas->end(); ++it) {
+            for (data::ConnectionsData::const_iterator it =
+                     connectionDatas->begin();
+                 it != connectionDatas->end(); ++it) {
                 if ((**it).duplicateOf(*cd)) {
-                    qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("Connections",
-                                          tr("Duplicate connection from %1 to %2")
-                                             .arg(cd->fromId()).arg(cd->toId()))));
+                    qCWarning(APEX_RS, "%s",
+                              qPrintable(QSL("%1: %2").arg(
+                                  "Connections",
+                                  tr("Duplicate connection from %1 to %2")
+                                      .arg(cd->fromId())
+                                      .arg(cd->toId()))));
                 }
             }
 
-            connectionDatas->push_back (cd);
+            connectionDatas->push_back(cd);
         } else {
-            qFatal ("Unknown tag in a connection: %s", qPrintable (tag));
+            qFatal("Unknown tag in a connection: %s", qPrintable(tag));
         }
     }
 
@@ -313,46 +336,52 @@ bool apex::ExperimentParser::ParseConnections(const QDomElement &p_base)
 }
 
 /**
- * iterate over all datablocks, devices and filters to find the device of the connection
+ * iterate over all datablocks, devices and filters to find the device of the
+ * connection
  */
-QString apex::ExperimentParser::GetDeviceForConnection(data::ConnectionData* cd)
+QString apex::ExperimentParser::GetDeviceForConnection(data::ConnectionData *cd)
 {
     QString targetID = cd->fromId();
 
     // search devices
     try {
-        data::DeviceData* d = m_devicesdata.deviceData(targetID);
+        data::DeviceData *d = m_devicesdata.deviceData(targetID);
         return d->id();
-    } catch (...) {}
+    } catch (...) {
+    }
 
     try {
-        const data::FilterData* d =  m_filtersdata.filterData(targetID);
+        const data::FilterData *d = m_filtersdata.filterData(targetID);
         return d->device();
-    } catch (...) {}
-
+    } catch (...) {
+    }
 
     try {
-        const data::DatablockData* d = m_datablocksdata.datablockData(targetID);
+        const data::DatablockData *d = m_datablocksdata.datablockData(targetID);
         return d->device();
-    } catch (...) {}
+    } catch (...) {
+    }
 
     targetID = cd->toId();
 
     // search devices
     try {
-        data::DeviceData* d = m_devicesdata.deviceData(targetID);
+        data::DeviceData *d = m_devicesdata.deviceData(targetID);
         return d->id();
-    } catch (...) {}
+    } catch (...) {
+    }
 
     try {
-        const data::FilterData* d =  m_filtersdata.filterData(targetID);
+        const data::FilterData *d = m_filtersdata.filterData(targetID);
         return d->device();
-    } catch (...) {}
+    } catch (...) {
+    }
 
     try {
-        const data::DatablockData* d = m_datablocksdata.datablockData(targetID);
+        const data::DatablockData *d = m_datablocksdata.datablockData(targetID);
         return d->device();
-    } catch (...) {}
+    } catch (...) {
+    }
 
     throw ApexStringException("Error: device not found for connection");
 }
@@ -372,15 +401,17 @@ bool apex::ExperimentParser::ParseFilters(const QDomElement &p_filters)
 {
     AddStatusMessage(tr("Processing filters"));
 
-    for (QDomElement currentNode = p_filters.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
+    for (QDomElement currentNode = p_filters.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
         const QString tag = currentNode.tagName();
         if (tag == "filter") {
             if (!ParseFilter(currentNode))
                 return false;
         } else {
-            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ExperimentParser::ParseFilters",
-                                   "Unknown tag: " + tag )));
+            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(
+                                         "ExperimentParser::ParseFilters",
+                                         "Unknown tag: " + tag)));
         }
     }
 
@@ -397,8 +428,9 @@ bool apex::ExperimentParser::ParseFilter(const QDomElement &p_filter)
 
     parser::FilterParser parser;
 
-    //create parameters
-    data::FilterData* parameters = parser.ParseFilter(p_filter, parameterManagerData.data());
+    // create parameters
+    data::FilterData *parameters =
+        parser.ParseFilter(p_filter, parameterManagerData.data());
     if (!parameters)
         return false;
 
@@ -411,7 +443,8 @@ bool apex::ExperimentParser::ParseDevices(const QDomElement &p_base)
     qCDebug(APEX_RS, "Parsing devices");
     parser::DevicesParser parser;
     try {
-        parser::tAllDevices all = parser.Parse(p_base, parameterManagerData.data());
+        parser::tAllDevices all =
+            parser.Parse(p_base, parameterManagerData.data());
         m_devicesdata = all.outputdevices;
         m_controldevicesdata = all.controldevices;
     } catch (const std::exception &e) {
@@ -422,29 +455,32 @@ bool apex::ExperimentParser::ParseDevices(const QDomElement &p_base)
     return true;
 };
 
-bool apex::ExperimentParser::ParseDatablocks(const QDomElement &p_datablocks)
+bool apex::ExperimentParser::ParseDatablocks(const QDomElement &p_datablocks,
+                                             bool expand)
 {
-    parser::DatablocksParser parser(m_interactive ? ApexControl::Get().mainWindow() : NULL);
+    parser::DatablocksParser parser(
+        m_interactive ? ApexControl::Get().mainWindow() : NULL);
 
     QString scriptLibrary;
     if (m_generalParameters)
         scriptLibrary = m_generalParameters->GetScriptLibrary();
 
-    m_datablocksdata = parser.Parse(fileName, p_datablocks, scriptLibrary,
-            m_generalParameters->scriptParameters());
+    m_datablocksdata =
+        parser.Parse(fileName, p_datablocks, scriptLibrary,
+                     m_generalParameters->scriptParameters(), expand);
 
     return true;
 }
 
 bool apex::ExperimentParser::ParseScreens(const QDomElement &p_base)
 {
-    AddStatusMessage( "Parsing Screens" );
+    AddStatusMessage("Parsing Screens");
 
     QString scriptLibrary;
     if (m_generalParameters)
         scriptLibrary = m_generalParameters->GetScriptLibrary();
 
-    gui::ApexMainWindow* mwp = 0;
+    gui::ApexMainWindow *mwp = 0;
     if (m_interactive)
         mwp = ApexControl::Get().mainWindow();
     parser::ScreensParser parser(mwp);
@@ -463,7 +499,7 @@ bool apex::ExperimentParser::ParseScreens(const QDomElement &p_base)
 void apex::ExperimentParser::expandTrials(const QDomElement &p_base)
 {
     // get the main window so we can draw message boxes if necessary
-    gui::ApexMainWindow* mwp = NULL;
+    gui::ApexMainWindow *mwp = NULL;
     if (m_interactive)
         mwp = ApexControl::Get().mainWindow();
 
@@ -476,29 +512,35 @@ void apex::ExperimentParser::expandTrials(const QDomElement &p_base)
     QDomElement trialNode = p_base.firstChildElement(QSL("trials"));
 
     // find plugin trials and expand them
-    for (QDomElement currentNode = trialNode.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
+    for (QDomElement currentNode = trialNode.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
         const QString tag(currentNode.tagName());
         if (tag == "plugintrials") {
             qCDebug(APEX_RS, "Script library: %s", qPrintable(scriptLibrary));
-            parser::ScriptExpander expander(fileName, scriptLibrary,
-                    m_generalParameters->scriptParameters(), mwp);
+            parser::ScriptExpander expander(
+                fileName, scriptLibrary,
+                m_generalParameters->scriptParameters(), mwp);
             expander.ExpandScript(currentNode, "getTrials");
         }
     }
 }
 
-bool apex::ExperimentParser::ParseProcedure(const QDomElement &p_base)
+bool apex::ExperimentParser::ParseProcedure(const QDomElement &p_base,
+                                            bool expand)
 {
     qCDebug(APEX_RS, "Parsing procedure");
+    // load plugin for parser
 
+    // Get xsi:type:
     QString type(p_base.attribute(gc_sType));
-    ProcedureCreatorInterface *creator = createPluginCreator<ProcedureCreatorInterface>(type);
-    QScopedPointer<ProcedureParserInterface> parser(creator->createProcedureParser(type));
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(type);
+    QScopedPointer<ProcedureParserInterface> parser(
+        creator->createProcedureParser(type));
 
-#ifndef NOSCRIPTEXPAND
-    expandTrials(p_base);
-#endif //NOSCRIPTEXPAND
+    if (expand)
+        expandTrials(p_base);
 
     procedureData.reset(parser->parse(p_base));
     Q_ASSERT(procedureData);
@@ -506,7 +548,8 @@ bool apex::ExperimentParser::ParseProcedure(const QDomElement &p_base)
     return true;
 }
 
-bool apex::ExperimentParser::ParseStimuli(const QDomElement &p_base)
+bool apex::ExperimentParser::ParseStimuli(const QDomElement &p_base,
+                                          bool expand)
 {
     AddStatusMessage(tr("Processing stimuli"));
 
@@ -516,25 +559,26 @@ bool apex::ExperimentParser::ParseStimuli(const QDomElement &p_base)
     if (m_generalParameters)
         scriptLibrary = m_generalParameters->GetScriptLibrary();
 
-    gui::ApexMainWindow* mwp = NULL;
+    gui::ApexMainWindow *mwp = NULL;
     if (m_interactive)
         mwp = ApexControl::Get().mainWindow();
     parser::StimuliParser parser(mwp);
 
     parser.Parse(fileName, p_base, m_stimuli.data(), scriptLibrary,
-                 m_generalParameters->scriptParameters());
+                 m_generalParameters->scriptParameters(), expand);
 
     return true;
 }
 
 // Auxilary functions
 
-void apex::ExperimentParser::AddStatusMessage( QString p_message )
+void apex::ExperimentParser::AddStatusMessage(QString p_message)
 {
-    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ExperimentParser", p_message)));
+    qCInfo(APEX_RS, "%s",
+           qPrintable(QSL("%1: %2").arg("ExperimentParser", p_message)));
 }
 
-void apex::ExperimentParser::StatusMessageDone( )
+void apex::ExperimentParser::StatusMessageDone()
 {
     qCInfo(APEX_RS, "ExperimentParser: Done");
 }
@@ -546,21 +590,13 @@ void apex::ExperimentParser::StatusMessageDone( )
 bool apex::ExperimentParser::DoExtraValidation()
 {
     // check whether every defined fixedparameter appears in every stimulus
-    bool result =
-        CheckProcedure() &&
-        CheckFixedParameters() &&
-        CheckAnswers() &&
-        CheckShowResults() &&
-        CheckDatablocks() &&
-        CheckFilters() &&
-        CheckTrials() &&
-        CheckStimuli() &&
-        CheckDevices() &&
-        CheckRandomGenerators();
+    bool result = CheckProcedure() && CheckFixedParameters() &&
+                  CheckAnswers() && CheckShowResults() && CheckDatablocks() &&
+                  CheckFilters() && CheckTrials() && CheckStimuli() &&
+                  CheckDevices() && CheckRandomGenerators();
 
     return result;
 }
-
 
 /**
  * check whether every defined fixedparameter appears in every stimulus
@@ -568,13 +604,21 @@ bool apex::ExperimentParser::DoExtraValidation()
  */
 bool apex::ExperimentParser::CheckFixedParameters()
 {
-    const data::FixedParameterList &fixedParameters = m_stimuli->GetFixedParameters();
-    for (int i=0; i<fixedParameters.size(); ++i) {
-        for ( QMap<QString,data::StimulusData>::const_iterator it=m_stimuli->begin();
-              it!=m_stimuli->end(); ++it) {
-            if (!it.value().GetFixedParameters()
-                    .contains(fixedParameters.at(i))) {
-                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("StimuliData", QString("Fixed parameter %1 not defined in stimulus %2").arg(fixedParameters.at(i)).arg(it.key()))));
+    const data::FixedParameterList &fixedParameters =
+        m_stimuli->GetFixedParameters();
+    for (int i = 0; i < fixedParameters.size(); ++i) {
+        for (QMap<QString, data::StimulusData>::const_iterator it =
+                 m_stimuli->begin();
+             it != m_stimuli->end(); ++it) {
+            if (!it.value().GetFixedParameters().contains(
+                    fixedParameters.at(i))) {
+                qCCritical(
+                    APEX_RS, "%s",
+                    qPrintable(QSL("%1: %2").arg(
+                        "StimuliData",
+                        QString("Fixed parameter %1 not defined in stimulus %2")
+                            .arg(fixedParameters.at(i))
+                            .arg(it.key()))));
                 return false;
             }
         }
@@ -583,62 +627,69 @@ bool apex::ExperimentParser::CheckFixedParameters()
 }
 
 /**
- * Check whether the number of answers (if defined) in Corrector corresponds to the number of alternatives in Procedure
+ * Check whether the number of answers (if defined) in Corrector corresponds to
+ * the number of alternatives in Procedure
  * @return
  */
-bool apex::ExperimentParser::CheckAnswers( )
+bool apex::ExperimentParser::CheckAnswers()
 {
-    bool result=true;
+    bool result = true;
 
     // check whether a standard is available for each stimulus if choices>1
     if (procedureData->choices().hasMultipleIntervals()) {
-        if (procedureData->defaultStandard().isEmpty()) {   // no default standard
+        if (procedureData->defaultStandard().isEmpty()) { // no default standard
             // check each trial
             data::tTrialList trials = procedureData->GetTrials();
-            for ( data::tTrialList::const_iterator it = trials.begin();  it!=trials.end(); ++it) {
-                if ( (*it)->GetRandomStandard().isEmpty()) {
-                    qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ExperimentParser",
-                                        tr( "Error: trial %1 has no standard and choices>1")
-                                        .arg((*it)->GetID()))));
-                    result=false;
+            for (data::tTrialList::const_iterator it = trials.begin();
+                 it != trials.end(); ++it) {
+                if ((*it)->GetRandomStandard().isEmpty()) {
+                    qCCritical(
+                        APEX_RS, "%s",
+                        qPrintable(QSL("%1: %2").arg(
+                            "ExperimentParser",
+                            tr("Error: trial %1 has no standard and choices>1")
+                                .arg((*it)->GetID()))));
+                    result = false;
                 }
             }
         }
-    } else {         // warn that there is no answer
+    } else { // warn that there is no answer
         data::tTrialList trials = procedureData->GetTrials();
-        for ( data::tTrialList::const_iterator it = trials.begin();  it!=trials.end(); ++it) {
-            if ( (*it)->GetAnswer().isEmpty()) {
-                qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ExperimentParser",
-                                      tr( "No answer was defined for trial %1. "
-                                          "This is probably unwanted.")
-                                      .arg((*it)->GetID()))));
+        for (data::tTrialList::const_iterator it = trials.begin();
+             it != trials.end(); ++it) {
+            if ((*it)->GetAnswer().isEmpty()) {
+                qCWarning(APEX_RS, "%s",
+                          qPrintable(QSL("%1: %2").arg(
+                              "ExperimentParser",
+                              tr("No answer was defined for trial %1. "
+                                 "This is probably unwanted.")
+                                  .arg((*it)->GetID()))));
             }
         }
-
     }
 
     return result;
-
 }
 
 bool apex::ExperimentParser::CheckDatablocks()
 {
     data::DatablocksData::const_iterator it;
 
-    QString defaultDevice;          // if there's only one device, we use it if
-                                    // no device is specified in a datablock
-    if ( m_devicesdata.size() ==1)
+    QString defaultDevice; // if there's only one device, we use it if
+                           // no device is specified in a datablock
+    if (m_devicesdata.size() == 1)
         defaultDevice = m_devicesdata.begin().key();
 
-    for ( it = m_datablocksdata.begin(); it != m_datablocksdata.end(); it++ ) {
+    for (it = m_datablocksdata.begin(); it != m_datablocksdata.end(); it++) {
         if (!defaultDevice.isEmpty() && it.value()->device().isEmpty())
             it.value()->setDevice(defaultDevice);
 
-        //check if all datablocks have a valid device
+        // check if all datablocks have a valid device
         try {
-            m_devicesdata.deviceData( it.value()->device() );
+            m_devicesdata.deviceData(it.value()->device());
         } catch (const std::exception &e) {
-            throw Exception(tr("Error in datablock %1: %2").arg(it.key(), e.what()));
+            throw Exception(
+                tr("Error in datablock %1: %2").arg(it.key(), e.what()));
         }
     }
 
@@ -649,17 +700,18 @@ bool apex::ExperimentParser::CheckFilters()
 {
     data::FiltersData::const_iterator it;
 
-    for ( it = m_filtersdata.begin(); it != m_filtersdata.end(); it++ ) {
-        //check if all filters have a valid device
+    for (it = m_filtersdata.begin(); it != m_filtersdata.end(); it++) {
+        // check if all filters have a valid device
         try {
-            data::DeviceData* temp =
-                    m_devicesdata.deviceData( it.value()->device() );
+            data::DeviceData *temp =
+                m_devicesdata.deviceData(it.value()->device());
 
-            if( temp->deviceType() != data::TYPE_WAVDEVICE)
-                throw ApexStringException( tr(
-                    "Filters are only implemented for a WavDevice" ) );
+            if (temp->deviceType() != data::TYPE_WAVDEVICE)
+                throw ApexStringException(
+                    tr("Filters are only implemented for a WavDevice"));
         } catch (const std::exception &e) {
-            throw Exception(tr("Error in filter %1: %2").arg(it.key(), e.what()));
+            throw Exception(
+                tr("Error in filter %1: %2").arg(it.key(), e.what()));
         }
     }
 
@@ -669,9 +721,9 @@ bool apex::ExperimentParser::CheckFilters()
 bool apex::ExperimentParser::CheckDevices()
 {
     // foreach device
-    for (data::DevicesData::const_iterator it=m_devicesdata.begin();
-         it!=m_devicesdata.end(); ++it) {
-        data::DeviceData* d = it.value();
+    for (data::DevicesData::const_iterator it = m_devicesdata.begin();
+         it != m_devicesdata.end(); ++it) {
+        data::DeviceData *d = it.value();
 
         // foreach gain parameter
         Q_FOREACH (data::Parameter param, d->parameters()) {
@@ -680,7 +732,8 @@ bool apex::ExperimentParser::CheckDevices()
             if (a >= (int)d->numberOfChannels()) {
                 throw ApexStringException(tr("Error in device %1: invalid"
                                              " channel number %2 in gain")
-                                             .arg(it.key()).arg( a));
+                                              .arg(it.key())
+                                              .arg(a));
             }
         }
     }
@@ -688,32 +741,38 @@ bool apex::ExperimentParser::CheckDevices()
     return true;
 }
 
-
 bool apex::ExperimentParser::CheckRandomGenerators()
 {
-    Q_FOREACH (data::RandomGeneratorParameters* params, m_randomgenerators) {
-        if (params->m_nType == params->TYPE_UNIFORM && params->m_nValueType==params->VALUE_INT &&
-                ( params->m_dMin != (int)params->m_dMin || params->m_dMax != (int)  params->m_dMax ))
-            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ExperimentParser::CheckRandomGenerators",
-                                  tr("Limits of uniform int random generator are not integers, results may be unexpected"))));
+    Q_FOREACH (data::RandomGeneratorParameters *params, m_randomgenerators) {
+        if (params->m_nType == params->TYPE_UNIFORM &&
+            params->m_nValueType == params->VALUE_INT &&
+            (params->m_dMin != (int)params->m_dMin ||
+             params->m_dMax != (int)params->m_dMax))
+            qCWarning(APEX_RS, "%s",
+                      qPrintable(QSL("%1: %2").arg(
+                          "ExperimentParser::CheckRandomGenerators",
+                          tr("Limits of uniform int random generator are not "
+                             "integers, results may be unexpected"))));
     }
     return true;
-
 }
 
 bool apex::ExperimentParser::ParseRandomGenerators(const QDomElement &p_base)
 {
     AddStatusMessage(tr("Processing random generators"));
 
-    bool result=true;
-    for (QDomElement currentNode = p_base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
+    bool result = true;
+    for (QDomElement currentNode = p_base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
         const QString tag = currentNode.tagName();
         if (tag == "randomgenerator") {
             result = result & ParseRandomGenerator(currentNode);
         } else {
-            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( "ExperimentParser::ParseRandomGenerators",
-                                   "Unknown tag: " + tag )));
+            qCWarning(APEX_RS, "%s",
+                      qPrintable(QSL("%1: %2").arg(
+                          "ExperimentParser::ParseRandomGenerators",
+                          "Unknown tag: " + tag)));
         }
     }
 
@@ -721,16 +780,15 @@ bool apex::ExperimentParser::ParseRandomGenerators(const QDomElement &p_base)
     return result;
 }
 
-
 bool apex::ExperimentParser::ParseRandomGenerator(const QDomElement &p_base)
 {
-    data::RandomGeneratorParameters* param = new data::RandomGeneratorParameters;
+    data::RandomGeneratorParameters *param =
+        new data::RandomGeneratorParameters;
     param->Parse(p_base);
-    QString id=p_base.attribute(sc_sID);
-    m_randomgenerators[id]=param;
+    QString id = p_base.attribute(sc_sID);
+    m_randomgenerators[id] = param;
     return true;
 }
-
 
 bool apex::ExperimentParser::ParseResults(const QDomElement &p_base)
 {
@@ -755,27 +813,31 @@ bool ExperimentParser::CheckProcedure()
 {
     const QString standard = procedureData->defaultStandard();
     if (!standard.isEmpty() && !m_stimuli->contains(standard)) {
-        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ScreenChecker",
-                "Invalid default standard stimulus " + standard)));
+        qCCritical(APEX_RS, "%s",
+                   qPrintable(QSL("%1: %2").arg(
+                       "ScreenChecker",
+                       "Invalid default standard stimulus " + standard)));
         return false;
     }
 
-    //only the first adapting parameter of an adaptive procedure is allowed
-    //to be a fixed parameter
-    const data::ProcedureData* parameters = procedureData.data();
+    // only the first adapting parameter of an adaptive procedure is allowed
+    // to be a fixed parameter
+    const data::ProcedureData *parameters = procedureData.data();
     if (parameters->type() == data::ProcedureData::AdaptiveType) {
         QStringList adaptingParameters =
-            static_cast<const data::AdaptiveProcedureData*>(parameters)
-                                        ->adaptingParameters();
+            static_cast<const data::AdaptiveProcedureData *>(parameters)
+                ->adaptingParameters();
 
         if (!adaptingParameters.isEmpty()) {
             adaptingParameters.takeFirst();
 
             Q_FOREACH (QString param, adaptingParameters) {
                 if (m_stimuli->GetFixedParameters().contains(param)) {
-                    qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ProcedureChecker",
-                                        "Only the first adaptive parameter can "
-                                        "be a fixed parameter.")));
+                    qCCritical(APEX_RS, "%s",
+                               qPrintable(QSL("%1: %2").arg(
+                                   "ProcedureChecker",
+                                   "Only the first adaptive parameter can "
+                                   "be a fixed parameter.")));
 
                     return false;
                 }
@@ -785,11 +847,15 @@ bool ExperimentParser::CheckProcedure()
 
     // Check if there is an interval defined for each choice
     if (parameters->choices().hasMultipleIntervals()) {
-        QStringList mIntervals( parameters->choices().intervals() );
-        for (int i=0; i<mIntervals.length() ; ++i) {
+        QStringList mIntervals(parameters->choices().intervals());
+        for (int i = 0; i < mIntervals.length(); ++i) {
             if (mIntervals[i].isEmpty()) {
-                qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("IntervalChecker",
-                                      QString("No screenelement defined for interval %1").arg(i+1))));
+                qCWarning(
+                    APEX_RS, "%s",
+                    qPrintable(QSL("%1: %2").arg(
+                        "IntervalChecker",
+                        QString("No screenelement defined for interval %1")
+                            .arg(i + 1))));
             }
         }
     }
@@ -799,31 +865,38 @@ bool ExperimentParser::CheckProcedure()
 
 bool ExperimentParser::CheckTrials()
 {
-    data::ScreensData::ScreenMap& lscreens = screens->getScreens();
+    data::ScreensData::ScreenMap &lscreens = screens->getScreens();
 
-    bool result=true;
-    const data::tTrialList& trials = procedureData->GetTrials();
-    for (data::tTrialList::const_iterator it=trials.begin();
-            it!=trials.end(); ++it)
-    {
+    bool result = true;
+    const data::tTrialList &trials = procedureData->GetTrials();
+    for (data::tTrialList::const_iterator it = trials.begin();
+         it != trials.end(); ++it) {
         QString screen = (*it)->GetScreen();
-        if (lscreens.find(screen)==lscreens.end() ) {
-            qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("TrialChecker", "Invalid screen in trial " + (*it)->GetID())));
+        if (lscreens.find(screen) == lscreens.end()) {
+            qCCritical(APEX_RS, "%s",
+                       qPrintable(QSL("%1: %2").arg("TrialChecker",
+                                                    "Invalid screen in trial " +
+                                                        (*it)->GetID())));
             result = false;
         }
 
-        const tStimulusList& stimulusList = (*it)->GetStimuli();
-        for (int i=0; i<stimulusList.size(); ++i) {
+        const tStimulusList &stimulusList = (*it)->GetStimuli();
+        for (int i = 0; i < stimulusList.size(); ++i) {
             if (!m_stimuli->contains(stimulusList.at(i))) {
-                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("TrialChecker",
-                                    "Invalid stimulus in trial " + (*it)->GetID())));
+                qCCritical(APEX_RS, "%s",
+                           qPrintable(QSL("%1: %2").arg(
+                               "TrialChecker",
+                               "Invalid stimulus in trial " + (*it)->GetID())));
                 result = false;
             }
         }
         if (stimulusList.isEmpty()) {
-            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("TrialChecker",
-                    tr("No stimulus was found in trial %1, is this "
-                            "what you want?").arg((*it)->GetID()))));
+            qCWarning(APEX_RS, "%s",
+                      qPrintable(QSL("%1: %2").arg(
+                          "TrialChecker",
+                          tr("No stimulus was found in trial %1, is this "
+                             "what you want?")
+                              .arg((*it)->GetID()))));
             if (procedureData->type() !=
                 data::ProcedureData::Type::PluginType) {
                 qCCritical(
@@ -834,18 +907,19 @@ bool ExperimentParser::CheckTrials()
             }
         }
 
-        const tStimulusList& standardList = (*it)->GetStandards();
-        for (int i=0; i<standardList.size(); ++i) {
-            if (!m_stimuli->contains( standardList.at(i) )) {
-                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("TrialChecker", "Invalid standard in trial " + (*it)->GetID())));
+        const tStimulusList &standardList = (*it)->GetStandards();
+        for (int i = 0; i < standardList.size(); ++i) {
+            if (!m_stimuli->contains(standardList.at(i))) {
+                qCCritical(APEX_RS, "%s",
+                           qPrintable(QSL("%1: %2").arg(
+                               "TrialChecker",
+                               "Invalid standard in trial " + (*it)->GetID())));
                 result = false;
             }
         }
-
     }
 
     return result;
-
 }
 
 /**
@@ -853,12 +927,12 @@ bool ExperimentParser::CheckTrials()
  */
 bool apex::ExperimentParser::CheckStimuli()
 {
-    //if this is an adaptive procedure which adapts a fixed parameter and has a
-    //min/max value set for the parameter, than for every fixed parameter there
-    //should be at least one stimulus with a value greater/smaller than the
-    //min/max value.
-    const data::AdaptiveProcedureData* params =
-        dynamic_cast<const data::AdaptiveProcedureData*>(procedureData.data());
+    // if this is an adaptive procedure which adapts a fixed parameter and has a
+    // min/max value set for the parameter, than for every fixed parameter there
+    // should be at least one stimulus with a value greater/smaller than the
+    // min/max value.
+    const data::AdaptiveProcedureData *params =
+        dynamic_cast<const data::AdaptiveProcedureData *>(procedureData.data());
 
     if (params != 0) {
         QString fixedParam = params->adaptingParameters().first();
@@ -866,15 +940,16 @@ bool apex::ExperimentParser::CheckStimuli()
         if (m_stimuli->GetFixedParameters().contains(fixedParam) &&
             (params->hasMinValue() || params->hasMaxValue())) {
             data::adapting_parameter min =
-                        std::numeric_limits<data::adapting_parameter>::max();
+                std::numeric_limits<data::adapting_parameter>::max();
             data::adapting_parameter max =
-                        std::numeric_limits<data::adapting_parameter>::min();
+                std::numeric_limits<data::adapting_parameter>::min();
 
             Q_FOREACH (data::StimulusData stimulus, m_stimuli->values()) {
-                QVariant variant = stimulus.GetFixedParameters().value(fixedParam);
+                QVariant variant =
+                    stimulus.GetFixedParameters().value(fixedParam);
                 Q_ASSERT(variant.canConvert<data::adapting_parameter>());
                 data::adapting_parameter value =
-                                variant.value<data::adapting_parameter>();
+                    variant.value<data::adapting_parameter>();
 
                 if (value < min)
                     min = value;
@@ -883,32 +958,38 @@ bool apex::ExperimentParser::CheckStimuli()
             }
 
             if (params->hasMinValue() && max < params->minValue()) {
-                QString error =
-                    tr("The adaptive procedure adapts a fixed parameter (%1) and has "
-                        "a minimum parameter value set but no stimulus exists "
-                        "with a fixed parameter value greater than this minimum");
+                QString error = tr(
+                    "The adaptive procedure adapts a fixed parameter (%1) and "
+                    "has "
+                    "a minimum parameter value set but no stimulus exists "
+                    "with a fixed parameter value greater than this minimum");
 
-                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("StimulusChecker", error.arg(fixedParam))));
+                qCCritical(APEX_RS, "%s",
+                           qPrintable(QSL("%1: %2").arg(
+                               "StimulusChecker", error.arg(fixedParam))));
                 return false;
             }
 
             if (params->hasMaxValue() && min > params->maxValue()) {
-                QString error =
-                    tr("The adaptive procedure adapts a fixed parameter (%1) and has "
-                        "a maximum parameter value set but no stimulus exists "
-                        "with a fixed parameter value smaller than this maximum");
+                QString error = tr(
+                    "The adaptive procedure adapts a fixed parameter (%1) and "
+                    "has "
+                    "a maximum parameter value set but no stimulus exists "
+                    "with a fixed parameter value smaller than this maximum");
 
-                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("StimulusChecker", error.arg(fixedParam))));
+                qCCritical(APEX_RS, "%s",
+                           qPrintable(QSL("%1: %2").arg(
+                               "StimulusChecker", error.arg(fixedParam))));
                 return false;
             }
         }
     }
 
-    for ( data::StimuliData::const_iterator it= m_stimuli->begin();
-          it!=m_stimuli->end(); ++it) {
-        const data::StimulusData& data = it.value();
+    for (data::StimuliData::const_iterator it = m_stimuli->begin();
+         it != m_stimuli->end(); ++it) {
+        const data::StimulusData &data = it.value();
         const data::StimulusDatablocksContainer datablocks =
-                data.GetDatablocksContainer();
+            data.GetDatablocksContainer();
 
         if (!CheckStimulusDatablocks(datablocks, it.key()))
             return false;
@@ -929,16 +1010,18 @@ bool apex::ExperimentParser::CheckStimulusDatablocks(
             Q_ASSERT(!id.isEmpty());
 
             if (m_datablocksdata.find(id) == m_datablocksdata.end()) {
-                qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("StimulusChecker",
-                              QString("Invalid datablock %1 in stimulus %2")
-                                      .arg(id)
-                                      .arg(trial))));
+                qCCritical(APEX_RS, "%s",
+                           qPrintable(QSL("%1: %2").arg(
+                               "StimulusChecker",
+                               QString("Invalid datablock %1 in stimulus %2")
+                                   .arg(id)
+                                   .arg(trial))));
                 return false;
             }
         } else {
             Q_ASSERT(it->type == StimulusDatablocksContainer::DATABLOCKS ||
-                    it->type == StimulusDatablocksContainer::SEQUENTIAL ||
-                    it->type == StimulusDatablocksContainer::SIMULTANEOUS);
+                     it->type == StimulusDatablocksContainer::SEQUENTIAL ||
+                     it->type == StimulusDatablocksContainer::SIMULTANEOUS);
 
             return CheckStimulusDatablocks(*it, trial);
         }
@@ -956,23 +1039,22 @@ bool apex::ExperimentParser::ParseGeneral(const QDomElement &p_base)
     return result;
 }
 
-
 /**
 * Check whether an xslt script is available if showresults is true
 * @return
 */
 bool apex::ExperimentParser::CheckShowResults()
 {
-    if (m_resultParameters &&
-        (m_resultParameters->showResultsAfter() || m_resultParameters->saveResults()) &&
+    if (m_resultParameters && (m_resultParameters->showResultsAfter() ||
+                               m_resultParameters->saveResults()) &&
         m_resultParameters->resultPage().isEmpty()) {
-        qCCritical(APEX_RS, "CheckShowResults: No page specified for analyzing results");
+        qCCritical(APEX_RS,
+                   "CheckShowResults: No page specified for analyzing results");
         return false;
     }
 
     return true;
 }
-
 
 bool apex::ExperimentParser::ParseDescription(const QDomElement &p_base)
 {
@@ -986,10 +1068,11 @@ void apex::ExperimentParser::upgrade3_0_2()
     {
         QString newName;
 
-        QDomNodeList list = document.documentElement().elementsByTagName("procedure");
-        for(int i = 0; i < list.count(); ++i) {
+        QDomNodeList list =
+            document.documentElement().elementsByTagName("procedure");
+        for (int i = 0; i < list.count(); ++i) {
             QDomElement procedureElement = list.at(i).toElement();
-            QString oldName( procedureElement.attribute("xsi:type") );
+            QString oldName(procedureElement.attribute("xsi:type"));
             if (oldName == "apex:pluginProcedureType")
                 newName = "apex:pluginProcedure";
             else if (oldName == "apex:adaptiveProcedureType")
@@ -1001,7 +1084,12 @@ void apex::ExperimentParser::upgrade3_0_2()
             else if (oldName == "apex:multiProcedureType")
                 newName = "apex:multiProcedure";
             else
-                qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("Upgrade", QString("Cannot upgrade procedure type %1").arg(procedureElement.attribute("xsi:type")))));
+                qCWarning(
+                    APEX_RS, "%s",
+                    qPrintable(QSL("%1: %2").arg(
+                        "Upgrade",
+                        QString("Cannot upgrade procedure type %1")
+                            .arg(procedureElement.attribute("xsi:type")))));
 
             procedureElement.setAttribute("xsi:type", newName);
         }
@@ -1009,38 +1097,69 @@ void apex::ExperimentParser::upgrade3_0_2()
 
     // Remove choices & corrector and add intervals
     {
-        const QDomNodeList procedureNodes = document.documentElement().elementsByTagName("procedure");
+        const QDomNodeList procedureNodes =
+            document.documentElement().elementsByTagName("procedure");
         for (int i = 0; i < procedureNodes.count(); ++i) {
             QDomElement procedureElement = procedureNodes.at(i).toElement();
-            const QDomElement correctorElement = document.documentElement().elementsByTagName("corrector").at(0).toElement();
+            const QDomElement correctorElement =
+                document.documentElement()
+                    .elementsByTagName("corrector")
+                    .at(0)
+                    .toElement();
 
-            QDomElement parametersElements = procedureElement.elementsByTagName("parameters").at(0).toElement();
-            const QDomElement choicesElement = parametersElements.elementsByTagName("choices").at(0).toElement();
+            QDomElement parametersElements =
+                procedureElement.elementsByTagName("parameters")
+                    .at(0)
+                    .toElement();
+            const QDomElement choicesElement =
+                parametersElements.elementsByTagName("choices")
+                    .at(0)
+                    .toElement();
 
             if (correctorElement.attribute("xsi:type") == "apex:alternatives") {
-                //Transform the answers into intervals
-                const QDomElement answerselement = correctorElement.elementsByTagName("answers").at(0).toElement();
-                const QDomNodeList answers = answerselement.elementsByTagName("answer");
+                // Transform the answers into intervals
+                const QDomElement answerselement =
+                    correctorElement.elementsByTagName("answers")
+                        .at(0)
+                        .toElement();
+                const QDomNodeList answers =
+                    answerselement.elementsByTagName("answer");
 
-                QDomElement intervalsElement = document.createElement("intervals");
+                QDomElement intervalsElement =
+                    document.createElement("intervals");
                 intervalsElement.setAttribute("count", answers.count());
 
                 for (int i = 0; i < answers.count(); ++i) {
-                    QDomElement intervalElement = document.createElement("interval");
+                    QDomElement intervalElement =
+                        document.createElement("interval");
 
-                    intervalElement.setAttribute("number", answers.at(i).toElement().attribute("number"));
-                    intervalElement.setAttribute("element", answers.at(i).toElement().attribute("value"));
+                    intervalElement.setAttribute(
+                        "number",
+                        answers.at(i).toElement().attribute("number"));
+                    intervalElement.setAttribute(
+                        "element",
+                        answers.at(i).toElement().attribute("value"));
 
                     intervalsElement.appendChild(intervalElement);
                 }
 
-                //Find a location to insert the intervals
+                // Find a location to insert the intervals
                 if (choicesElement.isNull()) {
-                    QDomElement afterThis = parametersElements.elementsByTagName("uniquestandard").at(0).toElement();
+                    QDomElement afterThis =
+                        parametersElements.elementsByTagName("uniquestandard")
+                            .at(0)
+                            .toElement();
                     if (afterThis.isNull()) {
-                        afterThis = parametersElements.elementsByTagName("defaultstandard").at(0).toElement();
+                        afterThis = parametersElements
+                                        .elementsByTagName("defaultstandard")
+                                        .at(0)
+                                        .toElement();
                         if (afterThis.isNull()) {
-                            afterThis = parametersElements.elementsByTagName("order").at(0).toElement(); //order is required, so we can stop here
+                            afterThis =
+                                parametersElements.elementsByTagName("order")
+                                    .at(0)
+                                    .toElement(); // order is required, so we
+                                                  // can stop here
                         }
                     }
 
@@ -1050,50 +1169,67 @@ void apex::ExperimentParser::upgrade3_0_2()
                     if (!select.isEmpty()) {
                         intervalsElement.setAttribute("select", select);
                     }
-                    parametersElements.replaceChild(intervalsElement, choicesElement);
+                    parametersElements.replaceChild(intervalsElement,
+                                                    choicesElement);
                 }
             } else {
-                if (!choicesElement.isNull() && choicesElement.text() != QL1S("1")) {
-                    qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(
-                            tr("XML parser"),
-                            tr("Can't convert a procedure with a choices element and a corrector that isn't an alternatives corrector."))));
+                if (!choicesElement.isNull() &&
+                    choicesElement.text() != QL1S("1")) {
+                    qCCritical(APEX_RS, "%s",
+                               qPrintable(QSL("%1: %2").arg(
+                                   tr("XML parser"),
+                                   tr("Can't convert a procedure with a "
+                                      "choices element and a corrector that "
+                                      "isn't an alternatives corrector."))));
                 } else {
                     choicesElement.parentNode().removeChild(choicesElement);
-                    QDomElement afterThis = parametersElements.elementsByTagName("uniquestandard").at(0).toElement();
+                    QDomElement afterThis =
+                        parametersElements.elementsByTagName("uniquestandard")
+                            .at(0)
+                            .toElement();
                     if (afterThis.isNull()) {
-                        afterThis = parametersElements.elementsByTagName("defaultstandard").at(0).toElement();
+                        afterThis = parametersElements
+                                        .elementsByTagName("defaultstandard")
+                                        .at(0)
+                                        .toElement();
                         if (afterThis.isNull()) {
-                            afterThis = parametersElements.elementsByTagName("order").at(0).toElement(); //order is required, so we can stop here
+                            afterThis =
+                                parametersElements.elementsByTagName("order")
+                                    .at(0)
+                                    .toElement(); // order is required, so we
+                                                  // can stop here
                         }
                     }
 
                     parametersElements.insertAfter(correctorElement, afterThis);
                 }
             }
-            //Delete the obsolete corrector
+            // Delete the obsolete corrector
             document.documentElement().removeChild(correctorElement);
         }
 
-        {//Remove birth from datablock
-            QDomNodeList list = document.documentElement().elementsByTagName("datablock");
-            for(int i=0; i<list.count(); ++i) {
+        { // Remove birth from datablock
+            QDomNodeList list =
+                document.documentElement().elementsByTagName("datablock");
+            for (int i = 0; i < list.count(); ++i) {
                 QDomElement datablock = list.at(i).toElement();
                 QDomNodeList births = datablock.elementsByTagName("birth");
-                if(!births.isEmpty()) {
+                if (!births.isEmpty()) {
                     datablock.removeChild(births.at(0));
                 }
             }
         }
 
-        { //Change silence:// to silence:
-            QDomNodeList list = document.documentElement().elementsByTagName("datablock");
-            for(int i=0; i<list.count(); ++i) {
+        { // Change silence:// to silence:
+            QDomNodeList list =
+                document.documentElement().elementsByTagName("datablock");
+            for (int i = 0; i < list.count(); ++i) {
                 QDomElement datablock = list.at(i).toElement();
                 QDomNode uri = datablock.elementsByTagName("uri").at(0);
 
                 QDomText text = uri.firstChild().toText();
                 QString value = text.nodeValue();
-                if(value.contains("silence://")) {
+                if (value.contains("silence://")) {
                     value.replace("silence://", "silence:");
                     uri.firstChild().setNodeValue(value);
                 }
@@ -1102,139 +1238,114 @@ void apex::ExperimentParser::upgrade3_0_2()
     }
 }
 
-
 void apex::ExperimentParser::upgrade3_1_0()
 {
-    //Get the contents of the results section
-    QDomNodeList resultsList = document.documentElement().elementsByTagName("results");
+    // Get the contents of the results section
+    QDomNodeList resultsList =
+        document.documentElement().elementsByTagName("results");
 
     QDomNode results = resultsList.item(0);
-    //Get all the child nodes from the resultsType section:
+    // Get all the child nodes from the resultsType section:
     QDomNodeList resultNodes = results.childNodes();
-    QDomNode currentNode, pageNode, realtimeNode, showNode, subjectNode, scriptNode;
+    QDomNode currentNode, pageNode, realtimeNode, showNode, subjectNode,
+        scriptNode;
     QString pageName;
     QDomNodeList parameterList;
 
-    for(int i=0; i<resultNodes.length(); i++)
-    {
+    for (int i = 0; i < resultNodes.length(); i++) {
         currentNode = resultNodes.item(i);
-        if(currentNode.nodeName() == "xsltscript")
-        {
-            //Take the name of the script as the name of the html page.
+        if (currentNode.nodeName() == "xsltscript") {
+            // Take the name of the script as the name of the html page.
             QDomNode scriptTextNode = currentNode.firstChild();
             /*pageName = scriptTextNode.nodeValue();
             pageName.truncate(pageName.lastIndexOf("."));
             pageName.append(".html");*/
             results.removeChild(currentNode);
-            //go to the next node, the list is updated live
+            // go to the next node, the list is updated live
             currentNode = resultNodes.item(i);
         }
-        if(currentNode.nodeName() == "xsltscriptparameters")
-        {
+        if (currentNode.nodeName() == "xsltscriptparameters") {
             parameterList = currentNode.childNodes();
-            //the children will be appended to the new node.
+            // the children will be appended to the new node.
             results.removeChild(currentNode);
             currentNode = resultNodes.item(i);
         }
-        if(currentNode.nodeName() == "showresults")
-        {
+        if (currentNode.nodeName() == "showresults") {
             showNode = currentNode.cloneNode();
 
             results.removeChild(currentNode);
-            //go to the next node, the list is updated live
+            // go to the next node, the list is updated live
             currentNode = resultNodes.item(i);
         }
-        if(currentNode.nodeName() == "javascript")
-        {
-            //Get the childNodes.
+        if (currentNode.nodeName() == "javascript") {
+            // Get the childNodes.
             QDomNodeList javascriptList = currentNode.childNodes();
             QDomNode currentJavascriptNode;
-            for(int j = 0; j < javascriptList.length(); j++)
-            {
+            for (int j = 0; j < javascriptList.length(); j++) {
                 currentJavascriptNode = javascriptList.item(j);
-                if (currentJavascriptNode.nodeName() == "page")
-                {
+                if (currentJavascriptNode.nodeName() == "page") {
                     pageNode = currentJavascriptNode.cloneNode();
-                }
-                else if (currentJavascriptNode.nodeName() == "realtime")
-                {
+                } else if (currentJavascriptNode.nodeName() == "realtime") {
                     realtimeNode = currentJavascriptNode.cloneNode();
-                }
-                else if (currentJavascriptNode.nodeName() == "showafterexperiment")
-                {
+                } else if (currentJavascriptNode.nodeName() ==
+                           "showafterexperiment") {
                     showNode = currentJavascriptNode.cloneNode();
                 }
             }
 
-            //Now remove the javascript node
+            // Now remove the javascript node
             results.removeChild(currentNode);
             currentNode = resultNodes.item(i);
-
         }
-        if(currentNode.nodeName() == "matlabscript")
-        {
+        if (currentNode.nodeName() == "matlabscript") {
             scriptNode = currentNode.cloneNode();
         }
-        if(currentNode.nodeName() == "subject")
-        {
+        if (currentNode.nodeName() == "subject") {
             subjectNode = currentNode.cloneNode();
         }
-        if(currentNode.nodeName() == "page")
-        {
+        if (currentNode.nodeName() == "page") {
             pageNode = currentNode;
         }
-
     }
 
-    //create the parameter node and default element:
-    QDomElement resultParameters= document.createElement("resultparameters");
-    //Append the parameters to the new node
-    if(!parameterList.isEmpty())
-    {
-        for(int i = 0; i<parameterList.count(); i++)
-        {
+    // create the parameter node and default element:
+    QDomElement resultParameters = document.createElement("resultparameters");
+    // Append the parameters to the new node
+    if (!parameterList.isEmpty()) {
+        for (int i = 0; i < parameterList.count(); i++) {
             resultParameters.appendChild(parameterList.item(i));
         }
     }
 
-    //check if the old nodes are present, if so, add them
-    //at the right place, if not, create defaults and add them.
+    // check if the old nodes are present, if so, add them
+    // at the right place, if not, create defaults and add them.
     QDomElement showAfterElement;
     showAfterElement = showNode.toElement();
-    if(showAfterElement.isNull())
-    {
+    if (showAfterElement.isNull()) {
         showAfterElement = document.createElement("showafterexperiment");
         showAfterElement.appendChild(document.createTextNode("false"));
-    }
-    else
-    {
+    } else {
         showAfterElement.setTagName("showafterexperiment");
     }
 
     QDomElement realtimeElement;
-    if(realtimeNode.isNull())
-    {
+    if (realtimeNode.isNull()) {
         realtimeElement = document.createElement("showduringexperiment");
         realtimeElement.appendChild(document.createTextNode("false"));
-    }
-    else
-    {
+    } else {
         realtimeElement.setTagName("showduringexperiment");
     }
 
     QDomElement pageElement;
-    if(pageNode.isNull())
-    {
-        if(pageName.isEmpty()) {
+    if (pageNode.isNull()) {
+        if (pageName.isEmpty()) {
             pageName = "apex:resultsviewer.html";
         }
         pageElement = document.createElement("page");
         QDomText pageText;
         pageText = document.createTextNode(pageName);
         pageElement.appendChild(pageText);
-    }
-    else
-    {
+    } else {
         pageElement = pageNode.toElement();
     }
 
@@ -1243,8 +1354,8 @@ void apex::ExperimentParser::upgrade3_1_0()
     results.insertBefore(resultParameters, resultNodes.item(0));
     results.insertBefore(pageElement, resultNodes.item(0));
 
-    //insert the new results in the dom document.
-    //First get the right position to set the results:
+    // insert the new results in the dom document.
+    // First get the right position to set the results:
     QDomNode previousChild = results.previousSibling();
     document.removeChild(results);
 }
@@ -1254,8 +1365,9 @@ void apex::ExperimentParser::upgrade3_1_1()
     QDomNodeList list = document.elementsByTagName("default_answer_element");
     for (int i = 0; i < list.count(); ++i) {
         QDomElement answerElement = list.at(i).toElement();
-        answerElement.replaceChild(document.createTextNode(answerElement.text().trimmed()),
-                answerElement.firstChild());
+        answerElement.replaceChild(
+            document.createTextNode(answerElement.text().trimmed()),
+            answerElement.firstChild());
     }
 
     list = document.elementsByTagName("device");
@@ -1281,8 +1393,9 @@ void apex::ExperimentParser::upgrade3_1_1()
                 }
             }
             QDomElement device = document.createElement("device");
-            device.appendChild(document.createTextNode(QString::fromLatin1("%1-%2-%3")
-                        .arg(device_type, implant, device_id)));
+            device.appendChild(document.createTextNode(
+                QString::fromLatin1("%1-%2-%3")
+                    .arg(device_type, implant, device_id)));
             deviceElement.insertBefore(device, QDomNode());
         }
     }
@@ -1293,14 +1406,14 @@ static void fixJsSources(const QDomNodeList &list)
     for (int i = 0; i < list.count(); ++i) {
         QDomElement element = list.at(i).firstChildElement(QSL("script"));
         if (element.attribute(QSL("source")) == QL1S("file") &&
-                !element.text().endsWith(QSL(".js"))) {
+            !element.text().endsWith(QSL(".js"))) {
             XmlUtils::setText(&element, element.text() + QSL(".js"));
         }
     }
 }
 
 static void fixUri(const QDomDocument &document, const QString &from,
-        const QString &to)
+                   const QString &to)
 {
     QDomNodeList list = document.elementsByTagName(from);
     // walk backwards as the list is updated dynamically
@@ -1333,13 +1446,15 @@ void apex::ExperimentParser::upgrade3_1_3()
     fixJsSources(document.elementsByTagName(QSL("plugindatablocks")));
 
     // fix js extension of library javascript files
-    QDomElement libnode = root.firstChildElement(QSL("general")).firstChildElement(QSL("scriptlibrary"));
+    QDomElement libnode = root.firstChildElement(QSL("general"))
+                              .firstChildElement(QSL("scriptlibrary"));
     if (!libnode.isNull() && !libnode.text().endsWith(QSL(".js")))
         XmlUtils::setText(&libnode, libnode.text() + QSL(".js"));
 
     // fix js extension of procedure javascript files
     QDomElement scriptnode = root.firstChildElement(QSL("procedure"))
-        .firstChildElement(QSL("parameters")).firstChildElement(QSL("script"));
+                                 .firstChildElement(QSL("parameters"))
+                                 .firstChildElement(QSL("script"));
     if (!scriptnode.isNull() && !scriptnode.text().endsWith(QSL(".js")))
         XmlUtils::setText(&scriptnode, scriptnode.text() + QSL(".js"));
 

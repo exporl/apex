@@ -26,89 +26,94 @@
 namespace appcore
 {
 
+/**
+  * Lock
+  *   enters the CriticalSection on construction,
+  *   leaves it again in the destructor.
+  *   Use for cleaner and faster code:
+  *
+  *   @code
+  *   int method()
+  *   {
+  *     mc_pLock.mf_Enter();
+  *     int nReturnValue = m_nMyMember;
+  *     mc_pLock.mf_Leave();
+  *     return nReturnValue;
+  *   }
+  *   @endcode
+  *
+  *   Can be replaced by:
+  *
+  *   @code
+  *   int method()
+  *   {
+  *     const Lock L( mc_pLock ); //enter
+  *     return m_nMyMember;       //L's destructor is called here: leave
+  *   }
+  *   @endcode
+  *
+  *   @see CriticalSection
+  *********************************************************************** */
+class Lock
+{
+public:
     /**
-      * Lock
-      *   enters the CriticalSection on construction,
-      *   leaves it again in the destructor.
-      *   Use for cleaner and faster code:
-      *
-      *   @code
-      *   int method()
-      *   {
-      *     mc_pLock.mf_Enter();
-      *     int nReturnValue = m_nMyMember;
-      *     mc_pLock.mf_Leave();
-      *     return nReturnValue;
-      *   }
-      *   @endcode
-      *
-      *   Can be replaced by:
-      *
-      *   @code
-      *   int method()
-      *   {
-      *     const Lock L( mc_pLock ); //enter
-      *     return m_nMyMember;       //L's destructor is called here: leave
-      *   }
-      *   @endcode
-      *
-      *   @see CriticalSection
-      *********************************************************************** */
-  class Lock
-  {
-  public:
-      /**
-        * Constructor.
-        * Enters the CriticalSection
-        */
-    INLINE Lock( const CriticalSection& ac_Section ) :
-      mc_Section( ac_Section )
-    { ac_Section.mf_Enter(); }
+      * Constructor.
+      * Enters the CriticalSection
+      */
+    INLINE Lock(const CriticalSection &ac_Section) : mc_Section(ac_Section)
+    {
+        ac_Section.mf_Enter();
+    }
 
-      /**
-        * Destructor.
-        * Leaves the CriticalSection
-        */
+    /**
+      * Destructor.
+      * Leaves the CriticalSection
+      */
     INLINE ~Lock()
-    { mc_Section.mf_Leave(); }
+    {
+        mc_Section.mf_Leave();
+    }
 
-  private:
-    const CriticalSection& mc_Section;
+private:
+    const CriticalSection &mc_Section;
 
-    Lock( const Lock& );
-    const Lock& operator= ( const Lock& );
-  };
+    Lock(const Lock &);
+    const Lock &operator=(const Lock &);
+};
+
+/**
+  * UnLock
+  *   reverse of Lock
+  *   make sure not to Unlock a CriticalSection that is not locked!
+  ***************************************************************** */
+class UnLock
+{
+public:
+    /**
+      * Constructor.
+      * Leaves the CriticalSection
+      */
+    INLINE UnLock(const CriticalSection &ac_Section) : mc_Section(ac_Section)
+    {
+        ac_Section.mf_Leave();
+    }
 
     /**
-      * UnLock
-      *   reverse of Lock
-      *   make sure not to Unlock a CriticalSection that is not locked!
-      ***************************************************************** */
-  class UnLock
-  {
-  public:
-      /**
-        * Constructor.
-        * Leaves the CriticalSection
-        */
-    INLINE UnLock( const CriticalSection& ac_Section ) :
-      mc_Section( ac_Section )
-    { ac_Section.mf_Leave(); }
-
-      /**
-        * Destructor.
-        * Leaves the CriticalSection
-        */
+      * Destructor.
+      * Leaves the CriticalSection
+      */
     INLINE ~UnLock()
-    { mc_Section.mf_Enter(); }
+    {
+        mc_Section.mf_Enter();
+    }
 
-  private:
-    const CriticalSection& mc_Section;
+private:
+    const CriticalSection &mc_Section;
 
-    UnLock( const UnLock& );
-    const UnLock& operator= ( const UnLock& );
-  };
-
+    UnLock(const UnLock &);
+    const UnLock &operator=(const UnLock &);
+};
 }
 
 #endif //#ifndef __LOCKS_H_

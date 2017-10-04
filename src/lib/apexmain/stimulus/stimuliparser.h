@@ -38,21 +38,22 @@ namespace parser
 class APEX_EXPORT StimuliParser
 {
 public:
-    StimuliParser(QWidget* parent = 0);
+    StimuliParser(QWidget *parent = 0);
 
     void Parse(const QString &fileName, const QDomElement &p_base,
                data::StimuliData *c, const QString &scriptLibraryFile,
-               const QVariantMap &scriptParameters);
+               const QVariantMap &scriptParameters, bool expand);
 
 private:
     void ParseStimulus(const QDomElement &p_base);
-    data::StimulusParameters CreateStimulusParameters(const QDomElement &a_pBase);
-    data::StimulusDatablocksContainer CreateDatablocksContainer(const QDomElement &data);
+    data::StimulusParameters
+    CreateStimulusParameters(const QDomElement &a_pBase);
+    data::StimulusDatablocksContainer
+    CreateDatablocksContainer(const QDomElement &data);
 
-    data::StimuliData* currentData;
-    QWidget* m_parent;
+    data::StimuliData *currentData;
+    QWidget *m_parent;
 };
-
 }
 }
 

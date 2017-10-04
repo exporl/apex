@@ -34,35 +34,32 @@ class CorrectorData;
 }
 }
 
-
 class ApexDataTest : public QObject
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    private Q_SLOTS:
+private Q_SLOTS:
+    void initTestCase();
+    void testSimpleParameters();
+    void testDatablockData();
+    void testCalibrationData();
+    void testCalibrationParameterData();
+    void testConnectionData();
+    void testCorrectorData();
+    void testApexMap();
+    void testChannelMap();
 
-        void testSimpleParameters();
+    // tests for SoundLevelMeterData
+    void testSoundLevelMeterDataCopy();
+    void testSoundLevelMeterDataSupported();
+    void testSoundLevelMeterDataSupported_data();
+    void testSoundLevelMeterDataUnsupported();
+    void testSoundLevelMeterDataUnsupported_data();
 
-        void testDatablockData();
-        void testCalibrationData();
-        void testCalibrationParameterData();
-        void testConnectionData();
-        void testCorrectorData();
-        void testApexMap();
-        void testChannelMap();
-
-        //tests for SoundLevelMeterData
-        void testSoundLevelMeterDataCopy();
-        void testSoundLevelMeterDataSupported();
-        void testSoundLevelMeterDataSupported_data();
-        void testSoundLevelMeterDataUnsupported();
-        void testSoundLevelMeterDataUnsupported_data();
-
-    private:
-
-        void initDatablockData(apex::data::DatablockData* data);
-        void initConnectionData(apex::data::ConnectionData* data);
-        void initCorrectorData(apex::data::CorrectorData* data);
+private:
+    void initDatablockData(apex::data::DatablockData *data);
+    void initConnectionData(apex::data::ConnectionData *data);
+    void initCorrectorData(apex::data::CorrectorData *data);
 };
 
 #endif

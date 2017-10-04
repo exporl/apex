@@ -33,8 +33,7 @@ namespace apex
 namespace parser
 {
 
-CohDeviceParser::CohDeviceParser() :
-    SimpleParametersParser()
+CohDeviceParser::CohDeviceParser() : SimpleParametersParser()
 {
 }
 
@@ -42,30 +41,31 @@ CohDeviceParser::~CohDeviceParser()
 {
 }
 
-void CohDeviceParser::AddParameter(data::SimpleParameters* p, const QDomElement &e,
-        const QString& owner, const QString& type, const QString& id,
-        const QVariant& value, const int channel)
+void CohDeviceParser::AddParameter(data::SimpleParameters *p,
+                                   const QDomElement &e, const QString &owner,
+                                   const QString &type, const QString &id,
+                                   const QVariant &value, const int channel)
 {
     SimpleParametersParser::AddParameter(p, e, owner, type, id, value, channel);
 
-    data::CohDeviceData* q = dynamic_cast<data::CohDeviceData*>(p);
+    data::CohDeviceData *q = dynamic_cast<data::CohDeviceData *>(p);
     Q_ASSERT(q);
 
     if (type == "defaultmap") {
         MapFactory mapfac;
-        data::ApexMap* pmap = mapfac.GetMap(e);
-        if( !pmap )
+        data::ApexMap *pmap = mapfac.GetMap(e);
+        if (!pmap)
             throw ApexStringException("Could not parse map for " + p->id());
         q->setMap(pmap);
         // the following are handled by SimpleParametersParser
-    } else if (type=="trigger") {
-    } else if (type=="powerup_count") {
-    } else if (type=="device") {
-    } else if (type=="volume") {
+    } else if (type == "trigger") {
+    } else if (type == "powerup_count") {
+    } else if (type == "device") {
+    } else if (type == "volume") {
     } else {
-        throw ApexStringException( "Unknown tag " +  type + " in CohDeviceData::SetParameter");
+        throw ApexStringException("Unknown tag " + type +
+                                  " in CohDeviceData::SetParameter");
     }
 }
-
 }
 }

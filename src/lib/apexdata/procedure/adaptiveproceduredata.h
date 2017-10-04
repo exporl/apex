@@ -44,23 +44,17 @@ typedef double adapting_parameter;
 class APEXDATA_EXPORT AdaptiveProcedureData : public data::ProcedureData
 {
 public:
-
-    enum StopAfter
-    {
+    enum StopAfter {
         StopAfterReversals,
         StopAfterTrials,
         StopAfterPresentations
     };
 
-    enum ChangeStepsizeAfter
-    {
-        ChangeAfterTrials,
-        ChangeAfterReversals
-    };
+    enum ChangeStepsizeAfter { ChangeAfterTrials, ChangeAfterReversals };
 
     AdaptiveProcedureData();
 
-    //bool CheckParameters();
+    // bool CheckParameters();
 
     ~AdaptiveProcedureData();
 
@@ -79,8 +73,8 @@ public:
     void setRepeatFirstUntilCorrect(const bool rfuc);
     bool largerIsEasier() const;
     void setLargerIsEasier(bool value);
-    const QMap<int,float>& upStepsizes() const;
-    const QMap<int,float>& downStepsizes() const;
+    const QMap<int, float> &upStepsizes() const;
+    const QMap<int, float> &downStepsizes() const;
     ChangeStepsizeAfter changeStepsizeAfter() const;
     QString changeStepsizeAfterString() const;
     void addUpStepsize(int trial, float stepsize);
@@ -96,35 +90,37 @@ public:
     virtual Type type() const;
     virtual QString name() const;
 
-
     friend class parser::AdaptiveProcedureDataParser;
 
-    bool operator==(const AdaptiveProcedureData& other) const;
+    bool operator==(const AdaptiveProcedureData &other) const;
 
 private:
     int m_nUp;
     int m_nDown;
     adapting_parameter m_startValue;
 
-    adapting_parameter m_minValue;                // minimum value of t_adaptParam, important in case of adaptation of a variable parameter
+    adapting_parameter m_minValue; // minimum value of t_adaptParam, important
+                                   // in case of adaptation of a variable
+                                   // parameter
     adapting_parameter m_maxValue;
     bool m_defMinValue;
     bool m_defMaxValue;
 
-    QStringList m_adapt_parameters;   //! list of parameters to be adapted.
+    QStringList m_adapt_parameters; //! list of parameters to be adapted.
     // only the first can be a fixed parameter
 
-    bool m_bFirstUntilCorrect;      // repeat the first trial untill the answer is correct
+    bool m_bFirstUntilCorrect; // repeat the first trial untill the answer is
+                               // correct
     ChangeStepsizeAfter m_changestepsize_type;
-    StopAfter m_bStopAfterType;           // stop after m_nStop reversals or m_nStop trials?
+    StopAfter
+        m_bStopAfterType; // stop after m_nStop reversals or m_nStop trials?
 
-    int m_nStop;            // number of reversals before stop
+    int m_nStop; // number of reversals before stop
     bool m_bLargerIsEasier;
 
     QMap<int, float> m_upStepsizes;
     QMap<int, float> m_downStepsizes;
 };
-
 }
 }
 

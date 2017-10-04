@@ -36,13 +36,11 @@ Random::Random()
 {
 }
 
-Random::Random(quint64 seed) :
-    cmn::Random(seed)
+Random::Random(quint64 seed) : cmn::Random(seed)
 {
 }
 
-Random::Random(const Random& other) :
-    cmn::Random()
+Random::Random(const Random &other) : cmn::Random()
 {
     E_D(cmn::Random);
 
@@ -74,8 +72,8 @@ unsigned Random::nextUInt(unsigned n)
 }
 
 unsigned Random::operator()(unsigned n)
- {
+{
     return nextUInt(n);
- }
+}
 
 } // namespace apex

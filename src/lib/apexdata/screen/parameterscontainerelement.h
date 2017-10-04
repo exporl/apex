@@ -20,8 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_PARAMETERSCONTAINERELEMENT_H_
 #define _EXPORL_SRC_LIB_APEXDATA_SCREEN_PARAMETERSCONTAINERELEMENT_H_
 
-#include "screenelement.h"
 #include "parameterdata.h"
+#include "screenelement.h"
 
 #include <vector>
 
@@ -32,26 +32,21 @@ namespace apex
 namespace data
 {
 
-
-
 /**
  * Base class for screen elements dealing with parameters
  */
-class APEXDATA_EXPORT ParametersContainerElement
-            : public ScreenElement
+class APEXDATA_EXPORT ParametersContainerElement : public ScreenElement
 {
-    public:
+public:
+    ParametersContainerElement(const QString &id, ScreenElement *parent);
 
-        ParametersContainerElement(const QString& id, ScreenElement* parent);
+    ~ParametersContainerElement();
 
-        ~ParametersContainerElement();
+    static const char parameterExpressionRegexpData[];
 
-        static const char parameterExpressionRegexpData[];
-
-    protected:
-        bool CheckExpression(const QString& p_expr);
+protected:
+    bool CheckExpression(const QString &p_expr);
 };
-
 }
 }
 #endif

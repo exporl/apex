@@ -37,168 +37,143 @@ class FreeFieldWidget : public QWidget
 {
     Q_OBJECT
 
-    public:
-        FreeFieldWidget(QWidget *parent);
-        ~FreeFieldWidget();
+public:
+    FreeFieldWidget(QWidget *parent);
+    ~FreeFieldWidget();
 
-        /**
-         * Returns the start level widget at the given angle.
-         * Returns NULL is there is no such widget.
-         */
-        StartLevelWidget *startLevelWidget(uint angle) const;
+    /**
+     * Returns the start level widget at the given angle.
+     * Returns NULL is there is no such widget.
+     */
+    StartLevelWidget *startLevelWidget(uint angle) const;
 
-         /**
-         * Checks whether all obliged fields are filled in, if not, w will
-         * be set to the first found widget that was not filled in.
-          */
-        bool hasAllObligedFields(QWidget **w);
+    /**
+    * Checks whether all obliged fields are filled in, if not, w will
+    * be set to the first found widget that was not filled in.
+     */
+    bool hasAllObligedFields(QWidget **w);
 
-        /**
-         * Checks whether at least one of the start level widgets has levels.
-         */
-        bool hasLevels() const;
+    /**
+     * Checks whether at least one of the start level widgets has levels.
+     */
+    bool hasLevels() const;
 
-        /**
-         * Sets the speakers to be shown in this widget.
-         */
-        void setSpeakerSetup(QVector<data::Speaker> speakers);
+    /**
+     * Sets the speakers to be shown in this widget.
+     */
+    void setSpeakerSetup(QVector<data::Speaker> speakers);
 
-        double totalSpeechlevel() const;
-        double totalNoiselevel() const;
+    double totalSpeechlevel() const;
+    double totalNoiselevel() const;
 
-    public slots:
+public slots:
 
-        /**
-         * Clears all StartLevelWidgets in this widget.
-         */
-        void clear();
+    /**
+     * Clears all StartLevelWidgets in this widget.
+     */
+    void clear();
 
-        /**
-         * Shows/hides the uncorrelated noises widgets of all StartLevelWidgets.
-         */
-        void setUncorrelatedNoisesVisible(bool visible);
+    /**
+     * Shows/hides the uncorrelated noises widgets of all StartLevelWidgets.
+     */
+    void setUncorrelatedNoisesVisible(bool visible);
 
-        /**
-         * If called with true, all noiselevels will be kept at the same value;
-         * if one gets changed, all get changed.
-         */
-        void setLockNoiselevels(bool lock);
+    /**
+     * If called with true, all noiselevels will be kept at the same value;
+     * if one gets changed, all get changed.
+     */
+    void setLockNoiselevels(bool lock);
 
-        /**
-         * If called with true, all speechlevels will be kept at the same value;
-         * if one gets changed, all get changed.
-         */
-        void setLockSpeechlevels(bool lock);
+    /**
+     * If called with true, all speechlevels will be kept at the same value;
+     * if one gets changed, all get changed.
+     */
+    void setLockSpeechlevels(bool lock);
 
-        /**
-         * Sets the total speechlevel to the given value. This will not do
-         * anything if the speechlevels are not locked.
-         */
-        void setTotalSpeechlevel(double level);
+    /**
+     * Sets the total speechlevel to the given value. This will not do
+     * anything if the speechlevels are not locked.
+     */
+    void setTotalSpeechlevel(double level);
 
-        /**
-         * Sets the total noiselevel to the given value. This will not do
-         * anything if the noiselevels are not locked.
-         */
-        void setTotalNoiselevel(double level);
+    /**
+     * Sets the total noiselevel to the given value. This will not do
+     * anything if the noiselevels are not locked.
+     */
+    void setTotalNoiselevel(double level);
 
-    signals:
+signals:
 
-        /**
-         * Emitted when something has changed in one of the widgets.
-         */
-        void contentsChanged();
+    /**
+     * Emitted when something has changed in one of the widgets.
+     */
+    void contentsChanged();
 
-        /**
-         * Emitted when the total speechlevel changed.
-         */
-        void totalSpeechlevelChanged(double to);
+    /**
+     * Emitted when the total speechlevel changed.
+     */
+    void totalSpeechlevelChanged(double to);
 
-        /**
-         * Emitted when the total noiselevel changed.
-         */
-        void totalNoiselevelChanged(double to);
+    /**
+     * Emitted when the total noiselevel changed.
+     */
+    void totalNoiselevelChanged(double to);
 
-    private:
-        /**
-         * Return true if speech is enabled on any speaker
-         */
-        bool anySpeechEnabled() const;
+private:
+    /**
+     * Return true if speech is enabled on any speaker
+     */
+    bool anySpeechEnabled() const;
 
-       /**
-         * Return true if noise is enabled on any speaker
-         */
-        bool anyNoiseEnabled() const;
+    /**
+      * Return true if noise is enabled on any speaker
+      */
+    bool anyNoiseEnabled() const;
 
-        //ArcLayout *arc;
-        QGridLayout *grid;
-        QMap<uint, StartLevelWidget*> angleMap;
+    // ArcLayout *arc;
+    QGridLayout *grid;
+    QMap<uint, StartLevelWidget *> angleMap;
 
-        void setupUi(QVector<data::Speaker> speakers);
-        double totalLevel(QList<double> levels) const;
-        double channelLevel(double totalLevel, uint nbOfChannels);
-        QList<double> noiselevels() const;
-        QList<double> speechlevels() const;
+    void setupUi(QVector<data::Speaker> speakers);
+    double totalLevel(QList<double> levels) const;
+    double channelLevel(double totalLevel, uint nbOfChannels);
+    QList<double> noiselevels() const;
+    QList<double> speechlevels() const;
 
-        bool speechLocked;
-        bool noiseLocked;
-        double totalNoise;
-        double totalSpeech;
-        bool totalNoiseSet;
-        bool totalSpeechSet;
+    bool speechLocked;
+    bool noiseLocked;
+    double totalNoise;
+    double totalSpeech;
+    bool totalNoiseSet;
+    bool totalSpeechSet;
 
-    private slots:
+private slots:
 
-        /**
-         * Emits the speechlevelsChanged(double) signal with the total
-         * speechlevel as argument.
-         */
-        void emitSpeechChanged();
+    /**
+     * Emits the speechlevelsChanged(double) signal with the total
+     * speechlevel as argument.
+     */
+    void emitSpeechChanged();
 
-        /**
-         * Emits the noiselevelsChanged(double) signal with the total
-         * noiselevel as argument.
-         */
-        void emitNoiseChanged();
+    /**
+     * Emits the noiselevelsChanged(double) signal with the total
+     * noiselevel as argument.
+     */
+    void emitNoiseChanged();
 
-        /**
-         * Will update the noiselevels (if they are locked) to the value of
-         * totalNoise.
-         */
-        void updateNoiselevels();
+    /**
+     * Will update the noiselevels (if they are locked) to the value of
+     * totalNoise.
+     */
+    void updateNoiselevels();
 
-        /**
-         * Will update the speechlevels (if they are locked) to the value of
-         * totalNoise.
-         */
-        void updateSpeechlevels();
+    /**
+     * Will update the speechlevels (if they are locked) to the value of
+     * totalNoise.
+     */
+    void updateSpeechlevels();
 };
-}//ns gui
-}//ns spin
+} // ns gui
+} // ns spin
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

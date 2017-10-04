@@ -28,8 +28,7 @@
 namespace apex
 {
 
-class APEX_EXPORT ErrorHandler :
-    public QObject
+class APEX_EXPORT ErrorHandler : public QObject
 {
     Q_OBJECT
 public:
@@ -51,9 +50,8 @@ Q_SIGNALS:
     void itemAdded(const apex::StatusItem &item);
 
 private:
-    static void messageOutput(QtMsgType type,
-            const QMessageLogContext &context,
-            const QString &msg);
+    static void messageOutput(QtMsgType type, const QMessageLogContext &context,
+                              const QString &msg);
 
 private:
     static ErrorHandler *globalInstance;
@@ -62,7 +60,5 @@ private:
     unsigned nbErrors;
     QQueue<StatusItem> queuedItems;
 };
-
 }
 #endif
-

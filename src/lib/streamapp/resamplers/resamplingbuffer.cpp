@@ -22,9 +22,12 @@
 
 using namespace streamapp;
 
-ResamplingBuffer::ResamplingBuffer( IResampler& a_Resampler, const unsigned ac_nOutputSize ) :
-    BasicBuffer( a_Resampler.mf_nGetNumChannels(), a_Resampler.mf_nGetOutputBufferSize(), ac_nOutputSize / a_Resampler.mf_nGetOutputBufferSize() ),
-  m_Resampler( a_Resampler )
+ResamplingBuffer::ResamplingBuffer(IResampler &a_Resampler,
+                                   const unsigned ac_nOutputSize)
+    : BasicBuffer(a_Resampler.mf_nGetNumChannels(),
+                  a_Resampler.mf_nGetOutputBufferSize(),
+                  ac_nOutputSize / a_Resampler.mf_nGetOutputBufferSize()),
+      m_Resampler(a_Resampler)
 {
 }
 
@@ -32,9 +35,9 @@ ResamplingBuffer::~ResamplingBuffer()
 {
 }
 
-const Stream& ResamplingBuffer::mf_DoProcessing( const Stream& ac_StrToProc )
+const Stream &ResamplingBuffer::mf_DoProcessing(const Stream &ac_StrToProc)
 {
-  const Stream& res = m_Resampler.mf_DownSample( ac_StrToProc );
-  BasicBuffer::mf_DoProcessing( res );
-  return ac_StrToProc;
+    const Stream &res = m_Resampler.mf_DownSample(ac_StrToProc);
+    BasicBuffer::mf_DoProcessing(res);
+    return ac_StrToProc;
 }

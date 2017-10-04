@@ -29,8 +29,7 @@
 namespace apex
 {
 
-class APEX_EXPORT MainConfigFileParser :
-    public UpgradableXmlParser
+class APEX_EXPORT MainConfigFileParser : public UpgradableXmlParser
 {
     Q_OBJECT
 public:
@@ -42,7 +41,7 @@ public:
 
     bool parse();
 
-    const data::MainConfigFileData& data() const;
+    const data::MainConfigFileData &data() const;
 
 private Q_SLOTS:
     void upgrade3_1_3();
@@ -50,6 +49,5 @@ private Q_SLOTS:
 private:
     data::MainConfigFileData m_data;
 };
-
 }
 #endif

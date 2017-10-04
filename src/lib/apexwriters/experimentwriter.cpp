@@ -49,69 +49,74 @@ using namespace apex;
 using namespace apex::writer;
 using apex::data::ExperimentData;
 
-void ExperimentWriter::write(const ExperimentData& data, const QString& file,
-        const QStringList& screens)
+void ExperimentWriter::write(const ExperimentData &data, const QString &file,
+                             const QStringList &screens)
 {
     QDomDocument doc;
-    doc.appendChild(doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\""));
+    doc.appendChild(doc.createProcessingInstruction(
+        "xml", "version=\"1.0\" encoding=\"UTF-8\""));
 
-    QDomElement apex = doc.createElementNS(QL1S(APEX_NAMESPACE), QSL("apex:apex"));
-    apex.setAttribute(QSL("xmlns:xsi"), QSL("http://www.w3.org/2001/XMLSchema-instance"));
-    apex.setAttribute(QSL("xsi:schemaLocation"), QL1S(APEX_NAMESPACE " " EXPERIMENT_SCHEMA_URL));
+    QDomElement apex =
+        doc.createElementNS(QL1S(APEX_NAMESPACE), QSL("apex:apex"));
+    apex.setAttribute(QSL("xmlns:xsi"),
+                      QSL("http://www.w3.org/2001/XMLSchema-instance"));
+    apex.setAttribute(QSL("xsi:schemaLocation"),
+                      QL1S(APEX_NAMESPACE " " EXPERIMENT_SCHEMA_URL));
     doc.appendChild(apex);
 
     QDomElement e;
 
-    //description
+    // description
     QString description = data.experimentDescription();
     if (!description.isEmpty())
-        apex.appendChild(XmlUtils::createTextElement(&doc, "description", description));
+        apex.appendChild(
+            XmlUtils::createTextElement(&doc, "description", description));
 
-    //ProcedureConfig
+    // ProcedureConfig
     e = ProceduresWriter::addElement(&doc, *data.procedureData());
     throwIfNull(e, "procedures");
 
-    //ScreensData
+    // ScreensData
     e = ScreensWriter::addElement(&doc, *data.screensData(), screens);
     throwIfNull(e, "screens");
 
-    //DatablocksData
+    // DatablocksData
     e = DatablocksWriter::addElement(&doc, *data.datablocksData());
     throwIfNull(e, "datablocks");
 
-    //DevicesData
+    // DevicesData
     e = DevicesWriter::addElement(&doc, *data.devicesData());
     throwIfNull(e, "devices");
 
-    //FiltersData
-    const data::FiltersData& filters = *data.filtersData();
+    // FiltersData
+    const data::FiltersData &filters = *data.filtersData();
     if (filters.size() > 0) {
         e = FiltersWriter::addElement(&doc, filters);
         throwIfNull(e, "filters");
     }
 
-    //StimuliData
+    // StimuliData
     e = StimuliWriter::addElement(&doc, *data.stimuliData());
     throwIfNull(e, "stimuli");
 
-    //ConnectionsData
-    const data::ConnectionsData* connections = data.connectionsData();
+    // ConnectionsData
+    const data::ConnectionsData *connections = data.connectionsData();
     if (connections->size() > 0) {
         e = ConnectionsWriter::addElement(&doc, *connections);
         throwIfNull(e, "connections");
     }
 
-    //CalibrationData
+    // CalibrationData
     if (data.calibrationData()) {
         e = CalibrationWriter::addElement(&doc, *data.calibrationData());
         throwIfNull(e, "calibration");
     }
 
-    //ResultParameters
+    // ResultParameters
     e = ResultParametersWriter::addElement(&doc, *data.resultParameters());
     throwIfNull(e, "resultparameters");
 
-    //GeneralParameters
+    // GeneralParameters
     e = GeneralParametersWriter::addElement(&doc, *data.generalParameters());
     throwIfNull(e, "generalparameters");
 
@@ -119,7 +124,8 @@ void ExperimentWriter::write(const ExperimentData& data, const QString& file,
 
     if (!XmlUtils::writeDocument(doc, file)) {
         throw ApexStringException(QString("ExperimentWriter: error writing "
-                                          "to file %1").arg(file));
+                                          "to file %1")
+                                      .arg(file));
     }
 
     qCDebug(APEX_RS) << "done writing experiment";
@@ -128,5 +134,6 @@ void ExperimentWriter::write(const ExperimentData& data, const QString& file,
 void ExperimentWriter::throwIfNull(const QDomElement &e, const QString &where)
 {
     if (e.isNull())
-        throw ApexStringException(tr("ExperimentWriter: failed to write %1data").arg(where));
+        throw ApexStringException(
+            tr("ExperimentWriter: failed to write %1data").arg(where));
 }

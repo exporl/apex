@@ -26,26 +26,30 @@
 
 class PluginControllerInterface;
 
-namespace apex {
+namespace apex
+{
 
-namespace data {
+namespace data
+{
 class PluginControllerData;
 }
 
-namespace device {
-
-class PluginController: public ControlDevice
+namespace device
 {
-Q_OBJECT
-public:
 
-    PluginController(  data::PluginControllerData* a_pParameters );
+class PluginController : public ControlDevice
+{
+    Q_OBJECT
+public:
+    PluginController(data::PluginControllerData *a_pParameters);
     virtual ~PluginController();
 
-    virtual bool SetParameter(const QString& type, const int channel, const QVariant& value);
+    virtual bool SetParameter(const QString &type, const int channel,
+                              const QVariant &value);
 
     virtual void Reset();
     virtual void Prepare();
+    virtual void release();
 
     virtual void syncControlDeviceOutput();
 
@@ -53,13 +57,11 @@ private:
     void MakePlugin();
 
 private:
-    data::PluginControllerData* m_param;
-    QScopedPointer<PluginControllerInterface>  m_plugin;
-
+    data::PluginControllerData *m_param;
+    QScopedPointer<PluginControllerInterface> m_plugin;
 };
 
-}       // ns device
-}       // ns apex
+} // ns device
+} // ns apex
 
 #endif
-

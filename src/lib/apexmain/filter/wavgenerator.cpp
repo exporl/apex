@@ -32,20 +32,20 @@
 
 using namespace apex::stimulus;
 
-//!WavGenerator
-apex::stimulus::WavGenerator::WavGenerator(const QString& ac_sID,
-                                           const QString& ac_sType,
-                                           data::FilterData* pParams,
-                                           unsigned long sr,
-                                           unsigned bs,
-                                           bool deterministic) :
-    WavFilter( ac_sID, pParams, sr, bs ),
-  m_pStrGen( StreamGeneratorFactory::CreateGenerator( ac_sType, pParams, sr, bs, deterministic ) )
+//! WavGenerator
+apex::stimulus::WavGenerator::WavGenerator(const QString &ac_sID,
+                                           const QString &ac_sType,
+                                           data::FilterData *pParams,
+                                           unsigned long sr, unsigned bs,
+                                           bool deterministic)
+    : WavFilter(ac_sID, pParams, sr, bs),
+      m_pStrGen(StreamGeneratorFactory::CreateGenerator(ac_sType, pParams, sr,
+                                                        bs, deterministic))
 //  m_src(0)
 {
-  Q_ASSERT( m_pStrGen );
-  //pParams->insert( std::pair<QString, QString>( "generator", "generator" ) );   //tell clients we have no inputs
-
+    Q_ASSERT(m_pStrGen);
+    // pParams->insert( std::pair<QString, QString>( "generator", "generator" )
+    // );   //tell clients we have no inputs
 }
 
 WavGenerator::~WavGenerator()
@@ -54,7 +54,7 @@ WavGenerator::~WavGenerator()
 
 void WavGenerator::Reset()
 {
-  m_pStrGen->Reset(); //must always be done
+    m_pStrGen->Reset(); // must always be done
 }
 
 void WavGenerator::Prepare()
@@ -62,49 +62,50 @@ void WavGenerator::Prepare()
     m_pStrGen->Prepare();
 }
 
-bool WavGenerator::SetParameter( const QString& type, const int channel, const QVariant& value )
-//bool WavGenerator::SetParameter( const QString& ac_ParamID, const QString& ac_Val )
+bool WavGenerator::SetParameter(const QString &type, const int channel,
+                                const QVariant &value)
+// bool WavGenerator::SetParameter( const QString& ac_ParamID, const QString&
+// ac_Val )
 {
-    Q_UNUSED (channel);
-  /*
-  if( !m_Params->HasParameter( ac_ParamID ) )
-    return false;*/
+    Q_UNUSED(channel);
+    /*
+    if( !m_Params->HasParameter( ac_ParamID ) )
+      return false;*/
 
-    //resolve parameter type
-  if( type == "gain" )
-  {
-    const double dGain = ((data::WavFilterParameters*)m_Params)->baseGain() +
-        (((data::WavFilterParameters*)m_Params)->invertGain() ? -value.toDouble() : +value.toDouble());
+    // resolve parameter type
+    if (type == "gain") {
+        const double dGain =
+            ((data::WavFilterParameters *)m_Params)->baseGain() +
+            (((data::WavFilterParameters *)m_Params)->invertGain()
+                 ? -value.toDouble()
+                 : +value.toDouble());
 
 //#define PRINTWAVFILTER
 #ifdef PRINTWAVFILTER
-    qCDebug(APEX_RS, "new gain value: %f", dGain);
+        qCDebug(APEX_RS, "new gain value: %f", dGain);
 #endif
 
-    if (channel!=-1)
-        qCDebug(APEX_RS, "Warning: channel parameter not implemented in generator");
+        if (channel != -1)
+            qCDebug(APEX_RS,
+                    "Warning: channel parameter not implemented in generator");
 
+        m_pStrGen->mp_SetSignalAmp(dGain);
 
-      m_pStrGen->mp_SetSignalAmp( dGain );
-
-    return true;
-  }
-  else if( type == "frequency"  )
-  {
-    const double dFreq = value.toDouble();
+        return true;
+    } else if (type == "frequency") {
+        const double dFreq = value.toDouble();
 #ifdef PRINTWAVFILTER
-    qCDebug(APEX_RS, "new frequency: %f", dFreq);
+        qCDebug(APEX_RS, "new frequency: %f", dFreq);
 #endif
 
-    m_pStrGen->mp_SetFrequency( dFreq );
-    return true;
-  }
-  return false;
+        m_pStrGen->mp_SetFrequency(dFreq);
+        return true;
+    }
+    return false;
 }
 
-StreamGenerator* WavGenerator::GetStreamGen() const
+StreamGenerator *WavGenerator::GetStreamGen() const
 {
-  Q_ASSERT( m_pStrGen );
-  return m_pStrGen;
+    Q_ASSERT(m_pStrGen);
+    return m_pStrGen;
 }
-

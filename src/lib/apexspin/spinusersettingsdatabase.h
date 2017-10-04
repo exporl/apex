@@ -29,85 +29,65 @@ namespace data
 
 class SpinUserSettingsDatabase
 {
-    public:
-        SpinUserSettingsDatabase();
-        ~SpinUserSettingsDatabase(){}
+public:
+    SpinUserSettingsDatabase();
+    ~SpinUserSettingsDatabase()
+    {
+    }
 
-        /**
-         * Saves user settings to disk.
-         *
-         * @param name  The name to save the settings under.
-         * @param settings The settings to save.
-         */
-        static void save(const QString& name, const SpinUserSettings& settings);
+    /**
+     * Saves user settings to disk.
+     *
+     * @param name  The name to save the settings under.
+     * @param settings The settings to save.
+     */
+    static void save(const QString &name, const SpinUserSettings &settings);
 
-        /**
-         * Load settings from disk.
-         *
-         * @param name The name of the settings to load.
-         *
-         * @note This method will given an assertion error if the given name
-         *   is not the name of saved settings so only give a string
-         *   returned by savedSettings() as parameter.
-         */
-        static SpinUserSettings load(const QString& name);
+    /**
+     * Load settings from disk.
+     *
+     * @param name The name of the settings to load.
+     *
+     * @note This method will given an assertion error if the given name
+     *   is not the name of saved settings so only give a string
+     *   returned by savedSettings() as parameter.
+     */
+    static SpinUserSettings load(const QString &name);
 
-        /*
-         * Remove settings from database
-         */
-        static bool remove(const QString& name);
-        static bool rename(const QString& oldName, const QString& newName);
+    /*
+     * Remove settings from database
+     */
+    static bool remove(const QString &name);
+    static bool rename(const QString &oldName, const QString &newName);
 
-        /**
-         * Sets the path where the user saved a file the last time.
-         */
-        static void setLastSavePath(const QString& path);
+    /**
+     * Sets the path where the user saved a file the last time.
+     */
+    static void setLastSavePath(const QString &path);
 
-        /**
-         * Returns the path where the user saved a file the last time.
-         * If this path has not been set yet, the users home directory will
-         * be returned.
-         */
-        static QString lastSavePath();
+    /**
+     * Returns the path where the user saved a file the last time.
+     * If this path has not been set yet, the users home directory will
+     * be returned.
+     */
+    static QString lastSavePath();
 
-        /**
-         * Returns a list with the names of all saved settings.
-         */
-        static QStringList savedSettings();
+    /**
+     * Returns a list with the names of all saved settings.
+     */
+    static QStringList savedSettings();
 
-        /**
-         * The name under which the default settings will be saved.
-         */
-        static const QString DEFAULT;
+    /**
+     * The name under which the default settings will be saved.
+     */
+    static const QString DEFAULT;
 
-        /**
-         * The name under which the previous settings will be saved.
-         */
-        static const QString PREVIOUS;
+    /**
+     * The name under which the previous settings will be saved.
+     */
+    static const QString PREVIOUS;
 };
-}//ns data
-}//ns spin
+} // ns data
+} // ns spin
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

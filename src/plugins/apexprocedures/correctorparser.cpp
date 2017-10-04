@@ -36,10 +36,11 @@ CorrectorData *CorrectorParser::Parse(const QDomElement &dom)
     if (type == "apex:isequal")
         data->setType(CorrectorData::EQUAL);
     else
-        qFatal ("Invalid corrector type %s", qPrintable (type));
+        qFatal("Invalid corrector type %s", qPrintable(type));
 
-    for (QDomElement currentNode = dom.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
+    for (QDomElement currentNode = dom.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
         const QString tag = currentNode.tagName();
         if (tag == "language") {
             const QString value = currentNode.text();
@@ -48,7 +49,7 @@ CorrectorData *CorrectorParser::Parse(const QDomElement &dom)
             else if (value == "English")
                 data->setLanguage(CorrectorData::ENGLISH);
         } else {
-            qFatal ("Unknown corrector tag: %s", qPrintable(tag));
+            qFatal("Unknown corrector tag: %s", qPrintable(tag));
         }
     }
     return data.take();

@@ -29,62 +29,61 @@
 
 namespace apex
 {
-  namespace editor
-  {
+namespace editor
+{
 
-    /**
-     * This base class is only necessary because Qt moc can't handle
-     * templates..
-     */
-    class ScreenEditorAddWidgetActionBase
-      : public QAction
-    {
-      Q_OBJECT
-    protected:
-      ScreenEditor* editor;
-      QString elName;
-    public:
-      ScreenEditorAddWidgetActionBase( ScreenEditor* e, const QString& name );
-    public slots:
-      void addWidgetSlot();
-    protected:
-      virtual void addWidgetSlotCalled() = 0;
-    };
+/**
+ * This base class is only necessary because Qt moc can't handle
+ * templates..
+ */
+class ScreenEditorAddWidgetActionBase : public QAction
+{
+    Q_OBJECT
+protected:
+    ScreenEditor *editor;
+    QString elName;
 
-    /**
-     * This template class is a \ref QAction that calls
-     * addWidgetClicked() on the given \ref ScreenEditor when it is
-     * triggered.  It will call addWidgetClicked() with a newly
-     * created instance of \ref
-     * ScreenElementCreatorTemplate<ElementT>.  This will make sure
-     * that a new element of type ElementT ( which should be a
-     * subclass of \ref ScreenElement, not \ref
-     * ScreenElementEditorDelegate ! ) is added to the screen being
-     * edited.
-     */
-    template <typename ElementT>
-    class ScreenEditorAddWidgetAction
-      : public ScreenEditorAddWidgetActionBase
-    {
-    public:
-      ScreenEditorAddWidgetAction( ScreenEditor* e, const QString& name );
-      void addWidgetSlotCalled();
-    };
+public:
+    ScreenEditorAddWidgetActionBase(ScreenEditor *e, const QString &name);
+public slots:
+    void addWidgetSlot();
 
-    template <typename ElementT>
-    ScreenEditorAddWidgetAction<ElementT>::ScreenEditorAddWidgetAction( ScreenEditor* e, const QString& name )
-      : ScreenEditorAddWidgetActionBase( e, name )
-    {
-    }
+protected:
+    virtual void addWidgetSlotCalled() = 0;
+};
 
-    template <typename ElementT>
-    void ScreenEditorAddWidgetAction<ElementT>::addWidgetSlotCalled()
-    {
-      editor->addWidgetClicked(
-        new ScreenElementCreatorTemplate<ElementT>( elName )
-        );
-    }
+/**
+ * This template class is a \ref QAction that calls
+ * addWidgetClicked() on the given \ref ScreenEditor when it is
+ * triggered.  It will call addWidgetClicked() with a newly
+ * created instance of \ref
+ * ScreenElementCreatorTemplate<ElementT>.  This will make sure
+ * that a new element of type ElementT ( which should be a
+ * subclass of \ref ScreenElement, not \ref
+ * ScreenElementEditorDelegate ! ) is added to the screen being
+ * edited.
+ */
+template <typename ElementT>
+class ScreenEditorAddWidgetAction : public ScreenEditorAddWidgetActionBase
+{
+public:
+    ScreenEditorAddWidgetAction(ScreenEditor *e, const QString &name);
+    void addWidgetSlotCalled();
+};
 
-  }
+template <typename ElementT>
+ScreenEditorAddWidgetAction<ElementT>::ScreenEditorAddWidgetAction(
+    ScreenEditor *e, const QString &name)
+    : ScreenEditorAddWidgetActionBase(e, name)
+{
+}
+
+template <typename ElementT>
+void ScreenEditorAddWidgetAction<ElementT>::addWidgetSlotCalled()
+{
+    editor->addWidgetClicked(
+        new ScreenElementCreatorTemplate<ElementT>(elName));
+}
+}
 }
 #endif

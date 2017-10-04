@@ -20,7 +20,8 @@
 /**********************************************************************
  *
  *   Copyright: Cochlear Ltd
- *    $Archive: /SPrint Research Software/Latest/Cpp/Sequence/stimulation_mode.h $
+ *    $Archive: /SPrint Research Software/Latest/Cpp/Sequence/stimulation_mode.h
+ *$
  *   $Revision: 3 $
  *       $Date: 9/10/02 7:00p $
  * $Nokeywords: $
@@ -52,41 +53,41 @@
  * \ref MP1_2 "MP1+2" are supported.
  */
 
-typedef enum
-{
-    CG,     /*!< Common ground stimulation. */
+typedef enum {
+    CG, /*!< Common ground stimulation. */
 
-    BP,     /*!< Bi-polar stimulation. */
-    BP1,    /*!< Bi-polar + 1 stimulation. */
-    BP2,    /*!< Bi-polar + 2 stimulation. */
-    BP3,    /*!< Bi-polar + 3 stimulation. */
-    BP4,    /*!< Bi-polar + 4 stimulation. */
-    BP5,    /*!< Bi-polar + 5 stimulation. */
-    BP6,    /*!< Bi-polar + 6 stimulation. */
-    BP7,    /*!< Bi-polar + 7 stimulation. */
-    BP8,    /*!< Bi-polar + 8 stimulation. */
-    BP9,    /*!< Bi-polar + 9 stimulation. */
-    BP10,   /*!< Bi-polar + 10 stimulation. */
+    BP,   /*!< Bi-polar stimulation. */
+    BP1,  /*!< Bi-polar + 1 stimulation. */
+    BP2,  /*!< Bi-polar + 2 stimulation. */
+    BP3,  /*!< Bi-polar + 3 stimulation. */
+    BP4,  /*!< Bi-polar + 4 stimulation. */
+    BP5,  /*!< Bi-polar + 5 stimulation. */
+    BP6,  /*!< Bi-polar + 6 stimulation. */
+    BP7,  /*!< Bi-polar + 7 stimulation. */
+    BP8,  /*!< Bi-polar + 8 stimulation. */
+    BP9,  /*!< Bi-polar + 9 stimulation. */
+    BP10, /*!< Bi-polar + 10 stimulation. */
 
-    RBP,     /*!< Reverse bi-polar stimulation. */
-    RBP1,    /*!< Reverse bi-polar + 1 stimulation. */
-    RBP2,    /*!< Reverse bi-polar + 2 stimulation. */
-    RBP3,    /*!< Reverse bi-polar + 3 stimulation. */
-    RBP4,    /*!< Reverse bi-polar + 4 stimulation. */
-    RBP5,    /*!< Reverse bi-polar + 5 stimulation. */
-    RBP6,    /*!< Reverse bi-polar + 6 stimulation. */
-    RBP7,    /*!< Reverse bi-polar + 7 stimulation. */
-    RBP8,    /*!< Reverse bi-polar + 8 stimulation. */
-    RBP9,    /*!< Reverse bi-polar + 9 stimulation. */
-    RBP10,   /*!< Reverse bi-polar + 10 stimulation. */
+    RBP,   /*!< Reverse bi-polar stimulation. */
+    RBP1,  /*!< Reverse bi-polar + 1 stimulation. */
+    RBP2,  /*!< Reverse bi-polar + 2 stimulation. */
+    RBP3,  /*!< Reverse bi-polar + 3 stimulation. */
+    RBP4,  /*!< Reverse bi-polar + 4 stimulation. */
+    RBP5,  /*!< Reverse bi-polar + 5 stimulation. */
+    RBP6,  /*!< Reverse bi-polar + 6 stimulation. */
+    RBP7,  /*!< Reverse bi-polar + 7 stimulation. */
+    RBP8,  /*!< Reverse bi-polar + 8 stimulation. */
+    RBP9,  /*!< Reverse bi-polar + 9 stimulation. */
+    RBP10, /*!< Reverse bi-polar + 10 stimulation. */
 
-    MP1,    /*!< Mono-polar 1 stimulation */
-    MP2,    /*!< Mono-polar 2 stimulation */
-    MP1_2,  /*!< Mono-polar 1+2 stimulation */
+    MP1,   /*!< Mono-polar 1 stimulation */
+    MP2,   /*!< Mono-polar 2 stimulation */
+    MP1_2, /*!< Mono-polar 1+2 stimulation */
 
-    RMP1,   /*!< Reverse mono-polar 1 stimulation */
-    RMP2,   /*!< Reverse mono-polar 2 stimulation */
-    RMP1_2  /*!< Reverse mono-polar 1+2 stimulation */
-} StimulationModeType, StimulationMode;
+    RMP1,  /*!< Reverse mono-polar 1 stimulation */
+    RMP2,  /*!< Reverse mono-polar 2 stimulation */
+    RMP1_2 /*!< Reverse mono-polar 1+2 stimulation */
+} StimulationModeType,
+    StimulationMode;
 
 #endif

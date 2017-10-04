@@ -23,61 +23,58 @@
 namespace appcore
 {
 
+/**
+  * Deleter
+  *   generic deleter like in Effective STL
+  *   uses a functor because it can be inlined.
+  *   Usage example with for_each:
+  *   \code
+  *   for_each( begin, end, Deleter() );
+  *   \endcode
+  ************************************************ */
+struct Deleter {
     /**
-      * Deleter
-      *   generic deleter like in Effective STL
-      *   uses a functor because it can be inlined.
-      *   Usage example with for_each:
-      *   \code
-      *   for_each( begin, end, Deleter() );
-      *   \endcode
-      ************************************************ */
-  struct Deleter
-  {
-      /**
-        * Delete.
-        * @param p pointer to the memory to delete
-        */
-    template < class tType >
-    void operator() ( tType * p )
+      * Delete.
+      * @param p pointer to the memory to delete
+      */
+    template <class tType>
+    void operator()(tType *p)
     {
-      delete p;
+        delete p;
     }
-  };
+};
 
+/**
+  * ZeroizingDeleter
+  *   much safer than Deleter if used consequently,
+  *   since delete( 0 ) doesn't crash your application.
+  *
+  *   \code
+  *   delete pointer;
+  *   pointer = 0;
+  *   \endcode
+  *
+  *   can be replaced with
+  *
+  *   \code
+  *   ZeroizingDeleter()( pointer );
+  *   \endcode
+  *
+  *   @see Deleter
+  ***************************************************** */
+struct ZeroizingDeleter {
     /**
-      * ZeroizingDeleter
-      *   much safer than Deleter if used consequently,
-      *   since delete( 0 ) doesn't crash your application.
-      *
-      *   \code
-      *   delete pointer;
-      *   pointer = 0;
-      *   \endcode
-      *
-      *   can be replaced with
-      *
-      *   \code
-      *   ZeroizingDeleter()( pointer );
-      *   \endcode
-      *
-      *   @see Deleter
-      ***************************************************** */
-  struct ZeroizingDeleter
-  {
-      /**
-        * Delete and set to zero.
-        * Reference is necessary for setting it to zero.
-        * @param p pointer to the memory to delete
-        */
-    template < class tType >
-    void operator() ( tType*& p )
+      * Delete and set to zero.
+      * Reference is necessary for setting it to zero.
+      * @param p pointer to the memory to delete
+      */
+    template <class tType>
+    void operator()(tType *&p)
     {
-      delete p;
-      p = 0;
+        delete p;
+        p = 0;
     }
-  };
-
+};
 }
 
 #endif //#ifndef DELETERR_H

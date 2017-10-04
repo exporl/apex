@@ -46,72 +46,85 @@ ScreenEditorExperimentFileParser::~ScreenEditorExperimentFileParser()
 {
 }
 
-ScreenEditorExperimentData *ScreenEditorExperimentFileParser::parse(const QString& file)
+ScreenEditorExperimentData *
+ScreenEditorExperimentFileParser::parse(const QString &file)
 {
-    QScopedPointer<ScreenEditorExperimentData> ret(new ScreenEditorExperimentData());
+    QScopedPointer<ScreenEditorExperimentData> ret(
+        new ScreenEditorExperimentData());
     try {
         ret->expDocument = XmlUtils::parseDocument(file);
-    } catch( ... ) {
+    } catch (...) {
         return NULL;
     }
-    for (QDomElement currentNode = ret->expDocument.documentElement().firstChildElement();
-            !currentNode.isNull(); currentNode = currentNode.nextSiblingElement() ) {
+    for (QDomElement currentNode =
+             ret->expDocument.documentElement().firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
         const QString tag = currentNode.tagName();
-        if ( tag == "screens" ) {
+        if (tag == "screens") {
             ret->screensElement = currentNode;
             ret->screens = new ScreensData;
 
             for (QDomElement cn = currentNode.firstChildElement(); !cn.isNull();
-                    cn = cn.nextSiblingElement()) {
+                 cn = cn.nextSiblingElement()) {
                 const QString ctag = cn.tagName();
-                if ( ctag == "screen" ) {
+                if (ctag == "screen") {
                     ScreenParser screenParser(ret->screens);
-                    Screen* s = screenParser.createScreen(cn);
+                    Screen *s = screenParser.createScreen(cn);
                     ret->screenToElementMap[s] = cn;
-                } else if ( ctag == "defaultFont" ) {
+                } else if (ctag == "defaultFont") {
                     const QString font = cn.text();
-                    ret->screens->setDefaultFont( font );
-                } else if ( ctag == "defaultFontSize" ) {
+                    ret->screens->setDefaultFont(font);
+                } else if (ctag == "defaultFontSize") {
                     unsigned fs = cn.text().toUInt();
-                    ret->screens->setDefaultFontSize( fs );
-                } else continue;
+                    ret->screens->setDefaultFontSize(fs);
+                } else
+                    continue;
             }
-        } else continue;
+        } else
+            continue;
     }
     return ret.take();
 }
 
-void ScreenEditorExperimentFileParser::save( const ScreenEditorExperimentData* d, const QString& file )
+void ScreenEditorExperimentFileParser::save(const ScreenEditorExperimentData *d,
+                                            const QString &file)
 {
     XmlUtils::writeDocument(d->expDocument, file);
 }
 
-void ScreenEditorExperimentData::storeScreenChanges( const Screen* s )
+void ScreenEditorExperimentData::storeScreenChanges(const Screen *s)
 {
-    screenToElementMapT::const_iterator i = screenToElementMap.find( s );
-    Q_ASSERT( i != screenToElementMap.end() );
+    screenToElementMapT::const_iterator i = screenToElementMap.find(s);
+    Q_ASSERT(i != screenToElementMap.end());
     QDomElement se = i->second;
-    Q_ASSERT( se.parentNode() == screensElement );
+    Q_ASSERT(se.parentNode() == screensElement);
 
     writer::ScreensWriter writer;
     QDomDocument doc;
     doc.appendChild(writer.addScreen(&doc, *s));
-    QDomElement ne2 = expDocument.importNode(XmlUtils::parseString(doc.toString())
-            .documentElement(), true).toElement();
-    screensElement.replaceChild( ne2, se );
-    Q_ASSERT( ne2.parentNode() == screensElement );
+    QDomElement ne2 =
+        expDocument
+            .importNode(XmlUtils::parseString(doc.toString()).documentElement(),
+                        true)
+            .toElement();
+    screensElement.replaceChild(ne2, se);
+    Q_ASSERT(ne2.parentNode() == screensElement);
     screenToElementMap[s] = ne2;
 }
 
-void ScreenEditorExperimentData::addScreen( Screen* s )
+void ScreenEditorExperimentData::addScreen(Screen *s)
 {
-    screens->manageScreen( s );
+    screens->manageScreen(s);
     writer::ScreensWriter writer;
     QDomDocument doc;
     doc.appendChild(writer.addScreen(&doc, *s));
-    QDomElement se2 = expDocument.importNode(XmlUtils::parseString(doc.toString())
-            .documentElement(), true).toElement();
-    screensElement.appendChild( se2 );
+    QDomElement se2 =
+        expDocument
+            .importNode(XmlUtils::parseString(doc.toString()).documentElement(),
+                        true)
+            .toElement();
+    screensElement.appendChild(se2);
     screenToElementMap[s] = se2;
 }
 
@@ -121,6 +134,5 @@ ScreenEditorExperimentData::~ScreenEditorExperimentData()
 }
 
 QString ScreenEditorExperimentFileParser::schemaLoc;
-
 }
 }

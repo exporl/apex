@@ -32,45 +32,42 @@ class QFont;
 namespace apex
 {
 
-  class ExperimentRunDelegate;
+class ExperimentRunDelegate;
 
-  namespace data
-  {
-    class GridLayoutElement;
-    class ScreenElement;
-  }
-  namespace rundelegates
-  {
-    using data::GridLayoutElement;
-    using data::ScreenElement;
+namespace data
+{
+class GridLayoutElement;
+class ScreenElement;
+}
+namespace rundelegates
+{
+using data::GridLayoutElement;
+using data::ScreenElement;
 
-    /**
-     * The GridLayoutRunDelegate class is an implementation of
-     * ScreenElementRunDelegate representing a GridLayoutElement.
-     */
-    class GridLayoutRunDelegate:
-                public QGridLayout,
-                public ScreenElementRunDelegate
-    {
-      const GridLayoutElement* element;
-    public:
-      GridLayoutRunDelegate(
-        ExperimentRunDelegate* p_exprd,
-        const GridLayoutElement* e,
-        QWidget* parent,
-        ElementToRunningMap& elementToRunningMap,
-        const QFont& font );
+/**
+ * The GridLayoutRunDelegate class is an implementation of
+ * ScreenElementRunDelegate representing a GridLayoutElement.
+ */
+class GridLayoutRunDelegate : public QGridLayout,
+                              public ScreenElementRunDelegate
+{
+    const GridLayoutElement *element;
+
+public:
+    GridLayoutRunDelegate(ExperimentRunDelegate *p_exprd,
+                          const GridLayoutElement *e, QWidget *parent,
+                          ElementToRunningMap &elementToRunningMap,
+                          const QFont &font);
 
     /*~GridLayoutRunDelegate() {
         qCDebug(APEX_RS, "nop");
     }*/
 
-      const ScreenElement* getScreenElement() const;
-      QWidget* getWidget();
-      QLayout* getLayout();
-
-    };
-  }
+    const ScreenElement *getScreenElement() const;
+    QWidget *getWidget();
+    QLayout *getLayout();
+};
+}
 }
 
 #endif

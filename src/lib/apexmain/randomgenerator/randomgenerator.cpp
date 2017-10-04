@@ -21,23 +21,23 @@
 
 #include "randomgenerator.h"
 
-namespace apex {
-
-RandomGenerator::RandomGenerator(data::RandomGeneratorParameters* p_param):
-  m_param(p_param)
+namespace apex
 {
-        Q_ASSERT(m_param);
-}
 
+RandomGenerator::RandomGenerator(data::RandomGeneratorParameters *p_param)
+    : m_param(p_param)
+{
+    Q_ASSERT(m_param);
+}
 
 RandomGenerator::~RandomGenerator()
 {
-        if (m_param) delete m_param;
+    if (m_param)
+        delete m_param;
 }
 
-
-QString& RandomGenerator::GetParameter() const {
-        return m_param->m_sParam;
+QString &RandomGenerator::GetParameter() const
+{
+    return m_param->m_sParam;
 }
-
 }

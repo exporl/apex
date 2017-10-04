@@ -27,7 +27,7 @@ FilePrefix::FilePrefix() : mType(PREFIX_INLINE)
 {
 }
 
-bool FilePrefix::operator==(const FilePrefix& other) const
+bool FilePrefix::operator==(const FilePrefix &other) const
 {
     return value() == other.value() && type() == other.type();
 }
@@ -42,7 +42,7 @@ FilePrefix::Type apex::data::FilePrefix::type() const
     return mType;
 }
 
-void apex::data::FilePrefix::setValue(const QString& v)
+void apex::data::FilePrefix::setValue(const QString &v)
 {
     mValue = v;
 }

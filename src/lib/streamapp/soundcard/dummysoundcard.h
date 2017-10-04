@@ -24,7 +24,7 @@
 
 #include "soundcard.h"
 
-#include <QTimer>
+#include <QThread>
 
 class QIODevice;
 
@@ -36,14 +36,12 @@ class DummySoundcard : public QObject, public ISoundCard
     Q_OBJECT
 
 public:
-
-    DummySoundcard(const QString& driverName = sc_sDefault);
+    DummySoundcard(const QString &driverName = sc_sDefault);
     ~DummySoundcard();
 
-    tSoundCardInfo  mf_GetInfo() const;
+    tSoundCardInfo mf_GetInfo() const;
 
-    bool mp_bOpenDriver(const unsigned nInChannels,
-                        const unsigned nOutChannels,
+    bool mp_bOpenDriver(const unsigned nInChannels, const unsigned nOutChannels,
                         const unsigned long sampleRate,
                         const unsigned bufferSize);
 
@@ -51,28 +49,23 @@ public:
     unsigned mf_nGetIChan() const;
     unsigned mf_nGetOChan() const;
     unsigned mf_nGetBufferSize() const;
-    unsigned long mf_lGetSampleRate () const;
+    unsigned long mf_lGetSampleRate() const;
     bool mf_bIsOpen() const;
     unsigned long mf_lGetEstimatedLatency() const;
-    bool mp_bStart (Callback& callback);
+    bool mp_bStart(Callback &callback);
     bool mp_bStop();
     bool mf_bIsRunning() const;
-    AudioFormatReader* mf_pCreateReader() const;
-    AudioFormatWriter* mf_pCreateWriter() const;
-    const std::string& mf_sGetLastError() const;
+    AudioFormatReader *mf_pCreateReader() const;
+    AudioFormatWriter *mf_pCreateWriter() const;
+    const std::string &mf_sGetLastError() const;
     void mp_ClearIOBuffers();
 
 Q_SIGNALS:
-
-    void stopTimer();
+    void startProcessing();
+    void stopProcessing();
 
 private:
-
-    enum State {
-        Closed,
-        Opened,
-        Running
-    };
+    enum State { Closed, Opened, Running };
 
     State state;
     unsigned nInChannels;
@@ -80,14 +73,8 @@ private:
     unsigned long sampleRate;
     unsigned bufferSize;
     std::string lastError;
-    Callback* callback;
-    QTimer timer;
-
-private Q_SLOTS:
-
-    void doCallback();
+    QThread processingThread;
 };
-
 }
 
-#endif //QTWRAPPER_H
+#endif // QTWRAPPER_H

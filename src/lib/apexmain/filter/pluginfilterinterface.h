@@ -82,7 +82,7 @@ public:
      * @return @c true if the given parameter is valid for the given channel, @c
      * false otherwise
      */
-    virtual bool isValidParameter (const QString &name, int channel) const = 0;
+    virtual bool isValidParameter(const QString &name, int channel) const = 0;
 
     /** Sets a filter parameter for the given channel. If the passed parameter
      * value can not be converted to the right type, returns @c false.
@@ -97,8 +97,8 @@ public:
      * @return @c true if the parameter exists and the value was valid for the
      * given parameter, @c false otherwise
      */
-    virtual bool setParameter (const QString &name, int channel,
-            const QString &value) = 0;
+    virtual bool setParameter(const QString &name, int channel,
+                              const QString &value) = 0;
 
     /** Prepares the plugin for processing. No parameters will be changed after
      * this method is called. This method is mostly used to do long-lasting
@@ -114,13 +114,13 @@ public:
      * @return @c true if the plugin is ready for processing and all parameters
      * are valid, @c false otherwise
      */
-    virtual bool prepare (unsigned numberOfFrames) = 0;
+    virtual bool prepare(unsigned numberOfFrames) = 0;
 
     /** Processes a block of sample frames.
      *
      * @param data non-interleaved sample data
      */
-    virtual void process (double * const *data) = 0;
+    virtual void process(double *const *data) = 0;
 
     /** Returns the last error message. The error message explaines why a method
      * such as #isValidParameter(), #setParameter() or #prepare() returned @c
@@ -139,7 +139,7 @@ protected:
      * @param error error message explaining why a method such as
      * #isValidParameter(), #setParameter() or #prepare() returned @c false.
      */
-    void setErrorMessage (const QString &error) const
+    void setErrorMessage(const QString &error) const
     {
         this->error = error;
     }
@@ -149,7 +149,6 @@ private:
     // error message
     mutable QString error;
 };
-
 
 /** Plugin filter creator interface. Each filter library has to implement the
  * abstract functions in this class. It contains a list of all available plugins
@@ -188,7 +187,6 @@ public:
      */
     virtual QStringList availablePlugins() const = 0;
 
-
     /** Creates a filter. The caller takes ownership of the created instance and
      * must free it after use. If it is not possible to create a filter
      * instance, returns @c NULL.
@@ -200,9 +198,10 @@ public:
      * @return new filter instance or @c NULL if it was not possible to create
      * the filter
      */
-    virtual PluginFilterInterface *createFilter (const QString &name,
-            unsigned channels, unsigned blocksize,
-            unsigned sampleRate) const = 0;
+    virtual PluginFilterInterface *createFilter(const QString &name,
+                                                unsigned channels,
+                                                unsigned blocksize,
+                                                unsigned sampleRate) const = 0;
 };
 
 Q_DECLARE_INTERFACE(PluginFilterCreator, "be.exporl.apex.pluginfilter/1.0")

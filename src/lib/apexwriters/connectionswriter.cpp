@@ -34,7 +34,7 @@ using apex::data::ConnectionsData;
 using apex::data::ConnectionData;
 
 QDomElement ConnectionsWriter::addElement(QDomDocument *doc,
-        const ConnectionsData& data)
+                                          const ConnectionsData &data)
 {
     QDomElement rootElement = doc->documentElement();
     QDomElement connections = doc->createElement(QSL("connections"));
@@ -48,15 +48,15 @@ QDomElement ConnectionsWriter::addElement(QDomDocument *doc,
 }
 
 QDomElement ConnectionsWriter::addConnection(QDomDocument *doc,
-        const ConnectionData& data)
+                                             const ConnectionData &data)
 {
     QDomElement connection = doc->createElement(QSL("connection"));
 
-    //from
+    // from
     QDomElement from = doc->createElement(QSL("from"));
     from.appendChild(XmlUtils::createTextElement(doc, "id", data.fromId()));
-    QDomElement fromCh = XmlUtils::createTextElement(doc, "channel",
-                         QString::number(data.fromChannel()));
+    QDomElement fromCh = XmlUtils::createTextElement(
+        doc, "channel", QString::number(data.fromChannel()));
     QString fromChId = data.fromChannelId();
 
     if (!fromChId.isEmpty())
@@ -64,11 +64,11 @@ QDomElement ConnectionsWriter::addConnection(QDomDocument *doc,
 
     from.appendChild(fromCh);
 
-    //to
+    // to
     QDomElement to = doc->createElement(QSL("to"));
     to.appendChild(XmlUtils::createTextElement(doc, "id", data.toId()));
-    QDomElement toCh = XmlUtils::createTextElement(doc, "channel",
-                       QString::number(data.toChannel()));
+    QDomElement toCh = XmlUtils::createTextElement(
+        doc, "channel", QString::number(data.toChannel()));
     QString toChId = data.toChannelId();
 
     if (!toChId.isEmpty())
@@ -81,33 +81,3 @@ QDomElement ConnectionsWriter::addConnection(QDomDocument *doc,
 
     return connection;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

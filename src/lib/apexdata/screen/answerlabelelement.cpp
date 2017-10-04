@@ -26,26 +26,24 @@ namespace apex
 namespace data
 {
 
-AnswerLabelElement::AnswerLabelElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent )
+AnswerLabelElement::AnswerLabelElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent)
 {
 }
 
-void AnswerLabelElement::visit( ScreenElementVisitor* v )
+void AnswerLabelElement::visit(ScreenElementVisitor *v)
 {
-    v->visitAnswerLabel( this );
+    v->visitAnswerLabel(this);
 }
 
-void AnswerLabelElement::visit( ScreenElementVisitor* v ) const
+void AnswerLabelElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitAnswerLabel( this );
+    v->visitAnswerLabel(this);
 }
 
 ScreenElement::ElementTypeT AnswerLabelElement::elementType() const
 {
     return AnswerLabel;
 }
-
 }
 }
-

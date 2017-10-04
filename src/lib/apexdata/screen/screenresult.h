@@ -22,15 +22,16 @@
 
 #include "apextools/global.h"
 
-#include <QMap>
-#include <QString>
 #include <QDebug>
+#include <QMap>
 #include <QObject>
 #include <QPointF>
+#include <QString>
 
-namespace apex {
+namespace apex
+{
 
-    typedef std::map<QString,QString> stimulusParamsT;
+typedef std::map<QString, QString> stimulusParamsT;
 
 /**
 Map containing the answers of a certain presentation on screen
@@ -47,40 +48,45 @@ public:
 
     virtual void clear();
 
-    void SetStimulusParameter(const QString& parameter, const QString& value);
-    const stimulusParamsT& GetStimulusParameters() const { return stimulusparams;};
+    void SetStimulusParameter(const QString &parameter, const QString &value);
+    const stimulusParamsT &GetStimulusParameters() const
+    {
+        return stimulusparams;
+    };
 
-    void setLastClickPosition(const QPointF& point);
-    const QPointF& lastClickPosition() const;
+    void setLastClickPosition(const QPointF &point);
+    const QPointF &lastClickPosition() const;
 
-    private:
-        stimulusParamsT stimulusparams;     //! used to keep parameters set on the screen of the last trial (eg using a spinbox)
-        QPointF mLastClickPosition;
+private:
+    stimulusParamsT stimulusparams; //! used to keep parameters set on the
+                                    //! screen of the last trial (eg using a
+                                    //! spinbox)
+    QPointF mLastClickPosition;
 
-        typedef QString KeyType;
-        typedef QString ValueType;
-        typedef QMap<KeyType, ValueType> Parent;
-        Parent map;
+    typedef QString KeyType;
+    typedef QString ValueType;
+    typedef QMap<KeyType, ValueType> Parent;
+    Parent map;
 
-        friend QDebug operator<< (QDebug dbg, const ScreenResult& screenResult);
-    public:
-        typedef Parent::const_iterator const_iterator;
+    friend QDebug operator<<(QDebug dbg, const ScreenResult &screenResult);
 
-        Parent::const_iterator begin() const;
-        Parent::const_iterator end() const;
-        const ValueType value (const KeyType& key, const ValueType& defaultValue = QString()) const;
-        ValueType& operator[](const KeyType& key);
-        const ValueType operator[](const KeyType& key) const;
-        bool contains(const KeyType& key) const ;
-        const Parent get() const;
+public:
+    typedef Parent::const_iterator const_iterator;
+
+    Parent::const_iterator begin() const;
+    Parent::const_iterator end() const;
+    const ValueType value(const KeyType &key,
+                          const ValueType &defaultValue = QString()) const;
+    ValueType &operator[](const KeyType &key);
+    const ValueType operator[](const KeyType &key) const;
+    bool contains(const KeyType &key) const;
+    const Parent get() const;
 };
 
-inline
-QDebug operator<< (QDebug out, const apex::ScreenResult& screenResult) {
+inline QDebug operator<<(QDebug out, const apex::ScreenResult &screenResult)
+{
     return (out << screenResult.map);
 }
-
-
 }
 
 #endif

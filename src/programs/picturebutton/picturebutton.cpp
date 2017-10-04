@@ -22,17 +22,17 @@
 #include <QApplication>
 #include <QGridLayout>
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
     QApplication app(argc, argv);
 
-    QWidget* main = new QWidget();
-    QGridLayout* l = new QGridLayout(main);
+    QWidget *main = new QWidget();
+    QGridLayout *l = new QGridLayout(main);
 
-    PictureButtonWidget* w = new PictureButtonWidget();
+    PictureButtonWidget *w = new PictureButtonWidget();
     l->addWidget(w);
-        w->setPixmap(QPixmap("1.png"));
+    w->setPixmap(QPixmap("1.png"));
 
     main->show();
     return app.exec();
-
 }

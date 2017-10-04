@@ -24,15 +24,14 @@
 #include "labelrundelegatebase.h"
 
 apex::rundelegates::LabelRunDelegateBase::LabelRunDelegateBase(
-        ExperimentRunDelegate* p_exprd,
-    QWidget* parent, const ScreenElement* screenEl, const QFont& defaultFont ) :
-        QLabel( parent ),
-        ScreenElementRunDelegate(p_exprd, screenEl)
+    ExperimentRunDelegate *p_exprd, QWidget *parent,
+    const ScreenElement *screenEl, const QFont &defaultFont)
+    : QLabel(parent), ScreenElementRunDelegate(p_exprd, screenEl)
 {
-    setAlignment (Qt::AlignCenter);
-    setAutoFillBackground( true );
-    setFrameShape( QLabel::Box );
-    setBackgroundRole( QPalette::AlternateBase );
+    setAlignment(Qt::AlignCenter);
+    setAutoFillBackground(true);
+    setFrameShape(QLabel::Box);
+    setBackgroundRole(QPalette::AlternateBase);
 
     /*setStyleSheet(screenEl->getStyle());
     setBgColor(this, screenEl->getBGColor());
@@ -40,13 +39,13 @@ apex::rundelegates::LabelRunDelegateBase::LabelRunDelegateBase(
     setCommonProperties(this);
 
     QFont font = defaultFont;
-    if ( screenEl->getFontSize() != -1 )
-        font.setPointSize( screenEl->getFontSize() );
-    QLabel::setFont( font );
+    if (screenEl->getFontSize() != -1)
+        font.setPointSize(screenEl->getFontSize());
+    QLabel::setFont(font);
     initialFont = font;
 }
 
-QLabel* apex::rundelegates::LabelRunDelegateBase::getWidget()
+QLabel *apex::rundelegates::LabelRunDelegateBase::getWidget()
 {
     return this;
 }
@@ -66,24 +65,23 @@ const QString apex::rundelegates::LabelRunDelegateBase::getText() const
     return text;
 }
 
-void apex::rundelegates::LabelRunDelegateBase::resizeEvent( QResizeEvent* e)
+void apex::rundelegates::LabelRunDelegateBase::resizeEvent(QResizeEvent *e)
 {
-    QLabel::resizeEvent (e);
-    setFont (initialFont);
-    ApexTools::shrinkTillItFits (this, text, QSize (2, 2));
+    QLabel::resizeEvent(e);
+    setFont(initialFont);
+    ApexTools::shrinkTillItFits(this, text, QSize(2, 2));
 }
 
-void apex::rundelegates::LabelRunDelegateBase::setEnabled( const bool )
+void apex::rundelegates::LabelRunDelegateBase::setEnabled(const bool)
 {
     // can't be disabled
-    QLabel::setEnabled( true );
+    QLabel::setEnabled(true);
 }
 
-void apex::rundelegates::LabelRunDelegateBase::setText( const QString& t )
+void apex::rundelegates::LabelRunDelegateBase::setText(const QString &t)
 {
     text = t;
-    QLabel::setText (text);
-    setFont (initialFont);
-    ApexTools::shrinkTillItFits (this, text, QSize (2, 2));
+    QLabel::setText(text);
+    setFont(initialFont);
+    ApexTools::shrinkTillItFits(this, text, QSize(2, 2));
 }
-

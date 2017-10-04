@@ -35,22 +35,29 @@ namespace data
 
 typedef QStringList FixedParameterList;
 
-
-class APEXDATA_EXPORT StimuliData:
-            public QMap<QString,StimulusData>
+class APEXDATA_EXPORT StimuliData : public QMap<QString, StimulusData>
 {
 public:
-    void setFixedParameters(FixedParameterList p);
-    const FixedParameterList& GetFixedParameters() const;
+    StimuliData();
 
-    bool operator==(const StimuliData& other) const;
+    void setFixedParameters(FixedParameterList p);
+    // /** Check whether each fixed parameter is defined in each stimulus.
+    //  * if so, return true, otherwise return false
+    //  **/
+    // bool CheckFixedParameters(StatusReporter *err);
+
+    const FixedParameterList &GetFixedParameters() const;
+
+    bool hasPluginStimuli() const;
+    void setHasPluginStimuli(bool s);
+
+    bool operator==(const StimuliData &other) const;
 
 private:
     FixedParameterList m_fixedParameters;
+    bool m_hasPluginStimuli;
 };
-
 }
-
 }
 
 #endif

@@ -28,7 +28,7 @@
 
 namespace apex
 {
-    class ExperimentRunDelegate;
+class ExperimentRunDelegate;
 namespace rundelegates
 {
 using data::ScreenElementVisitor;
@@ -59,45 +59,40 @@ using data::HtmlElement;
  * It is an implementation of the ScreenElementVisitor class in
  * order to avoid having a big ugly switch in the code...
  */
-class RunDelegateCreatorVisitor
-            : public ScreenElementVisitor
+class RunDelegateCreatorVisitor : public ScreenElementVisitor
 {
-    QWidget* parent;
-    ElementToRunningMap& elementToRunningMap;
+    QWidget *parent;
+    ElementToRunningMap &elementToRunningMap;
     QFont defaultFont;
-    ScreenElementRunDelegate* lastcreated;
-public:
-    RunDelegateCreatorVisitor(
-        ExperimentRunDelegate* p_exprd,
-        QWidget* parent,
-        ElementToRunningMap& elementToRunningMap,
-        const QFont& defaultFont);
+    ScreenElementRunDelegate *lastcreated;
 
-    ScreenElementRunDelegate* createRunDelegate(const ScreenElement* e);
+public:
+    RunDelegateCreatorVisitor(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                              ElementToRunningMap &elementToRunningMap,
+                              const QFont &defaultFont);
+
+    ScreenElementRunDelegate *createRunDelegate(const ScreenElement *e);
     ~RunDelegateCreatorVisitor();
 
 private:
-    void visitAnswerLabel(const AnswerLabelElement* e);
-    void visitArcLayout(const ArcLayoutElement* e);
-    void visitButton(const ButtonElement* e);
-    void visitMatrix(const MatrixElement* e);
-    void visitSpinBox(const SpinBoxElement* e);
-    void visitSlider(const SliderElement* e);
-    void visitCheckBox(const CheckBoxElement* e);
-    void visitEmpty(const EmptyElement* e);
-    void visitFlashPlayer(const FlashPlayerElement* e);
-    void visitGridLayout(const GridLayoutElement* e);
-    void visitLabel(const LabelElement* e);
-    void visitParameterList(const ParameterListElement* e);
-    void visitParameterLabel(const ParameterLabelElement* e);
-    void visitPicture(const PictureElement* e);
-    void visitPictureLabel(const PictureLabelElement* e);
-    void visitTextEdit(const TextEditElement* e);
-    // TODO ANDROID htmlrundelegate uses webkitwidgets
-#ifndef Q_OS_ANDROID
-    void visitHtml(const HtmlElement* e);
-#endif
-    ExperimentRunDelegate* m_rd;
+    void visitAnswerLabel(const AnswerLabelElement *e);
+    void visitArcLayout(const ArcLayoutElement *e);
+    void visitButton(const ButtonElement *e);
+    void visitMatrix(const MatrixElement *e);
+    void visitSpinBox(const SpinBoxElement *e);
+    void visitSlider(const SliderElement *e);
+    void visitCheckBox(const CheckBoxElement *e);
+    void visitEmpty(const EmptyElement *e);
+    void visitFlashPlayer(const FlashPlayerElement *e);
+    void visitGridLayout(const GridLayoutElement *e);
+    void visitLabel(const LabelElement *e);
+    void visitParameterList(const ParameterListElement *e);
+    void visitParameterLabel(const ParameterLabelElement *e);
+    void visitPicture(const PictureElement *e);
+    void visitPictureLabel(const PictureLabelElement *e);
+    void visitTextEdit(const TextEditElement *e);
+    void visitHtml(const HtmlElement *e);
+    ExperimentRunDelegate *m_rd;
 };
 }
 }

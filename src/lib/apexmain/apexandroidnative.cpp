@@ -68,12 +68,30 @@ void ApexAndroidMethods::signalExperimentFinished()
                                                   "()V");
 }
 
+void ApexAndroidMethods::signalTrialStarted()
+{
+    QtAndroid::androidActivity().callMethod<void>("signalTrialStarted", "()V");
+}
+
+QString ApexAndroidMethods::getSSLCertificateDirectory()
+{
+    return QtAndroid::androidActivity()
+        .callObjectMethod<jstring>("getSSLCertificateDirectory")
+        .toString();
+}
+
 QString ApexAndroidMethods::getDeviceSerialNumber()
 {
     // TODO this field is going to deprecate in API O
     return QAndroidJniObject::getStaticObjectField<jstring>("android/os/Build",
                                                             "SERIAL")
         .toString();
+}
+
+void ApexAndroidMethods::startGdbServer()
+{
+    return QtAndroid::androidActivity().callMethod<void>("startGdbServer",
+                                                         "()V");
 }
 }
 }

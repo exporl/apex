@@ -28,8 +28,8 @@ namespace apex
 namespace data
 {
 
-HtmlElement::HtmlElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent )
+HtmlElement::HtmlElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent)
 {
 }
 
@@ -37,7 +37,7 @@ HtmlElement::~HtmlElement()
 {
 }
 
-void HtmlElement::setPage( const QString& t )
+void HtmlElement::setPage(const QString &t)
 {
     m_page = t;
 }
@@ -47,19 +47,19 @@ void HtmlElement::setPage( const QString& t )
     return QString();
 }*/
 
-const QString& HtmlElement::page() const
+const QString &HtmlElement::page() const
 {
     return m_page;
 }
 
-void HtmlElement::visit( ScreenElementVisitor* v )
+void HtmlElement::visit(ScreenElementVisitor *v)
 {
-    v->visitHtml( this );
+    v->visitHtml(this);
 }
 
-void HtmlElement::visit( ScreenElementVisitor* v ) const
+void HtmlElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitHtml( this );
+    v->visitHtml(this);
 }
 
 ScreenElement::ElementTypeT HtmlElement::elementType() const
@@ -67,11 +67,9 @@ ScreenElement::ElementTypeT HtmlElement::elementType() const
     return Html;
 }
 
-bool HtmlElement::operator==(const HtmlElement& other) const
+bool HtmlElement::operator==(const HtmlElement &other) const
 {
     return ScreenElement::operator==(other) && m_page == other.m_page;
 }
-
 }
 }
-

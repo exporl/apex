@@ -26,27 +26,27 @@ namespace apex
 namespace data
 {
 
-  EmptyElement::EmptyElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent )
+EmptyElement::EmptyElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent)
 {
 }
 
-void EmptyElement::visit( ScreenElementVisitor* v )
+void EmptyElement::visit(ScreenElementVisitor *v)
 {
-    v->visitEmpty( this );
+    v->visitEmpty(this);
 }
 
-void EmptyElement::visit( ScreenElementVisitor* v ) const
+void EmptyElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitEmpty( this );
+    v->visitEmpty(this);
 }
 
-QString EmptyElement::findFreeID( const ScreenElementMap& takenIDs )
+QString EmptyElement::findFreeID(const ScreenElementMap &takenIDs)
 {
     int i = 0;
-    while ( true ) {
-        QString testId = QString( "empty%1" ).arg( i++ );
-        if ( takenIDs.find( testId ) == takenIDs.end() )
+    while (true) {
+        QString testId = QString("empty%1").arg(i++);
+        if (takenIDs.find(testId) == takenIDs.end())
             return testId;
     }
 }
@@ -55,8 +55,5 @@ ScreenElement::ElementTypeT EmptyElement::elementType() const
 {
     return Empty;
 }
-
 }
 }
-
-

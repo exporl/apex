@@ -22,46 +22,47 @@
 
 #include "gui/mapwizardbase.h"
 
-namespace r126{
-  class R126DataBase;
-  class R126PatientRecord;
-  class R126NucleusMAPRecord;
+namespace r126
+{
+class R126DataBase;
+class R126PatientRecord;
+class R126NucleusMAPRecord;
 }
 using namespace r126;
 
-namespace apex{
+namespace apex
+{
 
-    //!Wizard allowing user to select a map from a R126 database
-    //!has only two pages which are defined through designer
-    //!for simplicity, ApexMapWizard handles everything happening on any page
-  class ApexMapWizard : public MapWizardBase
-  {
-  public:
+//! Wizard allowing user to select a map from a R126 database
+//! has only two pages which are defined through designer
+//! for simplicity, ApexMapWizard handles everything happening on any page
+class ApexMapWizard : public MapWizardBase
+{
+public:
     ApexMapWizard();
     ~ApexMapWizard();
 
-      //returns selected map or 0 if cancelled
-    R126NucleusMAPRecord* GetSelectedMap() const;
+    // returns selected map or 0 if cancelled
+    R126NucleusMAPRecord *GetSelectedMap() const;
 
-      //base overrides
+    // base overrides
     int exec();
 
-  protected slots:
+protected slots:
     void back();
     void next();
     void help();
-    void PatientSelected( QListBoxItem* );
-    void MapSelected( QListBoxItem* );
+    void PatientSelected(QListBoxItem *);
+    void MapSelected(QListBoxItem *);
     void R126SettingsClicked();
 
-  private:
+private:
     void FillPatientList();
     void FillMapList();
-    QString       m_sSelectedPatient; //GUID
-    QString       m_sSelectedMap;     //
-    R126DataBase* m_pDataBase;
-  };
-
+    QString m_sSelectedPatient; // GUID
+    QString m_sSelectedMap;     //
+    R126DataBase *m_pDataBase;
+};
 }
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_APEXMAPWIZARD_H_

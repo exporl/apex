@@ -28,31 +28,31 @@ namespace apex
 namespace rundelegates
 {
 
-
-AnswerLabelRunDelegate::AnswerLabelRunDelegate(
-    ExperimentRunDelegate* p_exprd,
-    QWidget* parent, const AnswerLabelElement* e, const QFont& defaultFont )
-    : LabelRunDelegateBase( p_exprd, parent, e, defaultFont ), element( e )
+AnswerLabelRunDelegate::AnswerLabelRunDelegate(ExperimentRunDelegate *p_exprd,
+                                               QWidget *parent,
+                                               const AnswerLabelElement *e,
+                                               const QFont &defaultFont)
+    : LabelRunDelegateBase(p_exprd, parent, e, defaultFont), element(e)
 {
 }
 
-void AnswerLabelRunDelegate::newAnswer(
-    const QString& answer )
+void AnswerLabelRunDelegate::newAnswer(const QString &answer)
 {
-//    qCDebug(APEX_RS, "AnswerLabelRunDelegate::newAnswer: %s", qPrintable(answer));
-    LabelRunDelegateBase::setText( answer );
+    //    qCDebug(APEX_RS, "AnswerLabelRunDelegate::newAnswer: %s",
+    //    qPrintable(answer));
+    LabelRunDelegateBase::setText(answer);
 }
 
-const ScreenElement* AnswerLabelRunDelegate::getScreenElement() const
+const ScreenElement *AnswerLabelRunDelegate::getScreenElement() const
 {
     return element;
 }
-
 }
 }
 
-void apex::rundelegates::AnswerLabelRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
+void apex::rundelegates::AnswerLabelRunDelegate::connectSlots(
+    gui::ScreenRunDelegate *d)
 {
-    connect( d, SIGNAL( newAnswer( const QString& ) ),
-             this, SLOT( newAnswer( const QString& ) ) );
+    connect(d, SIGNAL(newAnswer(const QString &)), this,
+            SLOT(newAnswer(const QString &)));
 }

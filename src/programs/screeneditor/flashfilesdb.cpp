@@ -19,7 +19,7 @@
 
 #include "flashfilesdb.h"
 
-FlashFilesDB& FlashFilesDB::instance()
+FlashFilesDB &FlashFilesDB::instance()
 {
     static FlashFilesDB f;
     return f;

@@ -17,18 +17,12 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-// ChannelMap.h: interface for the CChannelMap class.
-//
-//////////////////////////////////////////////////////////////////////
+#ifndef _APEX_APEXDATA_MAP_CHANNELMAP_H_
+#define _APEX_APEXDATA_MAP_CHANNELMAP_H_
 
-#if !defined(AFX_CHANNELMAP_H__4551FCF2_99FB_4469_BF81_BCD7846C066C__INCLUDED_)
-#define AFX_CHANNELMAP_H__4551FCF2_99FB_4469_BF81_BCD7846C066C__INCLUDED_
-
-
-#include <qstring.h>
-
-//from libtools
 #include "apextools/global.h"
+
+#include <QCoreApplication>
 
 namespace apex
 {
@@ -38,57 +32,58 @@ namespace data
 
 struct ChannelMapPrivate;
 
-class APEXDATA_EXPORT ChannelMap //FIXME [job refactory] find a better name...
+class APEXDATA_EXPORT ChannelMap
 {
-    public:
+    Q_DECLARE_TR_FUNCTIONS(ChannelMap)
+public:
+    ChannelMap();
+    ChannelMap(const ChannelMap &other);
+    virtual ~ChannelMap();
 
-        ChannelMap();
-        ChannelMap(const ChannelMap& other);
-        virtual ~ChannelMap();
+    // getters
 
-        //getters
+    double period() const;
+    int referenceElectrode(int stim) const;
+    int constantReferenceElectrode() const;
+    bool hasConstantReferenceElectrode() const;
+    bool hasValidReferenceElectrode(int stim) const;
+    int comfortLevel() const;
+    int thresholdLevel() const;
+    int stimulationElectrode() const;
+    int channelNumber() const;
+    int mode() const;
+    double phaseWidth() const;
+    double phaseGap() const;
+    int totalRate() const;
 
-        double period() const;
-        int referenceElectrode() const;
-        int comfortLevel() const;
-        int thresholdLevel() const;
-        int stimulationElectrode() const;
-        int channelNumber() const;
-        int mode() const;
-        double phaseWidth() const;
-        double phaseGap() const;
-        int totalRate() const;
+    // setters
 
-        //setters
+    void setPeriod(double p_period);
+    void setComfortLevel(int level);
+    void setThresholdLevel(int level);
+    void setStimulationElectrode(int electrode);
+    void setChannelNumber(int nr);
+    void setMode(int mode);
+    void setPhaseWidth(double pw);
+    void setPhaseGap(double pg);
+    void setTotalRate(int rate);
 
-        void setPeriod(double p_period);
-        void setComfortLevel(int level);
-        void setThresholdLevel(int level);
-        void setStimulationElectrode(int electrode);
-        void setChannelNumber(int nr);
-        void setMode(int mode);
-        void setPhaseWidth(double pw);
-        void setPhaseGap(double pg);
-        void setTotalRate(int rate);
+    bool isValid() const;
+    bool isBaseValid() const;
 
-        bool isValid() const;
-        bool isBaseValid() const;
+    const QString toXml() const;
 
-        const QString toXml() const;
+    ChannelMap &operator=(const ChannelMap &other);
+    bool operator==(const ChannelMap &other) const;
 
-        ChannelMap& operator=(const ChannelMap& other);
-        bool operator==(const ChannelMap& other) const;
+    static int modeToStimulationModeType(const QString &sMode);
 
-        static int modeToStimulationModeType(QString sMode);
-
-    private:
-
-        ChannelMapPrivate* d;
-
+private:
+    ChannelMapPrivate *d;
 };
 
-}//ns data
+} // ns data
 
-}//ns apex
+} // ns apex
 
-#endif // !defined(AFX_CHANNELMAP_H__4551FCF2_99FB_4469_BF81_BCD7846C066C__INCLUDED_)
+#endif

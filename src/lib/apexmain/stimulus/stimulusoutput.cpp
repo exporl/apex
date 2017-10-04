@@ -38,6 +38,7 @@
 
 #include "streamapp/utils/vectorutils.h"
 
+#include "wavstimulus/berthabuffer.h"
 #include "wavstimulus/wavdevice.h"
 
 #include "apexcontrol.h"
@@ -49,517 +50,505 @@
 #include "stimulus.h"
 #include "stimulusoutput.h"
 
+#include "bertha/experimentdata.h"
+
 #include <QMessageBox>
 
 #include <QtGlobal>
 
-//from libdata
+// from libdata
 using namespace apex;
 using namespace stimulus;
 
 namespace
 {
-    //get mode
-  StimulusOutput::mt_eMode f_eInitMode( const tDeviceMap& ac_pDevices )
-  {
+// get mode
+StimulusOutput::mt_eMode f_eInitMode(const tDeviceMap &ac_pDevices)
+{
     tDeviceMap::size_type s = ac_pDevices.size();
-    if( s == 1 )
-    {
-      if( ac_pDevices.begin().value()->CanSequence() )
-        return StimulusOutput::singlesequence;
-      else
-        return StimulusOutput::normal; //or throw??
-    }
-    else
-    {
-      for( tDeviceMapCIt i = ac_pDevices.begin() ; i != ac_pDevices.end() ; ++i )
-        if( !i.value()->CanSequence() )
-          throw ApexStringException( "StimulusOutput: all devices must be able to load a sequence for this mode" );
+    if (s == 1) {
+        if (ac_pDevices.begin().value()->CanSequence())
+            return StimulusOutput::singlesequence;
+        else
+            return StimulusOutput::normal; // or throw??
+    } else {
+        for (tDeviceMapCIt i = ac_pDevices.begin(); i != ac_pDevices.end(); ++i)
+            if (!i.value()->CanSequence())
+                throw ApexStringException("StimulusOutput: all devices must be "
+                                          "able to load a sequence for this "
+                                          "mode");
     }
     return StimulusOutput::onlysequence;
-  }
+}
 
-    //get offline
-  bool f_bIsOffLine( const tDeviceMap& ac_Devices )
-  {
-    for( tDeviceMapCIt i = ac_Devices.begin() ; i != ac_Devices.end() ; ++i )
-      if( i.value()->IsOffLine() )
-        return true;
+// get offline
+bool f_bIsOffLine(const tDeviceMap &ac_Devices)
+{
+    for (tDeviceMapCIt i = ac_Devices.begin(); i != ac_Devices.end(); ++i)
+        if (i.value()->IsOffLine())
+            return true;
     return false;
-  }
+}
 }
 
 namespace apex
 {
 
-  class DeviceCheckThread : public appcore::IThread
-  {
-  public:
-    DeviceCheckThread( const tDeviceMap& ac_DevicesToWaitFor ) :
-        appcore::IThread( "DeviceCheckThread" ),
-      mv_bFired( false ),
-      mv_bChecking( false ),
-      m_Devs( ac_DevicesToWaitFor )
-    {}
+class DeviceCheckThread : public appcore::IThread
+{
+public:
+    DeviceCheckThread(const tDeviceMap &ac_DevicesToWaitFor)
+        : appcore::IThread("DeviceCheckThread"),
+          mv_bFired(false),
+          mv_bChecking(false),
+          m_Devs(ac_DevicesToWaitFor)
+    {
+    }
 
     ~DeviceCheckThread()
-    {}
+    {
+    }
 
     void mp_Run()
     {
-      for( ;; )
-      {
-        mf_bWait( 100 );
+        for (;;) {
+            mf_bWait(100);
 
-        if( mf_bThreadShouldStop() )
-          return;
+            if (mf_bThreadShouldStop())
+                return;
 
-        mc_Lock.mf_Enter();
+            mc_Lock.mf_Enter();
 
-        if( !mv_bFired && mv_bChecking )
-        {
-          /*tDeviceMapCIt it = m_Devs.begin();
-          while( it != m_Devs.end() )
-          {
-            (*it).second->AllDone();
-            ++it;
-          }*/
+            if (!mv_bFired && mv_bChecking) {
+                /*tDeviceMapCIt it = m_Devs.begin();
+                while( it != m_Devs.end() )
+                {
+                  (*it).second->AllDone();
+                  ++it;
+                }*/
 
-            // end in reverse order of starting
-          tDeviceMapCIt it = m_Devs.end();
-          while( it != m_Devs.begin() )
-          {
-            --it;
-            it.value()->AllDone();
-          }
+                // end in reverse order of starting
+                tDeviceMapCIt it = m_Devs.end();
+                while (it != m_Devs.begin()) {
+                    --it;
+                    it.value()->AllDone();
+                }
 
-          mc_Waiter.mp_SignalObject();
+                mc_Waiter.mp_SignalObject();
 
-          mv_bFired = true;
-          mv_bChecking = false;
+                mv_bFired = true;
+                mv_bChecking = false;
+            }
+
+            mc_Lock.mf_Leave();
         }
-
-        mc_Lock.mf_Leave();
-
-      }
     }
 
     void mp_StartCheck()
     {
-      mc_Lock.mf_Enter();
-      mv_bChecking = true;
-      mc_Lock.mf_Leave();
+        mc_Lock.mf_Enter();
+        mv_bChecking = true;
+        mc_Lock.mf_Leave();
     }
 
     void mp_Reset()
     {
-      mc_Lock.mf_Enter();
-      mv_bFired = false;
-      mc_Lock.mf_Leave();
+        mc_Lock.mf_Enter();
+        mv_bFired = false;
+        mc_Lock.mf_Leave();
     }
 
-    const appcore::WaitableObject& mf_GetWaiter()
-    { return mc_Waiter; }
+    const appcore::WaitableObject &mf_GetWaiter()
+    {
+        return mc_Waiter;
+    }
 
-  private:
+private:
     bool mv_bFired;
     bool mv_bChecking;
-    const tDeviceMap& m_Devs;
+    const tDeviceMap &m_Devs;
     const appcore::WaitableObject mc_Waiter;
     const appcore::CriticalSection mc_Lock;
-  };
-
+};
 }
 
-StimulusOutput::StimulusOutput(ExperimentRunDelegate& p_rd) :
-        ApexModule(p_rd),
-  mc_eMode( f_eInitMode(m_rd.GetDevices() ) ),
-  mc_bOffLine( f_bIsOffLine(m_rd.GetDevices() ) ),//instead of keeping everything in the parser where it doesn't belong
-  m_pDevices(m_rd.GetDevices() ),
-  m_pFilters(m_rd.GetFilters() ),
-  m_DataBlocks(m_rd.GetDatablocks() ),
-  m_pCurStim( 0 ),
-  m_pCurDev( 0 ),
-  m_pMaster( 0 ),
-  mc_pWaitThread( new DeviceCheckThread(m_rd.GetDevices() ) ),
-  m_bThreadRunning(true),
-  m_pControllers(m_rd.GetControllers() )
+StimulusOutput::StimulusOutput(ExperimentRunDelegate &p_rd)
+    : ApexModule(p_rd),
+      mc_eMode(f_eInitMode(m_rd.GetDevices())),
+      mc_bOffLine(f_bIsOffLine(m_rd.GetDevices())), // instead of keeping
+                                                    // everything in the parser
+                                                    // where it doesn't belong
+      m_pDevices(m_rd.GetDevices()),
+      m_pFilters(m_rd.GetFilters()),
+      m_DataBlocks(m_rd.GetDatablocks()),
+      m_pCurStim(0),
+      m_pCurDev(0),
+      m_pMaster(0),
+      mc_pWaitThread(new DeviceCheckThread(m_rd.GetDevices())),
+      m_bThreadRunning(true),
+      m_pControllers(m_rd.GetControllers())
 {
-  if( mc_eMode == singlesequence )
-    m_pCurDev = m_pDevices.begin().value();
-  SetMaster(m_rd.GetData().devicesData()->masterDevice() );
+    if (mc_eMode == singlesequence)
+        m_pCurDev = m_pDevices.begin().value();
+    SetMaster(m_rd.GetData().devicesData()->masterDevice());
 
-  LoadFilters();
-  ConnectFilters();
+    LoadFilters();
+    ConnectFilters();
 
     ResetParams();
 
-    //start thread
-  mc_pWaitThread->mp_Start( appcore::IThread::priority_verylow );
+    // start thread
+    mc_pWaitThread->mp_Start(appcore::IThread::priority_verylow);
 }
 
-StimulusOutput::~StimulusOutput( )
+StimulusOutput::~StimulusOutput()
 {
-  UnLoadStimulus();
-  CloseDevices();
-  delete mc_pWaitThread;
-    //these are copies, not created through factory, so delete them
-  for( tDeviceMapCIt i = m_OffLineDevices.begin() ; i != m_OffLineDevices.end() ; ++i )
-    delete i.value();
+    UnLoadStimulus();
+    CloseDevices();
+    delete mc_pWaitThread;
+    // these are copies, not created through factory, so delete them
+    for (tDeviceMapCIt i = m_OffLineDevices.begin();
+         i != m_OffLineDevices.end(); ++i)
+        delete i.value();
 }
 
-void StimulusOutput::CloseDevices() {
+void StimulusOutput::CloseDevices()
+{
     if (m_bThreadRunning) {
-        mc_pWaitThread->mp_Stop( 2000 );
-        for( tDeviceMapCIt i = m_pDevices.begin() ;
-             i != m_pDevices.end() ; ++i )
+        mc_pWaitThread->mp_Stop(2000);
+        for (tDeviceMapCIt i = m_pDevices.begin(); i != m_pDevices.end(); ++i)
             if (i.value())
                 i.value()->Finish();
     }
     m_bThreadRunning = false;
 }
 
-void StimulusOutput::SetMaster( const QString& ac_sID )
+void StimulusOutput::SetMaster(const QString &ac_sID)
 {
-  if( !ac_sID.isEmpty() )
-  {
-    m_pMaster = m_rd.GetDevice( ac_sID );
-    Q_ASSERT( m_pMaster );
-  }
+    if (!ac_sID.isEmpty()) {
+        m_pMaster = m_rd.GetDevice(ac_sID);
+        Q_ASSERT(m_pMaster);
+    }
 }
 
 void StimulusOutput::StopDevices()
 {
-  if( mc_eMode == singlesequence )
-  {
-    m_pCurDev->StopAll();
-  }
-  else
-  {
-    tDeviceMapCIt it = m_pDevices.begin();
-    while( it != m_pDevices.end() )
-    {
-      OutputDevice* p = it.value();
-      p->StopAll();
-      ++it;
+    if (mc_eMode == singlesequence) {
+        m_pCurDev->StopAll();
+    } else {
+        tDeviceMapCIt it = m_pDevices.begin();
+        while (it != m_pDevices.end()) {
+            OutputDevice *p = it.value();
+            p->StopAll();
+            ++it;
+        }
     }
-  }
 }
 
 void StimulusOutput::ResumeDevices()
 {
-  if( mc_eMode == singlesequence )
-  {
-    m_pCurDev->PlayAll();
-  }
-  else
-  {
-    tDeviceMapCIt it = m_pDevices.begin();
-    while( it != m_pDevices.end() )
-    {
-      OutputDevice* p = it.value();
-      if( p!= m_pMaster )
-        p->PlayAll();
-      ++it;
+    if (mc_eMode == singlesequence) {
+        m_pCurDev->PlayAll();
+    } else {
+        tDeviceMapCIt it = m_pDevices.begin();
+        while (it != m_pDevices.end()) {
+            OutputDevice *p = it.value();
+            if (p != m_pMaster)
+                p->PlayAll();
+            ++it;
+        }
+        if (m_pMaster)
+            m_pMaster->PlayAll();
     }
-    if( m_pMaster )
-      m_pMaster->PlayAll();
-  }
 }
 
 void StimulusOutput::PlayUntilDone()
 {
-    //play all in order
-  tDeviceMapCIt it = m_pDevices.begin();
-  while( it != m_pDevices.end() )
-  {
-    OutputDevice* p = it.value();
-    if( p!= m_pMaster )
-      p->PlayAll();
-    ++it;
-  }
-  if( m_pMaster )
-    m_pMaster->PlayAll();
+    // play all in order
+    tDeviceMapCIt it = m_pDevices.begin();
+    while (it != m_pDevices.end()) {
+        OutputDevice *p = it.value();
+        if (p != m_pMaster)
+            p->PlayAll();
+        ++it;
+    }
+    if (m_pMaster)
+        m_pMaster->PlayAll();
 
-    //wait for eof and remove datablocks
-  it = m_pDevices.begin();
-  while( it != m_pDevices.end() )
-  {
-    OutputDevice* p = it.value();
-    p->AllDone();
-    p->RemoveAll();
-    ++it;
-  }
+    // wait for eof and remove datablocks
+    it = m_pDevices.begin();
+    while (it != m_pDevices.end()) {
+        OutputDevice *p = it.value();
+        p->AllDone();
+        p->RemoveAll();
+        ++it;
+    }
 }
 
 void StimulusOutput::PlayAndWaitInThread()
 {
-  //start playing all in order
-  tDeviceMapCIt it = m_pDevices.begin();
-  while( it != m_pDevices.end() )
-  {
-      OutputDevice* p = it.value();
-    if( p!= m_pMaster )
-      p->PlayAll();
-    ++it;
-  }
+    // start playing all in order
+    tDeviceMapCIt it = m_pDevices.begin();
+    while (it != m_pDevices.end()) {
+        OutputDevice *p = it.value();
+        if (p != m_pMaster)
+            p->PlayAll();
+        ++it;
+    }
 
-  qCDebug(APEX_RS, "Calling PlayAndWaitInThread at time: %s", qPrintable(QString::number(QDateTime::currentMSecsSinceEpoch())));
+    qCDebug(APEX_RS, "Calling PlayAndWaitInThread at time: %s",
+            qPrintable(QString::number(QDateTime::currentMSecsSinceEpoch())));
 
-  if( m_pMaster )
-    m_pMaster->PlayAll();
+    if (m_pMaster)
+        m_pMaster->PlayAll();
 
-  //signal thread to start checking
-  mc_pWaitThread->mp_Reset();
-  mc_pWaitThread->mp_StartCheck();
+    // signal thread to start checking
+    mc_pWaitThread->mp_Reset();
+    mc_pWaitThread->mp_StartCheck();
 }
 
-const appcore::WaitableObject& StimulusOutput::GetStimulusEnd()
+const appcore::WaitableObject &StimulusOutput::GetStimulusEnd()
 {
-  return mc_pWaitThread->mf_GetWaiter();
+    return mc_pWaitThread->mf_GetWaiter();
 }
 
 void StimulusOutput::PlayStimulus()
 {
-  if( !m_pCurStim )
-    return;
+    if (!m_pCurStim)
+        return;
 
-  qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg( metaObject()->className(), "Playing Stimulus " + m_pCurStim->GetID() )));
+    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(
+                              metaObject()->className(),
+                              "Playing Stimulus " + m_pCurStim->GetID())));
 
-  const PlayMatrix* pCurMat = m_pCurStim->GetPlayMatrix();
-  if( mc_eMode == normal && pCurMat )
-  {
-     /*const unsigned nSeqs = pCurMat->mf_nGetBufferSize();
-     for( unsigned i = 0 ; i < nSeqs ; ++i )
-     {
-         //load one column of sims; first one is loaded in LoadStimulus
-       if( i > 0 )
-       {
-         LoadOneSim( pCurMat, i );
-         ConnectDataBlocks();
-       }
+    const PlayMatrix *pCurMat = m_pCurStim->GetPlayMatrix();
+    if (mc_eMode == normal && pCurMat) {
+        /*const unsigned nSeqs = pCurMat->mf_nGetBufferSize();
+        for( unsigned i = 0 ; i < nSeqs ; ++i )
+        {
+            //load one column of sims; first one is loaded in LoadStimulus
+          if( i > 0 )
+          {
+            LoadOneSim( pCurMat, i );
+            ConnectDataBlocks();
+          }
 
-         //play sims
-       PlayAndWaitInThread();
-     }*/
-    Q_ASSERT( 0 );
-  }
-  else
-  {
-    PlayAndWaitInThread();
-  }
+            //play sims
+          PlayAndWaitInThread();
+        }*/
+        Q_ASSERT(0);
+    } else {
+        PlayAndWaitInThread();
+    }
 }
 
-
-void StimulusOutput::LoadStimulus( const QString& ac_Stimulus, const bool p_restoreParams )
+void StimulusOutput::LoadStimulus(const QString &ac_Stimulus,
+                                  const bool p_restoreParams)
 {
-    Stimulus* s = m_rd.GetStimulus( ac_Stimulus );
-    LoadStimulus(s,p_restoreParams);
+    Stimulus *s = m_rd.GetStimulus(ac_Stimulus);
+    LoadStimulus(s, p_restoreParams);
 }
 
-void StimulusOutput::LoadStimulus( Stimulus* ac_Stimulus, const bool p_restoreParams )
+void StimulusOutput::LoadStimulus(Stimulus *ac_Stimulus,
+                                  const bool p_restoreParams)
 {
 #ifdef SHOWSLOTS
-  qCDebug(APEX_RS, "SLOT StimulusOutput::LoadStimulus " + ac_Stimulus);
+    qCDebug(APEX_RS, "SLOT StimulusOutput::LoadStimulus " + ac_Stimulus);
 #endif
-  if( !m_pCurStim )
-  {
-    m_pCurStim = ac_Stimulus;
+    if (!m_pCurStim) {
+        m_pCurStim = ac_Stimulus;
 
-   if (p_restoreParams)
-        ResetParams();
-    HandleParams();
+        if (p_restoreParams)
+            ResetParams();
+        HandleParams();
 
+        // load datablocks
+        const PlayMatrix *pCurMat = m_pCurStim->GetPlayMatrix();
 
-      //load datablocks
-    const PlayMatrix* pCurMat = m_pCurStim->GetPlayMatrix();
+        if (pCurMat && pCurMat->mf_nGetBufferSize() > 0 &&
+            pCurMat->mf_nGetChannelCount() > 0) {
+            if (mc_eMode == singlesequence ||
+                mc_eMode == onlysequence) // FIXME make enum or'able
+                LoadAll(pCurMat);
+            else if (mc_eMode == normal)
+                LoadOneSim(pCurMat, 0);
 
-    if( pCurMat  && pCurMat->mf_nGetBufferSize() > 0 && pCurMat->mf_nGetChannelCount() > 0)
-    {
-      if( mc_eMode == singlesequence || mc_eMode == onlysequence )  //FIXME make enum or'able
-        LoadAll( pCurMat );
-      else if( mc_eMode == normal )
-        LoadOneSim( pCurMat, 0 );
+            // connect IO
+            ConnectDataBlocks();
+        }
 
-        //connect IO
-      ConnectDataBlocks();
+        PrepareClients();
+
+        // do offline calculations and add result to online device
+        //     if( mc_bOffLine )
+        //       DoOffLine();
+    } else {
+        qCDebug(APEX_RS,
+                "StimulusOutput::LoadStimulus called before unloading!");
+        QMessageBox::warning(
+            0, "error", "StimulusOutput::LoadStimulus called before unloading!",
+            "OK");
+        //    throw( 0 ); //leave this here to enforce proper control behaviour!
     }
-
-    PrepareClients();
-
-      //do offline calculations and add result to online device
-//     if( mc_bOffLine )
-//       DoOffLine();
-  }
-  else
-  {
-    qCDebug(APEX_RS, "StimulusOutput::LoadStimulus called before unloading!" );
-    QMessageBox::warning(0, "error", "StimulusOutput::LoadStimulus called before unloading!", "OK");
-//    throw( 0 ); //leave this here to enforce proper control behaviour!
-  }
 }
 
-  //this will unload the whole
+// this will unload the whole
 void StimulusOutput::UnLoadStimulus()
 {
-  if( m_pCurStim )
-  {
-    if( mc_eMode == singlesequence )
-    {
-      m_pCurDev->RemoveAll();
-      m_pCurStim = 0;
+    if (m_pCurStim) {
+        if (mc_eMode == singlesequence) {
+            m_pCurDev->RemoveAll();
+            m_pCurStim = 0;
+        } else {
+            tDeviceMapCIt it = m_pDevices.begin();
+            while (it != m_pDevices.end()) {
+                OutputDevice *p = it.value();
+                if (p != m_pMaster)
+                    p->RemoveAll();
+                ++it;
+            }
+            if (m_pMaster)
+                m_pMaster->RemoveAll();
+            m_pCurStim = 0;
+        }
     }
-    else
-    {
-      tDeviceMapCIt it = m_pDevices.begin();
-      while( it != m_pDevices.end() )
-      {
-          OutputDevice* p = it.value();
-        if( p!= m_pMaster )
-          p->RemoveAll();
-        ++it;
-      }
-      if( m_pMaster )
-        m_pMaster->RemoveAll();
-      m_pCurStim = 0;
-    }
-  }
 }
 
-  //!currently only wavdevice connections have effect
+//! currently only wavdevice connections have effect
 void StimulusOutput::ConnectDataBlocks()
 {
-//  const ExperimentData& exp = ApexControl::Get().GetCurrentExperiment();
-  const ExperimentRunDelegate&      d = /*ApexControl::Get().GetCurrentExperimentRunDelegate()*/m_rd;
-  const tConnectionsMap&            c = d.GetConnections();
-  const tQStringVectorMap& curDBlcoks = m_pCurStim->GetDeviceDataBlocks();
+    //  const ExperimentData& exp = ApexControl::Get().GetCurrentExperiment();
+    const ExperimentRunDelegate &d =
+        /*ApexControl::Get().GetCurrentExperimentRunDelegate()*/ m_rd;
+    const tConnectionsMap &c = d.GetConnections();
+    const tQStringVectorMap &curDBlcoks = m_pCurStim->GetDeviceDataBlocks();
 
-  for( tConnectionsMapCIt it = c.begin() ; it != c.end() ; ++it )
-  {
-    const tConnections& Cur = it.value();
+    for (tConnectionsMapCIt it = c.begin(); it != c.end(); ++it) {
+        const tConnections &Cur = it.value();
 
-    OutputDevice* pDev = m_rd.GetDevice(it.key());
-    const tQStringVector& curDB = ( *curDBlcoks.find( pDev->GetID() ) ).second;
+        OutputDevice *pDev = m_rd.GetDevice(it.key());
+        const tQStringVector &curDB = (*curDBlcoks.find(pDev->GetID())).second;
 
-    if( pDev->IsOffLine() )
-      pDev = m_OffLineDevices.value(it.key());
+        if (pDev->IsOffLine())
+            pDev = m_OffLineDevices.value(it.key());
 
-    tConnections::size_type c_nItems = Cur.size();
-    for( tConnections::size_type i = 0 ; i < c_nItems ; ++i )
-    {
-        //add it if it's from a datablock for this device
-      const tConnection& cur = Cur[ i ];
-      if( utils::f_bHasElement( curDB, cur.m_sFromID ) )
-        pDev->AddConnection( cur );
+        tConnections::size_type c_nItems = Cur.size();
+        for (tConnections::size_type i = 0; i < c_nItems; ++i) {
+            // add it if it's from a datablock for this device
+            const tConnection &cur = Cur[i];
+            if (utils::f_bHasElement(curDB, cur.m_sFromID))
+                pDev->AddConnection(cur);
+        }
     }
-  }
 }
 
-void StimulusOutput::ConnectFilters()   //fixme first loop filters, then connections?
+void StimulusOutput::ConnectFilters() // fixme first loop filters, then
+                                      // connections?
 {
-//  const ExperimentData& exp = ApexControl::Get().GetCurrentExperiment();
-  const ExperimentRunDelegate&      d = /*ApexControl::Get().GetCurrentExperimentRunDelegate()*/m_rd;
-  const tConnectionsMap&            c = d.GetConnections();
+    //  const ExperimentData& exp = ApexControl::Get().GetCurrentExperiment();
+    const ExperimentRunDelegate &d =
+        /*ApexControl::Get().GetCurrentExperimentRunDelegate()*/ m_rd;
+    const tConnectionsMap &c = d.GetConnections();
 
-  for( tConnectionsMapCIt it = c.begin() ; it != c.end() ; ++it )
-  {
-    const tConnections& Cur = it.value();
-    OutputDevice* pDev = m_rd.GetDevice(it.key());
+    for (tConnectionsMapCIt it = c.begin(); it != c.end(); ++it) {
+        const tConnections &Cur = it.value();
+        OutputDevice *pDev = m_rd.GetDevice(it.key());
 
-    if( pDev->IsOffLine() )
-      pDev = m_OffLineDevices.value(it.key());
+        if (pDev->IsOffLine())
+            pDev = m_OffLineDevices.value(it.key());
 
-    tConnections::size_type c_nItems = Cur.size();
-    for( tConnections::size_type i = 0 ; i < c_nItems ; ++i )
-    {
-        //add it if it's from/to a filter or from filter to device, for this device only
-        //FIXME make everything per device? eg <device> <dblocks/> <filters/> </device>
-      const tConnection& cur = Cur[ i ];
-      Filter* pF = m_rd.GetFilter( cur.m_sFromID );
-      Filter* pT = m_rd.GetFilter( cur.m_sToID );
-      if( pF &&  pT )
-        pDev->AddConnection( cur );
-      else if( pF && cur.m_sToID == pDev->GetID() )
-        pDev->AddConnection( cur );
+        tConnections::size_type c_nItems = Cur.size();
+        for (tConnections::size_type i = 0; i < c_nItems; ++i) {
+            // add it if it's from/to a filter or from filter to device, for
+            // this device only
+            // FIXME make everything per device? eg <device> <dblocks/>
+            // <filters/> </device>
+            const tConnection &cur = Cur[i];
+            Filter *pF = m_rd.GetFilter(cur.m_sFromID);
+            Filter *pT = m_rd.GetFilter(cur.m_sToID);
+            if (pF && pT)
+                pDev->AddConnection(cur);
+            else if (pF && cur.m_sToID == pDev->GetID())
+                pDev->AddConnection(cur);
+        }
     }
-  }
 }
 
-void StimulusOutput::LoadAll( const PlayMatrix* ac_pMat )
+void StimulusOutput::LoadAll(const PlayMatrix *ac_pMat)
 {
-    //split up the matrix in submatrices per device
-    //and send them out
-  tDeviceMapCIt itB = m_pDevices.begin();
-  tDeviceMapCIt itE = m_pDevices.end();
-  for( ; itB != itE ; ++itB )
-  {
+    // split up the matrix in submatrices per device
+    // and send them out
+    tDeviceMapCIt itB = m_pDevices.begin();
+    tDeviceMapCIt itE = m_pDevices.end();
+    for (; itB != itE; ++itB) {
 
 //#define PRINTPLAYMATRIX
 #ifdef PRINTPLAYMATRIX
-      PlayMatrixCreator::sf_DoDisplay( ac_pMat );
+        PlayMatrixCreator::sf_DoDisplay(ac_pMat);
 #endif
 
-    PlayMatrix* toPlay = PlayMatrixCreator::sf_pCreateSubMatrix( ac_pMat,
-            m_DataBlocks, itB.key() );
+        PlayMatrix *toPlay = PlayMatrixCreator::sf_pCreateSubMatrix(
+            ac_pMat, m_DataBlocks, itB.key());
 
 #ifdef PRINTPLAYMATRIX
-    qCDebug(APEX_RS, "After sf_pCreateSubMatrix, for device %s",
-          qPrintable(itB.key()));
-    PlayMatrixCreator::sf_DoDisplay( toPlay );
+        qCDebug(APEX_RS, "After sf_pCreateSubMatrix, for device %s",
+                qPrintable(itB.key()));
+        PlayMatrixCreator::sf_DoDisplay(toPlay);
 #endif
 
-    OutputDevice* p = itB.value();
-    if( p->IsOffLine() )
-      p = m_OffLineDevices.value( itB.key() );
-    p->SetSequence( PlayMatrixCreator::sf_pConvert( toPlay, m_DataBlocks ) );
-    delete toPlay;
-  }
+        OutputDevice *p = itB.value();
+        if (p->IsOffLine())
+            p = m_OffLineDevices.value(itB.key());
+        p->SetSequence(PlayMatrixCreator::sf_pConvert(toPlay, m_DataBlocks));
+        delete toPlay;
+    }
 }
 
 void StimulusOutput::LoadFilters()
 {
-  tFilterMap::const_iterator it = m_pFilters.begin();
-  while( it != m_pFilters.end() )
-  {
-    const QString& sOutput = it.value()->GetDevice();
-    tDeviceMapCIt itDev = m_pDevices.find( sOutput );
-    Q_ASSERT( itDev != m_pDevices.end() );
+    tFilterMap::const_iterator it = m_pFilters.begin();
+    while (it != m_pFilters.end()) {
+        const QString &sOutput = it.value()->GetDevice();
+        tDeviceMapCIt itDev = m_pDevices.find(sOutput);
+        Q_ASSERT(itDev != m_pDevices.end());
 
-    OutputDevice* p = itDev.value();
-    if( p->IsOffLine() )                                 //switch to offline device, unless filter is contineuous
-      //if( !(*it).second->HasParameter( "continuous" ) )
-        p = m_OffLineDevices.value( sOutput );
-    Q_ASSERT( p );
+        OutputDevice *p = itDev.value();
+        if (p->IsOffLine()) // switch to offline device, unless filter is
+                            // contineuous
+            // if( !(*it).second->HasParameter( "continuous" ) )
+            p = m_OffLineDevices.value(sOutput);
+        Q_ASSERT(p);
 
-    p->AddFilter( *(it.value()) );
-    ++it;
-  }
+        p->AddFilter(*(it.value()));
+        ++it;
+    }
 }
 
-void StimulusOutput::LoadOneSim( const PlayMatrix* a_cpMat, const unsigned ac_nSim )
+void StimulusOutput::LoadOneSim(const PlayMatrix *a_cpMat,
+                                const unsigned ac_nSim)
 {
-  const unsigned nSims = a_cpMat->mf_nGetChannelCount();
+    const unsigned nSims = a_cpMat->mf_nGetChannelCount();
 
-  for( unsigned j = 0 ; j < nSims ; ++j )
-  {
-    const QString& sDBlock = a_cpMat->operator() ( j , ac_nSim );
-    //ignore empty matrix space
-    if( !sDBlock.isEmpty() )
-    {
-//      const DataBlock*  pDBlock = ApexControl::Get().GetDatablock( sDBlock );
-        const DataBlock*  pDBlock = m_rd.GetDatablock( sDBlock );
-      Q_ASSERT( pDBlock );
-      const QString&    sDevice = pDBlock->GetDevice();
-      tDeviceMapCIt it = m_pDevices.find( sDevice );
-      Q_ASSERT( it != m_pDevices.end() && "unknown device" );
-      it.value()->AddInput( *pDBlock );
+    for (unsigned j = 0; j < nSims; ++j) {
+        const QString &sDBlock = a_cpMat->operator()(j, ac_nSim);
+        // ignore empty matrix space
+        if (!sDBlock.isEmpty()) {
+            //      const DataBlock*  pDBlock = ApexControl::Get().GetDatablock(
+            //      sDBlock );
+            const DataBlock *pDBlock = m_rd.GetDatablock(sDBlock);
+            Q_ASSERT(pDBlock);
+            const QString &sDevice = pDBlock->GetDevice();
+            tDeviceMapCIt it = m_pDevices.find(sDevice);
+            Q_ASSERT(it != m_pDevices.end() && "unknown device");
+            it.value()->AddInput(*pDBlock);
+        }
     }
-  }
 }
 
 // void StimulusOutput::DoOffLine()
 // {
-//   for( tDeviceMapCIt i = m_OffLineDevices.begin() ; i != m_OffLineDevices.end() ; ++i )
+//   for( tDeviceMapCIt i = m_OffLineDevices.begin() ; i !=
+//   m_OffLineDevices.end() ; ++i )
 //   {
 //     DataBlock* p = i.value()->CreateOffLine();          //offline
 //     OutputDevice* pDev = m_pDevices.value( i.key() );  //online
@@ -582,137 +571,182 @@ void StimulusOutput::LoadOneSim( const PlayMatrix* a_cpMat, const unsigned ac_nS
 //   }
 // }
 
-void StimulusOutput::RestoreParams(  ) {
-     tDeviceMapCIt itB = m_pDevices.begin();
-  tDeviceMapCIt itE = m_pDevices.end();
-  for( ; itB != itE ; ++itB )
-    itB.value()->RestoreParameters();
+void StimulusOutput::RestoreParams()
+{
+    tDeviceMapCIt itB = m_pDevices.begin();
+    tDeviceMapCIt itE = m_pDevices.end();
+    for (; itB != itE; ++itB)
+        itB.value()->RestoreParameters();
 
-  /*tFilterMapCIt itBf = m_pFilters.begin();
-  tFilterMapCIt itEf = m_pFilters.end();
-  for( ; itBf != itEf ; ++itBf )
-    (*itBf).second->RestoreParameters();*/
+    /*tFilterMapCIt itBf = m_pFilters.begin();
+    tFilterMapCIt itEf = m_pFilters.end();
+    for( ; itBf != itEf ; ++itBf )
+      (*itBf).second->RestoreParameters();*/
 }
 
-void StimulusOutput::ResetParams() {
-     // ask each filter to reset its parameters
-    for(tFilterMapCIt itBf = m_pFilters.begin();itBf != m_pFilters.end() ; ++itBf ) {
+void StimulusOutput::ResetParams()
+{
+    if (!m_rd.usingBertha()) {
+        // ask each filter to reset its parameters
+        for (tFilterMapCIt itBf = m_pFilters.begin(); itBf != m_pFilters.end();
+             ++itBf) {
             itBf.value()->Reset();
-        itBf.value()->RestoreParameters();
+            itBf.value()->RestoreParameters();
+        }
     }
 
-
-    for (tDeviceMapCIt it=m_pDevices.begin(); it!=m_pDevices.end(); ++it) {
+    for (tDeviceMapCIt it = m_pDevices.begin(); it != m_pDevices.end(); ++it) {
         it.value()->Reset();
         it.value()->RestoreParameters();
     }
 
-    for (device::tControllerMap::const_iterator it=m_pControllers.begin(); it!=m_pControllers.end(); ++it) {
+    for (device::tControllerMap::const_iterator it = m_pControllers.begin();
+         it != m_pControllers.end(); ++it) {
         it.value()->Reset();
         it.value()->RestoreParameters();
     }
 }
-
 
 void StimulusOutput::HandleParams()
 {
     SendParametersToClients();
 }
 
+void StimulusOutput::SendParametersToClients()
+{
+    if (m_rd.usingBertha()) {
+        BerthaBuffer *berthaBuffer =
+            static_cast<WavDevice *>(
+                m_rd.GetDevice(m_rd.getBerthaExperimentData().device().id()))
+                ->getWavDeviceIo()
+                ->berthaBuffer.data();
 
-void StimulusOutput::SendParametersToClients() {
-    // ask each filter to parse its parameters
-    for(tFilterMapCIt itBf = m_pFilters.begin();itBf != m_pFilters.end() ; ++itBf ) {
-        itBf.value()->SetParameters(m_rd.GetParameterManager());
+        for (tFilterMapCIt itBf = m_pFilters.begin(); itBf != m_pFilters.end();
+             ++itBf) {
+            data::ParameterValueMap params =
+                m_rd.GetParameterManager()->parametersForOwner(itBf.key());
+            for (data::ParameterValueMap::const_iterator it = params.begin();
+                 it != params.end(); ++it) {
+                QVariantList apexParam = QVariantList() << it.key().type()
+                                                        << it.key().channel()
+                                                        << it.value();
+                berthaBuffer->queueParameter(itBf.key(), QSL("parameter"),
+                                             QVariant(apexParam));
+            }
+        }
+    } else {
+        for (tFilterMapCIt itBf = m_pFilters.begin(); itBf != m_pFilters.end();
+             ++itBf)
+            itBf.value()->SetParameters(m_rd.GetParameterManager());
     }
 
-
-    for (tDeviceMapCIt it=m_pDevices.begin(); it!=m_pDevices.end(); ++it) {
+    for (tDeviceMapCIt it = m_pDevices.begin(); it != m_pDevices.end(); ++it) {
         it.value()->SetParameters(*m_rd.GetParameterManager());
     }
 
-    for (device::tControllerMap::const_iterator it=m_pControllers.begin(); it!=m_pControllers.end(); ++it) {
+    for (device::tControllerMap::const_iterator it = m_pControllers.begin();
+         it != m_pControllers.end(); ++it) {
         it.value()->SetParameters(*m_rd.GetParameterManager());
     }
-
 }
 
-void StimulusOutput::PrepareClients() {
+void StimulusOutput::PrepareClients()
+{
     // ask each filter to parse its parameters
-    for(tFilterMapCIt itBf = m_pFilters.begin();itBf != m_pFilters.end() ; ++itBf ) {
-        itBf.value()->Prepare();
+    if (!m_rd.usingBertha()) {
+        for (tFilterMapCIt itBf = m_pFilters.begin(); itBf != m_pFilters.end();
+             ++itBf)
+            itBf.value()->Prepare();
     }
 
-
-    for (tDeviceMapCIt it=m_pDevices.begin(); it!=m_pDevices.end(); ++it) {
+    for (tDeviceMapCIt it = m_pDevices.begin(); it != m_pDevices.end(); ++it) {
         it.value()->Prepare();
     }
 
-    for (device::tControllerMap::const_iterator it=m_pControllers.begin(); it!=m_pControllers.end(); ++it) {
+    for (device::tControllerMap::const_iterator it = m_pControllers.begin();
+         it != m_pControllers.end(); ++it) {
         it.value()->Prepare();
     }
+}
+
+void StimulusOutput::releaseClients()
+{
+    for (tDeviceMapCIt it = m_pDevices.begin(); it != m_pDevices.end(); ++it)
+        it.value()->release();
+
+    for (device::tControllerMap::const_iterator it = m_pControllers.begin();
+         it != m_pControllers.end(); ++it)
+        it.value()->release();
 }
 
 void StimulusOutput::setSilenceBeforeNextStimulus(double seconds)
 {
     for (tDeviceMap::const_iterator dev = m_pDevices.begin();
-         dev != m_pDevices.end();
-         ++dev)
-    {
+         dev != m_pDevices.end(); ++dev) {
         (*dev)->SetSilenceBefore(seconds);
     }
 }
 
-bool StimulusOutput::HandleParam( const QString& ac_sID, const QVariant& ac_sValue )
+bool StimulusOutput::HandleParam(const QString &ac_sID,
+                                 const QVariant &ac_sValue)
 {
-  qCDebug(APEX_RS, "StimulusOutput::HandleParam: %s to value %s", qPrintable (ac_sID), qPrintable (ac_sValue.toString()));
+    qCDebug(APEX_RS, "StimulusOutput::HandleParam: %s to value %s",
+            qPrintable(ac_sID), qPrintable(ac_sValue.toString()));
+    bool result = false;
+    data::Parameter param(m_rd.GetParameterManager()->parameter(ac_sID));
+    if (m_rd.usingBertha()) {
+        BerthaBuffer *berthaBuffer =
+            static_cast<WavDevice *>(
+                m_rd.GetDevice(m_rd.getBerthaExperimentData().device().id()))
+                ->getWavDeviceIo()
+                ->berthaBuffer.data();
 
-  data::Parameter name( m_rd.GetParameterManager()->parameter(ac_sID) );
+        QVariantList apexParam = QVariantList() << param.type()
+                                                << param.channel() << ac_sValue;
+        berthaBuffer->setParameter(param.owner(), QSL("parameter"),
+                                   QVariant(apexParam));
+        result = true;
+    } else {
+        for (tFilterMapCIt itBf = m_pFilters.begin(); itBf != m_pFilters.end();
+             ++itBf) {
+            result |= itBf.value()->SetParameter(param, ac_sValue);
+        }
+    }
 
-  bool result=false;
+    for (tDeviceMapCIt it = m_pDevices.begin(); it != m_pDevices.end(); ++it) {
+        result |= it.value()->SetParameter(param, ac_sValue);
+    }
 
-  for(tFilterMapCIt itBf = m_pFilters.begin();itBf != m_pFilters.end() ; ++itBf ) {
-        result |= itBf.value()->SetParameter(name, ac_sValue);
-  }
-
-
-  for (tDeviceMapCIt it=m_pDevices.begin(); it!=m_pDevices.end(); ++it) {
-      result |= it.value()->SetParameter(name, ac_sValue);
-  }
-
-  for (device::tControllerMap::const_iterator it=m_pControllers.begin(); it!=m_pControllers.end(); ++it) {
-      result |= it.value()->SetParameter(name, ac_sValue);
-  }
-
-
-  return result;  // FIXME
+    for (device::tControllerMap::const_iterator it = m_pControllers.begin();
+         it != m_pControllers.end(); ++it) {
+        result |= it.value()->SetParameter(param, ac_sValue);
+    }
+    return result; // FIXME
 }
 
-QString StimulusOutput::GetResultXML( ) const
+QString StimulusOutput::GetResultXML() const
 {
-  QString result = QString("<output>\n" );
+    QString result = QString("<output>\n");
 
-    //query all devices
-  for( tDeviceMapCIt it = m_pDevices.begin() ; it != m_pDevices.end() ; ++it )
-    result += it.value()->GetResultXML();
+    // query all devices
+    for (tDeviceMapCIt it = m_pDevices.begin(); it != m_pDevices.end(); ++it)
+        result += it.value()->GetResultXML();
 
-  result += "</output>";
+    result += "</output>";
 
-  return result;
+    return result;
 }
 
 QString StimulusOutput::GetEndXML() const
 {
-  QString result;
+    QString result;
 
-    //query all devices
-  for( tDeviceMapCIt it = m_pDevices.begin() ; it != m_pDevices.end(); ++it )
-    result += it.value()->GetEndXML();
+    // query all devices
+    for (tDeviceMapCIt it = m_pDevices.begin(); it != m_pDevices.end(); ++it)
+        result += it.value()->GetEndXML();
 
-  if( !result.isEmpty() )
-    result = "<output>\n" + result + "</output>";
+    if (!result.isEmpty())
+        result = "<output>\n" + result + "</output>";
 
-  return result;
+    return result;
 }
-
-

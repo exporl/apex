@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bertha:experiment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://med.kuleuven.be/exporl/bertha/1.0/experiment ../schema/experiment.xsd"
+                   xmlns:bertha="http://med.kuleuven.be/exporl/bertha/1.0/experiment">
+  <blocks>
+
+    <!-- LOW BAND -->
+
+    <block id="fftblock">
+      <plugin>OlaFft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="firblock">
+      <plugin>FirFreq</plugin>
+      <parameter name="fftLength">2048</parameter>
+      <parameter name="lowerCutoffFreq">120</parameter>
+      <parameter name="upperCutoffFreq">595</parameter>
+    </block>
+    <block id="ifftblock">
+      <plugin>OlaIfft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="compressor">
+      <plugin>Compressor</plugin>
+      <parameter name="rmsWindowLength">20</parameter>
+      <parameter name="calibrationValue">113.32</parameter>
+      <parameter name="attackTime">5</parameter>
+      <parameter name="releaseTime">125</parameter>
+      <parameter name="xBreakPoints">[20 45 100]</parameter>
+      <parameter name="yBreakPoints">[50 75 102.5]</parameter>
+    </block>
+
+    <!-- 1st PASSBAND -->
+
+    <block id="fftblock2">
+      <plugin>OlaFft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="firblock2">
+      <plugin>FirFreq</plugin>
+      <parameter name="fftLength">2048</parameter>
+      <parameter name="lowerCutoffFreq">595</parameter>
+      <parameter name="upperCutoffFreq">841</parameter>
+    </block>
+    <block id="ifftblock2">
+      <plugin>OlaIfft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="compressor2">
+      <plugin>Compressor</plugin>
+      <parameter name="rmsWindowLength">20</parameter>
+      <parameter name="calibrationValue">113.32</parameter>
+      <parameter name="attackTime">5</parameter>
+      <parameter name="releaseTime">70</parameter>
+      <parameter name="xBreakPoints">[20 45 100]</parameter>
+      <parameter name="yBreakPoints">[50 75 102.5]</parameter>
+    </block>
+
+
+    <!-- 2nd PASSBAND -->
+
+    <block id="fftblock3">
+      <plugin>OlaFft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="firblock3">
+      <plugin>FirFreq</plugin>
+      <parameter name="fftLength">2048</parameter>
+      <parameter name="lowerCutoffFreq">841</parameter>
+      <parameter name="upperCutoffFreq">1189</parameter>
+    </block>
+    <block id="ifftblock3">
+      <plugin>OlaIfft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="compressor3">
+      <plugin>Compressor</plugin>
+      <parameter name="rmsWindowLength">20</parameter>
+      <parameter name="calibrationValue">113.32</parameter>
+      <parameter name="attackTime">5</parameter>
+      <parameter name="releaseTime">70</parameter>
+      <parameter name="xBreakPoints">[20 45 100]</parameter>
+      <parameter name="yBreakPoints">[50 75 102.5]</parameter>
+    </block>
+
+    <!-- 3rd PASSBAND -->
+
+    <block id="fftblock4">
+      <plugin>OlaFft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="firblock4">
+      <plugin>FirFreq</plugin>
+      <parameter name="fftLength">2048</parameter>
+      <parameter name="lowerCutoffFreq">1189</parameter>
+      <parameter name="upperCutoffFreq">1682</parameter>
+    </block>
+    <block id="ifftblock4">
+      <plugin>OlaIfft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="compressor4">
+      <plugin>Compressor</plugin>
+      <parameter name="rmsWindowLength">20</parameter>
+      <parameter name="calibrationValue">113.32</parameter>
+      <parameter name="attackTime">5</parameter>
+      <parameter name="releaseTime">70</parameter>
+      <parameter name="xBreakPoints">[20 45 100]</parameter>
+      <parameter name="yBreakPoints">[50 75 102.5]</parameter>
+    </block>
+
+ <!-- 4th PASSBAND -->
+
+    <block id="fftblock5">
+      <plugin>OlaFft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="firblock5">
+      <plugin>FirFreq</plugin>
+      <parameter name="fftLength">2048</parameter>
+      <parameter name="lowerCutoffFreq">1682</parameter>
+      <parameter name="upperCutoffFreq">2378</parameter>
+    </block>
+    <block id="ifftblock5">
+      <plugin>OlaIfft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="compressor5">
+      <plugin>Compressor</plugin>
+      <parameter name="rmsWindowLength">20</parameter>
+      <parameter name="calibrationValue">113.32</parameter>
+      <parameter name="attackTime">5</parameter>
+      <parameter name="releaseTime">70</parameter>
+      <parameter name="xBreakPoints">[20 45 100]</parameter>
+      <parameter name="yBreakPoints">[50 75 102.5]</parameter>
+    </block>
+
+    <!-- 5th PASSBAND -->
+
+    <block id="fftblock6">
+      <plugin>OlaFft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="firblock6">
+      <plugin>FirFreq</plugin>
+      <parameter name="fftLength">2048</parameter>
+      <parameter name="lowerCutoffFreq">2378</parameter>
+      <parameter name="upperCutoffFreq">3364</parameter>
+    </block>
+    <block id="ifftblock6">
+      <plugin>OlaIfft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="compressor6">
+      <plugin>Compressor</plugin>
+      <parameter name="rmsWindowLength">20</parameter>
+      <parameter name="calibrationValue">113.32</parameter>
+      <parameter name="attackTime">5</parameter>
+      <parameter name="releaseTime">70</parameter>
+      <parameter name="xBreakPoints">[20 45 100]</parameter>
+      <parameter name="yBreakPoints">[50 75 102.5]</parameter>
+    </block>
+
+    <!-- 5th PASSBAND -->
+
+    <block id="fftblock7">
+      <plugin>OlaFft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="firblock7">
+      <plugin>FirFreq</plugin>
+      <parameter name="fftLength">2048</parameter>
+      <parameter name="lowerCutoffFreq">3364</parameter>
+      <parameter name="upperCutoffFreq">4757</parameter>
+    </block>
+    <block id="ifftblock7">
+      <plugin>OlaIfft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="compressor7">
+      <plugin>Compressor</plugin>
+      <parameter name="rmsWindowLength">20</parameter>
+      <parameter name="calibrationValue">113.32</parameter>
+      <parameter name="attackTime">5</parameter>
+      <parameter name="releaseTime">70</parameter>
+      <parameter name="xBreakPoints">[20 45 100]</parameter>
+      <parameter name="yBreakPoints">[50 75 102.5]</parameter>
+    </block>
+
+    <!-- HIGH BAND -->
+
+    <block id="fftblock8">
+      <plugin>OlaFft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="firblock8">
+      <plugin>FirFreq</plugin>
+      <parameter name="fftLength">2048</parameter>
+      <parameter name="lowerCutoffFreq">4757</parameter>
+      <parameter name="upperCutoffFreq">10000</parameter>
+    </block>
+    <block id="ifftblock8">
+      <plugin>OlaIfft</plugin>
+      <parameter name="fftLength">2048</parameter>
+    </block>
+    <block id="compressor8">
+      <plugin>Compressor</plugin>
+      <parameter name="rmsWindowLength">20</parameter>
+      <parameter name="calibrationValue">113.32</parameter>
+      <parameter name="attackTime">5</parameter>
+      <parameter name="releaseTime">70</parameter>
+      <parameter name="xBreakPoints">[20 45 100]</parameter>
+      <parameter name="yBreakPoints">[50 75 102.5]</parameter>
+    </block>
+    <block id ="sum">
+      <plugin>Summation</plugin>
+      <inputports>8</inputports>
+      <outputports>1</outputports>
+    </block>
+
+  </blocks>
+
+  <!-- CONNECTIONS -->
+
+  <connections>
+    <connection>
+      <from id="device" port="capture-1"/>
+      <to id="fftblock" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="fftblock" port="output-1"/>
+      <to id="firblock" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="firblock" port="output-1"/>
+      <to id="ifftblock" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="ifftblock" port="output-1"/>
+      <to id="compressor" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="compressor" port="output-1"/>
+      <to id="sum" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="device" port="capture-1"/>
+      <to id="fftblock2" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="fftblock2" port="output-1"/>
+      <to id="firblock2" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="firblock2" port="output-1"/>
+      <to id="ifftblock2" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="ifftblock2" port="output-1"/>
+      <to id="compressor2" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="compressor2" port="output-1"/>
+      <to id="sum" port="input-2"/>
+    </connection>
+    <connection>
+      <from id="device" port="capture-1"/>
+      <to id="fftblock3" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="fftblock3" port="output-1"/>
+      <to id="firblock3" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="firblock3" port="output-1"/>
+      <to id="ifftblock3" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="ifftblock3" port="output-1"/>
+      <to id="compressor3" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="compressor3" port="output-1"/>
+      <to id="sum" port="input-3"/>
+    </connection>
+    <connection>
+      <from id="device" port="capture-1"/>
+      <to id="fftblock4" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="fftblock4" port="output-1"/>
+      <to id="firblock4" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="firblock4" port="output-1"/>
+      <to id="ifftblock4" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="ifftblock4" port="output-1"/>
+      <to id="compressor4" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="compressor4" port="output-1"/>
+      <to id="sum" port="input-4"/>
+    </connection>
+    <connection>
+      <from id="device" port="capture-1"/>
+      <to id="fftblock5" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="fftblock5" port="output-1"/>
+      <to id="firblock5" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="firblock5" port="output-1"/>
+      <to id="ifftblock5" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="ifftblock5" port="output-1"/>
+      <to id="compressor5" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="compressor5" port="output-1"/>
+      <to id="sum" port="input-5"/>
+    </connection>
+    <connection>
+      <from id="device" port="capture-1"/>
+      <to id="fftblock6" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="fftblock6" port="output-1"/>
+      <to id="firblock6" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="firblock6" port="output-1"/>
+      <to id="ifftblock6" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="ifftblock6" port="output-1"/>
+      <to id="compressor6" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="compressor6" port="output-1"/>
+      <to id="sum" port="input-6"/>
+    </connection>
+    <connection>
+      <from id="device" port="capture-1"/>
+      <to id="fftblock7" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="fftblock7" port="output-1"/>
+      <to id="firblock7" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="firblock7" port="output-1"/>
+      <to id="ifftblock7" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="ifftblock7" port="output-1"/>
+      <to id="compressor7" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="compressor7" port="output-1"/>
+      <to id="sum" port="input-7"/>
+    </connection>
+    <connection>
+      <from id="device" port="capture-1"/>
+      <to id="fftblock8" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="fftblock8" port="output-1"/>
+      <to id="firblock8" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="firblock8" port="output-1"/>
+      <to id="ifftblock8" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="ifftblock8" port="output-1"/>
+      <to id="compressor8" port="input-1"/>
+    </connection>
+    <connection>
+      <from id="compressor8" port="output-1"/>
+      <to id="sum" port="input-8"/>
+    </connection>
+    <connection>
+      <from id="sum" port="output-1"/>
+      <to id="device" port="playback-1"/>
+    </connection>
+  </connections>
+  <device id="device">
+    <driver>File</driver>
+    <samplerate>44100</samplerate>
+    <blocksize>512</blocksize>
+    <playbackports>1</playbackports>
+    <captureports>1</captureports>
+    <parameter name="inputFile">INPUTFILEPLACEHOLDER</parameter>
+    <parameter name="outputFile">OUTPUTFILEPLACEHOLDER</parameter>
+  </device>
+</bertha:experiment>

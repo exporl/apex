@@ -29,92 +29,90 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    ScreenElementEditorDelegate::ScreenElementEditorDelegate( ScreenWidget* w )
-      : screenWidget( w )
-    {
-    }
+namespace editor
+{
+ScreenElementEditorDelegate::ScreenElementEditorDelegate(ScreenWidget *w)
+    : screenWidget(w)
+{
+}
 
-    ScreenElementEditorDelegate::~ScreenElementEditorDelegate()
-    {
-    }
+ScreenElementEditorDelegate::~ScreenElementEditorDelegate()
+{
+}
 
-    void ScreenElementEditorDelegate::handleMouseReleaseEvent( QMouseEvent* me, QFrame* widget )
-    {
-      // if the user changes his mind and releases the mouse
-      // not above our widget, we ignore...
-      if ( !widget->rect().contains( me->pos() ) )
+void ScreenElementEditorDelegate::handleMouseReleaseEvent(QMouseEvent *me,
+                                                          QFrame *widget)
+{
+    // if the user changes his mind and releases the mouse
+    // not above our widget, we ignore...
+    if (!widget->rect().contains(me->pos()))
         return;
-      // otherwise, the user wants to select this widget...
-      screenWidget->getEditor()->selectWidget( widget, this );
-    }
+    // otherwise, the user wants to select this widget...
+    screenWidget->getEditor()->selectWidget(widget, this);
+}
 
-    void ScreenElementEditorDelegate::replaceChild(
-      QWidget*, ScreenElementEditorDelegate*,
-      ScreenElement* )
-    {
-      qFatal( "replaceChild on a non-layout delegate" );
-    }
+void ScreenElementEditorDelegate::replaceChild(QWidget *,
+                                               ScreenElementEditorDelegate *,
+                                               ScreenElement *)
+{
+    qFatal("replaceChild on a non-layout delegate");
+}
 
-    int ScreenElementEditorDelegate::getPropertyCount()
-    {
-      return 1;
-    }
+int ScreenElementEditorDelegate::getPropertyCount()
+{
+    return 1;
+}
 
-    QString ScreenElementEditorDelegate::getPropertyName( int nr )
-    {
-      switch( nr )
-      {
-      case 0: return QObject::tr( "id" );
-      default:
-        qFatal( "should not get here.." );
+QString ScreenElementEditorDelegate::getPropertyName(int nr)
+{
+    switch (nr) {
+    case 0:
+        return QObject::tr("id");
+    default:
+        qFatal("should not get here..");
         return QString();
-      }
     }
+}
 
-    QVariant ScreenElementEditorDelegate::getPropertyData( int nr, int role )
-    {
-      switch( nr )
-      {
-      case 0:
-        if ( role == Qt::DisplayRole )
-          return getScreenElement()->getID();
-        else return QVariant();
-      default:
-        qFatal( "should not get here.." );
+QVariant ScreenElementEditorDelegate::getPropertyData(int nr, int role)
+{
+    switch (nr) {
+    case 0:
+        if (role == Qt::DisplayRole)
+            return getScreenElement()->getID();
+        else
+            return QVariant();
+    default:
+        qFatal("should not get here..");
         return QVariant();
-      }
     }
+}
 
-    PropertyType ScreenElementEditorDelegate::getPropertyType( int nr )
-    {
-      switch( nr )
-      {
-      case 0:
+PropertyType ScreenElementEditorDelegate::getPropertyType(int nr)
+{
+    switch (nr) {
+    case 0:
         return StringPropertyType;
-      default:
-        qFatal( "should not get here.." );
+    default:
+        qFatal("should not get here..");
         return IntPropertyType;
-      }
     }
+}
 
-    bool ScreenElementEditorDelegate::setProperty( int nr, const QVariant& v )
-    {
-      QString s;
-      switch( nr )
-      {
-      case 0:
-        if ( v.type() != QVariant::String )
-          return false;
+bool ScreenElementEditorDelegate::setProperty(int nr, const QVariant &v)
+{
+    QString s;
+    switch (nr) {
+    case 0:
+        if (v.type() != QVariant::String)
+            return false;
         s = v.toString();
-        screenWidget->getScreen()->setElementID( getScreenElement(), s );
+        screenWidget->getScreen()->setElementID(getScreenElement(), s);
         return true;
-      default:
-        qFatal( "should not get here.." );
+    default:
+        qFatal("should not get here..");
         return false;
-      }
     }
-
-  }
+}
+}
 }

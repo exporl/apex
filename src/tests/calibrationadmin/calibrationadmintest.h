@@ -9,6 +9,7 @@ class CalibrationAdminTest : public QObject
 
 private slots:
 
+    void initTestCase();
     void init();
     void cleanup();
 
@@ -25,14 +26,11 @@ private slots:
 private:
     struct Setup {
         QString name;
-        enum Location {
-            LOCAL,
-            GLOBAL
-        } location;
+        enum Location { LOCAL, GLOBAL } location;
     } localSetup, globalSetup, invalidSetup;
 
-    void removeSetup(Setup& s);
-    void addSetup(Setup& s);
+    void removeSetup(Setup &s);
+    void addSetup(Setup &s);
 };
 
 #endif // _APEX_SRC_TESTS_CALIBRATIONADMIN_CALIBRATIONADMINTEST_H_

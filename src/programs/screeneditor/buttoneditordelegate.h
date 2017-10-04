@@ -28,55 +28,55 @@ class QPushButton;
 
 namespace apex
 {
-  namespace data
-  {
-    class ButtonElement;
-    class ScreenElement;
-  }
+namespace data
+{
+class ButtonElement;
+class ScreenElement;
+}
 
-  using data::ButtonElement;
-  using data::ScreenElement;
+using data::ButtonElement;
+using data::ScreenElement;
 
-  namespace editor
-  {
-    /**
-     * This class is an ScreenElementEditorDelegate representing a
-     * ButtonElement.
-     */
-    class ButtonEditorDelegate
-      : public QFrame, public ScreenElementEditorDelegate
-    {
-      Q_OBJECT
+namespace editor
+{
+/**
+ * This class is an ScreenElementEditorDelegate representing a
+ * ButtonElement.
+ */
+class ButtonEditorDelegate : public QFrame, public ScreenElementEditorDelegate
+{
+    Q_OBJECT
 
-      ButtonElement* element;
-      QPushButton* button;
-    public:
-      ButtonEditorDelegate( ButtonElement* e, QWidget* parent, ScreenWidget* w );
-      ~ButtonEditorDelegate();
-      QFrame* getWidget();
-      ScreenElement* getScreenElement();
-      int getPropertyCount();
-      QString getPropertyName( int nr );
-      QVariant getPropertyData( int nr, int role );
-      PropertyType getPropertyType( int nr );
-      bool setProperty( int nr, const QVariant& v );
+    ButtonElement *element;
+    QPushButton *button;
 
-    protected:
-      void setText( const QString& s );
-      const QString getText();
+public:
+    ButtonEditorDelegate(ButtonElement *e, QWidget *parent, ScreenWidget *w);
+    ~ButtonEditorDelegate();
+    QFrame *getWidget();
+    ScreenElement *getScreenElement();
+    int getPropertyCount();
+    QString getPropertyName(int nr);
+    QVariant getPropertyData(int nr, int role);
+    PropertyType getPropertyType(int nr);
+    bool setProperty(int nr, const QVariant &v);
 
-      bool eventFilter( QObject* o, QEvent* e );
+protected:
+    void setText(const QString &s);
+    const QString getText();
 
-      void mouseDoubleClickEvent( QMouseEvent* ev );
-      void mouseReleaseEvent( QMouseEvent* ev );
-      void resizeEvent( QResizeEvent* e );
-      void paintEvent( QPaintEvent* e );
-    private:
-      void setButtonGeometry();
-      QFont getFont();
-      void resetText();
-    };
+    bool eventFilter(QObject *o, QEvent *e);
 
-  }
+    void mouseDoubleClickEvent(QMouseEvent *ev);
+    void mouseReleaseEvent(QMouseEvent *ev);
+    void resizeEvent(QResizeEvent *e);
+    void paintEvent(QPaintEvent *e);
+
+private:
+    void setButtonGeometry();
+    QFont getFont();
+    void resetText();
+};
+}
 }
 #endif

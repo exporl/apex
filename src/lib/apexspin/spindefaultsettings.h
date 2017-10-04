@@ -30,18 +30,18 @@ namespace data
  */
 namespace defaults
 {
-//procedure
-const bool      REPEAT_FIRST_UNTIL_CORRECT  = true;
-const double    INITIAL_STEPSIZE            = 2.0;
+// procedure
+const bool REPEAT_FIRST_UNTIL_CORRECT = true;
+const double INITIAL_STEPSIZE = 2.0;
 
-//options
-const double    TIME_BEFORE_FIRST_STIMULUS  = 0;
-const bool      REINFORCEMENT               = true;
-const bool      SHOW_RESULT_EXPERIMENTER    = true;
-const bool      SHOW_RESULT_SUBJECT         = false;
-const unsigned  NB_RESPONSES_THAT_COUNT     = 6;
-}//ns defaults
-}//ns data
-}//ns spin
+// options
+const double TIME_BEFORE_FIRST_STIMULUS = 0;
+const bool REINFORCEMENT = true;
+const bool SHOW_RESULT_EXPERIMENTER = true;
+const bool SHOW_RESULT_SUBJECT = false;
+const unsigned NB_RESPONSES_THAT_COUNT = 6;
+} // ns defaults
+} // ns data
+} // ns spin
 
 #endif

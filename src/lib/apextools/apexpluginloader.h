@@ -27,9 +27,9 @@ namespace apex
 {
 
 template <typename T>
-T* createPluginCreator(const QString& name)
+T *createPluginCreator(const QString &name)
 {
-    QList<T*> modules = cmn::PluginLoader().availablePlugins<T>();
+    QList<T *> modules = cmn::PluginLoader().availablePlugins<T>();
 
     T *creator = NULL;
     Q_FOREACH (T *module, modules) {
@@ -41,7 +41,8 @@ T* createPluginCreator(const QString& name)
 
     if (!creator)
         throw ApexStringException(
-                cmn::PluginLoader::tr("Could not load plugin '%1'. "
+            cmn::PluginLoader::tr(
+                "Could not load plugin '%1'. "
                 "Consult the plugin dialog under the menu help "
                 "for more information")
                 .arg(name));
@@ -52,4 +53,3 @@ T* createPluginCreator(const QString& name)
 } // namespace apex
 
 #endif
-

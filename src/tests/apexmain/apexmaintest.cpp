@@ -38,6 +38,8 @@
 
 #include "apexmain/experimentparser.h"
 
+#include "apexmain/experimentstore/manageddirectory.h"
+
 #include "apexmain/gui/soundcardsdialog.h"
 
 #include "apexmain/interactive/interactiveparameters.h"
@@ -45,6 +47,9 @@
 #include "apexmain/mainconfigfileparser.h"
 
 #include "apexmain/randomgenerator/uniformrandomgenerator.h"
+
+#include "apexmain/resultsink/resultviewer.h"
+#include "apexmain/resultsink/rtresultsink.h"
 
 #include "apextools/apexpaths.h"
 #include "apextools/apexpluginloader.h"
@@ -57,10 +62,13 @@
 #include "coh/cohnicxmldumper.h"
 #include "coh/cohtextdumper.h"
 
+#include "common/debug.h"
 #include "common/exception.h"
 #include "common/paths.h"
 #include "common/pluginloader.h"
 #include "common/testutils.h"
+
+#include "commongui/webview.h"
 
 #include "apexmaintest.h"
 
@@ -71,10 +79,6 @@
 #include <QUrl>
 
 #if !defined(Q_OS_ANDROID)
-#include "apexmain/result/resultviewer.h"
-
-#include "apexmain/resultsink/rtresultsink.h"
-
 #include <QWebElement>
 #include <QWebFrame>
 #include <QWebPage>
@@ -89,6 +93,7 @@ using namespace coh;
 
 void ApexMainTest::initTestCase()
 {
+    enableCoreDumps(QCoreApplication::applicationFilePath());
     networkError = false;
 }
 
@@ -97,21 +102,25 @@ void ApexMainTest::testAseq()
     TEST_EXCEPTIONS_TRY
 
     {
-        const unsigned char data[]= {
-            82, 73, 70, 70, 72, 0, 0, 0, 65, 83, 69, 81, 73, 78, 70, 79, 20, 0,
-            0, 0, 0, 0, 128, 63, 67, 72, 65, 78, 3, 0, 0, 0, 77, 65, 71, 78, 3,
-            0, 0, 0, 67, 72, 65, 78, 3, 0, 0, 0, 1, 2, 3, 0, 77, 65, 71, 78, 12,
-            0, 0, 0, 0, 0, 160, 64, 0, 0, 192, 64, 0, 0, 224, 64
-        };
+        const unsigned char data[] = {
+            82, 73, 70,  70, 72, 0,  0,   0,   65, 83, 69,  81, 73, 78, 70,
+            79, 20, 0,   0,  0,  0,  0,   128, 63, 67, 72,  65, 78, 3,  0,
+            0,  0,  77,  65, 71, 78, 3,   0,   0,  0,  67,  72, 65, 78, 3,
+            0,  0,  0,   1,  2,  3,  0,   77,  65, 71, 78,  12, 0,  0,  0,
+            0,  0,  160, 64, 0,  0,  192, 64,  0,  0,  224, 64};
 
-        QString result = QL1S("Sequence: repeats 1\n"
-            "  Biphasic: active nan reference nan level nan width nan gap nan period nan channel 1 magnitude 5.0 trigger 0\n"
-            "  Biphasic: active nan reference nan level nan width nan gap nan period nan channel 2 magnitude 6.0 trigger 0\n"
-            "  Biphasic: active nan reference nan level nan width nan gap nan period nan channel 3 magnitude 7.0 trigger 0\n");
+        QString result =
+            QL1S("Sequence: repeats 1\n"
+                 "  Biphasic: active nan reference nan level nan width nan gap "
+                 "nan period nan channel 1 magnitude 5.0 trigger 0\n"
+                 "  Biphasic: active nan reference nan level nan width nan gap "
+                 "nan period nan channel 2 magnitude 6.0 trigger 0\n"
+                 "  Biphasic: active nan reference nan level nan width nan gap "
+                 "nan period nan channel 3 magnitude 7.0 trigger 0\n");
 
         try {
-            QScopedPointer<CohSequence> parsed(loadCohSequenceAseq
-                    (QByteArray((char*)data, sizeof(data)), true));
+            QScopedPointer<CohSequence> parsed(loadCohSequenceAseq(
+                QByteArray((char *)data, sizeof(data)), true));
             QCOMPARE(dumpCohSequenceText(parsed.data()), result);
         } catch (const std::exception &e) {
             QFAIL(e.what());
@@ -119,21 +128,27 @@ void ApexMainTest::testAseq()
     }
 
     {
-        const unsigned char data[]= {
-            82, 73, 70, 70, 134, 0, 0, 0, 65, 83, 69, 81, 73, 78, 70, 79, 44, 0,
-            0, 0, 0, 0, 128, 63, 65, 69, 76, 69, 4, 0, 0, 0, 82, 69, 76, 69, 1,
-            0, 0, 0, 67, 85, 82, 76, 4, 0, 0, 0, 80, 72, 87, 73, 1, 0, 0, 0, 80,
-            69, 82, 73, 4, 0, 0, 0, 65, 69, 76, 69, 4, 0, 0, 0, 10, 11, 12, 13,
-            82, 69, 76, 69, 1, 0, 0, 0, 255, 0, 67, 85, 82, 76, 4, 0, 0, 0, 22,
-            23, 24, 25, 80, 72, 87, 73, 4, 0, 0, 0, 0, 0, 32, 65, 80, 69, 82,
-            73, 16, 0, 0, 0, 0, 0, 220, 66, 0, 0, 240, 66, 0, 0, 2, 67, 0, 0,
-            12, 67 };
+        const unsigned char data[] = {
+            82,  73, 70, 70, 134, 0,  0,  0,   65, 83,  69, 81, 73, 78, 70,
+            79,  44, 0,  0,  0,   0,  0,  128, 63, 65,  69, 76, 69, 4,  0,
+            0,   0,  82, 69, 76,  69, 1,  0,   0,  0,   67, 85, 82, 76, 4,
+            0,   0,  0,  80, 72,  87, 73, 1,   0,  0,   0,  80, 69, 82, 73,
+            4,   0,  0,  0,  65,  69, 76, 69,  4,  0,   0,  0,  10, 11, 12,
+            13,  82, 69, 76, 69,  1,  0,  0,   0,  255, 0,  67, 85, 82, 76,
+            4,   0,  0,  0,  22,  23, 24, 25,  80, 72,  87, 73, 4,  0,  0,
+            0,   0,  0,  32, 65,  80, 69, 82,  73, 16,  0,  0,  0,  0,  0,
+            220, 66, 0,  0,  240, 66, 0,  0,   2,  67,  0,  0,  12, 67};
 
-        QString result = QL1S("Sequence: repeats 1\n"
-            "  Biphasic: active 10 reference -1 level 22 width 10.0 gap nan period 110.0 channel nan magnitude nan trigger 0\n"
-            "  Biphasic: active 11 reference -1 level 23 width 10.0 gap nan period 120.0 channel nan magnitude nan trigger 0\n"
-            "  Biphasic: active 12 reference -1 level 24 width 10.0 gap nan period 130.0 channel nan magnitude nan trigger 0\n"
-            "  Biphasic: active 13 reference -1 level 25 width 10.0 gap nan period 140.0 channel nan magnitude nan trigger 0\n");
+        QString result =
+            QL1S("Sequence: repeats 1\n"
+                 "  Biphasic: active 10 reference -1 level 22 width 10.0 gap "
+                 "nan period 110.0 channel nan magnitude nan trigger 0\n"
+                 "  Biphasic: active 11 reference -1 level 23 width 10.0 gap "
+                 "nan period 120.0 channel nan magnitude nan trigger 0\n"
+                 "  Biphasic: active 12 reference -1 level 24 width 10.0 gap "
+                 "nan period 130.0 channel nan magnitude nan trigger 0\n"
+                 "  Biphasic: active 13 reference -1 level 25 width 10.0 gap "
+                 "nan period 140.0 channel nan magnitude nan trigger 0\n");
 
         // seq.electrodes=[10 11 12 13];
         // seq.return_electrodes=[-1];
@@ -142,8 +157,8 @@ void ApexMainTest::testAseq()
         // seq.periods=[110 120 130 140];
 
         try {
-            QScopedPointer<CohSequence> parsed(loadCohSequenceAseq
-                    (QByteArray((char*)data, sizeof(data)), true));
+            QScopedPointer<CohSequence> parsed(loadCohSequenceAseq(
+                QByteArray((char *)data, sizeof(data)), true));
             QCOMPARE(dumpCohSequenceText(parsed.data()), result);
         } catch (const std::exception &e) {
             QFAIL(e.what());
@@ -162,13 +177,13 @@ void ApexMainTest::testCohDatablockInvalidFile()
     {
         QString file("invalidfilenameamzleirjalmijh");
         data.setFile(file);
-        bool ex=false;
+        bool ex = false;
         try {
             CohDataBlock(data, file, 0);
         } catch (const std::exception &) {
-            ex=true;
+            ex = true;
         }
-        QCOMPARE(ex,true);
+        QCOMPARE(ex, true);
     }
 
     TEST_EXCEPTIONS_CATCH
@@ -206,27 +221,31 @@ void ApexMainTest::testCohDatablockAseq()
     basemap.setPhaseGap(25);
     basemap.setPeriod(150);
     map.setDefaultMap(basemap);
-    for (int i=1; i<=22; ++i) {
+    for (int i = 1; i <= 22; ++i) {
         basemap.setChannelNumber(i);
-        basemap.setStimulationElectrode(22-i+1);
-        basemap.setThresholdLevel(1+i);
-        basemap.setComfortLevel(255-i);
+        basemap.setStimulationElectrode(22 - i + 1);
+        basemap.setThresholdLevel(1 + i);
+        basemap.setComfortLevel(255 - i);
         QVERIFY(basemap.isValid());
-        map[basemap.channelNumber()]=basemap;
+        map[basemap.channelNumber()] = basemap;
     }
 
     // parse aseq files and write XML results
     QString filename(QTest::currentDataTag());
 
-    QString filePath(Paths::searchFile(QL1S("tests/libapex/") + filename, Paths::dataDirectories()));
+    QString filePath(Paths::searchFile(QL1S("tests/libapex/") + filename,
+                                       Paths::dataDirectories()));
     data.setFile(filePath);
     CohDataBlock datablock(data, filePath, 0);
 
     QScopedPointer<CohSequence> xmlSequence(datablock.mappedData(&map, 100));
-    QList<QByteArray> xmlData(dumpCohSequenceNicXml(xmlSequence.data()).split('\n'));
+    QList<QByteArray> xmlData(
+        dumpCohSequenceNicXml(xmlSequence.data()).split('\n'));
 
     // Read reference data
-    QFile file(Paths::searchFile(QL1S("tests/libapex/") + filename + QL1S(".xml"), Paths::dataDirectories()));
+    QFile file(
+        Paths::searchFile(QL1S("tests/libapex/") + filename + QL1S(".xml"),
+                          Paths::dataDirectories()));
     QVERIFY(file.open(QIODevice::ReadOnly));
     QTextStream t(&file);
     for (int i = 0; i < xmlData.length(); ++i) {
@@ -241,18 +260,25 @@ void ApexMainTest::testAseqParser()
 {
     TEST_EXCEPTIONS_TRY
 
-    QFile file(Paths::searchFile(QL1S("tests/libapex/quantization.aseq"), Paths::dataDirectories()));
+    QFile file(Paths::searchFile(QL1S("tests/libapex/quantization.aseq"),
+                                 Paths::dataDirectories()));
     if (!file.open(QIODevice::ReadOnly)) {
         QFAIL("Can't open file for reading");
     }
 
-    QString result = QL1S("Sequence: repeats 1\n"
-        "  Biphasic: active nan reference nan level nan width nan gap nan period 120.0 channel 1 magnitude 0.1 trigger 0\n"
-        "  Biphasic: active nan reference nan level nan width nan gap nan period 120.2 channel 2 magnitude 0.2 trigger 0\n"
-        "  Biphasic: active nan reference nan level nan width nan gap nan period 120.4 channel 3 magnitude 0.1 trigger 0\n"
-        "  Biphasic: active nan reference nan level nan width nan gap nan period 120.8 channel 4 magnitude 0.3 trigger 0\n");
+    QString result =
+        QL1S("Sequence: repeats 1\n"
+             "  Biphasic: active nan reference nan level nan width nan gap nan "
+             "period 120.0 channel 1 magnitude 0.1 trigger 0\n"
+             "  Biphasic: active nan reference nan level nan width nan gap nan "
+             "period 120.2 channel 2 magnitude 0.2 trigger 0\n"
+             "  Biphasic: active nan reference nan level nan width nan gap nan "
+             "period 120.4 channel 3 magnitude 0.1 trigger 0\n"
+             "  Biphasic: active nan reference nan level nan width nan gap nan "
+             "period 120.8 channel 4 magnitude 0.3 trigger 0\n");
 
-    QScopedPointer<CohSequence> parsed(loadCohSequenceAseq(file.readAll(), true));
+    QScopedPointer<CohSequence> parsed(
+        loadCohSequenceAseq(file.readAll(), true));
     QCOMPARE(dumpCohSequenceText(parsed.data()), result);
 
     TEST_EXCEPTIONS_CATCH
@@ -272,34 +298,36 @@ void ApexMainTest::testCohDatablockAseqMapping()
     basemap.setPhaseGap(25);
     basemap.setPeriod(150);
     map.setDefaultMap(basemap);
-    for (int i=1; i<=22; ++i) {
+    for (int i = 1; i <= 22; ++i) {
         basemap.setChannelNumber(i);
-        basemap.setStimulationElectrode(22-i+1);
-        basemap.setThresholdLevel(1+i);
-        basemap.setComfortLevel(255-i);
+        basemap.setStimulationElectrode(22 - i + 1);
+        basemap.setThresholdLevel(1 + i);
+        basemap.setComfortLevel(255 - i);
         QVERIFY(basemap.isValid());
-        map[basemap.channelNumber()]=basemap;
+        map[basemap.channelNumber()] = basemap;
     }
 
     // parse aseq files and write XML results
-    QString filePath(Paths::searchFile(QL1S("tests/libapex/mapping.aseq"), Paths::dataDirectories()));
+    QString filePath(Paths::searchFile(QL1S("tests/libapex/mapping.aseq"),
+                                       Paths::dataDirectories()));
     data.setFile(filePath);
     CohDataBlock datablock(data, filePath, 0);
 
     QScopedPointer<CohSequence> xmlSequence(datablock.mappedData(&map, 100));
-    QList<QByteArray> xmlData(dumpCohSequenceNicXml(xmlSequence.data()).split('\n'));
+    QList<QByteArray> xmlData(
+        dumpCohSequenceNicXml(xmlSequence.data()).split('\n'));
 
-    QFile file(Paths::searchFile(QL1S("tests/libapex/mapping.aseq.xml"), Paths::dataDirectories()));
+    QFile file(Paths::searchFile(QL1S("tests/libapex/mapping.aseq.xml"),
+                                 Paths::dataDirectories()));
     QVERIFY(file.open(QIODevice::ReadOnly));
     QTextStream t(&file);
-    for (int i=0; i<xmlData.length(); ++i) {
+    for (int i = 0; i < xmlData.length(); ++i) {
         QCOMPARE(QString::fromLatin1(xmlData.at(i)), t.readLine(0));
     }
     file.close();
 
     TEST_EXCEPTIONS_CATCH
 }
-
 
 void ApexMainTest::testCohDatablock_invalid()
 {
@@ -315,16 +343,17 @@ void ApexMainTest::testCohDatablock_invalid()
     basemap.setPhaseGap(25);
     basemap.setPeriod(150);
     map.setDefaultMap(basemap);
-    for (int i=1; i<=22; ++i) {
+    for (int i = 1; i <= 22; ++i) {
         basemap.setChannelNumber(i);
-        basemap.setStimulationElectrode(22-i+1);
-        basemap.setThresholdLevel(1+i);
-        basemap.setComfortLevel(255-i);
+        basemap.setStimulationElectrode(22 - i + 1);
+        basemap.setThresholdLevel(1 + i);
+        basemap.setComfortLevel(255 - i);
         QVERIFY(basemap.isValid());
-        map[basemap.channelNumber()]=basemap;
+        map[basemap.channelNumber()] = basemap;
     }
 
-    QString file(Paths::searchFile(QL1S("tests/libapex/invalid1.aseq"), Paths::dataDirectories()));
+    QString file(Paths::searchFile(QL1S("tests/libapex/invalid1.aseq"),
+                                   Paths::dataDirectories()));
     data.setFile(file);
 
     try {
@@ -337,7 +366,6 @@ void ApexMainTest::testCohDatablock_invalid()
 
     TEST_EXCEPTIONS_CATCH
 }
-
 
 void ApexMainTest::testCohInvalidCL()
 {
@@ -353,17 +381,18 @@ void ApexMainTest::testCohInvalidCL()
     basemap.setPhaseGap(25);
     basemap.setPeriod(150);
     map.setDefaultMap(basemap);
-    for (int i=1; i<=22; ++i) {
+    for (int i = 1; i <= 22; ++i) {
         basemap.setChannelNumber(i);
-        basemap.setStimulationElectrode(22-i+1);
-        basemap.setThresholdLevel(1+i);
+        basemap.setStimulationElectrode(22 - i + 1);
+        basemap.setThresholdLevel(1 + i);
         basemap.setComfortLevel(100);
         QVERIFY(basemap.isValid());
-        map[basemap.channelNumber()]=basemap;
+        map[basemap.channelNumber()] = basemap;
     }
 
-    QString file(Paths::searchFile(QL1S("tests/libapex/chancl.aseq"), Paths::dataDirectories()));
-    data.setFile (file);
+    QString file(Paths::searchFile(QL1S("tests/libapex/chancl.aseq"),
+                                   Paths::dataDirectories()));
+    data.setFile(file);
 
     try {
         CohDataBlock datablock(data, file, 0);
@@ -376,38 +405,47 @@ void ApexMainTest::testCohInvalidCL()
     TEST_EXCEPTIONS_CATCH
 }
 
-class RandomGeneratorTestParameters : public RandomGeneratorParameters {
+class RandomGeneratorTestParameters : public RandomGeneratorParameters
+{
 public:
-    void setParameter(QString name, QString value) {
+    void setParameter(QString name, QString value)
+    {
         SetParameter(name, "", value, QDomElement());
     }
-    QString min() {
+    QString min()
+    {
         return QString::number(m_dMin);
     }
-    QString max() {
+    QString max()
+    {
         return QString::number(m_dMax);
     }
 };
 
 template <typename T>
-T convert(QString, bool*) {
+T convert(QString, bool *)
+{
     QVERIFY(false);
 }
 
 template <>
-int convert(QString s, bool *ok) {
+int convert(QString s, bool *ok)
+{
     return s.toInt(ok);
 }
 
 template <>
-double convert(QString s, bool *ok){
+double convert(QString s, bool *ok)
+{
     return s.toDouble(ok);
 }
 
 template <typename T>
-void ApexMainTest::verifyInterval(RandomGeneratorTestParameters* params, T min, T max) {
-    UniformRandomGenerator* urg = new UniformRandomGenerator(params);
-    for(unsigned int i=0; i<100; ++i) {
+void ApexMainTest::verifyInterval(RandomGeneratorTestParameters *params, T min,
+                                  T max)
+{
+    UniformRandomGenerator *urg = new UniformRandomGenerator(params);
+    for (unsigned int i = 0; i < 100; ++i) {
         QString stringValue = urg->GetNextValue();
         bool ok = false;
         T value = convert<T>(stringValue, &ok);
@@ -430,24 +468,24 @@ void ApexMainTest::testUniformInt()
     params.setParameter("min", QString::number(min));
     params.setParameter("max", QString::number(max));
 
-    UniformRandomGenerator* urg = new UniformRandomGenerator(&params);
+    UniformRandomGenerator *urg = new UniformRandomGenerator(&params);
     urg->doDeterministicGeneration();
-    double p = 1/double(max-min+1);
-    unsigned long n = 1000/p;
+    double p = 1 / double(max - min + 1);
+    unsigned long n = 1000 / p;
 
     QMap<int, unsigned long> freq;
-    for(unsigned long i=0; i<n; ++i) {
+    for (unsigned long i = 0; i < n; ++i) {
         bool ok = false;
         long value = convert<int>(urg->GetNextValue(), &ok);
         ++freq[value];
     }
 
     unsigned long squaredSum = 0;
-    foreach(unsigned long f, freq) {
-        squaredSum += (f*f);
+    foreach (unsigned long f, freq) {
+        squaredSum += (f * f);
     }
 
-    double v = (1/(n*p))*squaredSum - n;
+    double v = (1 / (n * p)) * squaredSum - n;
 
     QVERIFY(v >= 2.558);
     QVERIFY(v <= 23.21);
@@ -455,7 +493,8 @@ void ApexMainTest::testUniformInt()
     TEST_EXCEPTIONS_CATCH
 }
 
-double f(double val, double min, double max) {
+double f(double val, double min, double max)
+{
     return (val - min) / (max - min);
 }
 
@@ -471,12 +510,12 @@ void ApexMainTest::testUniformDouble()
     params.setParameter("min", QString::number(min));
     params.setParameter("max", QString::number(max));
 
-    UniformRandomGenerator* urg = new UniformRandomGenerator(&params);
+    UniformRandomGenerator *urg = new UniformRandomGenerator(&params);
     urg->doDeterministicGeneration();
     unsigned long n = 1000;
 
     QVector<double> numbers;
-    for(unsigned long i=0; i<n; ++i) {
+    for (unsigned long i = 0; i < n; ++i) {
         bool ok;
         double value = convert<double>(urg->GetNextValue(), &ok);
         numbers.push_back(value);
@@ -486,14 +525,16 @@ void ApexMainTest::testUniformDouble()
 
     QVector<double> transformed1;
     QVector<double> transformed2;
-    for(size_t j=1; j<=n; ++j){
-        size_t i = j-1;
-        transformed1.push_back(double(j)/n - f(numbers[i], min, max));
-        transformed2.push_back(f(numbers[i], min, max) - double(j-1)/n);
+    for (size_t j = 1; j <= n; ++j) {
+        size_t i = j - 1;
+        transformed1.push_back(double(j) / n - f(numbers[i], min, max));
+        transformed2.push_back(f(numbers[i], min, max) - double(j - 1) / n);
     }
 
-    double kMin = qSqrt(n) * *std::max_element(transformed1.begin(), transformed1.end());
-    double kMax = qSqrt(n) * *std::max_element(transformed2.begin(), transformed2.end());
+    double kMin =
+        qSqrt(n) * *std::max_element(transformed1.begin(), transformed1.end());
+    double kMax =
+        qSqrt(n) * *std::max_element(transformed2.begin(), transformed2.end());
 
     QVERIFY(kMin >= 0.02912);
     QVERIFY(kMin <= 1.444);
@@ -557,14 +598,13 @@ void ApexMainTest::testMainConfigFileParser()
     TEST_EXCEPTIONS_TRY
 
     MainConfigFileParser::Get().parse();
-    const data::MainConfigFileData& d = MainConfigFileParser::Get().data();
+    const data::MainConfigFileData &d = MainConfigFileParser::Get().data();
 
-    QCOMPARE( d.soundCardName("RME", "asio"), QString("ASIO Hammerfall DSP") );
-    QCOMPARE( d.soundCardName("invalid", "asio"), QString() );
-    QCOMPARE( d.prefix("regression"), QString("file:../stimuli"));
-    QCOMPARE( d.prefix("invalid"), QString(""));
-    QCOMPARE( d.pluginScriptLibrary(), QString("pluginscriptlibrary.js"));
-
+    QCOMPARE(d.soundCardName("RME", "asio"), QString("ASIO Hammerfall DSP"));
+    QCOMPARE(d.soundCardName("invalid", "asio"), QString());
+    QCOMPARE(d.prefix("regression"), QString("../stimuli"));
+    QCOMPARE(d.prefix("invalid"), QString(""));
+    QCOMPARE(d.pluginScriptLibrary(), QString("pluginscriptlibrary.js"));
 
     TEST_EXCEPTIONS_CATCH
 }
@@ -573,29 +613,32 @@ void ApexMainTest::testUpgradeTo3_1_1()
 {
     TEST_EXCEPTIONS_TRY
 
-    //Load the xml file to test. This is a file from version 3.1.0
-    QFile testFile(Paths::searchFile(QL1S("tests/libapex/results-upgradeoldschema.apx"), Paths::dataDirectories()));
+    // Load the xml file to test. This is a file from version 3.1.0
+    QFile testFile(
+        Paths::searchFile(QL1S("tests/libapex/results-upgradeoldschema.apx"),
+                          Paths::dataDirectories()));
     testFile.open(QIODevice::ReadOnly);
 
-    //Create the experiment parser
-    apex::data::ExperimentData* testData;
+    // Create the experiment parser
+    apex::data::ExperimentData *testData;
 
     apex::ExperimentParser parser(testFile.fileName());
 
-    //Parse the xml file, this should call the upgradeTo3_1_1 function
-    //apex::data::ExperimentData* testData;
+    // Parse the xml file, this should call the upgradeTo3_1_1 function
+    // apex::data::ExperimentData* testData;
     testData = parser.parse(false);
 
-    //Get the results from the parsing
-    apex::data::ResultParameters* parameterList = testData->resultParameters();
+    // Get the results from the parsing
+    apex::data::ResultParameters *parameterList = testData->resultParameters();
 
-    //now test the result of the parsing...
-    QCOMPARE(parameterList->showResultsAfter(), true); //This is supposed to be true
+    // now test the result of the parsing...
+    QCOMPARE(parameterList->showResultsAfter(),
+             true); // This is supposed to be true
     QCOMPARE(parameterList->showRTResults(), false);
     QCOMPARE(parameterList->resultPage(), QUrl("apex:resultsviewer.html"));
     QVERIFY(parameterList->matlabScript().isEmpty());
-    //QVERIFY(parameterList->GetXsltScript().isEmpty());
-    //QVERIFY(parameterList->getJavascriptScript().isEmpty());
+    // QVERIFY(parameterList->GetXsltScript().isEmpty());
+    // QVERIFY(parameterList->getJavascriptScript().isEmpty());
 
     TEST_EXCEPTIONS_CATCH
 }
@@ -606,10 +649,13 @@ void ApexMainTest::testResultViewerConvertToCSV_data()
     QTest::addColumn<QString>("testFilePath");
     QTest::addColumn<QString>("desiredFilePath");
 
-    QTest::newRow("Simple") << Paths::searchFile(QL1S("tests/libapex/subject_test-r.apr"), Paths::dataDirectories())
-                            << Paths::searchFile(QL1S("tests/libapex/testJavascriptResult2.xml"), Paths::dataDirectories())
-                            << Paths::searchFile(QL1S("tests/libapex/desiredJavascriptResult.xml"), Paths::dataDirectories());
-
+    QTest::newRow("Simple")
+        << Paths::searchFile(QL1S("tests/libapex/subject_test-r.apr"),
+                             Paths::dataDirectories())
+        << Paths::searchFile(QL1S("tests/libapex/testJavascriptResult2.xml"),
+                             Paths::dataDirectories())
+        << Paths::searchFile(QL1S("tests/libapex/desiredJavascriptResult.xml"),
+                             Paths::dataDirectories());
 }
 
 void ApexMainTest::testResultViewerConvertToCSV()
@@ -617,37 +663,40 @@ void ApexMainTest::testResultViewerConvertToCSV()
 #if !defined(Q_OS_ANDROID)
     TEST_EXCEPTIONS_TRY
 
-    //First, create the result parameters
-        data::ResultParameters rvparam;
+    // First, create the result parameters
+    data::ResultParameters rvparam;
     rvparam.setShowResultsAfter(true);
     rvparam.setSaveResults(false);
 
-    //Fetch the filenames:
+    // Fetch the filenames:
     QFETCH(QString, resultFilePath);
     QFETCH(QString, testFilePath);
     QFETCH(QString, desiredFilePath);
 
     QFileInfo resultFileInfo(resultFilePath);
-    QString resultFile = resultFileInfo.absoluteFilePath(); //To get the right path on all
-    //operating systems.
+    QString resultFile =
+        resultFileInfo.absoluteFilePath(); // To get the right path on all
+    // operating systems.
 
     apex::ResultViewer testViewer(&rvparam, resultFile);
 
-    //Export the contents to a file:
+    // Export the contents to a file:
     QFileInfo testFileInfo(testFilePath);
     QString testFile = testFileInfo.absoluteFilePath();
 
-    //export the new data to the existing result file.
+    // export the new data to the existing result file.
     testViewer.addtofile(testFile);
     QDomDocument testResult = readXmlResults(testFile);
 
-    //Get the comparison values
+    // Get the comparison values
     QFileInfo desiredFileInfo(desiredFilePath);
-    QDomDocument desiredContent = readXmlResults(desiredFileInfo.absoluteFilePath());
+    QDomDocument desiredContent =
+        readXmlResults(desiredFileInfo.absoluteFilePath());
 
     QCOMPARE(compareXml(testResult, desiredContent), QString());
 
-    //Now remove the part that has been written to the text file, so the test can be done again...
+    // Now remove the part that has been written to the text file, so the test
+    // can be done again...
     QFile file(testFile);
     file.open(QIODevice::ReadWrite);
     QByteArray fileData = file.readAll();
@@ -660,12 +709,12 @@ void ApexMainTest::testResultViewerConvertToCSV()
 
     fileText.remove(startIndex, endIndex - startIndex);
 
-    //Now clear the old file, and write contents to the new file
+    // Now clear the old file, and write contents to the new file
 
     file.resize(0);
     QTextStream out(&file);
     out.setCodec("UTF-8");
-    out<<fileText;
+    out << fileText;
     file.close();
 
     TEST_EXCEPTIONS_CATCH
@@ -679,27 +728,243 @@ void ApexMainTest::testResultViewer_data()
     QTest::addColumn<QString>("resultFilePath");
     QTest::addColumn<QString>("resultViewerPath");
     QTest::addColumn<QString>("plotConfig"); // sets up config object correctly
-    QTest::addColumn<QString>("testCommand"); // JSON.stringify(plots.<type>.data) + JSON.stringify(plots.text.data)
+    QTest::addColumn<QString>(
+        "testCommand"); // JSON.stringify(plots.<type>.data) +
+                        // JSON.stringify(plots.text.data)
     QTest::addColumn<QString>("plotDataJSON"); // Target result JSON
 
-    //Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"), Paths::dataDirectories())
-    QTest::newRow("line")        << Paths::searchFile(QL1S("data/tests/libapex/results-test-line.apr"), Paths::dataDirectories())
-                                 << Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"), Paths::dataDirectories())
-                                 << "config = { global: { removefromanswer: [\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\",\"answer\"] }, line: { show: true, parameterkey: \"parametervalue\", trialsformean: 6, reversalsformean: 6 }, matrix: { show: false }, polar: { show:false }, text: { show: true } };"
-                                 << "JSON.stringify( plots.line.data ) + JSON.stringify( plots.text.data );"
-                                 << "[{\"values\":[-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1],\"reversals\":[-1,-3,-1,-3,3,-1,1],\"meanrevs\":-0.6666666666666666,\"meanrevstd\":2.1343747458109497,\"meantrials\":0.6666666666666666,\"meantrialstd\":1.3743685418725535}][{\"line\":{\"allvalues\":\"<tr><td>Parametervalues</td><td>-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1</td></tr>\",\"lastvalue\":\"<tr><td>Lastvalue</td><td>-1</td></tr>\",\"reversals\":\"<tr><td>Reversals</td><td>-1,-3,-1,-3,3,-1,1</td></tr>\",\"meanrevs\":\"<tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6reversals</tdclass=\\\"dataname\\\"><td>-0.6667(&plusmn;2.134)</td></tr>\",\"meantrials\":\"<tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6trials</tdclass=\\\"dataname\\\"><td>0.6667(&plusmn1.374)</td></tr>\",\"linedatatable\":\"<tableclass=\\\"datatable\\\"><tr><td>Parametervalues</td><td>-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1</td></tr><tr><td>Lastvalue</td><td>-1</td></tr><tr><td>Reversals</td><td>-1,-3,-1,-3,3,-1,1</td></tr><tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6reversals</tdclass=\\\"dataname\\\"><td>-0.6667(&plusmn;2.134)</td></tr><tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6trials</tdclass=\\\"dataname\\\"><td>0.6667(&plusmn1.374)</td></tr></table>\",\"paramtable\":\"<tableclass=\\\"stripedtable\\\"><tr><th>Trial</th><th>Answer</th><th>Correct</th><th>Parameter</th></tr><tr><td>1</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-5</td></tr><tr><td>2</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-3</td></tr><tr><td>3</td><td>correct</td><td><spanclass=\\\"correct\\\">Correct</span></td><td>-1</td></tr><tr><td>4</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-3</td></tr><tr><td>5</td><td>correct</td><td><spanclass=\\\"correct\\\">Correct</span></td><td>-1</td></tr><tr><td>6</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-3</td></tr><tr><td>7</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-1</td></tr><tr><td>8</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>1</td></tr><tr><td>9</td><td>correct</td><td><spanclass=\\\"correct\\\">Correct</span></td><td>3</td></tr><tr><td>10</td><td>correct</td><td><spanclass=\\\"correct\\\">Correct</span></td><td>1</td></tr><tr><td>11</td><td>wrong</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-1</td></tr><tr><td>12</td><td>correct</td><td><spanclass=\\\"correct\\\">Correct</span></td><td>1</td></tr><tr><td>13</td><td>n/a</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-1</td></tr></table>\"}}]";
+    // Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"),
+    // Paths::dataDirectories())
+    QTest::newRow("line")
+        << Paths::searchFile(QL1S("data/tests/libapex/results-test-line.apr"),
+                             Paths::dataDirectories())
+        << Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"),
+                             Paths::dataDirectories())
+        << "config = { global: { removefromanswer: "
+           "[\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\","
+           "\"answer\"] }, line: { show: true, parameterkey: "
+           "\"parametervalue\", trialsformean: 6, reversalsformean: 6 }, "
+           "matrix: { show: false }, polar: { show:false }, text: { show: true "
+           "} };"
+        << "JSON.stringify( plots.line.data ) + JSON.stringify( "
+           "plots.text.data );"
+        << "[{\"values\":[-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1],\"reversals\":[-"
+           "1,-3,-1,-3,3,-1,1],\"meanrevs\":-0.6666666666666666,\"meanrevstd\":"
+           "2.1343747458109497,\"meantrials\":0.6666666666666666,"
+           "\"meantrialstd\":1.3743685418725535}][{\"line\":{\"allvalues\":\"<"
+           "tr><td>Parametervalues</td><td>-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1</"
+           "td></tr>\",\"lastvalue\":\"<tr><td>Lastvalue</td><td>-1</td></"
+           "tr>\",\"reversals\":\"<tr><td>Reversals</"
+           "td><td>-1,-3,-1,-3,3,-1,1</td></"
+           "tr>\",\"meanrevs\":\"<tr><tdclass=\\\"dataname\\\">Mean(std)<br>"
+           "last6reversals</"
+           "tdclass=\\\"dataname\\\"><td>-0.6667(&plusmn;2.134)</td></"
+           "tr>\",\"meantrials\":\"<tr><tdclass=\\\"dataname\\\">Mean(std)<br>"
+           "last6trials</tdclass=\\\"dataname\\\"><td>0.6667(&plusmn1.374)</"
+           "td></"
+           "tr>\",\"linedatatable\":\"<tableclass=\\\"datatable\\\"><tr><td>"
+           "Parametervalues</td><td>-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1</td></"
+           "tr><tr><td>Lastvalue</td><td>-1</td></tr><tr><td>Reversals</"
+           "td><td>-1,-3,-1,-3,3,-1,1</td></"
+           "tr><tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6reversals</"
+           "tdclass=\\\"dataname\\\"><td>-0.6667(&plusmn;2.134)</td></"
+           "tr><tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6trials</"
+           "tdclass=\\\"dataname\\\"><td>0.6667(&plusmn1.374)</td></tr></"
+           "table>\",\"paramtable\":\"<tableclass=\\\"stripedtable\\\"><tr><th>"
+           "Trial</th><th>Answer</th><th>Correct</th><th>Parameter</th></"
+           "tr><tr><td>1</td><td>wrong</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-5</"
+           "td></tr><tr><td>2</td><td>wrong</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-3</"
+           "td></tr><tr><td>3</td><td>correct</"
+           "td><td><spanclass=\\\"correct\\\">Correct</span></td><td>-1</td></"
+           "tr><tr><td>4</td><td>wrong</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-3</"
+           "td></tr><tr><td>5</td><td>correct</"
+           "td><td><spanclass=\\\"correct\\\">Correct</span></td><td>-1</td></"
+           "tr><tr><td>6</td><td>wrong</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-3</"
+           "td></tr><tr><td>7</td><td>wrong</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-1</"
+           "td></tr><tr><td>8</td><td>wrong</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>1</"
+           "td></tr><tr><td>9</td><td>correct</"
+           "td><td><spanclass=\\\"correct\\\">Correct</span></td><td>3</td></"
+           "tr><tr><td>10</td><td>correct</"
+           "td><td><spanclass=\\\"correct\\\">Correct</span></td><td>1</td></"
+           "tr><tr><td>11</td><td>wrong</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-1</"
+           "td></tr><tr><td>12</td><td>correct</"
+           "td><td><spanclass=\\\"correct\\\">Correct</span></td><td>1</td></"
+           "tr><tr><td>13</td><td>n/a</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td><td>-1</"
+           "td></tr></table>\"}}]";
 
-    QTest::newRow("matrixpolar") << Paths::searchFile(QL1S("data/tests/libapex/results-test-matrixpolar.apr"), Paths::dataDirectories())
-                                 << Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"), Paths::dataDirectories())
-                                 << "$.extend( config, { global: { stimuli: [\"-90\",\"-75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\",\"30\",\"45\",\"60\",\"75\",\"90\"],  removefromanswer: [\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\",\"answer\"] },line: {show: false }, matrix: { show: true },polar: { show: true, mindegree: -90, maxdegree: 90 }, text: { show: true } } );"
-                                 << "JSON.stringify( plots.matrix.data );"
-                                 << "[{\"values\":[{\"x\":0,\"y\":1,\"z\":1},{\"x\":1,\"y\":0,\"z\":1},{\"x\":2,\"y\":3,\"z\":1},{\"x\":3,\"y\":2,\"z\":2},{\"x\":4,\"y\":3,\"z\":1},{\"x\":6,\"y\":3,\"z\":1},{\"x\":7,\"y\":1,\"z\":1},{\"x\":7,\"y\":4,\"z\":1},{\"x\":7,\"y\":6,\"z\":1},{\"x\":8,\"y\":4,\"z\":1},{\"x\":8,\"y\":6,\"z\":1},{\"x\":9,\"y\":7,\"z\":1},{\"x\":10,\"y\":8,\"z\":2},{\"x\":12,\"y\":5,\"z\":1},{\"x\":12,\"y\":6,\"z\":1},{\"x\":12,\"y\":8,\"z\":1}],\"percentages\":[0,0,0,0,0,0,0,0.3333333333333333,0,0,0,0,0],\"xlabels\":[\"-90\",\"-75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\",\"30\",\"45\",\"60\",\"75\",\"90\"],\"ylabels\":[\"-90\",\"-60\",\"-30\",\"-15\",\"15\",\"30\",\"45\",\"60\",\"75\"],\"raw\":[[0,1,0,0,0,0,0,0,0],[1,0,0,0,0,0,0,0,0],[0,0,0,1,0,0,0,0,0],[0,0,2,0,0,0,0,0,0],[0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,1,0,0,0,0,0],[0,1,0,0,1,0,1,0,0],[0,0,0,0,1,0,1,0,0],[0,0,0,0,0,0,0,1,0],[0,0,0,0,0,0,0,0,2],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,0,1]]}]";
+    QTest::newRow("matrixpolar")
+        << Paths::searchFile(
+               QL1S("data/tests/libapex/results-test-matrixpolar.apr"),
+               Paths::dataDirectories())
+        << Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"),
+                             Paths::dataDirectories())
+        << "$.extend( config, { global: { stimuli: "
+           "[\"-90\",\"-75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\","
+           "\"30\",\"45\",\"60\",\"75\",\"90\"],  removefromanswer: "
+           "[\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\","
+           "\"answer\"] },line: {show: false }, matrix: { show: true },polar: "
+           "{ show: true, mindegree: -90, maxdegree: 90 }, text: { show: true "
+           "} } );"
+        << "JSON.stringify( plots.matrix.data );"
+        << "[{\"values\":[{\"x\":0,\"y\":1,\"z\":1},{\"x\":1,\"y\":0,\"z\":1},{"
+           "\"x\":2,\"y\":3,\"z\":1},{\"x\":3,\"y\":2,\"z\":2},{\"x\":4,\"y\":"
+           "3,\"z\":1},{\"x\":6,\"y\":3,\"z\":1},{\"x\":7,\"y\":1,\"z\":1},{"
+           "\"x\":7,\"y\":4,\"z\":1},{\"x\":7,\"y\":6,\"z\":1},{\"x\":8,\"y\":"
+           "4,\"z\":1},{\"x\":8,\"y\":6,\"z\":1},{\"x\":9,\"y\":7,\"z\":1},{"
+           "\"x\":10,\"y\":8,\"z\":2},{\"x\":12,\"y\":5,\"z\":1},{\"x\":12,"
+           "\"y\":6,\"z\":1},{\"x\":12,\"y\":8,\"z\":1}],\"percentages\":[0,0,"
+           "0,0,0,0,0,0.3333333333333333,0,0,0,0,0],\"xlabels\":[\"-90\",\"-"
+           "75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\",\"30\",\"45\","
+           "\"60\",\"75\",\"90\"],\"ylabels\":[\"-90\",\"-60\",\"-30\",\"-15\","
+           "\"15\",\"30\",\"45\",\"60\",\"75\"],\"raw\":[[0,1,0,0,0,0,0,0,0],["
+           "1,0,0,0,0,0,0,0,0],[0,0,0,1,0,0,0,0,0],[0,0,2,0,0,0,0,0,0],[0,0,0,"
+           "1,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,1,0,0,0,0,0],[0,1,0,0,1,0,"
+           "1,0,0],[0,0,0,0,1,0,1,0,0],[0,0,0,0,0,0,0,1,0],[0,0,0,0,0,0,0,0,2],"
+           "[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,1,1,0,1]]}]";
 
-    QTest::newRow("matrixpolartext") << Paths::searchFile(QL1S("data/tests/libapex/results-test-matrixpolar.apr"), Paths::dataDirectories())
-                                    << Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"), Paths::dataDirectories())
-                                    << "$.extend( config, { global: { stimuli: [\"-90\",\"-75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\",\"30\",\"45\",\"60\",\"75\",\"90\"],  removefromanswer: [\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\",\"answer\"] },line: {show: false }, matrix: { show: true },polar: { show: true, mindegree: -90, maxdegree: 90 }, text: { show: true } } );"
-                                    << "JSON.stringify( plots.text.data );"
-                                    << "[{\"matrix\":{\"correctpercentage\":\"<tr><tdcolspan=\\\"13\\\">Totalpercentagecorrect:5.5556%</td></tr>\",\"correctpercentages\":\"<tr><thcolspan=\\\"13\\\">Correct%perstimulus</th></tr><tr><th>-90</th><th>-75</th><th>-60</th><th>-45</th><th>-30</th><th>-15</th><th>0</th><th>15</th><th>30</th><th>45</th><th>60</th><th>75</th><th>90</th></tr><tr><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><td>33.33%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td><tdclass=\\\"lightcell\\\">0.00%</td></tr>\",\"matrixtable\":\"<tableclass=\\\"stripedtable\\\"><tbody><tr><tr><tr><tr><tr><tr><tr><tr><tr><tr><th></th><th>-90</th><th>-75</th><th>-60</th><th>-45</th><th>-30</th><th>-15</th><th>0</th><th>15</th><th>30</th><th>45</th><th>60</th><th>75</th><th>90</th></tr><th>-90</th><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>-60</th><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>-30</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>2</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>-15</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>15</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>30</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td></tr><th>45</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td></tr><th>60</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>1</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td></tr><th>75</th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</td><td>2</td><tdclass=\\\"lightcell\\\">0</td><td>1</td></tr></tbody></table>\",\"answertable\":\"<tableclass=\\\"stripedtable\\\"><tr><th>Trial</th><th>Stimulus</th><th>Answer</th><th>Correct</th></tr><tr><td>1</td><td>-75</td><td>-90</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>2</td><td>30</td><td>15</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>3</td><td>-60</td><td>-15</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>4</td><td>15</td><td>-60</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>5</td><td>-45</td><td>-30</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>6</td><td>15</td><td>15</td><td><spanclass=\\\"correct\\\">Correct</span></td></tr><tr><td>7</td><td>-45</td><td>-30</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>8</td><td>30</td><td>45</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>9</td><td>60</td><td>75</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>10</td><td>0</td><td>-15</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>11</td><td>15</td><td>45</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>12</td><td>90</td><td>45</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>13</td><td>45</td><td>60</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>14</td><td>60</td><td>75</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>15</td><td>-30</td><td>-15</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>16</td><td>90</td><td>30</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>17</td><td>-90</td><td>-60</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr><tr><td>18</td><td>90</td><td>75</td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr></table>\"}}]";
+    QTest::newRow("matrixpolartext")
+        << Paths::searchFile(
+               QL1S("data/tests/libapex/results-test-matrixpolar.apr"),
+               Paths::dataDirectories())
+        << Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"),
+                             Paths::dataDirectories())
+        << "$.extend( config, { global: { stimuli: "
+           "[\"-90\",\"-75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\","
+           "\"30\",\"45\",\"60\",\"75\",\"90\"],  removefromanswer: "
+           "[\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\","
+           "\"answer\"] },line: {show: false }, matrix: { show: true },polar: "
+           "{ show: true, mindegree: -90, maxdegree: 90 }, text: { show: true "
+           "} } );"
+        << "JSON.stringify( plots.text.data );"
+        << "[{\"matrix\":{\"correctpercentage\":\"<tr><tdcolspan=\\\"13\\\">"
+           "Totalpercentagecorrect:5.5556%</td></"
+           "tr>\",\"correctpercentages\":\"<tr><thcolspan=\\\"13\\\">Correct%"
+           "perstimulus</th></tr><tr><th>-90</th><th>-75</th><th>-60</"
+           "th><th>-45</th><th>-30</th><th>-15</th><th>0</th><th>15</"
+           "th><th>30</th><th>45</th><th>60</th><th>75</th><th>90</th></"
+           "tr><tr><tdclass=\\\"lightcell\\\">0.00%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</td><td>33.33%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</"
+           "td><tdclass=\\\"lightcell\\\">0.00%</td></"
+           "tr>\",\"matrixtable\":\"<tableclass=\\\"stripedtable\\\"><tbody><"
+           "tr><tr><tr><tr><tr><tr><tr><tr><tr><tr><th></th><th>-90</"
+           "th><th>-75</th><th>-60</th><th>-45</th><th>-30</th><th>-15</"
+           "th><th>0</th><th>15</th><th>30</th><th>45</th><th>60</th><th>75</"
+           "th><th>90</th></tr><th>-90</th><tdclass=\\\"lightcell\\\">0</"
+           "td><td>1</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td></tr><th>-60</th><td>1</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><td>1</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td></tr><th>-30</"
+           "th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><td>2</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td></tr><th>-15</"
+           "th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><td>1</td><tdclass=\\\"lightcell\\\">0</td><td>1</"
+           "td><tdclass=\\\"lightcell\\\">0</td><td>1</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td></tr><th>15</th><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><td>1</td><td>1</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td></tr><th>30</"
+           "th><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><td>1</td></tr><th>45</th><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><td>1</td><td>1</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><td>1</td></tr><th>60</th><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><td>1</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td></tr><th>75</th><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><tdclass=\\\"lightcell\\\">0</"
+           "td><tdclass=\\\"lightcell\\\">0</td><td>2</"
+           "td><tdclass=\\\"lightcell\\\">0</td><td>1</td></tr></tbody></"
+           "table>\",\"answertable\":\"<tableclass=\\\"stripedtable\\\"><tr><"
+           "th>Trial</th><th>Stimulus</th><th>Answer</th><th>Correct</th></"
+           "tr><tr><td>1</td><td>-75</td><td>-90</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>2</td><td>30</td><td>15</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>3</td><td>-60</td><td>-15</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>4</td><td>15</td><td>-60</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>5</td><td>-45</td><td>-30</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>6</td><td>15</td><td>15</"
+           "td><td><spanclass=\\\"correct\\\">Correct</span></td></"
+           "tr><tr><td>7</td><td>-45</td><td>-30</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>8</td><td>30</td><td>45</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>9</td><td>60</td><td>75</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>10</td><td>0</td><td>-15</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>11</td><td>15</td><td>45</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>12</td><td>90</td><td>45</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>13</td><td>45</td><td>60</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>14</td><td>60</td><td>75</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>15</td><td>-30</td><td>-15</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>16</td><td>90</td><td>30</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>17</td><td>-90</td><td>-60</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></"
+           "tr><tr><td>18</td><td>90</td><td>75</"
+           "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr></"
+           "table>\"}}]";
 }
 
 void ApexMainTest::testResultViewer()
@@ -707,12 +972,12 @@ void ApexMainTest::testResultViewer()
 #if !defined(Q_OS_ANDROID)
     TEST_EXCEPTIONS_TRY
 
-    //First, create the result parameters
+    // First, create the result parameters
     data::ResultParameters rvparam;
     rvparam.setShowResultsAfter(true);
     rvparam.setSaveResults(false);
 
-    //Fetch the filenames:
+    // Fetch the filenames:
     QFETCH(QString, resultFilePath);
     QFETCH(QString, resultViewerPath);
     QFETCH(QString, plotConfig);
@@ -721,7 +986,7 @@ void ApexMainTest::testResultViewer()
 
     QFileInfo resultFileInfo(resultFilePath);
     QString resultFile = resultFileInfo.absoluteFilePath();
-    //To get the right path on all operating systems.
+    // To get the right path on all operating systems.
 
     // Read results file
     QFile resultsFile(resultFilePath);
@@ -729,28 +994,26 @@ void ApexMainTest::testResultViewer()
     QByteArray resultsFileData = resultsFile.readAll();
     resultsFile.close();
 
-    QWebView webView;
-
     QUrl ResultViewerUrl(QUrl::fromUserInput(resultViewerPath));
-    qCDebug(APEX_RS) << ResultViewerUrl.scheme();
-    apex::RTResultSink resultSink(ResultViewerUrl,rvparam.resultParameters(), rvparam.extraScript(), &webView);
+    apex::RTResultSink resultSink(ResultViewerUrl, rvparam.resultParameters(),
+                                  rvparam.extraScript());
 
     // load page, execute javascript... (happens in separate thread)
-    QSignalSpy spy(&webView, SIGNAL(loadFinished(bool)));
-    while (spy.count()==0) {
+    QSignalSpy spy(&resultSink, SIGNAL(loadingFinished(bool)));
+    while (spy.count() == 0) {
         QCoreApplication::processEvents();
         QTest::qWait(10);
     }
 
-    resultSink.evaluateJavascript (plotConfig);
+    resultSink.evaluateJavascript(plotConfig);
     resultSink.newResults(resultsFileData);
     resultSink.plot();
     QCoreApplication::processEvents();
 
     QString resultJSON = resultSink.evaluateJavascript(testCommand).toString();
 
-    resultJSON = resultJSON.simplified().replace(" ","");
-    plotDataJSON = plotDataJSON.simplified().replace(" ","");
+    resultJSON = resultJSON.simplified().replace(" ", "");
+    plotDataJSON = plotDataJSON.simplified().replace(" ", "");
 
     QCOMPARE(resultJSON, plotDataJSON);
 
@@ -760,50 +1023,50 @@ void ApexMainTest::testResultViewer()
 #endif
 }
 
-
 #if !defined(Q_OS_ANDROID)
 static QUrl createUrl(const QString &filename)
 {
-    return QDir::current().relativeFilePath(Paths::searchFile(QL1S("tests/libapex/") + filename, Paths::dataDirectories()));
+    return QDir::current().relativeFilePath(Paths::searchFile(
+        QL1S("tests/libapex/") + filename, Paths::dataDirectories()));
 }
 #endif
 
 void ApexMainTest::wait()
 {
-    for(int i=0; i<5; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QCoreApplication::processEvents();
         QTest::qSleep(100);
     }
 }
 
-QPair<QWebFrame*, AccessManager*> ApexMainTest::initAccesManager()
+QPair<QWebFrame *, AccessManager *> ApexMainTest::initAccesManager()
 {
 #if !defined(Q_OS_ANDROID)
     networkError = false;
-    QWebView* webView = new QWebView();
-    QWebPage* page = new QWebPage(webView);
-    AccessManager* am = new AccessManager(page);
+    QWebView *webView = new QWebView();
+    QWebPage *page = new QWebPage(webView);
+    AccessManager *am = new AccessManager(page);
     page->setNetworkAccessManager(am);
-    LoadChecker* loadChecker = new LoadChecker(this);
-    connect(page->networkAccessManager(), SIGNAL(finished(QNetworkReply*)), loadChecker, SLOT(check(QNetworkReply*)));
+    LoadChecker *loadChecker = new LoadChecker(this);
+    connect(page->networkAccessManager(), SIGNAL(finished(QNetworkReply *)),
+            loadChecker, SLOT(check(QNetworkReply *)));
 
-    return QPair<QWebFrame*, AccessManager*>(page->mainFrame(), am);
+    return QPair<QWebFrame *, AccessManager *>(page->mainFrame(), am);
 #else
-    return QPair<QWebFrame*, AccessManager*>(NULL, NULL);
+    return QPair<QWebFrame *, AccessManager *>(NULL, NULL);
 #endif
 }
 
-
-//Load a local file that loads another local file
+// Load a local file that loads another local file
 void ApexMainTest::testAccessManagerLoadLocal()
 {
 #if !defined(Q_OS_ANDROID)
     TEST_EXCEPTIONS_TRY
 
     QUrl p_page = createUrl("test_local.html");
-    QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
+    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
 
-    pair.first->load( pair.second->prepare(p_page) );
+    pair.first->load(pair.second->prepare(p_page));
     wait();
 
     QCOMPARE(networkError, false);
@@ -814,7 +1077,7 @@ void ApexMainTest::testAccessManagerLoadLocal()
 #endif
 }
 
-//Load a local file that loads another local file
+// Load a local file that loads another local file
 void ApexMainTest::testAccessManagerLoadLocalWithScheme()
 {
 #if !defined(Q_OS_ANDROID)
@@ -822,9 +1085,9 @@ void ApexMainTest::testAccessManagerLoadLocalWithScheme()
 
     QUrl p_page = createUrl("test_local.html");
     p_page.setScheme("file");
-    QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
+    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
 
-    pair.first->load( pair.second->prepare(p_page) );
+    pair.first->load(pair.second->prepare(p_page));
     wait();
 
     QCOMPARE(networkError, false);
@@ -835,16 +1098,15 @@ void ApexMainTest::testAccessManagerLoadLocalWithScheme()
 #endif
 }
 
-
 void ApexMainTest::testAccessManagerLoadLocalAndApex()
 {
 #if !defined(Q_OS_ANDROID)
     TEST_EXCEPTIONS_TRY
 
     QUrl p_page = createUrl("test_global.html");
-    QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
+    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
 
-    pair.first->load( pair.second->prepare(p_page) );
+    pair.first->load(pair.second->prepare(p_page));
     wait();
 
     QCOMPARE(networkError, false);
@@ -862,9 +1124,9 @@ void ApexMainTest::testAccessManagerLoadLocalAndApexWithScheme()
 
     QUrl p_page = createUrl("test_global.html");
     p_page.setScheme("file");
-    QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
+    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
 
-    pair.first->load( pair.second->prepare(p_page) );
+    pair.first->load(pair.second->prepare(p_page));
     wait();
 
     QCOMPARE(networkError, false);
@@ -881,9 +1143,9 @@ void ApexMainTest::testAccessManagerLoadApex()
     TEST_EXCEPTIONS_TRY
 
     QUrl p_page("apex:resultsviewer.html");
-    QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
+    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
 
-    pair.first->load( pair.second->prepare(p_page) );
+    pair.first->load(pair.second->prepare(p_page));
     wait();
 
     QCOMPARE(networkError, false);
@@ -900,9 +1162,9 @@ void ApexMainTest::testAccessManagerLoadApexAndLocal()
     TEST_EXCEPTIONS_TRY
 
     QUrl p_page("apex:resultsviewer-config.js");
-    QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
+    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
 
-    pair.first->load( pair.second->prepare(p_page) );
+    pair.first->load(pair.second->prepare(p_page));
     wait();
 
     QCOMPARE(networkError, false);
@@ -919,9 +1181,9 @@ void ApexMainTest::testAccessManagerLoadUnknownLocal()
     TEST_EXCEPTIONS_TRY
 
     QUrl p_page("unk.html");
-    QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
+    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
 
-    pair.first->load( pair.second->prepare(p_page) );
+    pair.first->load(pair.second->prepare(p_page));
     wait();
 
     QCOMPARE(networkError, true);
@@ -938,9 +1200,9 @@ void ApexMainTest::testAccessManagerLoadUnknownApex()
     TEST_EXCEPTIONS_TRY
 
     QUrl p_page("apex:unk.html");
-    QPair<QWebFrame*, AccessManager*> pair = initAccesManager();
+    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
 
-    pair.first->load( pair.second->prepare(p_page) );
+    pair.first->load(pair.second->prepare(p_page));
     wait();
 
     QCOMPARE(networkError, true);
@@ -951,9 +1213,10 @@ void ApexMainTest::testAccessManagerLoadUnknownApex()
 #endif
 }
 
-struct MocWarning : public InteractiveParameters::Callback
-{
-    MocWarning() : InteractiveParameters::Callback(), count(0) {}
+struct MocWarning : public InteractiveParameters::Callback {
+    MocWarning() : InteractiveParameters::Callback(), count(0)
+    {
+    }
 
     void warning(const QString &)
     {
@@ -967,7 +1230,8 @@ void ApexMainTest::testInteractive()
 {
     TEST_EXCEPTIONS_TRY
 
-    QString filename = Paths::searchFile(QL1S("examples/interactive/setgain.apx"), Paths::dataDirectories());
+    QString filename = Paths::searchFile(QL1S("tests/libapex/setgain.apx"),
+                                         Paths::dataDirectories());
     ExperimentParser expParser(filename);
     QDomDocument document = expParser.loadAndUpgradeDom();
 
@@ -978,17 +1242,20 @@ void ApexMainTest::testInteractive()
     QString expectedText2 = "Text2";
 
     QStringList entryResults;
-    entryResults << "Sub" << expectedGain << expectedPresentations << "invalid" << "" << expectedFeedbackLength << expectedText1 << expectedText2;
+    entryResults << "Sub" << expectedGain << expectedPresentations << "invalid"
+                 << "" << expectedFeedbackLength << expectedText1
+                 << expectedText2;
 
     InteractiveParameters params(document);
-    MocWarning* mocWarning = new MocWarning;
+    MocWarning *mocWarning = new MocWarning;
     params.apply(entryResults, mocWarning);
     document = params.document();
 
     QDomElement apex = document.firstChildElement(QSL("apex:apex"));
     QDomElement procedure = apex.firstChildElement(QSL("procedure"));
     QDomElement parameters = procedure.firstChildElement(QSL("parameters"));
-    QDomElement presentations = parameters.firstChildElement(QSL("presentations"));
+    QDomElement presentations =
+        parameters.firstChildElement(QSL("presentations"));
 
     QDomElement devices = apex.firstChildElement(QSL("devices"));
     QDomElement device = devices.firstChildElement(QSL("device"));
@@ -1021,22 +1288,76 @@ void ApexMainTest::testInteractive()
     TEST_EXCEPTIONS_CATCH
 }
 
+void ApexMainTest::testInteractiveConstraints()
+{
+    TEST_EXCEPTIONS_TRY
+
+    QString filename = Paths::searchFile(QL1S("tests/libapex/subject.apx"),
+                                         Paths::dataDirectories());
+    InteractiveParameters interactiveParameters(
+        ExperimentParser(filename).loadAndUpgradeDom());
+    QStringList invalidEntry(QSL("invalid"));
+    QStringList validEntry(QSL("A01B01C"));
+    MocWarning mocWarning;
+
+    QVERIFY(interactiveParameters.apply(validEntry, &mocWarning));
+    QCOMPARE(mocWarning.count, 0);
+
+    QVERIFY(!interactiveParameters.apply(invalidEntry, &mocWarning));
+    QCOMPARE(mocWarning.count, 1);
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::testInteractiveAndExpressions()
+{
+    TEST_EXCEPTIONS_TRY
+
+    QString testFile = Paths::searchFile(QSL("tests/libapex/subject.apx"),
+                                         Paths::dataDirectories());
+    QMap<QString, QString> expressions;
+    expressions.insert(QSL("apex:apex/results[1]/subject[1]"), QSL("a01a01a"));
+    QStringList entryResults(QSL("a01a01b"));
+    MocWarning mocWarning;
+
+    InteractiveParameters interactiveParameters(
+        ExperimentParser(testFile).loadAndUpgradeDom());
+    QCOMPARE(interactiveParameters.entries().size(), 1);
+    ParameterDialogResults expressionResults =
+        interactiveParameters.applyExpressions(expressions);
+    QCOMPARE(interactiveParameters.entries().size(), 0);
+
+    ParameterDialogResults &dialogResults = *interactiveParameters.results();
+    QVERIFY(interactiveParameters.apply(entryResults, &mocWarning));
+
+    QCOMPARE(mocWarning.count, 0);
+
+    /* Expressions should take precedence since it came first */
+    QCOMPARE(dialogResults.size(), 0);
+    QCOMPARE(expressionResults.size(), 1);
+    QCOMPARE(expressionResults[0].newValue(), QSL("a01a01a"));
+
+    TEST_EXCEPTIONS_CATCH
+}
+
 void ApexMainTest::testSoundLevelMeter()
 {
 #if !defined(Q_OS_ANDROID)
     TEST_EXCEPTIONS_TRY
 
     QString dummy = QL1S("dummyslmslave");
-    QList<SoundLevelMeterPluginCreator*> available =
+    QList<SoundLevelMeterPluginCreator *> available =
         PluginLoader().availablePlugins<SoundLevelMeterPluginCreator>();
     QStringList plugins;
     Q_FOREACH (SoundLevelMeterPluginCreator *creator, available)
         plugins.append(creator->availablePlugins());
     QVERIFY(plugins.contains(dummy));
-    SoundLevelMeterPluginCreator* creator = createPluginCreator<SoundLevelMeterPluginCreator>(dummy);
+    SoundLevelMeterPluginCreator *creator =
+        createPluginCreator<SoundLevelMeterPluginCreator>(dummy);
     QVERIFY(creator != NULL);
     try {
-        QScopedPointer<SoundLevelMeter> slm(creator->createSoundLevelMeter(dummy));
+        QScopedPointer<SoundLevelMeter> slm(
+            creator->createSoundLevelMeter(dummy));
         QVERIFY(!slm.isNull());
         QCOMPARE(slm->result(), 64.9);
     } catch (const std::exception &e) {
@@ -1053,14 +1374,15 @@ QDomDocument ApexMainTest::readXmlResults(const QString &fileName)
 {
     QFile file(fileName);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
-    if(!file.isOpen())
+    if (!file.isOpen())
         qCDebug(APEX_RS) << "Result file could not be opened: " << fileName;
     QDomDocument document;
     document.setContent(file.readAll());
     return document;
 }
 
-QString ApexMainTest::compareXml(const QDomNode &actual, const QDomNode &expected)
+QString ApexMainTest::compareXml(const QDomNode &actual,
+                                 const QDomNode &expected)
 {
     // node type
     if (actual.nodeType() != expected.nodeType())
@@ -1082,13 +1404,15 @@ QString ApexMainTest::compareXml(const QDomNode &actual, const QDomNode &expecte
     QDomNamedNodeMap expectedAttributes = expected.attributes();
     QDomNamedNodeMap actualAttributes = actual.attributes();
     if (expectedAttributes.length() != actualAttributes.length())
-        return QString::fromLatin1("Different number of attributes in %3: %1!=%2")
+        return QString::fromLatin1(
+                   "Different number of attributes in %3: %1!=%2")
             .arg(actualAttributes.length())
             .arg(expectedAttributes.length())
             .arg(expected.nodeName());
     for (unsigned i = 0; i < unsigned(expectedAttributes.length()); ++i) {
         QDomNode expectedAttrItem = expectedAttributes.item(i);
-        QDomNode actualAttrItem = actualAttributes.namedItem(expectedAttrItem.nodeName());
+        QDomNode actualAttrItem =
+            actualAttributes.namedItem(expectedAttrItem.nodeName());
         QString result = compareXml(expectedAttrItem, actualAttrItem);
         if (!result.isEmpty())
             return result;
@@ -1098,7 +1422,8 @@ QString ApexMainTest::compareXml(const QDomNode &actual, const QDomNode &expecte
     QDomNodeList expectedNodes = expected.childNodes();
     QDomNodeList actualNodes = actual.childNodes();
     if (expectedNodes.length() != actualNodes.length())
-        return QString::fromLatin1("Different number of child nodes in %3: %1!=%2")
+        return QString::fromLatin1(
+                   "Different number of child nodes in %3: %1!=%2")
             .arg(actualNodes.length())
             .arg(expectedNodes.length())
             .arg(expected.nodeName());
@@ -1128,50 +1453,55 @@ void ApexMainTest::testStandaloneUpgrader()
     processFile = Paths::searchFile(processFile, Paths::binDirectories());
     upgraderProcess.setProgram(processFile);
 
-    //Set the right command line arguments:
+    // Set the right command line arguments:
     QStringList argumentsList;
-    QString arg2 = Paths::searchFile(QL1S("tests/libapex/upgraderTest.apx"), Paths::dataDirectories());
+    QString arg2 = Paths::searchFile(QL1S("tests/libapex/upgraderTest.apx"),
+                                     Paths::dataDirectories());
 
     argumentsList.append(arg2);
     upgraderProcess.setArguments(argumentsList);
 
-    upgraderProcess.setProcessChannelMode(QProcess::MergedChannels); //to redirect standard output
+    upgraderProcess.setProcessChannelMode(
+        QProcess::MergedChannels); // to redirect standard output
     upgraderProcess.start();
 
-    //Wait untill process finished before assesing results:
-    upgraderProcess.waitForFinished(); //default timeout 30s
-    //qCDebug(APEX_RS) << upgraderProcess.readAllStandardOutput();
+    // Wait untill process finished before assesing results:
+    upgraderProcess.waitForFinished(); // default timeout 30s
+    // qCDebug(APEX_RS) << upgraderProcess.readAllStandardOutput();
 
-    //Now read the contents of the tranformed file, and compare with desired file.
-    //Transformed:
+    // Now read the contents of the tranformed file, and compare with desired
+    // file.
+    // Transformed:
     QFile upgradeResultFile(arg2 + QSL(".upgraded"));
-    QVERIFY(upgradeResultFile.exists()); //Otherwise conversion failed by default.
+    QVERIFY(
+        upgradeResultFile.exists()); // Otherwise conversion failed by default.
     QVERIFY(upgradeResultFile.open(QIODevice::ReadOnly));
 
-    //qCDebug(APEX_RS) << "Upgrade resultfile: "<<upgradeResultFile.fileName();
+    // qCDebug(APEX_RS) << "Upgrade resultfile: "<<upgradeResultFile.fileName();
 
-    //Check if the version of the written file matches the current version:
+    // Check if the version of the written file matches the current version:
     QDomDocument doc;
     doc.setContent(&upgradeResultFile);
-    const QString sVersion = doc.documentElement().attribute("xmlns:apex" );
+    const QString sVersion = doc.documentElement().attribute("xmlns:apex");
 
-    //qCDebug(APEX_RS) << "Found version string: "<<sVersion;
+    // qCDebug(APEX_RS) << "Found version string: "<<sVersion;
 
     QVector<int> upgradedVersion;
     upgradedVersion.resize(3);
     QRegExp re("http://med.kuleuven.be/exporl/apex/(\\d+)\\.(\\d+)\\.?(\\d*)/");
-    if ( re.lastIndexIn(sVersion) != -1) {
+    if (re.lastIndexIn(sVersion) != -1) {
         upgradedVersion[0] = re.capturedTexts()[1].toInt();
         upgradedVersion[1] = re.capturedTexts()[2].toInt();
-        if (re.captureCount()==2)
+        if (re.captureCount() == 2)
             upgradedVersion[2] = 0;
         else
             upgradedVersion[2] = re.capturedTexts()[3].toInt();
     }
-    /*qCDebug(APEX_RS) << "Upgraded version: "<<upgradedVersion.at(0)<<"."<<upgradedVersion.at(1)
+    /*qCDebug(APEX_RS) << "Upgraded version:
+       "<<upgradedVersion.at(0)<<"."<<upgradedVersion.at(1)
                 <<"."<<upgradedVersion.at(2);*/
 
-    //get the current version:
+    // get the current version:
     QString currentVersionString = QString(APEX_SCHEMA_VERSION);
     QVector<int> currentVersion;
     currentVersion.resize(3);
@@ -1179,12 +1509,13 @@ void ApexMainTest::testStandaloneUpgrader()
     currentVersion[1] = currentVersionString.section(".", 1, 1).toInt();
     currentVersion[2] = currentVersionString.section(".", 2, 2).toInt();
 
-    /*qCDebug(APEX_RS) << "Current version: "<<currentVersion.at(0)<<"."<<currentVersion.at(1)
+    /*qCDebug(APEX_RS) << "Current version:
+       "<<currentVersion.at(0)<<"."<<currentVersion.at(1)
                 <<"."<<currentVersion.at(2);*/
 
     QCOMPARE(upgradedVersion, currentVersion);
 
-    //Remove the newly created file so the test can be done again...
+    // Remove the newly created file so the test can be done again...
     upgradeResultFile.remove();
 
     TEST_EXCEPTIONS_CATCH
@@ -1224,6 +1555,53 @@ void ApexMainTest::testSoundcardsDialog()
     d.displayHostApis();
     if (scs.hasData())
         d.setSelection(scs.hostApi(), scs.device());
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::testManagedDirectory()
+{
+    TEST_EXCEPTIONS_TRY
+
+    QTemporaryDir dir1;
+
+    QVERIFY(dir1.isValid());
+    ManagedDirectory managedDir(dir1.path());
+    managedDir.init();
+    managedDir.setAuthor(QSL("dummy"), QSL("dummy@dummy.com"));
+    QVERIFY(ManagedDirectory::exists(dir1.path()));
+
+    QFile newFile(dir1.path() + QL1S("/newFile"));
+    QVERIFY(newFile.open(QIODevice::ReadWrite));
+    newFile.write(QL1S("someData\n").data());
+    newFile.close();
+    managedDir.add(newFile.fileName());
+
+    QTemporaryDir dir2;
+    ManagedDirectory managedDir2(dir2.path());
+    managedDir2.init();
+    managedDir2.setRemote(QSL("origin"), dir1.path());
+    managedDir2.pull();
+    QVERIFY(QFile::exists(dir2.path() + QL1S("/newFile")));
+
+    QFile newFile2(dir1.path() + QL1S("/newFile2"));
+    QVERIFY(newFile2.open(QIODevice::ReadWrite));
+    newFile2.write(QL1S("someData\n").data());
+    newFile2.close();
+    managedDir.add(newFile2.fileName());
+    managedDir2.pull();
+    QVERIFY(QFile::exists(dir2.path() + QL1S("/newFile2")));
+
+    managedDir.reClone();
+    QVERIFY(managedDir.objects().contains(QSL("newFile")) &&
+            managedDir.objects().contains(QSL("newFile2")));
+    managedDir2.reClone();
+    QVERIFY(managedDir2.objects().contains(QSL("newFile")) &&
+            managedDir.objects().contains(QSL("newFile2")));
+
+    QTemporaryDir dir3;
+    ManagedDirectory managedDir3(dir3.path());
+    QVERIFY_EXCEPTION_THROWN(managedDir3.open(), ApexException);
 
     TEST_EXCEPTIONS_CATCH
 }

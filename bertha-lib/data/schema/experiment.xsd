@@ -1,0 +1,88 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
+    targetNamespace="http://med.kuleuven.be/exporl/bertha/1.0/experiment"
+    xmlns:bertha="http://med.kuleuven.be/exporl/bertha/1.0/experiment">
+
+    <xs:element name="experiment">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="blocks" type="bertha:blockstype"/>
+                <xs:element name="connections" type="bertha:connectionstype"/>
+                <xs:element name="device" type="bertha:devicetype"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="blockstype">
+        <xs:sequence>
+            <xs:element name="block" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="plugin" type="xs:string"/>
+                        <xs:element name="inputports" type="xs:int" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="outputports" type="xs:int" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="name" type="xs:string"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <!--<xs:any processContents="skip"/>-->
+                    </xs:sequence>
+                    <xs:attribute name="id" type="xs:ID" use="required"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="connectionstype">
+        <xs:sequence>
+            <xs:element name="connection" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="from" type="bertha:fromtotype"/>
+                        <xs:element name="to" type="bertha:fromtotype"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="fromtotype">
+        <xs:attribute name="id" type="xs:IDREF" use="required"/>
+        <xs:attribute name="port" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="devicetype">
+        <xs:sequence>
+            <xs:element name="driver" type="xs:string" />
+            <xs:element name="samplerate" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:unsignedInt">
+                        <xs:enumeration value="96000"/>
+                        <xs:enumeration value="48000"/>
+                        <xs:enumeration value="44100"/>
+                        <xs:enumeration value="22050"/>
+                        <xs:enumeration value="16000"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="blocksize" type="xs:unsignedInt" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="playbackports" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="captureports" type="xs:int" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="name" type="xs:string"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <!--<xs:any processContents="skip"/>-->
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+
+</xs:schema>

@@ -35,7 +35,7 @@ class PluginDialogPrivate;
 class PluginDialog : public QDialog
 {
 public:
-    PluginDialog (QWidget *parent = NULL);
+    PluginDialog(QWidget *parent = NULL);
 
     /** Destroys the plugin dialog. */
     ~PluginDialog();

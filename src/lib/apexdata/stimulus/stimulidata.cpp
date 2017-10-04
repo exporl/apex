@@ -29,23 +29,36 @@ namespace apex
 namespace data
 {
 
-void StimuliData::setFixedParameters( FixedParameterList p)
+StimuliData::StimuliData() : m_hasPluginStimuli(false)
 {
-    m_fixedParameters=p;
 }
 
-const FixedParameterList & StimuliData::GetFixedParameters() const
+void StimuliData::setFixedParameters(FixedParameterList p)
+{
+    m_fixedParameters = p;
+}
+
+const FixedParameterList &StimuliData::GetFixedParameters() const
 {
     return m_fixedParameters;
 }
 
-bool StimuliData::operator==(const StimuliData& other) const
+bool StimuliData::hasPluginStimuli() const
 {
-    return  QMap<QString,StimulusData>::operator==(other) &&
-            ApexTools::haveSameContents(m_fixedParameters, other.m_fixedParameters);
+    return m_hasPluginStimuli;
 }
 
-
+void StimuliData::setHasPluginStimuli(bool s)
+{
+    m_hasPluginStimuli = s;
 }
 
+bool StimuliData::operator==(const StimuliData &other) const
+{
+    return QMap<QString, StimulusData>::operator==(other) &&
+           ApexTools::haveSameContents(m_fixedParameters,
+                                       other.m_fixedParameters) &&
+           m_hasPluginStimuli == other.m_hasPluginStimuli;
+}
+}
 }

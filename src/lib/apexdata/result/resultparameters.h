@@ -34,7 +34,7 @@ namespace apex
 namespace data
 {
 
-typedef QMap<QString,QString> tScriptParameters;
+typedef QMap<QString, QString> tScriptParameters;
 
 class APEXDATA_EXPORT ResultParameters
 {
@@ -44,11 +44,12 @@ public:
 
     bool Parse(const QDomElement &p_paramElement);
 
-    virtual bool SetParameter(const QString& arg1, const QString& arg2, const QString& arg3, const QDomElement &arg4);
+    virtual bool SetParameter(const QString &arg1, const QString &arg2,
+                              const QString &arg3, const QDomElement &arg4);
 
-    const QString& matlabScript() const;
-    const QString& subject() const;
-    void setSubject(const QString& subject);
+    const QString &matlabScript() const;
+    const QString &subject() const;
+    void setSubject(const QString &subject);
 
     bool showResultsAfter() const;
     void setShowResultsAfter(bool show);
@@ -56,7 +57,7 @@ public:
     bool saveResults() const;
     void setSaveResults(bool save);
 
-    const QUrl& resultPage() const;
+    const QUrl &resultPage() const;
     void setResultPage(const QString &scriptname);
     bool showRTResults() const;
 
@@ -64,16 +65,17 @@ public:
 
     const QString extraScript() const;
 
-    //New functions for version 3.1.1
+    // New functions for version 3.1.1
 
-    void setResultParameter(const QString& name, const QString& value);
+    void setResultParameter(const QString &name, const QString &value);
 
-    bool operator==(const ResultParameters& other) const;
+    bool operator==(const ResultParameters &other) const;
 
 private:
     QString m_matlabScript;
     QString m_subject;
-    QString m_extraScript;          // javascript code to be executed after loading the results page, from tag <resultscript>
+    QString m_extraScript; // javascript code to be executed after loading the
+                           // results page, from tag <resultscript>
 
     QUrl m_resultPage;
     bool m_showRealtime;
@@ -83,7 +85,6 @@ private:
 
     tScriptParameters mResultParameters;
 };
-
 }
 }
 

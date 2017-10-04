@@ -25,61 +25,63 @@
 namespace streamapp
 {
 
+/**
+  * CallbackRunner
+  *   interface for anything that can call a Callback's cb function
+  *   in a periodic manner.
+  *   Example: a soundcard, or @see ManualCallbackRunner
+  ***************************************************************** */
+class CallbackRunner
+{
+protected:
     /**
-      * CallbackRunner
-      *   interface for anything that can call a Callback's cb function
-      *   in a periodic manner.
-      *   Example: a soundcard, or @see ManualCallbackRunner
-      ***************************************************************** */
-  class CallbackRunner
-  {
-  protected:
-      /**
-        * Protected Constructor.
-        */
+      * Protected Constructor.
+      */
     CallbackRunner()
     {
     }
 
-  public:
-      /**
-        * Destructor.
-        */
+public:
+    /**
+      * Destructor.
+      */
     virtual ~CallbackRunner()
     {
     }
 
-      /**
-        * Start running.
-        * This will call a_Callback's mf_Callback function periodically.
-        * Note that this can be blocking or non-blocking.
-        * @param a_Callback the Callback to run
-        * @return true if the call succeeds, false for error
-        */
-    virtual bool mp_bStart( Callback& a_Callback ) = 0;
+    /**
+      * Start running.
+      * This will call a_Callback's mf_Callback function periodically.
+      * Note that this can be blocking or non-blocking.
+      * @param a_Callback the Callback to run
+      * @return true if the call succeeds, false for error
+      */
+    virtual bool mp_bStart(Callback &a_Callback) = 0;
 
-      /**
-        * Stop running.
-        * @return true if the call succeeds, false for error
-        */
+    /**
+      * Stop running.
+      * @return true if the call succeeds, false for error
+      */
     virtual bool mp_bStop() = 0;
 
-      /**
-        * Query status.
-        * @return true after a succesfull start call returned and that call was blocking
-        */
+    /**
+      * Query status.
+      * @return true after a succesfull start call returned and that call was
+     * blocking
+      */
     virtual bool mf_bIsRunning() const = 0;
 
-      /**
-        * Query behaviour.
-        * For a blocking runner, mp_bStart will only return after some condition form
-        * the subclass is met. For the other case, mp_bStart returns immedeately but
-        * there is still something running in another process or thread.
-        * @return false for non-blocking
-        */
+    /**
+      * Query behaviour.
+      * For a blocking runner, mp_bStart will only return after some condition
+     * form
+      * the subclass is met. For the other case, mp_bStart returns immedeately
+     * but
+      * there is still something running in another process or thread.
+      * @return false for non-blocking
+      */
     virtual bool mf_bIsBlocking() const = 0;
-  };
-
+};
 }
 
 #endif //#ifndef __CALLBACKRUNNER_H__

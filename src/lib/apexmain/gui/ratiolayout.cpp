@@ -22,37 +22,35 @@
 
 #include <QWidget>
 
-
 class RatioLayoutPrivate
 {
 public:
-    RatioLayoutPrivate (double ratio);
+    RatioLayoutPrivate(double ratio);
 
-    int doLayout (const QRect &rect, bool testOnly) const;
+    int doLayout(const QRect &rect, bool testOnly) const;
 
-    QList<QLayoutItem*> items;
+    QList<QLayoutItem *> items;
     double ratio;
 };
 
-// RatioLayoutPrivate ============================================================
+// RatioLayoutPrivate
+// ============================================================
 
-RatioLayoutPrivate::RatioLayoutPrivate (double ratio) :
-    ratio (ratio)
+RatioLayoutPrivate::RatioLayoutPrivate(double ratio) : ratio(ratio)
 {
 }
 
 // activate == false for height for width calculation
-int RatioLayoutPrivate::doLayout (const QRect &rect, bool activate) const
+int RatioLayoutPrivate::doLayout(const QRect &rect, bool activate) const
 {
     int x = rect.x();
     int y = rect.y();
 
     if (!items.count())
         return 0;
-    QLayoutItem * const item = items.first();
+    QLayoutItem *const item = items.first();
 
-
-    double rectRatio = double (rect.height()) / rect.width();
+    double rectRatio = double(rect.height()) / rect.width();
 
     int newHeight = rect.height();
     int newWidth = rect.width();
@@ -60,53 +58,52 @@ int RatioLayoutPrivate::doLayout (const QRect &rect, bool activate) const
     if (rectRatio > ratio)
         newHeight = int(ratio * rect.width());
     else
-        newWidth = int(double (rect.height()) / ratio);
+        newWidth = int(double(rect.height()) / ratio);
 
     if (!activate)
         return newHeight;
 
-    item->setGeometry (QRect
-                      (x + (rect.width() - newWidth)/2,
-                       y + (rect.height() - newHeight) / 2,
-                       newWidth, newHeight));
+    item->setGeometry(QRect(x + (rect.width() - newWidth) / 2,
+                            y + (rect.height() - newHeight) / 2, newWidth,
+                            newHeight));
 
     return -1;
 }
 
-// RatioLayout ===================================================================
+// RatioLayout
+// ===================================================================
 
-RatioLayout::RatioLayout (double ratio, QWidget *parent) :
-    QLayout (parent),
-    d (new RatioLayoutPrivate (ratio))
+RatioLayout::RatioLayout(double ratio, QWidget *parent)
+    : QLayout(parent), d(new RatioLayoutPrivate(ratio))
 {
 }
 
 RatioLayout::~RatioLayout()
 {
-    qDeleteAll (d->items);
+    qDeleteAll(d->items);
 }
 
-void RatioLayout::addItem (QLayoutItem *item)
+void RatioLayout::addItem(QLayoutItem *item)
 {
-    d->items.append (item);
+    d->items.append(item);
 }
 
-void RatioLayout::insertItem (int index, QLayoutItem *item)
-{
-    // append
-    if (index < 0)
-        index = d->items.count();
-
-    d->items.insert (index, item);
-}
-
-void RatioLayout::insertWidget (int index, QWidget *widget)
+void RatioLayout::insertItem(int index, QLayoutItem *item)
 {
     // append
     if (index < 0)
         index = d->items.count();
 
-    d->items.insert (index, new QWidgetItem (widget));
+    d->items.insert(index, item);
+}
+
+void RatioLayout::insertWidget(int index, QWidget *widget)
+{
+    // append
+    if (index < 0)
+        index = d->items.count();
+
+    d->items.insert(index, new QWidgetItem(widget));
 }
 
 int RatioLayout::count() const
@@ -114,20 +111,20 @@ int RatioLayout::count() const
     return d->items.count();
 }
 
-QLayoutItem *RatioLayout::itemAt (int index) const
+QLayoutItem *RatioLayout::itemAt(int index) const
 {
     if (index < 0 || index >= d->items.count())
         return NULL;
 
-    return d->items.at (index);
+    return d->items.at(index);
 }
 
-QLayoutItem *RatioLayout::takeAt (int index)
+QLayoutItem *RatioLayout::takeAt(int index)
 {
     if (index < 0 || index >= d->items.count())
         return NULL;
 
-    return d->items.takeAt (index);
+    return d->items.takeAt(index);
 }
 
 Qt::Orientations RatioLayout::expandingDirections() const
@@ -140,15 +137,15 @@ bool RatioLayout::hasHeightForWidth() const
     return true;
 }
 
-int RatioLayout::heightForWidth (int width) const
+int RatioLayout::heightForWidth(int width) const
 {
-    return d->doLayout (QRect (0, 0, width, 0), false);
+    return d->doLayout(QRect(0, 0, width, 0), false);
 }
 
-void RatioLayout::setGeometry (const QRect &rect)
+void RatioLayout::setGeometry(const QRect &rect)
 {
-    QLayout::setGeometry (rect);
-    d->doLayout (rect, true);
+    QLayout::setGeometry(rect);
+    d->doLayout(rect, true);
 }
 
 QSize RatioLayout::sizeHint() const
@@ -160,17 +157,17 @@ QSize RatioLayout::minimumSize() const
 {
     // remove the || true if you want to get a sane size
     if (!d->items.count() || true)
-        return QSize (0, 0);
+        return QSize(0, 0);
 
-    QLayoutItem * const item = d->items.first();
+    QLayoutItem *const item = d->items.first();
 
-    const int width = int (item->minimumSize().width());
-    const int height = int (d->ratio * width);
+    const int width = int(item->minimumSize().width());
+    const int height = int(d->ratio * width);
 
-    return QSize (width, height);
+    return QSize(width, height);
 }
 
-void RatioLayout::setRatio (double ratio)
+void RatioLayout::setRatio(double ratio)
 {
     d->ratio = ratio;
     invalidate();

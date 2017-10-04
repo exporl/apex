@@ -48,11 +48,10 @@ public:
      *
      * @return the created element
      */
-    static QDomElement addElement(QDomElement *elem, const data::CorrectorData& data);
+    static QDomElement addElement(QDomElement *elem,
+                                  const data::CorrectorData &data);
 };
-
 }
-
 }
 
 #endif

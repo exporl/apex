@@ -29,62 +29,63 @@ using namespace apex::XMLKeys;
 using namespace apex::data;
 
 ApexParameters::const_iterator::const_iterator(
-        const QMap<QString,QString>::const_iterator& it)
+    const QMap<QString, QString>::const_iterator &it)
 {
     *this = it;
 }
 
-ApexParameters::const_iterator& ApexParameters::const_iterator::
-        operator=(const QMap<QString,QString>::const_iterator& it)
+ApexParameters::const_iterator &ApexParameters::const_iterator::
+operator=(const QMap<QString, QString>::const_iterator &it)
 {
     this->it = it;
     return *this;
 }
-ApexParameters::const_iterator&
-        ApexParameters::const_iterator::operator++() //prefix++
+ApexParameters::const_iterator &ApexParameters::const_iterator::
+operator++() // prefix++
 {
     it++;
     return *this;
 }
 
-ApexParameters::const_iterator
-        ApexParameters::const_iterator::operator++(int) //postfix++
+ApexParameters::const_iterator ApexParameters::const_iterator::
+operator++(int) // postfix++
 {
     const_iterator copy(it);
     ++(*this);
     return copy;
 }
 
-bool ApexParameters::const_iterator::operator==(const const_iterator& other) const
+bool ApexParameters::const_iterator::
+operator==(const const_iterator &other) const
 {
     return it == other.it;
 }
 
-bool ApexParameters::const_iterator::operator!=(const const_iterator& other) const
+bool ApexParameters::const_iterator::
+operator!=(const const_iterator &other) const
 {
     return !operator==(other);
 }
 
-const QString& ApexParameters::const_iterator::key()
+const QString &ApexParameters::const_iterator::key()
 {
     return it.key();
 }
 
-const QString& ApexParameters::const_iterator::value()
+const QString &ApexParameters::const_iterator::value()
 {
     return it.value();
 }
 
-QMap<QString,QString>::const_iterator ApexParameters::begin() const
+QMap<QString, QString>::const_iterator ApexParameters::begin() const
 {
     return parameters.begin();
 }
 
-QMap<QString,QString>::const_iterator ApexParameters::end() const
+QMap<QString, QString>::const_iterator ApexParameters::end() const
 {
     return parameters.end();
 }
-
 
 ApexParameters::ApexParameters()
 {
@@ -98,10 +99,11 @@ bool ApexParameters::Parse(const QDomElement &p_paramElement)
 {
     m_paramElement = p_paramElement;
 
-    for (QDomElement currentNode = m_paramElement.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
-        QString tag   = currentNode.tagName();
-        QString id    = currentNode.attribute(gc_sID);
+    for (QDomElement currentNode = m_paramElement.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
+        QString tag = currentNode.tagName();
+        QString id = currentNode.attribute(gc_sID);
         QString value = currentNode.text();
 
         SetParameter(tag, id, value, currentNode);
@@ -110,13 +112,12 @@ bool ApexParameters::Parse(const QDomElement &p_paramElement)
     return true;
 }
 
-
-QString ApexParameters::GetParameter( const QString& p_name ) const
+QString ApexParameters::GetParameter(const QString &p_name) const
 {
     return parameters.value(p_name);
 }
 
-bool ApexParameters::HasParameter (const QString& p_name) const
+bool ApexParameters::HasParameter(const QString &p_name) const
 {
     return parameters.contains(p_name);
 }
@@ -131,7 +132,7 @@ bool ApexParameters::CheckParameters()
     return true;
 }
 
-bool ApexParameters::operator==(const ApexParameters& other) const
+bool ApexParameters::operator==(const ApexParameters &other) const
 {
     return parameters == other.parameters;
 }

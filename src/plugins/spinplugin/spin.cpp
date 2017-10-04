@@ -25,9 +25,7 @@
 
 using namespace apex;
 
-class SpinRunnerCreator :
-    public QObject,
-    public PluginRunnerCreator
+class SpinRunnerCreator : public QObject, public PluginRunnerCreator
 {
     Q_OBJECT
     Q_INTERFACES(PluginRunnerCreator)
@@ -37,9 +35,7 @@ public:
     virtual PluginRunnerInterface *createRunner(const QString &name) const;
 };
 
-class SpinRunner:
-    public QObject,
-    public PluginRunnerInterface
+class SpinRunner : public QObject, public PluginRunnerInterface
 {
     Q_OBJECT
 public:
@@ -56,8 +52,7 @@ public:
 
 // SpinRunner ==================================================================
 
-SpinRunner::SpinRunner() :
-    PluginRunnerInterface("Spin")
+SpinRunner::SpinRunner() : PluginRunnerInterface("Spin")
 {
 }
 
@@ -73,7 +68,7 @@ QString SpinRunner::getFileName()
         return dlg.getFileName();
     } catch (const std::exception &e) {
         QMessageBox::critical(NULL, tr("Error"),
-                tr("Error occurred:\n%1").arg(e.what()));
+                              tr("Error occurred:\n%1").arg(e.what()));
     }
     return QString();
 }
@@ -85,8 +80,8 @@ QStringList SpinRunnerCreator::availablePlugins() const
     return QStringList() << "spin";
 }
 
-PluginRunnerInterface *SpinRunnerCreator::createRunner
-(const QString &name) const
+PluginRunnerInterface *
+SpinRunnerCreator::createRunner(const QString &name) const
 {
     try {
         if (name == "spin")

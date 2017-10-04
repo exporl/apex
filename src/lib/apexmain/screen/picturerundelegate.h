@@ -49,52 +49,47 @@ using data::ScreenElement;
  *
  * It is implemented as a QWidget containing a RatioLayout containing a QLabel
  */
-class PictureRunDelegate :
-             public QWidget,
-             public ScreenElementRunDelegate
+class PictureRunDelegate : public QWidget, public ScreenElementRunDelegate
 {
     Q_OBJECT
 
-    const PictureElement* element;
+    const PictureElement *element;
+
 public:
-    PictureRunDelegate(ExperimentRunDelegate* p_exprd,
-                       QWidget* parent, const PictureElement* e);
+    PictureRunDelegate(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                       const PictureElement *e);
 
     virtual ~PictureRunDelegate();
 
-    const ScreenElement* getScreenElement() const;
+    const ScreenElement *getScreenElement() const;
 
-    QWidget* getWidget();
-    void connectSlots(gui::ScreenRunDelegate* d);
+    QWidget *getWidget();
+    void connectSlots(gui::ScreenRunDelegate *d);
 
-    void feedBack(const FeedbackMode& mode);
+    void feedBack(const FeedbackMode &mode);
 
     // get mouse clicks
-    void mouseReleaseEvent ( QMouseEvent * event ) ;
+    void mouseReleaseEvent(QMouseEvent *event);
     void setEnabled(const bool e);
 
 signals:
-    void answered(ScreenElementRunDelegate*);
+    void answered(ScreenElementRunDelegate *);
     void released();
 
 public slots:
-     void newStimulus( stimulus::Stimulus* );
+    void newStimulus(stimulus::Stimulus *);
 private slots:
-    void sendAnsweredSignal( const QPointF& );
+    void sendAnsweredSignal(const QPointF &);
+
 private:
-    //QLabel* m_label;
-    PictureButtonWidget* m_button;
+    // QLabel* m_label;
+    PictureButtonWidget *m_button;
 
-
-
-
-    const QPixmap* m_pPixMap;
-    const QPixmap* m_pDisabled;
-    const QPixmap* m_pHighLight;
-    const QPixmap* m_pPositive;
-    const QPixmap* m_pNegative;
-
-
+    const QPixmap *m_pPixMap;
+    const QPixmap *m_pDisabled;
+    const QPixmap *m_pHighLight;
+    const QPixmap *m_pPositive;
+    const QPixmap *m_pNegative;
 
 protected:
     void clicked();

@@ -20,19 +20,22 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_PLUGINFILTER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_PLUGINFILTER_H_
 
-#include "wavfilter.h"
-#include "pluginfilterprocessor.h"
 #include "filter/pluginfilterinterface.h"
+#include "pluginfilterprocessor.h"
+#include "wavfilter.h"
 
-namespace apex {
+namespace apex
+{
 
-        class ParameterManager;
+class ParameterManager;
 
-namespace data {
-    class PluginFilterData;
+namespace data
+{
+class PluginFilterData;
 }
 
-namespace stimulus {
+namespace stimulus
+{
 
 /** Implementation of plugin filter.
  *  @author Tom Francart,,, <tom.francart@med.kuleuven.be>
@@ -40,13 +43,12 @@ namespace stimulus {
 class PluginFilter : public WavFilter
 {
 public:
-     PluginFilter (const QString &name,
-                 data::PluginFilterData *parameters,
+    PluginFilter(const QString &name, data::PluginFilterData *parameters,
                  unsigned long sr, unsigned bs);
 
-     ~PluginFilter();
+    ~PluginFilter();
 
-    //!wavdevice needs to know how to cast us
+    //! wavdevice needs to know how to cast us
     virtual bool mf_bIsRealFilter() const
     {
         return true;
@@ -57,28 +59,27 @@ public:
         return true;
     }
 
-    virtual void mp_SetStreamLength (const unsigned long ac_nSamples);
+    virtual void mp_SetStreamLength(const unsigned long ac_nSamples);
 
     virtual void Reset();
 
     virtual void Prepare();
 
-    //virtual bool SetParameter (const QString &id, const QString &value);
-    virtual bool SetParameter( const QString& type, const int channel, const QVariant& value );
+    // virtual bool SetParameter (const QString &id, const QString &value);
+    virtual bool SetParameter(const QString &type, const int channel,
+                              const QVariant &value);
 
-    virtual streamapp::IStreamProcessor* GetStrProc() const;
+    virtual streamapp::IStreamProcessor *GetStrProc() const;
 
 private:
-    //void UpdateProcessorParameters();
+    // void UpdateProcessorParameters();
 
-    PluginFilterProcessor* m_StrProc;
+    PluginFilterProcessor *m_StrProc;
 
-    const data::PluginFilterData * const m_data;
+    const data::PluginFilterData *const m_data;
     unsigned streamLength;
 };
-
 }
-
 }
 
 #endif

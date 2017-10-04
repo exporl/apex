@@ -27,8 +27,7 @@ namespace apex
 namespace data
 {
 
-CohDeviceData::CohDeviceData():
-    DeviceData(TYPE_COH)
+CohDeviceData::CohDeviceData() : DeviceData(TYPE_COH)
 {
     setNumberOfChannels(1);
 
@@ -39,12 +38,12 @@ CohDeviceData::~CohDeviceData()
 {
 }
 
-void CohDeviceData::setMap(ApexMap* map)
+void CohDeviceData::setMap(ApexMap *map)
 {
     apexMap.reset(map);
 }
 
-ApexMap* CohDeviceData::map() const
+ApexMap *CohDeviceData::map() const
 {
     return apexMap.data();
 }
@@ -58,11 +57,11 @@ int CohDeviceData::triggerType() const
 {
     QString triggertype = valueByType("trigger").toString();
 
-    if (triggertype.isEmpty() || triggertype=="none")
+    if (triggertype.isEmpty() || triggertype == "none")
         return TRIGGER_NONE;
-    if (triggertype=="in")
+    if (triggertype == "in")
         return TRIGGER_IN;
-    if (triggertype=="out")
+    if (triggertype == "out")
         return TRIGGER_OUT;
 
     qFatal("invalid trigger type");
@@ -79,6 +78,6 @@ float CohDeviceData::volume() const
     return valueByType("volume").toDouble();
 }
 
-}// ns data
+} // ns data
 
-}// ns apex
+} // ns apex

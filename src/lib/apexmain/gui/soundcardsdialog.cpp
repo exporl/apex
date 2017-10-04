@@ -1,13 +1,14 @@
 #include "soundcardsdialog.h"
-#include <portaudio.h>
 #include "ui_soundcardsdialog.h"
+#include <portaudio.h>
 
+#include "apextools/apextools.h"
 
-namespace apex {
+namespace apex
+{
 
-SoundcardsDialog::SoundcardsDialog(QWidget *parent) :
-    QDialog(parent),
-    selectedDevice(-1)
+SoundcardsDialog::SoundcardsDialog(QWidget *parent)
+    : QDialog(parent), selectedDevice(-1)
 {
     ui = new Ui::SoundcardsDialog();
     ui->setupUi(this);
@@ -17,22 +18,27 @@ SoundcardsDialog::SoundcardsDialog(QWidget *parent) :
 #ifdef Q_OS_WIN32
     QString suggestDriver("WASAPI with the default sound card");
 #endif
-#ifdef Q_OS_ANDROID
-    showMaximized();
-#endif
-    ui->infoLabel->setText( ui->infoLabel->text() + QString("\nWhen in doubt select %1.").arg(suggestDriver) );
-    connect(ui->hostApiList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(displayDevices(QListWidgetItem*)));
-    connect(ui->soundCardList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(selectDevice(QListWidgetItem*)));
+    ApexTools::expandWidgetToWindow(this);
+    ui->infoLabel->setText(
+        ui->infoLabel->text() +
+        QString("\nWhen in doubt select %1.").arg(suggestDriver));
+    connect(ui->hostApiList, SIGNAL(itemClicked(QListWidgetItem *)), this,
+            SLOT(displayDevices(QListWidgetItem *)));
+    connect(ui->soundCardList, SIGNAL(itemClicked(QListWidgetItem *)), this,
+            SLOT(selectDevice(QListWidgetItem *)));
 }
 SoundcardsDialog::~SoundcardsDialog()
 {
     delete ui;
 }
 
-void SoundcardsDialog::registerDevice(const QString &hostApiName, int deviceIndex, const QString &deviceName, int maxOutputChannels)
+void SoundcardsDialog::registerDevice(const QString &hostApiName,
+                                      int deviceIndex,
+                                      const QString &deviceName,
+                                      int maxOutputChannels)
 {
     Device d = {hostApiName, deviceName, deviceIndex, maxOutputChannels};
-    devices.push_back( d );
+    devices.push_back(d);
 }
 
 QString SoundcardsDialog::cardName() const
@@ -81,10 +87,12 @@ void SoundcardsDialog::displayHostApis()
     selectedDevice = -1;
 }
 
-void SoundcardsDialog::setSelection(const QString &hostApiName, const QString &deviceName)
+void SoundcardsDialog::setSelection(const QString &hostApiName,
+                                    const QString &deviceName)
 {
     {
-        QList<QListWidgetItem*> items(ui->hostApiList->findItems(hostApiName, Qt::MatchCaseSensitive));
+        QList<QListWidgetItem *> items(
+            ui->hostApiList->findItems(hostApiName, Qt::MatchCaseSensitive));
         if (items.length() != 1)
             return;
         items.at(0)->setSelected(true);
@@ -93,32 +101,34 @@ void SoundcardsDialog::setSelection(const QString &hostApiName, const QString &d
     displayDevices(hostApiName);
 
     {
-        QList<QListWidgetItem*> items(ui->soundCardList->findItems(deviceName, Qt::MatchCaseSensitive));
+        QList<QListWidgetItem *> items(
+            ui->soundCardList->findItems(deviceName, Qt::MatchCaseSensitive));
         if (items.length() != 1)
             return;
         items.at(0)->setSelected(true);
     }
 }
 
-void SoundcardsDialog::displayDevices(QListWidgetItem * i)
+void SoundcardsDialog::displayDevices(QListWidgetItem *i)
 {
     displayDevices(i->text());
 }
 
-void SoundcardsDialog::selectDevice(QListWidgetItem * i)
+void SoundcardsDialog::selectDevice(QListWidgetItem *i)
 {
     selectedDevice = i->data(Qt::UserRole).toInt();
 }
 
-void SoundcardsDialog::displayDevices(const QString &hostApiName )
+void SoundcardsDialog::displayDevices(const QString &hostApiName)
 {
     ui->soundCardList->clear();
 
     Q_FOREACH (Device cDevice, devices) {
         if (cDevice.hostApiName == hostApiName) {
-            QListWidgetItem* item = new QListWidgetItem(ui->soundCardList);
+            QListWidgetItem *item = new QListWidgetItem(ui->soundCardList);
             item->setText(cDevice.deviceName);
-            item->setData(Qt::UserRole, QVariant::fromValue(cDevice.deviceIndex));
+            item->setData(Qt::UserRole,
+                          QVariant::fromValue(cDevice.deviceIndex));
             ui->soundCardList->addItem(item);
         }
     }
@@ -126,10 +136,8 @@ void SoundcardsDialog::displayDevices(const QString &hostApiName )
     selectedDevice = -1;
 }
 
-void SoundcardsDialog::displayDeviceInfo( Device & /*device*/ )
+void SoundcardsDialog::displayDeviceInfo(Device & /*device*/)
 {
-
 }
-
 
 } // ns apex

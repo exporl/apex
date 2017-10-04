@@ -34,7 +34,7 @@ using apex::data::DatablocksData;
 using apex::writer::DatablocksWriter;
 
 QDomElement DatablocksWriter::addElement(QDomDocument *doc,
-        const data::DatablocksData& d)
+                                         const data::DatablocksData &d)
 {
     QDomElement rootElem = doc->documentElement();
 
@@ -49,36 +49,40 @@ QDomElement DatablocksWriter::addElement(QDomDocument *doc,
         QDomElement datablock = doc->createElement(QSL("datablock"));
         datablocks.appendChild(datablock);
 
-        DatablockData* d = it.value();
+        DatablockData *d = it.value();
 
         datablock.setAttribute(QSL("id"), d->id());
 
         if (!d->device().isEmpty()) {
             datablock.appendChild(
-                    XmlUtils::createTextElement(doc, QSL("device"), d->device()));
+                XmlUtils::createTextElement(doc, QSL("device"), d->device()));
         }
 
         if (!d->description().isEmpty()) {
-            datablock.appendChild(
-                    XmlUtils::createTextElement(doc, QSL("description"), d->description()));
+            datablock.appendChild(XmlUtils::createTextElement(
+                doc, QSL("description"), d->description()));
         }
 
         if (!d->file().isEmpty())
             datablock.appendChild(
-                    XmlUtils::createTextElement(doc, QSL("file"), d->file()));
+                XmlUtils::createTextElement(doc, QSL("file"), d->file()));
 
         if (!d->directData().isEmpty())
-            datablock.appendChild(
-                    doc->importNode(XmlUtils::parseString(d->directData()).documentElement(), true));
+            datablock.appendChild(doc->importNode(
+                XmlUtils::parseString(d->directData()).documentElement(),
+                true));
 
         if (d->nbChannels())
-            datablock.appendChild(
-                    XmlUtils::createTextElement(doc, QSL("channels"), d->nbChannels()));
+            datablock.appendChild(XmlUtils::createTextElement(
+                doc, QSL("channels"), d->nbChannels()));
 
         if (d->nbLoops() != 1)
             datablock.appendChild(
-                    XmlUtils::createTextElement(doc, QSL("loop"), d->nbLoops()));
+                XmlUtils::createTextElement(doc, QSL("loop"), d->nbLoops()));
     }
+
+    if (d.hasPluginDatablocks())
+        datablocks.appendChild(doc->createElement(QSL("plugindatablocks")));
 
     return datablocks;
 }

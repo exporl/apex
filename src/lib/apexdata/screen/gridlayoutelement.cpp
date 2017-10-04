@@ -29,82 +29,78 @@ namespace apex
 namespace data
 {
 
-GridLayoutElement::GridLayoutElement(
-    const QString& i, ScreenElement* parent, int w, int h,
-    tStretchList rs, tStretchList cs )
-        : ScreenLayoutElement( i, parent ),
-        width( w ),
-        height( h ),
-        rowStretch(rs),
-        colStretch(cs)
+GridLayoutElement::GridLayoutElement(const QString &i, ScreenElement *parent,
+                                     int w, int h, tStretchList rs,
+                                     tStretchList cs)
+    : ScreenLayoutElement(i, parent),
+      width(w),
+      height(h),
+      rowStretch(rs),
+      colStretch(cs)
 {
 }
 
-GridLayoutElement::GridLayoutElement( const QString& id, ScreenElement* parent )
-        : ScreenLayoutElement( id, parent ),
-        width( 3 ),
-        height( 2 )
+GridLayoutElement::GridLayoutElement(const QString &id, ScreenElement *parent)
+    : ScreenLayoutElement(id, parent), width(3), height(2)
 {
 }
 
-void GridLayoutElement::checkChild( const ScreenElement* childel ) const
+void GridLayoutElement::checkChild(const ScreenElement *childel) const
 {
     int x = childel->getX();
     int y = childel->getY();
-    if ( x >= getWidth() || x < 0 )
-        throw ApexStringException( "column for element '" + childel->getID() + "' out of range." );
-    else if ( y >= getHeight() || y < 0 )
-        throw ApexStringException( "row for element '" + childel->getID() + "' out of range." );
+    if (x >= getWidth() || x < 0)
+        throw ApexStringException("column for element '" + childel->getID() +
+                                  "' out of range.");
+    else if (y >= getHeight() || y < 0)
+        throw ApexStringException("row for element '" + childel->getID() +
+                                  "' out of range.");
 }
 
-void GridLayoutElement::visit( ScreenElementVisitor* v )
+void GridLayoutElement::visit(ScreenElementVisitor *v)
 {
-    v->visitGridLayout( this );
+    v->visitGridLayout(this);
 }
 
-void GridLayoutElement::visit( ScreenElementVisitor* v ) const
+void GridLayoutElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitGridLayout( this );
+    v->visitGridLayout(this);
 }
-
 
 int GridLayoutElement::getNumberOfChildPlaces() const
 {
     return getWidth() * getHeight();
 }
 
-void GridLayoutElement::fillChildrenWithEmpties( Screen* s )
+void GridLayoutElement::fillChildrenWithEmpties(Screen *s)
 {
-    const ScreenElementMap& takenIDs = s->idToElementMap();
-    std::vector<std::vector<bool> > filled( getWidth() );
-    for ( int i = 0; i < getWidth(); ++i )
-        filled[i].resize(getHeight(), false );
-    for ( int i = 0; i < getNumberOfChildren(); ++i )
-    {
-        ScreenElement* child = getChild( i );
+    const ScreenElementMap &takenIDs = s->idToElementMap();
+    std::vector<std::vector<bool>> filled(getWidth());
+    for (int i = 0; i < getWidth(); ++i)
+        filled[i].resize(getHeight(), false);
+    for (int i = 0; i < getNumberOfChildren(); ++i) {
+        ScreenElement *child = getChild(i);
         filled[child->getX()][child->getY()] = true;
     }
-    for ( int i = 0; i < getWidth(); ++i )
-    {
-        for ( int j = 0; j < getHeight(); ++j )
-        {
-            if ( !filled[i][j] )
-            {
-                EmptyElement* e = new EmptyElement( EmptyElement::findFreeID( takenIDs ), this );
-                e->setX( i );
-                e->setY( j );
-                s->addElement( e );
+    for (int i = 0; i < getWidth(); ++i) {
+        for (int j = 0; j < getHeight(); ++j) {
+            if (!filled[i][j]) {
+                EmptyElement *e =
+                    new EmptyElement(EmptyElement::findFreeID(takenIDs), this);
+                e->setX(i);
+                e->setY(j);
+                s->addElement(e);
             }
         }
     }
 }
 
-void GridLayoutElement::setWidth( int w )
+void GridLayoutElement::setWidth(int w)
 {
     width = w;
 }
 
-void GridLayoutElement::setHeight( int h )
+void GridLayoutElement::setHeight(int h)
 {
     height = h;
 }
@@ -114,14 +110,11 @@ ScreenElement::ElementTypeT GridLayoutElement::elementType() const
     return GridLayout;
 }
 
-bool GridLayoutElement::operator==(const GridLayoutElement& other) const
+bool GridLayoutElement::operator==(const GridLayoutElement &other) const
 {
-    return  ScreenLayoutElement::operator==(other) &&
-            width == other.width &&
-            height == other.height &&
-            rowStretch == other.rowStretch &&
-            colStretch == other.colStretch;
+    return ScreenLayoutElement::operator==(other) && width == other.width &&
+           height == other.height && rowStretch == other.rowStretch &&
+           colStretch == other.colStretch;
 }
-
 }
 }

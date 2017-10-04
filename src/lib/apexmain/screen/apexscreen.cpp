@@ -28,14 +28,15 @@
 using namespace apex;
 using namespace apex::gui;
 
-void ApexScreen::iAnswered(const ScreenResult* result) {
+void ApexScreen::iAnswered(const ScreenResult *result)
+{
     qCDebug(APEX_RS, "***iAnswered");
     m_lastResult = *result;
     ApexControl::Get().mainWindow()->EnableScreen(false);
-    Q_EMIT( Answered(result));
+    Q_EMIT(Answered(result));
 }
 
-QString apex::ApexScreen::GetResultXML( ) const
+QString apex::ApexScreen::GetResultXML() const
 {
     return m_lastResult.toXML();
 }

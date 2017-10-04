@@ -26,40 +26,40 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    /**
-     * This class is an ScreenElementEditorDelegate representing a
-     * ArcLayoutElement.
-     */
-    class ArcLayoutEditorDelegate
-      : public LayoutEditorDelegate
-    {
-      Q_OBJECT
+namespace editor
+{
+/**
+ * This class is an ScreenElementEditorDelegate representing a
+ * ArcLayoutElement.
+ */
+class ArcLayoutEditorDelegate : public LayoutEditorDelegate
+{
+    Q_OBJECT
 
-      ArcLayoutElement* element;
-      ArcLayout* arclayout;
-    public:
-      ArcLayoutEditorDelegate(
-        ArcLayoutElement* element, QWidget* parent,
-        ScreenWidget* widget, elementToDelegateMapT& elementToDelegateMap );
-      ~ArcLayoutEditorDelegate();
+    ArcLayoutElement *element;
+    ArcLayout *arclayout;
 
-      ScreenElement* getScreenElement();
+public:
+    ArcLayoutEditorDelegate(ArcLayoutElement *element, QWidget *parent,
+                            ScreenWidget *widget,
+                            elementToDelegateMapT &elementToDelegateMap);
+    ~ArcLayoutEditorDelegate();
 
-      ArcLayout* getLayout();
+    ScreenElement *getScreenElement();
 
-      int getPropertyCount();
-      void addItemToLayout( QWidget* w, ScreenElement* e );
+    ArcLayout *getLayout();
 
-      QString getPropertyName( int nr );
-      QVariant getPropertyData( int nr, int role );
-      PropertyType getPropertyType( int nr );
-      bool setProperty( int nr, const QVariant& v );
-    private:
-      void updateLayout( elementToDelegateMapT& elementToDelegateMap );
-    };
+    int getPropertyCount();
+    void addItemToLayout(QWidget *w, ScreenElement *e);
 
-  }
+    QString getPropertyName(int nr);
+    QVariant getPropertyData(int nr, int role);
+    PropertyType getPropertyType(int nr);
+    bool setProperty(int nr, const QVariant &v);
+
+private:
+    void updateLayout(elementToDelegateMapT &elementToDelegateMap);
+};
+}
 }
 #endif

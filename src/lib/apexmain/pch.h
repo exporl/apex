@@ -28,8 +28,8 @@
 
 #include <cmath>
 #include <cstdio>
-#include <cstdlib>                      // random, srand
-#include <ctime>                        // time
+#include <cstdlib> // random, srand
+#include <ctime>   // time
 #include <exception>
 #include <fstream>
 #include <fstream>
@@ -82,17 +82,17 @@
 #include <QString>
 #include <QStringList>
 #include <QTableView>
-#include <QtGlobal>
 #include <QTimer>
 #include <QToolBar>
 #include <QToolButton>
 #include <QTreeView>
 #include <QUrl>
-#include <QVariant>
 #include <QVBoxLayout>
+#include <QVariant>
 #include <QWidget>
+#include <QtGlobal>
 #include <sstream>
 #include <string>
 #include <vector>
 
-#endif      // C++
+#endif // C++

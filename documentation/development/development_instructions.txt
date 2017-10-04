@@ -1,0 +1,49 @@
+APEX development: getting started
+---------------------------------
+
+-   We use Git for version control. Read about it here:
+    http://git-scm.com/documentation
+
+-   We use Gerrit for code review. Read about it here:
+    https://gerrit-review.googlesource.com/Documentation/
+    Information about our local setup is in the file using_gerrit.txt in the current directory
+    To give you access to the gerrit server, we need to add your RSA public key to the list. 
+    The server is only accessible from inside KULeuven (or via VPN or SSH tunnel).
+
+-   Read about the coding style we use in the file coding_style.txt. 
+    Not all of the code in APEX complies to these guidelines yet, but all new code should.
+
+-   Compilation instructions are in 00compiling.txt. 
+    If these steps don't work for you, it's probably due to new versions of some libraries. In that case please update the file.
+
+-   To build APEX, we use the CLEBS system. It it written using qmake. Read about qmake here:
+    http://qt-project.org/doc/qt-4.8/qmake-manual.html
+    If you want to change certain settings or paths, you need to copy localconfig-template.pri to localconfig.pri and make the desired changes. Do not commit localconfig.pri.
+
+-   Before starting to develop APEX, you should understand how it works from a user's point of view. 
+    Read the APEX paper first (cf. doc/manual/apexpaper.pdf). Also check out the manual (cf. doc/manual/apex3manual.pdf). 
+    The current version of the manual is incomplete (does not cover all features) and the XML examples are slightly outdated. 
+    Then try out some of the examples (cf. examples/) and study the corresponding XML files.
+
+
+-   APEX consists of a simple executable (apexrunner), which only loads the libraries, various libraries, and a whole bunch of plugins. 
+    We currently have the following libraries:
+    -- apexdata: all data structures, does not depend on other libraries
+    -- apextools: various stand-alone tools, does not depens on other libraries
+    -- apexwriters: classes to write data structures to XML files
+    -- streamapp: audio library, to be removed later on
+    -- syllib: various signal processing clases
+    -- psiginfit: psychometric curve fitting
+    -- apexmain: everything else (parts of this library such as GUI, parsers, ... should be split into separate libraries), depends on all other libraries
+
+-   For all new code, and code to be refactored, we aim to have reasonable unit test coverage. 
+    Unit tests can be found in src/testbench/. We use the QTestLib framework. Read about it here:
+    http://qt-project.org/doc/qt-4.8/qtestlib-manual.html
+
+-   To provide test coverage for older code without unit tests, we use a bash-script that automatically lets APEX run through a set of example experiments, 
+    records the audio output and result files, and compares them to a "gold standard". The script can be found in tools/test-apex.sh. 
+    This script and the unit tests should run successfully after each change to the APEX codebase.
+
+-   If you use Qt Creator, you will see that a terminal pops up when you try to run the program/tests/... But this terminal doesn't do anything. 
+    To fix this, go to "Projects" -> "Run Settings" and make sure that "Run in terminal" isn't active. Then try to run again and normally the program 
+    will be run in the "Application Output" of Qt Creator where it will actually work.

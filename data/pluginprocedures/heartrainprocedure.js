@@ -134,7 +134,7 @@ heartrainProcedure.prototype.setupNextTrial = function()
 
 heartrainProcedure.prototype.progress = function()
 {
-    return (this.currentTrial + 1)/this.nbOfTrials;
+    return ((this.currentTrial + 1)/this.nbOfTrials) * 100;
 }
 
 heartrainProcedure.prototype.firstScreen = function()

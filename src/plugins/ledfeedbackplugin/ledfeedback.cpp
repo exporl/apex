@@ -30,27 +30,26 @@
 #include <exception>
 #include <memory>
 
-class LedFeedbackCreator :
-    public QObject,
-    public PluginFeedbackCreator
+class LedFeedbackCreator : public QObject, public PluginFeedbackCreator
 {
     Q_OBJECT
-    Q_INTERFACES (PluginFeedbackCreator)
+    Q_INTERFACES(PluginFeedbackCreator)
     Q_PLUGIN_METADATA(IID "apex.ledfeedback")
 public:
     virtual QStringList availablePlugins() const;
 
-    virtual PluginFeedbackInterface *createPluginFeedback(const QString &name,
-                                const FeedbackPluginParameters& params) const;
+    virtual PluginFeedbackInterface *
+    createPluginFeedback(const QString &name,
+                         const FeedbackPluginParameters &params) const;
 };
 
 class LedFeedback : public QObject, public PluginFeedbackInterface
 {
-        Q_OBJECT
+    Q_OBJECT
 public:
-    LedFeedback(const FeedbackPluginParameters& params);
+    LedFeedback(const FeedbackPluginParameters &params);
 
-    void highLight(const QString& element);
+    void highLight(const QString &element);
 
     //! Indicate that the response was correct (thumbs up)
     void showPositive();
@@ -65,12 +64,11 @@ public:
     virtual QString errorString();
 
 private:
-    void showMessage(const QString& message);
+    void showMessage(const QString &message);
 
     QScopedPointer<LedController> controller;
     QHash<QString, int> mapping;
     QString eString;
-
 };
 
 QStringList LedFeedbackCreator::availablePlugins() const
@@ -78,8 +76,8 @@ QStringList LedFeedbackCreator::availablePlugins() const
     return QStringList() << "ledfeedback";
 }
 
-PluginFeedbackInterface * LedFeedbackCreator::createPluginFeedback
-    (const QString &name, const FeedbackPluginParameters& params) const
+PluginFeedbackInterface *LedFeedbackCreator::createPluginFeedback(
+    const QString &name, const FeedbackPluginParameters &params) const
 {
     if (name == "ledfeedback")
         return new LedFeedback(params);
@@ -87,43 +85,40 @@ PluginFeedbackInterface * LedFeedbackCreator::createPluginFeedback
     return NULL;
 }
 
-
-void LedFeedback::showMessage(const QString& message)
+void LedFeedback::showMessage(const QString &message)
 {
     qCDebug(APEX_LEDFEEDBACKPLUGIN) << "LedFeedback: " << message;
 }
 
-LedFeedback::LedFeedback(const FeedbackPluginParameters& params)
+LedFeedback::LedFeedback(const FeedbackPluginParameters &params)
 {
     showMessage("constructor");
 
-    QPair<QString,QString> p;
-    Q_FOREACH( p, params) {
+    QPair<QString, QString> p;
+    Q_FOREACH (p, params) {
         bool success;
         mapping[p.first] = p.second.toInt(&success);
-        if (!success)
-        {
+        if (!success) {
             eString = "LedFeedback: could not parse parameter " + p.first;
         }
     }
 
-    controller.reset( new LedController );
-    QString err( controller->errorMessage() );
-    if (! err.isEmpty()) {
+    controller.reset(new LedController);
+    QString err(controller->errorMessage());
+    if (!err.isEmpty()) {
         eString = err;
         return;
     }
-
 }
 
-
-void LedFeedback::highLight(const QString& element)
+void LedFeedback::highLight(const QString &element)
 {
     showMessage("Highlighting " + element);
-    if ( mapping.contains(element) ) {
+    if (mapping.contains(element)) {
         controller->setLed(mapping[element]);
     } else {
-        qCDebug(APEX_LEDFEEDBACKPLUGIN) << "LedFeedback:: error cannot find response " << element;
+        qCDebug(APEX_LEDFEEDBACKPLUGIN)
+            << "LedFeedback:: error cannot find response " << element;
     }
 }
 
@@ -151,4 +146,3 @@ QString LedFeedback::errorString()
 }
 
 #include "ledfeedback.moc"
-

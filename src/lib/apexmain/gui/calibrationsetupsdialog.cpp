@@ -16,9 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "calibration/calibrationdatabase.h"
 #include "calibrationsetupsdialog.h"
+#include "calibration/calibrationdatabase.h"
 #include "ui_calibrationsetupsdialog.h"
+
+#include "apextools/apextools.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -30,7 +32,7 @@ class CalibrationSetupsDialogPrivate : public QObject
 {
     Q_OBJECT
 public:
-    CalibrationSetupsDialogPrivate (CalibrationSetupsDialog *pub);
+    CalibrationSetupsDialogPrivate(CalibrationSetupsDialog *pub);
 
 private Q_SLOTS:
     void on_add_clicked();
@@ -41,18 +43,18 @@ private Q_SLOTS:
     void on_importSetup_clicked();
     void on_exportSetup_clicked();
     void accepted();
-    void finished (int result);
+    void finished(int result);
 
 private:
     void checkAddButton();
     void checkRenameButton();
     void checkDefaultButton();
-    void addSetup (const QString &setup, bool imported = false);
-    void renameSetup (QListWidgetItem *item, const QString &newName);
-    bool hasSetup (const QString &setup);
+    void addSetup(const QString &setup, bool imported = false);
+    void renameSetup(QListWidgetItem *item, const QString &newName);
+    bool hasSetup(const QString &setup);
 
 private:
-    CalibrationSetupsDialog * const p;
+    CalibrationSetupsDialog *const p;
     const int setupNameRole;
     const int setupRenamedNameRole;
     const int setupImportedRole;
@@ -61,104 +63,103 @@ private:
 
 // CalibrationSetupsDialogPrivate ==============================================
 
-CalibrationSetupsDialogPrivate::CalibrationSetupsDialogPrivate
-    (CalibrationSetupsDialog *pub) :
-    p (pub),
-    setupNameRole (Qt::UserRole),
-    setupRenamedNameRole (setupNameRole + 1),
-    setupImportedRole (setupRenamedNameRole + 1)
+CalibrationSetupsDialogPrivate::CalibrationSetupsDialogPrivate(
+    CalibrationSetupsDialog *pub)
+    : p(pub),
+      setupNameRole(Qt::UserRole),
+      setupRenamedNameRole(setupNameRole + 1),
+      setupImportedRole(setupRenamedNameRole + 1)
 {
-    ui.setupUi (p);
+    ui.setupUi(p);
 
-    ui.detailsList->setVisible (false);
-    QPushButton *details = ui.buttonBox->addButton (tr ("Details..."),
-            QDialogButtonBox::ActionRole);
-    details->setCheckable (true);
+    ui.detailsList->setVisible(false);
+    QPushButton *details =
+        ui.buttonBox->addButton(tr("Details..."), QDialogButtonBox::ActionRole);
+    details->setCheckable(true);
 
-    connect (ui.add, SIGNAL (clicked()), this, SLOT (on_add_clicked()));
-    connect (ui.remove, SIGNAL (clicked()), this, SLOT (on_remove_clicked()));
-    connect (ui.rename, SIGNAL (clicked()), this, SLOT (on_rename_clicked()));
-    connect (ui.exportSetup, SIGNAL (clicked()),
-            this, SLOT (on_exportSetup_clicked()));
-    connect (ui.importSetup, SIGNAL (clicked()),
-            this, SLOT (on_importSetup_clicked()));
-    connect (ui.list, SIGNAL
-            (currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT (on_list_currentItemChanged()));
-    connect (ui.input, SIGNAL (textChanged(QString)),
-            this, SLOT (on_input_textChanged()));
-    connect (p, SIGNAL (accepted()), this, SLOT (accepted()));
-    connect (p, SIGNAL (finished(int)), this, SLOT (finished(int)));
-    connect (details, SIGNAL (toggled(bool)),
-            ui.detailsList, SLOT (setVisible(bool)));
+    connect(ui.add, SIGNAL(clicked()), this, SLOT(on_add_clicked()));
+    connect(ui.remove, SIGNAL(clicked()), this, SLOT(on_remove_clicked()));
+    connect(ui.rename, SIGNAL(clicked()), this, SLOT(on_rename_clicked()));
+    connect(ui.exportSetup, SIGNAL(clicked()), this,
+            SLOT(on_exportSetup_clicked()));
+    connect(ui.importSetup, SIGNAL(clicked()), this,
+            SLOT(on_importSetup_clicked()));
+    connect(ui.list,
+            SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+            this, SLOT(on_list_currentItemChanged()));
+    connect(ui.input, SIGNAL(textChanged(QString)), this,
+            SLOT(on_input_textChanged()));
+    connect(p, SIGNAL(accepted()), this, SLOT(accepted()));
+    connect(p, SIGNAL(finished(int)), this, SLOT(finished(int)));
+    connect(details, SIGNAL(toggled(bool)), ui.detailsList,
+            SLOT(setVisible(bool)));
 
-    Q_FOREACH (const QString &setup,
-            CalibrationDatabase().hardwareSetups())
-        addSetup (setup);
+    Q_FOREACH (const QString &setup, CalibrationDatabase().hardwareSetups())
+        addSetup(setup);
 
     on_list_currentItemChanged();
-    ui.add->setEnabled (false);
+    ui.add->setEnabled(false);
 }
 
-void CalibrationSetupsDialogPrivate::finished (int result)
+void CalibrationSetupsDialogPrivate::finished(int result)
 {
     if (result != QDialog::Accepted)
         for (int i = 0; i < ui.list->count(); ++i)
-            if (ui.list->item (i)->data (setupImportedRole).toBool())
-                CalibrationDatabase().removeHardwareSetup
-                    (ui.list->item (i)->data (setupNameRole).toString());
+            if (ui.list->item(i)->data(setupImportedRole).toBool())
+                CalibrationDatabase().removeHardwareSetup(
+                    ui.list->item(i)->data(setupNameRole).toString());
 }
 
 void CalibrationSetupsDialogPrivate::accepted()
 {
-    const QSet<QString> before = QSet<QString>::fromList
-        (CalibrationDatabase().hardwareSetups());
+    const QSet<QString> before =
+        QSet<QString>::fromList(CalibrationDatabase().hardwareSetups());
     QMap<QString, QString> after;
     for (int i = 0; i < ui.list->count(); ++i)
-        after[ui.list->item (i)->data (setupNameRole).toString()] =
-            ui.list->item (i)->data (setupRenamedNameRole).toString();
+        after[ui.list->item(i)->data(setupNameRole).toString()] =
+            ui.list->item(i)->data(setupRenamedNameRole).toString();
 
-    const QSet<QString> afterKeys = QSet<QString>::fromList (after.keys());
-    const QSet<QString> toRemove = QSet<QString> (before) - afterKeys;
-    const QSet<QString> toAdd = QSet<QString> (afterKeys) - before;
-    const QSet<QString> toModify = QSet<QString> (afterKeys) - toAdd;
+    const QSet<QString> afterKeys = QSet<QString>::fromList(after.keys());
+    const QSet<QString> toRemove = QSet<QString>(before) - afterKeys;
+    const QSet<QString> toAdd = QSet<QString>(afterKeys) - before;
+    const QSet<QString> toModify = QSet<QString>(afterKeys) - toAdd;
 
     Q_FOREACH (const QString &setup, toRemove)
-        CalibrationDatabase().removeHardwareSetup (setup);
+        CalibrationDatabase().removeHardwareSetup(setup);
     Q_FOREACH (const QString &setup, toAdd)
-        CalibrationDatabase().addHardwareSetup (!after.value (setup).isEmpty() ?
-                after.value (setup) : setup);
+        CalibrationDatabase().addHardwareSetup(
+            !after.value(setup).isEmpty() ? after.value(setup) : setup);
     Q_FOREACH (const QString &setup, toModify)
-        if (!after.value (setup).isEmpty())
-            CalibrationDatabase().renameHardwareSetup (setup, after.value
-                    (setup));
+        if (!after.value(setup).isEmpty())
+            CalibrationDatabase().renameHardwareSetup(setup,
+                                                      after.value(setup));
 }
 
 void CalibrationSetupsDialogPrivate::on_add_clicked()
 {
     const QString text = ui.input->text().simplified();
-    if (!text.isEmpty() && !hasSetup (text)) {
-        addSetup (text);
-        ui.add->setEnabled (false);
+    if (!text.isEmpty() && !hasSetup(text)) {
+        addSetup(text);
+        ui.add->setEnabled(false);
     }
 }
 
 void CalibrationSetupsDialogPrivate::on_rename_clicked()
 {
-    QListWidgetItem * const item = ui.list->currentItem();
-    Q_ASSERT (item);
+    QListWidgetItem *const item = ui.list->currentItem();
+    Q_ASSERT(item);
 
     const QString text = ui.input->text().simplified();
-    if (!text.isEmpty() && !hasSetup (text)) {
-        renameSetup (item, text);
-        ui.add->setEnabled (false);
-        ui.rename->setEnabled (false);
+    if (!text.isEmpty() && !hasSetup(text)) {
+        renameSetup(item, text);
+        ui.add->setEnabled(false);
+        ui.rename->setEnabled(false);
     }
 }
 
 void CalibrationSetupsDialogPrivate::on_remove_clicked()
 {
-    Q_ASSERT (ui.list->currentItem());
+    Q_ASSERT(ui.list->currentItem());
 
     delete ui.list->currentItem();
     checkAddButton();
@@ -167,65 +168,73 @@ void CalibrationSetupsDialogPrivate::on_remove_clicked()
 
 void CalibrationSetupsDialogPrivate::on_exportSetup_clicked()
 {
-    Q_ASSERT (ui.list->currentItem());
+    Q_ASSERT(ui.list->currentItem());
 
-    const QListWidgetItem * const item = ui.list->currentItem();
-    const QString setup = item->data (setupNameRole).toString();
-    const QString fileName = QFileDialog::getSaveFileName (p,
-            tr ("Export Calibration Data"), QString(),
-            tr ("Calibration data (*.calib)"));
-    if (fileName.isEmpty())
-        return;
+    const QListWidgetItem *const item = ui.list->currentItem();
+    const QString setup = item->data(setupNameRole).toString();
 
-    try {
-        CalibrationDatabase().exportHardwareSetup (setup, fileName);
-    } catch (std::exception &e) {
-        QMessageBox::critical (p, tr ("Calibration Database Error"),
-                tr ("Unable to export setup:\n%1").arg (e.what()));
+    QFileDialog dlg(p, tr("Export Calibration Data"), QL1S(".calib"),
+                    tr("Calibration data (*.calib)"));
+    dlg.setAcceptMode(QFileDialog::AcceptSave);
+    dlg.setLabelText(QFileDialog::Accept, tr("Export"));
+    ApexTools::expandWidgetToWindow(&dlg);
+    if (dlg.exec() == QDialog::Accepted) {
+        const QString fileName = dlg.selectedFiles().first();
+        try {
+            CalibrationDatabase().exportHardwareSetup(setup, fileName);
+        } catch (std::exception &e) {
+            QMessageBox::critical(
+                p, tr("Calibration Database Error"),
+                tr("Unable to export setup:\n%1").arg(e.what()));
+        }
     }
 }
 
 void CalibrationSetupsDialogPrivate::on_importSetup_clicked()
 {
-    const QString fileName = QFileDialog::getOpenFileName (p,
-            tr ("Import Calibration Data"), QString(),
-            tr ("Calibration data (*.calib)"));
-    if (fileName.isEmpty())
-        return;
-
-    try {
-        const QString setup = CalibrationDatabase().importHardwareSetup
-            (fileName);
-        addSetup (setup, true);
-    } catch (std::exception &e) {
-        QMessageBox::critical (p, tr ("Calibration Database Error"),
-                tr ("Unable to import setup:\n%1").arg (e.what()));
+    QFileDialog dlg(p, tr("Import Calibration Data"), QString(),
+                    tr("Calibration data (*.calib)"));
+    dlg.setLabelText(QFileDialog::Accept, tr("Import"));
+    ApexTools::expandWidgetToWindow(&dlg);
+    if (dlg.exec() == QDialog::Accepted) {
+        const QString fileName = dlg.selectedFiles().first();
+        try {
+            const QString setup =
+                CalibrationDatabase().importHardwareSetup(fileName);
+            addSetup(setup, true);
+        } catch (std::exception &e) {
+            QMessageBox::critical(
+                p, tr("Calibration Database Error"),
+                tr("Unable to import setup:\n%1").arg(e.what()));
+        }
     }
 }
 
 void CalibrationSetupsDialogPrivate::on_list_currentItemChanged()
 {
     CalibrationDatabase database;
-    const QListWidgetItem * const item = ui.list->currentItem();
-    ui.remove->setEnabled (item != NULL);
-    ui.exportSetup->setEnabled (item != NULL);
+    const QListWidgetItem *const item = ui.list->currentItem();
+    ui.remove->setEnabled(item != NULL);
+    ui.exportSetup->setEnabled(item != NULL);
     checkRenameButton();
 
-    if(item != NULL && database.isGlobal(item->text().mid(0, item->text().indexOf(" ")))) {
+    if (item != NULL &&
+        database.isGlobal(item->text().mid(0, item->text().indexOf(" ")))) {
         ui.remove->setDisabled(true);
         ui.rename->setDisabled(true);
     }
 
     ui.detailsList->clear();
     if (item) {
-        const QString setup = item->data (setupNameRole).toString();
-        Q_FOREACH (const QString &profile, database.calibrationProfiles (setup))
-            Q_FOREACH (const QString &name, database.parameterNames
-                    (setup, profile))
-                ui.detailsList->addItem (QString ("%3 - %4 (%1:%2)")
-                 .arg (database.targetAmplitude (setup, profile, name))
-                 .arg (database.outputParameter (setup, profile, name))
-                 .arg (profile, name));
+        const QString setup = item->data(setupNameRole).toString();
+        Q_FOREACH (const QString &profile, database.calibrationProfiles(setup))
+            Q_FOREACH (const QString &name,
+                       database.parameterNames(setup, profile))
+                ui.detailsList->addItem(
+                    QString("%3 - %4 (%1:%2)")
+                        .arg(database.targetAmplitude(setup, profile, name))
+                        .arg(database.outputParameter(setup, profile, name))
+                        .arg(profile, name));
     }
 }
 
@@ -239,52 +248,54 @@ void CalibrationSetupsDialogPrivate::on_input_textChanged()
 void CalibrationSetupsDialogPrivate::checkAddButton()
 {
     const QString text = ui.input->text().simplified();
-    ui.add->setEnabled (!text.isEmpty() && !text.startsWith ('<') &&
-            !hasSetup (text));
+    ui.add->setEnabled(!text.isEmpty() && !text.startsWith('<') &&
+                       !hasSetup(text));
 }
 
 void CalibrationSetupsDialogPrivate::checkRenameButton()
 {
     const QString text = ui.input->text().simplified();
-    ui.rename->setEnabled (ui.list->currentItem() && !text.isEmpty() &&
-            !text.startsWith ('<') && !hasSetup (text));
+    ui.rename->setEnabled(ui.list->currentItem() && !text.isEmpty() &&
+                          !text.startsWith('<') && !hasSetup(text));
 }
 
 void CalibrationSetupsDialogPrivate::checkDefaultButton()
 {
     if (ui.input->text().simplified().isEmpty())
-        ui.buttonBox->button (QDialogButtonBox::Ok)->setDefault (true);
+        ui.buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
     else
-        ui.add->setDefault (true);
+        ui.add->setDefault(true);
 }
 
-void CalibrationSetupsDialogPrivate::addSetup (const QString &setup,
-        bool imported)
+void CalibrationSetupsDialogPrivate::addSetup(const QString &setup,
+                                              bool imported)
 {
-    QListWidgetItem *item = new QListWidgetItem (tr ("%2 - %1 calibration(s)")
-            .arg (CalibrationDatabase().calibrationCount (setup)).arg (setup));
-    ui.list->addItem (item);
-    item->setData (setupNameRole, setup);
+    QListWidgetItem *item = new QListWidgetItem(
+        tr("%2 - %1 calibration(s)")
+            .arg(CalibrationDatabase().calibrationCount(setup))
+            .arg(setup));
+    ui.list->addItem(item);
+    item->setData(setupNameRole, setup);
     if (imported)
-        item->setData (setupImportedRole, true);
+        item->setData(setupImportedRole, true);
 }
 
-void CalibrationSetupsDialogPrivate::renameSetup (QListWidgetItem *item,
-        const QString &newName)
+void CalibrationSetupsDialogPrivate::renameSetup(QListWidgetItem *item,
+                                                 const QString &newName)
 {
-    const QString setup = item->data (setupNameRole).toString();
-    item->setText (tr ("%2 - %1 calibration(s)")
-            .arg (CalibrationDatabase().calibrationCount (setup))
-            .arg (newName));
-    item->setData (setupRenamedNameRole, newName);
+    const QString setup = item->data(setupNameRole).toString();
+    item->setText(tr("%2 - %1 calibration(s)")
+                      .arg(CalibrationDatabase().calibrationCount(setup))
+                      .arg(newName));
+    item->setData(setupRenamedNameRole, newName);
 }
 
-bool CalibrationSetupsDialogPrivate::hasSetup (const QString &setup)
+bool CalibrationSetupsDialogPrivate::hasSetup(const QString &setup)
 {
     for (int i = 0; i < ui.list->count(); ++i) {
-        QListWidgetItem *item = ui.list->item (i);
-        if (item->data (setupNameRole) == setup ||
-                item->data (setupRenamedNameRole) == setup)
+        QListWidgetItem *item = ui.list->item(i);
+        if (item->data(setupNameRole) == setup ||
+            item->data(setupRenamedNameRole) == setup)
             return true;
     }
     return false;
@@ -292,13 +303,10 @@ bool CalibrationSetupsDialogPrivate::hasSetup (const QString &setup)
 
 // CalibrationSetupsDialog =====================================================
 
-CalibrationSetupsDialog::CalibrationSetupsDialog (QWidget *parent) :
-    QDialog (parent),
-    d (new CalibrationSetupsDialogPrivate (this))
+CalibrationSetupsDialog::CalibrationSetupsDialog(QWidget *parent)
+    : QDialog(parent), d(new CalibrationSetupsDialogPrivate(this))
 {
-#ifdef Q_OS_ANDROID
-    showMaximized();
-#endif
+    ApexTools::expandWidgetToWindow(this);
 }
 
 CalibrationSetupsDialog::~CalibrationSetupsDialog()

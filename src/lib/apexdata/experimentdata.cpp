@@ -70,7 +70,7 @@ public:
     QScopedPointer<GeneralParameters> generalParameters;
     QScopedPointer<ResultParameters> resultParameters;
     QScopedPointer<ParameterDialogResults> parameterDialogResults;
-    QScopedPointer<QMap<QString, RandomGeneratorParameters*>> randomgenerators;
+    QScopedPointer<QMap<QString, RandomGeneratorParameters *>> randomgenerators;
     QScopedPointer<DevicesData> devices;
     QScopedPointer<FiltersData> filtersdata;
     QScopedPointer<DevicesData> controldevices;
@@ -79,30 +79,23 @@ public:
     QString experimentDescription;
     QScopedPointer<ParameterManagerData> parameterManagerData;
 };
-
 }
 }
 
 using namespace apex::data;
 using namespace apex;
 
-ExperimentData::ExperimentData(const QString& configFile,
-                        data::ScreensData *screens,
-                        data::ProcedureData *procedures,
-                        data::ConnectionsData *connections,
-                        data::CalibrationData *calibration,
-                        GeneralParameters *genParam,
-                        ResultParameters *resParam,
-                        ParameterDialogResults *paramDlg,
-                        QMap<QString, RandomGeneratorParameters*>  *rndGen,
-                        data::DevicesData *devices,
-                        data::FiltersData *filters,
-                        data::DevicesData *controlDevices,
-                        data::DatablocksData *datablocks,
-                        data::StimuliData *stimuli,
-                        const QString& description,
-                        data::ParameterManagerData *paramMngr) :
-    d(new ExperimentDataPrivate())
+ExperimentData::ExperimentData(
+    const QString &configFile, data::ScreensData *screens,
+    data::ProcedureData *procedures, data::ConnectionsData *connections,
+    data::CalibrationData *calibration, GeneralParameters *genParam,
+    ResultParameters *resParam, ParameterDialogResults *paramDlg,
+    QMap<QString, RandomGeneratorParameters *> *rndGen,
+    data::DevicesData *devices, data::FiltersData *filters,
+    data::DevicesData *controlDevices, data::DatablocksData *datablocks,
+    data::StimuliData *stimuli, const QString &description,
+    data::ParameterManagerData *paramMngr)
+    : d(new ExperimentDataPrivate())
 {
     d->fileName = configFile;
     d->screens.reset(screens);
@@ -122,36 +115,32 @@ ExperimentData::ExperimentData(const QString& configFile,
     d->parameterManagerData.reset(paramMngr);
 }
 
-ExperimentData::ExperimentData() :
-    d(new ExperimentDataPrivate())
+ExperimentData::ExperimentData() : d(new ExperimentDataPrivate())
 {
 }
 
 ExperimentData::~ExperimentData()
 {
-    //FIXME [job] shouldn't these deletes happen in the destructors of the
-    //classes that are iterated
+    // FIXME [job] shouldn't these deletes happen in the destructors of the
+    // classes that are iterated
 
     // remove device data from map
     for (data::DevicesData::const_iterator it = d->devices->begin();
-         it!= d->devices->end(); ++it)
-    {
+         it != d->devices->end(); ++it) {
         Q_CHECK_PTR(it.value());
         delete it.value();
     }
 
     // remove filter data from map
     for (data::FiltersData::const_iterator it = d->filtersdata->begin();
-         it!= d->filtersdata->end(); ++it)
-    {
+         it != d->filtersdata->end(); ++it) {
         Q_CHECK_PTR(it.value());
         delete it.value();
     }
 
     // remove datablocks from map
     for (data::DatablocksData::const_iterator it = d->datablocksdata->begin();
-         it!= d->datablocksdata->end(); ++it)
-    {
+         it != d->datablocksdata->end(); ++it) {
         Q_CHECK_PTR(it.value());
         delete it.value();
     }
@@ -159,57 +148,58 @@ ExperimentData::~ExperimentData()
     delete d;
 }
 
-const QString& ExperimentData::fileName() const
+const QString &ExperimentData::fileName() const
 {
     return d->fileName;
 }
 
-void ExperimentData::setFileName(const QString& fileName)
+void ExperimentData::setFileName(const QString &fileName)
 {
     d->fileName = fileName;
 }
 
-const ProcedureData* ExperimentData::procedureData() const
+const ProcedureData *ExperimentData::procedureData() const
 {
     return d->procedureConfig.data();
 }
 
-ProcedureData* ExperimentData::procedureData()
+ProcedureData *ExperimentData::procedureData()
 {
     return d->procedureConfig.data();
 }
 
-const TrialData* ExperimentData::trialById(const QString& name) const
+const TrialData *ExperimentData::trialById(const QString &name) const
 {
     return d->procedureConfig->GetTrial(name);
 }
 
-TrialData* ExperimentData::trialById(const QString& name)
+TrialData *ExperimentData::trialById(const QString &name)
 {
     return d->procedureConfig->GetTrial(name);
 }
 
-const Screen& ExperimentData::screenById(const QString& id) const
+const Screen &ExperimentData::screenById(const QString &id) const
 {
     return d->screens->GetScreen(id);
 }
 
-const ConnectionsData* ExperimentData::connectionsData() const
+const ConnectionsData *ExperimentData::connectionsData() const
 {
     return d->connectionDatas.data();
 }
 
-ConnectionsData* ExperimentData::connectionsData()
+ConnectionsData *ExperimentData::connectionsData()
 {
     return d->connectionDatas.data();
 }
 
-const ScreensData* ExperimentData::screensData() const
+const ScreensData *ExperimentData::screensData() const
 {
     return d->screens.data();
 }
 
-QMap<QString, RandomGeneratorParameters*> ExperimentData::randomGenerators() const
+QMap<QString, RandomGeneratorParameters *>
+ExperimentData::randomGenerators() const
 {
     return *d->randomgenerators;
 }
@@ -219,22 +209,22 @@ CalibrationData *ExperimentData::calibrationData() const
     return d->calibrationData.data();
 }
 
-const GeneralParameters* ExperimentData::generalParameters() const
+const GeneralParameters *ExperimentData::generalParameters() const
 {
     return d->generalParameters.data();
 }
 
-GeneralParameters* ExperimentData::generalParameters()
+GeneralParameters *ExperimentData::generalParameters()
 {
     return d->generalParameters.data();
 }
 
-ResultParameters* ExperimentData::resultParameters()
+ResultParameters *ExperimentData::resultParameters()
 {
     return d->resultParameters.data();
 }
 
-ScreensData* ExperimentData::screensData()
+ScreensData *ExperimentData::screensData()
 {
     return d->screens.data();
 }
@@ -244,18 +234,20 @@ FixedParameterList ExperimentData::fixedParameters() const
     return d->stimuli->GetFixedParameters();
 }
 
-const StimulusData* ExperimentData::stimulusById(const QString& p_name) const
+const StimulusData *ExperimentData::stimulusById(const QString &p_name) const
 {
     if (!d->stimuli->contains(p_name))
-        throw ApexStringException(tr("ExperimentData::GetStimulus: error: stimulus %1 not found").arg(p_name));
+        throw ApexStringException(
+            tr("ExperimentData::GetStimulus: error: stimulus %1 not found")
+                .arg(p_name));
 
     return &(*d->stimuli)[p_name];
 }
 
-const DeviceData* ExperimentData::deviceById(const QString& p_name) const
+const DeviceData *ExperimentData::deviceById(const QString &p_name) const
 {
-    data::DevicesData::const_iterator i=d->devices->find(p_name);
-    Q_ASSERT(i!=d->devices->end());
+    data::DevicesData::const_iterator i = d->devices->find(p_name);
+    Q_ASSERT(i != d->devices->end());
     return i.value();
 }
 
@@ -264,62 +256,62 @@ QString ExperimentData::experimentDescription() const
     return d->experimentDescription;
 }
 
-const DevicesData* ExperimentData::controlDevices() const
+const DevicesData *ExperimentData::controlDevices() const
 {
     return d->controldevices.data();
 }
 
-const ParameterDialogResults* ExperimentData::parameterDialogResults() const
+const ParameterDialogResults *ExperimentData::parameterDialogResults() const
 {
     return d->parameterDialogResults.data();
 }
 
-bool ExperimentData::isFixedParameter(const QString& p_name) const
+bool ExperimentData::isFixedParameter(const QString &p_name) const
 {
     return d->stimuli->GetFixedParameters().contains(p_name);
 }
 
-const DevicesData* ExperimentData::devicesData() const
+const DevicesData *ExperimentData::devicesData() const
 {
     return d->devices.data();
 }
 
-const StimuliData* ExperimentData::stimuliData() const
+const StimuliData *ExperimentData::stimuliData() const
 {
     return d->stimuli.data();
 }
 
-const FiltersData* ExperimentData::filtersData() const
+const FiltersData *ExperimentData::filtersData() const
 {
     return d->filtersdata.data();
 }
 
-const ResultParameters* ExperimentData::resultParameters() const
+const ResultParameters *ExperimentData::resultParameters() const
 {
     return d->resultParameters.data();
 }
 
-const DatablocksData* ExperimentData::datablocksData() const
+const DatablocksData *ExperimentData::datablocksData() const
 {
     return d->datablocksdata.data();
 }
 
-const ParameterManagerData* ExperimentData::parameterManagerData() const
+const ParameterManagerData *ExperimentData::parameterManagerData() const
 {
     return d->parameterManagerData.data();
 }
 
-void ExperimentData::addFilter(FilterData* filter)
+void ExperimentData::addFilter(FilterData *filter)
 {
     d->filtersdata->insert(filter->id(), filter);
 }
 
-#define ARE_EQUAL(a, b) \
-    ((a.data() == 0 && b.data() == 0) ? true :\
-    ((a.data() == 0 || b.data() == 0) ? false :\
-    *a == *b))
+#define ARE_EQUAL(a, b)                                                        \
+    ((a.data() == 0 && b.data() == 0)                                          \
+         ? true                                                                \
+         : ((a.data() == 0 || b.data() == 0) ? false : *a == *b))
 
-bool ExperimentData::operator==(const ExperimentData& other) const
+bool ExperimentData::operator==(const ExperimentData &other) const
 {
     if (!(*d->screens == *other.d->screens)) {
         qCDebug(APEX_RS, "screensdata not equal");
@@ -345,7 +337,8 @@ bool ExperimentData::operator==(const ExperimentData& other) const
         qCDebug(APEX_RS, "result parameters not equal");
         return false;
     }
-    if (!ARE_EQUAL(d->parameterDialogResults, other.d->parameterDialogResults)) {
+    if (!ARE_EQUAL(d->parameterDialogResults,
+                   other.d->parameterDialogResults)) {
         qCDebug(APEX_RS, "parameter dialog results not equal");
         return false;
     }
@@ -353,7 +346,8 @@ bool ExperimentData::operator==(const ExperimentData& other) const
         qCDebug(APEX_RS, "parameter manager data not equal");
         return false;
     }
-    if (!ApexTools::areEqualPointerMaps(*d->randomgenerators, *other.d->randomgenerators)) {
+    if (!ApexTools::areEqualPointerMaps(*d->randomgenerators,
+                                        *other.d->randomgenerators)) {
         qCDebug(APEX_RS, "random generators not equal");
         return false;
     }
@@ -384,31 +378,3 @@ bool ExperimentData::operator==(const ExperimentData& other) const
 
     return true;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

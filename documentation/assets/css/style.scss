@@ -1,0 +1,31 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+.git-ribbon {
+    background-color: white;
+    overflow: hidden;
+    position: fixed;
+    right: -4em;
+    top: 3em;
+    -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-box-shadow: 0 0 1em #888;
+    -webkit-box-shadow: 0 0 1em #888;
+}
+.git-ribbon a {
+    color: #727272;
+    display: block;
+    margin: 0.05em 0 0.075em 0;
+    padding: 0.5em 3.5em;
+    text-align: center;
+    text-decoration: none;
+}
+.git-ribbon a:hover {
+    font-weight: inherit;
+}
+.git-ribbon:hover {
+    -moz-box-shadow: 0 0 1.5em #888;
+    -webkit-box-shadow: 0 0 1.5em #888;
+}

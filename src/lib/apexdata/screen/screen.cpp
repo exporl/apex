@@ -27,27 +27,29 @@ namespace apex
 {
 namespace data
 {
-ScreenElement* Screen::getRootElement()
+ScreenElement *Screen::getRootElement()
 {
     return rootElement;
 }
 
-Screen::Screen( const QString& i, ScreenElement* re,
-                const ScreenElementMap& elmap,
-                ButtonGroup* bg, const QString& da )
-    : m_idToElementMap( elmap ),
-      rootElement( re ), buttonGroup( bg ),
-      defaultAnswer( da ), id( i )
+Screen::Screen(const QString &i, ScreenElement *re,
+               const ScreenElementMap &elmap, ButtonGroup *bg,
+               const QString &da)
+    : m_idToElementMap(elmap),
+      rootElement(re),
+      buttonGroup(bg),
+      defaultAnswer(da),
+      id(i)
 {
 }
 
 Screen::~Screen()
 {
-    deleteElement( rootElement );
+    deleteElement(rootElement);
     delete buttonGroup;
 }
 
-ButtonGroup* apex::data::Screen::getButtonGroup()
+ButtonGroup *apex::data::Screen::getButtonGroup()
 {
     return buttonGroup;
 }
@@ -57,7 +59,7 @@ const QString Screen::getID() const
     return id;
 }
 
-const ScreenElementMap& Screen::idToElementMap() const
+const ScreenElementMap &Screen::idToElementMap() const
 {
     return m_idToElementMap;
 }
@@ -67,100 +69,77 @@ const QString Screen::getDefaultAnswerElement() const
     return defaultAnswer;
 }
 
-const ScreenElement* Screen::getRootElement() const
+const ScreenElement *Screen::getRootElement() const
 {
     return rootElement;
 }
 
-const ButtonGroup* Screen::getButtonGroup() const
+const ButtonGroup *Screen::getButtonGroup() const
 {
     return buttonGroup;
 }
 
-void Screen::setRootElement( ScreenElement* e )
+void Screen::setRootElement(ScreenElement *e)
 {
-    if ( rootElement )
-        deleteElement( rootElement );
+    if (rootElement)
+        deleteElement(rootElement);
     rootElement = e;
 }
 
-void Screen::deleteElement( ScreenElement* e )
+void Screen::deleteElement(ScreenElement *e)
 {
-    if ( e->canHaveChildren() )
-    {
-        std::vector<ScreenElement*> children = *e->getChildren();
-        for ( unsigned i = 0; i < children.size(); ++i )
-            deleteElement( children[i] );
+    if (e->canHaveChildren()) {
+        std::vector<ScreenElement *> children = *e->getChildren();
+        for (unsigned i = 0; i < children.size(); ++i)
+            deleteElement(children[i]);
     }
-    m_idToElementMap.remove( e->getID() );
+    m_idToElementMap.remove(e->getID());
     delete e;
-    if ( rootElement == e )
+    if (rootElement == e)
         rootElement = 0;
 }
 
-void Screen::setElementID( ScreenElement* e, const QString& id )
+void Screen::setElementID(ScreenElement *e, const QString &id)
 {
     QString oldid = e->getID();
-    m_idToElementMap.remove( oldid );
-    e->setID( id );
+    m_idToElementMap.remove(oldid);
+    e->setID(id);
     m_idToElementMap[id] = e;
 }
 
-void Screen::addElement( ScreenElement* e )
+void Screen::addElement(ScreenElement *e)
 {
     m_idToElementMap[e->getID()] = e;
 }
 
-
-const ScreenElement* Screen::elementById(const QString& id) const
+const ScreenElement *Screen::elementById(const QString &id) const
 {
     return m_idToElementMap[id];
 }
 
-
-QString Screen::elementTextById(const QString& id) const
+QString Screen::elementTextById(const QString &id) const
 {
     return elementById(id)->text();
 }
 
-
-bool Screen::operator==(const Screen& other) const
+bool Screen::operator==(const Screen &other) const
 {
-    //special check for the buttongroup because it can be 0
-    if (buttonGroup == 0 || other.buttonGroup == 0)
-    {
+    // special check for the buttongroup because it can be 0
+    if (buttonGroup == 0 || other.buttonGroup == 0) {
         if (buttonGroup != other.buttonGroup)
             return false;
-    }
-    else if (*buttonGroup != *other.buttonGroup)
+    } else if (*buttonGroup != *other.buttonGroup)
         return false;
 
-    return  defaultAnswer == other.defaultAnswer &&
-            id == other.id &&
-            *rootElement == *other.rootElement &&
-            ApexTools::areEqualPointerMaps(m_idToElementMap, other.m_idToElementMap);
+    return defaultAnswer == other.defaultAnswer && id == other.id &&
+           *rootElement == *other.rootElement &&
+           ApexTools::areEqualPointerMaps(m_idToElementMap,
+                                          other.m_idToElementMap);
 }
 
-bool Screen::operator!=(const Screen& other) const
+bool Screen::operator!=(const Screen &other) const
 {
     return !(*this == other);
 }
-
 }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

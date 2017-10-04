@@ -1205,8 +1205,12 @@ function defaultResultsFilter(t)
     var isConfirm = $(t.DOM).find("isConfirmation").text();
     if (!isConfirm.length)
         return true;
-    else
-        return !stringToBoolean(isConfirm);
+    
+    isConfirm = $(t.DOM).find("isConfirmationTrial").text();
+    if (!isConfirm.length)
+        return true;
+    
+    return !stringToBoolean(isConfirm);
 }
 
  /* Filter for matrix results plotting (does not remove from results array)
@@ -1224,7 +1228,7 @@ function matrixDataFilter(t)
         }
     }
     if (typeof t.proceduretype !== "undefined")
-        return t.isConstantProcedure();
+        return !t.isAdaptiveProcedure();
     else
         return true;
 }

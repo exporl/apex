@@ -42,9 +42,13 @@ QString apex::FilePrefixConvertor::convert(data::FilePrefix p)
     if (p.type() == FilePrefix::PREFIX_MAINCONFIG) {
         QString result(MainConfigFileParser::Get().data().prefix(p.value()));
         if (result.isEmpty()) {
-            qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("PrefixParser", tr("Prefix "
-                "with ID %1 not found in main config file, trying with empty "
-                "prefix").arg(p.value()))));
+            qCWarning(APEX_RS, "%s",
+                      qPrintable(QSL("%1: %2").arg(
+                          "PrefixParser", tr("Prefix "
+                                             "with ID %1 not found in main "
+                                             "config file, trying with empty "
+                                             "prefix")
+                                              .arg(p.value()))));
         }
         return result;
     }
@@ -52,10 +56,8 @@ QString apex::FilePrefixConvertor::convert(data::FilePrefix p)
     return QString();
 }
 
-
 QString apex::FilePrefixConvertor::addPrefix(data::FilePrefix p,
-                                          const QString& file)
+                                             const QString &file)
 {
     return ApexTools::addPrefix(file, FilePrefixConvertor::convert(p));
 }
-

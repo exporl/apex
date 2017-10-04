@@ -25,51 +25,51 @@
 
 namespace apex
 {
-    class ExperimentRunDelegate;
-    namespace data
-    {
-        class ParameterLabelElement;
-        class ScreenElement;
-    }
+class ExperimentRunDelegate;
+namespace data
+{
+class ParameterLabelElement;
+class ScreenElement;
+}
 
-    namespace stimulus {
-        class Stimulus;
-    }
+namespace stimulus
+{
+class Stimulus;
+}
 
-    namespace rundelegates
-    {
+namespace rundelegates
+{
 
-        using data::ParameterLabelElement;
-        using data::ScreenElement;
+using data::ParameterLabelElement;
+using data::ScreenElement;
 
 /**
          * The ParameterLabelRunDelegate class is an implementation of
          * ScreenElementRunDelegate representing a LabelElement.
  */
-        class ParameterLabelRunDelegate
-            : public LabelRunDelegateBase,
-            public ParametersContainerRunDelegate
-        {
-            Q_OBJECT
+class ParameterLabelRunDelegate : public LabelRunDelegateBase,
+                                  public ParametersContainerRunDelegate
+{
+    Q_OBJECT
 
-                    const ParameterLabelElement* element;
-            public:
-                ParameterLabelRunDelegate(ExperimentRunDelegate* p_exprd,
-                                 QWidget* parent, const ParameterLabelElement* e,
-                                 const QFont& font);
+    const ParameterLabelElement *element;
 
-                virtual ~ParameterLabelRunDelegate() {};
+public:
+    ParameterLabelRunDelegate(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                              const ParameterLabelElement *e,
+                              const QFont &font);
 
-                const ScreenElement* getScreenElement() const;
+    virtual ~ParameterLabelRunDelegate(){};
 
-                void connectSlots( gui::ScreenRunDelegate* d );
+    const ScreenElement *getScreenElement() const;
 
-                virtual void setEnabled( const bool );
+    void connectSlots(gui::ScreenRunDelegate *d);
 
-            public slots:
-                void updateParameter(const QString& id, const QVariant& value);
+    virtual void setEnabled(const bool);
 
-        };
-    }
+public slots:
+    void updateParameter(const QString &id, const QVariant &value);
+};
+}
 }
 #endif

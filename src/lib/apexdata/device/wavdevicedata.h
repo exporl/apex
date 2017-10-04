@@ -32,32 +32,29 @@ namespace data
 
 class APEXDATA_EXPORT WavDeviceData : public DeviceData
 {
-    public:
+public:
+    WavDeviceData();
+    virtual ~WavDeviceData();
 
-        WavDeviceData();
-        virtual ~WavDeviceData();
+    // getters
 
-        //getters
+    QString driverString() const;
+    double internalBufferSize() const;
+    int bufferSize() const;
+    // unsigned defaultBufferSize() const;
+    int blockSize() const;
+    unsigned long sampleRate() const;
+    QString cardName() const;
 
-        QString driverString() const;
-        double internalBufferSize() const;
-        int bufferSize() const;
-        //unsigned defaultBufferSize() const;
-        int blockSize() const;
-        unsigned long sampleRate() const;
-        QString cardName() const;
+    // setters
 
-        //setters
-
-        void setDriverString(const QString& driver);
-        void setInternalBufferSize(double bs);
-        void setBufferSize(int bs);
-        void setBlockSize(unsigned bs);
-        void setSampleRate(unsigned long fs);
+    void setDriverString(const QString &driver);
+    void setInternalBufferSize(double bs);
+    void setBufferSize(int bs);
+    void setBlockSize(unsigned bs);
+    void setSampleRate(unsigned long fs);
 };
-
 }
-
 }
 
 #endif

@@ -23,7 +23,8 @@
 
 //#include <QMessageBox>
 
-void ScriptProcedureInterface::ShowError(const QString& message) const {
-    //QMessageBox::critical(0,"ScriptProcedure error", message);
+void ScriptProcedureInterface::ShowError(const QString &message) const
+{
+    // QMessageBox::critical(0,"ScriptProcedure error", message);
     qCDebug(APEX_RS) << message;
 }

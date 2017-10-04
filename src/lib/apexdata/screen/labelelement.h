@@ -35,24 +35,23 @@ namespace data
  * The LabelElement is an implementation of a \ref
  * ScreenElement representing an "label".
  */
-class APEXDATA_EXPORT LabelElement
-            : public ScreenElement
+class APEXDATA_EXPORT LabelElement : public ScreenElement
 {
-        QString text;
-    public:
-        LabelElement(const QString& id, ScreenElement* parent);
-        ~LabelElement();
+    QString text;
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+public:
+    LabelElement(const QString &id, ScreenElement *parent);
+    ~LabelElement();
 
-        void setText(const QString& t);
-        QString getText() const;
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
-        bool operator==(const LabelElement& other) const;
+    void setText(const QString &t);
+    QString getText() const;
+
+    bool operator==(const LabelElement &other) const;
 };
-
 }
 }
 #endif

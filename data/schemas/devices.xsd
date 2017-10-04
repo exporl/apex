@@ -1,6 +1,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.5/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.5/experiment">
 
     <xs:include schemaLocation="filters.xsd"/>
 
@@ -334,7 +334,14 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="mode" type="apex:CohModeEnum"/>
+            <xs:element name="mode" type="apex:CohModeEnum">
+                <xs:annotation>
+                    <xs:documentation>
+                        Stimulation mode; bipolar modes use a lower, reverse
+                        bipolar modes a higher reference electrode.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="pulsewidth">
                 <xs:annotation>
                     <xs:documentation>
@@ -422,6 +429,27 @@
             <xs:enumeration value="MP1"/>
             <xs:enumeration value="MP2"/>
             <xs:enumeration value="BP"/>
+            <xs:enumeration value="BP+1"/>
+            <xs:enumeration value="BP+2"/>
+            <xs:enumeration value="BP+3"/>
+            <xs:enumeration value="BP+4"/>
+            <xs:enumeration value="BP+5"/>
+            <xs:enumeration value="BP+6"/>
+            <xs:enumeration value="BP+7"/>
+            <xs:enumeration value="BP+8"/>
+            <xs:enumeration value="BP+9"/>
+            <xs:enumeration value="BP+10"/>
+            <xs:enumeration value="RBP"/>
+            <xs:enumeration value="RBP+1"/>
+            <xs:enumeration value="RBP+2"/>
+            <xs:enumeration value="RBP+3"/>
+            <xs:enumeration value="RBP+4"/>
+            <xs:enumeration value="RBP+5"/>
+            <xs:enumeration value="RBP+6"/>
+            <xs:enumeration value="RBP+7"/>
+            <xs:enumeration value="RBP+8"/>
+            <xs:enumeration value="RBP+9"/>
+            <xs:enumeration value="RBP+10"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="deviceModesEnum">

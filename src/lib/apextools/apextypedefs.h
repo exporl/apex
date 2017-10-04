@@ -24,47 +24,46 @@
   * define common typedefs here
   ***************************** */
 
-
 #include <QMap>
-#include <QString>
 #include <QPair>
+#include <QString>
 
 #include <map>
 #include <vector>
 
-//TODO * replace all STL containers with Qt containers
+// TODO * replace all STL containers with Qt containers
 //     * rename all tFoo typedefs to Foo
 
 namespace apex
 {
 
-//TODO remove the typedefs in the apex namespace because they are so general
+// TODO remove the typedefs in the apex namespace because they are so general
 //     that it's much clearer to just write them fully all the time.
-typedef std::vector<bool>                 tBooleanVector;
-typedef std::vector<QString>              tQStringVector;
+typedef std::vector<bool> tBooleanVector;
+typedef std::vector<QString> tQStringVector;
 
-typedef QMap<QString, QString>            tParamMap;
-typedef QPair<QString, QString>           tParamMapPair;
-typedef tParamMap::const_iterator         tParamMapCIt;
-typedef tParamMap::iterator               tParamMapIt;
+typedef QMap<QString, QString> tParamMap;
+typedef QPair<QString, QString> tParamMapPair;
+typedef tParamMap::const_iterator tParamMapCIt;
+typedef tParamMap::iterator tParamMapIt;
 
-typedef std::map<QString, bool>           tQStringBoolMap;
-typedef std::pair<QString, bool>          tQStringBoolPair;
-typedef tQStringBoolMap::iterator         tQStringBoolMapIt;
-typedef tQStringBoolMap::const_iterator   tQStringBoolMapCIt;
+typedef std::map<QString, bool> tQStringBoolMap;
+typedef std::pair<QString, bool> tQStringBoolPair;
+typedef tQStringBoolMap::iterator tQStringBoolMapIt;
+typedef tQStringBoolMap::const_iterator tQStringBoolMapCIt;
 
-typedef std::map<QString, unsigned>       tQStringUintMap;
-typedef std::pair<QString, unsigned>      tQStringUintPair;
-typedef tQStringUintMap::iterator         tQStringUintMapIt;
-typedef tQStringUintMap::const_iterator   tQStringUintMapCIt;
+typedef std::map<QString, unsigned> tQStringUintMap;
+typedef std::pair<QString, unsigned> tQStringUintPair;
+typedef tQStringUintMap::iterator tQStringUintMapIt;
+typedef tQStringUintMap::const_iterator tQStringUintMapCIt;
 
-typedef std::map<unsigned, QString>       tUintQStringMap;
-typedef std::pair<unsigned, QString>      tUintQStringPair;
-typedef tUintQStringMap::iterator         tUintQStringMapIt;
-typedef tUintQStringMap::const_iterator   tUintQStringMapCIt;
+typedef std::map<unsigned, QString> tUintQStringMap;
+typedef std::pair<unsigned, QString> tUintQStringPair;
+typedef tUintQStringMap::iterator tUintQStringMapIt;
+typedef tUintQStringMap::const_iterator tUintQStringMapCIt;
 
 class ApexModule;
-typedef QList<ApexModule*>          ModuleList;
+typedef QList<ApexModule *> ModuleList;
 
 typedef int tEventCode;
 
@@ -74,49 +73,45 @@ class Screen;
 class ScreenElement;
 class DeviceData;
 class DatablockData;
-typedef QMap<QString, DeviceData*>      DeviceDataMap;
-typedef std::pair<QString,data::DeviceData*>      tDeviceDataPair;
+typedef QMap<QString, DeviceData *> DeviceDataMap;
+typedef std::pair<QString, data::DeviceData *> tDeviceDataPair;
 
-typedef QMap<QString, data::DatablockData*>          DatablockDataMap;
+typedef QMap<QString, data::DatablockData *> DatablockDataMap;
 
-typedef QList<int> tStretchList;            //! list of stretchfactors
-
-
+typedef QList<int> tStretchList; //! list of stretchfactors
 }
 
 namespace stimulus
 {
-class   IDeviceFactory;
-class   DataBlock;
-class   OutputDevice;
-class   Stimulus;
-class   Filter;
-struct  tCalibratorConfig;
-struct  tConnection;
+class IDeviceFactory;
+class DataBlock;
+class OutputDevice;
+class Stimulus;
+class Filter;
+struct tCalibratorConfig;
+struct tConnection;
 
+typedef QMap<QString, OutputDevice *> tDeviceMap;
 
+typedef tDeviceMap::iterator tDeviceMapIt;
+typedef tDeviceMap::const_iterator tDeviceMapCIt;
 
-typedef QMap<QString, OutputDevice*>      tDeviceMap;
+typedef QMap<QString, Filter *> tFilterMap;
+typedef tFilterMap::iterator tFilterMapIt;
+typedef tFilterMap::const_iterator tFilterMapCIt;
 
-typedef tDeviceMap::iterator              tDeviceMapIt;
-typedef tDeviceMap::const_iterator        tDeviceMapCIt;
-
-typedef QMap<QString, Filter*>            tFilterMap;
-typedef tFilterMap::iterator              tFilterMapIt;
-typedef tFilterMap::const_iterator        tFilterMapCIt;
-
-typedef QMap<QString, DataBlock*>         tDataBlockMap;
-typedef tDataBlockMap::iterator           tDataBlockMapIt;
-typedef tDataBlockMap::const_iterator     tDataBlockMapCIt;
+typedef QMap<QString, DataBlock *> tDataBlockMap;
+typedef tDataBlockMap::iterator tDataBlockMapIt;
+typedef tDataBlockMap::const_iterator tDataBlockMapCIt;
 
 typedef std::map<QString, tQStringVector> tQStringVectorMap;
-typedef tQStringVectorMap::iterator       tQStringVectorMapIt;
+typedef tQStringVectorMap::iterator tQStringVectorMapIt;
 typedef tQStringVectorMap::const_iterator tQStringVectorMapCIt;
 
 /*typedef QStringPtrMap<Stimulus>           tStimuliMap;
 typedef tStimuliMap::iterator             tStimuliMapIt;
 typedef tStimuliMap::const_iterator       tStimuliMapCIt;*/
-    typedef QMap<QString, Stimulus*> tStimulusMap;
+typedef QMap<QString, Stimulus *> tStimulusMap;
 }
 
 namespace device
@@ -124,10 +119,8 @@ namespace device
 class IApexDevice;
 class ControlDevice;
 
-typedef QMap<QString, ControlDevice*>        tControllerMap;
+typedef QMap<QString, ControlDevice *> tControllerMap;
 }
-
-
 
 namespace rundelegates
 {
@@ -137,17 +130,14 @@ namespace gui
 {
 class ScreenRunDelegate;
 
-typedef QMap<QString, data::Screen*>             tScreenMap;
-typedef tScreenMap::iterator              tScreenMapIt;
-typedef tScreenMap::const_iterator        tScreenMapCIt;
+typedef QMap<QString, data::Screen *> tScreenMap;
+typedef tScreenMap::iterator tScreenMapIt;
+typedef tScreenMap::const_iterator tScreenMapCIt;
 
-typedef QMap<QString, data::ScreenElement*>      ScreenElementMap;
-typedef ScreenElementMap::iterator       tScreenElementMapIt;
+typedef QMap<QString, data::ScreenElement *> ScreenElementMap;
+typedef ScreenElementMap::iterator tScreenElementMapIt;
 typedef ScreenElementMap::const_iterator tScreenElementMapCIt;
-
-
 }
-
 }
 
 #endif //#ifndef _APEX_SRC_LIB_APEXTOOLS_APEXTYPEDEFS_H_

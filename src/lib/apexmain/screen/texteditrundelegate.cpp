@@ -34,40 +34,37 @@ namespace rundelegates
 
 using gui::sc_DefaultPanelColor;
 
-TextEditRunDelegate::TextEditRunDelegate(
-    ExperimentRunDelegate* p_exprd,
-    QWidget* parent, const TextEditElement* e,
-    const QFont& defaultFont )
-        : QLineEdit( parent ),
-        ScreenElementRunDelegate(p_exprd, e),
-        element( e )
+TextEditRunDelegate::TextEditRunDelegate(ExperimentRunDelegate *p_exprd,
+                                         QWidget *parent,
+                                         const TextEditElement *e,
+                                         const QFont &defaultFont)
+    : QLineEdit(parent), ScreenElementRunDelegate(p_exprd, e), element(e)
 {
     setObjectName(element->getID());
     setStyleSheet(element->getStyle());
-    setText( e->getText() );
-    connect( this, SIGNAL( returnPressed() ),
-             this, SLOT( sendAnsweredSignal() ) );
+    setText(e->getText());
+    connect(this, SIGNAL(returnPressed()), this, SLOT(sendAnsweredSignal()));
 
     QFont font = defaultFont;
-    if ( element->getFontSize() != -1 )
-        font.setPointSize( element->getFontSize() );
-    QLineEdit::setFont( font );
+    if (element->getFontSize() != -1)
+        font.setPointSize(element->getFontSize());
+    QLineEdit::setFont(font);
 
     QString sMask = e->getInputMask();
-    if ( sMask == "numbers" )
-        setValidator( new QIntValidator( -32768, 32767, this ) );
+    if (sMask == "numbers")
+        setValidator(new QIntValidator(-32768, 32767, this));
     else if (sMask.startsWith(QLatin1Char('/')))
         setValidator(new QRegExpValidator(QRegExp(sMask.mid(1)), this));
     else
-        setInputMask( sMask );
+        setInputMask(sMask);
 }
 
-const ScreenElement* TextEditRunDelegate::getScreenElement() const
+const ScreenElement *TextEditRunDelegate::getScreenElement() const
 {
     return element;
 }
 
-QWidget* TextEditRunDelegate::getWidget()
+QWidget *TextEditRunDelegate::getWidget()
 {
     return this;
 }
@@ -89,13 +86,13 @@ const QString TextEditRunDelegate::getText() const
 
 void TextEditRunDelegate::sendAnsweredSignal()
 {
-    Q_EMIT answered( this );
+    Q_EMIT answered(this);
 }
 
-void TextEditRunDelegate::setText( const QString& t )
+void TextEditRunDelegate::setText(const QString &t)
 {
-    QLineEdit::setText( t );
-    if (! inputMask().isEmpty())
+    QLineEdit::setText(t);
+    if (!inputMask().isEmpty())
         home(true);
 }
 
@@ -104,13 +101,10 @@ void TextEditRunDelegate::clearText()
     setText(element->getText());
 }
 
-void TextEditRunDelegate::connectSlots(gui::ScreenRunDelegate* d)
+void TextEditRunDelegate::connectSlots(gui::ScreenRunDelegate *d)
 {
-    connect(this, SIGNAL(answered(ScreenElementRunDelegate*)),
-            d, SIGNAL(answered(ScreenElementRunDelegate*)));
+    connect(this, SIGNAL(answered(ScreenElementRunDelegate *)), d,
+            SIGNAL(answered(ScreenElementRunDelegate *)));
 }
-
 }
-
 }
-

@@ -38,17 +38,19 @@ namespace parser
 class WavDeviceParser : public apex::parser::SimpleParametersParser
 {
     Q_DECLARE_TR_FUNCTIONS(WavDeviceParser);
+
 public:
     WavDeviceParser();
 
     ~WavDeviceParser();
 
-    virtual void AddParameter(data::SimpleParameters* p, const QDomElement &e, const QString& owner, const QString& type, const QString& id, const QVariant& value, const int channel) Q_DECL_OVERRIDE;
-    void Parse(const QDomElement &base, data::WavDeviceData* p);
+    virtual void AddParameter(data::SimpleParameters *p, const QDomElement &e,
+                              const QString &owner, const QString &type,
+                              const QString &id, const QVariant &value,
+                              const int channel) Q_DECL_OVERRIDE;
+    void Parse(const QDomElement &base, data::WavDeviceData *p);
 };
-
 }
-
 }
 
 #endif

@@ -37,9 +37,9 @@ TrialParser::~TrialParser()
 {
 }
 
-data::TrialData* TrialParser::GetTrial(const QDomElement &p_base)
+data::TrialData *TrialParser::GetTrial(const QDomElement &p_base)
 {
-    data::TrialData* newTrial = MakeTrial();
+    data::TrialData *newTrial = MakeTrial();
     Q_ASSERT(newTrial);
 
     // get id
@@ -47,31 +47,33 @@ data::TrialData* TrialParser::GetTrial(const QDomElement &p_base)
     Q_ASSERT(!id.isEmpty());
     newTrial->SetID(id);
 
-    for (QDomElement currentNode = p_base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
-        const QString tag       = currentNode.tagName();
-        const QString subid     = currentNode.attribute(gc_sID);
-        const QString nodeText  = currentNode.text();
+    for (QDomElement currentNode = p_base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
+        const QString tag = currentNode.tagName();
+        const QString subid = currentNode.attribute(gc_sID);
+        const QString nodeText = currentNode.text();
 
         if (tag == "answer") {
             QString text = GetAnswer(currentNode);
             newTrial->SetAnswer(text);
-            //Q_ASSERT(nodeText.isEmpty()==0);
-            //newTrial->SetAnswer(nodeText);
+            // Q_ASSERT(nodeText.isEmpty()==0);
+            // newTrial->SetAnswer(nodeText);
         } else if (tag == "answer_element") {
-            Q_ASSERT(nodeText.isEmpty()==0);
+            Q_ASSERT(nodeText.isEmpty() == 0);
             newTrial->SetAnswerElement(nodeText);
         } else if (tag == "screen") {
-            Q_ASSERT(subid.isEmpty()==0);
+            Q_ASSERT(subid.isEmpty() == 0);
             newTrial->SetScreen(subid);
         } else if (tag == "stimulus") {
-            Q_ASSERT(subid.isEmpty()==0);
+            Q_ASSERT(subid.isEmpty() == 0);
             newTrial->AddStimulus(subid);
         } else if (tag == "standard") {
-            Q_ASSERT(subid.isEmpty()==0);
+            Q_ASSERT(subid.isEmpty() == 0);
             newTrial->AddStandard(subid);
         } else {
-            qCDebug(APEX_RS, "Unknown tag in parsedatablocks: %s", qPrintable(tag));
+            qCDebug(APEX_RS, "Unknown tag in parsedatablocks: %s",
+                    qPrintable(tag));
         }
     }
 
@@ -87,5 +89,4 @@ data::TrialData *apex::TrialParser::MakeTrial()
 {
     return new data::TrialData();
 }
-
 }

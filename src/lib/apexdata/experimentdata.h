@@ -20,7 +20,6 @@
 #ifndef _APEX_SRC_LIB_APEXDATA_EXPERIMENTDATA_H_
 #define _APEX_SRC_LIB_APEXDATA_EXPERIMENTDATA_H_
 
-
 #include "apextools/apextypedefs.h"
 #include "apextools/global.h"
 
@@ -75,84 +74,80 @@ class TrialData;
 /**
  * Please modify operator== when modifying this data structure.
  */
-//FIXME
+// FIXME
 //[job] I've made all the getters return pointers but there should be thought
-//about how we want this data to be modified: either make const and non-const
-//versions of all getters and modify through the non-const version or make
-//all getters const and provide setters (probably less convenient).
+// about how we want this data to be modified: either make const and non-const
+// versions of all getters and modify through the non-const version or make
+// all getters const and provide setters (probably less convenient).
 
-//FIXME [job] what should be the copy behaviour of this class?
+// FIXME [job] what should be the copy behaviour of this class?
 class APEXDATA_EXPORT ExperimentData
 {
     Q_DECLARE_TR_FUNCTIONS(ExperimentData)
 public:
-    ExperimentData(const QString& configFile,
-                    data::ScreensData *screens,
-                    data::ProcedureData *procedures,
-                    data::ConnectionsData *connections,
-                    data::CalibrationData *calibration,
-                    GeneralParameters *genParam,
-                    ResultParameters *resParam,
-                    ParameterDialogResults *paramDlg,
-                    QMap<QString, RandomGeneratorParameters*>  *rndGen,
-                    data::DevicesData *devices,
-                    data::FiltersData *filters,
-                    data::DevicesData *controlDevices,
-                    data::DatablocksData *datablocks,
-                    data::StimuliData *stimuli,
-                    const QString& description,
-                    data::ParameterManagerData *paramMngr);
+    ExperimentData(const QString &configFile, data::ScreensData *screens,
+                   data::ProcedureData *procedures,
+                   data::ConnectionsData *connections,
+                   data::CalibrationData *calibration,
+                   GeneralParameters *genParam, ResultParameters *resParam,
+                   ParameterDialogResults *paramDlg,
+                   QMap<QString, RandomGeneratorParameters *> *rndGen,
+                   data::DevicesData *devices, data::FiltersData *filters,
+                   data::DevicesData *controlDevices,
+                   data::DatablocksData *datablocks, data::StimuliData *stimuli,
+                   const QString &description,
+                   data::ParameterManagerData *paramMngr);
     ExperimentData();
     virtual ~ExperimentData();
 
-    const QString& fileName() const;
-    void setFileName (const QString& fileName);
+    const QString &fileName() const;
+    void setFileName(const QString &fileName);
 
-    //const getters
+    // const getters
 
-    const ScreensData* screensData() const;
-    const TrialData* trialById (const QString& id) const;
-    const ConnectionsData* connectionsData() const;
-    const Screen& screenById (const QString& id) const;
-    const ProcedureData* procedureData() const;
-    QMap<QString, RandomGeneratorParameters*> randomGenerators() const; //FIXME params still modifiable
-    CalibrationData* calibrationData() const;
-    const GeneralParameters* generalParameters() const;
-    const ResultParameters* resultParameters() const;
+    const ScreensData *screensData() const;
+    const TrialData *trialById(const QString &id) const;
+    const ConnectionsData *connectionsData() const;
+    const Screen &screenById(const QString &id) const;
+    const ProcedureData *procedureData() const;
+    QMap<QString, RandomGeneratorParameters *>
+    randomGenerators() const; // FIXME params still modifiable
+    CalibrationData *calibrationData() const;
+    const GeneralParameters *generalParameters() const;
+    const ResultParameters *resultParameters() const;
     FixedParameterList fixedParameters() const;
-    const ParameterDialogResults* parameterDialogResults() const;
-    const DevicesData* devicesData() const;
-    const DeviceData* deviceById (const QString& id) const;
-    const DatablocksData* datablocksData() const;
-    const FiltersData* filtersData() const;
-    const StimuliData* stimuliData() const;
-    const DevicesData* controlDevices() const;
-    const ParameterManagerData* parameterManagerData() const;
-    const StimulusData* stimulusById (const QString& id) const;
+    const ParameterDialogResults *parameterDialogResults() const;
+    const DevicesData *devicesData() const;
+    const DeviceData *deviceById(const QString &id) const;
+    const DatablocksData *datablocksData() const;
+    const FiltersData *filtersData() const;
+    const StimuliData *stimuliData() const;
+    const DevicesData *controlDevices() const;
+    const ParameterManagerData *parameterManagerData() const;
+    const StimulusData *stimulusById(const QString &id) const;
     QString experimentDescription() const;
-    bool isFixedParameter (const QString& id) const;
+    bool isFixedParameter(const QString &id) const;
 
     // non-const getters
 
-    TrialData* trialById(const QString& id);
-    ResultParameters* resultParameters();
-    GeneralParameters* generalParameters();
-    ScreensData* screensData();
-    ConnectionsData* connectionsData();
-    ProcedureData* procedureData();
+    TrialData *trialById(const QString &id);
+    ResultParameters *resultParameters();
+    GeneralParameters *generalParameters();
+    ScreensData *screensData();
+    ConnectionsData *connectionsData();
+    ProcedureData *procedureData();
 
-    void addFilter(FilterData* filter);
+    void addFilter(FilterData *filter);
 
     /**
         * Equality operator used for regression test.
         * Please modify if modifying this data structure.
         */
-    bool operator==(const ExperimentData& other) const;
+    bool operator==(const ExperimentData &other) const;
 
 private:
-    ExperimentDataPrivate* d;
+    ExperimentDataPrivate *d;
 };
-
 }
 }
 #endif //#ifndef _APEX_SRC_LIB_APEXDATA_EXPERIMENTDATA_H_

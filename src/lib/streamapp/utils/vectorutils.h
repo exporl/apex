@@ -25,35 +25,40 @@
 namespace utils
 {
 
-  template< class tType >
-  bool f_bHasElement( const std::vector<tType>& ac_VectorToSearch, const tType& ac_ItemToFind )
-  {
-    const typename std::vector<tType>::size_type c_nItems = ac_VectorToSearch.size();
-    for( typename std::vector<tType>::size_type i = 0 ; i < c_nItems ; ++ i )
-      if( ac_VectorToSearch[ i ] == ac_ItemToFind )
-        return true;
+template <class tType>
+bool f_bHasElement(const std::vector<tType> &ac_VectorToSearch,
+                   const tType &ac_ItemToFind)
+{
+    const typename std::vector<tType>::size_type c_nItems =
+        ac_VectorToSearch.size();
+    for (typename std::vector<tType>::size_type i = 0; i < c_nItems; ++i)
+        if (ac_VectorToSearch[i] == ac_ItemToFind)
+            return true;
     return false;
-  }
+}
 
-    //!-1 = not found
-  template< class tType >
-  int f_nFindElement( const std::vector<tType>& ac_VectorToSearch, const tType& ac_ItemToFind )
-  {
-    const typename std::vector<tType>::size_type c_nItems = ac_VectorToSearch.size();
-    for( typename std::vector<tType>::size_type i = 0 ; i < c_nItems ; ++ i )
-      if( ac_VectorToSearch[ i ] == ac_ItemToFind )
-        return (int) i;
+//!-1 = not found
+template <class tType>
+int f_nFindElement(const std::vector<tType> &ac_VectorToSearch,
+                   const tType &ac_ItemToFind)
+{
+    const typename std::vector<tType>::size_type c_nItems =
+        ac_VectorToSearch.size();
+    for (typename std::vector<tType>::size_type i = 0; i < c_nItems; ++i)
+        if (ac_VectorToSearch[i] == ac_ItemToFind)
+            return (int)i;
     return -1;
-  }
+}
 
-  template< class tType >
-  void f_AddFrom( const std::vector<tType>& ac_VectorToAddFrom, std::vector<tType>& ac_VectorToAddTo )
-  {
-    const typename std::vector<tType>::size_type c_nItems = ac_VectorToAddFrom.size();
-    for( typename std::vector<tType>::size_type i = 0 ; i < c_nItems ; ++ i )
-      ac_VectorToAddTo.push_back( ac_VectorToAddFrom.at( i ) );
-  }
-
+template <class tType>
+void f_AddFrom(const std::vector<tType> &ac_VectorToAddFrom,
+               std::vector<tType> &ac_VectorToAddTo)
+{
+    const typename std::vector<tType>::size_type c_nItems =
+        ac_VectorToAddFrom.size();
+    for (typename std::vector<tType>::size_type i = 0; i < c_nItems; ++i)
+        ac_VectorToAddTo.push_back(ac_VectorToAddFrom.at(i));
+}
 }
 
 #endif //#ifndef __VECTORUTILS_H__

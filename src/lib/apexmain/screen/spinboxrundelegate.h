@@ -26,51 +26,54 @@
 
 namespace apex
 {
-    class ExperimentRunDelegate;
-  namespace data
-  {
-    class ScreenElement;
-    class SpinBoxElement;
-  }
+class ExperimentRunDelegate;
+namespace data
+{
+class ScreenElement;
+class SpinBoxElement;
+}
 
-  namespace rundelegates
-  {
-    using data::SpinBoxElement;
-    using data::ScreenElement;
+namespace rundelegates
+{
+using data::SpinBoxElement;
+using data::ScreenElement;
 
-    /**
-     * The SpinBoxRunDelegate class is an implementation of
-     * ScreenElementRunDelegate representing a SpinBoxElement.
-     */
-    class SpinBoxRunDelegate
-      : public QSpinBox, public ScreenElementRunDelegate
+/**
+ * The SpinBoxRunDelegate class is an implementation of
+ * ScreenElementRunDelegate representing a SpinBoxElement.
+ */
+class SpinBoxRunDelegate : public QSpinBox, public ScreenElementRunDelegate
+{
+    Q_OBJECT
+
+    QFont initialFont;
+    const SpinBoxElement *element;
+
+public:
+    SpinBoxRunDelegate(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                       const SpinBoxElement *e, const QFont &defaultFont);
+
+    const ScreenElement *getScreenElement() const;
+
+    QWidget *getWidget();
+    bool hasText() const;
+    bool hasInterestingText() const;
+    const QString getText() const;
+    void connectSlots(gui::ScreenRunDelegate *d);
+
+    const SpinBoxElement *GetElement() const
     {
-      Q_OBJECT
-
-      QFont initialFont;
-      const SpinBoxElement* element;
-    public:
-        SpinBoxRunDelegate( ExperimentRunDelegate* p_exprd,
-                            QWidget* parent, const SpinBoxElement* e,
-                         const QFont& defaultFont );
-
-      const ScreenElement* getScreenElement() const;
-
-      QWidget* getWidget();
-      bool hasText() const;
-      bool hasInterestingText() const;
-      const QString getText() const;
-      void connectSlots( gui::ScreenRunDelegate* d );
-
-      const SpinBoxElement* GetElement() const { return element; };
-    signals:
-      void answered( ScreenElementRunDelegate* );
-    protected:
-      void resizeEvent( QResizeEvent* e );
-    public slots:
-      void sendAnsweredSignal();
+        return element;
     };
-  }
+signals:
+    void answered(ScreenElementRunDelegate *);
+
+protected:
+    void resizeEvent(QResizeEvent *e);
+public slots:
+    void sendAnsweredSignal();
+};
+}
 }
 
 #endif

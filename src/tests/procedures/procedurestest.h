@@ -41,51 +41,53 @@ class MainConfigFileData;
 class ConstantProcedureData;
 class TrainingProcedureData;
 }
-
 }
 
 typedef QList<QStringList>::Iterator ListIt;
-class ProceduresTest: public QObject
+class ProceduresTest : public QObject
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    QString name() const;
 
-        QString name() const;
+private Q_SLOTS:
+    void initTestCase();
+    void testEqualCorrector();
+    void testProcedureApi();
+    void testConstantProcedureParser();
+    void testConstantProcedure();
+    void testScriptProcedure();
+    void testDummyProcedure();
+    void testTrainingProcedure();
+    void testAdaptiveProcedure();
+    void testKaernbachProcedure();
+    void testMultiProcedureOneByOne();
+    void testMultiProcedureSequential();
+    void testMultiProcedureRandom();
 
-    private Q_SLOTS:
+    void testScriptProcedureInvalidTrial();
 
-        void testEqualCorrector();
-        void testProcedureApi();
-        void testConstantProcedureParser();
-        void testConstantProcedure();
-        void testScriptProcedure();
-        void testDummyProcedure();
-        void testTrainingProcedure();
-        void testAdaptiveProcedure();
-        void testKaernbachProcedure();
-        void testMultiProcedureOneByOne();
-        void testMultiProcedureSequential();
-        void testMultiProcedureRandom();
+private:
+    void createConstantProcedure(apex::data::ConstantProcedureData *&data,
+                                 QStringList &expectedStimuli);
+    void createTrainingProcedure(apex::data::TrainingProcedureData *&data,
+                                 QString &answerElement,
+                                 QStringList &trial1Stimuli);
+    void testTrial(const apex::data::Trial &trial, const QString id,
+                   const int count) const;
 
-        void testScriptProcedureInvalidTrial();
+    apex::data::ExperimentData *makeDummyExperimentData();
+    apex::data::ExperimentData *makeStimulusExperimentData();
+    apex::ExperimentRunDelegate *
+    makeDummyExperimentRunDelegate(const apex::data::MainConfigFileData &mcd);
+    apex::ExperimentRunDelegate *makeStimulusExperimentRunDelegate(
+        const apex::data::MainConfigFileData &mcd);
+    ListIt indexOf(const QString &text, QList<QStringList> &list);
 
-    private:
-        void createConstantProcedure(apex::data::ConstantProcedureData*& data, QStringList &expectedStimuli);
-        void createTrainingProcedure(apex::data::TrainingProcedureData*& data, QString &answerElement, QStringList &trial1Stimuli);
-        void testTrial(const apex::data::Trial& trial, const QString id, const int count) const;
-
-        apex::data::ExperimentData* makeDummyExperimentData();
-        apex::data::ExperimentData* makeStimulusExperimentData();
-        apex::ExperimentRunDelegate* makeDummyExperimentRunDelegate(const apex::data::MainConfigFileData& mcd);
-        apex::ExperimentRunDelegate* makeStimulusExperimentRunDelegate(const apex::data::MainConfigFileData& mcd);
-        ListIt indexOf(const QString& text, QList<QStringList>& list);
-
-        void checkResultXml(QString xml,
-                            QSet<QString> elements,
-                            QString type = "",
-                            QString id = "",
-                            QList<QStringList> alternatives = QList<QStringList>());
+    void checkResultXml(QString xml, QSet<QString> elements, QString type = "",
+                        QString id = "",
+                        QList<QStringList> alternatives = QList<QStringList>());
 };
 
 #endif

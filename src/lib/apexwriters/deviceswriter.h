@@ -43,7 +43,8 @@ public:
     *@param doc the document to place the element in
     *@param data the data to create the element with
     */
-    static QDomElement addElement(QDomDocument *doc, const data::DevicesData& data);
+    static QDomElement addElement(QDomDocument *doc,
+                                  const data::DevicesData &data);
 
 private:
     /**
@@ -52,16 +53,15 @@ private:
         * @param dev the <device> element that needs to be finished
         * @param data the data to finish this element with
         */
-    static void finishAsWav(QDomElement *dev, const data::WavDeviceData& data);
+    static void finishAsWav(QDomElement *dev, const data::WavDeviceData &data);
     /**
         * Finishes a partly created <device> element as an cohdevice
         *
         * @param dev the <device> element that needs to be finished
         * @param data the data to finish this element with
         */
-    static void finishAsCoh(QDomElement *dev, const data::CohDeviceData& data);
+    static void finishAsCoh(QDomElement *dev, const data::CohDeviceData &data);
 };
-
 }
 }
 

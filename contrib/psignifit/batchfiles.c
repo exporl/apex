@@ -171,7 +171,7 @@ BatchPtr LoadBatchFromFile(char * name, boolean generateErrorIfNotFound)
 {
 	FILE * stream;
 	size_t i, bufSize, bufIncrement = 1024, maxBufSize = 8192;
-	char c;
+	int c;
 	BatchPtr b;
 
 	b = New(Batch, 1);

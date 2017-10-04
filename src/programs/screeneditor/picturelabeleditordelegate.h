@@ -24,45 +24,45 @@
 
 namespace apex
 {
-  namespace data
-  {
-    class PictureLabelElement;
-  }
+namespace data
+{
+class PictureLabelElement;
+}
 
-  namespace editor
-  {
+namespace editor
+{
 
-    using data::PictureLabelElement;
+using data::PictureLabelElement;
 
-    /**
-     * This class is an ScreenElementEditorDelegate representing a
-     * PictureLabelElement.
-     */
-    class PictureLabelEditorDelegate
-      : public LabelEditorDelegateBase
-    {
-      Q_OBJECT
+/**
+ * This class is an ScreenElementEditorDelegate representing a
+ * PictureLabelElement.
+ */
+class PictureLabelEditorDelegate : public LabelEditorDelegateBase
+{
+    Q_OBJECT
 
-      PictureLabelElement* element;
-    public:
-      PictureLabelEditorDelegate( PictureLabelElement* e, QWidget* parent, ScreenWidget* w );
-      ~PictureLabelEditorDelegate();
+    PictureLabelElement *element;
 
-      ScreenElement* getScreenElement();
+public:
+    PictureLabelEditorDelegate(PictureLabelElement *e, QWidget *parent,
+                               ScreenWidget *w);
+    ~PictureLabelEditorDelegate();
 
-      int getPropertyCount();
-      QString getPropertyName( int nr );
-      QVariant getPropertyData( int nr, int role );
-      PropertyType getPropertyType( int nr );
-      bool setProperty( int nr, const QVariant& v );
+    ScreenElement *getScreenElement();
 
-      const QString getText() const;
+    int getPropertyCount();
+    QString getPropertyName(int nr);
+    QVariant getPropertyData(int nr, int role);
+    PropertyType getPropertyType(int nr);
+    bool setProperty(int nr, const QVariant &v);
 
-    protected:
-      void mouseReleaseEvent( QMouseEvent* ev );
-    };
+    const QString getText() const;
 
-  }
+protected:
+    void mouseReleaseEvent(QMouseEvent *ev);
+};
+}
 }
 
 #endif

@@ -36,15 +36,14 @@ public:
 
     static QString GetApexConfigFilePath();
     static QString GetUserConfigFilePath();
-    static QString GetConfigFilePath(const QString& filename);
+    static QString GetConfigFilePath(const QString &filename);
 
     static QString GetNonBinaryPluginPath();
     static QString GetScriptsPath();
 
 private:
-    static QString GetSchemaPath(const QString& filename);
+    static QString GetSchemaPath(const QString &filename);
 };
-
 }
 
 #endif //#ifndef _APEX_SRC_LIB_APEXTOOLS_APEXPATHS_H_

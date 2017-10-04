@@ -36,24 +36,18 @@ namespace stimulus
 */
 class PluginFilterParameters : public data::FilterData
 {
-    public:
+public:
+    PluginFilterParameters();
+    ~PluginFilterParameters();
 
-        PluginFilterParameters();
-        ~PluginFilterParameters();
+    virtual void setParameter(const QString &type, const QString &value,
+                              const QString &optionalId,
+                              const QString &optionalChannel) = 0;
 
-        virtual void setParameter(const QString& type, const QString& value,
-                                  const QString& optionalId,
-                                  const QString& optionalChannel) = 0;
-
-
-        private:
-
-            QString m_plugin; //! filename of plugin
+private:
+    QString m_plugin; //! filename of plugin
 };
-
-
 }
-
 }
 
 #endif

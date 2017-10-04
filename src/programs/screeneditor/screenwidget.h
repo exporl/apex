@@ -31,52 +31,52 @@ class QPushButton;
 
 namespace apex
 {
-  namespace data
-  {
-    class Screen;
-    class ScreenEmptyElement;
-  }
-  namespace editor
-  {
-    class ScreenEditor;
-    class ScreenWidget;
-    class ScreenElementEditorDelegate;
+namespace data
+{
+class Screen;
+class ScreenEmptyElement;
+}
+namespace editor
+{
+class ScreenEditor;
+class ScreenWidget;
+class ScreenElementEditorDelegate;
 
-    using data::Screen;
+using data::Screen;
 
-    class ScreenWidget
-      : public QWidget
-    {
-      Q_OBJECT
+class ScreenWidget : public QWidget
+{
+    Q_OBJECT
 
-      ScreenEditor* editor;
-      Screen* screen;
-      QFont defaultFont;
-      elementToDelegateMapT elementToDelegateMap;
-      ScreenElementEditorDelegate* rootDelegate;
-    public:
-      ScreenWidget( ScreenEditor* editor, Screen* screen,
-                    QFont defaultFont );
-      ~ScreenWidget();
-      void buildScreenReps();
-      ScreenEditor* getEditor();
-      elementToDelegateMapT& getElementToDelegateMap();
+    ScreenEditor *editor;
+    Screen *screen;
+    QFont defaultFont;
+    elementToDelegateMapT elementToDelegateMap;
+    ScreenElementEditorDelegate *rootDelegate;
 
-      ScreenElementEditorDelegate* getEditorDelegate( ScreenElement* el );
-      Screen* getScreen();
-      const Screen* getScreen() const;
+public:
+    ScreenWidget(ScreenEditor *editor, Screen *screen, QFont defaultFont);
+    ~ScreenWidget();
+    void buildScreenReps();
+    ScreenEditor *getEditor();
+    elementToDelegateMapT &getElementToDelegateMap();
 
-      QFont getDefaultFont();
+    ScreenElementEditorDelegate *getEditorDelegate(ScreenElement *el);
+    Screen *getScreen();
+    const Screen *getScreen() const;
 
-      void resizeEvent( QResizeEvent* e );
+    QFont getDefaultFont();
 
-      void deleteDelegate( ScreenElementEditorDelegate* e, bool deleteElementToo = true );
-      // called by a delegate to inform the screenWidget of its death..
-      void delegateDeleted( ScreenElementEditorDelegate* e );
-    private:
-      void setRootDelegateGeometry();
-    };
+    void resizeEvent(QResizeEvent *e);
 
-  }
+    void deleteDelegate(ScreenElementEditorDelegate *e,
+                        bool deleteElementToo = true);
+    // called by a delegate to inform the screenWidget of its death..
+    void delegateDeleted(ScreenElementEditorDelegate *e);
+
+private:
+    void setRootDelegateGeometry();
+};
+}
 }
 #endif

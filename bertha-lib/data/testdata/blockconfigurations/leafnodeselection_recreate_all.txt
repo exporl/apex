@@ -1,0 +1,7 @@
+sin2:output-1 gain2:input-1
+gain2:output-1 sum:input-2
+gain:output-1 sum:input-1
+sin:output-1 gain:input-1
+sum:output-1 device:playback-1
+gain3:output-1 device:playback-2
+device:capture-1 gain3:input-1

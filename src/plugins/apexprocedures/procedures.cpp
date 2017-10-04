@@ -34,41 +34,34 @@
 #define STR_ADAPTIVE "apex:adaptiveProcedure"
 #define STR_CONSTANT "apex:constantProcedure"
 #define STR_TRAINING "apex:trainingProcedure"
-#define STR_MULTI    "apex:multiProcedure"
-#define STR_PLUGIN   "apex:pluginProcedure"
+#define STR_MULTI "apex:multiProcedure"
+#define STR_PLUGIN "apex:pluginProcedure"
 
 using namespace apex;
 
 class ProcedureCreator : public QObject, public ProcedureCreatorInterface
 {
-        Q_OBJECT
-        Q_INTERFACES(apex::ProcedureCreatorInterface)
+    Q_OBJECT
+    Q_INTERFACES(apex::ProcedureCreatorInterface)
     Q_PLUGIN_METADATA(IID "apex.procedurecreator")
-    public:
+public:
+    QStringList availablePlugins() const;
 
-        QStringList availablePlugins() const;
+    ProcedureInterface *createProcedure(const QString &name, ProcedureApi *api,
+                                        const data::ProcedureData *config);
 
-        ProcedureInterface* createProcedure(const QString& name,
-                                            ProcedureApi* api,
-                                            const data::ProcedureData* config);
-
-        ProcedureParserInterface* createProcedureParser(const QString& name);
+    ProcedureParserInterface *createProcedureParser(const QString &name);
 };
 
 QStringList ProcedureCreator::availablePlugins() const
 {
-    return QStringList()
-        << STR_ADAPTIVE
-        << STR_CONSTANT
-        << STR_TRAINING
-        << STR_MULTI
-        << STR_PLUGIN;
+    return QStringList() << STR_ADAPTIVE << STR_CONSTANT << STR_TRAINING
+                         << STR_MULTI << STR_PLUGIN;
 }
 
-
-ProcedureInterface* ProcedureCreator::createProcedure(const QString& name,
-                                                      ProcedureApi* api,
-                                                      const data::ProcedureData* config)
+ProcedureInterface *
+ProcedureCreator::createProcedure(const QString &name, ProcedureApi *api,
+                                  const data::ProcedureData *config)
 {
     if (name == STR_ADAPTIVE)
         return new AdaptiveProcedure(api, config);
@@ -83,11 +76,11 @@ ProcedureInterface* ProcedureCreator::createProcedure(const QString& name,
     else
         qFatal("Invalid name in createProcedure");
 
-    return 0;           // keep compiler happy
+    return 0; // keep compiler happy
 }
 
-
-ProcedureParserInterface *ProcedureCreator::createProcedureParser(const QString &name)
+ProcedureParserInterface *
+ProcedureCreator::createProcedureParser(const QString &name)
 {
     if (name == STR_ADAPTIVE)
         return new parser::AdaptiveProcedureParser();
@@ -102,8 +95,7 @@ ProcedureParserInterface *ProcedureCreator::createProcedureParser(const QString 
     else
         qFatal("Invalid name in createProcedureParser");
 
-    return 0;           // keep compiler happy
+    return 0; // keep compiler happy
 }
-
 
 #include "procedures.moc"

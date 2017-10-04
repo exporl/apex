@@ -27,66 +27,65 @@ class QFrame;
 
 namespace apex
 {
-  namespace data
-  {
-    class Screen;
-  }
+namespace data
+{
+class Screen;
+}
 
-  namespace editor
-  {
-    class PropertiesEditor;
-    class ScreenWidget;
-    class ScreenElementCreator;
-    class ScreenWidgetDB;
+namespace editor
+{
+class PropertiesEditor;
+class ScreenWidget;
+class ScreenElementCreator;
+class ScreenWidgetDB;
 
-    class ScreenElementEditorDelegate;
+class ScreenElementEditorDelegate;
 
-    using apex::data::Screen;
+using apex::data::Screen;
 
-    class ScreenEditor
-      : public QMainWindow
-    {
-      Q_OBJECT
-      ScreenWidget* screenWidget;
+class ScreenEditor : public QMainWindow
+{
+    Q_OBJECT
+    ScreenWidget *screenWidget;
 
-      QFrame* selectedWidget;
-      ScreenElementEditorDelegate* selectedDelegate;
-      PropertiesEditor* propeditor;
-      ScreenWidgetDB* widgetDB;
-      QString file;
+    QFrame *selectedWidget;
+    ScreenElementEditorDelegate *selectedDelegate;
+    PropertiesEditor *propeditor;
+    ScreenWidgetDB *widgetDB;
+    QString file;
 
-      void setupWidgetsToolBox();
-      void setupLayoutsToolBox();
-      void setupObjectPropertiesWidget();
-      void setupToolBoxes();
+    void setupWidgetsToolBox();
+    void setupLayoutsToolBox();
+    void setupObjectPropertiesWidget();
+    void setupToolBoxes();
 
-      void setupActions();
-    private slots:
-      void saveScreen();
-      void screenModified();
-    public:
-      ScreenEditor( QWidget* parent = 0, Screen* screen = 0 );
-      ~ScreenEditor();
-      ScreenWidget* getScreenWidget();
+    void setupActions();
+private slots:
+    void saveScreen();
+    void screenModified();
 
-      PropertiesEditor* getPropertiesEditor();
+public:
+    ScreenEditor(QWidget *parent = 0, Screen *screen = 0);
+    ~ScreenEditor();
+    ScreenWidget *getScreenWidget();
 
-      void selectWidget( QFrame* widget, ScreenElementEditorDelegate* rep );
+    PropertiesEditor *getPropertiesEditor();
 
-      void addWidgetClicked( ScreenElementCreator* rep );
+    void selectWidget(QFrame *widget, ScreenElementEditorDelegate *rep);
 
-      static Screen* createDefaultScreen();
+    void addWidgetClicked(ScreenElementCreator *rep);
 
-      // set the filename, which is shown in the title bar...
-      void setFile( const QString& f );
-      QString makeTitle();
-    signals:
-      void newScreen();
-      void saveScreen( ScreenEditor*, Screen* s );
-      void saveAllAs();
-      void saveAllScreens();
-    };
+    static Screen *createDefaultScreen();
 
-  }
+    // set the filename, which is shown in the title bar...
+    void setFile(const QString &f);
+    QString makeTitle();
+signals:
+    void newScreen();
+    void saveScreen(ScreenEditor *, Screen *s);
+    void saveAllAs();
+    void saveAllScreens();
+};
+}
 }
 #endif

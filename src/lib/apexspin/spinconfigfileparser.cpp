@@ -34,19 +34,16 @@ using spin::data::SpinConfig;
 using namespace apex;
 using namespace spin::parser;
 
-SpinConfigFileParser::SpinConfigFileParser() :
-    UpgradableXmlParser(apex::ApexPaths::GetConfigFilePath(QSL("spin.xml")),
-            ApexPaths::GetSpinSchemaPath(),
-            QL1S(SPIN_SCHEMA_URL),
-            QL1S(APEX_NAMESPACE))
+SpinConfigFileParser::SpinConfigFileParser()
+    : UpgradableXmlParser(apex::ApexPaths::GetConfigFilePath(QSL("spin.xml")),
+                          ApexPaths::GetSpinSchemaPath(), QL1S(SPIN_SCHEMA_URL),
+                          QL1S(APEX_NAMESPACE))
 {
 }
 
-SpinConfigFileParser::SpinConfigFileParser(const QString &file) :
-    UpgradableXmlParser(file,
-            ApexPaths::GetSpinSchemaPath(),
-            QL1S(SPIN_SCHEMA_URL),
-            QL1S(APEX_NAMESPACE))
+SpinConfigFileParser::SpinConfigFileParser(const QString &file)
+    : UpgradableXmlParser(file, ApexPaths::GetSpinSchemaPath(),
+                          QL1S(SPIN_SCHEMA_URL), QL1S(APEX_NAMESPACE))
 {
 }
 
@@ -56,8 +53,8 @@ SpinConfig SpinConfigFileParser::parse()
 
     SpinConfig config;
 
-    for (QDomElement child = document.documentElement().firstChildElement(); !child.isNull();
-            child = child.nextSiblingElement()) {
+    for (QDomElement child = document.documentElement().firstChildElement();
+         !child.isNull(); child = child.nextSiblingElement()) {
         QString tag = child.tagName();
         if (tag == "prefix")
             parsePrefix(child, &config);
@@ -90,7 +87,8 @@ SpinConfig SpinConfigFileParser::parse()
 
 /*FIXME link against libparser when ready!
 This code is a duplicate from prefixparser */
-void SpinConfigFileParser::parsePrefix(const QDomElement &prefixNode, SpinConfig* into)
+void SpinConfigFileParser::parsePrefix(const QDomElement &prefixNode,
+                                       SpinConfig *into)
 {
     Q_ASSERT(prefixNode.tagName() == "prefix");
 
@@ -98,45 +96,50 @@ void SpinConfigFileParser::parsePrefix(const QDomElement &prefixNode, SpinConfig
     QString value(prefixNode.text());
 
     apex::data::FilePrefix prefix;
-    prefix.setValue( value.trimmed() );
+    prefix.setValue(value.trimmed());
     if (attrib.isEmpty() || attrib == "inline")
-        prefix.setType( apex::data::FilePrefix::PREFIX_INLINE);
+        prefix.setType(apex::data::FilePrefix::PREFIX_INLINE);
     else if (attrib == "apexconfig")
-        prefix.setType(apex::data::FilePrefix::PREFIX_MAINCONFIG );
+        prefix.setType(apex::data::FilePrefix::PREFIX_MAINCONFIG);
     else
         qFatal("invalid attribute value");
 
     into->setPrefix(prefix);
 }
 
-void SpinConfigFileParser::parseSpeakers(const QDomElement &speakers, SpinConfig* into)
+void SpinConfigFileParser::parseSpeakers(const QDomElement &speakers,
+                                         SpinConfig *into)
 {
     Q_ASSERT(speakers.tagName() == "speaker_setup");
 
     for (QDomElement speaker = speakers.firstChildElement(); !speaker.isNull();
-            speaker = speaker.nextSiblingElement()) {
+         speaker = speaker.nextSiblingElement()) {
         Q_ASSERT(speaker.tagName() == "speaker");
 
-        unsigned angle = speaker.firstChildElement(QSL("angle")).text().toUInt();
-        unsigned channel = speaker.firstChildElement(QSL("channel")).text().toUInt();
+        unsigned angle =
+            speaker.firstChildElement(QSL("angle")).text().toUInt();
+        unsigned channel =
+            speaker.firstChildElement(QSL("channel")).text().toUInt();
 
         into->addSpeaker(channel, angle);
     }
 }
 
-void SpinConfigFileParser::parseNoises(const QDomElement &noises, SpinConfig* into)
+void SpinConfigFileParser::parseNoises(const QDomElement &noises,
+                                       SpinConfig *into)
 {
     Q_ASSERT(noises.tagName() == "noises");
 
     for (QDomElement noise = noises.firstChildElement(); !noise.isNull();
-            noise = noise.nextSiblingElement()) {
+         noise = noise.nextSiblingElement()) {
         Q_ASSERT(noise.tagName() == "noise");
 
         QString id = noise.attribute(QSL("id"));
         QString file = noise.firstChildElement(QSL("file")).text();
         double rms = noise.firstChildElement(QSL("rms")).text().toDouble();
         QString name = noise.firstChildElement(QSL("name")).text();
-        QString description = noise.firstChildElement(QSL("description")).text();
+        QString description =
+            noise.firstChildElement(QSL("description")).text();
 
         QDomElement speechNode = noise.firstChildElement(QSL("speechmaterial"));
         QString speechmat;
@@ -151,11 +154,12 @@ void SpinConfigFileParser::parseNoises(const QDomElement &noises, SpinConfig* in
     }
 }
 
-void SpinConfigFileParser::parseSpeech(const QDomElement &speechmat, SpinConfig* into)
+void SpinConfigFileParser::parseSpeech(const QDomElement &speechmat,
+                                       SpinConfig *into)
 {
     Q_ASSERT(speechmat.tagName() == "speechmaterial");
 
-    //get all childs of speechmat. there must be an <rms> child and either
+    // get all childs of speechmat. there must be an <rms> child and either
     //<list> or <category> childs.
     spin::data::CategoryMap categoryMap;
 
@@ -178,7 +182,7 @@ void SpinConfigFileParser::parseSpeech(const QDomElement &speechmat, SpinConfig*
 
     if (!hasCategories) {
         QDomNodeList listList = speechmat.elementsByTagName(QSL("list"));
-        addLists(listList, &categoryMap);   //no category
+        addLists(listList, &categoryMap); // no category
         Q_ASSERT(!categoryMap.hasCategories());
     } else {
         Q_ASSERT(categoryMap.hasCategories());
@@ -192,7 +196,8 @@ void SpinConfigFileParser::parseSpeech(const QDomElement &speechmat, SpinConfig*
         into->addSpeechmaterial(id, rms, categoryMap, vfm.toUInt());
 }
 
-QStringList SpinConfigFileParser::expandWildcards(const QString &directory, const QString &fileIdentifier)
+QStringList SpinConfigFileParser::expandWildcards(const QString &directory,
+                                                  const QString &fileIdentifier)
 {
     QStringList pathParts = fileIdentifier.split(QDir::separator());
 
@@ -203,7 +208,7 @@ QStringList SpinConfigFileParser::expandWildcards(const QString &directory, cons
 
         if (files.isEmpty()) {
             QStringList entries = QDir(directory).entryList(filters);
-            if(entries.isEmpty()) {
+            if (entries.isEmpty()) {
                 files.clear();
                 break;
             }
@@ -213,8 +218,9 @@ QStringList SpinConfigFileParser::expandWildcards(const QString &directory, cons
             QStringList newFilePart;
             bool breaked = false;
             Q_FOREACH (const QString &filePart, files) {
-                QStringList entries = QDir(directory + "/" + filePart).entryList(filters);
-                if(entries.isEmpty()) {
+                QStringList entries =
+                    QDir(directory + "/" + filePart).entryList(filters);
+                if (entries.isEmpty()) {
                     files.clear();
                     breaked = true;
                     break;
@@ -233,7 +239,7 @@ QStringList SpinConfigFileParser::expandWildcards(const QString &directory, cons
         }
     }
 
-    for (int i=0; i<files.size(); ++i) {
+    for (int i = 0; i < files.size(); ++i) {
         QFileInfo fi(QDir(directory), files[i]);
         files[i] = fi.absoluteFilePath();
     }
@@ -241,19 +247,20 @@ QStringList SpinConfigFileParser::expandWildcards(const QString &directory, cons
     return files;
 }
 
-void SpinConfigFileParser::parseSpeechFiles(const QDomElement &speechfiles, SpinConfig *into,
-        const QString &path)
+void SpinConfigFileParser::parseSpeechFiles(const QDomElement &speechfiles,
+                                            SpinConfig *into,
+                                            const QString &path)
 {
     Q_ASSERT(speechfiles.tagName() == "speechmaterial_files");
 
-    for (QDomElement speechfile = speechfiles.firstChildElement(); !speechfile.isNull();
-            speechfile = speechfile.nextSiblingElement()) {
+    for (QDomElement speechfile = speechfiles.firstChildElement();
+         !speechfile.isNull(); speechfile = speechfile.nextSiblingElement()) {
         Q_ASSERT(speechfile.tagName() == "speechmaterial_file");
         QString fileIdentifier = speechfile.attribute(QSL("href"));
         QString matchType = speechfile.attribute(QSL("mode"));
 
         QStringList files;
-        if(matchType.isEmpty() || matchType == "name") {
+        if (matchType.isEmpty() || matchType == "name") {
             QFileInfo fileInfo(QDir(path), fileIdentifier);
             files << fileInfo.absoluteFilePath();
         } else if (matchType == "wildcard") {
@@ -266,8 +273,8 @@ void SpinConfigFileParser::parseSpeechFiles(const QDomElement &speechfiles, Spin
             SpinConfigFileParser speechParser(file);
             QDomDocument doc = speechParser.loadAndUpgradeDom();
             // TODO all of this should really be done in speechParser.parse()
-            for (QDomElement child = doc.documentElement().firstChildElement(); !child.isNull();
-                    child = child.nextSiblingElement()) {
+            for (QDomElement child = doc.documentElement().firstChildElement();
+                 !child.isNull(); child = child.nextSiblingElement()) {
                 QString tag = child.tagName();
                 if (tag == "speechmaterial")
                     parseSpeech(child, into);
@@ -278,31 +285,36 @@ void SpinConfigFileParser::parseSpeechFiles(const QDomElement &speechfiles, Spin
     }
 }
 
-void SpinConfigFileParser::parseSubjectScreen(const QDomElement &screen, SpinConfig* into)
+void SpinConfigFileParser::parseSubjectScreen(const QDomElement &screen,
+                                              SpinConfig *into)
 {
     Q_ASSERT(screen.tagName() == "subject_screen");
     into->setSubjectScreen(XmlUtils::nodeToString(screen.firstChildElement()));
 }
 
-void SpinConfigFileParser::parseExperimenterScreenQuiet(const QDomElement &screen, SpinConfig* into)
+void SpinConfigFileParser::parseExperimenterScreenQuiet(
+    const QDomElement &screen, SpinConfig *into)
 {
     Q_ASSERT(screen.tagName() == "experimenter_screen_quiet");
-    into->setExperimenterScreenQuiet(XmlUtils::nodeToString(screen.firstChildElement()));
+    into->setExperimenterScreenQuiet(
+        XmlUtils::nodeToString(screen.firstChildElement()));
 }
 
-void SpinConfigFileParser::parseExperimenterScreenNoise(const QDomElement &screen, SpinConfig* into)
+void SpinConfigFileParser::parseExperimenterScreenNoise(
+    const QDomElement &screen, SpinConfig *into)
 {
     Q_ASSERT(screen.tagName() == "experimenter_screen_noise");
-    into->setExperimenterScreenNoise(XmlUtils::nodeToString(screen.firstChildElement()));
+    into->setExperimenterScreenNoise(
+        XmlUtils::nodeToString(screen.firstChildElement()));
 }
 
-
-void SpinConfigFileParser::parseCustomScreens(const QDomElement &screens, SpinConfig* into)
+void SpinConfigFileParser::parseCustomScreens(const QDomElement &screens,
+                                              SpinConfig *into)
 {
     Q_ASSERT(screens.tagName() == "custom_screens");
 
     for (QDomElement screen = screens.firstChildElement(); !screen.isNull();
-            screen = screen.nextSiblingElement()) {
+         screen = screen.nextSiblingElement()) {
         Q_ASSERT(screen.tagName() == "screen");
         QString description = screen.attribute(QSL("description"));
         QString id = screen.attribute(QSL("id"));
@@ -313,23 +325,27 @@ void SpinConfigFileParser::parseCustomScreens(const QDomElement &screens, SpinCo
     }
 }
 
-void SpinConfigFileParser::parseIds(const QDomElement &ids, SpinConfig* into)
+void SpinConfigFileParser::parseIds(const QDomElement &ids, SpinConfig *into)
 {
     Q_ASSERT(ids.tagName() == "id_setup");
     into->setGainId(ids.firstChildElement(QSL("gain")).text());
     into->setTextId(ids.firstChildElement(QSL("text")).text());
 }
 
-void SpinConfigFileParser::parseGeneralData(const QDomElement &data, SpinConfig* into)
+void SpinConfigFileParser::parseGeneralData(const QDomElement &data,
+                                            SpinConfig *into)
 {
-    into->setInternalRms(data.firstChildElement(QSL("internal_rms")).text().toDouble());
-    into->setDefaultCalibration(data.firstChildElement(QSL("default_calibration")).text().toDouble());
+    into->setInternalRms(
+        data.firstChildElement(QSL("internal_rms")).text().toDouble());
+    into->setDefaultCalibration(
+        data.firstChildElement(QSL("default_calibration")).text().toDouble());
 }
 
-void SpinConfigFileParser::parseSoundcardSetup(const QDomElement &data, SpinConfig* into)
+void SpinConfigFileParser::parseSoundcardSetup(const QDomElement &data,
+                                               SpinConfig *into)
 {
     for (QDomElement node = data.firstChildElement(); !node.isNull();
-            node = node.nextSiblingElement()) {
+         node = node.nextSiblingElement()) {
         QString tagname(node.tagName());
         QString value(node.text());
 
@@ -342,7 +358,8 @@ void SpinConfigFileParser::parseSoundcardSetup(const QDomElement &data, SpinConf
     }
 }
 
-void SpinConfigFileParser::addLists(const QDomNodeList &lists, spin::data::CategoryMap* into,
+void SpinConfigFileParser::addLists(const QDomNodeList &lists,
+                                    spin::data::CategoryMap *into,
                                     const QString &category)
 {
     for (int i = 0; i < lists.length(); i++) {
@@ -352,14 +369,15 @@ void SpinConfigFileParser::addLists(const QDomNodeList &lists, spin::data::Categ
         spin::data::List list;
         list.id = listNode.attribute(QSL("id"));
 
-        //get the speechtokens
+        // get the speechtokens
         for (QDomElement token = listNode.firstChildElement(); !token.isNull();
-                token = token.nextSiblingElement()) {
+             token = token.nextSiblingElement()) {
             Q_ASSERT(token.tagName() == "speechtoken");
 
             QString id = token.attribute(QSL("id"));
             QString file = token.firstChildElement(QSL("file")).text();
-            QString text = XmlUtils::richText(token.firstChildElement(QSL("text")));
+            QString text =
+                XmlUtils::richText(token.firstChildElement(QSL("text")));
 
             list.addToken(id, file, text);
         }
@@ -369,7 +387,7 @@ void SpinConfigFileParser::addLists(const QDomNodeList &lists, spin::data::Categ
 }
 
 static void fixUri(const QDomDocument &document, const QString &from,
-        const QString &to)
+                   const QString &to)
 {
     QDomNodeList list = document.elementsByTagName(from);
     // walk backwards as the list is updated dynamically

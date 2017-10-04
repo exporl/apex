@@ -39,33 +39,31 @@ class ConstantProcedureData;
 */
 class ConstantProcedure : public ProcedureInterface
 {
-    public:
+public:
+    ConstantProcedure(ProcedureApi *api, const data::ProcedureData *data);
 
-        ConstantProcedure(ProcedureApi* api, const data::ProcedureData* data);
+    QString firstScreen();
+    data::Trial setupNextTrial();
+    double progress() const;
+    ResultHighlight processResult(const ScreenResult *screenResult);
+    QString resultXml() const;
+    virtual QString finalResultXml() const;
 
-        QString firstScreen();
-        data::Trial setupNextTrial();
-        double progress() const;
-        ResultHighlight processResult(const ScreenResult *screenResult);
-        QString resultXml() const;
-        virtual QString finalResultXml() const;
+private:
+    const data::ConstantProcedureData *data;
 
-    private:
+    QStringList trialList; //! list of trials to be presented
+    int currentTrial;
+    int stimulusPosition; // position of the current stimulus, only valid when
+                          // data->choices().nChoices() > 1
 
-        const data::ConstantProcedureData* data;
-
-        QStringList trialList;      //! list of trials to be presented
-        int currentTrial;
-        int stimulusPosition;       // position of the current stimulus, only valid when data->choices().nChoices() > 1
-
-        bool trialSetup;            //! safety check: only process results after a
-                                    // trial has been set up
-        bool lastResult;            //! was the last processed result correct or false?
-        QString lastAnswer;
-        QString lastCorrectAnswer;
-        data::Trial lastTrial;
+    bool trialSetup; //! safety check: only process results after a
+                     // trial has been set up
+    bool lastResult; //! was the last processed result correct or false?
+    QString lastAnswer;
+    QString lastCorrectAnswer;
+    data::Trial lastTrial;
 };
-
 }
 
 #endif

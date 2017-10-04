@@ -31,7 +31,7 @@ namespace apex
 {
 namespace data
 {
-typedef QVector<const ProcedureData*> tProcConfigList;
+typedef QVector<const ProcedureData *> tProcConfigList;
 
 /**
 @author Tom Francart,,,
@@ -39,31 +39,30 @@ typedef QVector<const ProcedureData*> tProcConfigList;
 class APEXDATA_EXPORT MultiProcedureData : public ProcedureData
 {
 
-    public:
-        MultiProcedureData();
+public:
+    MultiProcedureData();
 
-        ~MultiProcedureData();
+    ~MultiProcedureData();
 
-        void addProcedure(ProcedureData* procedure);
-        tProcConfigList procedures() const;
+    void addProcedure(ProcedureData *procedure);
+    tProcConfigList procedures() const;
 
-        virtual Type type() const;
-        virtual QString name() const;
+    virtual Type type() const;
+    virtual QString name() const;
 
-    private:
-        QVector<ProcedureData*> m_procedureDatas;
+private:
+    QVector<ProcedureData *> m_procedureDatas;
 
-        // ProcedureData contains functions that aren't valid for MultiProcedureData
-        void setPresentations(int presentations);
-        void setSkip(int skip);
-        void setNumberOfChoices(int nb);
-        void setDefaultStandard(const QString &defStd);
-        void setUniqueStandard(bool u);
-        void setPauseBetweenStimuli(int pause);
-        void setTimeBeforeFirstStimulus(int tbfs);
-        void setInputDuringStimulus(bool ids);
+    // ProcedureData contains functions that aren't valid for MultiProcedureData
+    void setPresentations(int presentations);
+    void setSkip(int skip);
+    void setNumberOfChoices(int nb);
+    void setDefaultStandard(const QString &defStd);
+    void setUniqueStandard(bool u);
+    void setPauseBetweenStimuli(int pause);
+    void setTimeBeforeFirstStimulus(int tbfs);
+    void setInputDuringStimulus(bool ids);
 };
-
 }
 }
 #endif

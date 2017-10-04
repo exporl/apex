@@ -22,14 +22,16 @@
 
 #include "comparator.h"
 
-namespace apex {
-    class EqualComparator : public Comparator {
-    public:
-        virtual bool Compare(const QString& m1, const QString& m2)
-        {
-            return m1 == m2;
-        }
-    };
+namespace apex
+{
+class EqualComparator : public Comparator
+{
+public:
+    virtual bool Compare(const QString &m1, const QString &m2)
+    {
+        return m1 == m2;
+    }
+};
 }
 
 #endif

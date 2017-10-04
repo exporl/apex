@@ -26,26 +26,25 @@ class QString;
 
 namespace apex
 {
-  namespace editor
-  {
-    using gui::ScreenElementMap;
+namespace editor
+{
+using gui::ScreenElementMap;
 
-    /**
-     * Find an id for a ScreenElement.  The given base string will be
-     * used, stripped of all spaces, and then a number will be added
-     * at the end, starting with 1.  The first id that is not present
-     * in the given map takenIDs will be returned.
-     */
-    QString findFreeID( const QString& base, const ScreenElementMap& takenIDs );
+/**
+ * Find an id for a ScreenElement.  The given base string will be
+ * used, stripped of all spaces, and then a number will be added
+ * at the end, starting with 1.  The first id that is not present
+ * in the given map takenIDs will be returned.
+ */
+QString findFreeID(const QString &base, const ScreenElementMap &takenIDs);
 
-    /**
-     * Shorten a given string, and return a string of length smaller
-     * than the given length.  If the given string is too long,
-     * characters will be removed from it at the start, and replaced
-     * by three dots ( "..." ).
-     */
-    QString shortenString( const QString& s, int length );
-
-  }
+/**
+ * Shorten a given string, and return a string of length smaller
+ * than the given length.  If the given string is too long,
+ * characters will be removed from it at the start, and replaced
+ * by three dots ( "..." ).
+ */
+QString shortenString(const QString &s, int length);
+}
 }
 #endif

@@ -27,15 +27,17 @@
 using namespace spin;
 using namespace spin::gui;
 
-FreeFieldWidget::FreeFieldWidget(QWidget *parent):
-      QWidget(parent),
+FreeFieldWidget::FreeFieldWidget(QWidget *parent)
+    : QWidget(parent),
       grid(new QGridLayout(this)),
-      totalNoise(0.0), totalSpeech(0.0),
-      totalNoiseSet(false), totalSpeechSet(false)
+      totalNoise(0.0),
+      totalSpeech(0.0),
+      totalNoiseSet(false),
+      totalSpeechSet(false)
 {
     /*arc = new ArcLayout(ArcLayout::ARC_FULL, this);
     setLayout(arc);*/
-    //setting up ui is postponed till speaker setup is set
+    // setting up ui is postponed till speaker setup is set
 }
 
 FreeFieldWidget::~FreeFieldWidget()
@@ -59,62 +61,66 @@ void FreeFieldWidget::setupUi(QVector<data::Speaker> speakers)
 
     qSort(angles.begin(), angles.end());
 
-    //an empty widget in the center of the arc
-    //TODO replace with image-6.02
-    //arc->addWidget(new QWidget());
+    // an empty widget in the center of the arc
+    // TODO replace with image-6.02
+    // arc->addWidget(new QWidget());
 
-    //add widgets for all speakers
-    //TODO make a beter layout than the arc
+    // add widgets for all speakers
+    // TODO make a beter layout than the arc
     QList<uint>::const_iterator it2;
-    int count=0;
-    for (it2 = angles.begin(); it2 != angles.end(); it2++)
-    {
+    int count = 0;
+    for (it2 = angles.begin(); it2 != angles.end(); it2++) {
         StartLevelWidget *w = new StartLevelWidget(this);
         w->showAngle(*it2);
-        //arc->addWidget(w);   //layout takes ownership
-        if ( angles.size()==4) {
-            int x=0;
-            int y=0;
+        // arc->addWidget(w);   //layout takes ownership
+        if (angles.size() == 4) {
+            int x = 0;
+            int y = 0;
             switch (*it2) {
             case 0:
-                x=0; y=1;
+                x = 0;
+                y = 1;
                 break;
             case 90:
-                x=1; y=2;
+                x = 1;
+                y = 2;
                 break;
             case 180:
-                x=2; y=1;
+                x = 2;
+                y = 1;
                 break;
             case 270:
-                x=1; y=0;
+                x = 1;
+                y = 0;
                 break;
             default:
-                x=0; y=0;
+                x = 0;
+                y = 0;
                 qCDebug(APEX_RS, "Angle %u not implemented", *it2);
             }
             qCDebug(APEX_RS, "x=%u, y=%u", x, y);
             grid->addWidget(w, x, y);
         } else {
-             grid->addWidget(w, floor((double)count/2), count%2);
+            grid->addWidget(w, floor((double)count / 2), count % 2);
         }
         angleMap.insert(*it2, w);
 
         connect(w, SIGNAL(contentsChanged()), this, SIGNAL(contentsChanged()));
 
-        connect(w, SIGNAL(speechlevelChanged(double)),
-                this, SLOT(emitSpeechChanged()));
-        connect(w, SIGNAL(noiselevelChanged(double)),
-                this, SLOT(emitNoiseChanged()));
+        connect(w, SIGNAL(speechlevelChanged(double)), this,
+                SLOT(emitSpeechChanged()));
+        connect(w, SIGNAL(noiselevelChanged(double)), this,
+                SLOT(emitNoiseChanged()));
 
-        connect(w, SIGNAL(noiseUsedChanged(bool)),
-                this, SLOT(updateNoiselevels()));
-        connect(w, SIGNAL(speechUsedChanged(bool)),
-                this, SLOT(updateSpeechlevels()));
+        connect(w, SIGNAL(noiseUsedChanged(bool)), this,
+                SLOT(updateNoiselevels()));
+        connect(w, SIGNAL(speechUsedChanged(bool)), this,
+                SLOT(updateSpeechlevels()));
         ++count;
     }
 }
 
-StartLevelWidget* FreeFieldWidget::startLevelWidget(uint angle) const
+StartLevelWidget *FreeFieldWidget::startLevelWidget(uint angle) const
 {
     if (!angleMap.contains(angle))
         return 0;
@@ -124,14 +130,14 @@ StartLevelWidget* FreeFieldWidget::startLevelWidget(uint angle) const
 
 void FreeFieldWidget::clear()
 {
-    QMap<uint, StartLevelWidget*>::const_iterator it;
+    QMap<uint, StartLevelWidget *>::const_iterator it;
     for (it = angleMap.begin(); it != angleMap.end(); it++)
         it.value()->clear();
 }
 
 void FreeFieldWidget::setUncorrelatedNoisesVisible(bool visible)
 {
-    QMap<uint, StartLevelWidget*>::const_iterator it;
+    QMap<uint, StartLevelWidget *>::const_iterator it;
     for (it = angleMap.begin(); it != angleMap.end(); it++)
         it.value()->setUncorrelatedNoisesVisible(visible);
 }
@@ -140,25 +146,19 @@ void FreeFieldWidget::setLockNoiselevels(bool lock)
 {
     noiseLocked = lock;
 
-    if (lock)
-    {
-        QMap<uint, StartLevelWidget*>::const_iterator it1, it2;
-        for (it1 = angleMap.begin(); it1 != angleMap.end(); it1++)
-        {
-            for (it2 = angleMap.begin(); it2 != angleMap.end(); it2++)
-            {
-                if (it1.value() != it2.value())
-                {
+    if (lock) {
+        QMap<uint, StartLevelWidget *>::const_iterator it1, it2;
+        for (it1 = angleMap.begin(); it1 != angleMap.end(); it1++) {
+            for (it2 = angleMap.begin(); it2 != angleMap.end(); it2++) {
+                if (it1.value() != it2.value()) {
                     connect(it1.value(), SIGNAL(noiselevelChanged(double)),
                             it2.value(), SLOT(setNoiseStartlevel(double)));
                 }
             }
         }
 
-    }
-    else
-    {
-        QMap<uint, StartLevelWidget*>::const_iterator it;
+    } else {
+        QMap<uint, StartLevelWidget *>::const_iterator it;
         for (it = angleMap.begin(); it != angleMap.end(); it++)
             it.value()->disconnect(SIGNAL(noiselevelChanged(double)));
     }
@@ -168,24 +168,18 @@ void FreeFieldWidget::setLockSpeechlevels(bool lock)
 {
     speechLocked = lock;
 
-    if (lock)
-    {
-        QMap<uint, StartLevelWidget*>::const_iterator it1, it2;
-        for (it1 = angleMap.begin(); it1 != angleMap.end(); it1++)
-        {
-            for (it2 = angleMap.begin(); it2 != angleMap.end(); it2++)
-            {
-                if (it1.value() != it2.value())
-                {
+    if (lock) {
+        QMap<uint, StartLevelWidget *>::const_iterator it1, it2;
+        for (it1 = angleMap.begin(); it1 != angleMap.end(); it1++) {
+            for (it2 = angleMap.begin(); it2 != angleMap.end(); it2++) {
+                if (it1.value() != it2.value()) {
                     connect(it1.value(), SIGNAL(speechlevelChanged(double)),
                             it2.value(), SLOT(setSpeechStartlevel(double)));
                 }
             }
         }
-    }
-    else
-    {
-        QMap<uint, StartLevelWidget*>::const_iterator it;
+    } else {
+        QMap<uint, StartLevelWidget *>::const_iterator it;
         for (it = angleMap.begin(); it != angleMap.end(); it++)
             it.value()->disconnect(SIGNAL(speechlevelChanged(double)));
     }
@@ -216,9 +210,10 @@ void FreeFieldWidget::updateSpeechlevels()
     if (!speechLocked || !totalSpeechSet || !anySpeechEnabled())
         return;
 
-    double channelLevel = this->channelLevel(totalSpeech, speechlevels().size());
+    double channelLevel =
+        this->channelLevel(totalSpeech, speechlevels().size());
 
-    //only set speech in one start level widget because speechlevels are locked
+    // only set speech in one start level widget because speechlevels are locked
     angleMap.values().first()->setSpeechStartlevel(channelLevel);
 }
 
@@ -229,15 +224,14 @@ void FreeFieldWidget::updateNoiselevels()
 
     double channelLevel = this->channelLevel(totalNoise, noiselevels().size());
 
-    //only set noise in one start level widget because noiselevels are locked
+    // only set noise in one start level widget because noiselevels are locked
     angleMap.values().first()->setNoiseStartlevel(channelLevel);
 }
 
 bool FreeFieldWidget::hasAllObligedFields(QWidget **w)
 {
-    QMap<uint, StartLevelWidget*>::const_iterator it;
-    for (it = angleMap.begin(); it != angleMap.end(); it++)
-    {
+    QMap<uint, StartLevelWidget *>::const_iterator it;
+    for (it = angleMap.begin(); it != angleMap.end(); it++) {
         if (!it.value()->hasAllObligedFields(w))
             return false;
     }
@@ -247,9 +241,8 @@ bool FreeFieldWidget::hasAllObligedFields(QWidget **w)
 
 bool FreeFieldWidget::hasLevels() const
 {
-    QMap<uint, StartLevelWidget*>::const_iterator it;
-    for (it = angleMap.begin(); it != angleMap.end(); it++)
-    {
+    QMap<uint, StartLevelWidget *>::const_iterator it;
+    for (it = angleMap.begin(); it != angleMap.end(); it++) {
         if (it.value()->hasLevels())
             return true;
     }
@@ -290,7 +283,7 @@ double FreeFieldWidget::totalLevel(QList<double> levels) const
 
     double totalLinear = 0.0;
 
-    Q_FOREACH(double db, levels)
+    Q_FOREACH (double db, levels)
         totalLinear += pow(10, db / 10);
 
     return 10 * log10(totalLinear);
@@ -305,8 +298,7 @@ QList<double> FreeFieldWidget::noiselevels() const
 {
     QList<double> levels;
 
-    Q_FOREACH(StartLevelWidget* slw, angleMap.values())
-    {
+    Q_FOREACH (StartLevelWidget *slw, angleMap.values()) {
         if (slw->hasNoiseLevel())
             levels.append(slw->noiseLevel());
     }
@@ -318,8 +310,7 @@ QList<double> FreeFieldWidget::speechlevels() const
 {
     QList<double> levels;
 
-    Q_FOREACH(StartLevelWidget* slw, angleMap.values())
-    {
+    Q_FOREACH (StartLevelWidget *slw, angleMap.values()) {
         if (slw->hasSpeechLevel())
             levels.append(slw->speechLevel());
     }
@@ -327,35 +318,22 @@ QList<double> FreeFieldWidget::speechlevels() const
     return levels;
 }
 
-
-
 bool FreeFieldWidget::anyNoiseEnabled() const
 {
-     Q_FOREACH(StartLevelWidget* slw, angleMap.values())
-    {
+    Q_FOREACH (StartLevelWidget *slw, angleMap.values()) {
         if (slw->hasNoiseLevel())
             return true;
     }
 
-     return false;
+    return false;
 }
 
 bool FreeFieldWidget::anySpeechEnabled() const
 {
-     Q_FOREACH(StartLevelWidget* slw, angleMap.values())
-    {
+    Q_FOREACH (StartLevelWidget *slw, angleMap.values()) {
         if (slw->hasSpeechLevel())
             return true;
     }
 
-     return false;
+    return false;
 }
-
-
-
-
-
-
-
-
-

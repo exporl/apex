@@ -32,38 +32,36 @@ namespace gui
 
 class DecibelLineEdit : public QLineEdit
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    DecibelLineEdit(QWidget *parent);
+    ~DecibelLineEdit()
+    {
+    }
 
-        DecibelLineEdit(QWidget* parent);
-        ~DecibelLineEdit() {}
+    double level() const;
+    bool hasLevel() const;
 
-        double level() const;
-        bool hasLevel() const;
+public slots:
 
-    public slots:
+    void setLevel(double level);
 
-        void setLevel(double level);
+signals:
 
-    signals:
+    void levelChanged(double level);
 
-        void levelChanged(double level);
+protected:
+    void focusOutEvent(QFocusEvent *event);
 
-    protected:
+private:
+    QSize calculateSize();
+    bool emitting;
 
-        void focusOutEvent(QFocusEvent* event);
+private slots:
 
-    private:
-
-        QSize calculateSize();
-        bool emitting;
-
-    private slots:
-
-        void emitLevelChange(QString levelText);
+    void emitLevelChange(QString levelText);
 };
-
 }
 }
 

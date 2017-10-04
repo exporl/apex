@@ -28,17 +28,16 @@ namespace gui
 {
 class DecibelLabel : public QLabel
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    DecibelLabel(QWidget *parent);
 
-        DecibelLabel(QWidget* parent);
+public slots:
 
-    public slots:
-
-        void setLevel(double level);
+    void setLevel(double level);
 };
-}//ns gui
-}//ns spin
+} // ns gui
+} // ns spin
 
 #endif

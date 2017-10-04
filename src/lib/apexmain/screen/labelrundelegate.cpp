@@ -30,47 +30,41 @@ namespace apex
 namespace rundelegates
 {
 
-    LabelRunDelegate::LabelRunDelegate( ExperimentRunDelegate* p_exprd,
-                                   QWidget* parent, const LabelElement* e,
-                                    const QFont& defaultFont )
-    : LabelRunDelegateBase( p_exprd, parent, e, defaultFont ), element( e )
+LabelRunDelegate::LabelRunDelegate(ExperimentRunDelegate *p_exprd,
+                                   QWidget *parent, const LabelElement *e,
+                                   const QFont &defaultFont)
+    : LabelRunDelegateBase(p_exprd, parent, e, defaultFont), element(e)
 {
     setObjectName(element->getID());
 
-    setText( e->getText() );
+    setText(e->getText());
 
-     // set minimum size hint
+    // set minimum size hint
     // get line of text with maximum width
 
     // font with minimum size:
     QFont minfont(font());
     minfont.setPointSize(10);
 
-    QStringList l( e->getText().split("\n"));
-    int maxlen=0;
-    int pos=-1;
-    for (int i=0; i<l.size(); ++i) {
-        if (l.at(i).length()>maxlen) {
-            maxlen=l.at(i).length();
-            pos=i;
+    QStringList l(e->getText().split("\n"));
+    int maxlen = 0;
+    int pos = -1;
+    for (int i = 0; i < l.size(); ++i) {
+        if (l.at(i).length() > maxlen) {
+            maxlen = l.at(i).length();
+            pos = i;
         }
     }
-    if (pos==-1)
+    if (pos == -1)
         return;
     QFontMetrics fm(minfont);
-    setMinimumWidth( fm.width(l.at(pos)));
-    setMinimumHeight( (fm.height()+fm.lineSpacing())*l.size());
-
-
+    setMinimumWidth(fm.width(l.at(pos)));
+    setMinimumHeight((fm.height() + fm.lineSpacing()) * l.size());
 }
 
-const ScreenElement* LabelRunDelegate::getScreenElement() const
+const ScreenElement *LabelRunDelegate::getScreenElement() const
 {
     return element;
 }
-
-
-
 }
 }
-

@@ -44,48 +44,53 @@ namespace stimulus
 class DummyDevice : public OutputDevice
 {
 public:
-    DummyDevice( data::DeviceData& a_Params );
+    DummyDevice(data::DeviceData &a_Params);
 
     ~DummyDevice();
 
     virtual bool AllDone();
-    virtual void AddFilter(Filter& ac_Filter);
-    virtual void AddInput(const DataBlock& ac_DataBlock);
+    virtual void AddFilter(Filter &ac_Filter);
+    virtual void AddInput(const DataBlock &ac_DataBlock);
     virtual void PlayAll();
     virtual void RemoveAll();
     virtual void StopAll();
-    virtual bool SetParameter ( const QString& type, int channel, const QVariant& value );
-
+    virtual bool SetParameter(const QString &type, int channel,
+                              const QVariant &value);
 
     /**
-     * Reset the filter to its initial state and set all internal parameters to built in
+     * Reset the filter to its initial state and set all internal parameters to
+     * built in
      * default values
      * throw exception if problem
      */
-    virtual void Reset() {};
+    virtual void Reset(){};
 
     /**
      * Prepare filter for processing
      * throw exception if problem
      */
-    virtual void Prepare() {};
+    virtual void Prepare(){};
 
     virtual bool HasError() const;
-    virtual const QString& GetID() const;
+    virtual const QString &GetID() const;
 
     virtual bool CanSequence() const
-    { return true; }
+    {
+        return true;
+    }
 
-    virtual void SetSequence( const apex::stimulus::DataBlockMatrix* );
+    virtual void SetSequence(const apex::stimulus::DataBlockMatrix *);
 
     virtual void RestoreParameters();
 
-    virtual void SetSilenceBefore(double) { qCDebug(APEX_RS, "DummyDevice: SetSilenceBefore not implemented");};
+    virtual void SetSilenceBefore(double)
+    {
+        qCDebug(APEX_RS, "DummyDevice: SetSilenceBefore not implemented");
+    };
 
 private:
-    void Say(const QString& message) const;
+    void Say(const QString &message) const;
 };
-
 }
 }
 

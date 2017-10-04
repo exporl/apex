@@ -29,58 +29,58 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    EmptyElementEditorDelegate::EmptyElementEditorDelegate( EmptyElement* e, QWidget* parent, ScreenWidget* w )
-      : LabelEditorDelegateBase( e, parent, w ),
-        element( e )
-    {
-      resetText();
-    }
+namespace editor
+{
+EmptyElementEditorDelegate::EmptyElementEditorDelegate(EmptyElement *e,
+                                                       QWidget *parent,
+                                                       ScreenWidget *w)
+    : LabelEditorDelegateBase(e, parent, w), element(e)
+{
+    resetText();
+}
 
-    ScreenElement* EmptyElementEditorDelegate::getScreenElement()
-    {
-      return element;
-    }
+ScreenElement *EmptyElementEditorDelegate::getScreenElement()
+{
+    return element;
+}
 
-    int EmptyElementEditorDelegate::getPropertyCount()
-    {
-      return 0;
-    }
+int EmptyElementEditorDelegate::getPropertyCount()
+{
+    return 0;
+}
 
-    QString EmptyElementEditorDelegate::getPropertyName( int )
-    {
-      qFatal( "should not be called" );
-      return QString();
-    }
+QString EmptyElementEditorDelegate::getPropertyName(int)
+{
+    qFatal("should not be called");
+    return QString();
+}
 
-    QVariant EmptyElementEditorDelegate::getPropertyData( int, int )
-    {
-      qFatal( "should not be called" );
-      return QVariant();
-    }
+QVariant EmptyElementEditorDelegate::getPropertyData(int, int)
+{
+    qFatal("should not be called");
+    return QVariant();
+}
 
-    PropertyType EmptyElementEditorDelegate::getPropertyType( int )
-    {
-      qFatal( "should not be called" );
-      return IntPropertyType;
-    }
+PropertyType EmptyElementEditorDelegate::getPropertyType(int)
+{
+    qFatal("should not be called");
+    return IntPropertyType;
+}
 
-    bool EmptyElementEditorDelegate::setProperty( int, const QVariant& )
-    {
-      qFatal( "should not be called" );
-      return false;
-    }
+bool EmptyElementEditorDelegate::setProperty(int, const QVariant &)
+{
+    qFatal("should not be called");
+    return false;
+}
 
-    const QString EmptyElementEditorDelegate::getText() const
-    {
-      return tr( "<Empty>" );
-    }
+const QString EmptyElementEditorDelegate::getText() const
+{
+    return tr("<Empty>");
+}
 
-    EmptyElementEditorDelegate::~EmptyElementEditorDelegate()
-    {
-      screenWidget->delegateDeleted( this );
-    }
-
-  }
+EmptyElementEditorDelegate::~EmptyElementEditorDelegate()
+{
+    screenWidget->delegateDeleted(this);
+}
+}
 }

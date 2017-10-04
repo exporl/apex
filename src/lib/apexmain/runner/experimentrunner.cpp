@@ -19,6 +19,8 @@
 
 #include "apexdata/experimentdata.h"
 
+#include "../apexcontrol.h"
+#include "../gui/mainwindow.h"
 #include "errorhandler.h"
 #include "experimentparser.h"
 #include "experimentrunner.h"
@@ -31,28 +33,36 @@
 using namespace apex;
 using namespace apex::data;
 
-ExperimentData* ExperimentRunner::parseExperiment(const QString& fileName)
+ExperimentData *ExperimentRunner::parseExperiment(const QString &fileName)
 {
     qCDebug(APEX_RS, "Parsing Experiment");
 
-    data::ExperimentData* data;
+    data::ExperimentData *data;
 
     ErrorHandler::instance()->clearCounters();
 
     if (!QFile(fileName).exists()) {
         qCCritical(APEX_RS, "ApexControl: Experiment file not found");
 #ifndef NODIALOG
-        QMessageBox::critical(NULL, tr("Error"), tr("Experiment file not found"));
+#ifdef Q_OS_ANDROID
+        ApexControl::Get().mainWindow()->quickWidgetBugShow();
+#endif
+        QMessageBox::critical(NULL, tr("Error"),
+                              tr("Experiment file not found"));
+#ifdef Q_OS_ANDROID
+        ApexControl::Get().mainWindow()->quickWidgetBugHide();
+#endif
 #endif
         return NULL;
     }
 
-    const QString& sConfigFileName(fileName);
+    const QString &sConfigFileName(fileName);
     QDir dConfigFileDir(fileName);
     dConfigFileDir.cdUp();
-    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ApexControl" , "Parsing " + sConfigFileName)));
+    qCInfo(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(
+                              "ApexControl", "Parsing " + sConfigFileName)));
     try {
-        data = ExperimentParser(fileName, expressions).parse(true);
+        data = ExperimentParser(fileName, expressions).parse(true, true);
     } catch (std::exception &e) {
         qCCritical(APEX_RS, "ApexControl: %s", e.what());
     } catch (...) {

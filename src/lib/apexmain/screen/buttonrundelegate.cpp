@@ -37,12 +37,12 @@ namespace apex
 namespace rundelegates
 {
 
-const ScreenElement* ButtonRunDelegate::getScreenElement() const
+const ScreenElement *ButtonRunDelegate::getScreenElement() const
 {
     return element;
 }
 
-QWidget* ButtonRunDelegate::getWidget()
+QWidget *ButtonRunDelegate::getWidget()
 {
     return this;
 }
@@ -62,122 +62,118 @@ const QString ButtonRunDelegate::getText() const
     return text();
 }
 
-void ButtonRunDelegate::resizeEvent( QResizeEvent* e )
+void ButtonRunDelegate::resizeEvent(QResizeEvent *e)
 {
-    QPushButton::resizeEvent (e);
-    setFont (initialFont);
-    ApexTools::shrinkTillItFits (this, element->text(), QSize (2, 2));
+    QPushButton::resizeEvent(e);
+    setFont(initialFont);
+    ApexTools::shrinkTillItFits(this, element->text(), QSize(2, 2));
 }
 
-void ButtonRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
+void ButtonRunDelegate::connectSlots(gui::ScreenRunDelegate *d)
 {
-    connect( this, SIGNAL( answered( ScreenElementRunDelegate* ) ),
-             d, SIGNAL( answered( ScreenElementRunDelegate* ) ) );
+    connect(this, SIGNAL(answered(ScreenElementRunDelegate *)), d,
+            SIGNAL(answered(ScreenElementRunDelegate *)));
 }
-
 }
 }
 
 void apex::rundelegates::ButtonRunDelegate::sendAnsweredSignal()
 {
-    Q_EMIT answered( this );
+    Q_EMIT answered(this);
 }
 
 apex::rundelegates::ButtonRunDelegate::ButtonRunDelegate(
-        ExperimentRunDelegate* p_rd,
-    QWidget* parent, const ButtonElement* e, const QFont& defaultFont ) :
-      QPushButton( parent ),
-      ScreenElementRunDelegate(p_rd,e),
-      element( e )
+    ExperimentRunDelegate *p_rd, QWidget *parent, const ButtonElement *e,
+    const QFont &defaultFont)
+    : QPushButton(parent), ScreenElementRunDelegate(p_rd, e), element(e)
 {
     setObjectName(element->getID());
-    //setStyleSheet(element->getStyle());
+    // setStyleSheet(element->getStyle());
     setCommonProperties(this);
-    //    qCDebug(APEX_RS, "Creating button with parent %p", parent);
+//    qCDebug(APEX_RS, "Creating button with parent %p", parent);
 
-    #ifdef Q_WS_WIN
-    // make sure we can change the button color (is not possible when using xp or vista engine)
+#ifdef Q_WS_WIN
+    // make sure we can change the button color (is not possible when using xp
+    // or vista engine)
     setStyle(QStyleFactory::create("windows"));
-    #endif
+#endif
 
-    QPushButton::setText( e->text() );
-    if ( !element->getShortCut().isEmpty() ) {
-        QPushButton::setShortcut( e->getShortCut() );
+    QPushButton::setText(e->text());
+    if (!element->getShortCut().isEmpty()) {
+        QPushButton::setShortcut(e->getShortCut());
         /*qCDebug(APEX_RS, "Setting shortcut of element %s to %s",
-               qPrintable(e->getID()), qPrintable(e->getShortCut().toString()));*/
+               qPrintable(e->getID()),
+           qPrintable(e->getShortCut().toString()));*/
     }
 
-    connect( this, SIGNAL( clicked() ), this, SLOT( sendAnsweredSignal() ) );
+    connect(this, SIGNAL(clicked()), this, SLOT(sendAnsweredSignal()));
 
-    if (! e->getFGColor().isEmpty()) {
-        QPalette p=palette();
-        p.setColor(QPalette::Active, QPalette::ButtonText, QColor(e->getFGColor()));
+    if (!e->getFGColor().isEmpty()) {
+        QPalette p = palette();
+        p.setColor(QPalette::Active, QPalette::ButtonText,
+                   QColor(e->getFGColor()));
         setPalette(p);
     }
-    if (! e->getBGColor().isEmpty()) {
-        QPalette p=palette();
+    if (!e->getBGColor().isEmpty()) {
+        QPalette p = palette();
         p.setColor(QPalette::Active, QPalette::Button, QColor(e->getBGColor()));
         setPalette(p);
     }
 
     QFont font = defaultFont;
-    if ( element->getFontSize() != -1 )
-        font.setPointSize( element->getFontSize() );
-    QPushButton::setFont( font );
+    if (element->getFontSize() != -1)
+        font.setPointSize(element->getFontSize());
+    QPushButton::setFont(font);
     initialFont = font;
 
     // set maximum height to N*font height
-    QFontMetrics fm( font );
-    setMaximumHeight( fm.height()*5 );
-    setMinimumHeight( fm.height());
+    QFontMetrics fm(font);
+    setMaximumHeight(fm.height() * 5);
+    setMinimumHeight(fm.height());
 
-    feedBack(ScreenElementRunDelegate::NoFeedback );
+    feedBack(ScreenElementRunDelegate::NoFeedback);
 }
 
-
-void apex::rundelegates::ButtonRunDelegate::feedBack
-        (const FeedbackMode& mode)
+void apex::rundelegates::ButtonRunDelegate::feedBack(const FeedbackMode &mode)
 {
     QColor newFGColor_enabled, newFGColor_disabled;
     QColor newBGColor_enabled, newBGColor_disabled;
-    QPalette dp;        // default palette
+    QPalette dp; // default palette
 
-
-    if ( mode == ScreenElementRunDelegate::NoFeedback )    {
-        //setDown(false);
+    if (mode == ScreenElementRunDelegate::NoFeedback) {
+        // setDown(false);
         setProperty("role", "none");
         setStyleSheet(styleSheet());
-        if (! element->getFGColor().isEmpty()) {
-            newFGColor_disabled=element->getFGColor();
-            newFGColor_enabled=newFGColor_disabled;
+        if (!element->getFGColor().isEmpty()) {
+            newFGColor_disabled = element->getFGColor();
+            newFGColor_enabled = newFGColor_disabled;
         } else {
-            newFGColor_disabled = dp.color(QPalette::Disabled,
-                QPalette::ButtonText);
-            newFGColor_enabled = dp.color(QPalette::Active,
-                QPalette::ButtonText);
+            newFGColor_disabled =
+                dp.color(QPalette::Disabled, QPalette::ButtonText);
+            newFGColor_enabled =
+                dp.color(QPalette::Active, QPalette::ButtonText);
         }
-        if (! element->getBGColor().isEmpty()) {
-            newBGColor_disabled=element->getBGColor();
-            newBGColor_enabled=newBGColor_disabled;
+        if (!element->getBGColor().isEmpty()) {
+            newBGColor_disabled = element->getBGColor();
+            newBGColor_enabled = newBGColor_disabled;
         } else {
-            newBGColor_disabled = dp.color(QPalette::Disabled,
-                                 QPalette::Button);
-            newBGColor_enabled = dp.color(QPalette::Active,
-                                           QPalette::Button);
+            newBGColor_disabled =
+                dp.color(QPalette::Disabled, QPalette::Button);
+            newBGColor_enabled = dp.color(QPalette::Active, QPalette::Button);
         }
 
-    } else if ( mode == ScreenElementRunDelegate::HighlightFeedback ) {
+    } else if (mode == ScreenElementRunDelegate::HighlightFeedback) {
         setProperty("role", "highlight");
         setStyleSheet(styleSheet());
-        newBGColor_disabled=QColor(0xff, 0xff, 0x90);      // light yellow
-    } else if ( mode == ScreenElementRunDelegate::NegativeFeedback ) {
+        newBGColor_disabled = QColor(0xff, 0xff, 0x90); // light yellow
+    } else if (mode == ScreenElementRunDelegate::NegativeFeedback) {
         setProperty("role", "negative");
         setStyleSheet(styleSheet());
-        newBGColor_disabled=Qt::red;
-    } else if ( mode == ScreenElementRunDelegate::PositiveFeedback ) {
+        newBGColor_disabled = Qt::red;
+    } else if (mode == ScreenElementRunDelegate::PositiveFeedback) {
         setProperty("role", "positive");
         setStyleSheet(styleSheet());
-        newBGColor_disabled=Qt::darkGreen;
+        newBGColor_disabled = Qt::darkGreen;
     }
 
     QPalette palette(this->palette());
@@ -195,6 +191,4 @@ void apex::rundelegates::ButtonRunDelegate::feedBack
         palette.setColor(QPalette::Active, QPalette::ButtonText,
                          newFGColor_enabled);
     setPalette(palette);
-
 }
-

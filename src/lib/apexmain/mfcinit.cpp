@@ -18,12 +18,13 @@
  *****************************************************************************/
 
 #ifdef _WIN32_DCOM
-  #include <ObjBase.h>
-  void SInitMFC()
-  {
-    CoInitialize( 0 );    //do this once
-  }
+#include <ObjBase.h>
+void SInitMFC()
+{
+    CoInitialize(0); // do this once
+}
 #else
-  void SInitMFC()
-  {}
+void SInitMFC()
+{
+}
 #endif

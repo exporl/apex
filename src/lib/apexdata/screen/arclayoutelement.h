@@ -33,31 +33,38 @@ namespace data
  * The ArcLayoutElement is an implementation of a \ref
  * ScreenElement representing an "arclayout".
  */
-class APEXDATA_EXPORT ArcLayoutElement
-            : public ScreenLayoutElement
+class APEXDATA_EXPORT ArcLayoutElement : public ScreenLayoutElement
 {
-        int width;
-        /*ArcLayout::ArcType*/int arctype;
-    public:
-        ArcLayoutElement(const QString& id, ScreenElement* parent, int width, /*::ArcLayout::ArcType*/int type);
-        ArcLayoutElement(const QString& id, ScreenElement* parent);
+    int width;
+    /*ArcLayout::ArcType*/ int arctype;
 
-        void fillChildrenWithEmpties(Screen* s);
-        int getNumberOfChildPlaces() const;
+public:
+    ArcLayoutElement(const QString &id, ScreenElement *parent, int width,
+                     /*::ArcLayout::ArcType*/ int type);
+    ArcLayoutElement(const QString &id, ScreenElement *parent);
 
-        ElementTypeT elementType() const;
+    void fillChildrenWithEmpties(Screen *s);
+    int getNumberOfChildPlaces() const;
 
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+    ElementTypeT elementType() const;
 
-        int getWidth() const { return width; }
-        void setWidth(int w);
-        /*ArcLayout::ArcType*/int getType() const { return arctype; }
-        void setType(/*ArcLayout::ArcType*/int t);
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
-        void checkChild(const ScreenElement* childel) const;
+    int getWidth() const
+    {
+        return width;
+    }
+    void setWidth(int w);
+    /*ArcLayout::ArcType*/ int getType() const
+    {
+        return arctype;
+    }
+    void setType(/*ArcLayout::ArcType*/ int t);
 
-        bool operator==(const ArcLayoutElement& other) const;
+    void checkChild(const ScreenElement *childel) const;
+
+    bool operator==(const ArcLayoutElement &other) const;
 };
 }
 }

@@ -39,25 +39,25 @@ class ParameterManagerData;
 namespace parser
 {
 
-struct tAllDevices
-{
+struct tAllDevices {
     data::DevicesData outputdevices;
     data::DevicesData controldevices;
 };
 
 class APEX_EXPORT DevicesParser
 {
-    Q_DECLARE_TR_FUNCTIONS (DevicesParser);
+    Q_DECLARE_TR_FUNCTIONS(DevicesParser);
+
 public:
     DevicesParser();
     ~DevicesParser();
 
-    tAllDevices Parse(const QDomElement &dom, data::ParameterManagerData* pm);
+    tAllDevices Parse(const QDomElement &dom, data::ParameterManagerData *pm);
 
 private:
-    data::DeviceData* ParseDevice(const QDomElement &p_base, data::ParameterManagerData* pm);
+    data::DeviceData *ParseDevice(const QDomElement &p_base,
+                                  data::ParameterManagerData *pm);
 };
-
 }
 }
 

@@ -34,26 +34,29 @@ AdaptiveProcedureParser::AdaptiveProcedureParser()
 {
 }
 
-data::ProcedureData* AdaptiveProcedureParser::parse(const QDomElement &base)
+data::ProcedureData *AdaptiveProcedureParser::parse(const QDomElement &base)
 {
-    data::AdaptiveProcedureData* data = new data::AdaptiveProcedureData();
+    data::AdaptiveProcedureData *data = new data::AdaptiveProcedureData();
     ProcedureParsersParent::Parse(base, data);
     return data;
 }
 
 bool AdaptiveProcedureParser::trialsValid()
 {
-    return !currentConfig->GetTrials().isEmpty();
+    return !currentConfig->GetTrials().isEmpty() ||
+           currentConfig->hasPluginTrials();
 }
 
 void AdaptiveProcedureParser::SetProcedureParameters(const QDomElement &p_base)
 {
-    data::AdaptiveProcedureData* param = dynamic_cast<data::AdaptiveProcedureData*>(currentConfig);
+    data::AdaptiveProcedureData *param =
+        dynamic_cast<data::AdaptiveProcedureData *>(currentConfig);
     parser::AdaptiveProcedureDataParser parser;
     parser.Parse(p_base, param);
 
-    if (! parser.CheckParameters(param))
-        throw ApexStringException("Could not parse adaptive procedure parameters");
+    if (!parser.CheckParameters(param))
+        throw ApexStringException(
+            "Could not parse adaptive procedure parameters");
 
     currentConfig = param;
 }

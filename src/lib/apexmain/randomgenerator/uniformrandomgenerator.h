@@ -24,27 +24,24 @@
 
 #include "randomgenerator.h"
 
-namespace apex {
+namespace apex
+{
 
 /**
 @author Tom Francart,,,
 */
 class APEX_EXPORT UniformRandomGenerator : public RandomGenerator
 {
-    public:
+public:
+    UniformRandomGenerator(data::RandomGeneratorParameters *p_param);
+    ~UniformRandomGenerator();
 
-        UniformRandomGenerator(data::RandomGeneratorParameters* p_param);
-        ~UniformRandomGenerator();
+    QString GetNextValue();
+    void doDeterministicGeneration();
 
-        QString GetNextValue();
-        void doDeterministicGeneration();
-
-    private:
-
-        Random generator;
-
+private:
+    Random generator;
 };
-
 }
 
 #endif

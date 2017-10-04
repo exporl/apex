@@ -32,39 +32,35 @@ DevicesData::DevicesData()
 {
 }
 
-
 DevicesData::~DevicesData()
 {
     // contents destructed in ExperimentData
 }
 
-
-DeviceData* DevicesData::deviceData(const QString& name) const
+DeviceData *DevicesData::deviceData(const QString &name) const
 {
     const_iterator i = find(name);
 
     if (i == end())
-        throw ApexStringException("Device " + name + " not found" );
+        throw ApexStringException("Device " + name + " not found");
 
     return i.value();
 }
 
-bool DevicesData::operator==(const DevicesData& other) const
+bool DevicesData::operator==(const DevicesData &other) const
 {
-    return  ApexTools::areEqualPointerMaps(*this, other) &&
-            masterDev == other.masterDev;
+    return ApexTools::areEqualPointerMaps(*this, other) &&
+           masterDev == other.masterDev;
 }
 
-void DevicesData::setMasterDevice(const QString& device)
+void DevicesData::setMasterDevice(const QString &device)
 {
     masterDev = device;
 }
 
-const QString& DevicesData::masterDevice() const
+const QString &DevicesData::masterDevice() const
 {
     return masterDev;
 }
-
 }
-
 }

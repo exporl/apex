@@ -26,39 +26,38 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    /**
-     * This class is an ScreenElementEditorDelegate representing a
-     * GridLayoutElement.
-     */
-    class GridLayoutEditorDelegate
-      : public LayoutEditorDelegate
-    {
-      Q_OBJECT
+namespace editor
+{
+/**
+ * This class is an ScreenElementEditorDelegate representing a
+ * GridLayoutElement.
+ */
+class GridLayoutEditorDelegate : public LayoutEditorDelegate
+{
+    Q_OBJECT
 
-      GridLayoutElement* element;
-      QGridLayout* gridlayout;
-    public:
-      GridLayoutEditorDelegate(
-        GridLayoutElement* element, QWidget* parent,
-        ScreenWidget* widget, elementToDelegateMapT& elementToDelegateMap );
-      ~GridLayoutEditorDelegate();
+    GridLayoutElement *element;
+    QGridLayout *gridlayout;
 
-      ScreenElement* getScreenElement();
+public:
+    GridLayoutEditorDelegate(GridLayoutElement *element, QWidget *parent,
+                             ScreenWidget *widget,
+                             elementToDelegateMapT &elementToDelegateMap);
+    ~GridLayoutEditorDelegate();
 
-      int getPropertyCount();
-      QString getPropertyName( int nr );
-      QVariant getPropertyData( int nr, int role );
-      PropertyType getPropertyType( int nr );
-      bool setProperty( int nr, const QVariant& v );
+    ScreenElement *getScreenElement();
 
-    private:
-      void updateLayout( elementToDelegateMapT& elementToDelegateMap );
-      QGridLayout* getLayout();
-      void addItemToLayout( QWidget* widget, ScreenElement* e );
-    };
+    int getPropertyCount();
+    QString getPropertyName(int nr);
+    QVariant getPropertyData(int nr, int role);
+    PropertyType getPropertyType(int nr);
+    bool setProperty(int nr, const QVariant &v);
 
-  }
+private:
+    void updateLayout(elementToDelegateMapT &elementToDelegateMap);
+    QGridLayout *getLayout();
+    void addItemToLayout(QWidget *widget, ScreenElement *e);
+};
+}
 }
 #endif

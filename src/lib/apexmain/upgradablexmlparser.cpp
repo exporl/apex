@@ -34,13 +34,13 @@ namespace apex
 {
 
 UpgradableXmlParser::UpgradableXmlParser(const QString &fileName,
-        const QString &schema,
-        const QString &schemaUrl,
-        const QString &nameSpace) :
-    fileName(fileName),
-    schema(schema),
-    schemaUrl(schemaUrl),
-    nameSpace(nameSpace)
+                                         const QString &schema,
+                                         const QString &schemaUrl,
+                                         const QString &nameSpace)
+    : fileName(fileName),
+      schema(schema),
+      schemaUrl(schemaUrl),
+      nameSpace(nameSpace)
 {
 }
 
@@ -56,30 +56,34 @@ QDomDocument UpgradableXmlParser::loadAndUpgradeDom(bool removeComments)
     document = XmlUtils::parseDocument(fileName);
 
     QRegExp re("http://med.kuleuven.be/exporl/apex/(\\d+\\.\\d+\\.\\d+)/");
-    if (re.lastIndexIn(document.documentElement().attribute("xmlns:apex")) == -1)
-        throw Exception(tr("Cannot parse XML namespace of experiment %1")
-                .arg(fileName));
+    if (re.lastIndexIn(document.documentElement().attribute("xmlns:apex")) ==
+        -1)
+        throw Exception(
+            tr("Cannot parse XML namespace of experiment %1").arg(fileName));
 
     QString version = re.capturedTexts()[1];
     if (version == "3.0")
         version = "3.0.0";
 
     const QMap<QByteArray, QByteArray> methods = upgradeMethods();
-    for (auto i = methods.lowerBound(version.toUtf8());
-            i != methods.end(); ++i) {
+    for (auto i = methods.lowerBound(version.toUtf8()); i != methods.end();
+         ++i) {
         if (!metaObject()->invokeMethod(this, i.value()))
             throw Exception(tr("Unable to invoke upgrade method"));
     }
     document.documentElement().setAttribute("xmlns:apex", nameSpace);
     document.documentElement().setAttribute("xsi:schemaLocation",
-            nameSpace + QL1S(" ") + schemaUrl);
+                                            nameSpace + QL1S(" ") + schemaUrl);
 
     if (version != QL1S(APEX_SCHEMA_VERSION))
-        qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(tr("XML parser"),
-                tr("XML file upgraded from previous version"))));
+        qCWarning(APEX_RS, "%s",
+                  qPrintable(QSL("%1: %2").arg(
+                      tr("XML parser"),
+                      tr("XML file upgraded from previous version"))));
 
-    document = XmlUtils::parseString(
-        document.toString(), QUrl::fromLocalFile(schema), fileName, removeComments);
+    document =
+        XmlUtils::parseString(document.toString(), QUrl::fromLocalFile(schema),
+                              fileName, removeComments);
 
     return document;
 }
@@ -88,8 +92,8 @@ QMap<QByteArray, QByteArray> UpgradableXmlParser::upgradeMethods() const
 {
     QMap<QByteArray, QByteArray> result;
 
-    for (int i = metaObject()->methodOffset();
-         i < metaObject()->methodCount(); ++i) {
+    for (int i = metaObject()->methodOffset(); i < metaObject()->methodCount();
+         ++i) {
         const QMetaMethod metaMethod = metaObject()->method(i);
         if (metaMethod.access() != QMetaMethod::Private ||
             !metaMethod.parameterTypes().isEmpty() ||
@@ -107,5 +111,4 @@ QMap<QByteArray, QByteArray> UpgradableXmlParser::upgradeMethods() const
 
     return result;
 }
-
 }

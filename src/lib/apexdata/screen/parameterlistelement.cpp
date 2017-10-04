@@ -30,9 +30,9 @@ namespace apex
 namespace data
 {
 
-ParameterListElement::ParameterListElement(
-    const QString& id, ScreenElement* parent )
-    : ParametersContainerElement( id, parent )
+ParameterListElement::ParameterListElement(const QString &id,
+                                           ScreenElement *parent)
+    : ParametersContainerElement(id, parent)
 {
 }
 
@@ -40,56 +40,54 @@ ParameterListElement::~ParameterListElement()
 {
 }
 
-bool ParameterListElement::addParameter(
-    const QString& id, const QString& name,
-    const QString& expression )
+bool ParameterListElement::addParameter(const QString &id, const QString &name,
+                                        const QString &expression)
 {
-    Q_ASSERT( !id.isEmpty() );
+    Q_ASSERT(!id.isEmpty());
 #ifdef PRINTPARAMETERLIST
     qCDebug(APEX_RS, "ParameterlistElement::AddParameter id=" + id);
 #endif
-    parameterList.push_back( ParameterData( id, name, expression ) );
-    return CheckExpression( expression );
+    parameterList.push_back(ParameterData(id, name, expression));
+    return CheckExpression(expression);
 }
 
-
-const ParameterListElement::ParameterListT& ParameterListElement::getParameterList() const
+const ParameterListElement::ParameterListT &
+ParameterListElement::getParameterList() const
 {
     return parameterList;
 }
 
-
-void ParameterListElement::visit( ScreenElementVisitor* v )
+void ParameterListElement::visit(ScreenElementVisitor *v)
 {
-    v->visitParameterList( this );
+    v->visitParameterList(this);
 }
 
-void ParameterListElement::visit( ScreenElementVisitor* v ) const
+void ParameterListElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitParameterList( this );
+    v->visitParameterList(this);
 }
 
-bool ParameterListElement::setParameterID( int param, const QString& s )
+bool ParameterListElement::setParameterID(int param, const QString &s)
 {
     // check id already taken...
-    for ( ParameterListT::iterator i = parameterList.begin();
-          i != parameterList.end(); ++i )
-    {
-        if ( i->id == s && i - parameterList.begin() != param )
+    for (ParameterListT::iterator i = parameterList.begin();
+         i != parameterList.end(); ++i) {
+        if (i->id == s && i - parameterList.begin() != param)
             return false;
     }
     parameterList[param].id = s;
     return true;
 }
 
-void ParameterListElement::setParameterName( int param, const QString& s )
+void ParameterListElement::setParameterName(int param, const QString &s)
 {
     parameterList[param].name = s;
 }
 
-bool ParameterListElement::setParameterExpression( int param, const QString& s )
+bool ParameterListElement::setParameterExpression(int param, const QString &s)
 {
-    if ( !CheckExpression( s ) ) return false;
+    if (!CheckExpression(s))
+        return false;
     else {
         parameterList[param].expression = s;
         return true;
@@ -101,33 +99,30 @@ ScreenElement::ElementTypeT ParameterListElement::elementType() const
     return ParameterList;
 }
 
-void ParameterListElement::removeParameter( int param )
+void ParameterListElement::removeParameter(int param)
 {
-    parameterList.erase( parameterList.begin() + param );
+    parameterList.erase(parameterList.begin() + param);
+}
+}
 }
 
-}
-}
-
-bool apex::data::ParameterListElement::parameterIDTaken( const QString& s ) const
+bool apex::data::ParameterListElement::parameterIDTaken(const QString &s) const
 {
-    for ( ParameterListT::const_iterator i = parameterList.begin();
-          i != parameterList.end(); ++i ) {
-        if ( i->id == s )
+    for (ParameterListT::const_iterator i = parameterList.begin();
+         i != parameterList.end(); ++i) {
+        if (i->id == s)
             return true;
     }
     return false;
 }
 
 bool apex::data::ParameterListElement::
-        operator==(const ParameterListElement& other) const
+operator==(const ParameterListElement &other) const
 {
-    if (!ApexTools::haveSameContents(parameterList, other.parameterList))
-    {
+    if (!ApexTools::haveSameContents(parameterList, other.parameterList)) {
         qCDebug(APEX_RS, "parameterlists are not equal");
         return false;
     }
 
-    return  ScreenElement::operator==(other);
+    return ScreenElement::operator==(other);
 }
-

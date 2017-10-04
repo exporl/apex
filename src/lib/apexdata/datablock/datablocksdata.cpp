@@ -29,42 +29,50 @@ namespace apex
 namespace data
 {
 
-DatablocksData::DatablocksData() : DatablockDataMap()
+DatablocksData::DatablocksData()
+    : DatablockDataMap(), m_hasPluginDatablocks(false)
 {
 }
-
 
 DatablocksData::~DatablocksData()
 {
 }
 
-
-const FilePrefix& DatablocksData::prefix() const
+const FilePrefix &DatablocksData::prefix() const
 {
     return filePrefix;
 }
 
+void DatablocksData::setHasPluginDatablocks(bool s)
+{
+    m_hasPluginDatablocks = s;
+}
 
-void DatablocksData::setPrefix(const FilePrefix& prefix)
+bool DatablocksData::hasPluginDatablocks() const
+{
+    return m_hasPluginDatablocks;
+}
+
+void DatablocksData::setPrefix(const FilePrefix &prefix)
 {
     filePrefix = prefix;
 }
 
-
-DatablockData* DatablocksData::datablockData(const QString& name) const
+DatablockData *DatablocksData::datablockData(const QString &name) const
 {
-    const_iterator i=find(name);
-    if (i==end())
-        throw ApexStringException("Datablock " + name + " not found" );
+    const_iterator i = find(name);
+    if (i == end())
+        throw ApexStringException("Datablock " + name + " not found");
     return i.value();
 }
 
-bool DatablocksData::operator==(const DatablocksData& other) const
+bool DatablocksData::operator==(const DatablocksData &other) const
 {
-    return  ApexTools::areEqualPointerMaps(*this, other) &&
-            filePrefix == other.filePrefix;
+    return ApexTools::areEqualPointerMaps(*this, other) &&
+           filePrefix == other.filePrefix &&
+           m_hasPluginDatablocks == other.hasPluginDatablocks();
 }
 
-}   // ns data
+} // ns data
 
 } // ns apex

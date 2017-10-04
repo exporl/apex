@@ -19,8 +19,6 @@
 
 #include "dummydevicedata.h"
 
-
 apex::data::DummyDeviceData::DummyDeviceData() : DeviceData(TYPE_DUMMY)
 {
 }
-

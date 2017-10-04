@@ -36,9 +36,7 @@ TrainingProcedureData::Type TrainingProcedureData::type() const
     return TrainingType;
 }
 
-
 QString TrainingProcedureData::name() const
 {
     return QLatin1String("apex:trainingProcedure");
 }
-

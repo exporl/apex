@@ -18,8 +18,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_APEXMAINWNDBASE_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_GUI_APEXMAINWNDBASE_H_
 
-#include <qvariant.h>
 #include <qmainwindow.h>
+#include <qvariant.h>
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -29,17 +29,17 @@ class QActionGroup;
 class QToolBar;
 class QMenu;
 
-  /**
-    * File originally generated from mainwndbase.ui.
-    * DO NOT UIC the .ui file, since this file is modified to apex' needs.
-    */
+/**
+  * File originally generated from mainwndbase.ui.
+  * DO NOT UIC the .ui file, since this file is modified to apex' needs.
+  */
 
 class ApexMainWndBase : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    ApexMainWndBase( QWidget* parent = 0, const char* name = 0 );
+    ApexMainWndBase(QWidget *parent = 0, const char *name = 0);
     ~ApexMainWndBase();
 
     QMenuBar *MenuBar;
@@ -48,28 +48,29 @@ public:
     QMenu *calibrateMenu;
     QMenu *hardwareSetupMenu;
     QMenu *helpMenu;
-    QMenu* viewMenu;
-    QAction* fileOpenAction;
-    QAction* fileSaveAsAction;
-    QAction* fileExitAction;
-    QAction* helpContentsAction;
-    QAction* helpDeletePluginCacheAction;
-    QAction* helpShowPluginDialogAction;
-    QAction* helpAboutAction;
-    QAction* helpEditApexconfigAction;
-    QAction* experimentStartAction;
-    QAction* experimentPauseAction;
-    QAction* experimentStopAction;
-    QAction* experimentShowStimulusAction;
-    QAction* experimentSkipAction;
-    QAction* stimulusRepeatAction;
-    QAction* experimentAutoAnswerAction;
-    QAction* recalibrateAction;
-    QAction* startPluginRunnerAction;
-    QAction* saveExperimentAction;
-    QAction* showMessageWindowAction;
-    QAction* selectSoundcardAction;
-    QAction* createShortcutToFileAction;
+    QMenu *viewMenu;
+    QAction *fileOpenAction;
+    QAction *fileSaveAsAction;
+    QAction *fileExitAction;
+    QAction *helpContentsAction;
+    QAction *helpDeletePluginCacheAction;
+    QAction *helpShowPluginDialogAction;
+    QAction *helpAboutAction;
+    QAction *helpEditApexconfigAction;
+    QAction *experimentStartAction;
+    QAction *experimentPauseAction;
+    QAction *experimentStopAction;
+    QAction *experimentShowStimulusAction;
+    QAction *experimentSkipAction;
+    QAction *stimulusRepeatAction;
+    QAction *experimentAutoAnswerAction;
+    QAction *recalibrateAction;
+    QAction *startPluginRunnerAction;
+    QAction *saveExperimentAction;
+    QAction *showMessageWindowAction;
+    QAction *selectSoundcardAction;
+    QAction *createShortcutToFileAction;
+    QAction *startGdbServerAction;
 
 Q_SIGNALS:
     void fileOpen();
@@ -82,12 +83,13 @@ Q_SIGNALS:
     void stopClicked();
     void skipClicked();
     void recalibrateClicked();
-    void autoAnswerClicked(bool);
+    void autoAnswerClicked();
     void showStimulus();
     void repeatTrial();
     void saveExperiment();
     void statusReportingChanged();
     void createShortcut();
+    void startGdbServer();
 
 public Q_SLOTS:
     virtual void helpContents();

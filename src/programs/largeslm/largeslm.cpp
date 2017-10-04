@@ -51,10 +51,11 @@ private:
     QScopedPointer<SoundLevelMeter> slm;
 };
 
-MainWindow::MainWindow(const QString &plugin, QMainWindow *parent) :
-    QMainWindow(parent),
-    style(QString::fromLatin1("font: %1px; color: black;")
-            .arg(QApplication::desktop()->availableGeometry().width() / 5 * 2))
+MainWindow::MainWindow(const QString &plugin, QMainWindow *parent)
+    : QMainWindow(parent),
+      style(QString::fromLatin1("font: %1px; color: black;")
+                .arg(QApplication::desktop()->availableGeometry().width() / 5 *
+                     2))
 {
     this->setWindowTitle(tr("Sound Level Meter"));
 
@@ -63,18 +64,21 @@ MainWindow::MainWindow(const QString &plugin, QMainWindow *parent) :
     this->label->setStyleSheet(style);
     setCentralWidget(this->label);
 
-    QList<SoundLevelMeterPluginCreator*> available =
+    QList<SoundLevelMeterPluginCreator *> available =
         PluginLoader().availablePlugins<SoundLevelMeterPluginCreator>();
     Q_FOREACH (SoundLevelMeterPluginCreator *creator, available) {
-        qCDebug(APEX_RS, "Available plugins: %s", qPrintable(creator->availablePlugins().join(QL1S(", "))));
+        qCDebug(APEX_RS, "Available plugins: %s",
+                qPrintable(creator->availablePlugins().join(QL1S(", "))));
     }
     QString name(plugin.length() > 0 ? plugin : QL1S("dummyslmslave"));
 
-    SoundLevelMeterPluginCreator* creator = createPluginCreator<SoundLevelMeterPluginCreator>(name);
+    SoundLevelMeterPluginCreator *creator =
+        createPluginCreator<SoundLevelMeterPluginCreator>(name);
     this->slm.reset(creator->createSoundLevelMeter(name));
     this->slm->setTransducer("4196"); // TODO
     this->slm->startMeasurement(SoundLevelMeter::SPL_Measurement,
-            SoundLevelMeter::A_Weighting, SoundLevelMeter::FastWeighting);
+                                SoundLevelMeter::A_Weighting,
+                                SoundLevelMeter::FastWeighting);
 
     QTimer *timer = new QTimer(this);
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(update()));
@@ -86,8 +90,12 @@ void MainWindow::update()
     if (this->slm->measure()) {
         double value = this->slm->result();
         this->label->setText(QString::fromLatin1("%1").arg(value, 0, 'f', 1));
-        this->label->setStyleSheet(QString::fromLatin1("%1; background-color: %2;").arg(this->style,
-                    value > 100 ? QL1S("lightred") : value >  80 ? QL1S("yellow") : QL1S("lightgreen")));
+        this->label->setStyleSheet(
+            QString::fromLatin1("%1; background-color: %2;")
+                .arg(this->style,
+                     value > 100
+                         ? QL1S("lightred")
+                         : value > 80 ? QL1S("yellow") : QL1S("lightgreen")));
     }
 }
 

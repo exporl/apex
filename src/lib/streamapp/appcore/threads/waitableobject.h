@@ -23,62 +23,61 @@
 namespace appcore
 {
 
+/**
+  * WaitableObject
+  *   allows threads to wait for events triggered by other threads.
+  *   A thread can call mf_eWaitForSignal() on a WaitableObject,
+  *   and this will suspend the calling thread until another
+  *   thread wakes it up by calling the mp_SignalObject() method.
+  ***************************************************************** */
+class WaitableObject
+{
+public:
     /**
-      * WaitableObject
-      *   allows threads to wait for events triggered by other threads.
-      *   A thread can call mf_eWaitForSignal() on a WaitableObject,
-      *   and this will suspend the calling thread until another
-      *   thread wakes it up by calling the mp_SignalObject() method.
-      ***************************************************************** */
-  class WaitableObject
-  {
-  public:
-      /**
-        * Constructor.
-        */
+      * Constructor.
+      */
     WaitableObject();
 
-      /**
-        * ~Destructor.
-        */
+    /**
+      * ~Destructor.
+      */
     ~WaitableObject();
 
-      /**
-        * Return codes for mf_eWaitForSignal().
-        */
-    enum mt_eWaitResult
-    {
-      wait_ok,      //!< the object was signaled within the time specified
-      wait_timeout, //!< the object was not signaled within the time specified
-      wait_failed   //!< there was a serious error, like killing the object
+    /**
+      * Return codes for mf_eWaitForSignal().
+      */
+    enum mt_eWaitResult {
+        wait_ok,      //!< the object was signaled within the time specified
+        wait_timeout, //!< the object was not signaled within the time specified
+        wait_failed   //!< there was a serious error, like killing the object
     };
 
-      /**
-        * This will make the calling thread idle until timeout, or until
-        * another thread calls mp_SignalObject().
-        * @param ac_nTimeoutMilliSeconds the time to wait, use -1 to wait forever
-        * @return one of mt_eWaitResult
-        */
-    mt_eWaitResult mf_eWaitForSignal( const int ac_nTimeoutMilliSeconds = -1 ) const;
+    /**
+      * This will make the calling thread idle until timeout, or until
+      * another thread calls mp_SignalObject().
+      * @param ac_nTimeoutMilliSeconds the time to wait, use -1 to wait forever
+      * @return one of mt_eWaitResult
+      */
+    mt_eWaitResult
+    mf_eWaitForSignal(const int ac_nTimeoutMilliSeconds = -1) const;
 
-      /**
-        * Wakes up any threads that are currently waiting on this object.
-        */
+    /**
+      * Wakes up any threads that are currently waiting on this object.
+      */
     void mp_SignalObject() const;
 
-      /**
-        * Resets the event to an unsignalled state.
-        * If it's not already signalled, this does nothing.
-        */
+    /**
+      * Resets the event to an unsignalled state.
+      * If it's not already signalled, this does nothing.
+      */
     void mp_ResetObject() const;
 
-  private:
-    void* m_hHandle;
+private:
+    void *m_hHandle;
 
-    WaitableObject( const WaitableObject& );
-    const WaitableObject& operator= ( const WaitableObject& );
-  };
-
+    WaitableObject(const WaitableObject &);
+    const WaitableObject &operator=(const WaitableObject &);
+};
 }
 
 #endif //#ifndef __SEMAPHORES_H__

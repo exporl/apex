@@ -20,8 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_GRIDLAYOUTELEMENT_H_
 #define _EXPORL_SRC_LIB_APEXDATA_SCREEN_GRIDLAYOUTELEMENT_H_
 
-#include "screenlayoutelement.h"
 #include "apextools/apextypedefs.h"
+#include "screenlayoutelement.h"
 
 #include "apextools/global.h"
 
@@ -36,38 +36,51 @@ using gui::ScreenElementMap;
  * The GridLayoutElement is an implementation of a \ref
  * ScreenElement representing an "grid layout".
  */
-class APEXDATA_EXPORT GridLayoutElement
-            : public ScreenLayoutElement
+class APEXDATA_EXPORT GridLayoutElement : public ScreenLayoutElement
 {
-        int width;
-        int height;
-        tStretchList rowStretch;
-        tStretchList colStretch;
+    int width;
+    int height;
+    tStretchList rowStretch;
+    tStretchList colStretch;
 
-    public:
-        GridLayoutElement(const QString& id, ScreenElement* parent, int width, int height, tStretchList rowstretch, tStretchList colstretch);
-        GridLayoutElement(const QString& id, ScreenElement* parent);
+public:
+    GridLayoutElement(const QString &id, ScreenElement *parent, int width,
+                      int height, tStretchList rowstretch,
+                      tStretchList colstretch);
+    GridLayoutElement(const QString &id, ScreenElement *parent);
 
-        ElementTypeT elementType() const;
+    ElementTypeT elementType() const;
 
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
-        void fillChildrenWithEmpties(Screen* s);
+    void fillChildrenWithEmpties(Screen *s);
 
-        int getNumberOfChildPlaces() const;
+    int getNumberOfChildPlaces() const;
 
-        int getWidth() const { return width; }
-        int getHeight() const { return height; }
-        void setWidth(int w);
-        void setHeight(int h);
+    int getWidth() const
+    {
+        return width;
+    }
+    int getHeight() const
+    {
+        return height;
+    }
+    void setWidth(int w);
+    void setHeight(int h);
 
-        tStretchList getColumnStretches() const { return colStretch; };
-        tStretchList getRowStretches() const { return rowStretch; };
+    tStretchList getColumnStretches() const
+    {
+        return colStretch;
+    };
+    tStretchList getRowStretches() const
+    {
+        return rowStretch;
+    };
 
-        void checkChild(const ScreenElement* childel) const;
+    void checkChild(const ScreenElement *childel) const;
 
-        bool operator==(const GridLayoutElement& other) const;
+    bool operator==(const GridLayoutElement &other) const;
 };
 }
 }

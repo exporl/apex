@@ -27,8 +27,6 @@ namespace apex
 namespace parser
 {
 
-
-
 WavDeviceParser::WavDeviceParser()
 {
 }
@@ -37,33 +35,33 @@ WavDeviceParser::~WavDeviceParser()
 {
 }
 
-void WavDeviceParser::Parse(const QDomElement &base, data::WavDeviceData* p)
+void WavDeviceParser::Parse(const QDomElement &base, data::WavDeviceData *p)
 {
     SimpleParametersParser::Parse(base, p);
 }
 
-void WavDeviceParser::AddParameter(data::SimpleParameters* p,
-        const QDomElement &e, const QString& owner, const QString& type,
-        const QString& id, const QVariant& value, const int channel)
+void WavDeviceParser::AddParameter(data::SimpleParameters *p,
+                                   const QDomElement &e, const QString &owner,
+                                   const QString &type, const QString &id,
+                                   const QVariant &value, const int channel)
 {
     SimpleParametersParser::AddParameter(p, e, owner, type, id, value, channel);
 
-    data::WavDeviceData* q = dynamic_cast<data::WavDeviceData*>(p);
+    data::WavDeviceData *q = dynamic_cast<data::WavDeviceData *>(p);
     Q_ASSERT(q);
 
     /*if (type=="driver") {
         q->SetDriver( stimulus::fSndStringToEnum(value) );
-    } else */ if (type=="samplerate") {
+    } else */ if (type == "samplerate") {
         q->setSampleRate(value.toULongLong());
-    } else if (type=="buffersize") {
+    } else if (type == "buffersize") {
         qCDebug(APEX_RS, "Setting buffer size to %d", value.toUInt());
         q->setBufferSize(value.toUInt());
     } else if (type == "blocksize") {
-        qCDebug(APEX_RS, "Setting internal stream block size to %d", value.toUInt());
+        qCDebug(APEX_RS, "Setting internal stream block size to %d",
+                value.toUInt());
         q->setBlockSize(value.toUInt());
     }
 }
-
 }
-
 }

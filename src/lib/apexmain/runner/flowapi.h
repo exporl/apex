@@ -17,38 +17,46 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef FLOWAPI_H
-#define FLOWAPI_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RUNNER_FLOWAPI_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RUNNER_FLOWAPI_H_
 
 #include "simplerunner.h"
-#include "flowrunner.h"
-#include <QString>
-#include <QObject>
-#include <QDebug>
-#include <QQueue>
+
 #include <QDir>
+#include <QMap>
+#include <QObject>
+#include <QString>
 
+namespace apex
+{
+class FlowRunner;
 
-namespace apex {
 class FlowApi : public QObject
 {
     Q_OBJECT
 public:
     FlowApi(FlowRunner *fr, const QDir &baseDir);
-public slots:
-    Q_INVOKABLE virtual void runExperiment(const QString& filePath, const QVariantMap& expressions = QVariantMap(), const QString& resultsFilepath = "");
-    Q_INVOKABLE virtual QString readFile(const QString& fileName);
-    Q_INVOKABLE virtual QString fromCurrentDir(const QString& fileName);
-private:
-    SimpleRunner *sr;
-    FlowRunner *fr;
-    const QDir baseDir;
 
-signals:
+public Q_SLOTS:
+    bool runExperiment(const QString &filePath, const QString &resultsFilePath);
+
+    QString readFile(const QString &fileName);
+    QString absoluteFilePath(const QString &fileName);
+
+    void clearExpressions();
+    void addExpression(const QString &key, const QString &value);
+
+Q_SIGNALS:
     void setResultsFilePath(QString filePath);
     void savedFile(QString filePath);
 
-};
-} // ns apex
+private:
+    SimpleRunner *sr;
+    FlowRunner *fr;
 
-#endif // FLOWAPI_H
+    QMap<QString, QString> savedExpressions;
+    const QDir baseDir;
+};
+}
+
+#endif

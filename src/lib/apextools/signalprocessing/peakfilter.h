@@ -4,17 +4,15 @@
 #include "../global.h"
 #include <QVector>
 
-namespace apex {
+namespace apex
+{
 
 class APEXTOOLS_EXPORT PeakFilter
 {
 public:
-
-    static void peakFilter(QVector<double> &B, QVector<double> &A,
-        double gain, double center, double bw, unsigned fs);
+    static void peakFilter(QVector<double> &B, QVector<double> &A, double gain,
+                           double center, double bw, unsigned fs);
 };
-
-
 
 } // ns apex
 

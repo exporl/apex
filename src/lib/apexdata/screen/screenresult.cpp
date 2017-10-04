@@ -26,29 +26,27 @@ ScreenResult::ScreenResult()
 {
 }
 
-
 ScreenResult::~ScreenResult()
 {
 }
-
-
 }
 
-const QString apex::ScreenResult::toXML( ) const
+const QString apex::ScreenResult::toXML() const
 {
-     QString temp = "<screenresult";
+    QString temp = "<screenresult";
 
-    if ( mLastClickPosition.x() >= 0) {
-        temp += QString(" xclickposition=\"%1\" yclickposition=\"%2\"" )
-                .arg(mLastClickPosition.x()).arg(mLastClickPosition.y());
+    if (mLastClickPosition.x() >= 0) {
+        temp += QString(" xclickposition=\"%1\" yclickposition=\"%2\"")
+                    .arg(mLastClickPosition.x())
+                    .arg(mLastClickPosition.y());
     }
 
     temp += ">\n";
 
-    for (const_iterator p=begin(); p!=end(); ++p)
-    {
+    for (const_iterator p = begin(); p != end(); ++p) {
         // do not report stuff for buttons and labels
-        temp+="\t<element id=\"" + p.key() + "\">" + p.value() + "</element>\n";
+        temp +=
+            "\t<element id=\"" + p.key() + "\">" + p.value() + "</element>\n";
     }
 
     temp += "</screenresult>";
@@ -56,53 +54,63 @@ const QString apex::ScreenResult::toXML( ) const
     return temp;
 }
 
-
-
-void apex::ScreenResult::clear( )
+void apex::ScreenResult::clear()
 {
     map.clear();
     stimulusparams.clear();
 }
 
-void apex::ScreenResult::SetStimulusParameter( const QString & parameter, const QString & value )
+void apex::ScreenResult::SetStimulusParameter(const QString &parameter,
+                                              const QString &value)
 {
-    stimulusparams[parameter]=value;
+    stimulusparams[parameter] = value;
 }
 
-void apex::ScreenResult::setLastClickPosition(const QPointF& point)
+void apex::ScreenResult::setLastClickPosition(const QPointF &point)
 {
     mLastClickPosition = point;
 }
 
-const QPointF&  apex::ScreenResult::lastClickPosition() const
+const QPointF &apex::ScreenResult::lastClickPosition() const
 {
     return mLastClickPosition;
 }
 
-apex::ScreenResult::Parent::const_iterator apex::ScreenResult::begin() const {
+apex::ScreenResult::Parent::const_iterator apex::ScreenResult::begin() const
+{
     return map.begin();
 }
 
-apex::ScreenResult::Parent::const_iterator apex::ScreenResult::end() const {
+apex::ScreenResult::Parent::const_iterator apex::ScreenResult::end() const
+{
     return map.end();
 }
 
-const apex::ScreenResult::ValueType apex::ScreenResult::value (const KeyType& key, const ValueType& defaultValue) const {
+const apex::ScreenResult::ValueType
+apex::ScreenResult::value(const KeyType &key,
+                          const ValueType &defaultValue) const
+{
     return map.value(key, defaultValue);
 }
 
-apex::ScreenResult::ValueType& apex::ScreenResult::operator[](const KeyType& key) {
+apex::ScreenResult::ValueType &apex::ScreenResult::
+operator[](const KeyType &key)
+{
     return map[key];
 }
 
-const apex::ScreenResult::ValueType apex::ScreenResult::operator[](const KeyType& key) const {
+const apex::ScreenResult::ValueType apex::ScreenResult::
+operator[](const KeyType &key) const
+{
     return map[key];
 }
 
-bool apex::ScreenResult::contains(const KeyType& key) const {
+bool apex::ScreenResult::contains(const KeyType &key) const
+{
     return map.contains(key);
 }
 
-const apex::ScreenResult::Parent apex::ScreenResult::get() const {
+const apex::ScreenResult::Parent apex::ScreenResult::get() const
+{
     return map;
 }

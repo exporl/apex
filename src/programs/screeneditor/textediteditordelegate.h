@@ -28,55 +28,55 @@ class QLineEdit;
 
 namespace apex
 {
-  namespace data
-  {
-    class TextEditElement;
-    class ScreenElement;
-  }
-  namespace editor
-  {
-    using data::TextEditElement;
-    using data::ScreenElement;
+namespace data
+{
+class TextEditElement;
+class ScreenElement;
+}
+namespace editor
+{
+using data::TextEditElement;
+using data::ScreenElement;
 
-    /**
-     * This class is an ScreenElementEditorDelegate representing a
-     * TextEditElement.
-     */
-    class TextEditEditorDelegate
-      : public QFrame, public ScreenElementEditorDelegate
-    {
-      Q_OBJECT
+/**
+ * This class is an ScreenElementEditorDelegate representing a
+ * TextEditElement.
+ */
+class TextEditEditorDelegate : public QFrame, public ScreenElementEditorDelegate
+{
+    Q_OBJECT
 
-      TextEditElement* element;
-      QLineEdit* lineedit;
-      bool ignoretextchangedsignal;
-    public:
-      TextEditEditorDelegate( TextEditElement* e, QWidget* parent, ScreenWidget* w );
-      ~TextEditEditorDelegate();
+    TextEditElement *element;
+    QLineEdit *lineedit;
+    bool ignoretextchangedsignal;
 
-      QFrame* getWidget();
-      ScreenElement* getScreenElement();
+public:
+    TextEditEditorDelegate(TextEditElement *e, QWidget *parent,
+                           ScreenWidget *w);
+    ~TextEditEditorDelegate();
 
-      void setInputMask( const QString& s );
+    QFrame *getWidget();
+    ScreenElement *getScreenElement();
 
-      int getPropertyCount();
-      QString getPropertyName( int nr );
-      QVariant getPropertyData( int nr, int role );
-      PropertyType getPropertyType( int nr );
-      bool setProperty( int nr, const QVariant& v );
-      void setText( const QString& s );
-      bool eventFilter( QObject* o, QEvent* e );
+    void setInputMask(const QString &s);
 
-    public slots:
-      void textEdited( const QString& s );
-    protected:
+    int getPropertyCount();
+    QString getPropertyName(int nr);
+    QVariant getPropertyData(int nr, int role);
+    PropertyType getPropertyType(int nr);
+    bool setProperty(int nr, const QVariant &v);
+    void setText(const QString &s);
+    bool eventFilter(QObject *o, QEvent *e);
 
-      void mouseDoubleClickEvent( QMouseEvent* ev );
-      void mouseReleaseEvent( QMouseEvent* ev );
+public slots:
+    void textEdited(const QString &s);
 
-      QFont getFont();
-    };
+protected:
+    void mouseDoubleClickEvent(QMouseEvent *ev);
+    void mouseReleaseEvent(QMouseEvent *ev);
 
-  }
+    QFont getFont();
+};
+}
 }
 #endif

@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #include "apextools/apexpaths.h"
+#include "apextools/apextools.h"
 
 #include "calibration/soundlevelmeter.h"
 
@@ -54,8 +55,8 @@ class PluginDialogPrivate : public QObject
     Q_OBJECT
 public:
     void add(const QObject *object, const QString &what, const QString &text,
-            const QString &tooltip = QString(),
-            const QString &path = QString());
+             const QString &tooltip = QString(),
+             const QString &path = QString());
     void scanPlugins();
 
 public Q_SLOTS:
@@ -63,7 +64,7 @@ public Q_SLOTS:
     void on_buttonBox_helpRequested();
 
 public:
-    QMap<QString, QTreeWidgetItem*> parents;
+    QMap<QString, QTreeWidgetItem *> parents;
     Ui::PluginDialog ui;
 
 private:
@@ -75,12 +76,12 @@ protected:
 // PluginDialogPrivate =========================================================
 
 void PluginDialogPrivate::add(const QObject *object, const QString &what,
-        const QString &text, const QString &tooltip, const QString &path)
+                              const QString &text, const QString &tooltip,
+                              const QString &path)
 {
     QTreeWidgetItem *parent = parents.value(what);
     if (!parent) {
-        parent = new QTreeWidgetItem(ui.treeWidget,
-                QStringList() << what);
+        parent = new QTreeWidgetItem(ui.treeWidget, QStringList() << what);
         parent->setExpanded(true);
         parents.insert(what, parent);
     }
@@ -95,10 +96,9 @@ void PluginDialogPrivate::add(const QObject *object, const QString &what,
         filePath = PluginLoader().pluginPath(object);
     }
 
-    QTreeWidgetItem * const item = new QTreeWidgetItem(parent, QStringList()
-            << className
-            << text
-            << QFileInfo(filePath).fileName());
+    QTreeWidgetItem *const item = new QTreeWidgetItem(
+        parent, QStringList() << className << text
+                              << QFileInfo(filePath).fileName());
 
     item->setToolTip(2, filePath);
     if (!tooltip.isEmpty()) {
@@ -115,52 +115,53 @@ void PluginDialogPrivate::scanPlugins()
     ui.treeWidget->clear();
     parents.clear();
 
-    Q_FOREACH (const QObject * const object,
-            PluginLoader().allAvailablePlugins()) {
+    Q_FOREACH (const QObject *const object,
+               PluginLoader().allAvailablePlugins()) {
         bool added = false;
-        if (const PluginFilterCreator * const creator =
-            qobject_cast<PluginFilterCreator*>(object)) {
-            add(object, PluginDialog::tr("Filters"), creator->availablePlugins().join(","));
+        if (const PluginFilterCreator *const creator =
+                qobject_cast<PluginFilterCreator *>(object)) {
+            add(object, PluginDialog::tr("Filters"),
+                creator->availablePlugins().join(","));
             added = true;
         }
 
-        if (const PluginControllerCreator * const creator =
-            qobject_cast<PluginControllerCreator*>(object)) {
+        if (const PluginControllerCreator *const creator =
+                qobject_cast<PluginControllerCreator *>(object)) {
             add(object, PluginDialog::tr("Controllers"),
-                 creator->availablePlugins().join(","));
+                creator->availablePlugins().join(","));
             added = true;
         }
 
-        if (const PluginRunnerCreator * const creator =
-            qobject_cast<PluginRunnerCreator*>(object)) {
+        if (const PluginRunnerCreator *const creator =
+                qobject_cast<PluginRunnerCreator *>(object)) {
             add(object, PluginDialog::tr("Runners"),
-                 creator->availablePlugins().join(","));
+                creator->availablePlugins().join(","));
             added = true;
         }
 
-        if (const SoundLevelMeterPluginCreator * const creator =
-            qobject_cast<SoundLevelMeterPluginCreator*>(object)) {
+        if (const SoundLevelMeterPluginCreator *const creator =
+                qobject_cast<SoundLevelMeterPluginCreator *>(object)) {
             add(object, PluginDialog::tr("Sound level meters"),
-                 creator->availablePlugins().join(","));
+                creator->availablePlugins().join(","));
             added = true;
         }
 
-        if (const PluginFeedbackCreator * const creator =
-            qobject_cast<PluginFeedbackCreator*>(object)) {
+        if (const PluginFeedbackCreator *const creator =
+                qobject_cast<PluginFeedbackCreator *>(object)) {
             add(object, PluginDialog::tr("Feedback plugins"),
-                    creator->availablePlugins().join(","));
+                creator->availablePlugins().join(","));
             added = true;
         }
 
-        if (const CohClientCreator * const creator =
-                qobject_cast<CohClientCreator*>(object)) {
+        if (const CohClientCreator *const creator =
+                qobject_cast<CohClientCreator *>(object)) {
             add(object, PluginDialog::tr("CI Clients"),
-                    creator->cohDriverName());
+                creator->cohDriverName());
             added = true;
         }
         if (!added) {
             add(object, PluginDialog::tr("Unknown plugins"),
-                    PluginDialog::tr("unknown"));
+                PluginDialog::tr("unknown"));
         }
     }
 
@@ -168,7 +169,7 @@ void PluginDialogPrivate::scanPlugins()
     while (i.hasNext()) {
         i.next();
         add(NULL, PluginDialog::tr("Invalid plugins"),
-                PluginDialog::tr("unknown"), i.value(), i.key());
+            PluginDialog::tr("unknown"), i.value(), i.key());
     }
 
     ui.treeWidget->resizeColumnToContents(0);
@@ -184,9 +185,9 @@ void PluginDialogPrivate::on_refresh_clicked()
     PluginDialog::refreshPluginCache();
     scanPlugins();
     if (pluginCount == PluginLoader().allAvailablePlugins().size()) {
-         QMessageBox::information(p, tr("Plugins"),
-                 tr("No new plugins have been found.\n"
-                     "Restarting RBA might help."));
+        QMessageBox::information(p, tr("Plugins"),
+                                 tr("No new plugins have been found.\n"
+                                    "Restarting RBA might help."));
     }
 }
 
@@ -194,22 +195,22 @@ void PluginDialogPrivate::on_buttonBox_helpRequested()
 {
     E_P(PluginDialog);
 
-    QMessageBox::information(p, tr("Help for plugin dialog"),
-                             tr("This dialog lists all plugins that could "
-                            "be found in the plugin directories: \n %1 \n"
-                            "The plugin specified in the experiment file "
-                            "should correspond to one of the names in the "
-                            "second column. By holding the cursor above the "
-                            "first column, eventual error messages during "
-                            "loading of the plugin are shown.")
-                            .arg(Paths::pluginDirectories().join("\n")));
+    QMessageBox::information(
+        p, tr("Help for plugin dialog"),
+        tr("This dialog lists all plugins that could "
+           "be found in the plugin directories: \n %1 \n"
+           "The plugin specified in the experiment file "
+           "should correspond to one of the names in the "
+           "second column. By holding the cursor above the "
+           "first column, eventual error messages during "
+           "loading of the plugin are shown.")
+            .arg(Paths::pluginDirectories().join("\n")));
 }
 
 // PluginDialog ================================================================
 
-PluginDialog::PluginDialog(QWidget *parent) :
-    QDialog(parent),
-    dataPtr(new PluginDialogPrivate)
+PluginDialog::PluginDialog(QWidget *parent)
+    : QDialog(parent), dataPtr(new PluginDialogPrivate)
 {
     E_D(PluginDialog);
 
@@ -221,14 +222,12 @@ PluginDialog::PluginDialog(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_QuitOnClose, false);
 
-    QPushButton *button = d->ui.buttonBox->addButton(tr("Refresh plugins"),
-            QDialogButtonBox::ActionRole);
+    QPushButton *button = d->ui.buttonBox->addButton(
+        tr("Refresh plugins"), QDialogButtonBox::ActionRole);
     button->setObjectName(QL1S("refresh"));
     connectSlotsByNameToPrivate(this, d);
 
-#ifdef Q_OS_ANDROID
-    showMaximized();
-#endif
+    ApexTools::expandWidgetToWindow(this);
 
     d->scanPlugins();
 }

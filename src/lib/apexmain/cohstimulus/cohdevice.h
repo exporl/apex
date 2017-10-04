@@ -51,7 +51,8 @@ public:
     virtual void PlayAll() Q_DECL_OVERRIDE;
     virtual void StopAll() Q_DECL_OVERRIDE;
     virtual bool AllDone() Q_DECL_OVERRIDE;
-    virtual bool SetParameter(const QString &type, int channel, const QVariant &value) Q_DECL_OVERRIDE;
+    virtual bool SetParameter(const QString &type, int channel,
+                              const QVariant &value) Q_DECL_OVERRIDE;
     virtual void Reset() Q_DECL_OVERRIDE;
     virtual void Prepare() Q_DECL_OVERRIDE;
     virtual void SetSilenceBefore(double time) Q_DECL_OVERRIDE;
@@ -63,7 +64,6 @@ private:
 protected:
     DECLARE_PRIVATE_DATA(CohDevice)
 };
-
 }
 }
 

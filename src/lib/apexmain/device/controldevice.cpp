@@ -19,22 +19,19 @@
 
 #include "controldevice.h"
 
-namespace apex {
-
-namespace device {
-
-  ControlDevice::ControlDevice( data::DeviceData* a_pParameters)
- : IApexDevice( a_pParameters)
+namespace apex
 {
 
-}
+namespace device
+{
 
+ControlDevice::ControlDevice(data::DeviceData *a_pParameters)
+    : IApexDevice(a_pParameters)
+{
+}
 
 ControlDevice::~ControlDevice()
 {
 }
-
-
 }
-
 }

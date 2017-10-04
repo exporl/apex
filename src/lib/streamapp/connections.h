@@ -20,11 +20,11 @@
 #ifndef _APEX_SRC_LIB_STREAMAPP_CONNECTIONS_H__
 #define _APEX_SRC_LIB_STREAMAPP_CONNECTIONS_H__
 
-#include "typedefs.h"
-#include "multiproc.h"
 #include "audioformat.h"
-#include "streamutils.h"
 #include "callback/callback.h"
+#include "multiproc.h"
+#include "streamutils.h"
+#include "typedefs.h"
 
 #include <map>
 
@@ -40,14 +40,18 @@ namespace streamapp
  * StreamCallback
  *   manages the result of streams and processors.
  *   Streams and processors work on subsequent blocks, so every call gets/sets a
- *   different Stream. This class wraps the objects in a Callback that stores the
+ *   different Stream. This class wraps the objects in a Callback that stores
+ *the
  *   result so that the same result can be used an unlimited number of times.
- *   The implementations implement mf_CallbackFunc() in which they set the result.
- *   At the start of a callback, the result is unlocked, when the result is first needed
+ *   The implementations implement mf_CallbackFunc() in which they set the
+ *result.
+ *   At the start of a callback, the result is unlocked, when the result is
+ *first needed
  *   it is set and then locked for the duration of the callback.
  *   If mf_bIsPlaying() is false, the callback never gets executed.
  *   @see ConnectItem
- **************************************************************************************** */
+ ****************************************************************************************
+ */
 class StreamCallback : public Callback
 {
 public:
@@ -55,10 +59,8 @@ public:
      * Constructor.
      * @param ac_bIsPlaying initial play condition
      */
-    StreamCallback(const bool ac_bIsPlaying = true) :
-        mc_pResult(0),
-        mv_bLocked(false),
-        mv_bIsPlaying(ac_bIsPlaying)
+    StreamCallback(const bool ac_bIsPlaying = true)
+        : mc_pResult(0), mv_bLocked(false), mv_bIsPlaying(ac_bIsPlaying)
     {
     }
 
@@ -79,7 +81,7 @@ public:
      */
     virtual void mf_Callback()
     {
-        if(mf_bResultLocked())
+        if (mf_bResultLocked())
             return;
         mf_CallbackFunc();
         mp_LockResult();
@@ -107,7 +109,7 @@ public:
      * Check locked.
      * @return true if locked
      */
-    const bool& mf_bResultLocked() const
+    const bool &mf_bResultLocked() const
     {
         return mv_bLocked;
     }
@@ -136,7 +138,7 @@ public:
      * This result will always be valid.
      * @return the result
      */
-    const Stream& mf_GetResult()
+    const Stream &mf_GetResult()
     {
         mf_Callback();
         return *mc_pResult;
@@ -146,29 +148,29 @@ public:
      * Get the number of channels of the result.
      * @return the number
      */
-    virtual unsigned  mf_nGetNumChannels() const = 0;
+    virtual unsigned mf_nGetNumChannels() const = 0;
 
     /**
      * Get the buffersize of the result.
      * @return the size
      */
-    virtual unsigned  mf_nGetBufferSize() const = 0;
+    virtual unsigned mf_nGetBufferSize() const = 0;
 
     /**
      * Callback function to be implemented.
      * This function must set a valid result.
      */
-    virtual void      mf_CallbackFunc() = 0;
+    virtual void mf_CallbackFunc() = 0;
 
 protected:
-    const Stream* mc_pResult;
+    const Stream *mc_pResult;
 
 private:
     bool mv_bLocked;
     bool mv_bIsPlaying;
 };
 
-typedef ArrayStorage<StreamCallback*> CallbackInputs;
+typedef ArrayStorage<StreamCallback *> CallbackInputs;
 typedef ArrayStorage<unsigned> InputChannels;
 typedef ArrayStorage<bool> tFreeChannels;
 
@@ -183,8 +185,7 @@ public:
      * Constructor.
      * @param ac_nSize the number of channels.
      */
-    FreeChannels(const unsigned ac_nSize) :
-        tFreeChannels(ac_nSize)
+    FreeChannels(const unsigned ac_nSize) : tFreeChannels(ac_nSize)
     {
     }
 
@@ -200,9 +201,9 @@ public:
      * @param ac_nIndex the channel
      * @return true if free
      */
-    const bool& mf_bIsFreeChannel(const unsigned ac_nIndex) const
+    const bool &mf_bIsFreeChannel(const unsigned ac_nIndex) const
     {
-        return tFreeChannels::operator() (ac_nIndex);
+        return tFreeChannels::operator()(ac_nIndex);
     }
 
     /**
@@ -211,11 +212,11 @@ public:
      */
     int mf_nGetFirstFreeChannel() const
     {
-        const unsigned& nChan = tFreeChannels::mf_nGetBufferSize();
-        for (unsigned i = 0 ; i < nChan ; ++i) {
-                if(mf_bIsFreeChannel(i))
-                    return (int) i;
-            }
+        const unsigned &nChan = tFreeChannels::mf_nGetBufferSize();
+        for (unsigned i = 0; i < nChan; ++i) {
+            if (mf_bIsFreeChannel(i))
+                return (int)i;
+        }
         return -1;
     }
 
@@ -226,9 +227,9 @@ public:
     unsigned mf_nGetNumFreeChannels() const
     {
         unsigned nRet = 0;
-        const unsigned& nChan = tFreeChannels::mf_nGetBufferSize();
-        for (unsigned i = 0 ; i < nChan ; ++i)
-            if(mf_bIsFreeChannel(i))
+        const unsigned &nChan = tFreeChannels::mf_nGetBufferSize();
+        for (unsigned i = 0; i < nChan; ++i)
+            if (mf_bIsFreeChannel(i))
                 ++nRet;
         return nRet;
     }
@@ -237,7 +238,8 @@ public:
 /**
  * ConnectItem
  *   manages connections between StreamCallbacks.
- *   When connected, ConnectItem will use StreamCallback's result, combine it with
+ *   When connected, ConnectItem will use StreamCallback's result, combine it
+ with
  *   the results of other connected items and set this as it's own result.
  *   Suppose StreamCallback str1 with 2 channels, str2 with 1 channel and
  *   ConnectItem con with 4 channels (sockets).
@@ -256,7 +258,8 @@ public:
  *   No samples are copied, just pointers, and null is a pointer to a Stream
  *   having only zeroes in it.
  *   Multiple connetions from the same item and same channel are allowed.
- ********************************************************************************* */
+ *********************************************************************************
+ */
 class ConnectItem : public StreamCallback
 {
 public:
@@ -277,7 +280,7 @@ public:
      * Connects as much channels as possible to the first x free channels.
      * @param ac_pItem the item to connect
      */
-    virtual void mp_AddInput(StreamCallback* const ac_pItem);
+    virtual void mp_AddInput(StreamCallback *const ac_pItem);
 
     /**
      * Connect one channel of the input.
@@ -285,7 +288,8 @@ public:
      * @param ac_pItem the item to connect
      * @param ac_nItemOutChannel the channel to use of ac_pItem
      */
-    virtual void mp_AddInput(StreamCallback* const ac_pItem, const unsigned ac_nItemOutChannel);
+    virtual void mp_AddInput(StreamCallback *const ac_pItem,
+                             const unsigned ac_nItemOutChannel);
 
     /**
      * Connect one channel of the input to the specified channel.
@@ -294,7 +298,9 @@ public:
      * @param ac_nItemOutChannel the channel to use of ac_pItem
      * @param ac_nThisInChannel the channel to use here
      */
-    virtual void mp_AddInput(StreamCallback* const ac_pItem, const unsigned ac_nItemOutChannel, const unsigned ac_nThisInChannel);
+    virtual void mp_AddInput(StreamCallback *const ac_pItem,
+                             const unsigned ac_nItemOutChannel,
+                             const unsigned ac_nThisInChannel);
 
     /**
      * Remove the inputchannel specified.
@@ -307,14 +313,15 @@ public:
      * Remove all connections from the item.
      * @param ac_pItem the item
      */
-    virtual void mp_RemoveInput(StreamCallback* const ac_pItem);
+    virtual void mp_RemoveInput(StreamCallback *const ac_pItem);
 
     /**
      * Remove one connection from the item.
      * @param ac_pItem the item
      * @param ac_nItemOutChannel the channel of the item to disconnect
      */
-    virtual void mp_RemoveInput(StreamCallback* const ac_pItem, const unsigned ac_nItemOutChannel);
+    virtual void mp_RemoveInput(StreamCallback *const ac_pItem,
+                                const unsigned ac_nItemOutChannel);
 
     /**
      * Remove one connection from the item.
@@ -322,7 +329,9 @@ public:
      * @param ac_nItemOutChannel the channel of the item to disconnect
      * @param ac_nThisInChannel this' channel to disconnect from.
      */
-    virtual void mp_RemoveInput(StreamCallback* const ac_pItem, const unsigned ac_nItemOutChannel, const unsigned ac_nThisInChannel);
+    virtual void mp_RemoveInput(StreamCallback *const ac_pItem,
+                                const unsigned ac_nItemOutChannel,
+                                const unsigned ac_nThisInChannel);
 
     /**
      * Free all connected sockets.
@@ -333,26 +342,26 @@ public:
      * Get the number of free sockets.
      * @return the number
      */
-    unsigned  mf_nGetFreeChannels() const;
+    unsigned mf_nGetFreeChannels() const;
 
     /**
      * Get the index of the first free socket.
      * @return the index or -1 if none free
      */
-    int       mf_nGetFirstFreeChannel() const;
+    int mf_nGetFirstFreeChannel() const;
 
     /**
      * Check if the given socket is free.
      * @param ac_nIndex the index
      * @return true if not connected
      */
-    bool      mf_bIsFreeChannel(const unsigned ac_nIndex) const;
+    bool mf_bIsFreeChannel(const unsigned ac_nIndex) const;
 
     /**
      * Check if this item has any connections at all.
      * @return true if at least one connection
      */
-    bool      mf_bIsConnected() const;
+    bool mf_bIsConnected() const;
 
     /**
      * Implementation of the StreamCallback method.
@@ -380,36 +389,40 @@ public:
      *   struct with connection info.
      *   Not used internally, but nice to query connections.
      ******************************************************* */
-    struct mt_eConnectionInfo
-    {
-        mt_eConnectionInfo(StreamCallback* a_pFrom, const unsigned ac_nFromChannel, const unsigned ac_nToChannel) :
-            m_pFrom(a_pFrom ), m_nFromChannel(ac_nFromChannel), m_nToChannel( ac_nToChannel)
-        {}
-        mt_eConnectionInfo() :
-            m_pFrom(0 ), m_nFromChannel(0), m_nToChannel( 0)
-        {}
-        StreamCallback* m_pFrom;
-        unsigned        m_nFromChannel;
-        unsigned        m_nToChannel;
+    struct mt_eConnectionInfo {
+        mt_eConnectionInfo(StreamCallback *a_pFrom,
+                           const unsigned ac_nFromChannel,
+                           const unsigned ac_nToChannel)
+            : m_pFrom(a_pFrom),
+              m_nFromChannel(ac_nFromChannel),
+              m_nToChannel(ac_nToChannel)
+        {
+        }
+        mt_eConnectionInfo() : m_pFrom(0), m_nFromChannel(0), m_nToChannel(0)
+        {
+        }
+        StreamCallback *m_pFrom;
+        unsigned m_nFromChannel;
+        unsigned m_nToChannel;
     };
 
     /**
      * Get a list of all connections.
      * @return an array, must be deleted by callee
      */
-    DeleteAtDestructionArray<mt_eConnectionInfo>* mf_pGetConnections() const;
+    DeleteAtDestructionArray<mt_eConnectionInfo> *mf_pGetConnections() const;
 
 protected:
-    const unsigned  mc_nChan;
-    const unsigned  mc_nSize;
+    const unsigned mc_nChan;
+    const unsigned mc_nSize;
 
-    CallbackInputs  m_Inputs;
-    InputChannels   m_InputChans;
-    FreeChannels    m_FreeChan;
-    PtrStream       m_Result;
+    CallbackInputs m_Inputs;
+    InputChannels m_InputChans;
+    FreeChannels m_FreeChan;
+    PtrStream m_Result;
 
-    ConnectItem& operator= (const ConnectItem&);
-    ConnectItem(const ConnectItem&);
+    ConnectItem &operator=(const ConnectItem &);
+    ConnectItem(const ConnectItem &);
 };
 
 /**
@@ -424,9 +437,9 @@ public:
      * @param a_pInput the input stream
      * @param ac_bDeleteInput if true, deletes input when killed
      */
-    InputStreamCallback(InputStream* const a_pInput, const bool ac_bDeleteInput = false) :
-        mc_pInput(a_pInput),
-        mc_bDeleteInput(ac_bDeleteInput)
+    InputStreamCallback(InputStream *const a_pInput,
+                        const bool ac_bDeleteInput = false)
+        : mc_pInput(a_pInput), mc_bDeleteInput(ac_bDeleteInput)
     {
     }
 
@@ -435,7 +448,7 @@ public:
      */
     ~InputStreamCallback()
     {
-        if(mc_bDeleteInput)
+        if (mc_bDeleteInput)
             delete mc_pInput;
     }
 
@@ -464,11 +477,11 @@ public:
     }
 
 private:
-    InputStream* const  mc_pInput;
-    const bool          mc_bDeleteInput;
+    InputStream *const mc_pInput;
+    const bool mc_bDeleteInput;
 
-    InputStreamCallback(const InputStreamCallback&);
-    InputStreamCallback& operator = (const InputStreamCallback&);
+    InputStreamCallback(const InputStreamCallback &);
+    InputStreamCallback &operator=(const InputStreamCallback &);
 };
 
 /**
@@ -485,10 +498,12 @@ public:
      * @param ac_pProc the processor
      * @param ac_bDeleteInput if true, deletes processor when killed
      */
-    ProcessorCallback(IStreamProcessor* const ac_pProc, const bool ac_bDeleteInput = false) :
-        ConnectItem(ac_pProc->mf_nGetBufferSize(), ac_pProc->mf_nGetNumInputChannels()),
-        mc_pProc(ac_pProc),
-        mc_bDeleteInput(ac_bDeleteInput)
+    ProcessorCallback(IStreamProcessor *const ac_pProc,
+                      const bool ac_bDeleteInput = false)
+        : ConnectItem(ac_pProc->mf_nGetBufferSize(),
+                      ac_pProc->mf_nGetNumInputChannels()),
+          mc_pProc(ac_pProc),
+          mc_bDeleteInput(ac_bDeleteInput)
     {
     }
 
@@ -497,7 +512,7 @@ public:
      */
     ~ProcessorCallback()
     {
-        if(mc_bDeleteInput)
+        if (mc_bDeleteInput)
             delete mc_pProc;
     }
 
@@ -506,7 +521,7 @@ public:
      */
     virtual void mf_Callback()
     {
-        if(mf_bResultLocked())
+        if (mf_bResultLocked())
             return;
         ConnectItem::mf_CallbackFunc();
         mf_CallbackFunc();
@@ -526,15 +541,15 @@ public:
      */
     unsigned mf_nGetNumChannels() const
     {
-        return mc_pProc->mf_nGetNumOutputChannels();  //!!!!!
+        return mc_pProc->mf_nGetNumOutputChannels(); //!!!!!
     }
 
 private:
-    IStreamProcessor* const mc_pProc;
-    const bool              mc_bDeleteInput;
+    IStreamProcessor *const mc_pProc;
+    const bool mc_bDeleteInput;
 
-    ProcessorCallback(const ProcessorCallback&);
-    ProcessorCallback& operator = (const ProcessorCallback&);
+    ProcessorCallback(const ProcessorCallback &);
+    ProcessorCallback &operator=(const ProcessorCallback &);
 };
 
 /**
@@ -551,10 +566,12 @@ public:
      * @param ac_pOutput the output stream
      * @param ac_bDeleteInput if true, deletes ac_pOutput when killed
      */
-    OutputStreamCallback(OutputStream* const ac_pOutput, const bool ac_bDeleteInput = false) :
-        ConnectItem(ac_pOutput->mf_nGetBufferSize(), ac_pOutput->mf_nGetNumChannels()),
-        mc_pOutput(ac_pOutput),
-        mc_bDeleteInput(ac_bDeleteInput)
+    OutputStreamCallback(OutputStream *const ac_pOutput,
+                         const bool ac_bDeleteInput = false)
+        : ConnectItem(ac_pOutput->mf_nGetBufferSize(),
+                      ac_pOutput->mf_nGetNumChannels()),
+          mc_pOutput(ac_pOutput),
+          mc_bDeleteInput(ac_bDeleteInput)
     {
     }
 
@@ -563,7 +580,7 @@ public:
      */
     ~OutputStreamCallback()
     {
-        if(mc_bDeleteInput)
+        if (mc_bDeleteInput)
             delete mc_pOutput;
     }
 
@@ -572,7 +589,7 @@ public:
      */
     virtual void mf_Callback()
     {
-        if(mf_bResultLocked())
+        if (mf_bResultLocked())
             return;
         ConnectItem::mf_CallbackFunc();
         mf_CallbackFunc();
@@ -588,15 +605,15 @@ public:
     }
 
 private:
-    OutputStream* const mc_pOutput;
-    const bool          mc_bDeleteInput;
+    OutputStream *const mc_pOutput;
+    const bool mc_bDeleteInput;
 
-    OutputStreamCallback(const OutputStreamCallback&);
-    OutputStreamCallback& operator = (const OutputStreamCallback&);
+    OutputStreamCallback(const OutputStreamCallback &);
+    OutputStreamCallback &operator=(const OutputStreamCallback &);
 };
 
-typedef std::map<QString,ConnectItem*> tConnectable;
-typedef std::map<QString,StreamCallback*> tUnConnectable;
+typedef std::map<QString, ConnectItem *> tConnectable;
+typedef std::map<QString, StreamCallback *> tUnConnectable;
 
 /**
  * ConnectionManager
@@ -629,28 +646,30 @@ public:
      * @param ac_pInput the stream
      * @param ac_bPlaying initial state
      */
-    void mp_RegisterItem(const QString& ac_sId, InputStream* const ac_pInput, const bool ac_bPlaying = true);
+    void mp_RegisterItem(const QString &ac_sId, InputStream *const ac_pInput,
+                         const bool ac_bPlaying = true);
 
     /**
      * Register an OutputStream.
      * @param ac_sId the id, must be unique
      * @param ac_pOutput the stream
      */
-    void mp_RegisterItem(const QString& ac_sId, OutputStream* const ac_pOutput);
+    void mp_RegisterItem(const QString &ac_sId, OutputStream *const ac_pOutput);
 
     /**
      * Register an IStreamProcessor.
      * @param ac_sId the id, must be unique
      * @param ac_pProcessor the processor
      */
-    void mp_RegisterItem(const QString& ac_sId, IStreamProcessor* const ac_pProcessor);
+    void mp_RegisterItem(const QString &ac_sId,
+                         IStreamProcessor *const ac_pProcessor);
 
     /**
      * Register a ConnectItem.
      * @param ac_sId the id, must be unique
      * @param ac_pInput the item
      */
-    void mp_RegisterItem(const QString& ac_sId, ConnectItem* const ac_pInput);
+    void mp_RegisterItem(const QString &ac_sId, ConnectItem *const ac_pInput);
 
     /**
      * Connect all channels from both items.
@@ -658,7 +677,7 @@ public:
      * @param ac_sFromID origin
      * @param ac_sToID destination
      */
-    void mp_Connect(const QString& ac_sFromID, const QString& ac_sToID);
+    void mp_Connect(const QString &ac_sFromID, const QString &ac_sToID);
 
     /**
      * Connect a single channel from both items.
@@ -667,14 +686,17 @@ public:
      * @param ac_nFromChannel origin channel
      * @param ac_nToChannel destination channel
      */
-    void mp_Connect(const QString& ac_sFromID, const QString& ac_sToID, const unsigned ac_nFromChannel, const unsigned ac_nToChannel);
+    void mp_Connect(const QString &ac_sFromID, const QString &ac_sToID,
+                    const unsigned ac_nFromChannel,
+                    const unsigned ac_nToChannel);
 
     /**
      * Remove all connections between two items.
      * @param ac_sFromID origin
      * @param ac_sToID destination
      */
-    void mp_RemoveConnection(const QString& ac_sFromID, const QString& ac_sToID);
+    void mp_RemoveConnection(const QString &ac_sFromID,
+                             const QString &ac_sToID);
 
     /**
      * Remove a specific connection between two items.
@@ -683,13 +705,15 @@ public:
      * @param ac_nFromChannel origin channel
      * @param ac_nToChannel destination channel
      */
-    void mp_RemoveConnection(const QString& ac_sFromID, const QString& ac_sToID, const unsigned ac_nFromChannel, const unsigned ac_nToChannel);
+    void mp_RemoveConnection(const QString &ac_sFromID, const QString &ac_sToID,
+                             const unsigned ac_nFromChannel,
+                             const unsigned ac_nToChannel);
 
     /**
      * Unregister an item, hereby removing all it's connections.
      * @param ac_sID the unique id.
      */
-    void mp_UnregisterItem(const QString& ac_sID);
+    void mp_UnregisterItem(const QString &ac_sID);
 
     /**
      * Set to use all items.
@@ -698,19 +722,20 @@ public:
 
     /**
      * Set to use a specific item.
-     * If an item is set to "not playing", all items needing input from the first
+     * If an item is set to "not playing", all items needing input from the
+     * first
      * item will only receive zeroes at their sockets.
      * @param ac_sItem the item's id
      * @param ac_bPlay if false, item is not used.
      */
-    void mp_PlayItem(const QString& ac_sItem, const bool ac_bPlay = true);
+    void mp_PlayItem(const QString &ac_sItem, const bool ac_bPlay = true);
 
     /**
      * Check if the id is for a registered item.
      * @param ac_sItem the id
      * @return true if id exists and is registered
      */
-    bool mf_bIsRegistered(const QString& ac_sItem) const;
+    bool mf_bIsRegistered(const QString &ac_sItem) const;
 
     /**
      * Check if all inputs have connections.
@@ -739,21 +764,21 @@ public:
     void mf_Callback();
 
 private:
-    int             mf_nGetItemIndex(const QString& ac_sID) const;
-    ConnectItem*    mf_pGetConnectable(const QString& ac_sID) const;
-    StreamCallback* mf_pGetUnConnectable(const QString& ac_sID) const;
-    StreamCallback* mf_pGetAny(const QString& ac_sID) const;
-    QString     mf_sGetAny(StreamCallback* const ac_pID) const;  //!slow, searching by val
+    int mf_nGetItemIndex(const QString &ac_sID) const;
+    ConnectItem *mf_pGetConnectable(const QString &ac_sID) const;
+    StreamCallback *mf_pGetUnConnectable(const QString &ac_sID) const;
+    StreamCallback *mf_pGetAny(const QString &ac_sID) const;
+    QString
+    mf_sGetAny(StreamCallback *const ac_pID) const; //! slow, searching by val
 
-    tConnectable    m_Connectable;
-    tUnConnectable  m_UnConnectable;
+    tConnectable m_Connectable;
+    tUnConnectable m_UnConnectable;
 
-    const appcore::CriticalSection* mc_pLock;
+    const appcore::CriticalSection *mc_pLock;
 
-    ConnectionManager(const ConnectionManager&);
-    ConnectionManager& operator = (const ConnectionManager&);
+    ConnectionManager(const ConnectionManager &);
+    ConnectionManager &operator=(const ConnectionManager &);
 };
-
 }
 
 #endif //#ifndef _APEX_SRC_LIB_STREAMAPP_CONNECTIONS_H__

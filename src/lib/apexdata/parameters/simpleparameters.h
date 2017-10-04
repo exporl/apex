@@ -20,7 +20,7 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_SIMPLEPARAMETERS_H_
 #define _EXPORL_SRC_LIB_APEXDATA_PARAMETERS_SIMPLEPARAMETERS_H_
 
-//from libtools
+// from libtools
 #include "apextools/global.h"
 
 #include "parameter.h"
@@ -56,61 +56,59 @@ typedef QList<Parameter> ParameterList;
  */
 class APEXDATA_EXPORT SimpleParameters
 {
-    public:
+public:
+    SimpleParameters();
+    SimpleParameters(const SimpleParameters &other);
+    virtual ~SimpleParameters();
 
-        SimpleParameters();
-        SimpleParameters(const SimpleParameters& other);
-        virtual ~SimpleParameters();
+    // getters
 
-        //getters
+    /**
+     * Returns the value for the given type.
+     *
+     * @throws ApexStringException If multiple parameters with the given
+     *                             type exist.
+     *
+     * @return  A default constructed value if there is no
+     *          parameter with the given type.
+     */
+    QVariant valueByType(const QString &type) const;
 
-        /**
-         * Returns the value for the given type.
-         *
-         * @throws ApexStringException If multiple parameters with the given
-         *                             type exist.
-         *
-         * @return  A default constructed value if there is no
-         *          parameter with the given type.
-         */
-        QVariant valueByType(const QString& type) const;
+    /**
+     * Returns the parameter corresponding to the given type.
+     *
+     * @throws ApexStringException If multiple parameters with the given
+     *                             type exist.
+     *
+     * @return  A default constructed ParameterName if there is no
+     *          parameter with the given type.
+     */
+    Parameter parameterByType(const QString &type) const;
+    virtual bool hasParameter(const QString &type) const;
+    ParameterList parameters() const;
+    virtual QString id() const;
+    QString xsiType() const;
 
-        /**
-         * Returns the parameter corresponding to the given type.
-         *
-         * @throws ApexStringException If multiple parameters with the given
-         *                             type exist.
-         *
-         * @return  A default constructed ParameterName if there is no
-         *          parameter with the given type.
-         */
-        Parameter parameterByType(const QString& type) const;
-        virtual bool hasParameter(const QString& type) const;
-        ParameterList parameters() const;
-        virtual QString id() const;
-        QString xsiType() const;
+    // setters
 
-        //setters
+    /**
+     * Sets the parameter corresponding to \param type to \param value.
+     * If there is no such parameter, a default one will be constructed.
+     *
+     * @throws ApexStringException If multiple parameters with the given
+     *                             type exist.
+     */
+    virtual void setValueByType(const QString &type, const QVariant &value);
+    virtual void setId(const QString &id);
+    void setXsiType(const QString &type);
+    void addParameter(const Parameter &param);
+    void removeParameter(const Parameter &param);
 
-        /**
-         * Sets the parameter corresponding to \param type to \param value.
-         * If there is no such parameter, a default one will be constructed.
-         *
-         * @throws ApexStringException If multiple parameters with the given
-         *                             type exist.
-         */
-        virtual void setValueByType(const QString& type, const QVariant& value);
-        virtual void setId(const QString& id);
-        void setXsiType(const QString& type);
-        void addParameter(const Parameter& param);
-        void removeParameter(const Parameter& param);
+    SimpleParameters &operator=(const SimpleParameters &other);
+    virtual bool operator==(const SimpleParameters &other) const;
 
-        SimpleParameters& operator=(const SimpleParameters& other);
-        virtual bool operator==(const SimpleParameters& other) const;
-
-    private:
-
-        SimpleParametersPrivate* d;
+private:
+    SimpleParametersPrivate *d;
 };
 
 } // ns data

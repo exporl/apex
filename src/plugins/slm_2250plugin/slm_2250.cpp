@@ -17,7 +17,6 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-
 /**
   This plugin uses the ActiveQt framework
 
@@ -50,12 +49,10 @@
 #include <QObject>
 #include <QUuid>
 
-class SLM_2250Creator :
-    public QObject,
-    public SoundLevelMeterPluginCreator
+class SLM_2250Creator : public QObject, public SoundLevelMeterPluginCreator
 {
     Q_OBJECT
-    Q_INTERFACES (SoundLevelMeterPluginCreator)
+    Q_INTERFACES(SoundLevelMeterPluginCreator)
     Q_PLUGIN_METADATA(IID "apex.slm2250")
 public:
     virtual QStringList availablePlugins() const;
@@ -65,124 +62,148 @@ public:
 
 class SLM_2250 : public QObject, public SoundLevelMeter
 {
-        Q_OBJECT
+    Q_OBJECT
 public:
+    /**
+      * Constructor of SLM_2250
+      * Initializes the COM object and casts it to the supported interfaces.
+      * Initializes the instrument on the first instrument found.
+      */
+    SLM_2250();
 
-/**
-  * Constructor of SLM_2250
-  * Initializes the COM object and casts it to the supported interfaces.
-  * Initializes the instrument on the first instrument found.
-  */
-        SLM_2250();
+    /**
+      * Desctructor of SLM_2250.
+      * Disconnects the device if connected.
+      * Closes the COM interface.
+      */
+    ~SLM_2250();
 
-/**
-  * Desctructor of SLM_2250.
-  * Disconnects the device if connected.
-  * Closes the COM interface.
-  */
-        ~SLM_2250();
+    /**
+      * This method connects to the specific device, defined by -instrument-.
+      * Instruments gets initialized on the first device found.
+      * You can get a list of instruments by calling the instruments() method.
+      */
+    bool connect();
 
-/**
-  * This method connects to the specific device, defined by -instrument-.
-  * Instruments gets initialized on the first device found.
-  * You can get a list of instruments by calling the instruments() method.
-  */
-        bool connect();
+    /**
+      * This method disconnects the device
+      */
+    bool disconnect();
 
-/**
-  * This method disconnects the device
-  */
-        bool disconnect();
+    /**
+      * This method returns the error string.
+      * The error string contains the error when one of the bool returning
+     * methods returns false.
+      */
+    inline const QString errorString() const
+    {
+        return error;
+    };
 
-/**
-  * This method returns the error string.
-  * The error string contains the error when one of the bool returning methods returns false.
-  */
-        inline const QString errorString() const {return error;};
+    /**
+      * This method returns an array of the supported transducers by the device.
+      */
+    const QStringList transducers() const;
 
-/**
-  * This method returns an array of the supported transducers by the device.
-  */
-        const QStringList transducers() const;
+    /**
+      * This method sets a specific transducer to the device.
+      * The transducer has to be an existing one.
+      * To get the supported transducers, use the transducers() method.
+      * @param name : the transducer's name
+      */
+    bool setTransducer(QString);
 
-/**
-  * This method sets a specific transducer to the device.
-  * The transducer has to be an existing one.
-  * To get the supported transducers, use the transducers() method.
-  * @param name : the transducer's name
-  */
-        bool setTransducer(QString);
+    /**
+      * This method returns an array of connected devices.
+      */
+    const QStringList instruments() const;
 
-/**
-  * This method returns an array of connected devices.
-  */
-        const QStringList instruments() const;
+    /**
+      * This method sets an instrument.
+      * Connected instruments can be obtained by calling instruments().
+      * @param _instrument the name of the instrument you want to use.
+      */
+    inline bool setInstrument(QString _instrument)
+    {
+        this->instrument = _instrument;
+        return true;
+    };
 
-/**
-  * This method sets an instrument.
-  * Connected instruments can be obtained by calling instruments().
-  * @param _instrument the name of the instrument you want to use.
-  */
-    inline bool setInstrument(QString _instrument){this->instrument = _instrument; return true;};
+    /**
+      * This method starts a measurement.
+      * @param type_measurement : the measurement type (see
+     * SoundLevelMeter::type_measurement for supported measurements)
+      * @param frequency_weighting : the frequency weighting (see
+     * SoundLevelMeter::frequency_weighting for supported frequency weightings)
+      * @param time_weighting : the time weighting (see
+     * SoundLevelMeter::time_weighting for supported time weightings)
+      * @percentile : not compulsory : value between 0 and 1, get's rounded to 3
+     * digits.
+      */
+    bool startMeasurement(int type_measurement, int frequency_weighting,
+                          int time_weighting, double percentile = 0);
 
-/**
-  * This method starts a measurement.
-  * @param type_measurement : the measurement type (see SoundLevelMeter::type_measurement for supported measurements)
-  * @param frequency_weighting : the frequency weighting (see SoundLevelMeter::frequency_weighting for supported frequency weightings)
-  * @param time_weighting : the time weighting (see SoundLevelMeter::time_weighting for supported time weightings)
-  * @percentile : not compulsory : value between 0 and 1, get's rounded to 3 digits.
-  */
-        bool startMeasurement(int type_measurement,int frequency_weighting,int time_weighting,double percentile=0);
+    /**
+      * This method stops the measurement.
+      */
+    bool stopMeasurement();
 
-/**
-  * This method stops the measurement.
-  */
-        bool stopMeasurement();
+    /**
+      * This method calculates the measured result and stores it in result (call
+     * it with result()).
+      * You're still able to change the results you want to obtain.
+      * @param type_measurement : the measurement type (see
+     * SoundLevelMeter::type_measurement for supported measurements)
+      * @param frequency_weighting : the frequency weighting (see
+     * SoundLevelMeter::frequency_weighting for supported frequency weightings)
+      * @param time_weighting : the time weighting (see
+     * SoundLevelMeter::time_weighting for supported time weightings)
+      */
+    bool measure(int type_measurement, int frequency_weighting,
+                 int time_weighting);
 
-/**
-  * This method calculates the measured result and stores it in result (call it with result()).
-  * You're still able to change the results you want to obtain.
-  * @param type_measurement : the measurement type (see SoundLevelMeter::type_measurement for supported measurements)
-  * @param frequency_weighting : the frequency weighting (see SoundLevelMeter::frequency_weighting for supported frequency weightings)
-  * @param time_weighting : the time weighting (see SoundLevelMeter::time_weighting for supported time weightings)
-  */
-        bool measure(int type_measurement,int frequency_weighting,int time_weighting);
+    /**
+      * This method calculates the measured result and stores it in result (call
+     * it with result()).
+      * You're still able to change the results you want to obtain.
+      * @param measurement : the measurement specific string (see SLM_2250
+     * documentation)
+      */
+    bool measure(QString);
 
-/**
-  * This method calculates the measured result and stores it in result (call it with result()).
-  * You're still able to change the results you want to obtain.
-  * @param measurement : the measurement specific string (see SLM_2250 documentation)
-  */
-        bool measure(QString);
+    /**
+      * This method calculates the measured result and stores it in result (call
+     * it with result()).
+      * The result is calculated according to de defined parameters in the
+     * startMeasurement method.
+      */
+    bool measure();
 
-/**
-  * This method calculates the measured result and stores it in result (call it with result()).
-  * The result is calculated according to de defined parameters in the startMeasurement method.
-  */
-        bool measure();
+    /**
+      * This method returns the measured result after measure has been called.
+      */
+    inline double result() const
+    {
+        return ((double)_result) / 100;
+    };
 
-/**
-  * This method returns the measured result after measure has been called.
-  */
-        inline double result() const {return ((double)_result)/100;};
 private:
-
-/**
-  * NOT WORKING PROPERLY
-  * This methods return the current measuring state.
-  * 0 = paused; 1 = running; 2 = stopped
-  */
-        int measurementState(); //doesn't work properly
-        BasicEnvRemoteAPI::I2250Connect* connectInterface;
-        BasicEnvRemoteAPI::I2250Control* controlInterface;
-    //BasicEnvRemoteAPI::I2250Instrument* instrumentInterface;
-        int timeWeighting;
-        int typeMeasurement;
-        int frequencyWeighting;
-        QString instrument;
-        int _result;
-        bool percentile;
-        bool measuring;
+    /**
+      * NOT WORKING PROPERLY
+      * This methods return the current measuring state.
+      * 0 = paused; 1 = running; 2 = stopped
+      */
+    int measurementState(); // doesn't work properly
+    BasicEnvRemoteAPI::I2250Connect *connectInterface;
+    BasicEnvRemoteAPI::I2250Control *controlInterface;
+    // BasicEnvRemoteAPI::I2250Instrument* instrumentInterface;
+    int timeWeighting;
+    int typeMeasurement;
+    int frequencyWeighting;
+    QString instrument;
+    int _result;
+    bool percentile;
+    bool measuring;
 };
 
 /* SLM_2250Creator CPP*/
@@ -192,16 +213,17 @@ QStringList SLM_2250Creator::availablePlugins() const
     return QStringList() << "slm_2250";
 }
 
-SoundLevelMeter * SLM_2250Creator::createSoundLevelMeter(const QString &name) const
+SoundLevelMeter *
+SLM_2250Creator::createSoundLevelMeter(const QString &name) const
 {
     if (name == "slm_2250") {
         qCDebug(APEX_RS, "Returning slm_2250()");
-        SoundLevelMeter* slm = new SLM_2250();
+        SoundLevelMeter *slm = new SLM_2250();
         if (!slm) {
             qCDebug(APEX_RS, "Invalid slm pointer");
             return 0;
         }
-        if(slm->errorString().size() > 1) {
+        if (slm->errorString().size() > 1) {
             qCDebug(APEX_RS, "slm error: %s", qPrintable(slm->errorString()));
             throw ApexStringException(slm->errorString());
         } else
@@ -214,71 +236,85 @@ SoundLevelMeter * SLM_2250Creator::createSoundLevelMeter(const QString &name) co
 
 /*******SLM_2250 CPP*******/
 
-SLM_2250::SLM_2250():
-        connectInterface(0),
-        controlInterface(0),
-        measuring(false)
+SLM_2250::SLM_2250()
+    : connectInterface(0), controlInterface(0), measuring(false)
 {
     qCDebug(APEX_RS, "SLM_2250::SLM_2250()");
-        error.clear();
-        QString path = QDir::currentPath();
+    error.clear();
+    QString path = QDir::currentPath();
 
     // extracted from BasicEnvRemoteApi.tlb, generated by visual studio
-    const GUID CLSID_RemoteAPI =
-        {0x5bc25821,0x4936,0x4e9e,{0x9a,0xcf,0x12,0xe1,0x2a,0xdd,0xa9,0xcc}};
-    const GUID IID_I2250Connect =
-        {0xd0ad98e5,0x8c38,0x43b1,{0xa3,0x7a,0xe4,0xab,0x4d,0x1b,0xfe,0xd4}};
-    const GUID IID_I2250Control =
-        {0xa994720d,0xd71b,0x405e,{0x8e,0x90,0x2e,0xc8,0xcf,0xbb,0xf6,0x03}};
-    const GUID IID_I2250Instrument =
-        {0x288be79a,0x6c9e,0x44a7,{0x91,0x20,0xef,0xd8,0x57,0x9d,0xdf,0xca}};
+    const GUID CLSID_RemoteAPI = {
+        0x5bc25821,
+        0x4936,
+        0x4e9e,
+        {0x9a, 0xcf, 0x12, 0xe1, 0x2a, 0xdd, 0xa9, 0xcc}};
+    const GUID IID_I2250Connect = {
+        0xd0ad98e5,
+        0x8c38,
+        0x43b1,
+        {0xa3, 0x7a, 0xe4, 0xab, 0x4d, 0x1b, 0xfe, 0xd4}};
+    const GUID IID_I2250Control = {
+        0xa994720d,
+        0xd71b,
+        0x405e,
+        {0x8e, 0x90, 0x2e, 0xc8, 0xcf, 0xbb, 0xf6, 0x03}};
+    const GUID IID_I2250Instrument = {
+        0x288be79a,
+        0x6c9e,
+        0x44a7,
+        {0x91, 0x20, 0xef, 0xd8, 0x57, 0x9d, 0xdf, 0xca}};
 
+    IUnknown *connectInterfaceP = 0;
+    IUnknown *controlInterfaceP = 0;
+    IUnknown *instrumentInterfaceP = 0;
 
-    IUnknown* connectInterfaceP = 0;
-    IUnknown* controlInterfaceP = 0;
-    IUnknown* instrumentInterfaceP = 0;
-
-    CoCreateInstance(CLSID_RemoteAPI, NULL,
-        CLSCTX_INPROC_SERVER,IID_I2250Connect, (void**) &connectInterfaceP);
+    CoCreateInstance(CLSID_RemoteAPI, NULL, CLSCTX_INPROC_SERVER,
+                     IID_I2250Connect, (void **)&connectInterfaceP);
     if (!connectInterfaceP) {
-         error=tr("2250 API not found, install the 2250 utility software "
-                  "from B&K and run\n"
-                  "C:\\Program Files\\Bruel and Kjaer\\ENV\\BZ5503\\BasicEnvRemoteApi_Register.bat "
-                  "to register it");
+        error = tr("2250 API not found, install the 2250 utility software "
+                   "from B&K and run\n"
+                   "C:\\Program Files\\Bruel and "
+                   "Kjaer\\ENV\\BZ5503\\BasicEnvRemoteApi_Register.bat "
+                   "to register it");
         return;
     }
 
-    connectInterfaceP->QueryInterface(IID_I2250Control,(void**)&controlInterfaceP);
+    connectInterfaceP->QueryInterface(IID_I2250Control,
+                                      (void **)&controlInterfaceP);
     if (!controlInterfaceP)
         qFatal("controlInterfaceP==0");
 
-    connectInterfaceP->QueryInterface(IID_I2250Instrument,(void**)&instrumentInterfaceP);
+    connectInterfaceP->QueryInterface(IID_I2250Instrument,
+                                      (void **)&instrumentInterfaceP);
     if (!instrumentInterfaceP)
         qFatal("instrumentInterfaceP==0");
 
-
     // Start Qt stuff
     connectInterface =
-            new BasicEnvRemoteAPI::I2250Connect((IDispatch*)connectInterfaceP);
+        new BasicEnvRemoteAPI::I2250Connect((IDispatch *)connectInterfaceP);
     controlInterface =
-            new BasicEnvRemoteAPI::I2250Control((IDispatch*)controlInterfaceP);
+        new BasicEnvRemoteAPI::I2250Control((IDispatch *)controlInterfaceP);
 
     qCDebug(APEX_RS, "Calling GetInstrumentNames");
-    QStringList instrumentNames( connectInterface->GetInstrumentNames() );
+    QStringList instrumentNames(connectInterface->GetInstrumentNames());
     qCDebug(APEX_RS) << instrumentNames;
-    if (! instrumentNames.size()){
-        error = tr("No sound level meter found, "
-                   "make sure it is connected to the computer and turned on. (1)");
+    if (!instrumentNames.size()) {
+        error =
+            tr("No sound level meter found, "
+               "make sure it is connected to the computer and turned on. (1)");
         connectInterface->Close();
         return;
     }
 
-    instrument = instrumentNames[0];            // Connect to the first found instrument (FIXME)
+    instrument =
+        instrumentNames[0]; // Connect to the first found instrument (FIXME)
     /*connectInterface->Connect(instrument);
 
     if (!connectInterface->IsConnected(instrument)) {
         error = tr("Sound level meter found not found - "
-                   "make sure the soundlevelmeter is connected to the computer and turned on. (2)");
+                   "make sure the soundlevelmeter is connected to the computer
+    and turned on. (2)");
         connectInterface->Close();
         return;
     }*/
@@ -289,28 +325,25 @@ SLM_2250::SLM_2250():
         return;
     }*/
 
-
     //   controlInterface = new BasicEnvRemoteAPI::I2250C
-       /*if (connectInterface->NameOfConnectedInstrument() != "2250") {
-           error = tr("No 2250 sound level meter found, only a %1")
-                   .arg(connectInterface->NameOfConnectedInstrument());
-           return;
-       }*/
+    /*if (connectInterface->NameOfConnectedInstrument() != "2250") {
+        error = tr("No 2250 sound level meter found, only a %1")
+                .arg(connectInterface->NameOfConnectedInstrument());
+        return;
+    }*/
 
-
-        QDir::setCurrent(path);//necessary because B&K SLM changed it
+    QDir::setCurrent(path); // necessary because B&K SLM changed it
 }
-
 
 SLM_2250::~SLM_2250()
 {
-    if(connectInterface->IsConnected(instrument))
-        {
-        controlInterface->SetParameterEnum(instrument ,"QueryStatusIsOn",1);
-        //message boxes are shown again on the instrument in case of error, measurement reset, etc
-        connectInterface->Disconnect( instrument );
-                connectInterface->Close();
-        }
+    if (connectInterface->IsConnected(instrument)) {
+        controlInterface->SetParameterEnum(instrument, "QueryStatusIsOn", 1);
+        // message boxes are shown again on the instrument in case of error,
+        // measurement reset, etc
+        connectInterface->Disconnect(instrument);
+        connectInterface->Close();
+    }
 }
 
 const QStringList SLM_2250::instruments() const
@@ -320,241 +353,247 @@ const QStringList SLM_2250::instruments() const
 
 int SLM_2250::measurementState()
 {
-    if(connectInterface->IsConnected(instrument ))
-        {
-        int state = controlInterface->ReadOutputEnum(instrument ,"MeasState");
-                return state;
-        }
-        else
-        {
-                error = "Device isn't connected.";
-                return false;
-        }
+    if (connectInterface->IsConnected(instrument)) {
+        int state = controlInterface->ReadOutputEnum(instrument, "MeasState");
+        return state;
+    } else {
+        error = "Device isn't connected.";
+        return false;
+    }
 }
 
 bool SLM_2250::connect()
 {
     qCDebug(APEX_RS) << "The instrument:" << instrument;
-    if(instrument.isEmpty()) qCDebug(APEX_RS, "no instrument");
+    if (instrument.isEmpty())
+        qCDebug(APEX_RS, "no instrument");
 
     try {
         connectInterface->Connect(instrument);
-    }  catch (std::exception &e)
-    {
-        qCDebug(APEX_RS, "exception in SLM_2250::connect: %s" , e.what());
-    }
-    catch (...)
-    {
-        qCDebug(APEX_RS, "unknown exception in SLM_2250::connect" );
+    } catch (std::exception &e) {
+        qCDebug(APEX_RS, "exception in SLM_2250::connect: %s", e.what());
+    } catch (...) {
+        qCDebug(APEX_RS, "unknown exception in SLM_2250::connect");
     }
 
-    controlInterface->SetParameterEnum(instrument ,"QueryStatusIsOn",0); //NO message boxes are shown on the instrument in case of error, measurement reset, etc
-        return true;
+    controlInterface->SetParameterEnum(instrument, "QueryStatusIsOn",
+                                       0); // NO message boxes are shown on the
+                                           // instrument in case of error,
+                                           // measurement reset, etc
+    return true;
 }
-
 
 bool SLM_2250::disconnect()
 {
-    if(connectInterface->IsConnected(instrument) )
-        {
-        connectInterface->Disconnect(instrument );
-        //return hres == S_OK;
+    if (connectInterface->IsConnected(instrument)) {
+        connectInterface->Disconnect(instrument);
+        // return hres == S_OK;
         // FIXME
-        }
-        else error = "The device was not connected.";
-        return false;
+    } else
+        error = "The device was not connected.";
+    return false;
 }
-
 
 const QStringList SLM_2250::transducers() const
 {
     int index = 0;
-    return controlInterface->GetParameterValues(instrument ,"TransducerId",index);
+    return controlInterface->GetParameterValues(instrument, "TransducerId",
+                                                index);
 }
-
 
 bool SLM_2250::setTransducer(QString name)
 {
     int index = 0;
-    QStringList names(
-            controlInterface->GetParameterValues(instrument ,"TransducerId",index));
-    for(int i = 0; i < names.length(); )
+    QStringList names(controlInterface->GetParameterValues(
+        instrument, "TransducerId", index));
+    for (int i = 0; i < names.length();) {
+        if (name == names[i]) {
+            break;                        // transducer matches so continue
+        } else if (++i == names.length()) // increment i - end of list? - no
+                                          // transducer match found
         {
-        if ( name == names[i] )
-                {
-                        break; //transducer matches so continue
-                }
-        else if( ++i == names.length()) //increment i - end of list? - no transducer match found
-                {
-                        error = "Transducer ";
-                        error.append(name);
-                        error.append(" not found or supported.");
-                        return false;
-                }
+            error = "Transducer ";
+            error.append(name);
+            error.append(" not found or supported.");
+            return false;
         }
-    if(connectInterface->IsConnected(instrument))
-        {
+    }
+    if (connectInterface->IsConnected(instrument)) {
 
-        controlInterface->SetParameterValue(instrument,"TransducerId",name);
-                return true;
-        }
-        else
-        {
-                error = "Device isn't connected.";
-                return false;
-        }
-}
-
-
-bool SLM_2250::startMeasurement(int type_measurement,int frequency_weighting,int time_weighting,double percentile)
-{
-        this->timeWeighting = time_weighting;
-        this->typeMeasurement = type_measurement;
-        this->frequencyWeighting = frequency_weighting;
-    if(!connectInterface->IsConnected(instrument ))
-        {
-                error = "Not connected.";
-                return false;
-        }
-        if(percentile)//between 0.001 & 0.999
-        {
-                percentile = floor(fabs(percentile*100)*10)/10; //converting percentiles to a valid number [0.1 -> 99.9]
-                if(percentile < 0.1 || percentile > 99.9)
-                {
-                        error = "Percentile should be from 0.1 to 99.9.";
-                        return false;
-                }
-        controlInterface->SetParameterSingle(instrument ,"StatisticsPercentile1",percentile);
-                this->percentile = true;
-        }
-    controlInterface->SetParameterEnum(instrument ,"StopMode",0); //manual stopmode
-    controlInterface->ExecuteCommand(instrument ,"Reset");
-
-        switch(frequency_weighting)
-        {
-    case A_Weighting: controlInterface->SetParameterEnum(instrument , "BroadBandFreqWeight", 0); //AZ
-                      controlInterface->SetParameterEnum(instrument , "PeakFreqWeight", 0); //A
-                                          break;
-    case C_Weighting: controlInterface->SetParameterEnum(instrument , "BroadBandFreqWeight", 1); //AC
-                      controlInterface->SetParameterEnum(instrument , "PeakFreqWeight", 1); //C
-                                          break;
-    case Z_Weighting: controlInterface->SetParameterEnum(instrument , "BroadBandFreqWeight", 0); //AZ
-                      controlInterface->SetParameterEnum(instrument , "PeakFreqWeight", 2); //Z
-        }
-
-
-    controlInterface->ExecuteCommand(instrument ,"PauseContinue");
-        measuring = true;
+        controlInterface->SetParameterValue(instrument, "TransducerId", name);
         return true;
+    } else {
+        error = "Device isn't connected.";
+        return false;
+    }
 }
 
+bool SLM_2250::startMeasurement(int type_measurement, int frequency_weighting,
+                                int time_weighting, double percentile)
+{
+    this->timeWeighting = time_weighting;
+    this->typeMeasurement = type_measurement;
+    this->frequencyWeighting = frequency_weighting;
+    if (!connectInterface->IsConnected(instrument)) {
+        error = "Not connected.";
+        return false;
+    }
+    if (percentile) // between 0.001 & 0.999
+    {
+        percentile =
+            floor(fabs(percentile * 100) * 10) /
+            10; // converting percentiles to a valid number [0.1 -> 99.9]
+        if (percentile < 0.1 || percentile > 99.9) {
+            error = "Percentile should be from 0.1 to 99.9.";
+            return false;
+        }
+        controlInterface->SetParameterSingle(
+            instrument, "StatisticsPercentile1", percentile);
+        this->percentile = true;
+    }
+    controlInterface->SetParameterEnum(instrument, "StopMode",
+                                       0); // manual stopmode
+    controlInterface->ExecuteCommand(instrument, "Reset");
+
+    switch (frequency_weighting) {
+    case A_Weighting:
+        controlInterface->SetParameterEnum(instrument, "BroadBandFreqWeight",
+                                           0); // AZ
+        controlInterface->SetParameterEnum(instrument, "PeakFreqWeight",
+                                           0); // A
+        break;
+    case C_Weighting:
+        controlInterface->SetParameterEnum(instrument, "BroadBandFreqWeight",
+                                           1); // AC
+        controlInterface->SetParameterEnum(instrument, "PeakFreqWeight",
+                                           1); // C
+        break;
+    case Z_Weighting:
+        controlInterface->SetParameterEnum(instrument, "BroadBandFreqWeight",
+                                           0); // AZ
+        controlInterface->SetParameterEnum(instrument, "PeakFreqWeight",
+                                           2); // Z
+    }
+
+    controlInterface->ExecuteCommand(instrument, "PauseContinue");
+    measuring = true;
+    return true;
+}
 
 bool SLM_2250::stopMeasurement()
 {
-        if(!measuring)
-        {
-                error = "Measurement should be started first.";
-                return false;
-        }
-    if(!connectInterface->IsConnected(instrument ))
-        {
-                error = "Not connected.";
-                return false;
-        }
-    controlInterface->ExecuteCommand(instrument ,"PauseContinue");
-        measuring = false;
-        measure();
-        return true;
+    if (!measuring) {
+        error = "Measurement should be started first.";
+        return false;
+    }
+    if (!connectInterface->IsConnected(instrument)) {
+        error = "Not connected.";
+        return false;
+    }
+    controlInterface->ExecuteCommand(instrument, "PauseContinue");
+    measuring = false;
+    measure();
+    return true;
 }
 
-bool SLM_2250::measure(int type_measurement,int frequency_weighting,int time_weighting)
+bool SLM_2250::measure(int type_measurement, int frequency_weighting,
+                       int time_weighting)
 {
     type_measurement = typeMeasurement;
-        frequency_weighting = frequencyWeighting;
-        time_weighting = timeWeighting;
-        return measure();
+    frequency_weighting = frequencyWeighting;
+    time_weighting = timeWeighting;
+    return measure();
 }
 
 bool SLM_2250::measure(QString measurement)
 {
-    if(!connectInterface->IsConnected(instrument ))
-        {
-                error = "Not connected.";
-                return false;
-        }
-    _result = controlInterface->ReadOutputInt16(instrument ,measurement );
-        return true;
+    if (!connectInterface->IsConnected(instrument)) {
+        error = "Not connected.";
+        return false;
+    }
+    _result = controlInterface->ReadOutputInt16(instrument, measurement);
+    return true;
 }
-
 
 bool SLM_2250::measure()
 {
-    if(!connectInterface->IsConnected(instrument ))
-        {
-                error = "Not connected.";
-                return false;
-        }
-        _result = -1;
-        if(!measuring) //the end of a measure (percentile or spectrum output)
-        {
-                if(this->percentile)
-            _result = controlInterface->ReadOutputInt16(instrument ,"LAN1"); //read percentile measurement 1 LANX (X: 1-7)
-                else
-            _result = controlInterface->ReadOutputInt16(instrument ,"CPBLACZeq");
-        }
+    if (!connectInterface->IsConnected(instrument)) {
+        error = "Not connected.";
+        return false;
+    }
+    _result = -1;
+    if (!measuring) // the end of a measure (percentile or spectrum output)
+    {
+        if (this->percentile)
+            _result = controlInterface->ReadOutputInt16(
+                instrument,
+                "LAN1"); // read percentile measurement 1 LANX (X: 1-7)
         else
-        {
-                switch(typeMeasurement)
-                {
-                case SPL_Measurement:
-                        switch(timeWeighting)
-                        {
-                        case FastWeighting:
-                                switch(frequencyWeighting)
-                                {
-                case A_Weighting: _result = controlInterface->ReadOutputInt16(instrument ,"LACF(SPL)");
-                                                                  break;
-                case Z_Weighting: _result = controlInterface->ReadOutputInt16(instrument ,"LCZF(SPL)");
-                                                                  break;
-                default: _result = controlInterface->ReadOutputInt16(instrument ,"LACF(SPL)");
-                                }
-                                break;
-                        case SlowWeighting:
-                                switch(frequencyWeighting)
-                                {
-                case A_Weighting: _result = controlInterface->ReadOutputInt16(instrument ,"LACS(SPL)");
-                                                                  break;
-                case Z_Weighting: _result = controlInterface->ReadOutputInt16(instrument ,"LCZS(SPL)");
-                                                                  break;
-                default: _result = controlInterface->ReadOutputInt16(instrument ,"LACS(SPL)");
-                                }
-                                break;
-                        case ImpulseWeighting:
-                                switch(frequencyWeighting)
-                                {
-                case A_Weighting: _result = controlInterface->ReadOutputInt16(instrument ,"LACI(SPL)");
-                                                                  break;
-                case Z_Weighting: _result = controlInterface->ReadOutputInt16(instrument ,"LCZI(SPL)");
-                                                                  break;
-                default: _result = controlInterface->ReadOutputInt16(instrument ,"LACI(SPL)");
-                                }
-                                break;
-                        }
-                        break;
-                case pkSPL_Measurement: error = "pkSPL hasn't been implemented yet";
-                                                                return false;
-
+            _result =
+                controlInterface->ReadOutputInt16(instrument, "CPBLACZeq");
+    } else {
+        switch (typeMeasurement) {
+        case SPL_Measurement:
+            switch (timeWeighting) {
+            case FastWeighting:
+                switch (frequencyWeighting) {
+                case A_Weighting:
+                    _result = controlInterface->ReadOutputInt16(instrument,
+                                                                "LACF(SPL)");
+                    break;
+                case Z_Weighting:
+                    _result = controlInterface->ReadOutputInt16(instrument,
+                                                                "LCZF(SPL)");
+                    break;
+                default:
+                    _result = controlInterface->ReadOutputInt16(instrument,
+                                                                "LACF(SPL)");
                 }
+                break;
+            case SlowWeighting:
+                switch (frequencyWeighting) {
+                case A_Weighting:
+                    _result = controlInterface->ReadOutputInt16(instrument,
+                                                                "LACS(SPL)");
+                    break;
+                case Z_Weighting:
+                    _result = controlInterface->ReadOutputInt16(instrument,
+                                                                "LCZS(SPL)");
+                    break;
+                default:
+                    _result = controlInterface->ReadOutputInt16(instrument,
+                                                                "LACS(SPL)");
+                }
+                break;
+            case ImpulseWeighting:
+                switch (frequencyWeighting) {
+                case A_Weighting:
+                    _result = controlInterface->ReadOutputInt16(instrument,
+                                                                "LACI(SPL)");
+                    break;
+                case Z_Weighting:
+                    _result = controlInterface->ReadOutputInt16(instrument,
+                                                                "LCZI(SPL)");
+                    break;
+                default:
+                    _result = controlInterface->ReadOutputInt16(instrument,
+                                                                "LACI(SPL)");
+                }
+                break;
+            }
+            break;
+        case pkSPL_Measurement:
+            error = "pkSPL hasn't been implemented yet";
+            return false;
         }
+    }
 
-        if(_result == -1)
-        {
-                error = "Measurement failed: be sure to have called start_measurement & stop_measurement first";
-                return false;
-        }
-        else return true;
+    if (_result == -1) {
+        error = "Measurement failed: be sure to have called start_measurement "
+                "& stop_measurement first";
+        return false;
+    } else
+        return true;
 }
 
-
 #include "slm_2250.moc"
-

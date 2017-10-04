@@ -19,12 +19,11 @@ class Screen;
 class TrialData;
 }
 
-struct AnswerInfo
-{
-    QString  userAnswer;
-    QString  correctAnswer;
+struct AnswerInfo {
+    QString userAnswer;
+    QString correctAnswer;
     QVariant correctness;
-    QString  highlightElement;
+    QString highlightElement;
 };
 
 /** API for plugin procedures
@@ -35,17 +34,17 @@ public:
     /**
      * Return StimulusData from the current experiment for a given ID
      */
-    virtual const data::StimulusData* stimulus(const QString& id) const=0;
+    virtual const data::StimulusData *stimulus(const QString &id) const = 0;
 
     /**
       * Return list of all stimuli
       */
-    virtual QStringList stimuli() const=0;
+    virtual QStringList stimuli() const = 0;
 
     /**
      * Return Screen from the current experiment for a given ID
      */
-    virtual const data::Screen* screen(const QString& id) const=0;
+    virtual const data::Screen *screen(const QString &id) const = 0;
 
     virtual data::tFeedbackOn feedbackOn() const = 0;
 
@@ -54,8 +53,9 @@ public:
      * Returns default answer element for the current screen if no answer
      * element is defined in the trial
      */
-    virtual const QString answerElement(const QString& trialid,
-            const data::ProcedureData* data) const=0;
+    virtual const QString
+    answerElement(const QString &trialid,
+                  const data::ProcedureData *data) const = 0;
 
     /**
      * Return (zero based) interval number based on user answer (screen element
@@ -68,8 +68,8 @@ public:
      * Make a list of trials to be presented based on given ProcedureData
      * @param doSkip if false, trials to be skipped will be ignored
      */
-    virtual QStringList makeTrialList(const data::ProcedureData* d,
-            const bool doSkip)=0;
+    virtual QStringList makeTrialList(const data::ProcedureData *d,
+                                      const bool doSkip) = 0;
 
     /**
      * Make list of standards to be presented, based on a given list
@@ -77,19 +77,21 @@ public:
      * Will randomize if necessary
      * Will use default standard if empty list is given
      */
-    virtual QStringList makeStandardList( const data::ProcedureData* d,
-            const QStringList& inputlist) const=0;
+    virtual QStringList
+    makeStandardList(const data::ProcedureData *d,
+                     const QStringList &inputlist) const = 0;
 
     /**
      * Make list of stimuli to be sent to the output
      */
-    virtual QStringList makeOutputList(const data::ProcedureData* d,
-                                       const QString& stimulus,
+    virtual QStringList makeOutputList(const data::ProcedureData *d,
+                                       const QString &stimulus,
                                        const QStringList &standardList,
-                                       const int stimulusPosition)  const=0;
+                                       const int stimulusPosition) const = 0;
 
-    virtual QStringList makeOutputList(const data::ProcedureData* data,
-                                       const data::TrialData* trialData) const = 0;
+    virtual QStringList
+    makeOutputList(const data::ProcedureData *data,
+                   const data::TrialData *trialData) const = 0;
 
     /**
      * Returns the screen element that should be highlighted when the stimulus
@@ -97,33 +99,33 @@ public:
      * answer is returned. Otherwise the screen element associated with the
      * interval stimulusPosition is returned.
      */
-    virtual QString highlightedElement(const data::ProcedureData* data,
-                                       const QString& answer,
+    virtual QString highlightedElement(const data::ProcedureData *data,
+                                       const QString &answer,
                                        int stimulusPosition) const = 0;
 
-    virtual AnswerInfo processAnswer(const data::ProcedureData* data,
-                                     const ScreenResult* screenResult,
-                                     const QString& trialId,
+    virtual AnswerInfo processAnswer(const data::ProcedureData *data,
+                                     const ScreenResult *screenResult,
+                                     const QString &trialId,
                                      int stimulusPosition = -1) const = 0;
 
-    virtual void showMessage(const QString& message) const = 0;
+    virtual void showMessage(const QString &message) const = 0;
 
     virtual QString pluginScriptLibrary() const = 0;
 
-    virtual QVariant parameterValue(const QString& id) const = 0;
+    virtual QVariant parameterValue(const QString &id) const = 0;
 
-    virtual void registerParameter(const QString& name) = 0;
+    virtual void registerParameter(const QString &name) = 0;
 
-    virtual ProcedureInterface* makeProcedure(const data::ProcedureData* data) = 0;
+    virtual ProcedureInterface *
+    makeProcedure(const data::ProcedureData *data) = 0;
 
-    virtual void makeCorrector(const data::ProcedureData* data) = 0;
+    virtual void makeCorrector(const data::ProcedureData *data) = 0;
 
-    virtual const Corrector* corrector() const = 0;
+    virtual const Corrector *corrector() const = 0;
 
-    virtual void stopWithError(const QString& source, const QString& message) = 0;
+    virtual void stopWithError(const QString &source,
+                               const QString &message) = 0;
 };
-
 }
 
 #endif
-

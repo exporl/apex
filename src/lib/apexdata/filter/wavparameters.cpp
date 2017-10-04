@@ -27,7 +27,7 @@ namespace apex
 namespace data
 {
 
-//class WavFilterParameters
+// class WavFilterParameters
 
 WavFilterParameters::WavFilterParameters() : FilterData()
 {
@@ -55,16 +55,16 @@ bool WavFilterParameters::invertGain() const
     return valueByType("invertgain").toBool();
 }
 
-//class WavFaderParameters
+// class WavFaderParameters
 
 WavFaderParameters::WavFaderParameters() : WavFilterParameters()
 {
     removeParameter(parameterByType("gain"));
     removeParameter(parameterByType("basegain"));
     removeParameter(parameterByType("invertgain"));
-    setValueByType("length",0);
-    setValueByType("type","cosine");
-    setValueByType("direction","in");
+    setValueByType("length", 0);
+    setValueByType("type", "cosine");
+    setValueByType("direction", "in");
 }
 
 WavFaderParameters::~WavFaderParameters()
@@ -73,7 +73,7 @@ WavFaderParameters::~WavFaderParameters()
 
 WavFaderParameters::FadeType WavFaderParameters::type() const
 {
-    QString type( valueByType(QString("type")).toString() );
+    QString type(valueByType(QString("type")).toString());
 
     if (type == "linear")
         return LINEAR;
@@ -92,11 +92,11 @@ bool WavFaderParameters::isFadeIn() const
     return valueByType(QString("direction")).toString() == "in";
 }
 
-//class WavGeneratorParameters
+// class WavGeneratorParameters
 
 WavGeneratorParameters::WavGeneratorParameters() : WavFilterParameters()
 {
-    setValueByType("continuous","false");
+    setValueByType("continuous", "false");
 }
 
 WavGeneratorParameters::~WavGeneratorParameters()
@@ -105,7 +105,8 @@ WavGeneratorParameters::~WavGeneratorParameters()
 
 bool WavGeneratorParameters::isContinuous() const
 {
-    qCDebug(APEX_RS) << QString("iscontinuous: ") << valueByType(QString("continuous")).toString();
+    qCDebug(APEX_RS) << QString("iscontinuous: ")
+                     << valueByType(QString("continuous")).toString();
     return valueByType(QString("continuous")).toString() == "true";
 }
 
@@ -114,13 +115,13 @@ bool WavGeneratorParameters::isGenerator() const
     return true;
 }
 
-//class SinglePulseGeneratorParameters
+// class SinglePulseGeneratorParameters
 
-SinglePulseGeneratorParameters::SinglePulseGeneratorParameters() :
-                                                    WavGeneratorParameters()
+SinglePulseGeneratorParameters::SinglePulseGeneratorParameters()
+    : WavGeneratorParameters()
 {
-    setValueByType("pulsewidth",1);
-    setValueByType("polarity",true);
+    setValueByType("pulsewidth", 1);
+    setValueByType("polarity", true);
 }
 
 SinglePulseGeneratorParameters::~SinglePulseGeneratorParameters()
@@ -137,13 +138,13 @@ bool SinglePulseGeneratorParameters::polarity() const
     return valueByType("polarity").toString() == "true";
 }
 
-//class DataLoopGeneratorParameters
+// class DataLoopGeneratorParameters
 
-DataLoopGeneratorParameters::DataLoopGeneratorParameters() :
-                                                    WavGeneratorParameters()
+DataLoopGeneratorParameters::DataLoopGeneratorParameters()
+    : WavGeneratorParameters()
 {
-    setValueByType("randomjump","false");
-    setValueByType("jump",0);
+    setValueByType("randomjump", "false");
+    setValueByType("jump", 0);
 }
 
 DataLoopGeneratorParameters::~DataLoopGeneratorParameters()
@@ -160,12 +161,12 @@ double DataLoopGeneratorParameters::jump() const
     return valueByType("jump").toDouble();
 }
 
-//class SineGeneratorParameters
+// class SineGeneratorParameters
 
 SineGeneratorParameters::SineGeneratorParameters() : WavGeneratorParameters()
 {
-    setValueByType("frequency",1000);
-    setValueByType("phase",0);
+    setValueByType("frequency", 1000);
+    setValueByType("phase", 0);
 }
 
 SineGeneratorParameters::~SineGeneratorParameters()
@@ -182,5 +183,5 @@ double SineGeneratorParameters::phase() const
     return valueByType("phase").toDouble();
 }
 
-}//ns data
-}//ns apex
+} // ns data
+} // ns apex

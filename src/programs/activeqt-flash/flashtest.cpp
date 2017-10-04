@@ -9,14 +9,15 @@
 #include <QAxWidget>
 #include <QDebug>
 
-int main(int argc, char ** argv) {
+int main(int argc, char **argv)
+{
     QApplication app(argc, argv);
     qCDebug(APEX_RS) << "bla";
 
-
     // direct QAxWidget use
     /*QAxWidget* mFlashWidget = new QAxWidget ("ShockwaveFlash.ShockwaveFlash");
-    mFlashWidget->dynamicCall ("LoadMovie(int,const QString&)",0, "C:\\apex\\examples\\movies\\car\\introcar.swf");
+    mFlashWidget->dynamicCall ("LoadMovie(int,const QString&)",0,
+    "C:\\apex\\examples\\movies\\car\\introcar.swf");
     mFlashWidget->show();*/
 
     // direct flashwidget use
@@ -25,12 +26,9 @@ int main(int argc, char ** argv) {
     fw.show();
     fw.play();*/
 
-
     // from test object (signal/slot)
     Test t;
-    QMetaObject::invokeMethod(&t, "test",
-                              Qt::QueuedConnection);
-
+    QMetaObject::invokeMethod(&t, "test", Qt::QueuedConnection);
 
     /*ShockwaveFlashObjects::ShockwaveFlash swf;
     swf.LoadMovie(0,"C:\\apex\\examples\\movies\\car\\introcar.swf");
@@ -42,7 +40,5 @@ int main(int argc, char ** argv) {
     else
             qCDebug(APEX_RS) << "not playing";*/
 
-
     app.exec();
 }
-

@@ -47,122 +47,132 @@ class DataBlock;
   ******************************************************** */
 class WavFilter : public Filter
 {
-        public:
-                /**
-                  * Constructor.
-                  */
-                WavFilter ( const QString& ac_sID,
-                            data::FilterData* const ac_pParams,
-                            unsigned long sr, unsigned bs ) :
-                                Filter ( ac_sID, ac_pParams ),
-                                mv_bNeedsRestore ( false ),
-                sampleRate ( sr ),
-                                blockSize ( bs )
-                {}
+public:
+    /**
+      * Constructor.
+      */
+    WavFilter(const QString &ac_sID, data::FilterData *const ac_pParams,
+              unsigned long sr, unsigned bs, bool needsStreamLength = false)
+        : Filter(ac_sID, ac_pParams),
+          mv_bNeedsRestore(false),
+          sampleRate(sr),
+          blockSize(bs),
+          needsStreamLength(needsStreamLength)
+    {
+    }
 
-                /**
-                  * Destructor.
-                  */
-                virtual ~WavFilter()
-                {}
+    /**
+      * Destructor.
+      */
+    virtual ~WavFilter()
+    {
+    }
 
-                /**
-                  * Get the IStreamProcessor for this filter.
-                  * mf_bIsRealFilter() must return true when using this.
-                  * @return an IStreamProcessor, or 0 if it's a generator
-                  */
-                virtual streamapp::IStreamProcessor* GetStrProc() const
-                {
-                        if ( !mf_bIsRealFilter() )
-                                Q_ASSERT ( 0 );
-                        return 0;
-                }
+    /**
+      * Get the IStreamProcessor for this filter.
+      * mf_bIsRealFilter() must return true when using this.
+      * @return an IStreamProcessor, or 0 if it's a generator
+      */
+    virtual streamapp::IStreamProcessor *GetStrProc() const
+    {
+        if (!mf_bIsRealFilter())
+            Q_ASSERT(0);
+        return 0;
+    }
 
-                /**
-                  * Get the StreamGenerator for this filter.
-                  * mf_bIsRealFilter() must return false for this.
-                  * @return a StreamGenerator, or 0 if it's an IStreamProcessor
-                  */
-                virtual StreamGenerator* GetStreamGen() const
-                {
-                        if ( mf_bIsRealFilter() )
-                                Q_ASSERT ( 0 );
-                        return 0;
-                }
+    /**
+      * Get the StreamGenerator for this filter.
+      * mf_bIsRealFilter() must return false for this.
+      * @return a StreamGenerator, or 0 if it's an IStreamProcessor
+      */
+    virtual StreamGenerator *GetStreamGen() const
+    {
+        if (mf_bIsRealFilter())
+            Q_ASSERT(0);
+        return 0;
+    }
 
-                /**
-                  * Check if the actual implementation is a filter
-                  * or a generator. A filter has input anbd output,
-                  * a generator has only output.
-                  * Used when WavDevice needs to know how to cast us.
-                  */
-                virtual bool mf_bIsRealFilter() const = 0;
+    /**
+      * Check if the actual implementation is a filter
+      * or a generator. A filter has input anbd output,
+      * a generator has only output.
+      * Used when WavDevice needs to know how to cast us.
+      */
+    virtual bool mf_bIsRealFilter() const;
 
-                /**
-                  * @see IApexdevice
-                  */
-                void mp_NeedRestore()
-                { mv_bNeedsRestore = true; }
+    /**
+      * @see IApexdevice
+      */
+    void mp_NeedRestore()
+    {
+        mv_bNeedsRestore = true;
+    }
 
-                /**
-                  * @see IApexdevice
-                  */
-                bool mf_bNeedsRestore()
-                { return mv_bNeedsRestore; }
+    /**
+      * @see IApexdevice
+      */
+    bool mf_bNeedsRestore()
+    {
+        return mv_bNeedsRestore;
+    }
 
+    /**
+        * Reset the filter to its initial state and set all internal parameters
+     * to built in
+        * default values
+        * throw exception if problem
+     */
+    virtual void Reset()
+    {
+        qCDebug(APEX_RS, "WavFilter::Reset: for %s should be overwritten",
+                qPrintable(GetID()));
+    };
 
-                /**
-                    * Reset the filter to its initial state and set all internal parameters to built in
-                    * default values
-                    * throw exception if problem
-                 */
-                virtual void Reset()
-                {
-                        qCDebug(APEX_RS, "WavFilter::Reset: for %s should be overwritten", qPrintable ( GetID() ) );
-                };
+    /**
+    * Prepare filter for processing
+    * throw exception if problem
+     */
+    virtual void Prepare(){
+        // dummy, not everyone wants to prepare
+    };
 
-                /**
-                * Prepare filter for processing
-                * throw exception if problem
-                 */
-                virtual void Prepare()
-                {
-                        // dummy, not everyone wants to prepare
-                };
+    /**
+      * If a filter needs to know the total length
+      * (not incorporating continuous generators)
+      * of the stimulus being played, it should return
+      * true here.
+      * @return true if filter wants to have it's
+      * @c mp_SetStreamLength called at the start of
+      * each stimulus presentation
+      */
+    virtual bool mf_bWantsToKnowStreamLength() const
+    {
+        return needsStreamLength;
+    }
 
-                /**
-                  * If a filter needs to know the total length
-                  * (not incorporating continuous generators)
-                  * of the stimulus being played, it should return
-                  * true here.
-                  * @return true if filter wants to have it's
-                  * @c mp_SetStreamLength called at the start of
-                  * each stimulus presentation
-                  */
-                virtual bool mf_bWantsToKnowStreamLength() const
-                {
-                        return false;
-                }
+    /**
+      * Called to inform filter of stimulus length.
+      * Used to know when to start fadeout etc.
+      * @param ac_nSamples total samples in stream
+      */
+    virtual void mp_SetStreamLength(const unsigned long ac_nSamples)
+    {
+        (void)ac_nSamples;
+    }
 
-                /**
-                  * Called to inform filter of stimulus length.
-                  * Used to know when to start fadeout etc.
-                  * @param ac_nSamples total samples in stream
-                  */
-                virtual void mp_SetStreamLength ( const unsigned long ac_nSamples )
-                {
-                        ( void ) ac_nSamples;
-                }
+    void SetBlockSize(unsigned bs);
+    unsigned GetBlockSize();
+    void SetSampleRate(unsigned long sr);
+    unsigned long GetSampleRate();
 
-                void SetBlockSize( unsigned bs );
-                unsigned GetBlockSize();
-                void SetSampleRate( unsigned long sr );
-                unsigned long GetSampleRate();
+    virtual bool SetParameter(const QString &type, const int channel,
+                              const QVariant &value);
 
-        private:
-                bool mv_bNeedsRestore;
-                unsigned long sampleRate;
-                unsigned blockSize;
+private:
+    bool mv_bNeedsRestore;
+    unsigned long sampleRate;
+    unsigned blockSize;
+    bool needsStreamLength;
 };
 
 /**
@@ -171,46 +181,46 @@ class WavFilter : public Filter
   ***************************** */
 class WavAmplifier : public WavFilter
 {
-        public:
-                /**
-                  * Constructor.
-                  */
-                WavAmplifier ( const QString& ac_sID,
-                               data::FilterData* const pParams,
-                                           unsigned long sr, unsigned bs);
+public:
+    /**
+      * Constructor.
+      */
+    WavAmplifier(const QString &ac_sID, data::FilterData *const pParams,
+                 unsigned long sr, unsigned bs);
 
-                /**
-                  * Destructor.
-                  */
-                ~WavAmplifier();
+    /**
+      * Destructor.
+      */
+    ~WavAmplifier();
 
-                /**
-                  * Set a parameter.
-                  * Only accepts "gain".
-                  * Final gain = basegain +- ac_Val.
-                  */
-                //bool SetParameter( const QString& ac_ParamID, const QString& ac_Val );
-                virtual bool SetParameter ( const QString& type, const int channel, const QVariant& value ) ;
+    /**
+      * Set a parameter.
+      * Only accepts "gain".
+      * Final gain = basegain +- ac_Val.
+      */
+    // bool SetParameter( const QString& ac_ParamID, const QString& ac_Val );
+    virtual bool SetParameter(const QString &type, const int channel,
+                              const QVariant &value);
 
-                /**
-                  * Implementation of the WavFilter method.
-                  */
-                streamapp::IStreamProcessor*  GetStrProc() const;
+    /**
+      * Implementation of the WavFilter method.
+      */
+    streamapp::IStreamProcessor *GetStrProc() const;
 
-                /**
-                  * Implementation of the WavFilter method.
-                  */
-                INLINE bool mf_bIsRealFilter() const
-                { return true; }
+    /**
+      * Implementation of the WavFilter method.
+      */
+    INLINE bool mf_bIsRealFilter() const
+    {
+        return true;
+    }
 
-                virtual void Reset();
+    virtual void Reset();
 
-        private:
-                streamapp::Amplifier* m_StrProc;
-                tQStringUintMap m_GainChannels;
+private:
+    streamapp::Amplifier *m_StrProc;
+    tQStringUintMap m_GainChannels;
 };
-
-
 }
-} //end ns
-#endif //WAVFILTER_H
+} // end ns
+#endif // WAVFILTER_H

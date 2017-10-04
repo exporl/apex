@@ -24,15 +24,15 @@
 
 namespace streamapp
 {
-  typedef double                            StreamType;
-  typedef MatrixAccess<StreamType>          Stream;
-  typedef MatrixStorage<StreamType>         StreamBuf;
-  typedef ExternalMatrixAccess<StreamType>  StreamPtrBuf;
-  typedef ArrayAccess<StreamType>           StreamChannel;
-  typedef ArrayStorage<StreamType>          StreamChannelBuf;
-  typedef ArrayStorage<StreamType*>         StreamChanPtr;
+typedef double StreamType;
+typedef MatrixAccess<StreamType> Stream;
+typedef MatrixStorage<StreamType> StreamBuf;
+typedef ExternalMatrixAccess<StreamType> StreamPtrBuf;
+typedef ArrayAccess<StreamType> StreamChannel;
+typedef ArrayStorage<StreamType> StreamChannelBuf;
+typedef ArrayStorage<StreamType *> StreamChanPtr;
 
-  typedef double                            GainType; //!< for mixers etc
+typedef double GainType; //!< for mixers etc
 }
 
 #endif //#ifndef _APEX_SRC_LIB_STREAMAPP_STREAMAPPDEFINES_H__

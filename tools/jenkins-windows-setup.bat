@@ -5,5 +5,7 @@ set PATH=%PATH%;C:\texlive\2011\bin\win32;c:\api-vs2010\nucleus\binaries;C:\texl
 set PYTHON_PATH=c:\api-vs2010\nic3\binaries;c:\api-vs2010\nic3\python
 set NUCLEUS=c:\api-vs2010\nucleus
 set WIXDIR=c:\api-vs2010\wix3
+set SYMSTOREDIR=c:\Program Files (x86)\Windows Kits\10\Debuggers\x86
+set APEXSYMSTORE=c:\apex-symbols
 
 copy tools\jenkins-windows-localconfig.pri localconfig.pri

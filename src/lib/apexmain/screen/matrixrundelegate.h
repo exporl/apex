@@ -27,12 +27,12 @@ class QButtonGroup;
 
 namespace apex
 {
-    class ExperimentRunDelegate;
+class ExperimentRunDelegate;
 
 namespace data
 {
-    class ScreenElement;
-    class MatrixElement;
+class ScreenElement;
+class MatrixElement;
 }
 
 namespace rundelegates
@@ -42,18 +42,16 @@ namespace rundelegates
  * The MatrixRunDelegate class is an implementation of
  * ScreenElementRunDelegate representing a MatrixElement.
  */
-class MatrixRunDelegate :
-    public QWidget,
-    public ScreenElementRunDelegate
+class MatrixRunDelegate : public QWidget, public ScreenElementRunDelegate
 {
     Q_OBJECT
 public:
-    MatrixRunDelegate(ExperimentRunDelegate* p_rd, QWidget* parent,
-            const data::MatrixElement *e);
+    MatrixRunDelegate(ExperimentRunDelegate *p_rd, QWidget *parent,
+                      const data::MatrixElement *e);
 
-    const data::ScreenElement* getScreenElement() const;
+    const data::ScreenElement *getScreenElement() const;
 
-    QWidget* getWidget();
+    QWidget *getWidget();
     bool hasText() const;
     bool hasInterestingText() const;
     const QString getText() const;
@@ -64,15 +62,14 @@ public Q_SLOTS:
     void sendAnsweredSignal(int button);
 
 Q_SIGNALS:
-    void answered(ScreenElementRunDelegate*);
+    void answered(ScreenElementRunDelegate *);
 
 private:
     void makeMatrix();
 
     const data::MatrixElement *element;
-    QVector<QButtonGroup*> m_groups;
+    QVector<QButtonGroup *> m_groups;
 };
-
 }
 }
 

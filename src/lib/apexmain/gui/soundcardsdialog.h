@@ -1,24 +1,25 @@
 #ifndef SoundcardsDialog_H
 #define SoundcardsDialog_H
 
-#include <QVector>
+#include "apextools/global.h"
 #include <QDialog>
 #include <QListWidgetItem>
-#include "apextools/global.h"
+#include <QVector>
 
-namespace Ui {
-    class SoundcardsDialog;
+namespace Ui
+{
+class SoundcardsDialog;
 }
 
-
-namespace apex {
+namespace apex
+{
 
 struct Device {
     QString hostApiName;
     QString deviceName;
     int deviceIndex;
     int maxOutputChannels;
-    //double defaultSampleRate;
+    // double defaultSampleRate;
 };
 
 class APEX_EXPORT SoundcardsDialog : public QDialog
@@ -28,34 +29,33 @@ public:
     SoundcardsDialog(QWidget *parent = 0);
     virtual ~SoundcardsDialog();
 
-    void registerDevice(const QString& hostApiName, int deviceIndex, const QString& deviceName, int maxOutputChannels);
+    void registerDevice(const QString &hostApiName, int deviceIndex,
+                        const QString &deviceName, int maxOutputChannels);
 
     /**
      * @brief device
-     * @return portaudio device ID of selected device. Returns -1 if no device selected.
+     * @return portaudio device ID of selected device. Returns -1 if no device
+     * selected.
      */
     int device() const;
     QString cardName() const;
     QString hostApiName() const;
 
     void displayHostApis();
-    void setSelection(const QString& hostApiName, const QString& deviceName);
-
+    void setSelection(const QString &hostApiName, const QString &deviceName);
 
 public slots:
-    void displayDevices(QListWidgetItem*);
-    void selectDevice(QListWidgetItem*);
+    void displayDevices(QListWidgetItem *);
+    void selectDevice(QListWidgetItem *);
 
 private:
-    void displayDevices(const QString &hostApiName );
-    void displayDeviceInfo( Device &device );
+    void displayDevices(const QString &hostApiName);
+    void displayDeviceInfo(Device &device);
 
     Ui::SoundcardsDialog *ui;
     QList<Device> devices;
     int selectedDevice;
-
 };
-
 
 } // ns apex
 

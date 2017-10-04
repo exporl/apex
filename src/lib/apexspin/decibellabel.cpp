@@ -21,7 +21,7 @@
 
 using namespace spin::gui;
 
-DecibelLabel::DecibelLabel(QWidget* parent) : QLabel(parent)
+DecibelLabel::DecibelLabel(QWidget *parent) : QLabel(parent)
 {
 }
 

@@ -20,15 +20,15 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_FEEDBACK_PLUGINFEEDBACKINTERFACE_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_FEEDBACK_PLUGINFEEDBACKINTERFACE_H_
 
-#include <QtPlugin>
-#include <QPair>
 #include <QList>
+#include <QPair>
+#include <QtPlugin>
 
 /** @file
  * Plugin feedback interface for APEX.
  */
 
-typedef QList< QPair<QString, QString> > FeedbackPluginParameters;
+typedef QList<QPair<QString, QString>> FeedbackPluginParameters;
 
 class PluginFeedbackInterface
 {
@@ -39,9 +39,9 @@ public:
     }
 
     //! reset status
-    //virtual void reset() =0;
+    // virtual void reset() =0;
 
-    virtual void highLight(const QString& element) =0;
+    virtual void highLight(const QString &element) = 0;
 
     //! Indicate that the response was correct (thumbs up)
     virtual void showPositive() = 0;
@@ -55,7 +55,6 @@ public:
     //! Get error string (error condition if non-empty)
     virtual QString errorString() = 0;
 };
-
 
 /** Plugin creator interface. Each plugin library has to implement the
  * abstract functions in this class. It contains a list of all available plugins
@@ -81,17 +80,17 @@ public:
      */
     virtual QStringList availablePlugins() const = 0;
 
-
     /** The caller takes ownership of the created instance and
      * must free it after use. If it is not possible to create a plugin
      * instance, returns @c NULL.
      *
      * @param name name of feedback plugin as returned by #availablePlugins()
      */
-    virtual PluginFeedbackInterface *createPluginFeedback (const QString &name,
-                            const FeedbackPluginParameters& params) const = 0;
+    virtual PluginFeedbackInterface *
+    createPluginFeedback(const QString &name,
+                         const FeedbackPluginParameters &params) const = 0;
 };
 
-Q_DECLARE_INTERFACE (PluginFeedbackCreator, "be.exporl.apex.pluginfeedback/1.0")
+Q_DECLARE_INTERFACE(PluginFeedbackCreator, "be.exporl.apex.pluginfeedback/1.0")
 
 #endif

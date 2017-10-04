@@ -20,35 +20,36 @@
 #ifndef EXCEPTIONSS_H
 #define EXCEPTIONSS_H
 
-#include <string>
 #include <exception>
+#include <string>
 
-  /**
-    * namespace with all kinds of utilities and tools
-    ************************************************* */
+/**
+  * namespace with all kinds of utilities and tools
+  ************************************************* */
 namespace utils
 {
 
-    /**
-      * StringException
-      *   exception with an std::string.
-      *   Used in a lot of places in streamapp.
-      *   @code
-      *   throw( StringException( "problem!" );
-      *   @endcode
-      *   @see PtrCheck for an example
-      ***************************************** */
-  struct StringException : std::exception
-  {
-    explicit StringException( const std::string& ac_sError ) :
-      mc_sError( ac_sError )
-    {}
+/**
+  * StringException
+  *   exception with an std::string.
+  *   Used in a lot of places in streamapp.
+  *   @code
+  *   throw( StringException( "problem!" );
+  *   @endcode
+  *   @see PtrCheck for an example
+  ***************************************** */
+struct StringException : std::exception {
+    explicit StringException(const std::string &ac_sError)
+        : mc_sError(ac_sError)
+    {
+    }
 
-    ~StringException() throw() {}
+    ~StringException() throw()
+    {
+    }
 
     std::string mc_sError;
-  };
-
+};
 }
 
 #endif //#ifndef EXCEPTIONSS_H

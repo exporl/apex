@@ -76,7 +76,7 @@ public:
      *
      * @see #hardwareSetups(), #parameterNames()
      */
-    QStringList calibrationProfiles (const QString &setup) const;
+    QStringList calibrationProfiles(const QString &setup) const;
 
     /** Returns all available parameters for a certain hardware setup and
      * calibration profile. This list is changed implicitly if #calibrate() or
@@ -89,8 +89,8 @@ public:
      *
      * @see #hardwareSetups(), #calibrationProfiles()
      */
-    QStringList parameterNames (const QString &setup,
-            const QString &profile) const;
+    QStringList parameterNames(const QString &setup,
+                               const QString &profile) const;
 
     /** Returns the total number of all calibration results for the given
      * hardware setup.
@@ -98,7 +98,7 @@ public:
      * @param setup hardware setup @return total number of all calibration
      * results for the given hardware setup
      */
-    unsigned calibrationCount (const QString &setup) const;
+    unsigned calibrationCount(const QString &setup) const;
 
     /** Adds a new hardware setup to the calibration database. You do not
      * need to call this method if you just want to add a new calibration
@@ -108,7 +108,7 @@ public:
      *
      * @param setup new hardware setup to add
      */
-    void addHardwareSetup (const QString &setup);
+    void addHardwareSetup(const QString &setup);
 
     /** Removes a hardware setup and all its calibrations from the database.
      * Take care with calling this method, it also removes all calibrations
@@ -117,7 +117,7 @@ public:
      *
      * @param setup hardware setup to remove
      */
-    void removeHardwareSetup (const QString &setup);
+    void removeHardwareSetup(const QString &setup);
 
     /** Renames a hardware setup. If the new setup already exists,
      * calibrations with the same calibration profile and parameter will be
@@ -127,7 +127,7 @@ public:
      * @param setup hardware setup to rename
      * @param newName new name for the hardware setup
      */
-    void renameHardwareSetup (const QString &setup, const QString &newName);
+    void renameHardwareSetup(const QString &setup, const QString &newName);
 
     /** Exports the given hardware setup to an XML file.
      *
@@ -136,8 +136,8 @@ public:
      *
      * @throws std::exception on IO errors
      */
-    void exportHardwareSetup (const QString &setup,
-            const QString &fileName) const;
+    void exportHardwareSetup(const QString &setup,
+                             const QString &fileName) const;
 
     /** Imports the given hardware setup from an XML file. Already existing
      * setups will be overwritten. Before an exception is thrown, a
@@ -149,7 +149,7 @@ public:
      *
      * @throws std::exception on IO and XML errors
      */
-    QString importHardwareSetup (const QString &fileName);
+    QString importHardwareSetup(const QString &fileName);
 
     /** Returns whether a certain combination of hardware setup, calibration
      * profile and parameter name has already been calibrated. You can then use
@@ -165,8 +165,8 @@ public:
      * @return true if this combination of hardware setup, calibration profile
      * and parameter name has already been calibrated, false otherwise
      */
-    bool isCalibrated (const QString &setup, const QString &profile,
-            const QString &name) const;
+    bool isCalibrated(const QString &setup, const QString &profile,
+                      const QString &name) const;
 
     /** Returns whether the given hardware setup is a global setup. I.e. it is
      * stored at machine level rather than user level.
@@ -177,7 +177,7 @@ public:
      * @param setup hardware setup for the calibration
      * @return true if this hardware setup is global, false otherwise
      */
-    bool isGlobal(const QString& setup) const;
+    bool isGlobal(const QString &setup) const;
 
     /** Returns the target amplitude for a calibration. You have to ensure
      * that a calibration for the given combination of hardware setup,
@@ -194,8 +194,8 @@ public:
      * of hardware setup, calibration profile and parameter name, the result is
      * undefined if no such calibration exists
      */
-    double targetAmplitude (const QString &setup, const QString &profile,
-            const QString &name) const;
+    double targetAmplitude(const QString &setup, const QString &profile,
+                           const QString &name) const;
 
     /** Returns the output parameter for a calibration. You have to ensure
      * that a calibration for the given combination of hardware setup,
@@ -212,8 +212,8 @@ public:
      * of hardware setup, calibration profile and parameter name, the result is
      * undefined if no such calibration exists
      */
-    double outputParameter (const QString &setup, const QString &profile,
-            const QString &name) const;
+    double outputParameter(const QString &setup, const QString &profile,
+                           const QString &name) const;
 
     /** Stores a calibration result in the database. This method associates
      * a combination of hardware setup, calibration profile and parameter name
@@ -229,8 +229,8 @@ public:
      * @param target target amplitude of the calibration
      * @param parameter output parameter of the calibration
      */
-    void calibrate (const QString &setup, const QString &profile,
-            const QString &name, double target, double parameter);
+    void calibrate(const QString &setup, const QString &profile,
+                   const QString &name, double target, double parameter);
 
     /** Removes a calibration result from the database. Nothing will happen
      * if the calibration does not exist.
@@ -239,8 +239,8 @@ public:
      * @param profile calibration profile
      * @param name parameter name
      */
-    void remove (const QString &setup, const QString &profile,
-            const QString &name);
+    void remove(const QString &setup, const QString &profile,
+                const QString &name);
 
     /** Returns the currently selected hardware setup for the UI that was set
      * with #setCurrentHardwareSetup().
@@ -253,10 +253,9 @@ public:
      *
      * @param setup currently selected hardware setup
      */
-    void setCurrentHardwareSetup (const QString &setup);
+    void setCurrentHardwareSetup(const QString &setup);
 };
 
 } // namespace apex
 
 #endif
-

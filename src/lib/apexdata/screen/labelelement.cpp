@@ -28,7 +28,7 @@ namespace apex
 namespace data
 {
 
-void LabelElement::setText( const QString& t )
+void LabelElement::setText(const QString &t)
 {
     text = t;
 }
@@ -37,9 +37,8 @@ LabelElement::~LabelElement()
 {
 }
 
-LabelElement::LabelElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent ),
-      text( QObject::tr( "<No text set>" ) )
+LabelElement::LabelElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent), text(QObject::tr("<No text set>"))
 {
 }
 
@@ -48,14 +47,14 @@ QString LabelElement::getText() const
     return text;
 }
 
-void LabelElement::visit( ScreenElementVisitor* v )
+void LabelElement::visit(ScreenElementVisitor *v)
 {
-    v->visitLabel( this );
+    v->visitLabel(this);
 }
 
-void LabelElement::visit( ScreenElementVisitor* v ) const
+void LabelElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitLabel( this );
+    v->visitLabel(this);
 }
 
 ScreenElement::ElementTypeT LabelElement::elementType() const
@@ -63,11 +62,9 @@ ScreenElement::ElementTypeT LabelElement::elementType() const
     return Label;
 }
 
-bool LabelElement::operator==(const LabelElement& other) const
+bool LabelElement::operator==(const LabelElement &other) const
 {
     return ScreenElement::operator==(other) && text == other.text;
 }
-
 }
 }
-

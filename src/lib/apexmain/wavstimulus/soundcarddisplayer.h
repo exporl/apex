@@ -20,21 +20,18 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_SOUNDCARDDISPLAYER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_SOUNDCARDDISPLAYER_H_
 
+namespace apex
+{
 
-namespace apex {
+namespace stimulus
+{
 
-    namespace stimulus {
-
-
-class SoundCardDisplayer {
-    public:
+class SoundCardDisplayer
+{
+public:
     static void ShowSoundCards();
-
 };
-
-    }
-
 }
-
+}
 
 #endif

@@ -24,7 +24,7 @@
 
 namespace streamapp
 {
-  class PositionableAudioFormatReaderStream;
+class PositionableAudioFormatReaderStream;
 }
 using namespace streamapp;
 
@@ -48,8 +48,8 @@ public:
     /**
      * Constructor.
      */
-    WavDataBlock(const data::DatablockData& data, const QString& filename,
-                 const ExperimentRunDelegate* experiment);
+    WavDataBlock(const data::DatablockData &data, const QString &filename,
+                 const ExperimentRunDelegate *experiment);
 
     /**
      * Destructor.
@@ -59,15 +59,17 @@ public:
     /**
         * Implementation of the WavCompatibleDataBlock method.
         */
-    PositionableAudioFormatReaderStream* GetWavStream( const unsigned ac_nBufferSize, const unsigned long ac_lFs ) const;
+    PositionableAudioFormatReaderStream *
+    GetWavStream(const unsigned ac_nBufferSize,
+                 const unsigned long ac_lFs) const;
 
-    virtual DataBlock* GetCopy(QString id);
+    virtual DataBlock *GetCopy(QString id);
 
 private:
-    double m_dSilenceLength;    //!< if !=0 datablock is a silence datablock of length m_silenceLen ms
+    double m_dSilenceLength; //!< if !=0 datablock is a silence datablock of
+                             //! length m_silenceLen ms
 };
-
 }
 }
 
-#endif //WAVDATABLOCK_H
+#endif // WAVDATABLOCK_H

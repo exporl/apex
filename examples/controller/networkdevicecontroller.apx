@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
+    <!--  @doc
+         @what: NetworkDeviceController
+         @description: Connected to a tcp server with user-defined start and stop messages, corresponding with the start and end of an experiment.
+         @how: The NetworkDeviceController combined with interactive seeks to provide a user-friendly interface.
+    -->
+    <procedure xsi:type="apex:adaptiveProcedure">
+        <parameters>
+            <presentations>5</presentations>
+            <skip>0</skip>
+            <order>sequential</order>
+            <corrector xsi:type="apex:isequal"/>
+            <nUp>1</nUp>
+            <nDown>1</nDown>
+            <adapt_parameter>gain</adapt_parameter>
+            <start_value>0</start_value>
+            <stop_after_type>presentations</stop_after_type>
+            <stop_after>5</stop_after>
+            <larger_is_easier>false</larger_is_easier>
+            <stepsizes>
+                <stepsize begin="0" size="2"/>
+            </stepsizes>
+        </parameters>
+        <trials>
+            <trial id="trial1">
+                <answer>up</answer>
+                <screen id="screen1"/>
+                <stimulus id="stimulus1"/>
+            </trial>
+        </trials>
+    </procedure>
+    <screens>
+        <reinforcement>
+            <progressbar>true</progressbar>
+            <feedback length="300">false</feedback>
+        </reinforcement>
+        <screen id="screen1">
+            <gridLayout height="1" id="main_layout" width="3">
+                <button id="up" x="1" y="1">
+                    <text>louder</text>
+                </button>
+                <button id="down" x="2" y="1">
+                    <text>quieter</text>
+                </button>
+                <parameterlist id="pl" x="3" y="1">
+                    <parameter>gain</parameter>
+                </parameterlist>
+            </gridLayout>
+            <buttongroup id="buttongroup1">
+                <button id="up"/>
+                <button id="down"/>
+            </buttongroup>
+            <default_answer_element>buttongroup1</default_answer_element>
+        </screen>
+    </screens>
+    <datablocks>
+        <prefix>../stimuli</prefix>
+        <datablock id="rawdata1">
+            <device>wavdevice</device>
+            <file>wd1.wav</file>
+        </datablock>
+    </datablocks>
+    <devices>
+        <device xsi:type="apex:wavDeviceType" id="wavdevice">
+            <driver>portaudio</driver>
+            <card>interactive</card>
+            <channels>2</channels>
+            <gain id="gain">0</gain>
+            <samplerate>44100</samplerate>
+            <buffersize>4096</buffersize>
+        </device>
+        <device xsi:type="apex:pluginController" id="controller">
+            <plugin>networkdevicecontroller</plugin>
+            <parameter name="filename">filename</parameter>
+            <parameter name="subject">subject</parameter>
+            <parameter name="note">note!</parameter>
+            <parameter name="host">127.0.0.1</parameter>
+            <parameter name="port">9999</parameter>
+            <parameter name="timeout">30000</parameter>
+        </device>
+    </devices>
+    <filters>
+        <filter xsi:type="apex:amplifier" id="amplifier">
+            <device>wavdevice</device>
+            <channels>2</channels>
+            <basegain>0</basegain>
+            <gain>0</gain>
+        </filter>
+    </filters>
+    <stimuli>
+        <fixed_parameters/>
+        <stimulus id="stimulus1">
+            <description>Eenvoudige teststimulus</description>
+            <datablocks>
+                <datablock id="rawdata1"/>
+            </datablocks>
+            <variableParameters/>
+            <fixedParameters/>
+        </stimulus>
+    </stimuli>
+    <connections>
+        <connection>
+            <from>
+                <id>_ALL_</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>amplifier</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+        <connection>
+            <from>
+                <id>_ALL_</id>
+                <channel>1</channel>
+            </from>
+            <to>
+                <id>amplifier</id>
+                <channel>1</channel>
+            </to>
+        </connection>
+        <connection>
+            <from>
+                <id>amplifier</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>wavdevice</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+        <connection>
+            <from>
+                <id>amplifier</id>
+                <channel>1</channel>
+            </from>
+            <to>
+                <id>wavdevice</id>
+                <channel>1</channel>
+            </to>
+        </connection>
+    </connections>
+    <interactive>
+        <entry type="string" expression="apex:apex/devices/device[2]/parameter[1]" default="filename" description="filename"/>
+        <entry type="string" expression="apex:apex/devices/device[2]/parameter[2]" default="subject" description="subject"/>
+        <entry type="string" expression="apex:apex/devices/device[2]/parameter[3]" default="note" description="note"/>
+        <entry type="string" expression="apex:apex/devices/device[2]/parameter[4]" default="127.0.0.1" description="Host"/>
+        <entry type="int" expression="apex:apex/devices/device[2]/parameter[5]" default="9999" description="Port"/>
+    </interactive>
+</apex:apex>

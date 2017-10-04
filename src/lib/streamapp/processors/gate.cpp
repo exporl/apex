@@ -24,12 +24,13 @@
 
 using namespace streamapp;
 
-Gate::Gate( const unsigned ac_nChan, const unsigned ac_nSize, mt_FadeFunc a_pfnGainFunc ):
-    IGainProcessor( ac_nChan, ac_nSize ),
-  mv_dGateOn( 0.0 ),
-  mv_dGateOff( 0.0 ),
-  mv_dGateLength( 0.0 ),
-  m_pfnGate( utils::PtrCheck( a_pfnGainFunc ) )
+Gate::Gate(const unsigned ac_nChan, const unsigned ac_nSize,
+           mt_FadeFunc a_pfnGainFunc)
+    : IGainProcessor(ac_nChan, ac_nSize),
+      mv_dGateOn(0.0),
+      mv_dGateOff(0.0),
+      mv_dGateLength(0.0),
+      m_pfnGate(utils::PtrCheck(a_pfnGainFunc))
 {
 }
 
@@ -49,33 +50,32 @@ bool Gate::isMutedAfterwards() const
 
 double Gate::mf_dGetCurGain()
 {
-  if( IGainProcessor::mv_dSamples >= mv_dGateOn &&
-      IGainProcessor::mv_dSamples <  mv_dGateOff )
-  {
-    const double dPosInGate = IGainProcessor::mv_dSamples - mv_dGateOn;
-    return m_pfnGate( dPosInGate, mv_dGateLength );
-  }
-  if (IGainProcessor::mv_dSamples >= mv_dGateOff && mutedAfterwards)
-      return 0.0;
-  return 1.0;
+    if (IGainProcessor::mv_dSamples >= mv_dGateOn &&
+        IGainProcessor::mv_dSamples < mv_dGateOff) {
+        const double dPosInGate = IGainProcessor::mv_dSamples - mv_dGateOn;
+        return m_pfnGate(dPosInGate, mv_dGateLength);
+    }
+    if (IGainProcessor::mv_dSamples >= mv_dGateOff && mutedAfterwards)
+        return 0.0;
+    return 1.0;
 }
 
-void Gate::mp_SetGateOn( const double ac_dSample )
+void Gate::mp_SetGateOn(const double ac_dSample)
 {
     qCDebug(APEX_SA, "Gate: starting gate on at %g samples", ac_dSample);
     mv_dGateOn = ac_dSample;
     mv_dGateOff = ac_dSample + mv_dGateLength;
 }
 
-void Gate::mp_SetGateOff( const double ac_dSample )
+void Gate::mp_SetGateOff(const double ac_dSample)
 {
     qCDebug(APEX_SA, "Gate: starting gate off at %g samples", ac_dSample);
     mv_dGateOff = ac_dSample;
     mv_dGateLength = ac_dSample - mv_dGateOn;
 }
 
-void Gate::mp_SetGateLength( const double ac_dSamples )
+void Gate::mp_SetGateLength(const double ac_dSamples)
 {
-  mv_dGateLength = ac_dSamples;
-  mv_dGateOff = mv_dGateOn + ac_dSamples;
+    mv_dGateLength = ac_dSamples;
+    mv_dGateOff = mv_dGateOn + ac_dSamples;
 }

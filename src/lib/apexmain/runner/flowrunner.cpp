@@ -18,53 +18,126 @@
  *****************************************************************************/
 
 #include "flowrunner.h"
-#include "apexdata/experimentdata.h"
-#include "flowapi.h"
+
 #include "accessmanager.h"
+#include "apexcontrol.h"
+#include "flowapi.h"
+#include "gui/mainwindow.h"
 
-#include <QDebug>
-#include <QWebFrame>
-#include <QTemporaryFile>
-#include <QPointer>
+#include "apexdata/experimentdata.h"
+
+#include "apextools/apextools.h"
+
+#include "common/paths.h"
+
 #include <QFileInfo>
+#include <QTemporaryDir>
 
-using namespace apex;
+using namespace cmn;
+
+namespace apex
+{
+class FlowRunnerPrivate
+{
+public:
+    QScopedPointer<FlowApi> flowApi;
+    QScopedPointer<cmn::WebView> webView;
+    QScopedPointer<cmn::WebSocketServer> webSocketServer;
+    QTemporaryDir temporaryDirectory;
+};
+
+FlowRunner::FlowRunner() : d(new FlowRunnerPrivate)
+{
+    ApexTools::recursiveCopy(
+        Paths::searchFile(QSL("js/flowapi.js"), Paths::dataDirectories()),
+        QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
+    ApexTools::recursiveCopy(
+        Paths::searchFile(QSL("js/commonwebsocket.js"),
+                          Paths::dataDirectories()),
+        QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
+    ApexTools::recursiveCopy(
+        Paths::searchFile(QSL("js/polyfill.js"), Paths::dataDirectories()),
+        QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
+    ApexTools::recursiveCopy(
+        Paths::searchDirectory(QSL("resultsviewer/external"),
+                               Paths::dataDirectories()),
+        d->temporaryDirectory.path());
+}
+
+FlowRunner::~FlowRunner()
+{
+    delete d;
+}
 
 bool FlowRunner::select(const QString &path)
 {
     Q_EMIT opened(path);
 
-    QTemporaryFile tmpFile;
-    QTextStream tmpStream(&tmpFile);
-    tmpFile.setFileTemplate("tmp-XXXXXX.html");
-    tmpFile.open();
+    if (!QFile::exists(path)) {
+        qCWarning(APEX_RS, "%s could not be found", qPrintable(path));
+        return false;
+    }
+    connect(this, SIGNAL(savedFile(QString)), this, SLOT(onSavedFile(QString)));
 
-    QFile originalFile(path);
-    originalFile.open(QIODevice::ReadOnly);
-    tmpStream << originalFile.readAll();
+    d->flowApi.reset(new FlowApi(this, QFileInfo(path).absoluteDir()));
+    d->webSocketServer.reset(new WebSocketServer(QSL("FlowRunner")));
+    d->webSocketServer->start();
+    d->webSocketServer->on(QSL("runExperiment"), d->flowApi.data(),
+                           QSL("runExperiment(QString,QString)"));
+    d->webSocketServer->on(QSL("addExpression"), d->flowApi.data(),
+                           QSL("addExpression(QString,QString)"));
+    d->webSocketServer->on(QSL("clearExpressions"), d->flowApi.data(),
+                           QSL("clearExpressions()"));
+    d->webSocketServer->on(QSL("absoluteFilePath"), d->flowApi.data(),
+                           QSL("absoluteFilePath(QString)"));
+    d->webSocketServer->on(QSL("readFile"), d->flowApi.data(),
+                           QSL("readFile(QString)"));
 
-    api =  new FlowApi(this, QFileInfo(path).absoluteDir());
+    d->webView.reset(new WebView);
+    connect(d->webView.data(), SIGNAL(loadingFinished()), this,
+            SLOT(setupView()));
+    connect(d->webView.data(), SIGNAL(hidden()), this, SLOT(cleanup()));
 
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::LocalStorageEnabled, true);
-
-    view = new QWebView();
-
-    view->resize(480, 640);
-    view->setFocus();
-    view->page()->mainFrame()->addToJavaScriptWindowObject("api", api);
-    QPointer<AccessManager> am = new AccessManager(view->page());
-    view->page()->setNetworkAccessManager(am);
-    view->page()->mainFrame()->load(QUrl::fromLocalFile(tmpFile.fileName()));
-
-    view->showMaximized();
+    QUrl url = QUrl::fromUserInput(
+        QDir(d->temporaryDirectory.path())
+            .filePath(QFileInfo(path).baseName() + QL1S(".html")));
+    ApexTools::recursiveCopy(path, url.toString(QUrl::RemoveScheme));
+    d->webView->load(url);
 
     return true;
+}
+
+void FlowRunner::setupView()
+{
+    d->webView->runJavaScript(
+        QL1S("var api = new FlowApi('ws://127.0.0.1:") +
+        QString::number(d->webSocketServer->serverPort()) + QL1S("', '") +
+        d->webSocketServer->csrfToken() + QL1S("');"));
+    d->webView->runJavaScript(
+        "setTimeout(function() { initialize(); }, 1000);");
+    makeVisible();
+}
+
+void FlowRunner::cleanup()
+{
+    d->webSocketServer.reset();
+    ApexControl::Get().mainWindow()->quickWidgetBugShow();
 }
 
 void FlowRunner::selectFromDir(const QString &path)
 {
     qCDebug(APEX_RS) << "Running SelectFromDir with " << path;
+}
+
+void FlowRunner::onSavedFile(const QString &filePath)
+{
+    if (d->webSocketServer.isNull())
+        return;
+
+    QVariantList arguments;
+    arguments << QVariant(filePath);
+    d->webSocketServer->broadcastMessage(
+        WebSocketServer::buildInvokeMessage(QSL("savedFile"), arguments));
 }
 
 void FlowRunner::select(data::ExperimentData *data)
@@ -75,11 +148,13 @@ void FlowRunner::select(data::ExperimentData *data)
 
 void FlowRunner::makeInvisible()
 {
-    view->setVisible(false);
+    ApexControl::Get().mainWindow()->quickWidgetBugShow();
+    d->webView->hide();
 }
 
 void FlowRunner::makeVisible()
 {
-    view->setVisible(true);
-    view->setFocus();
+    d->webView->show();
+    ApexControl::Get().mainWindow()->quickWidgetBugHide();
+}
 }

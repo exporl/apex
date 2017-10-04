@@ -31,95 +31,97 @@ using namespace appcore;
 namespace streamapp
 {
 
-  /**
+/**
 
-      *   CHECKME something weird: should be done using a CriticalSection:
-      *   if it cannot be entered when mf_Callback() is called, it means
-      *   mf_Callback() is still in use, which clearly indicates a buffer underrun.
-      *   Doesn't work with portaudio however, it seems there is a double lock somewhere..
+    *   CHECKME something weird: should be done using a CriticalSection:
+    *   if it cannot be entered when mf_Callback() is called, it means
+    *   mf_Callback() is still in use, which clearly indicates a buffer
+underrun.
+    *   Doesn't work with portaudio however, it seems there is a double lock
+somewhere..
 
-  **/
+**/
+
+/**
+  * BufferDropCheck
+  *   callback for checking bufferdrops.
+  *   Uses a very simple technique: if the time needed
+  *   for the callback is larger then the period set,
+  *   a bufferdrop happens.
+  ***************************************************** */
+class BufferDropCheck : public Callback
+{
+public:
+    /**
+      * Constructor.
+      * @param ac_bDeleteSlave if true, deletes the callback(s) set by
+     * mp_InstallCallback
+      */
+    BufferDropCheck(const bool ac_bDeleteSlave);
 
     /**
-      * BufferDropCheck
-      *   callback for checking bufferdrops.
-      *   Uses a very simple technique: if the time needed
-      *   for the callback is larger then the period set,
-      *   a bufferdrop happens.
-      ***************************************************** */
-  class BufferDropCheck : public Callback
-  {
-  public:
-      /**
-        * Constructor.
-        * @param ac_bDeleteSlave if true, deletes the callback(s) set by mp_InstallCallback
-        */
-    BufferDropCheck( const bool ac_bDeleteSlave );
-
-      /**
-        * Destructor.
-        */
+      * Destructor.
+      */
     ~BufferDropCheck();
 
-      /**
-        * The callback.
-        */
+    /**
+      * The callback.
+      */
     void mf_Callback();
 
-      /**
-        * Set the maximum period the main callback can process.
-        * For soundcards this is buffersize divided by samplerate.
-        * @param ac_dTimeInSec the time in seconds
-        */
-    void mp_SetMaxCallbackTime( const double ac_dTimeInSec );
+    /**
+      * Set the maximum period the main callback can process.
+      * For soundcards this is buffersize divided by samplerate.
+      * @param ac_dTimeInSec the time in seconds
+      */
+    void mp_SetMaxCallbackTime(const double ac_dTimeInSec);
 
-      /**
-        * Set the callback to be called in mf_Callback()
-        * @param a_pCallback the callback or 0 for none
-        */
-    void mp_InstallMainCallback( Callback* a_pCallback );
+    /**
+      * Set the callback to be called in mf_Callback()
+      * @param a_pCallback the callback or 0 for none
+      */
+    void mp_InstallMainCallback(Callback *a_pCallback);
 
-      /**
-        * Get the current slave callback.
-        * @return the callback
-        */
-    Callback* mf_pGetMainCallback();
+    /**
+      * Get the current slave callback.
+      * @return the callback
+      */
+    Callback *mf_pGetMainCallback();
 
-      /**
-        * Set the callback to be called in mf_Callback()
-        * when a bufferdrop occurs
-        * @param a_pCallback the callback or 0 for none
-        */
-    void mp_InstallNoLockCallback( Callback* a_pCallback );
+    /**
+      * Set the callback to be called in mf_Callback()
+      * when a bufferdrop occurs
+      * @param a_pCallback the callback or 0 for none
+      */
+    void mp_InstallNoLockCallback(Callback *a_pCallback);
 
-      /**
-        * Get the current no lock callback.
-        * @return the callback
-        */
-    Callback* mf_pGetNoLockCallback();
+    /**
+      * Get the current no lock callback.
+      * @return the callback
+      */
+    Callback *mf_pGetNoLockCallback();
 
-      /**
-        * Print drops to std::out.
-        * @param ac_bSet true for print
-        */
-    void mp_SetPrintToStdOut( const bool ac_bSet = true );
+    /**
+      * Print drops to std::out.
+      * @param ac_bSet true for print
+      */
+    void mp_SetPrintToStdOut(const bool ac_bSet = true);
 
-      /**
-        * Get printing status.
-        * @return true if currently printing to std::out
-        */
-    const bool& mf_bGetPrintToStdOut() const;
+    /**
+      * Get printing status.
+      * @return true if currently printing to std::out
+      */
+    const bool &mf_bGetPrintToStdOut() const;
 
-  private:
-    Callback*             mv_pDlock;
-    Callback*             mv_pNlock;
-    bool                  mv_bPrint;
-    double                mv_dTime;
-    ITimer* const         mc_pTimer;
-    const bool            mc_bDelete;
+private:
+    Callback *mv_pDlock;
+    Callback *mv_pNlock;
+    bool mv_bPrint;
+    double mv_dTime;
+    ITimer *const mc_pTimer;
+    const bool mc_bDelete;
     const CriticalSection mc_Lock;
-  };
-
+};
 }
 
 #endif //#ifndef __BUFFERDROPCHECK_H__

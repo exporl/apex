@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bertha:experiment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/bertha/1.0/experiment ../schema/experiment.xsd"
+    xmlns:bertha="http://med.kuleuven.be/exporl/bertha/1.0/experiment">
+    <blocks>
+        <block id="leaf1">
+            <plugin>SineGenerator</plugin>
+            <parameter name="frequency">1000</parameter>
+            <parameter name="amplitude">0.2</parameter>
+            <parameter name="phase">0</parameter>
+        </block>
+        <block id="leaf2">
+            <plugin>SineGenerator</plugin>
+            <parameter name="frequency">1000</parameter>
+            <parameter name="amplitude">0.2</parameter>
+            <parameter name="phase">0</parameter>
+        </block>
+        <block id="amplifier">
+            <plugin>Amplifier</plugin>
+            <inputports>2</inputports>
+            <outputports>2</outputports>
+            <parameter name="baseGain">-10</parameter>
+            <parameter name="gain">0</parameter>
+        </block>
+        <block id="summation">
+            <plugin>Summation</plugin>
+        </block>
+    </blocks>
+
+    <connections>
+        <connection>
+            <from id="device" port="capture-1"/>
+            <to id="summation" port="input-1"/>
+        </connection>
+
+        <connection>
+            <from id="leaf1" port="output-1"/>
+            <to id="summation" port="input-2"/>
+        </connection>
+        <connection>
+            <from id="leaf2" port="output-1"/>
+            <to id="amplifier" port="input-1"/>
+        </connection>
+
+        <connection>
+            <from id="summation" port="output-1"/>
+            <to id="device" port="playback-1"/>
+        </connection>
+        <connection>
+            <from id="amplifier" port="output-1"/>
+            <to id="device" port="playback-2"/>
+        </connection>
+    </connections>
+
+    <device id="device">
+        <driver>Files</driver>
+        <samplerate>16000</samplerate>
+        <blocksize>8192</blocksize>
+        <playbackports>2</playbackports>
+        <captureports>1</captureports>
+        <parameter name="inputFiles">../testdata/man001.wav</parameter>
+        <parameter name="outputFiles">%OUTPUTFILEPLACEHOLDER%</parameter>
+    </device>
+</bertha:experiment>

@@ -31,65 +31,66 @@ class QFrame;
 
 namespace apex
 {
-  namespace data
-  {
-    class ScreenElement;
-  }
-  namespace editor
-  {
-    class ScreenWidget;
-    using data::ScreenElement;
+namespace data
+{
+class ScreenElement;
+}
+namespace editor
+{
+class ScreenWidget;
+using data::ScreenElement;
 
-    /**
-     * \class ScreenElementEditorDelegate ScreenElementEditorDelegate.h screen/ScreenElementEditorDelegate.h
-     *
-     * The ScreenElementEditorDelegate class is a class that
-     * represents a \ref ScreenElement towards the \ref ScreenEditor
-     * class and associate classes.  It separates purely editor stuff
-     * like editable properties, QWidget representation etc. from the
-     * pure data.  This is done so that the data classes can be used
-     * for other purposes as well.
-     *
-     * A related class is \ref ScreenElementRunDelegate, which has a
-     * similar purpose, but towards a running apex program instead of
-     * a ScreenEditor.
-     *
-     * Ownership of these EditorDelegates is managed by the class
-     * creating them.  Normally this will be the class \ref
-     * ScreenWidget, which deletes its RunDelegates in its destructor.
-     * No class should ever delete a ScreenElementEditorDelegate
-     * directly.  Instead, the ScreenWidget should be asked to delete
-     * it by calling the method ScreenWidget::deleteDelegate().  This
-     * will make the ScreenWidget delete the
-     * ScreenElementEditorDelegate and its children, and update its
-     * internal structures..
-     *
-     * This is an abstract base class.
-     */
-    class ScreenElementEditorDelegate
-    {
-    protected:
-      ScreenWidget* screenWidget;
-    public:
-      ScreenElementEditorDelegate( ScreenWidget* w );
+/**
+ * \class ScreenElementEditorDelegate ScreenElementEditorDelegate.h
+ * screen/ScreenElementEditorDelegate.h
+ *
+ * The ScreenElementEditorDelegate class is a class that
+ * represents a \ref ScreenElement towards the \ref ScreenEditor
+ * class and associate classes.  It separates purely editor stuff
+ * like editable properties, QWidget representation etc. from the
+ * pure data.  This is done so that the data classes can be used
+ * for other purposes as well.
+ *
+ * A related class is \ref ScreenElementRunDelegate, which has a
+ * similar purpose, but towards a running apex program instead of
+ * a ScreenEditor.
+ *
+ * Ownership of these EditorDelegates is managed by the class
+ * creating them.  Normally this will be the class \ref
+ * ScreenWidget, which deletes its RunDelegates in its destructor.
+ * No class should ever delete a ScreenElementEditorDelegate
+ * directly.  Instead, the ScreenWidget should be asked to delete
+ * it by calling the method ScreenWidget::deleteDelegate().  This
+ * will make the ScreenWidget delete the
+ * ScreenElementEditorDelegate and its children, and update its
+ * internal structures..
+ *
+ * This is an abstract base class.
+ */
+class ScreenElementEditorDelegate
+{
+protected:
+    ScreenWidget *screenWidget;
 
-      virtual QFrame* getWidget() = 0;
-      virtual ~ScreenElementEditorDelegate();
-      virtual ScreenElement* getScreenElement() = 0;
+public:
+    ScreenElementEditorDelegate(ScreenWidget *w);
 
-      virtual int getPropertyCount() = 0;
-      virtual QString getPropertyName( int nr ) = 0;
-      virtual QVariant getPropertyData( int nr, int role ) = 0;
-      virtual PropertyType getPropertyType( int nr ) = 0;
-      virtual bool setProperty( int nr, const QVariant& v );
-      virtual void replaceChild(
-        QWidget* oldChildWidget, ScreenElementEditorDelegate* oldChildRep,
-        ScreenElement* newElement
-        );
-    protected:
-      void handleMouseReleaseEvent( QMouseEvent* me, QFrame* widget );
-    };
+    virtual QFrame *getWidget() = 0;
+    virtual ~ScreenElementEditorDelegate();
+    virtual ScreenElement *getScreenElement() = 0;
 
-  }
+    virtual int getPropertyCount() = 0;
+    virtual QString getPropertyName(int nr) = 0;
+    virtual QVariant getPropertyData(int nr, int role) = 0;
+    virtual PropertyType getPropertyType(int nr) = 0;
+    virtual bool setProperty(int nr, const QVariant &v);
+    virtual void replaceChild(QWidget *oldChildWidget,
+                              ScreenElementEditorDelegate *oldChildRep,
+                              ScreenElement *newElement);
+
+protected:
+    void handleMouseReleaseEvent(QMouseEvent *me, QFrame *widget);
+};
+}
 }
 #endif

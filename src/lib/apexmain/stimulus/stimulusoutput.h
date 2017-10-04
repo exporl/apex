@@ -36,7 +36,8 @@ class WaitableObject;
 namespace apex
 {
 
-class DeviceCheckThread;  //TODO combine clipping and checking for end, (but clipping at a lower rate)
+class DeviceCheckThread; // TODO combine clipping and checking for end, (but
+                         // clipping at a lower rate)
 
 namespace device
 {
@@ -58,7 +59,7 @@ public:
       * Constructor.
       * Needs constructed tDeviceMap and tFilterMap from ApexControl.
       */
-    StimulusOutput(ExperimentRunDelegate& p_rd);
+    StimulusOutput(ExperimentRunDelegate &p_rd);
 
     /**
       * Destructor.
@@ -68,8 +69,7 @@ public:
     /**
       * The different modes.
       */
-    enum mt_eMode
-    {
+    enum mt_eMode {
         /** initial value, not important */
         notset,
 
@@ -95,7 +95,6 @@ public:
          * called. PlayStimulus() calls PlayAll(), AllDone() and RemoveAll(). */
         onlysequence
     };
-
 
     /** Get offline mode. If IsOffLine == true (this is, when at least one of
      * the devices has it's offline mode set), StimulusOutput() makes a copy of
@@ -133,7 +132,7 @@ public:
       * Get the object that will be signaled when all devices are done.
       * @return a WaitableObject reference
       */
-    const appcore::WaitableObject& GetStimulusEnd();
+    const appcore::WaitableObject &GetStimulusEnd();
 
     /**
       * Play currently loaded Stimulus.
@@ -168,9 +167,9 @@ public:
      * default values, otherwise the current values (from previous stimuli) will
      * be used
      */
-    void LoadStimulus(const QString& ac_sID , const bool p_restoreParams=true);
+    void LoadStimulus(const QString &ac_sID, const bool p_restoreParams = true);
 
-    void LoadStimulus(Stimulus* ac_Stimulus, const bool p_restoreParams);
+    void LoadStimulus(Stimulus *ac_Stimulus, const bool p_restoreParams);
 
     /**
       * Unload the current Stimulus.
@@ -182,7 +181,7 @@ public:
       * Set the device to start as last.
       * @param ac_sID the device's ID
       */
-    void SetMaster(const QString& ac_sID);
+    void SetMaster(const QString &ac_sID);
 
     /**
       * See SendParametersToClients().
@@ -198,28 +197,30 @@ public:
       * @param ac_sValue the parameter's new value
       * @return true if the parameter was found and set
       */
-    bool HandleParam(const QString& ac_sID, const QVariant& ac_sValue);
+    bool HandleParam(const QString &ac_sID, const QVariant &ac_sValue);
 
     /**
       * Get the devices we're using.
       * @return a tDeviceMap
       */
-    const tDeviceMap& GetDevices() const
-        { return m_pDevices; }
+    const tDeviceMap &GetDevices() const
+    {
+        return m_pDevices;
+    }
 
-        /**
-     * Have all things that accept parameters update their parameters
-         */
+    /**
+ * Have all things that accept parameters update their parameters
+     */
     void SendParametersToClients();
 
-        /**
-     * Ask all clients (devices, controllers, filters) to do prepare
-         */
+    /**
+ * Ask all clients (devices, controllers, filters) to do prepare
+     */
     void PrepareClients();
 
     void setSilenceBeforeNextStimulus(double seconds);
 
-
+    void releaseClients();
 
 private:
     /**
@@ -228,13 +229,13 @@ private:
       * @param ac_pMat the matrix
       * @param ac_nCol the column's index
       */
-    void LoadOneSim(const PlayMatrix* ac_pMat, const unsigned ac_nCol);
+    void LoadOneSim(const PlayMatrix *ac_pMat, const unsigned ac_nCol);
 
     /**
       * Load everything.
       * @param ac_pMat the matrix
       */
-    void LoadAll(const PlayMatrix* ac_pMat);
+    void LoadAll(const PlayMatrix *ac_pMat);
 
     /**
       * Load the filters.
@@ -245,7 +246,7 @@ private:
     /**
       * Create offline copies and use them.
       */
-//     void DoOffLine();
+    //     void DoOffLine();
 
     /**
       * Connect the filters.
@@ -269,34 +270,32 @@ private:
       */
     void PlayAndWaitInThread();
 
-
     /**
      * Ask all clients to reset their parameters to the default values
      * and the values defined in the experiment file
      */
     void ResetParams();
 
+    const mt_eMode mc_eMode;
+    const bool mc_bOffLine;
 
-    const mt_eMode        mc_eMode;
-    const bool            mc_bOffLine;
+    const tDeviceMap &m_pDevices;
+    const tFilterMap &m_pFilters;
+    const tDataBlockMap &m_DataBlocks;
+    tDeviceMap m_OffLineDevices;
 
-    const tDeviceMap&     m_pDevices;
-    const tFilterMap&     m_pFilters;
-    const tDataBlockMap&  m_DataBlocks;
-    tDeviceMap            m_OffLineDevices;
-
-    Stimulus*             m_pCurStim;
+    Stimulus *m_pCurStim;
     // shortcuts to avoid indexing map
-    OutputDevice*         m_pCurDev;
-    OutputDevice*         m_pMaster;
+    OutputDevice *m_pCurDev;
+    OutputDevice *m_pMaster;
 
-    DeviceCheckThread* const mc_pWaitThread;
-    bool                  m_bThreadRunning;
+    DeviceCheckThread *const mc_pWaitThread;
+    bool m_bThreadRunning;
 
-    const device::tControllerMap& m_pControllers;
+    const device::tControllerMap &m_pControllers;
 };
 
-} //end ns stimulus
-} //end ns apex
+} // end ns stimulus
+} // end ns apex
 
-#endif //STIMULUSOUTPUT_H
+#endif // STIMULUSOUTPUT_H

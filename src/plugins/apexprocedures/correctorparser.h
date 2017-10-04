@@ -34,6 +34,5 @@ class CorrectorParser
 public:
     data::CorrectorData *Parse(const QDomElement &dom);
 };
-
 }
 #endif

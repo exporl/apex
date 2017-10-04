@@ -23,9 +23,8 @@
 
 using namespace apex::stimulus;
 
-BufferDropCallback::BufferDropCallback(const QString &dropSource) :
-    mv_nDrops(0),
-    dropSource(dropSource)
+BufferDropCallback::BufferDropCallback(const QString &dropSource)
+    : mv_nDrops(0), dropSource(dropSource)
 {
 }
 
@@ -35,6 +34,7 @@ BufferDropCallback::~BufferDropCallback()
 
 void BufferDropCallback::mf_Callback()
 {
-    qCCritical(APEX_RS, "%s: !!!!! buffer underrun !!!!!", qPrintable(dropSource));
+    qCCritical(APEX_RS, "%s: !!!!! buffer underrun !!!!!",
+               qPrintable(dropSource));
     ++mv_nDrops;
 }

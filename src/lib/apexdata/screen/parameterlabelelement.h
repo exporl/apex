@@ -20,48 +20,42 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_SCREEN_PARAMETERLABELELEMENT_H_
 #define _EXPORL_SRC_LIB_APEXDATA_SCREEN_PARAMETERLABELELEMENT_H_
 
-#include "parameterscontainerelement.h"
 #include "parameterdata.h"
+#include "parameterscontainerelement.h"
 
 #include <QCoreApplication>
 
 #include "apextools/global.h"
-
 
 namespace apex
 {
 namespace data
 {
 
-
-
 /**
  * The ParameterLabelElement is an implementation of a \ref
  * ScreenElement representing a "parameter list".
  */
-class APEXDATA_EXPORT ParameterLabelElement
-            : public ParametersContainerElement
+class APEXDATA_EXPORT ParameterLabelElement : public ParametersContainerElement
 {
-        Q_DECLARE_TR_FUNCTIONS(ParameterLabelElement)
+    Q_DECLARE_TR_FUNCTIONS(ParameterLabelElement)
 
-    public:
-        ParameterLabelElement(const QString& id, ScreenElement* parent);
-        ~ParameterLabelElement();
+public:
+    ParameterLabelElement(const QString &id, ScreenElement *parent);
+    ~ParameterLabelElement();
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
-        bool setParameter(ParameterData d);
-        ParameterData getParameter() const;
+    bool setParameter(ParameterData d);
+    ParameterData getParameter() const;
 
-        bool operator==(const ParameterLabelElement& other) const;
+    bool operator==(const ParameterLabelElement &other) const;
 
-    private:
-
-        ParameterData parameterData;
+private:
+    ParameterData parameterData;
 };
-
 }
 }
 #endif

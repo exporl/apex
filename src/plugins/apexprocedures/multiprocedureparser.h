@@ -35,13 +35,14 @@ class MultiProcedureParser : public ProcedureParsersParent
 public:
     MultiProcedureParser();
 
-    virtual data::MultiProcedureData* parse(const QDomElement &base) Q_DECL_OVERRIDE;
+    virtual data::MultiProcedureData *
+    parse(const QDomElement &base) Q_DECL_OVERRIDE;
 
 protected:
     virtual bool trialsValid() Q_DECL_OVERRIDE;
-    virtual void SetProcedureParameters(const QDomElement &p_base) Q_DECL_OVERRIDE;
+    virtual void
+    SetProcedureParameters(const QDomElement &p_base) Q_DECL_OVERRIDE;
 };
-
 }
 }
 

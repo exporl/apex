@@ -43,17 +43,21 @@ namespace writer
 class APEXWRITERS_EXPORT StimuliWriter
 {
 public:
-    static QDomElement addElement(QDomDocument *doc, const data::StimuliData &data);
+    static QDomElement addElement(QDomDocument *doc,
+                                  const data::StimuliData &data);
 
 private:
-    static QDomElement addFixedParameters(QDomDocument *doc, const QStringList& params);
-    static QDomElement addStimulus(QDomDocument *doc, const data::StimulusData& data);
-    static QDomElement addDatablocks(QDomDocument *doc,
-            const data::StimulusDatablocksContainer& data);
+    static QDomElement addFixedParameters(QDomDocument *doc,
+                                          const QStringList &params);
+    static QDomElement addStimulus(QDomDocument *doc,
+                                   const data::StimulusData &data);
+    static QDomElement
+    addDatablocks(QDomDocument *doc,
+                  const data::StimulusDatablocksContainer &data);
     static QDomElement addParameters(QDomDocument *doc,
-            const data::StimulusParameters& params, const QString& name);
+                                     const data::StimulusParameters &params,
+                                     const QString &name);
 };
-
 }
 }
 

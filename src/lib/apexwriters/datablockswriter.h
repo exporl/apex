@@ -40,9 +40,8 @@ public:
      * to the given data structure
      */
     static QDomElement addElement(QDomDocument *doc,
-            const data::DatablocksData& d);
+                                  const data::DatablocksData &d);
 };
-
 }
 }
 

@@ -70,7 +70,7 @@ for f=1:length(filenames)
     end
 
     %stimuli=[stimuli; strread(results{I}, '%s\t')];
-    res=strsplit(results{I}, tb)
+    res=amt_strsplit(results{I}, tb)
     if (~isempty(res) && isempty(res{end}))
          res=res(1:end-1);
     end
@@ -78,7 +78,7 @@ for f=1:length(filenames)
 
 
     %scorrector=strread(results{I+2}, '%s\t');
-    scorrector=strsplit(results{I+2}, tb);
+    scorrector=amt_strsplit(results{I+2}, tb);
     if (~isempty(scorrector) && isempty(scorrector{end}))
         scorrector=scorrector(1:end-1);
     end
@@ -112,7 +112,7 @@ for f=1:length(filenames)
     if (smart)
         %buttons=[buttons; strread(results{I+1}, '%s\t')];
 
-        res=strsplit(results{I+1}, tb);
+        res=amt_strsplit(results{I+1}, tb);
         if (~isempty(res) && isempty(res{end}))
              res=res(1:end-1);
         end
@@ -127,7 +127,7 @@ for f=1:length(filenames)
             buttons='';
         else
             %buttons=[buttons; strread(results{I}, '%s\t')];
-            buttons=[buttons; strsplit(results{I}, tb)];
+            buttons=[buttons; amt_strsplit(results{I}, tb)];
         end
 
     end

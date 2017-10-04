@@ -20,30 +20,32 @@
 #ifndef __ITIMER_H__
 #define __ITIMER_H__
 
-  /**
-    * Simple Timer Interface
-    * FIXME add some functinality
-    ***************************** */
+/**
+  * Simple Timer Interface
+  * FIXME add some functinality
+  ***************************** */
 class ITimer
 {
 protected:
-  ITimer()
-  {}
+    ITimer()
+    {
+    }
 
 public:
-  virtual ~ITimer()
-  {}
+    virtual ~ITimer()
+    {
+    }
 
     /**
       * Set the time to zero and start counting.
       */
-  virtual void Reset() = 0;
+    virtual void Reset() = 0;
 
     /**
       * Get the elapsed tim.
       * @return the time (preferably nanoseconds)
       */
-  virtual double Elapsed() = 0;
+    virtual double Elapsed() = 0;
 };
 
 #endif //#ifndef __ITIMER_H__

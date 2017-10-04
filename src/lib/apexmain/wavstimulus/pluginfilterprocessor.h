@@ -38,33 +38,31 @@ using namespace streamapp;
 
 class PluginFilterInterface;
 
-namespace apex {
+namespace apex
+{
 
-namespace stimulus {
+namespace stimulus
+{
 
 class PluginFilterProcessor : public StreamProcessor
 {
 public:
-    PluginFilterProcessor (unsigned channels, unsigned size, unsigned fs,
-            const QString &name);
+    PluginFilterProcessor(unsigned channels, unsigned size, unsigned fs,
+                          const QString &name);
     virtual ~PluginFilterProcessor();
 
-    void Prepare (unsigned numberOfFrames);
-    virtual const Stream& mf_DoProcessing (const Stream& ac_Output);
+    void Prepare(unsigned numberOfFrames);
+    virtual const Stream &mf_DoProcessing(const Stream &ac_Output);
 
-    bool setParameter (const QString &type, int channel, const QString &value);
-    bool isValidParameter (const QString &type, int channel) const;
+    bool setParameter(const QString &type, int channel, const QString &value);
+    bool isValidParameter(const QString &type, int channel) const;
     void resetParameters();
 
 private:
     const appcore::CriticalSection section;
     QScopedPointer<PluginFilterInterface> m_plugin;
 };
-
 }
-
 }
 
 #endif // ProcsH
-
-

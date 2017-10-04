@@ -1,11 +1,11 @@
 function result=a3showparams(s)
-fields=fieldnames(s);
-result='';
-temp='';
-for i=1:length(fields)
-    field=fields{i};
-
-        temp=['<parameter id="' field '">' num2str(getfield(s,field)) '</parameter>' sprintf('\n')];
-
-    result=[result temp];
+if isstruct(s)
+    fields=fieldnames(s);
+    result=[];
+    
+    for i=1:length(fields)
+        result = [ result wraptag('parameter',num2str(getfield(s,fields{i})),'id',fields{i}) sprintf('\n') ];
+    end
+else
+    result = '';
 end

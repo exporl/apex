@@ -24,6 +24,12 @@ xcopy /s /i /y bin\%RELEASETYPE%-installed-nic\bin\cochlear bin\%RELEASETYPE%\co
 
 nmake testxml
 
+rem Store symbols
+if "%~2" == "storesymbols" (
+   echo Adding symbols
+   "%SYMSTOREDIR%\symstore.exe" add /r /s %APEXSYMSTORE% /t "Apex" /v "Build %BUILD_NUMBER%" /f "bin\%RELEASETYPE%-installed\bin\*.*"
+)
+
 rem Zipping and installer
 
 rem This must be set before the if condition as all variables inside the if are expanded before entering the block

@@ -25,11 +25,10 @@
 #include "soundcard.h"
 #include <QString>
 
-
 Q_DECLARE_LOGGING_CATEGORY(soundcard)
 
-typedef void  PaStream;
-typedef int   PaDeviceIndex;
+typedef void PaStream;
+typedef int PaDeviceIndex;
 
 namespace streamapp
 {
@@ -70,7 +69,7 @@ public:
      * Constructor.
      * @param ac_sDriverName the drivername to use
      */
-    PortAudioWrapper(const QString& cardName = sc_sDefault);
+    PortAudioWrapper(const QString &cardName = sc_sDefault);
 
     /**
      * Destructor.
@@ -88,40 +87,39 @@ public:
     /**
      * Implementation of the ISoundCard method.
      */
-    tSoundCardInfo  mf_GetInfo() const;
+    tSoundCardInfo mf_GetInfo() const;
 
     /**
      * Implementation of the ISoundCard method.
      */
-    bool            mp_bOpenDriver    ( const unsigned      ac_nIChan,
-                                        const unsigned      ac_nOChan,
-                                        const unsigned long ac_nFs,
-                                        const unsigned      ac_nBufferSize );
+    bool mp_bOpenDriver(const unsigned ac_nIChan, const unsigned ac_nOChan,
+                        const unsigned long ac_nFs,
+                        const unsigned ac_nBufferSize);
 
     /**
      * Implementation of the ISoundCard method.
      */
-    bool            mp_bCloseDriver   ();
+    bool mp_bCloseDriver();
 
     /**
      * Implementation of the ISoundCard method.
      */
-    unsigned         mf_nGetIChan      () const;
+    unsigned mf_nGetIChan() const;
 
     /**
      * Implementation of the ISoundCard method.
      */
-    unsigned         mf_nGetOChan      () const;
+    unsigned mf_nGetOChan() const;
 
     /**
      * Implementation of the ISoundCard method.
      */
-    unsigned         mf_nGetBufferSize   () const;
+    unsigned mf_nGetBufferSize() const;
 
     /**
      * Implementation of the ISoundCard method.
      */
-    unsigned long    mf_lGetSampleRate () const;
+    unsigned long mf_lGetSampleRate() const;
 
     /**
      * Implementation of the ISoundCard method.
@@ -131,7 +129,7 @@ public:
     /**
      * Implementation of the ISoundCard method.
      */
-    bool             mf_bIsOpen        () const
+    bool mf_bIsOpen() const
     {
         return mv_bOpen;
     }
@@ -139,32 +137,32 @@ public:
     /**
      * Implementation of the ISoundCard method.
      */
-    unsigned long           mf_lGetEstimatedLatency() const;
+    unsigned long mf_lGetEstimatedLatency() const;
 
     /**
      * Implementation of the ISoundCard method.
      */
-    bool                    mp_bStart         (Callback& a_CallbackToUse);
+    bool mp_bStart(Callback &a_CallbackToUse);
 
     /**
      * Implementation of the ISoundCard method.
      */
-    bool                    mp_bStop          ();
+    bool mp_bStop();
 
     /**
      * Implementation of the ISoundCard method.
      */
-    bool             mf_bIsRunning     () const;
+    bool mf_bIsRunning() const;
 
     /**
      * Implementation of the ISoundCard method.
      */
-    AudioFormatReader*      mf_pCreateReader() const;
+    AudioFormatReader *mf_pCreateReader() const;
 
     /**
      * Implementation of the ISoundCard method.
      */
-    AudioFormatWriter*      mf_pCreateWriter() const;
+    AudioFormatWriter *mf_pCreateWriter() const;
 
     /**
      * Implementation of the ISoundCard method.
@@ -176,7 +174,8 @@ public:
 
     /**
      * Implementation of the ISoundCard method.
-     * Doesn't do anything, Portaudio's buffers are not accessible when it's not running
+     * Doesn't do anything, Portaudio's buffers are not accessible when it's not
+     * running
      */
     void mp_ClearIOBuffers()
     {
@@ -186,7 +185,7 @@ public:
      * Get a pointer to the PortAudioStream object.
      * @return the pointer
      */
-    const PaStream* mf_pGetPaStream() const
+    const PaStream *mf_pGetPaStream() const
     {
         return m_pPaStream;
     }
@@ -195,15 +194,14 @@ public:
     friend class PortAudioWriter;
 
 private:
-    PaStream*                 m_pPaStream;
-    PaUserData*               m_pUserData;
-    bool                      mv_bOpen;
-    unsigned                  mv_nBuffers;
-    std::string               mv_sError;
-    PaDeviceIndex             m_iInputID;
-    PaDeviceIndex             m_iOutputID;
+    PaStream *m_pPaStream;
+    PaUserData *m_pUserData;
+    bool mv_bOpen;
+    unsigned mv_nBuffers;
+    std::string mv_sError;
+    PaDeviceIndex m_iInputID;
+    PaDeviceIndex m_iOutputID;
 };
-
 }
 
-#endif //PAWRAPPER_H
+#endif // PAWRAPPER_H

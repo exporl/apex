@@ -35,7 +35,10 @@ public:
     static void signalApexInitialized();
     static void signalExperimentStarted();
     static void signalExperimentFinished();
+    static void signalTrialStarted();
     static QString getDeviceSerialNumber();
+    static QString getSSLCertificateDirectory();
+    static void startGdbServer();
 };
 }
 }

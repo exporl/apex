@@ -28,8 +28,7 @@ namespace apex
 namespace data
 {
 
-enum DeviceType
-{
+enum DeviceType {
     TYPE_NONE = -1,
     TYPE_WAVDEVICE,
     TYPE_COH,
@@ -42,38 +41,37 @@ enum DeviceType
  *
  * @author Tom Francart,,, <tom.francart@med.kuleuven.be>
  */
-class APEXDATA_EXPORT DeviceData: public SimpleParameters
+class APEXDATA_EXPORT DeviceData : public SimpleParameters
 {
 public:
-
     virtual ~DeviceData();
 
-    //getters
+    // getters
 
     DeviceType deviceType() const;
     virtual bool isControlDevice() const;
     virtual unsigned numberOfChannels() const;
 
-    //setters
+    // setters
 
     virtual void setNumberOfChannels(unsigned n);
 
-    bool operator==(const DeviceData& other) const;
+    bool operator==(const DeviceData &other) const;
     void setSilent(bool newSilent = true);
     bool isSilent() const;
 
 protected:
     DeviceData(DeviceType type);
 
-    bool    isControlDev;
+    bool isControlDev;
 
 private:
     DeviceType devType;
     bool silent;
 };
 
-}// ns data
+} // ns data
 
-}// ns apex
+} // ns apex
 
 #endif

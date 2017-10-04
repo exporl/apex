@@ -28,11 +28,11 @@
 namespace apex
 {
 
-UniformRandomGenerator::UniformRandomGenerator(data::RandomGeneratorParameters* p_param)
-                                : RandomGenerator(p_param)
+UniformRandomGenerator::UniformRandomGenerator(
+    data::RandomGeneratorParameters *p_param)
+    : RandomGenerator(p_param)
 {
 }
-
 
 UniformRandomGenerator::~UniformRandomGenerator()
 {
@@ -42,32 +42,31 @@ QString UniformRandomGenerator::GetNextValue()
 {
     QString sResult;
 
-    if (m_param->m_nValueType == data::RandomGeneratorParameters::VALUE_INT)
-    {
-        //int result = (int) ApexTools::RandomRange((int)m_param->m_dMin, (int)m_param->m_dMax);
-        //int result = generator.nextDouble(qCeil(m_param->m_dMin), qFloor(m_param->m_dMax) + 1);
-        int result = (int) generator.nextUInt(qFloor(m_param->m_dMax - m_param->m_dMin)+1) + m_param->m_dMin;
+    if (m_param->m_nValueType == data::RandomGeneratorParameters::VALUE_INT) {
+        // int result = (int) ApexTools::RandomRange((int)m_param->m_dMin,
+        // (int)m_param->m_dMax);
+        // int result = generator.nextDouble(qCeil(m_param->m_dMin),
+        // qFloor(m_param->m_dMax) + 1);
+        int result = (int)generator.nextUInt(
+                         qFloor(m_param->m_dMax - m_param->m_dMin) + 1) +
+                     m_param->m_dMin;
         sResult = QString::number(result);
-    }
-    else if (m_param->m_nValueType == data::RandomGeneratorParameters::VALUE_DOUBLE)
-    {
-        //double result = (double) ApexTools::RandomRange(m_param->m_dMin, m_param->m_dMax);
+    } else if (m_param->m_nValueType ==
+               data::RandomGeneratorParameters::VALUE_DOUBLE) {
+        // double result = (double) ApexTools::RandomRange(m_param->m_dMin,
+        // m_param->m_dMax);
         double result = generator.nextDouble(m_param->m_dMin, m_param->m_dMax);
         sResult = QString::number(result);
-    }
-    else
-    {
+    } else {
         qFatal("Error: not implemented");
     }
 
     m_lastValue = sResult;
     return sResult;
-
 }
 
 void UniformRandomGenerator::doDeterministicGeneration()
 {
     generator.setSeed(0);
 }
-
 }

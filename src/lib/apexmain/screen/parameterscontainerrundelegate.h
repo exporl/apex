@@ -24,7 +24,6 @@
 
 #include <QObject>
 
-
 namespace apex
 {
 
@@ -36,12 +35,10 @@ class ScreenElement;
 class ParametersContainerElement;
 }
 
-
 namespace stimulus
 {
 class Stimulus;
 }
-
 
 namespace rundelegates
 {
@@ -54,13 +51,13 @@ using data::ScreenElement;
 class ParametersContainerRunDelegate
 {
 public:
-    ParametersContainerRunDelegate( );
+    ParametersContainerRunDelegate();
     ~ParametersContainerRunDelegate();
 
-
 protected:
-    double ParseExpression(const QString& p_expr, double value);
-    QVariant parameterValue(stimulus::Stimulus *stimulus, ParameterManager* pm, const QString &id);
+    double ParseExpression(const QString &p_expr, double value);
+    QVariant parameterValue(stimulus::Stimulus *stimulus, ParameterManager *pm,
+                            const QString &id);
 };
 }
 }

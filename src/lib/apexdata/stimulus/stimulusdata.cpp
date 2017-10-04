@@ -25,22 +25,22 @@ apex::data::StimulusData::StimulusData()
 {
 }
 
-apex::data::StimulusData::StimulusData(const StimulusData& o)
+apex::data::StimulusData::StimulusData(const StimulusData &o)
 {
-    m_description=o.m_description;
-    m_fixParams=o.m_fixParams;
-    m_varParams=o.m_varParams;
-    m_datablocksContainer=o.m_datablocksContainer;
-    m_id=o.m_id;
+    m_description = o.m_description;
+    m_fixParams = o.m_fixParams;
+    m_varParams = o.m_varParams;
+    m_datablocksContainer = o.m_datablocksContainer;
+    m_id = o.m_id;
 }
 
-const apex::data::StimulusParameters&
-        apex::data::StimulusData::GetFixedParameters() const
+const apex::data::StimulusParameters &
+apex::data::StimulusData::GetFixedParameters() const
 {
     return m_fixParams;
 }
 
-const QString  apex::data::StimulusData::GetID() const
+const QString apex::data::StimulusData::GetID() const
 {
     return m_id;
 }
@@ -52,16 +52,15 @@ const QString apex::data::StimulusData::description() const
 
 QString apex::data::StimulusDatablocksContainer::typeName() const
 {
-    switch (type)
-    {
-        case DATABLOCKS:
-            return "datablocks";
-        case DATABLOCK:
-            return "datablock";
-        case SEQUENTIAL:
-            return "sequential";
-        case SIMULTANEOUS:
-            return "simultaneous";
+    switch (type) {
+    case DATABLOCKS:
+        return "datablocks";
+    case DATABLOCK:
+        return "datablock";
+    case SEQUENTIAL:
+        return "sequential";
+    case SIMULTANEOUS:
+        return "simultaneous";
     }
 
     Q_ASSERT(false);
@@ -69,52 +68,48 @@ QString apex::data::StimulusDatablocksContainer::typeName() const
 }
 
 bool apex::data::StimulusDatablocksContainer::
-        operator==(const StimulusDatablocksContainer& other) const
+operator==(const StimulusDatablocksContainer &other) const
 {
-    return  ApexTools::haveSameContents(*this, other) &&
-            id == other.id &&
-            type == other.type;
+    return ApexTools::haveSameContents(*this, other) && id == other.id &&
+           type == other.type;
 }
 
-bool apex::data::StimulusData::operator==(const StimulusData & other) const
+bool apex::data::StimulusData::operator==(const StimulusData &other) const
 {
-    return  m_description == other.m_description &&
-            m_fixParams == other.m_fixParams &&
-            m_varParams == other.m_varParams &&
-            m_datablocksContainer == other.m_datablocksContainer &&
-            m_id == other.m_id;
+    return m_description == other.m_description &&
+           m_fixParams == other.m_fixParams &&
+           m_varParams == other.m_varParams &&
+           m_datablocksContainer == other.m_datablocksContainer &&
+           m_id == other.m_id;
 }
 
 void apex::data::StimulusData::setFixedParameters(
-        const StimulusParameters& parameters)
+    const StimulusParameters &parameters)
 {
     m_fixParams = parameters;
 }
 
 void apex::data::StimulusData::setDatablocksContainer(
-        const StimulusDatablocksContainer& cont)
+    const StimulusDatablocksContainer &cont)
 {
     m_datablocksContainer = cont;
 }
 
-void apex::data::StimulusData::setId(const QString& id)
+void apex::data::StimulusData::setId(const QString &id)
 {
     m_id = id;
 }
 
-
-
-
 QStringList apex::data::StimulusDatablocksContainer::toStringList() const
 {
-    if (type==DATABLOCK)
+    if (type == DATABLOCK)
         return QStringList() << id;
 
     QStringList result;
-    result.append( typeName() + ": " );
-    for (const_iterator it=begin(); it!=end(); ++it) {
-        QStringList a( it->toStringList() );
-        for (QStringList::const_iterator subit=a.begin(); subit!=a.end();
+    result.append(typeName() + ": ");
+    for (const_iterator it = begin(); it != end(); ++it) {
+        QStringList a(it->toStringList());
+        for (QStringList::const_iterator subit = a.begin(); subit != a.end();
              ++subit) {
             result.append("*" + *subit);
         }
@@ -127,21 +122,3 @@ QString apex::data::StimulusDatablocksContainer::toString() const
 {
     return toStringList().join("\n");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -22,7 +22,7 @@
 
 #include "devicedata.h"
 
-//from libtools
+// from libtools
 #include "apextools/global.h"
 
 namespace apex
@@ -33,19 +33,14 @@ namespace data
 
 class APEXDATA_EXPORT PluginControllerData : public DeviceData
 {
-    public:
+public:
+    PluginControllerData();
 
-        PluginControllerData();
-
-        const QString plugin() const;
-        virtual bool isControlDevice() const;
+    const QString plugin() const;
+    virtual bool isControlDevice() const;
 };
 
-
-
-}// ns apex
-}// ns data
-
+} // ns apex
+} // ns data
 
 #endif
-

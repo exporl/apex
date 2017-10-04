@@ -13,10 +13,6 @@
 # Uncomment to override make files that want precompiled headers
 CLEBS -= pch
 
-# Uncomment to disable certain modules although all dependencies are available
-# Do not disable flash here!
-CLEBS_DISABLED -= documentation/manual
-
 # Disable matlab filter as it gives problems with clang
 CLEBS_DISABLED *= src/plugins/matlabfilter
 

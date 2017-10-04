@@ -5,15 +5,16 @@
 
 #include "corrector.h"
 
-namespace apex {
+namespace apex
+{
 
 class APEX_EXPORT EqualCorrector : public Corrector
 {
 public:
-    virtual const QVariant compare(const QVariant& a, const QVariant& b) const;
+    virtual const QVariant compare(const QVariant &a, const QVariant &b) const;
     virtual ~EqualCorrector();
 };
 
-}   // ns apex
+} // ns apex
 
 #endif

@@ -36,19 +36,20 @@ namespace apex
 namespace parser
 {
 
-ProcedureParsersParent::ProcedureParsersParent() :
-    currentConfig(NULL)
+ProcedureParsersParent::ProcedureParsersParent() : currentConfig(NULL)
 {
 }
 
-void ProcedureParsersParent::Parse(const QDomElement &p_base, data::ProcedureData* c)
+void ProcedureParsersParent::Parse(const QDomElement &p_base,
+                                   data::ProcedureData *c)
 {
     currentConfig = c;
 
     ParseTrials(p_base);
     c->SetID(p_base.attribute(gc_sID));
 
-    QDomElement parametersNode = p_base.elementsByTagName("parameters").item(0).toElement();
+    QDomElement parametersNode =
+        p_base.elementsByTagName("parameters").item(0).toElement();
     SetProcedureParameters(parametersNode);
 
     currentConfig = 0;
@@ -56,28 +57,32 @@ void ProcedureParsersParent::Parse(const QDomElement &p_base, data::ProcedureDat
 
 void ProcedureParsersParent::ParseTrials(const QDomElement &p_base)
 {
-    Q_ASSERT (currentConfig);
+    Q_ASSERT(currentConfig);
     // parse trials block
     QDomNode trialNode = p_base.elementsByTagName("trials").item(0).toElement();
 
     TrialParser trialFactory;
     for (QDomElement currentNode = trialNode.firstChildElement();
-            !currentNode.isNull(); currentNode = currentNode.nextSiblingElement()) {
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
         const QString tag = currentNode.tagName();
         if (tag == "trial") {
             currentConfig->AddTrial(trialFactory.GetTrial(currentNode));
+        } else if (tag == "plugintrials") {
+            currentConfig->setHasPluginTrials(true);
         } else {
             throw ApexStringException(tr("ProcedureParsersParent::ParseTrials:"
-                        " unknown tag %1").arg(tag));
+                                         " unknown tag %1")
+                                          .arg(tag));
         }
     }
 
     if (!trialsValid()) {
-        throw ApexStringException(tr("For this procedure, there is an incorrect"
-                    " number of trials, or some required"
-                    " information is missing from the trials."));
+        throw ApexStringException(
+            tr("For this procedure, there is an incorrect"
+               " number of trials, or some required"
+               " information is missing from the trials."));
     }
 }
-
 }
 }

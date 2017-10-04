@@ -33,35 +33,39 @@ namespace data
 class ExperimentData;
 }
 
-class ExperimentRunner: public QObject
+class ExperimentRunner : public QObject
 {
-        Q_OBJECT
-    public:
-        virtual void makeVisible() {}
-        virtual void makeInvisible() {}
-    public slots:
-        /**
-         * Bring the Runner in a usable state. The provided path is the
-         * project file/experiment/whatever to open. If called again, it will
-         * reset the instance to a virgin internal state.
-         *
-         * Returns false if the experiment could not be loaded successfully.
-         */
-        virtual bool select(const QString& name) = 0;
-        /**
-         * Bring the Runner in a usable state. The provided path is a suggestion
-         * for the runner to use. If called again, it will reset the instance to
-         * a virgin internal state.
-         */
-        virtual void selectFromDir(const QString& path) = 0;
+    Q_OBJECT
+public:
+    virtual void makeVisible()
+    {
+    }
+    virtual void makeInvisible()
+    {
+    }
+public slots:
+    /**
+     * Bring the Runner in a usable state. The provided path is the
+     * project file/experiment/whatever to open. If called again, it will
+     * reset the instance to a virgin internal state.
+     *
+     * Returns false if the experiment could not be loaded successfully.
+     */
+    virtual bool select(const QString &name) = 0;
+    /**
+     * Bring the Runner in a usable state. The provided path is a suggestion
+     * for the runner to use. If called again, it will reset the instance to
+     * a virgin internal state.
+     */
+    virtual void selectFromDir(const QString &path) = 0;
 
-    signals:
-        void selected(data::ExperimentData* data);
-        void opened(const QString& fileName);
+signals:
+    void selected(data::ExperimentData *data);
+    void opened(const QString &fileName);
 
-    protected:
-        QMap<QString, QString> expressions;
-        virtual data::ExperimentData* parseExperiment(const QString& fileName);
+protected:
+    QMap<QString, QString> expressions;
+    virtual data::ExperimentData *parseExperiment(const QString &fileName);
 };
 }
 

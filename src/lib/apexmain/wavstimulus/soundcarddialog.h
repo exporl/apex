@@ -30,30 +30,30 @@
 #include <QString>
 #include <QStringList>
 
-namespace apex{
+namespace apex
+{
 
 class SoundcardDialog : public QDialog, public Ui_SoundcardDialog
 {
 public:
-  SoundcardDialog( const QString& ac_sErroneousDriver,
-                   const QStringList& ac_sOtherDrivers ) :
-      QDialog(), Ui_SoundcardDialog()
-  {
-      setupUi( this );
-    textLabel2->setText( ac_sErroneousDriver );
-    comboBox1->addItems( ac_sOtherDrivers );
-  }
-  ~SoundcardDialog()
-  {
-  }
+    SoundcardDialog(const QString &ac_sErroneousDriver,
+                    const QStringList &ac_sOtherDrivers)
+        : QDialog(), Ui_SoundcardDialog()
+    {
+        setupUi(this);
+        textLabel2->setText(ac_sErroneousDriver);
+        comboBox1->addItems(ac_sOtherDrivers);
+    }
+    ~SoundcardDialog()
+    {
+    }
 
-  QString GetSelectedItem() const
-  {
-    return comboBox1->currentText();
-  }
+    QString GetSelectedItem() const
+    {
+        return comboBox1->currentText();
+    }
 };
 
-} //end ns apex
-
+} // end ns apex
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_SOUNDCARDDIALOG_H_

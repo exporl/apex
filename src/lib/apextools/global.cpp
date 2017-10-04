@@ -19,3 +19,14 @@
 #include "global.h"
 
 Q_LOGGING_CATEGORY(APEX_RS, "apex")
+
+const QLoggingCategory &APEX_THREADS()
+{
+    static QLoggingCategory category("apex.threads");
+    /* Disabled by default.
+     * Set the QT_LOGGING_RULES environment variable to "apex.threads=true" to
+     * enable.
+     */
+    QLoggingCategory::setFilterRules(QSL("apex.threads=false"));
+    return category;
+}

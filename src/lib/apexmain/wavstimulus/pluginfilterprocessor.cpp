@@ -28,86 +28,85 @@
 
 using namespace streamapp;
 
-namespace apex {
+namespace apex
+{
 
-namespace stimulus {
+namespace stimulus
+{
 
-    // PluginFilterProcessor =======================================================
+// PluginFilterProcessor =======================================================
 
-    /**
-     *
-     * @param channels  number of channels
-     * @param size      blocksize (frames)
-     * @param fs        sample rate (samples/s)
-     */
-    PluginFilterProcessor::PluginFilterProcessor (unsigned channels,
-            unsigned size,
-            unsigned fs,
-            const QString &name) :
-        StreamProcessor (channels, size)
-    {
-        qCDebug(APEX_RS, "Looking for %s plugin", qPrintable (name));
+/**
+ *
+ * @param channels  number of channels
+ * @param size      blocksize (frames)
+ * @param fs        sample rate (samples/s)
+ */
+PluginFilterProcessor::PluginFilterProcessor(unsigned channels, unsigned size,
+                                             unsigned fs, const QString &name)
+    : StreamProcessor(channels, size)
+{
+    qCDebug(APEX_RS, "Looking for %s plugin", qPrintable(name));
 
-        PluginFilterCreator* creator = createPluginCreator<PluginFilterCreator>(name);
-        m_plugin.reset (creator->createFilter (name, channels, size, fs));
-        return;
-    }
-
-    PluginFilterProcessor::~PluginFilterProcessor()
-    {
-    }
-
-    void PluginFilterProcessor::resetParameters()
-    {
-        const appcore::Lock locker (section);
-
-        m_plugin->resetParameters();
-    }
-
-    bool PluginFilterProcessor::setParameter (const QString &type, int channel,
-            const QString &value)
-    {
-        const appcore::Lock locker (section);
-
-        if (!m_plugin->setParameter (type, channel, value))
-            throw ApexStringException (m_plugin->errorMessage());
-
-        return true;
-    }
-
-    bool PluginFilterProcessor::isValidParameter (const QString &type,
-            int channel) const
-    {
-        const appcore::Lock locker (section);
-
-        return m_plugin->isValidParameter (type, channel);
-    }
-
-
-    //void PluginFilterProcessor::Reset() {
-    //    const appcore::Lock locker (section);
-    //    m_plugin->resetParameters ();
-    //}
-
-    void PluginFilterProcessor::Prepare (unsigned numberOfFrames) {
-        const appcore::Lock locker (section);
-        if (!m_plugin->prepare (numberOfFrames))
-            throw ApexStringException (m_plugin->errorMessage());
-    }
-
-    const Stream &PluginFilterProcessor::mf_DoProcessing (const Stream& ac_Output)
-    {
-        const appcore::Lock locker (section);
-
-        /* const unsigned channels = ac_Output.mf_nGetChannelCount();
-           const unsigned frames = ac_Output.mf_nGetBufferSize();*/
-        double** const data = ac_Output.mf_pGetArray();
-
-        m_plugin->process (data);
-
-        return ac_Output;
-    }
-
+    PluginFilterCreator *creator =
+        createPluginCreator<PluginFilterCreator>(name);
+    m_plugin.reset(creator->createFilter(name, channels, size, fs));
+    return;
 }
 
+PluginFilterProcessor::~PluginFilterProcessor()
+{
+}
+
+void PluginFilterProcessor::resetParameters()
+{
+    const appcore::Lock locker(section);
+
+    m_plugin->resetParameters();
+}
+
+bool PluginFilterProcessor::setParameter(const QString &type, int channel,
+                                         const QString &value)
+{
+    const appcore::Lock locker(section);
+
+    if (!m_plugin->setParameter(type, channel, value))
+        throw ApexStringException(m_plugin->errorMessage());
+
+    return true;
+}
+
+bool PluginFilterProcessor::isValidParameter(const QString &type,
+                                             int channel) const
+{
+    const appcore::Lock locker(section);
+
+    return m_plugin->isValidParameter(type, channel);
+}
+
+// void PluginFilterProcessor::Reset() {
+//    const appcore::Lock locker (section);
+//    m_plugin->resetParameters ();
+//}
+
+void PluginFilterProcessor::Prepare(unsigned numberOfFrames)
+{
+    const appcore::Lock locker(section);
+    if (!m_plugin->prepare(numberOfFrames))
+        throw ApexStringException(m_plugin->errorMessage());
+}
+
+const Stream &PluginFilterProcessor::mf_DoProcessing(const Stream &ac_Output)
+{
+    const appcore::Lock locker(section);
+
+    /* const unsigned channels = ac_Output.mf_nGetChannelCount();
+       const unsigned frames = ac_Output.mf_nGetBufferSize();*/
+    double **const data = ac_Output.mf_pGetArray();
+
+    m_plugin->process(data);
+
+    return ac_Output;
+}
+}
 }

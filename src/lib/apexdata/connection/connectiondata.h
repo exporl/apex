@@ -20,8 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_CONNECTION_CONNECTIONDATA_H_
 #define _EXPORL_SRC_LIB_APEXDATA_CONNECTION_CONNECTIONDATA_H_
 
-#include <QVector>
 #include <QString>
+#include <QVector>
 
 #include "apextools/global.h"
 
@@ -32,66 +32,56 @@ namespace data
 
 struct ConnectionDataPrivate;
 
-enum MatchType
-{
-    MATCH_NAME,
-    MATCH_REGEXP,
-    MATCH_WILDCARD
-};
+enum MatchType { MATCH_NAME, MATCH_REGEXP, MATCH_WILDCARD };
 
 class APEXDATA_EXPORT ConnectionData
 {
-    public:
+public:
+    ConnectionData();
+    ConnectionData(const ConnectionData &other);
+    ~ConnectionData();
 
-        ConnectionData();
-        ConnectionData(const ConnectionData& other);
-        ~ConnectionData();
+    // getters
+    MatchType matchType() const;
+    const QString &fromId() const;
+    const QString &fromChannelId() const;
+    int fromChannel() const;
+    const QString &toId() const;
+    const QString &toChannelId() const;
+    int toChannel() const;
+    QString device() const;
 
-        //getters
-        MatchType matchType() const;
-        const QString& fromId() const;
-        const QString& fromChannelId() const;
-        int fromChannel() const;
-        const QString& toId() const;
-        const QString& toChannelId() const;
-        int toChannel() const;
-        QString device() const;
+    // setters
+    void setMatchType(MatchType t);
+    void setFromId(const QString &id);
+    void setFromChannel(int channel, const QString &channelId = QString());
+    void setToId(const QString &id);
+    void setToChannel(int channel, const QString &channelId = QString());
+    void setDevice(QString id);
 
-        //setters
-        void setMatchType(MatchType t);
-        void setFromId(const QString& id);
-        void setFromChannel(int channel, const QString& channelId = QString());
-        void setToId(const QString& id);
-        void setToChannel(int channel, const QString& channelId = QString());
-        void setDevice(QString id);
+    ConnectionData &operator=(const ConnectionData &other);
+    bool operator==(const ConnectionData &other);
+    bool duplicateOf(const ConnectionData &c);
 
-        ConnectionData& operator=(const ConnectionData& other);
-        bool operator==(const ConnectionData& other);
-        bool duplicateOf(const ConnectionData& c);
-
-    private:
-
-        ConnectionDataPrivate* d;
+private:
+    ConnectionDataPrivate *d;
 };
 
-class APEXDATA_EXPORT ConnectionsData : public QList<ConnectionData*>
+class APEXDATA_EXPORT ConnectionsData : public QList<ConnectionData *>
 {
-    public:
+public:
+    ConnectionsData();
+    ~ConnectionsData();
 
-        ConnectionsData();
-        ~ConnectionsData();
+    bool operator==(const ConnectionsData &other);
 
-        bool operator==(const ConnectionsData& other);
-
-    private:
-
-        //prevent copying
-        ConnectionsData(const ConnectionsData&);
-        ConnectionsData& operator=(const ConnectionsData&);
-
+private:
+    // prevent copying
+    ConnectionsData(const ConnectionsData &);
+    ConnectionsData &operator=(const ConnectionsData &);
 };
 
-}//ns data
-}//ns apex
+} // ns data
+} // ns apex
 
 #endif

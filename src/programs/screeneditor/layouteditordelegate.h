@@ -23,65 +23,59 @@
 #include "screenelementeditordelegate.h"
 #include "screentypedefs.h"
 
-#include <QWidget>
-#include <QLayout>
 #include <QFrame>
-
+#include <QLayout>
+#include <QWidget>
 
 namespace apex
 {
-  namespace data
-  {
-    class ArcLayoutElement;
-    class GridLayoutElement;
-    class ScreenElement;
-    class ScreenLayoutElement;
-  }
+namespace data
+{
+class ArcLayoutElement;
+class GridLayoutElement;
+class ScreenElement;
+class ScreenLayoutElement;
+}
 
-  namespace editor
-  {
+namespace editor
+{
 
-    using data::ArcLayoutElement;
-    using data::GridLayoutElement;
-    using data::ScreenElement;
-    using data::ScreenLayoutElement;
+using data::ArcLayoutElement;
+using data::GridLayoutElement;
+using data::ScreenElement;
+using data::ScreenLayoutElement;
 
+/**
+ * This class is a convenience parent class for
+ * ScreenElementEditorDelegate's representing a layout element. It
+ * is inherited by both GridLayoutEditorDelegate and
+ * ArcLayoutEditorDelegate, and contains functions common to both
+ * classes.
+ */
+class LayoutEditorDelegate : public QFrame, public ScreenElementEditorDelegate
+{
+    Q_OBJECT
+protected:
+    LayoutEditorDelegate(QWidget *parent, ScreenWidget *widget);
 
-    /**
-     * This class is a convenience parent class for
-     * ScreenElementEditorDelegate's representing a layout element. It
-     * is inherited by both GridLayoutEditorDelegate and
-     * ArcLayoutEditorDelegate, and contains functions common to both
-     * classes.
-     */
-    class LayoutEditorDelegate :
-        public QFrame,
-        public ScreenElementEditorDelegate
-    {
-      Q_OBJECT
-    protected:
-      LayoutEditorDelegate(
-        QWidget* parent,
-        ScreenWidget* widget );
+    QFrame *getWidget();
 
-      QFrame* getWidget();
+    void replaceChild(QWidget *oldChildWidget,
+                      ScreenElementEditorDelegate *oldChildRep,
+                      data::ScreenElement *newElement);
 
-      void replaceChild(
-        QWidget* oldChildWidget, ScreenElementEditorDelegate* oldChildRep,
-        data::ScreenElement* newElement );
+    bool setProperty(int nr, const QVariant &v);
 
-      bool setProperty( int nr, const QVariant& v );
-    protected:
-      virtual QLayout* getLayout() = 0;
-      virtual void addItemToLayout( QWidget* widget, ScreenElement* e ) = 0;
+protected:
+    virtual QLayout *getLayout() = 0;
+    virtual void addItemToLayout(QWidget *widget, ScreenElement *e) = 0;
 
-      void fixupChildren( ScreenLayoutElement* element );
-      bool checkHarmlessChange( const ScreenLayoutElement* element );
-      void updateLayoutChildren( elementToDelegateMapT& elementToDelegateMap );
+    void fixupChildren(ScreenLayoutElement *element);
+    bool checkHarmlessChange(const ScreenLayoutElement *element);
+    void updateLayoutChildren(elementToDelegateMapT &elementToDelegateMap);
 
-      void mouseReleaseEvent( QMouseEvent* ev );
-    };
-
-  }
+    void mouseReleaseEvent(QMouseEvent *ev);
+};
+}
 }
 #endif

@@ -35,13 +35,12 @@ class TrainingProcedureParser : public ProcedureParsersParent
 public:
     TrainingProcedureParser();
 
-    data::ProcedureData* parse(const QDomElement &base);
+    data::ProcedureData *parse(const QDomElement &base);
 
 protected:
     virtual bool trialsValid();
     virtual void SetProcedureParameters(const QDomElement &p_base);
 };
-
 }
 }
 

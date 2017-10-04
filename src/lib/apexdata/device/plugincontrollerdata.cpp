@@ -39,6 +39,5 @@ bool PluginControllerData::isControlDevice() const
     return true;
 }
 
-
 } // ns data
 } // ns apex

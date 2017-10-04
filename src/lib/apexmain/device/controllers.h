@@ -27,46 +27,42 @@
 namespace apex
 {
 
-  namespace stimulus
-  {
-    class StimulusParameters;
-  }
+namespace stimulus
+{
+class StimulusParameters;
+}
 
-  namespace device
-  {
+namespace device
+{
 
+/**
+  * Controllers
+  *   class responsible for parameter output
+  *   to hardware devices of any kind, that do not produce audible stimuli.
+  *   Examples are mixers and attenuators.
+  ************************************************************************* */
+class Controllers : public ApexModule
+{
+public:
+    /**
+      * Constructor.
+      */
+    Controllers(ExperimentRunDelegate &p_rd);
 
-      /**
-        * Controllers
-        *   class responsible for parameter output
-        *   to hardware devices of any kind, that do not produce audible stimuli.
-        *   Examples are mixers and attenuators.
-        ************************************************************************* */
-    class Controllers : public ApexModule
-    {
-    public:
-        /**
-          * Constructor.
-          */
-        Controllers(ExperimentRunDelegate& p_rd);
+    /**
+      * Destructor.
+      */
+    ~Controllers();
 
-        /**
-          * Destructor.
-          */
-        ~Controllers();
+    /**
+      * Implementation of the ApexModule method.
+      */
+    QString GetResultXML() const;
 
-        /**
-          * Implementation of the ApexModule method.
-          */
-        QString GetResultXML() const;
-
-
-
-    private:
-      const tControllerMap& m_Devices;
-    };
-
-  }
+private:
+    const tControllerMap &m_Devices;
+};
+}
 }
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_DEVICE_CONTROLLERS_H_

@@ -29,6 +29,7 @@
 
 #include "apexdata/filter/filterdata.h"
 #include "apexdata/filter/pluginfilterdata.h"
+#include "apexdata/filter/wavparameters.h"
 
 #include "apexdata/map/apexmap.h"
 
@@ -42,6 +43,11 @@
 #include "apextools/apexpluginloader.h"
 #include "apextools/apextypedefs.h"
 
+#include "bertha/blockdata.h"
+#include "bertha/connectiondata.h"
+#include "bertha/devicedata.h"
+#include "bertha/experimentdata.h"
+
 #include "calibration/calibrationdatabase.h"
 #include "calibration/calibrator.h"
 
@@ -50,6 +56,7 @@
 
 #include "common/exception.h"
 #include "common/pluginloader.h"
+#include "common/sndfilewrapper.h"
 
 #include "connection/connectionrundelegatecreator.h"
 
@@ -73,6 +80,7 @@
 #include "randomgenerator/randomgenerators.h"
 
 #include "resultsink/apexresultsink.h"
+#include "resultsink/rtresultsink.h"
 
 #include "screen/apexscreen.h"
 #include "screen/screenrundelegate.h"
@@ -101,47 +109,43 @@
 #include <QMessageBox>
 #include <QWidget>
 
-// TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
-#include "resultsink/rtresultsink.h"
-#endif
-
 using namespace apex;
 using namespace apex::data;
 using namespace apex::stimulus;
 using namespace cmn;
 
 #ifdef _MSC_VER
-#pragma warning ( disable : 4065 ) //switch statement without case labels
+#pragma warning(disable : 4065) // switch statement without case labels
 #endif
 
 namespace apex
 {
-typedef QMap<const data::Screen*,gui::ScreenRunDelegate*> ScreenToDelegateMap;
+typedef QMap<const data::Screen *, gui::ScreenRunDelegate *>
+    ScreenToDelegateMap;
 
 class ExperimentRunDelegatePrivate
 {
 public:
-    ExperimentRunDelegatePrivate (QWidget* parent, const data::MainConfigFileData& p_maindata, bool det) :
-            mainData(p_maindata),
-            parent (parent),
-            autoAnswer(false),
-            deterministic(det),
-            blockSize(-1),
-            mod_screen(0),
-            mod_resultsink(0),
-            // TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
-            mod_rtresultsink(0),
-#endif
-            mod_randomgenerators(0),
-            mod_controllers(0),
-            mod_calibrator(0),
-            mod_output(0),
-            mod_trialStartTime(0)
-    {}
+    ExperimentRunDelegatePrivate(QWidget *parent,
+                                 const data::MainConfigFileData &p_maindata,
+                                 bool det)
+        : mainData(p_maindata),
+          parent(parent),
+          autoAnswer(false),
+          deterministic(det),
+          blockSize(-1),
+          mod_screen(0),
+          mod_resultsink(0),
+          mod_rtresultsink(0),
+          mod_randomgenerators(0),
+          mod_controllers(0),
+          mod_calibrator(0),
+          mod_output(0),
+          mod_trialStartTime(0)
+    {
+    }
 
-    const data::MainConfigFileData& mainData;
+    const data::MainConfigFileData &mainData;
     ScreenToDelegateMap screenToDelegateMap;
     tDeviceMap devices;
     stimulus::tDataBlockMap datablocks;
@@ -149,40 +153,40 @@ public:
     tFilterMap filters;
     tControllerMap controldevices;
     tConnectionsMap connections;
-    QWidget* const parent;
+    QWidget *const parent;
     QScopedPointer<ParameterManager> parameterManager;
 
     bool autoAnswer;
     bool deterministic;
     int blockSize;
 
-    //modules
-    QScopedPointer<ApexTimer>                mod_timer;
-    QScopedPointer<ApexScreen>               mod_screen;
-    QScopedPointer<ApexResultSink>           mod_resultsink;
-// TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
-    QScopedPointer<RTResultSink>             mod_rtresultsink;
-#endif
-    QScopedPointer<RandomGenerators>         mod_randomgenerators;
-    QScopedPointer<device::Controllers>      mod_controllers;
-    QScopedPointer<Calibrator>               mod_calibrator;
+    // modules
+    QScopedPointer<ApexTimer> mod_timer;
+    QScopedPointer<ApexScreen> mod_screen;
+    QScopedPointer<ApexResultSink> mod_resultsink;
+    QScopedPointer<RTResultSink> mod_rtresultsink;
+    QScopedPointer<RandomGenerators> mod_randomgenerators;
+    QScopedPointer<device::Controllers> mod_controllers;
+    QScopedPointer<Calibrator> mod_calibrator;
     QScopedPointer<stimulus::StimulusOutput> mod_output;
-    QScopedPointer<Feedback>                 mod_feedback;
-    QScopedPointer<TrialStartTime>           mod_trialStartTime;
+    QScopedPointer<Feedback> mod_feedback;
+    QScopedPointer<TrialStartTime> mod_trialStartTime;
+    bertha::ExperimentData berthaExperimentData;
 
-    ModuleList modules;   // list of the modules above
+    ModuleList modules; // list of the modules above
 
+    bool useBertha;
 };
 
-ExperimentRunDelegate::ExperimentRunDelegate (ExperimentData& experiment,
-                                              const MainConfigFileData &p_maindata,
-                                              QWidget* parent,
-                                              bool deterministic) :
-        experiment (experiment),
-        d (new ExperimentRunDelegatePrivate (parent, p_maindata, deterministic))
+ExperimentRunDelegate::ExperimentRunDelegate(
+    ExperimentData &experiment, const MainConfigFileData &p_maindata,
+    QWidget *parent, bool deterministic, bool useBertha)
+    : experiment(experiment),
+      d(new ExperimentRunDelegatePrivate(parent, p_maindata, deterministic))
 {
-    d->parameterManager.reset(new ParameterManager(*experiment.parameterManagerData()));
+    d->useBertha = useBertha;
+    d->parameterManager.reset(
+        new ParameterManager(*experiment.parameterManagerData()));
 
     MakeOutputDevices();
     MakeControlDevices();
@@ -191,35 +195,29 @@ ExperimentRunDelegate::ExperimentRunDelegate (ExperimentData& experiment,
     MakeFilters();
     MakeFeedback();
 
-    // Create delegates for connections
-    ConnectionRunDelegateCreator connectionMaker(d->connections,
-                                                 d->devices,
-                                                 d->filters,
-                                                 d->datablocks);
+    if (d->useBertha)
+        MakeBerthaExperimentData();
 
-    const ConnectionsData* connectionsData = experiment.connectionsData();
+    // Create delegates for connections
+    ConnectionRunDelegateCreator connectionMaker(d->connections, d->devices,
+                                                 d->filters, d->datablocks);
+    const ConnectionsData *connectionsData = experiment.connectionsData();
     for (ConnectionsData::const_iterator i = connectionsData->begin();
          i != connectionsData->end(); ++i)
-    {
-        connectionMaker.AddConnection (**i);
-    }
-
-    if (connectionsData->empty())
+        connectionMaker.AddConnection(**i);
+    if (connectionsData->empty() && !d->useBertha)
         connectionMaker.mp_bMakeDefaultConnections();
-
     connectionMaker.mf_ReportUnconnectedItems();
-
     FixStimuli();
 }
 
-
 ExperimentRunDelegate::~ExperimentRunDelegate()
 {
-    d->mod_output.reset();   // StimulusOutput needs the datastructures
-                                // that are deleted below in its destructor
+    d->mod_output.reset(); // StimulusOutput needs the datastructures
+                           // that are deleted below in its destructor
 
     qDeleteAll(d->screenToDelegateMap);
-    //d->screenToDelegateMap.clear();
+    // d->screenToDelegateMap.clear();
     qDeleteAll(d->datablocks);
     qDeleteAll(d->stimuli);
     qDeleteAll(d->devices);
@@ -233,99 +231,93 @@ void ExperimentRunDelegate::makeModules()
 {
     RandomGeneratorFactory rgFactory;
 
-    // we pass every module the rundelegate corresponding to the current experiment
-    d->mod_screen.reset(new ApexScreen(*this) );
+    // we pass every module the rundelegate corresponding to the current
+    // experiment
+    d->mod_screen.reset(new ApexScreen(*this));
     d->mod_controllers.reset(new device::Controllers(*this));
     d->mod_output.reset(new StimulusOutput(*this));
     d->mod_timer.reset(new ApexTimer(*this));
     d->mod_trialStartTime.reset(new TrialStartTime(*this));
-    d->mod_randomgenerators.reset(rgFactory.GetRandomGenerators
-            (*this, experiment.randomGenerators()));
+    d->mod_randomgenerators.reset(
+        rgFactory.GetRandomGenerators(*this, experiment.randomGenerators()));
 
     d->mod_resultsink.reset(new ApexResultSink(*this));
 
     if (!ApexControl::Get().saveFilename().isEmpty())
         d->mod_resultsink->SetFilename(ApexControl::Get().saveFilename());
 
-    if (experiment.resultParameters()->showRTResults())
-    {
-// TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
+    if (experiment.resultParameters()->showRTResults()) {
+#ifdef Q_OS_ANDROID
+        qCCritical(APEX_RS, "Cannot enable real time results on Android");
+#else
         d->mod_rtresultsink.reset(
-            new RTResultSink(experiment.resultParameters()->resultPage(), experiment.resultParameters()->resultParameters(), experiment.resultParameters()->extraScript()));
+            new RTResultSink(experiment.resultParameters()->resultPage(),
+                             experiment.resultParameters()->resultParameters(),
+                             experiment.resultParameters()->extraScript()));
 #endif
     }
 
-    d->modules << d->mod_screen.data()
-               << d->mod_controllers.data()
-               << d->mod_output.data()
-               << d->mod_resultsink.data()
-               << d->mod_timer.data()
-               << d->mod_randomgenerators.data()
+    d->modules << d->mod_screen.data() << d->mod_controllers.data()
+               << d->mod_output.data() << d->mod_resultsink.data()
+               << d->mod_timer.data() << d->mod_randomgenerators.data()
                << d->mod_trialStartTime.data();
 
-    //only add calibrator if configuration exists
-    //must be last module added since it requires others
-    CalibrationData* calibrationData = experiment.calibrationData();
-    if (calibrationData != 0)
-    {
+    // only add calibrator if configuration exists
+    // must be last module added since it requires others
+    CalibrationData *calibrationData = experiment.calibrationData();
+    if (calibrationData != 0) {
         d->mod_calibrator.reset(new Calibrator(this, *calibrationData));
         d->modules << d->mod_calibrator.data();
 
-        ApexControl::Get().mainWindow()->EnableCalibration (true);
+        ApexControl::Get().mainWindow()->EnableCalibration(true);
 
-        if (!d->mod_calibrator->calibrate())
-        {
-            qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(tr("Calibration"),
-                              tr("Not all parameters are calibrated. Please calibrate them first."))));
+        if (!d->mod_calibrator->calibrate()) {
+            qCCritical(
+                APEX_RS, "%s",
+                qPrintable(QSL("%1: %2").arg(
+                    tr("Calibration"), tr("Not all parameters are calibrated. "
+                                          "Please calibrate them first."))));
             return;
         }
 
         d->mod_calibrator->updateParameters();
 
-        ApexControl::Get().mainWindow()->AddStatusMessage(tr("Hardware profile:\n%1").
-                                arg(CalibrationDatabase().currentHardwareSetup()));
+        ApexControl::Get().mainWindow()->AddStatusMessage(
+            tr("Hardware profile:\n%1")
+                .arg(CalibrationDatabase().currentHardwareSetup()));
     }
 
-// TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
     if (d->mod_rtresultsink) {
         QObject::connect(d->mod_resultsink.data(), SIGNAL(collected(QString)),
                          d->mod_rtresultsink.data(), SLOT(newAnswer(QString)));
     }
-#endif
 }
 
-
-gui::ScreenRunDelegate* ExperimentRunDelegate::GetScreen (const QString& id )
+gui::ScreenRunDelegate *ExperimentRunDelegate::GetScreen(const QString &id)
 {
-    const data::Screen* s = &experiment.screenById(id);
+    const data::Screen *s = &experiment.screenById(id);
     Q_ASSERT(s != 0);
 
-    if (d->screenToDelegateMap.contains(s))
-    {
+    if (d->screenToDelegateMap.contains(s)) {
         return d->screenToDelegateMap[s];
-    }
-    else
-    {
-        const ScreensData* screens = experiment.screensData();
+    } else {
+        const ScreensData *screens = experiment.screensData();
 
         // create the ScreenRunDelegate..
-        ScreenRunDelegate* ret = new ScreenRunDelegate(this, s, d->parent,
-                                                       screens->defaultFont(),
-                                                       screens->defaultFontSize());
+        ScreenRunDelegate *ret =
+            new ScreenRunDelegate(this, s, d->parent, screens->defaultFont(),
+                                  screens->defaultFontSize());
 
-        QObject::connect(ret, SIGNAL(answered(ScreenElementRunDelegate*)),
+        QObject::connect(ret, SIGNAL(answered(ScreenElementRunDelegate *)),
                          ApexControl::Get().mainWindow(),
-                         SLOT(AnswerFromElement(ScreenElementRunDelegate*)));
+                         SLOT(AnswerFromElement(ScreenElementRunDelegate *)));
 
         d->screenToDelegateMap[s] = ret;
         return ret;
     }
 }
 
-
-stimulus::tConnectionsMap& ExperimentRunDelegate::GetConnections() const
+stimulus::tConnectionsMap &ExperimentRunDelegate::GetConnections() const
 {
     return d->connections;
 }
@@ -337,34 +329,51 @@ void ExperimentRunDelegate::MakeOutputDevices()
 {
     qCDebug(APEX_RS, "Making output devices");
 
-    const DevicesData* data = experiment.devicesData();
-    Q_FOREACH (data::DeviceData* devData, *data)
-    {
+    const DevicesData *data = experiment.devicesData();
+    Q_FOREACH (data::DeviceData *devData, *data) {
         Q_ASSERT(devData != 0);
-        OutputDevice* device = 0;
+        OutputDevice *device = 0;
 
-        switch (devData->deviceType())
-        {
-            case TYPE_WAVDEVICE:
-                device = new WavDevice(dynamic_cast<WavDeviceData*>(devData));
-                d->blockSize = (dynamic_cast<WavDevice*>(device))->GetBlockSize();
-                break;
+        switch (devData->deviceType()) {
+        case TYPE_WAVDEVICE: {
+            WavDeviceData *wavDeviceData =
+                static_cast<WavDeviceData *>(devData);
+            if (d->useBertha) {
+                bertha::DeviceData deviceBlockData(devData->id(),
+                                                   QSL("ApexSoundCard"));
+                deviceBlockData.setInputPorts(devData->numberOfChannels());
+                deviceBlockData.setBlockSize(wavDeviceData->blockSize());
+                deviceBlockData.setSampleRate(wavDeviceData->sampleRate());
+                d->berthaExperimentData.setDevice(deviceBlockData);
+                d->blockSize = deviceBlockData.blockSize();
+            } else {
+                WavDevice *wavDevice = new WavDevice(
+                    wavDeviceData, d->berthaExperimentData, d->useBertha);
+                d->blockSize = (wavDevice)->GetBlockSize();
+                device = wavDevice;
+            }
+        } break;
+        case TYPE_COH:
+            device =
+                MakeCohDevice(dynamic_cast<data::CohDeviceData *>(devData));
+            break;
 
-            case TYPE_COH:
-                device = MakeCohDevice(dynamic_cast<data::CohDeviceData*>(devData));
-                break;
+        case TYPE_DUMMY:
+            device = MakeDummyDevice(devData);
+            break;
 
-            case TYPE_DUMMY:
-                device = MakeDummyDevice( devData);
-                break;
-
-            default:
-                qFatal("Unknown device type");
+        default:
+            qFatal("Unknown device type");
         }
 
-        Q_CHECK_PTR(device);
-
-        d->devices[devData->id()] = device;
+        if (d->useBertha && devData->deviceType() == TYPE_WAVDEVICE) {
+            /* we need the full experimentdata before creating the
+             * bertha device*/
+            Q_UNUSED(device);
+        } else {
+            Q_CHECK_PTR(device);
+            d->devices[devData->id()] = device;
+        }
     }
 }
 
@@ -372,18 +381,17 @@ void ExperimentRunDelegate::MakeControlDevices()
 {
     qCDebug(APEX_RS, "Making control devices");
 
-    const DevicesData* data = experiment.controlDevices();
-    Q_FOREACH(data::DeviceData* devData, *data)
-    {
-        device::ControlDevice* device = 0;
-        switch (devData->deviceType())
-        {
-            case TYPE_PLUGINCONTROLLER:
-                device=new device::PluginController(dynamic_cast<PluginControllerData*>(devData));
-                break;
+    const DevicesData *data = experiment.controlDevices();
+    Q_FOREACH (data::DeviceData *devData, *data) {
+        device::ControlDevice *device = 0;
+        switch (devData->deviceType()) {
+        case TYPE_PLUGINCONTROLLER:
+            device = new device::PluginController(
+                dynamic_cast<PluginControllerData *>(devData));
+            break;
 
-            default:
-                qFatal("Unknown device type");
+        default:
+            qFatal("Unknown device type");
         }
 
         Q_CHECK_PTR(device);
@@ -392,35 +400,37 @@ void ExperimentRunDelegate::MakeControlDevices()
     }
 }
 
-stimulus::OutputDevice* ExperimentRunDelegate::GetDevice(const QString& id) const
+stimulus::OutputDevice *
+ExperimentRunDelegate::GetDevice(const QString &id) const
 {
     RETURN_VAL_IF_FAIL(d->devices.contains(id), NULL);
     return d->devices[id];
 }
 
-tDeviceMap& ExperimentRunDelegate::GetDevices() const
+tDeviceMap &ExperimentRunDelegate::GetDevices() const
 {
     return d->devices;
 }
 
-device::ControlDevice* ExperimentRunDelegate::GetController(const QString &id) const
+device::ControlDevice *
+ExperimentRunDelegate::GetController(const QString &id) const
 {
     RETURN_VAL_IF_FAIL(d->controldevices.contains(id), NULL);
     return d->controldevices[id];
 }
 
-const device::tControllerMap& ExperimentRunDelegate::GetControllers() const
+const device::tControllerMap &ExperimentRunDelegate::GetControllers() const
 {
     return d->controldevices;
 }
 
-
-stimulus::OutputDevice* ExperimentRunDelegate::MakeDummyDevice(DeviceData* params)
+stimulus::OutputDevice *
+ExperimentRunDelegate::MakeDummyDevice(DeviceData *params)
 {
     return new DummyDevice(*params);
 }
 
-stimulus::CohDevice* ExperimentRunDelegate::MakeCohDevice(CohDeviceData* params)
+stimulus::CohDevice *ExperimentRunDelegate::MakeCohDevice(CohDeviceData *params)
 {
     QScopedPointer<CohDevice> dev;
 
@@ -435,10 +445,12 @@ stimulus::CohDevice* ExperimentRunDelegate::MakeCohDevice(CohDeviceData* params)
                              "Check whether the USB connection is ok and the "
                              "L34 is switched on\n "
                              "You can try to turn off and back on the L34")
-                             .arg(params->device());
+                              .arg(params->device());
             if (QMessageBox::warning(NULL, "Apex - CohDevice", msg,
-                        QMessageBox::Retry, QMessageBox::Cancel) != QMessageBox::Retry) {
-                qCCritical(APEX_RS, "CohDeviceFactory: Couldn't initialize CohDevice");
+                                     QMessageBox::Retry, QMessageBox::Cancel) !=
+                QMessageBox::Retry) {
+                qCCritical(APEX_RS,
+                           "CohDeviceFactory: Couldn't initialize CohDevice");
                 throw;
             }
         }
@@ -447,41 +459,56 @@ stimulus::CohDevice* ExperimentRunDelegate::MakeCohDevice(CohDeviceData* params)
     return dev.take();
 }
 
-void ExperimentRunDelegate::MakeDatablocks( )
+void ExperimentRunDelegate::MakeDatablocks()
 {
     qCDebug(APEX_RS, "Making datablocks");
-    const DatablocksData* data = experiment.datablocksData();
-    for (DatablocksData::const_iterator it= data->begin(); it!=data->end(); ++it)
-    {
-        DatablockData* dbData = it.value();
+    const DatablocksData *data = experiment.datablocksData();
+    for (DatablocksData::const_iterator it = data->begin(); it != data->end();
+         ++it) {
+        DatablockData *dbData = it.value();
         Q_CHECK_PTR(dbData);
-        stimulus::DataBlock* db=0;
-
+        stimulus::DataBlock *db = 0;
 
         // add path to file
-        QString filename = FilePrefixConvertor::addPrefix(dbData->prefix(),
-                                                       dbData->file());
+        QString filename =
+            FilePrefixConvertor::addPrefix(dbData->prefix(), dbData->file());
 
         // lookup associated device type
-        DeviceType devicetype = experiment.deviceById(dbData->device())->deviceType();
+        DeviceType devicetype =
+            experiment.deviceById(dbData->device())->deviceType();
 
-        //if ( d->m_type == XMLKeys::sc_sWavDevice)
-        if (devicetype == TYPE_WAVDEVICE)
-        {
+        if (devicetype == TYPE_WAVDEVICE) {
+            if (d->useBertha) {
+                bertha::BlockData dataBlock(dbData->id(),
+                                            QSL("ApexCompatibleDataBlock"));
+                if (dbData->nbChannels() != 0) {
+                    dataBlock.setOutputPorts(dbData->nbChannels());
+                } else if (filename.startsWith(QSL("silence:"))) {
+                    dataBlock.setOutputPorts(
+                        d->berthaExperimentData.device().inputPorts());
+                } else {
+                    int channels;
+                    try {
+                        channels = SndFile::channels(filename);
+                    } catch (...) {
+                        qCWarning(APEX_RS,
+                                  "Couldn't determine channels of datablock %s",
+                                  qPrintable(filename));
+                        channels = 1;
+                    }
+                    dataBlock.setOutputPorts(channels);
+                }
+                dataBlock.setParameter(QSL("filename"), filename);
+                dataBlock.setParameter(QSL("loops"), dbData->nbLoops());
+                d->berthaExperimentData.addBlock(dataBlock);
+            }
             db = new WavDataBlock(*dbData, filename, this);
-
-        }
-        else if ( devicetype == TYPE_COH)
-        {
+        } else if (devicetype == TYPE_COH) {
 
             db = new CohDataBlock(*dbData, filename, this);
-        }
-        else if (  devicetype == TYPE_DUMMY)
-        {
+        } else if (devicetype == TYPE_DUMMY) {
             db = new DataBlock(*dbData, filename, this);
-        }
-        else
-        {
+        } else {
             qFatal("Invalid device type");
         }
 
@@ -489,159 +516,451 @@ void ExperimentRunDelegate::MakeDatablocks( )
     }
 }
 
-void ExperimentRunDelegate::MakeFeedback()
+void ExperimentRunDelegate::MakeBerthaExperimentData()
 {
-    d->mod_feedback.reset( new Feedback( experiment.screensData()) );
+    if (experiment.connectionsData()->empty() &&
+        !experiment.filtersData()->empty())
+        throw ApexStringException(
+            tr("Can't make default connections when filter "
+               "connections are specified"));
+
+    /* Map to aid in the placement of summation blocks */
+    QMap<QString, QVector<bertha::ConnectionData>> connectionMap;
+    /* Fill in the datablock connections if they're not present */
+    FillDataBlockConnections(connectionMap);
+
+    /* Connectionmaking */
+    QMutableListIterator<data::ConnectionData *> connectionsIt(
+        *experiment.connectionsData());
+    while (connectionsIt.hasNext()) {
+        data::ConnectionData tempData(*connectionsIt.next());
+        /* If the user has not specified the device of the datablock we assume
+         * it's for the wavdevice */
+        if (!tempData.device().isEmpty() &&
+            tempData.device() != d->berthaExperimentData.device().id())
+            continue;
+
+        switch (tempData.matchType()) {
+        case data::MATCH_NAME:
+            if (tempData.fromId() != "_ALL_") {
+                AddBerthaConnection(connectionMap, &tempData);
+            } else {
+                Q_FOREACH (const QString &id,
+                           experiment.datablocksData()->keys()) {
+                    if (d->berthaExperimentData.block(id).outputPorts() >=
+                        tempData.fromChannel() + 1) {
+                        tempData.setFromId(id);
+                        AddBerthaConnection(connectionMap, &tempData);
+                    }
+                }
+            }
+            break;
+        case data::MATCH_WILDCARD:
+        case data::MATCH_REGEXP:
+            QRegExp re(tempData.fromId());
+            if (tempData.matchType() == data::MATCH_WILDCARD)
+                re.setPatternSyntax(QRegExp::Wildcard);
+            Q_FOREACH (const QString &id, experiment.datablocksData()->keys()) {
+                if (re.exactMatch(id)) {
+                    tempData.setFromId(id);
+                    AddBerthaConnection(connectionMap, &tempData);
+                }
+            }
+            break;
+        }
+        connectionsIt.remove();
+    }
+
+    MakeBerthaSummationBlocks(connectionMap);
+
+    const DevicesData *devicesData = experiment.devicesData();
+    Q_FOREACH (data::DeviceData *devData, *devicesData) {
+        Q_ASSERT(devData != 0);
+        if (devData->deviceType() == TYPE_WAVDEVICE) {
+            OutputDevice *device =
+                new WavDevice(static_cast<WavDeviceData *>(devData),
+                              d->berthaExperimentData, d->useBertha);
+            d->devices[devData->id()] = device;
+        }
+    }
 }
 
-
-void ExperimentRunDelegate::MakeStimuli( )
+void ExperimentRunDelegate::FillDataBlockConnections(
+    QMap<QString, QVector<bertha::ConnectionData>> &connectionMap)
 {
-    const StimuliData* data = experiment.stimuliData();
-    for (StimuliData::const_iterator it=data->begin(); it!=data->end(); ++it) {
-        const data::StimulusData& data = it.value();
-        stimulus::Stimulus* newStim = new Stimulus(data);
+    Q_UNUSED(connectionMap);
+    /* Generate the connectionsdata if it's not present */
+    if (experiment.connectionsData()->empty()) {
+        Q_FOREACH (const QString &dataBlock,
+                   experiment.datablocksData()->keys()) {
+            data::DatablockData *dataBlockData =
+                experiment.datablocksData()->datablockData(dataBlock);
+            QString fileName = FilePrefixConvertor::addPrefix(
+                dataBlockData->prefix(), dataBlockData->file());
+            int channels;
+            try {
+                channels = SndFile::channels(fileName);
+            } catch (...) {
+                qCWarning(APEX_RS,
+                          "Couldn't determine channels of datablock %s",
+                          qPrintable(fileName));
+                channels = 1;
+            }
+
+            for (unsigned i = 0; i < (unsigned)channels; ++i) {
+                data::ConnectionData *connectionData = new data::ConnectionData;
+                connectionData->setFromId(dataBlock);
+                connectionData->setToId(d->berthaExperimentData.device().id());
+                connectionData->setFromChannel(i);
+                connectionData->setToChannel(i);
+                connectionData->setDevice(
+                    d->berthaExperimentData.device().id());
+                experiment.connectionsData()->append(connectionData);
+            }
+        }
+    }
+}
+
+void ExperimentRunDelegate::AddBerthaConnection(
+    QMap<QString, QVector<bertha::ConnectionData>> &connectionMap,
+    const data::ConnectionData *connectionData)
+{
+    QString sourceBlock = connectionData->fromId();
+    QString targetBlock = connectionData->toId();
+    QString targetPort =
+        connectionData->toId() == d->berthaExperimentData.device().id()
+            ? QString::fromLatin1("playback-%1")
+                  .arg(connectionData->toChannel() + 1)
+            : QString::fromLatin1("input-%1")
+                  .arg(connectionData->toChannel() + 1);
+    QString sourcePort =
+        connectionData->fromId() == d->berthaExperimentData.device().id()
+            ? QString::fromLatin1("capture-%1")
+                  .arg(connectionData->fromChannel() + 1)
+            : QString::fromLatin1("output-%1")
+                  .arg(connectionData->fromChannel() + 1);
+
+    if (!connectionData->fromChannelId().isEmpty()) {
+        unsigned sourceChannels =
+            d->berthaExperimentData.device().id() == connectionData->fromId()
+                ? d->berthaExperimentData.device().inputPorts()
+                : d->berthaExperimentData.block(connectionData->fromId())
+                      .inputPorts();
+
+        bertha::BlockData switchBlock;
+        switchBlock.setPlugin(QString::fromLatin1("Mixer"));
+        switchBlock.setId(connectionData->fromChannelId());
+        switchBlock.setInputPorts(sourceChannels);
+        switchBlock.setOutputPorts(1);
+        switchBlock.setParameter(QString::fromLatin1("logarithmicGain"), false);
+        d->berthaExperimentData.addBlock(switchBlock);
+        /* sourceblock -> switchblock */
+        for (unsigned i = 0; i < sourceChannels; ++i) {
+            QString switchSourcePort =
+                connectionData->fromId() ==
+                        d->berthaExperimentData.device().id()
+                    ? QString::fromLatin1("capture-%1").arg(i + 1)
+                    : QString::fromLatin1("output-%1").arg(i + 1);
+            bertha::ConnectionData switchConnection(
+                connectionData->fromId(), switchSourcePort, switchBlock.id(),
+                QString::fromLatin1("input-%1").arg(i + 1));
+            QString mapId =
+                switchConnection.targetBlock() +
+                QString(switchConnection.targetPort()).remove(QChar('-'));
+            connectionMap[mapId].append(switchConnection);
+        }
+        /* switchblock -> targetblock */
+        sourceBlock = switchBlock.id();
+        sourcePort = QString::fromLatin1("output-1");
+    }
+
+    if (!connectionData->toChannelId().isEmpty()) {
+        unsigned targetChannels =
+            d->berthaExperimentData.device().id() == connectionData->toId()
+                ? d->berthaExperimentData.device().inputPorts()
+                : d->berthaExperimentData.block(connectionData->toId())
+                      .inputPorts();
+
+        bertha::BlockData switchBlock;
+        switchBlock.setPlugin(QString::fromLatin1("Mixer"));
+        switchBlock.setId(connectionData->toChannelId());
+        switchBlock.setInputPorts(1);
+        switchBlock.setOutputPorts(targetChannels);
+        switchBlock.setParameter(QString::fromLatin1("logarithmicGain"), false);
+        d->berthaExperimentData.addBlock(switchBlock);
+        /* switchblock -> targetblock */
+        for (unsigned i = 0; i < targetChannels; ++i) {
+            QString switchTargetPort =
+                connectionData->toId() == d->berthaExperimentData.device().id()
+                    ? QString::fromLatin1("playback-%1").arg(i + 1)
+                    : QString::fromLatin1("input-%1").arg(i + 1);
+            bertha::ConnectionData switchConnection(
+                switchBlock.id(), QString::fromLatin1("output-%1").arg(i + 1),
+                connectionData->toId(), switchTargetPort);
+            QString mapId =
+                switchConnection.targetBlock() +
+                QString(switchConnection.targetPort()).remove(QChar('-'));
+            connectionMap[mapId].append(switchConnection);
+        }
+        /* sourceblock -> switchblock */
+        targetBlock = switchBlock.id();
+        targetPort = QString::fromLatin1("input-1");
+    }
+
+    bertha::ConnectionData berthaConnection(sourceBlock, sourcePort,
+                                            targetBlock, targetPort);
+    QString mapId = berthaConnection.targetBlock() +
+                    QString(berthaConnection.targetPort()).remove(QChar('-'));
+    connectionMap[mapId].append(berthaConnection);
+}
+
+void ExperimentRunDelegate::MakeBerthaSummationBlocks(
+    QMap<QString, QVector<bertha::ConnectionData>> &connectionMap)
+{
+    Q_FOREACH (QString id, connectionMap.keys()) {
+        QVector<bertha::ConnectionData> connectionList = connectionMap[id];
+        if (connectionList.size() == 1)
+            d->berthaExperimentData.addConnection(connectionList[0]);
+        else {
+            bertha::BlockData summationBlock;
+            summationBlock.setPlugin(QString::fromLatin1("Summation"));
+            summationBlock.setId(id);
+            summationBlock.setOutputPorts(1);
+            summationBlock.setInputPorts(connectionList.size());
+            d->berthaExperimentData.addBlock(summationBlock);
+
+            d->berthaExperimentData.addConnection(bertha::ConnectionData(
+                id, QString::fromLatin1("output-%1").arg(1),
+                connectionList[0].targetBlock(),
+                connectionList[0].targetPort()));
+
+            for (int i = 0; i < connectionList.size(); ++i) {
+                connectionList[i].setTargetBlock(id);
+                connectionList[i].setTargetPort(
+                    QString::fromLatin1("input-%1").arg(i + 1));
+                d->berthaExperimentData.addConnection(connectionList[i]);
+            }
+        }
+    }
+}
+
+void ExperimentRunDelegate::MakeFeedback()
+{
+    d->mod_feedback.reset(new Feedback(experiment.screensData()));
+}
+
+void ExperimentRunDelegate::MakeStimuli()
+{
+    const StimuliData *data = experiment.stimuliData();
+    for (StimuliData::const_iterator it = data->begin(); it != data->end();
+         ++it) {
+        const data::StimulusData &data = it.value();
+        stimulus::Stimulus *newStim = new Stimulus(data);
         stimulus::PlayMatrixCreator::sf_FixDuplicateIDs(
-                newStim->GetPlayMatrix(), d->datablocks,
-                *experiment.connectionsData() );
+            newStim->GetPlayMatrix(), d->datablocks,
+            *experiment.connectionsData());
         d->stimuli[it.key()] = newStim;
     }
 }
 
-ProcedureInterface* ExperimentRunDelegate::makeProcedure(ProcedureApi* api,
-                                                               const ProcedureData* data)
+ProcedureInterface *
+ExperimentRunDelegate::makeProcedure(ProcedureApi *api,
+                                     const ProcedureData *data)
 {
     QString procedureType = data->name();
-    ProcedureCreatorInterface *creator = createPluginCreator<ProcedureCreatorInterface>(procedureType);
+    ProcedureCreatorInterface *creator =
+        createPluginCreator<ProcedureCreatorInterface>(procedureType);
     return creator->createProcedure(procedureType, api, data);
 }
 
-void ExperimentRunDelegate::FixStimuli( )
+void ExperimentRunDelegate::FixStimuli()
 {
 
-    for (tStimulusMap::const_iterator it=d->stimuli.begin();
-            it!=d->stimuli.end(); ++it )
-    {
+    for (tStimulusMap::const_iterator it = d->stimuli.begin();
+         it != d->stimuli.end(); ++it) {
 
-        Stimulus* newStim = it.value();
-
+        Stimulus *newStim = it.value();
 
         QString sError;
-        //map is complete now, check whether it's valid
-        if ( !stimulus::PlayMatrixCreator::sf_bCheckMatrixValid( newStim->GetPlayMatrix(), d->datablocks, sError ) )
-        {
-            qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("Playmatrix", sError)));
+        // map is complete now, check whether it's valid
+        if (!stimulus::PlayMatrixCreator::sf_bCheckMatrixValid(
+                newStim->GetPlayMatrix(), d->datablocks, sError)) {
+            qCCritical(APEX_RS, "%s",
+                       qPrintable(QSL("%1: %2").arg("Playmatrix", sError)));
             return;
         }
-        newStim->ConstructDevDBlockMap( d->devices,d->datablocks );
+        newStim->ConstructDevDBlockMap(d->devices, d->datablocks);
     }
-
 }
 
 void ExperimentRunDelegate::MakeFilters()
 {
     qCDebug(APEX_RS, "Making filters");
-    const data::FiltersData* data = experiment.filtersData();
-    for (FiltersData::const_iterator it= data->begin(); it!=data->end(); ++it)
-    {
-        data::FilterData* data = it.value();
+    const data::FiltersData *data = experiment.filtersData();
+    for (FiltersData::const_iterator it = data->begin(); it != data->end();
+         ++it) {
+        data::FilterData *data = it.value();
         Q_CHECK_PTR(data);
 
-        qCDebug(APEX_RS) << "Making filter" << data->id();
+        if (d->useBertha) {
+            bertha::BlockData filterData(data->id(), QSL("ApexAdapter"));
+            filterData.setInputPorts(data->numberOfChannels());
+            filterData.setOutputPorts(data->numberOfChannels());
 
-        QString id = data->id();
-        QString type = data->xsiType();
+            QString filterType;
+            QVariantList parameters;
+            if (data->xsiType() == sc_sFilterPluginFilterType) {
+                filterType = data->valueByType(QSL("plugin")).toString();
+            } else if (data->xsiType() == sc_sFilterGeneratorType) {
+                if (data->type() == sc_sFilterSineGenType) {
+                    filterType = QSL("sinegenerator");
+                    parameters.append(QVariant(QVariantList() << QSL("id") << -1
+                                                              << data->id()));
+                } else if (data->type() == sc_sFilterNoiseGeneratorType) {
+                    filterType = QSL("noisegenerator");
+                    parameters.append(QVariant(QVariantList()
+                                               << QL1S("deterministic") << -1
+                                               << d->deterministic));
 
-        //create filter
-        Filter* filter = MakeFilter(id, type, data);
-        d->filters[id] = filter;
+                } else if (data->type() == sc_sFilterSinglePulseGenType) {
+                    filterType = QSL("singlepulsegenerator");
+                }
+            } else {
+                filterType = data->xsiType().split(':').last();
+                if (data->xsiType() == sc_sFilterDataLoopType) {
+                    bertha::BlockData dataBlock = d->berthaExperimentData.block(
+                        data->valueByType("datablock").toString());
+                    parameters.append(
+                        QVariant(QVariantList()
+                                 << QSL("fileName") << -1
+                                 << dataBlock.parameter(QSL("fileName"))));
+                    parameters.append(QVariant(QVariantList() << QSL("id") << -1
+                                                              << data->id()));
+                    parameters.append(QVariant(QVariantList()
+                                               << QL1S("deterministic") << -1
+                                               << d->deterministic));
+                }
+            }
+            filterData.setParameter(QSL("apexFilter"), filterType);
 
+            Q_FOREACH (const Parameter &param, data->parameters())
+                parameters.append(QVariant(QVariantList()
+                                           << param.type() << param.channel()
+                                           << param.defaultValue()));
+            filterData.setParameter(QSL("parameters"), parameters);
+
+            d->berthaExperimentData.addBlock(filterData);
+
+            data::WavGeneratorParameters *wavGenData =
+                dynamic_cast<data::WavGeneratorParameters *>(data);
+
+            if (wavGenData != nullptr) {
+                if (data->xsiType() == sc_sFilterGeneratorType) {
+                    d->filters[data->id()] = new WavGenerator(
+                        data->id(), data->valueByType("type").toString(), data,
+                        d->berthaExperimentData.device().sampleRate(),
+                        d->blockSize);
+                } else if (data->xsiType() == sc_sFilterDataLoopType) {
+                    d->filters[data->id()] = new DataLoopGeneratorFilter(
+                        data->id(), sc_sFilterDataLoopType, data,
+                        d->berthaExperimentData.device().sampleRate(),
+                        d->blockSize);
+                }
+            } else {
+                /* fader is the only plugin that needs to know the length
+                   of longest row */
+                d->filters[data->id()] = new WavFilter(
+                    data->id(), data,
+                    d->berthaExperimentData.device().sampleRate(), d->blockSize,
+                    filterType == QL1S("fader") ? true : false);
+            }
+        } else {
+            QString id = data->id();
+            QString type = data->xsiType();
+            Filter *filter = MakeFilter(id, type, data);
+            d->filters[id] = filter;
+        }
     }
 }
 
-
-Filter* ExperimentRunDelegate::MakeFilter( const QString& ac_sID,
-        const QString& ac_sType,
-        data::FilterData* const ac_pParams )
+Filter *ExperimentRunDelegate::MakeFilter(const QString &ac_sID,
+                                          const QString &ac_sType,
+                                          data::FilterData *const ac_pParams)
 {
-    Filter* filter = 0;
+    Filter *filter = 0;
+    DeviceData *devData =
+        experiment.devicesData()->deviceData(ac_pParams->device());
+    WavDeviceData *wavData;
 
-    DeviceData* devData = experiment.devicesData()->
-                          deviceData( ac_pParams->device() );
-    WavDeviceData* wavData;
-
-
-    if ( devData->deviceType() == data::TYPE_WAVDEVICE )
-        wavData = dynamic_cast<WavDeviceData*>( devData );
+    if (devData->deviceType() == data::TYPE_WAVDEVICE)
+        wavData = dynamic_cast<WavDeviceData *>(devData);
     else
-        throw ApexStringException("No filters supported for other device types than wavDevice");
+        throw ApexStringException(
+            "No filters supported for other device types than wavDevice");
 
-    unsigned sr=wavData->sampleRate();
+    unsigned sr = wavData->sampleRate();
 
-    Q_ASSERT(d->blockSize>0);
-    unsigned long bs=d->blockSize;
+    Q_ASSERT(d->blockSize > 0);
+    unsigned long bs = d->blockSize;
 
-
-
-    if ( ac_sType == sc_sFilterAmplifierType )
-        filter = new WavAmplifier( ac_sID, ac_pParams,
-                                   sr, bs );
-    else if ( ac_sType == sc_sFilterFaderType )
-        filter = new WavFader( ac_sID, (WavFaderParameters*) ac_pParams,
-                               sr, bs);
-    else if ( ac_sType == sc_sFilterGeneratorType )
-    {
-        Q_ASSERT( wavData != NULL );
+    if (ac_sType == sc_sFilterAmplifierType)
+        filter = new WavAmplifier(ac_sID, ac_pParams, sr, bs);
+    else if (ac_sType == sc_sFilterFaderType)
+        filter = new WavFader(ac_sID, (WavFaderParameters *)ac_pParams, sr, bs);
+    else if (ac_sType == sc_sFilterGeneratorType) {
+        Q_ASSERT(wavData != NULL);
 
         unsigned long sr = wavData->sampleRate();
-        filter = new WavGenerator( ac_sID, ac_pParams->valueByType("type").toString() ,
-                                   ac_pParams, sr, d->blockSize, d->deterministic);
-    }
-    else if ( ac_sType == sc_sFilterDataLoopType )    //FIXME should be sc_sFilterGeneratorType with subtype DataLoop
+        filter =
+            new WavGenerator(ac_sID, ac_pParams->valueByType("type").toString(),
+                             ac_pParams, sr, d->blockSize, d->deterministic);
+    } else if (ac_sType == sc_sFilterDataLoopType) // FIXME should be
+                                                   // sc_sFilterGeneratorType
+                                                   // with subtype DataLoop
     {
-        Q_ASSERT( wavData != NULL );
+        Q_ASSERT(wavData != NULL);
 
         unsigned long sr = wavData->sampleRate();
 
-        //get datablock if needed
-        const QString sDataID( ac_pParams->valueByType( "datablock" ).toString() );
-        stimulus::WavDataBlock* pSrc;
+        // get datablock if needed
+        const QString sDataID(ac_pParams->valueByType("datablock").toString());
+        stimulus::WavDataBlock *pSrc;
         try {
-            pSrc = (WavDataBlock*) GetDatablock(sDataID);
+            pSrc = (WavDataBlock *)GetDatablock(sDataID);
         } catch (const std::exception &e) {
-            throw Exception(tr("dataloop: datablock %1 not found: %2").arg(sDataID, e.what()));
+            throw Exception(tr("dataloop: datablock %1 not found: %2")
+                                .arg(sDataID, e.what()));
         }
-//            ac_pParams->mp_SetExtraData( pSrc );
+        //            ac_pParams->mp_SetExtraData( pSrc );
 
-        DataLoopGeneratorFilter* gen = new DataLoopGeneratorFilter( ac_sID, sc_sFilterDataLoopType, ac_pParams, sr, d->blockSize );
+        DataLoopGeneratorFilter *gen = new DataLoopGeneratorFilter(
+            ac_sID, sc_sFilterDataLoopType, ac_pParams, sr, d->blockSize);
         gen->SetSource(pSrc);
 
-        ((DataLoopGenerator*) gen->GetStreamGen() ) ->SetInputStream(pSrc->GetWavStream(bs, sr));
+        ((DataLoopGenerator *)gen->GetStreamGen())
+            ->SetInputStream(pSrc->GetWavStream(bs, sr));
 
         filter = gen;
-    }
-    else if (ac_sType == sc_sFilterPluginFilterType)
-    {
-        filter = new PluginFilter ( ac_sID,
-                                    dynamic_cast<data::PluginFilterData*> (ac_pParams),
-                                    sr, bs);
-    }
-    else
-    {
-        qCCritical(APEX_RS, "WavDeviceFactory::CreateFilter: Unknown FilterType");
+    } else if (ac_sType == sc_sFilterPluginFilterType) {
+        filter = new PluginFilter(
+            ac_sID, dynamic_cast<data::PluginFilterData *>(ac_pParams), sr, bs);
+    } else {
+        qCCritical(APEX_RS,
+                   "WavDeviceFactory::CreateFilter: Unknown FilterType");
         return 0;
     }
 
     return filter;
 }
 
-stimulus::DataBlock* ExperimentRunDelegate::GetDatablock(const QString& p_name) const
+stimulus::DataBlock *
+ExperimentRunDelegate::GetDatablock(const QString &p_name) const
 {
     return d->datablocks.value(p_name);
 }
 
-
-void    ExperimentRunDelegate::AddDatablock(const QString& name, stimulus::DataBlock* db)
+void ExperimentRunDelegate::AddDatablock(const QString &name,
+                                         stimulus::DataBlock *db)
 {
     d->datablocks.insert(name, db);
 }
@@ -651,38 +970,45 @@ const ExperimentData &ExperimentRunDelegate::GetData() const
     return experiment;
 }
 
-const stimulus::tDataBlockMap&              ExperimentRunDelegate::GetDatablocks() const
+const bertha::ExperimentData &
+ExperimentRunDelegate::getBerthaExperimentData() const
+{
+    return d->berthaExperimentData;
+}
+
+const stimulus::tDataBlockMap &ExperimentRunDelegate::GetDatablocks() const
 {
     return d->datablocks;
 }
 
-tFilterMap& ExperimentRunDelegate::GetFilters() const
+tFilterMap &ExperimentRunDelegate::GetFilters() const
 {
     return d->filters;
 }
 
-stimulus::Filter* ExperimentRunDelegate::GetFilter(const QString& p_name) const
+stimulus::Filter *ExperimentRunDelegate::GetFilter(const QString &p_name) const
 {
-    tFilterMap::const_iterator i=d->filters.find(p_name);
-    if (i==d->filters.end())
-    {
-        //throw ApexStringException(tr(QString("ExperimentRunDelegate::GetFilter: filter with id %1 not found").arg(p_name)));
+    tFilterMap::const_iterator i = d->filters.find(p_name);
+    if (i == d->filters.end()) {
+        // throw
+        // ApexStringException(tr(QString("ExperimentRunDelegate::GetFilter:
+        // filter with id %1 not found").arg(p_name)));
         return 0;
     }
     return d->filters[p_name];
 }
 
-bool ExperimentRunDelegate::GetAutoAnswer( ) const
+bool ExperimentRunDelegate::GetAutoAnswer() const
 {
     return d->autoAnswer;
 }
 
-void ExperimentRunDelegate::SetAutoAnswer( const bool p )
+void ExperimentRunDelegate::enableAutoAnswer()
 {
-    d->autoAnswer=p;
+    d->autoAnswer = true;
 }
 
-ParameterManager* ExperimentRunDelegate::GetParameterManager() const
+ParameterManager *ExperimentRunDelegate::GetParameterManager() const
 {
     return d->parameterManager.data();
 }
@@ -692,14 +1018,14 @@ const data::MainConfigFileData &ExperimentRunDelegate::mainData() const
     return d->mainData;
 }
 
-stimulus::StimulusOutput*  ExperimentRunDelegate::GetModOutput() const
+stimulus::StimulusOutput *ExperimentRunDelegate::GetModOutput() const
 {
     return modOutput();
 }
 
-stimulus::Stimulus* ExperimentRunDelegate::GetStimulus(const QString& id) const
+stimulus::Stimulus *ExperimentRunDelegate::GetStimulus(const QString &id) const
 {
-    if (! d->stimuli.contains(id))
+    if (!d->stimuli.contains(id))
         throw ApexStringException(QString("Stimulus not found: %1").arg(id));
 
     return d->stimuli.value(id);
@@ -710,67 +1036,69 @@ QStringList ExperimentRunDelegate::stimuli() const
     return d->stimuli.keys();
 }
 
-TrialStartTime* ExperimentRunDelegate::trialStartTime() const
+TrialStartTime *ExperimentRunDelegate::trialStartTime() const
 {
     return d->mod_trialStartTime.data();
 }
 
-ApexTimer* ExperimentRunDelegate::modTimer() const
+ApexTimer *ExperimentRunDelegate::modTimer() const
 
 {
     return d->mod_timer.data();
 }
 
-ApexScreen* ExperimentRunDelegate::modScreen() const
+ApexScreen *ExperimentRunDelegate::modScreen() const
 {
     return d->mod_screen.data();
 }
 
-ApexResultSink* ExperimentRunDelegate::modResultSink() const
+ApexResultSink *ExperimentRunDelegate::modResultSink() const
 {
     return d->mod_resultsink.data();
 }
 
-// TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
-RTResultSink* ExperimentRunDelegate::modRTResultSink() const
+RTResultSink *ExperimentRunDelegate::modRTResultSink() const
 {
     return d->mod_rtresultsink.data();
 }
-#endif
-device::Controllers* ExperimentRunDelegate::modControllers() const
+
+device::Controllers *ExperimentRunDelegate::modControllers() const
 {
     return d->mod_controllers.data();
 }
 
-Calibrator*  ExperimentRunDelegate::modCalibrator() const
+Calibrator *ExperimentRunDelegate::modCalibrator() const
 {
     return d->mod_calibrator.data();
 }
 
-Feedback* ExperimentRunDelegate::modFeedback() const
+Feedback *ExperimentRunDelegate::modFeedback() const
 {
     return d->mod_feedback.data();
 }
 
-stimulus::StimulusOutput* ExperimentRunDelegate::modOutput() const
+stimulus::StimulusOutput *ExperimentRunDelegate::modOutput() const
 {
     return d->mod_output.data();
 }
 
-RandomGenerators* ExperimentRunDelegate::modRandomGenerators() const
+RandomGenerators *ExperimentRunDelegate::modRandomGenerators() const
 {
     return d->mod_randomgenerators.data();
 }
 
-const ModuleList* ExperimentRunDelegate::modules() const
+const ModuleList *ExperimentRunDelegate::modules() const
 {
     return &d->modules;
 }
 
-QWidget* ExperimentRunDelegate::parentWidget() const
+QWidget *ExperimentRunDelegate::parentWidget() const
 {
     return d->parent;
 }
 
+bool ExperimentRunDelegate::usingBertha() const
+{
+    return !d->berthaExperimentData.device().id().isNull() && d->useBertha;
+}
 }

@@ -1,0 +1,10 @@
+# Backup files
+*~
+.*.swp
+
+# Build related
+.build
+Makefile
+Makefile.*
+vc*0.[pi]db
+object_script.*

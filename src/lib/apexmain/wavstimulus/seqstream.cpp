@@ -25,119 +25,115 @@ using namespace apex;
 using namespace apex::stimulus;
 using namespace utils;
 
-ApexSeqStream::ApexSeqStream( PosAudioFormatStream* a_pParent, const bool ac_bDeleteParent ) :
-  mc_pParent( PtrCheck( a_pParent ) ),
-  mc_bDeleteParent( ac_bDeleteParent ),
-  mv_nStartIndex( 0 ),
-  mv_lTotalSamples( a_pParent->mf_lSamplesLeft() ),
-  mv_lStartAt( 0 ),
-  mv_lCurrentPosition( 0 ),
-  mv_bParentIsPlaying( false ),
-  mv_bParentNeedsReset( false )
+ApexSeqStream::ApexSeqStream(PosAudioFormatStream *a_pParent,
+                             const bool ac_bDeleteParent)
+    : mc_pParent(PtrCheck(a_pParent)),
+      mc_bDeleteParent(ac_bDeleteParent),
+      mv_nStartIndex(0),
+      mv_lTotalSamples(a_pParent->mf_lSamplesLeft()),
+      mv_lStartAt(0),
+      mv_lCurrentPosition(0),
+      mv_bParentIsPlaying(false),
+      mv_bParentNeedsReset(false)
 {
-  a_pParent->mp_GetConvertor().mp_Clear();
-//  qCDebug(APEX_RS, "ApexSeqStream::ApexSeqStream: mv_lTotalSamples=%u", mv_lTotalSamples);
+    a_pParent->mp_GetConvertor().mp_Clear();
+    //  qCDebug(APEX_RS, "ApexSeqStream::ApexSeqStream: mv_lTotalSamples=%u",
+    //  mv_lTotalSamples);
 }
 
 ApexSeqStream::~ApexSeqStream()
 {
-  if( mc_bDeleteParent )
-    delete mc_pParent;
+    if (mc_bDeleteParent)
+        delete mc_pParent;
 }
 
-void ApexSeqStream::mp_SetStartAt( const unsigned long ac_lStartAt )
+void ApexSeqStream::mp_SetStartAt(const unsigned long ac_lStartAt)
 {
-  if( m_Triggers.mf_nGetNumItems() == 0 )
-    mv_lStartAt = ac_lStartAt;
-  else
-    Q_ASSERT( ac_lStartAt >= mv_lTotalSamples );
-  m_Triggers.mp_AddItem( ac_lStartAt );
-  mv_lTotalSamples = ac_lStartAt + mc_pParent->mf_lTotalSamples();
+    if (m_Triggers.mf_nGetNumItems() == 0)
+        mv_lStartAt = ac_lStartAt;
+    else
+        Q_ASSERT(ac_lStartAt >= mv_lTotalSamples);
+    m_Triggers.mp_AddItem(ac_lStartAt);
+    mv_lTotalSamples = ac_lStartAt + mc_pParent->mf_lTotalSamples();
 }
 
-const Stream& ApexSeqStream::Read()
+const Stream &ApexSeqStream::Read()
 {
-  if( m_Triggers.mf_nGetNumItems() == 0 ) //nothing to do here..
-    return mc_pParent->Read();
+    if (m_Triggers.mf_nGetNumItems() == 0) // nothing to do here..
+        return mc_pParent->Read();
 
-  mv_lCurrentPosition += mf_nGetBufferSize();
-  if( !mv_bParentIsPlaying )
-  {
-    AudioFormatConvertor& rConv = mc_pParent->mp_GetConvertor();
+    mv_lCurrentPosition += mf_nGetBufferSize();
+    if (!mv_bParentIsPlaying) {
+        AudioFormatConvertor &rConv = mc_pParent->mp_GetConvertor();
 
-    if( mv_bParentNeedsReset )
-    {
-      rConv.mp_Clear();
-      mv_bParentNeedsReset = false;
-    }
-
-    if( mv_lCurrentPosition >= mv_lStartAt )
-    {
-        //manually get needed samples on offset
-      unsigned nOffset = mf_nGetBufferSize() - (unsigned) ( mv_lCurrentPosition - mv_lStartAt );
-      rConv.ReadFromSource( mc_pParent->mf_pGetReader(), mf_nGetBufferSize() - nOffset, nOffset );
-      mv_bParentIsPlaying = true;
-    }
-
-    return rConv;
-  }
-  else
-  {
-    const Stream& ret = mc_pParent->Read();
-    if( mc_pParent->mf_lSamplesLeft() == 0 )
-    {
-      ++mv_nStartIndex;
-      if( mv_nStartIndex < m_Triggers.mf_nGetNumItems() )
-      {
-        mc_pParent->mp_SeekPosition( 0 );
-        mv_lStartAt = m_Triggers.mf_GetItem( mv_nStartIndex );
-        if( mv_lCurrentPosition >= mv_lStartAt )
-        {
-          AudioFormatConvertor& rConv = mc_pParent->mp_GetConvertor();
-            //manually get needed samples on offset
-          unsigned nOffset = mf_nGetBufferSize() - (unsigned) ( mv_lCurrentPosition - mv_lStartAt );
-          rConv.ReadFromSource( mc_pParent->mf_pGetReader(), mf_nGetBufferSize() - nOffset, nOffset );
-          mv_bParentIsPlaying = true;
+        if (mv_bParentNeedsReset) {
+            rConv.mp_Clear();
+            mv_bParentNeedsReset = false;
         }
-        else
-        {
-          mv_bParentIsPlaying = false;
-          mv_bParentNeedsReset = true;
+
+        if (mv_lCurrentPosition >= mv_lStartAt) {
+            // manually get needed samples on offset
+            unsigned nOffset = mf_nGetBufferSize() -
+                               (unsigned)(mv_lCurrentPosition - mv_lStartAt);
+            rConv.ReadFromSource(mc_pParent->mf_pGetReader(),
+                                 mf_nGetBufferSize() - nOffset, nOffset);
+            mv_bParentIsPlaying = true;
         }
-      }
+
+        return rConv;
+    } else {
+        const Stream &ret = mc_pParent->Read();
+        if (mc_pParent->mf_lSamplesLeft() == 0) {
+            ++mv_nStartIndex;
+            if (mv_nStartIndex < m_Triggers.mf_nGetNumItems()) {
+                mc_pParent->mp_SeekPosition(0);
+                mv_lStartAt = m_Triggers.mf_GetItem(mv_nStartIndex);
+                if (mv_lCurrentPosition >= mv_lStartAt) {
+                    AudioFormatConvertor &rConv = mc_pParent->mp_GetConvertor();
+                    // manually get needed samples on offset
+                    unsigned nOffset =
+                        mf_nGetBufferSize() -
+                        (unsigned)(mv_lCurrentPosition - mv_lStartAt);
+                    rConv.ReadFromSource(mc_pParent->mf_pGetReader(),
+                                         mf_nGetBufferSize() - nOffset,
+                                         nOffset);
+                    mv_bParentIsPlaying = true;
+                } else {
+                    mv_bParentIsPlaying = false;
+                    mv_bParentNeedsReset = true;
+                }
+            }
+        }
+        return ret;
     }
-    return ret;
-  }
 }
 
 unsigned long ApexSeqStream::mf_lSamplesLeft() const
 {
-  if( mv_lCurrentPosition < mv_lStartAt )
-    return mv_lTotalSamples - mv_lCurrentPosition;
-  return mc_pParent->mf_lSamplesLeft();
+    if (mv_lCurrentPosition < mv_lStartAt)
+        return mv_lTotalSamples - mv_lCurrentPosition;
+    return mc_pParent->mf_lSamplesLeft();
 }
 
 unsigned long ApexSeqStream::mf_lTotalSamples() const
 {
-  return mv_lTotalSamples;
+    return mv_lTotalSamples;
 }
 
 unsigned long ApexSeqStream::mf_lCurrentPosition() const
 {
-  if( mv_lCurrentPosition < mv_lStartAt )
-    return mv_lCurrentPosition;
-  return mv_lStartAt + mc_pParent->mf_lCurrentPosition();
+    if (mv_lCurrentPosition < mv_lStartAt)
+        return mv_lCurrentPosition;
+    return mv_lStartAt + mc_pParent->mf_lCurrentPosition();
 }
 
-void ApexSeqStream::mp_SeekPosition( const unsigned long ac_nPosition )
+void ApexSeqStream::mp_SeekPosition(const unsigned long ac_nPosition)
 {
-  Q_ASSERT( 0 && "not implemented" );
-  if( ac_nPosition < mv_lStartAt )
-  {
-    mv_lCurrentPosition = ac_nPosition;
-    mc_pParent->mp_SeekPosition( 0 );
-    mv_bParentIsPlaying = false;
-  }
-  else
-    mc_pParent->mp_SeekPosition( ac_nPosition - mv_lStartAt );
+    Q_ASSERT(0 && "not implemented");
+    if (ac_nPosition < mv_lStartAt) {
+        mv_lCurrentPosition = ac_nPosition;
+        mc_pParent->mp_SeekPosition(0);
+        mv_bParentIsPlaying = false;
+    } else
+        mc_pParent->mp_SeekPosition(ac_nPosition - mv_lStartAt);
 }

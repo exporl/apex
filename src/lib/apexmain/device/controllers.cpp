@@ -32,9 +32,8 @@
 using namespace apex;
 using namespace apex::device;
 
-Controllers::Controllers(ExperimentRunDelegate& p_rd) :
-        ApexModule(p_rd),
-  m_Devices(p_rd.GetControllers() )
+Controllers::Controllers(ExperimentRunDelegate &p_rd)
+    : ApexModule(p_rd), m_Devices(p_rd.GetControllers())
 {
 }
 
@@ -42,14 +41,13 @@ Controllers::~Controllers()
 {
 }
 
-
-QString apex::device::Controllers::GetResultXML( ) const
+QString apex::device::Controllers::GetResultXML() const
 {
     QString result;
-    for (tControllerMap::const_iterator it=m_Devices.begin(); it!=m_Devices.end(); ++it) {
+    for (tControllerMap::const_iterator it = m_Devices.begin();
+         it != m_Devices.end(); ++it) {
         result += it.value()->GetResultXML();
     }
 
-  return result;
+    return result;
 }
-

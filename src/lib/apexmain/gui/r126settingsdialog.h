@@ -20,30 +20,32 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_R126SETTINGSDIALOG_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_GUI_R126SETTINGSDIALOG_H_
 
-#include "r216settingsbase.h"
 #include "../map/r126dbasesetting.h"
+#include "r216settingsbase.h"
 #include <qstring.h>
 
-namespace r126{
-  class R126DataBase;
+namespace r126
+{
+class R126DataBase;
 }
 using namespace r126;
 
-namespace apex{
+namespace apex
+{
 
-  //!Wizard allowing user to select a map from a R126 database
-  //!has only two pages which are defined through designer
-  //!for simplicity, ApexMapWizard handles everything happening on any page
-  class R126SettingsDialog : public R216SettingsBase
-  {
-  public:
-    R126SettingsDialog( R126DataBase* const a_cpDataBase );
+//! Wizard allowing user to select a map from a R126 database
+//! has only two pages which are defined through designer
+//! for simplicity, ApexMapWizard handles everything happening on any page
+class R126SettingsDialog : public R216SettingsBase
+{
+public:
+    R126SettingsDialog(R126DataBase *const a_cpDataBase);
     ~R126SettingsDialog();
 
     void Init();
 
-      //base overrides
-  protected slots:
+    // base overrides
+protected slots:
     virtual void ThisComputerClicked();
     virtual void RemoteComputerClicked();
     virtual void SV0Clicked();
@@ -51,12 +53,11 @@ namespace apex{
     virtual void SV2Clicked();
     virtual void TestConnectionClicked();
 
-  private:
-    R126DataBase* const m_pDataBase;
-    eR126VersionNumber  m_eVersion;
-    QString             m_sServer;
-  };
-
+private:
+    R126DataBase *const m_pDataBase;
+    eR126VersionNumber m_eVersion;
+    QString m_sServer;
+};
 }
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_R126SETTINGSDIALOG_H_

@@ -20,126 +20,126 @@
 #ifndef __BASICBUFFER_H__
 #define __BASICBUFFER_H__
 
+#include "containers/matrix.h"
 #include "stream.h"
 #include "utils/checks.h"
-#include "containers/matrix.h"
 
 namespace streamapp
 {
 
+/**
+  * BasicBuffer
+  *   processor for buffering Streams.
+  *   Has functionality to set the buffer and can call a
+  *   callback when the buffer is full.
+  *   Because of exposing these two, it's easy to make eg
+  *   a double buffering scheme with it.
+  ******************************************************* */
+class BasicBuffer : public IStreamProcessor
+{
+public:
     /**
-      * BasicBuffer
-      *   processor for buffering Streams.
-      *   Has functionality to set the buffer and can call a
-      *   callback when the buffer is full.
-      *   Because of exposing these two, it's easy to make eg
-      *   a double buffering scheme with it.
-      ******************************************************* */
-  class BasicBuffer : public IStreamProcessor
-  {
-  public:
-      /**
-        * Constructor.
-        * @param ac_nChan the number of input channels
-        * @param ac_nInputSize the number of input samples
-        * @param ac_nBuffers the number of times to buffer the input to get a full buffer (must be >= 1)
-        */
-    BasicBuffer(  const unsigned ac_nChan, const unsigned ac_nInputSize,
-                  const unsigned ac_nBuffers );
+      * Constructor.
+      * @param ac_nChan the number of input channels
+      * @param ac_nInputSize the number of input samples
+      * @param ac_nBuffers the number of times to buffer the input to get a full
+     * buffer (must be >= 1)
+      */
+    BasicBuffer(const unsigned ac_nChan, const unsigned ac_nInputSize,
+                const unsigned ac_nBuffers);
 
-      /**
-        * Destructor.
-        */
+    /**
+      * Destructor.
+      */
     virtual ~BasicBuffer();
 
-      /**
-        * Do the buffering.
-        * Buffers until buffer is full, then calls back.
-        * @param ac_StrToProc the stream to buffer
-        * @return ac_StrToProc unchanged
-        */
-    virtual const Stream& mf_DoProcessing( const Stream& ac_StrToProc );
+    /**
+      * Do the buffering.
+      * Buffers until buffer is full, then calls back.
+      * @param ac_StrToProc the stream to buffer
+      * @return ac_StrToProc unchanged
+      */
+    virtual const Stream &mf_DoProcessing(const Stream &ac_StrToProc);
 
-      /**
-        * Set the buffer to use. Must have enough channels and samples.
-        * No buffering if set to 0 (default).
-        * @param ac_Buf the buffer or 0 for none.
-        */
-    void mp_SetBufferToFill( Stream* ac_Buf );
+    /**
+      * Set the buffer to use. Must have enough channels and samples.
+      * No buffering if set to 0 (default).
+      * @param ac_Buf the buffer or 0 for none.
+      */
+    void mp_SetBufferToFill(Stream *ac_Buf);
 
-      /**
-        * Set the processor to call when the buffer is full.
-        * The processor's mf_DoProcessing is called with the buffer set in mp_SetBufferToFill.
-        * Nothing is done if processor is set to 0 (default)
-        * @param ac_pCallbackProc the processor, or 0 for none.
-        */
-    void mp_SetCallback( IStreamProcessor* const ac_pCallbackProc );
+    /**
+      * Set the processor to call when the buffer is full.
+      * The processor's mf_DoProcessing is called with the buffer set in
+     * mp_SetBufferToFill.
+      * Nothing is done if processor is set to 0 (default)
+      * @param ac_pCallbackProc the processor, or 0 for none.
+      */
+    void mp_SetCallback(IStreamProcessor *const ac_pCallbackProc);
 
-
-      /**
-        * Implementation of the IStreamProcessor method.
-        */
+    /**
+      * Implementation of the IStreamProcessor method.
+      */
     INLINE unsigned mf_nGetNumInputChannels() const
     {
-      return mc_nChannels;
+        return mc_nChannels;
     }
 
-      /**
-        * Implementation of the IStreamProcessor method.
-        */
+    /**
+      * Implementation of the IStreamProcessor method.
+      */
     INLINE unsigned mf_nGetNumOutputChannels() const
     {
-      return mc_nChannels;
+        return mc_nChannels;
     }
 
-      /**
-        * Implementation of the IStreamProcessor method.
-        */
+    /**
+      * Implementation of the IStreamProcessor method.
+      */
     INLINE unsigned mf_nGetBufferSize() const
     {
-      return mc_nInputSize;
+        return mc_nInputSize;
     }
 
-      /**
-        * Get the size in samples of the buffer.
-        * @return the size
-        */
-    INLINE const unsigned& mf_nGetOutputSize() const
+    /**
+      * Get the size in samples of the buffer.
+      * @return the size
+      */
+    INLINE const unsigned &mf_nGetOutputSize() const
     {
-      return mc_nOutputSize;
+        return mc_nOutputSize;
     }
 
-      /**
-        * Get the current number of streams in the buffer.
-        * @return the number
-        */
-    INLINE const unsigned& mf_nGetCount() const
+    /**
+      * Get the current number of streams in the buffer.
+      * @return the number
+      */
+    INLINE const unsigned &mf_nGetCount() const
     {
-      return m_nCount;
+        return m_nCount;
     }
 
-      /**
-        * Reset the buffer count.
-        * This will re-start the buffering.
-        */
+    /**
+      * Reset the buffer count.
+      * This will re-start the buffering.
+      */
     INLINE void mp_ResetCount()
     {
-      m_nCount = 0;
+        m_nCount = 0;
     }
 
-  private:
-    const unsigned    mc_nBuffers;
-    const unsigned    mc_nInputSize;
-    const unsigned    mc_nOutputSize;
-    const unsigned    mc_nChannels;
-    unsigned          m_nCount;
-    Stream*           m_pResult;
-    IStreamProcessor* m_pCallback;
+private:
+    const unsigned mc_nBuffers;
+    const unsigned mc_nInputSize;
+    const unsigned mc_nOutputSize;
+    const unsigned mc_nChannels;
+    unsigned m_nCount;
+    Stream *m_pResult;
+    IStreamProcessor *m_pCallback;
 
-    BasicBuffer( const BasicBuffer& );
-    BasicBuffer& operator = ( const BasicBuffer& );
-  };
-
+    BasicBuffer(const BasicBuffer &);
+    BasicBuffer &operator=(const BasicBuffer &);
+};
 }
 
 #endif //#ifndef __BASICBUFFER_H__

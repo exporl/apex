@@ -23,9 +23,16 @@
 #include "apextools/apextypedefs.h"
 #include "apextools/global.h"
 
+#include <QMap>
 #include <QStringList>
 
 #include <map>
+
+namespace bertha
+{
+class ConnectionData;
+class ExperimentData;
+}
 
 namespace apex
 {
@@ -62,6 +69,7 @@ namespace data
 class CohDeviceData;
 class FilterData;
 class ExperimentData;
+class ConnectionData;
 class ApexTrial;
 class ProcedureData;
 class MainConfigFileData;
@@ -92,109 +100,115 @@ class ApexResultSink;
 class Calibrator;
 class RandomGenerators;
 class Feedback;
-// TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
 class RTResultSink;
-#endif
 class ProcedureApi;
 
-//FIXME [job refactory] this class shouldn't be exported
+// FIXME [job refactory] this class shouldn't be exported
 
 class APEX_EXPORT ExperimentRunDelegate : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
     /**
-     * Class containing all "dynamic" data for an experiment, ie data that is derived
-     * from the corresponding data structure (ExperimentData) and eventually updated
+     * Class containing all "dynamic" data for an experiment, ie data that is
+     * derived
+     * from the corresponding data structure (ExperimentData) and eventually
+     * updated
      * while running
      */
 public:
-    ExperimentRunDelegate (data::ExperimentData& experiment,
-                           const data::MainConfigFileData& maindata,
-                           QWidget* parent,
-                           bool deterministic = false);
+    ExperimentRunDelegate(data::ExperimentData &experiment,
+                          const data::MainConfigFileData &maindata,
+                          QWidget *parent, bool deterministic = false,
+                          bool useBertha = false);
 
     virtual ~ExperimentRunDelegate();
 
     // Modules
     void makeModules();
 
-    //Procedure* modProcedure() const;
-    TrialStartTime* trialStartTime() const;
-    ApexTimer* modTimer() const;
-    ApexScreen* modScreen() const;
-    ApexResultSink* modResultSink() const;
-// TODO ANDROID rtresultsink uses webkitwidgets
-#ifndef Q_OS_ANDROID
-    RTResultSink* modRTResultSink() const;
-#endif
-    RandomGenerators* modRandomGenerators() const;
-    device::Controllers* modControllers() const;
-    Calibrator*  modCalibrator() const;
-    stimulus::StimulusOutput* modOutput() const;
-    Feedback* modFeedback() const;
-    const ModuleList* modules() const;
+    // Procedure* modProcedure() const;
+    TrialStartTime *trialStartTime() const;
+    ApexTimer *modTimer() const;
+    ApexScreen *modScreen() const;
+    ApexResultSink *modResultSink() const;
+    RTResultSink *modRTResultSink() const;
+    RandomGenerators *modRandomGenerators() const;
+    device::Controllers *modControllers() const;
+    Calibrator *modCalibrator() const;
+    stimulus::StimulusOutput *modOutput() const;
+    Feedback *modFeedback() const;
+    const ModuleList *modules() const;
 
+    ScreenRunDelegate *GetScreen(const QString &id);
+    gui::ApexMainWindow *GetMainWindow() const;
 
-    ScreenRunDelegate* GetScreen (const QString& id);
-    gui::ApexMainWindow* GetMainWindow() const;
+    stimulus::tConnectionsMap &GetConnections() const;
 
-    stimulus::tConnectionsMap& GetConnections() const;
+    stimulus::tDeviceMap &GetDevices() const;
+    stimulus::OutputDevice *GetDevice(const QString &id) const;
 
-    stimulus::tDeviceMap& GetDevices() const;
-    stimulus::OutputDevice* GetDevice (const QString& id) const;
+    stimulus::tFilterMap &GetFilters() const;
+    stimulus::Filter *GetFilter(const QString &p_name) const;
 
-    stimulus::tFilterMap& GetFilters() const;
-    stimulus::Filter* GetFilter (const QString& p_name) const;
-
-    stimulus::Stimulus* GetStimulus (const QString& id) const;
+    stimulus::Stimulus *GetStimulus(const QString &id) const;
     QStringList stimuli() const;
 
-    const device::tControllerMap& GetControllers() const;
-    device::ControlDevice* GetController(const QString &id) const;
+    const device::tControllerMap &GetControllers() const;
+    device::ControlDevice *GetController(const QString &id) const;
 
-    const stimulus::tDataBlockMap&              GetDatablocks() const;
-    stimulus::DataBlock*                  GetDatablock (const QString& p_name) const;
-    void    AddDatablock (const QString& name, stimulus::DataBlock* db);
+    const stimulus::tDataBlockMap &GetDatablocks() const;
+    stimulus::DataBlock *GetDatablock(const QString &p_name) const;
+    void AddDatablock(const QString &name, stimulus::DataBlock *db);
 
-    const data::ExperimentData& GetData() const;
+    const data::ExperimentData &GetData() const;
+    const bertha::ExperimentData &getBerthaExperimentData() const;
+    bool usingBertha() const;
 
     bool GetAutoAnswer() const;
-    void SetAutoAnswer (const bool p);
+    void enableAutoAnswer();
 
-    ParameterManager* GetParameterManager() const;
+    ParameterManager *GetParameterManager() const;
 
-    const data::MainConfigFileData& mainData() const;
-
+    const data::MainConfigFileData &mainData() const;
 
     // modules
-    stimulus::StimulusOutput*  GetModOutput() const;
+    stimulus::StimulusOutput *GetModOutput() const;
 
-    QWidget* parentWidget() const;
+    QWidget *parentWidget() const;
 
-    ProcedureInterface* makeProcedure(ProcedureApi* api, const data::ProcedureData* data);
+    ProcedureInterface *makeProcedure(ProcedureApi *api,
+                                      const data::ProcedureData *data);
+
 private:
     void FixStimuli();
 
-    data::ExperimentData& experiment;
-    // There are quite a bit of includes necessary, move the hassle to the c file
-    ExperimentRunDelegatePrivate* d;
-
+    data::ExperimentData &experiment;
+    // There are quite a bit of includes necessary, move the hassle to the c
+    // file
+    ExperimentRunDelegatePrivate *d;
 
     void MakeOutputDevices();
     void MakeControlDevices();
-
     void MakeDatablocks();
     void MakeStimuli();
     void MakeFilters();
     void MakeFeedback();
-    stimulus::Filter* MakeFilter (const QString& ac_sID, const QString& ac_sType,  data::FilterData* const ac_pParams);
-    stimulus::CohDevice* MakeCohDevice (data::CohDeviceData* ac_Params);
-    stimulus::OutputDevice* MakeDummyDevice (data::DeviceData* p_params);
+    stimulus::Filter *MakeFilter(const QString &ac_sID, const QString &ac_sType,
+                                 data::FilterData *const ac_pParams);
+    stimulus::CohDevice *MakeCohDevice(data::CohDeviceData *ac_Params);
+    stimulus::OutputDevice *MakeDummyDevice(data::DeviceData *p_params);
 
-    signals:
-        void showMessage(QString message) const;
+    void MakeBerthaExperimentData();
+    void
+    FillDataBlockConnections(QMap<QString, QVector<bertha::ConnectionData>> &);
+    void
+    MakeBerthaSummationBlocks(QMap<QString, QVector<bertha::ConnectionData>> &);
+    void AddBerthaConnection(QMap<QString, QVector<bertha::ConnectionData>> &,
+                             const data::ConnectionData *);
+
+signals:
+    void showMessage(QString message) const;
 };
 }
 

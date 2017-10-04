@@ -31,18 +31,19 @@
 enum PropertyType {
     StringPropertyType,   // any QString
     IntPropertyType,      // any integer
-    FontSizePropertyType, // basically an integer, but restricted to sane font sizes
-    PositiveIntPropertyType, // positive integer
-    BooleanPropertyType,  // boolean
-    IDPropertyType,       // a valid XML id
-    ColorPropertyType,    // a color
-    ShortcutPropertyType, // a shortcut
-    FontPropertyType,              // a font
-    ImagePropertyType,             // an image
-    FlashPropertyType,             // a flash movie
-    ArcLayoutTypePropertyType,     // the direction of an arc layout
-    InputMaskPropertyType,         // an input mask for a text edit..
-    Double01PropertyType,          // a double between 0 and 1
+    FontSizePropertyType, // basically an integer, but restricted to sane font
+                          // sizes
+    PositiveIntPropertyType,   // positive integer
+    BooleanPropertyType,       // boolean
+    IDPropertyType,            // a valid XML id
+    ColorPropertyType,         // a color
+    ShortcutPropertyType,      // a shortcut
+    FontPropertyType,          // a font
+    ImagePropertyType,         // an image
+    FlashPropertyType,         // a flash movie
+    ArcLayoutTypePropertyType, // the direction of an arc layout
+    InputMaskPropertyType,     // an input mask for a text edit..
+    Double01PropertyType,      // a double between 0 and 1
     TwoPartLayoutDirectionPropertyType
 };
 

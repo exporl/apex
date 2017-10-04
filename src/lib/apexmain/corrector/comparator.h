@@ -22,26 +22,26 @@
 
 #include <QString>
 
-namespace apex {
-    class Comparator {
-    public:
-        virtual ~Comparator()
-        {
-        };
+namespace apex
+{
+class Comparator
+{
+public:
+    virtual ~Comparator(){};
 
-        // m1 = gold standard (= correct answer); m2 = user input
-        virtual bool Compare (const QString& m1, const QString& m2) = 0;
+    // m1 = gold standard (= correct answer); m2 = user input
+    virtual bool Compare(const QString &m1, const QString &m2) = 0;
 
-        virtual bool TestAnswer (const QString&) const
-        {
-            return true;
-        }
+    virtual bool TestAnswer(const QString &) const
+    {
+        return true;
+    }
 
-        virtual QString GetResultXML() const
-        {
-            return QString();
-        }
-    };
+    virtual QString GetResultXML() const
+    {
+        return QString();
+    }
+};
 }
 
 #endif

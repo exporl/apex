@@ -34,25 +34,24 @@ namespace data
  * The HtmlElement is an implementation of a \ref
  * ScreenElement representing a html document.
  */
-class APEXDATA_EXPORT HtmlElement
-            : public ScreenElement
+class APEXDATA_EXPORT HtmlElement : public ScreenElement
 {
-        QString m_page;
-    public:
-        HtmlElement(const QString& id, ScreenElement* parent);
-        ~HtmlElement();
+    QString m_page;
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+public:
+    HtmlElement(const QString &id, ScreenElement *parent);
+    ~HtmlElement();
 
-        void setPage(const QString& t);
-        const QString& page() const;
-        //virtual QString text() const;
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
-        bool operator==(const HtmlElement& other) const;
+    void setPage(const QString &t);
+    const QString &page() const;
+    // virtual QString text() const;
+
+    bool operator==(const HtmlElement &other) const;
 };
-
 }
 }
 #endif

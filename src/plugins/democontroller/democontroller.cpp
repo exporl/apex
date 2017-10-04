@@ -26,62 +26,55 @@
 Q_DECLARE_LOGGING_CATEGORY(APEX_DEMOCONTROLLER)
 Q_LOGGING_CATEGORY(APEX_DEMOCONTROLLER, "apex.democontroller")
 
-class DemoControllerCreator :
-    public QObject,
-    public PluginControllerCreator
+class DemoControllerCreator : public QObject, public PluginControllerCreator
 {
     Q_OBJECT
-    Q_INTERFACES (PluginControllerCreator)
-    Q_PLUGIN_METADATA (IID "apex.democontroller")
+    Q_INTERFACES(PluginControllerCreator)
+    Q_PLUGIN_METADATA(IID "apex.democontroller")
 public:
     virtual QStringList availablePlugins() const;
 
-    virtual PluginControllerInterface *createController
-            (const QString &name ) const;
+    virtual PluginControllerInterface *
+    createController(const QString &name) const;
 };
 
-class DemoController:
-    public QObject,
-    public PluginControllerInterface
+class DemoController : public QObject, public PluginControllerInterface
 {
     Q_OBJECT
 public:
-    DemoController ();
+    DemoController();
     ~DemoController();
 
     virtual void resetParameters();
 
-    virtual bool isValidParameter (const QString &type, int channel) const;
-    virtual bool setParameter (const QString &type, int channel,
-            const QString &value);
+    virtual bool isValidParameter(const QString &type, int channel) const;
+    virtual bool setParameter(const QString &type, int channel,
+                              const QString &value);
 
-    virtual bool prepare ();
+    virtual bool prepare();
 
 private:
     int myParam;
 };
 
-
 // DemoController ==============================================================
 
-DemoController::DemoController ():
-        myParam(-1)
+DemoController::DemoController() : myParam(-1)
 {
     qCDebug(APEX_DEMOCONTROLLER, "Initializing democontroller");
 }
 
-
 DemoController::~DemoController()
 {
-   qCDebug(APEX_DEMOCONTROLLER, "Deleting democontroller");
+    qCDebug(APEX_DEMOCONTROLLER, "Deleting democontroller");
 }
 
 void DemoController::resetParameters()
 {
-   myParam=-1;
+    myParam = -1;
 }
 
-bool DemoController::isValidParameter (const QString &type, int channel) const
+bool DemoController::isValidParameter(const QString &type, int channel) const
 {
     if (type == "demoparameter" && channel == -1)
         return true;
@@ -89,24 +82,25 @@ bool DemoController::isValidParameter (const QString &type, int channel) const
     return false;
 }
 
-bool DemoController::setParameter (const QString &type, int channel,
-        const QString &value)
+bool DemoController::setParameter(const QString &type, int channel,
+                                  const QString &value)
 {
     if (type == "demoparameter" && channel == -1) {
-        myParam=value.toInt();
-        qCDebug(APEX_DEMOCONTROLLER, "DemoController: setting parameter to value %i", myParam);
+        myParam = value.toInt();
+        qCDebug(APEX_DEMOCONTROLLER,
+                "DemoController: setting parameter to value %i", myParam);
         return true;
     }
 
     return false;
 }
 
-bool DemoController::prepare ()
+bool DemoController::prepare()
 {
-    qCDebug(APEX_DEMOCONTROLLER, "DemoController: the fancy stuf happens here...");
+    qCDebug(APEX_DEMOCONTROLLER,
+            "DemoController: the fancy stuf happens here...");
     return true;
 }
-
 
 // DemoControllerCreator =======================================================
 
@@ -115,12 +109,12 @@ QStringList DemoControllerCreator::availablePlugins() const
     return QStringList() << "democontroller";
 }
 
-PluginControllerInterface *DemoControllerCreator::createController
-       (const QString &name) const
+PluginControllerInterface *
+DemoControllerCreator::createController(const QString &name) const
 {
     try {
         if (name == "democontroller")
-            return new DemoController ();
+            return new DemoController();
     } catch (...) {
         // Exceptions silently ignored
     }

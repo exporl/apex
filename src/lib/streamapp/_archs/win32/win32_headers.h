@@ -27,19 +27,19 @@
 #include <windows.h>
 
 #ifdef _MSC_VER
-  #pragma warning ( disable : 4201 )
+#pragma warning(disable : 4201)
 #endif
 
 #include <mmsystem.h>
 #include <winioctl.h>
 
 #ifdef _MSC_VER
-  #pragma warning ( default : 4201 )
+#pragma warning(default : 4201)
 #endif
 
-  //use default alignment for speed
+// use default alignment for speed
 #ifdef PACKED
-  #undef PACKED
+#undef PACKED
 #endif
 
 #endif //#ifndef __STR_WIN32_HEADERS_H__

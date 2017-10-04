@@ -48,14 +48,14 @@ public:
 
     virtual bool Parse(const QDomElement &p_paramElement) Q_DECL_OVERRIDE;
 
-    enum {TYPE_UNIFORM, TYPE_GAUSSIAN};
-    enum {VALUE_INT, VALUE_DOUBLE};
+    enum { TYPE_UNIFORM, TYPE_GAUSSIAN };
+    enum { VALUE_INT, VALUE_DOUBLE };
 
-    bool operator==(const RandomGeneratorParameters& other) const;
+    bool operator==(const RandomGeneratorParameters &other) const;
 
 protected:
-    virtual bool SetParameter(const QString& , const QString& , const QString& , const QDomElement &) Q_DECL_OVERRIDE;
-
+    virtual bool SetParameter(const QString &, const QString &, const QString &,
+                              const QDomElement &) Q_DECL_OVERRIDE;
 
     friend class apex::RandomGenerator;
     friend class apex::UniformRandomGenerator;
@@ -66,12 +66,10 @@ protected:
 protected:
     double m_dMin;
     double m_dMax;
-    QString m_sParam;           // parameter to be set by this generator
+    QString m_sParam; // parameter to be set by this generator
     int m_nType;
     int m_nValueType;
-
 };
-
 }
 }
 

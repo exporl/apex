@@ -43,42 +43,44 @@ namespace apex
 namespace parser
 {
 
-StimuliParser::StimuliParser(QWidget* parent) :
-        currentData(0),
-        m_parent(parent)
+StimuliParser::StimuliParser(QWidget *parent) : currentData(0), m_parent(parent)
 {
 }
 
 void StimuliParser::Parse(const QString &fileName, const QDomElement &p_base,
                           data::StimuliData *c,
                           const QString &scriptLibraryFile,
-                          const QVariantMap &scriptParameters)
+                          const QVariantMap &scriptParameters, bool expand)
 {
     currentData = c;
 
-#ifndef NOSCRIPTEXPAND
+    if (expand) {
         // find plugin stimuli and expand them
-    for (QDomElement currentNode = p_base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement())
-    {
-        const QString tag(currentNode.tagName());
-        if (tag == "pluginstimuli") {
-            ScriptExpander expander(fileName, scriptLibraryFile, scriptParameters, m_parent);
-            expander.ExpandScript(currentNode, "getStimuli");
+        for (QDomElement currentNode = p_base.firstChildElement();
+             !currentNode.isNull();
+             currentNode = currentNode.nextSiblingElement()) {
+            const QString tag(currentNode.tagName());
+            if (tag == "pluginstimuli") {
+                ScriptExpander expander(fileName, scriptLibraryFile,
+                                        scriptParameters, m_parent);
+                expander.ExpandScript(currentNode, "getStimuli");
+            }
         }
     }
-#endif
 
-    for (QDomElement currentNode = p_base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
+    for (QDomElement currentNode = p_base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
         const QString tag = currentNode.tagName();
         if (tag == "stimulus") {
             ParseStimulus(currentNode);
+        } else if (tag == "pluginstimuli") {
+            c->setHasPluginStimuli(true);
         } else if (tag == "fixed_parameters") {
             // create QStringList from defined parameters
             data::FixedParameterList params;
-            for (QDomElement cur = currentNode.firstChildElement(); !cur.isNull();
-                    cur = cur.nextSiblingElement()) {
+            for (QDomElement cur = currentNode.firstChildElement();
+                 !cur.isNull(); cur = cur.nextSiblingElement()) {
                 QString id = cur.attribute(QSL("id"));
                 params.push_back(id);
             }
@@ -97,42 +99,47 @@ void apex::parser::StimuliParser::ParseStimulus(const QDomElement &p_base)
 
     target.m_id = p_base.attribute(gc_sID);
 
-    for (QDomElement currentNode = p_base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
-        const QString tag   = currentNode.tagName();
+    for (QDomElement currentNode = p_base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
+        const QString tag = currentNode.tagName();
         const QString value = currentNode.text();
         if (tag == "description") {
             target.m_description = value;
         } else if (tag == "datablocks") {
-            target.m_datablocksContainer = CreateDatablocksContainer(currentNode);
+            target.m_datablocksContainer =
+                CreateDatablocksContainer(currentNode);
         } else if (tag == "variableParameters") {
             target.m_varParams = CreateStimulusParameters(currentNode);
         } else if (tag == "fixedParameters") {
             target.m_fixParams = CreateStimulusParameters(currentNode);
         } else {
-            throw ApexStringException( "Unknown tag: " + tag );
+            throw ApexStringException("Unknown tag: " + tag);
         }
     }
 
     currentData->insert(target.m_id, target);
 }
 
-
-StimulusParameters StimuliParser::CreateStimulusParameters(const QDomElement &base)
+StimulusParameters
+StimuliParser::CreateStimulusParameters(const QDomElement &base)
 {
     StimulusParameters param;
 
-    for (QDomElement currentNode = base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
-        const QString id    = currentNode.attribute(gc_sID);
-        const QString value = XmlUtils::richText(currentNode); // can contain markup (eg fixed parameter with <b>)
+    for (QDomElement currentNode = base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
+        const QString id = currentNode.attribute(gc_sID);
+        const QString value = XmlUtils::richText(
+            currentNode); // can contain markup (eg fixed parameter with <b>)
         param.insert(id, value);
     }
 
     return param;
 }
 
-StimulusDatablocksContainer StimuliParser::CreateDatablocksContainer(const QDomElement &data)
+StimulusDatablocksContainer
+StimuliParser::CreateDatablocksContainer(const QDomElement &data)
 {
     StimulusDatablocksContainer::Type type;
 
@@ -149,10 +156,11 @@ StimulusDatablocksContainer StimuliParser::CreateDatablocksContainer(const QDomE
     StimulusDatablocksContainer container(type);
 
     for (QDomElement child = data.firstChildElement(); !child.isNull();
-            child = child.nextSiblingElement()) {
+         child = child.nextSiblingElement()) {
         QString tag = child.tagName();
         if (tag == "datablock") {
-            StimulusDatablocksContainer datablock(StimulusDatablocksContainer::DATABLOCK);
+            StimulusDatablocksContainer datablock(
+                StimulusDatablocksContainer::DATABLOCK);
             datablock.id = child.attribute(QSL("id"));
             container.append(datablock);
         } else if (tag == "sequential") {
@@ -166,6 +174,5 @@ StimulusDatablocksContainer StimuliParser::CreateDatablocksContainer(const QDomE
 
     return container;
 }
-
 }
 }

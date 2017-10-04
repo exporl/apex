@@ -33,21 +33,18 @@ namespace data
  */
 class APEXDATA_EXPORT FilterData : public SimpleParameters
 {
-    public:
+public:
+    FilterData();
+    virtual ~FilterData();
 
-        FilterData();
-        virtual ~FilterData();
-
-        QString device() const;
-        QString type() const;
-        unsigned numberOfChannels() const;
-        virtual bool isGenerator() const;
+    QString device() const;
+    QString type() const;
+    unsigned numberOfChannels() const;
+    virtual bool isGenerator() const;
 };
 
-}// ns data
+} // ns data
 
-}// ns apex
-
-
+} // ns apex
 
 #endif

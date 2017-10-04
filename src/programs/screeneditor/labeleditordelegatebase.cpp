@@ -31,90 +31,88 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    using gui::sc_nDefaultFontSize;
-    using gui::sc_DefaultBGColor;
+namespace editor
+{
+using gui::sc_nDefaultFontSize;
+using gui::sc_DefaultBGColor;
 
-    QFrame* LabelEditorDelegateBase::getWidget()
-    {
-      return this;
-    }
+QFrame *LabelEditorDelegateBase::getWidget()
+{
+    return this;
+}
 
-    LabelEditorDelegateBase::LabelEditorDelegateBase( ScreenElement* e, QWidget* parent, ScreenWidget* w )
-      : QFrame( parent ),
-        ScreenElementEditorDelegate( w ),
-        label( new QLabel( this ) )
-    {
-      label->setAlignment (Qt::AlignCenter);
-      label->setAutoFillBackground( true );
-      label->setFrameShape( QLabel::Box );
+LabelEditorDelegateBase::LabelEditorDelegateBase(ScreenElement *e,
+                                                 QWidget *parent,
+                                                 ScreenWidget *w)
+    : QFrame(parent), ScreenElementEditorDelegate(w), label(new QLabel(this))
+{
+    label->setAlignment(Qt::AlignCenter);
+    label->setAutoFillBackground(true);
+    label->setFrameShape(QLabel::Box);
 
-      QFont font = w->getDefaultFont();
-      if ( e->getFontSize() > 0 )
-        font.setPointSize( e->getFontSize() );
-      label->setFont( font );
-    }
+    QFont font = w->getDefaultFont();
+    if (e->getFontSize() > 0)
+        font.setPointSize(e->getFontSize());
+    label->setFont(font);
+}
 
-    void LabelEditorDelegateBase::mouseReleaseEvent( QMouseEvent* ev )
-    {
-      handleMouseReleaseEvent( ev, this );
-    }
+void LabelEditorDelegateBase::mouseReleaseEvent(QMouseEvent *ev)
+{
+    handleMouseReleaseEvent(ev, this);
+}
 
-    bool LabelEditorDelegateBase::eventFilter( QObject* o, QEvent* e )
-    {
-      if ( o == label )
-      {
-        if ( e->type() == QEvent::MouseButtonRelease )
-        {
-          handleMouseReleaseEvent( static_cast<QMouseEvent*>( e ), this );
-          return true;
+bool LabelEditorDelegateBase::eventFilter(QObject *o, QEvent *e)
+{
+    if (o == label) {
+        if (e->type() == QEvent::MouseButtonRelease) {
+            handleMouseReleaseEvent(static_cast<QMouseEvent *>(e), this);
+            return true;
         }
-      }
-      return false;
     }
+    return false;
+}
 
-    void LabelEditorDelegateBase::resizeEvent( QResizeEvent* e )
-    {
-      QFrame::resizeEvent( e );
-      setLabelGeometry();
+void LabelEditorDelegateBase::resizeEvent(QResizeEvent *e)
+{
+    QFrame::resizeEvent(e);
+    setLabelGeometry();
 
-      resetText();
-    }
+    resetText();
+}
 
-    void LabelEditorDelegateBase::paintEvent( QPaintEvent* e )
-    {
-      setLabelGeometry();
-      QFrame::paintEvent( e );
-    }
+void LabelEditorDelegateBase::paintEvent(QPaintEvent *e)
+{
+    setLabelGeometry();
+    QFrame::paintEvent(e);
+}
 
-    void LabelEditorDelegateBase::setLabelGeometry()
-    {
-      label->setGeometry( contentsRect().adjusted( 2, 2, -2, -2 ) );
-    }
+void LabelEditorDelegateBase::setLabelGeometry()
+{
+    label->setGeometry(contentsRect().adjusted(2, 2, -2, -2));
+}
 
-    void LabelEditorDelegateBase::resetText()
-    {
-      label->setFont( getFont() );
+void LabelEditorDelegateBase::resetText()
+{
+    label->setFont(getFont());
 
-      QString text = getText();
-      ApexTools::shrinkTillItFits (label, text, QSize (2, 2));
-      label->setText( text );
-    }
+    QString text = getText();
+    ApexTools::shrinkTillItFits(label, text, QSize(2, 2));
+    label->setText(text);
+}
 
-    QFont LabelEditorDelegateBase::getFont()
-    {
-      QFont font = label->font();
-      if ( getScreenElement()->getFontSize() > 0 )
-        font.setPointSize( getScreenElement()->getFontSize() );
-      else
-        font.setPointSize( sc_nDefaultFontSize );
-      return font;
-    }
+QFont LabelEditorDelegateBase::getFont()
+{
+    QFont font = label->font();
+    if (getScreenElement()->getFontSize() > 0)
+        font.setPointSize(getScreenElement()->getFontSize());
+    else
+        font.setPointSize(sc_nDefaultFontSize);
+    return font;
+}
 
-    bool LabelEditorDelegateBase::setProperty( int nr, const QVariant& v )
-    {
-      return ScreenElementEditorDelegate::setProperty( nr, v );
-    }
-  }
+bool LabelEditorDelegateBase::setProperty(int nr, const QVariant &v)
+{
+    return ScreenElementEditorDelegate::setProperty(nr, v);
+}
+}
 }

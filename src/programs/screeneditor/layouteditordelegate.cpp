@@ -29,114 +29,111 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    using data::EmptyElement;
+namespace editor
+{
+using data::EmptyElement;
 
-    LayoutEditorDelegate::LayoutEditorDelegate(
-      QWidget* parent,
-      ScreenWidget* widget )
-      : QFrame(parent),
-        ScreenElementEditorDelegate( widget )
-    {
-    }
+LayoutEditorDelegate::LayoutEditorDelegate(QWidget *parent,
+                                           ScreenWidget *widget)
+    : QFrame(parent), ScreenElementEditorDelegate(widget)
+{
+}
 
-    QFrame* LayoutEditorDelegate::getWidget()
-    {
-      return this;
-    }
+QFrame *LayoutEditorDelegate::getWidget()
+{
+    return this;
+}
 
-    void LayoutEditorDelegate::mouseReleaseEvent( QMouseEvent* ev )
-    {
-      handleMouseReleaseEvent( ev, this );
-    }
+void LayoutEditorDelegate::mouseReleaseEvent(QMouseEvent *ev)
+{
+    handleMouseReleaseEvent(ev, this);
+}
 
-    bool LayoutEditorDelegate::checkHarmlessChange( const ScreenLayoutElement* element )
-    {
-      bool ret = true;
-      for ( int i = 0; i < element->getNumberOfChildren(); ++i )
-      {
-        const ScreenElement* el = element->getChild( i );
+bool LayoutEditorDelegate::checkHarmlessChange(
+    const ScreenLayoutElement *element)
+{
+    bool ret = true;
+    for (int i = 0; i < element->getNumberOfChildren(); ++i) {
+        const ScreenElement *el = element->getChild(i);
 
         try {
-          element->checkChild( el );
-        } catch( ... ) {
-          // problem with child, doesn't matter if it's an EmptyElement
-          if ( !dynamic_cast<const EmptyElement*>( el ) )
-          {
-            ret = false;
-          }
+            element->checkChild(el);
+        } catch (...) {
+            // problem with child, doesn't matter if it's an EmptyElement
+            if (!dynamic_cast<const EmptyElement *>(el)) {
+                ret = false;
+            }
         }
-      }
-      return ret;
     }
+    return ret;
+}
 
-    void LayoutEditorDelegate::fixupChildren(
-      ScreenLayoutElement* element )
-    {
-      std::vector<ScreenElement*> children = *element->getChildren();
-      for ( unsigned i = 0; i < children.size(); ++i )
-      {
-        ScreenElement* el = children[i];
+void LayoutEditorDelegate::fixupChildren(ScreenLayoutElement *element)
+{
+    std::vector<ScreenElement *> children = *element->getChildren();
+    for (unsigned i = 0; i < children.size(); ++i) {
+        ScreenElement *el = children[i];
 
         try {
-          element->checkChild( el );
-        } catch( ... ) {
-          // delete this child element..
-          ScreenElementEditorDelegate* eldel = screenWidget->getEditorDelegate( el );
-          getLayout()->removeWidget( eldel->getWidget() );
-          screenWidget->deleteDelegate( eldel );
+            element->checkChild(el);
+        } catch (...) {
+            // delete this child element..
+            ScreenElementEditorDelegate *eldel =
+                screenWidget->getEditorDelegate(el);
+            getLayout()->removeWidget(eldel->getWidget());
+            screenWidget->deleteDelegate(eldel);
         }
-      }
-      element->fillChildrenWithEmpties(screenWidget->getScreen());
     }
+    element->fillChildrenWithEmpties(screenWidget->getScreen());
+}
 
-    void LayoutEditorDelegate::updateLayoutChildren( elementToDelegateMapT& elementToDelegateMap )
-    {
-      for ( int i = 0; i < getScreenElement()->getNumberOfChildren(); ++i )
-      {
-        ScreenElement* el = getScreenElement()->getChild( i );
-        ScreenElementEditorDelegate* eldel = 0;
-        elementToDelegateMapT::const_iterator eldelit = elementToDelegateMap.find( el );
-        if ( eldelit == elementToDelegateMap.end() )
-        {
-          EditorDelegateCreatorVisitor delcreator( this, screenWidget, elementToDelegateMap );
-          eldel = delcreator.createEditorDelegate( el );
-          elementToDelegateMap[el] = eldel;
+void LayoutEditorDelegate::updateLayoutChildren(
+    elementToDelegateMapT &elementToDelegateMap)
+{
+    for (int i = 0; i < getScreenElement()->getNumberOfChildren(); ++i) {
+        ScreenElement *el = getScreenElement()->getChild(i);
+        ScreenElementEditorDelegate *eldel = 0;
+        elementToDelegateMapT::const_iterator eldelit =
+            elementToDelegateMap.find(el);
+        if (eldelit == elementToDelegateMap.end()) {
+            EditorDelegateCreatorVisitor delcreator(this, screenWidget,
+                                                    elementToDelegateMap);
+            eldel = delcreator.createEditorDelegate(el);
+            elementToDelegateMap[el] = eldel;
         } else {
-          eldel = eldelit->second;
+            eldel = eldelit->second;
         }
 
-        addItemToLayout( eldel->getWidget(), el );
+        addItemToLayout(eldel->getWidget(), el);
         eldel->getWidget()->show();
-      }
-//      mp_DoResize();      // FIXME
-
     }
+    //      mp_DoResize();      // FIXME
+}
 
-    void LayoutEditorDelegate::replaceChild(
-      QWidget* oldChildWidget, ScreenElementEditorDelegate* oldChildRep,
-      apex::data::ScreenElement* newElement )
-    {
-      int oldx = oldChildRep->getScreenElement()->getX();
-      int oldy = oldChildRep->getScreenElement()->getY();
-      getLayout()->removeWidget( oldChildWidget );
-      screenWidget->deleteDelegate( oldChildRep );
-      newElement->setX( oldx );
-      newElement->setY( oldy );
-      EditorDelegateCreatorVisitor delcreator( this, screenWidget, screenWidget->getElementToDelegateMap() );
-      ScreenElementEditorDelegate* newRep =
-        delcreator.createEditorDelegate( newElement );
-      if ( newRep )
-        addItemToLayout( newRep->getWidget(), newElement );
-      update();
-      if ( newRep )
+void LayoutEditorDelegate::replaceChild(
+    QWidget *oldChildWidget, ScreenElementEditorDelegate *oldChildRep,
+    apex::data::ScreenElement *newElement)
+{
+    int oldx = oldChildRep->getScreenElement()->getX();
+    int oldy = oldChildRep->getScreenElement()->getY();
+    getLayout()->removeWidget(oldChildWidget);
+    screenWidget->deleteDelegate(oldChildRep);
+    newElement->setX(oldx);
+    newElement->setY(oldy);
+    EditorDelegateCreatorVisitor delcreator(
+        this, screenWidget, screenWidget->getElementToDelegateMap());
+    ScreenElementEditorDelegate *newRep =
+        delcreator.createEditorDelegate(newElement);
+    if (newRep)
+        addItemToLayout(newRep->getWidget(), newElement);
+    update();
+    if (newRep)
         newRep->getWidget()->show();
-    }
+}
 
-    bool LayoutEditorDelegate::setProperty( int nr, const QVariant& v )
-    {
-      return ScreenElementEditorDelegate::setProperty( nr, v );
-    }
-  }
+bool LayoutEditorDelegate::setProperty(int nr, const QVariant &v)
+{
+    return ScreenElementEditorDelegate::setProperty(nr, v);
+}
+}
 }

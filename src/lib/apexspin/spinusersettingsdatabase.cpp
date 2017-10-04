@@ -33,339 +33,329 @@ namespace data
 
 class DatabasePrivate
 {
-    public:
+public:
+    enum Section { NO_SECTION, INFO, MATERIALS, SPEAKERS, PROCEDURE, OPTIONS };
 
-        enum Section
-        {
-            NO_SECTION,
-            INFO,
-            MATERIALS,
-            SPEAKERS,
-            PROCEDURE,
-            OPTIONS
-        };
+    static QString prefix()
+    {
+        return "SPIN";
+    }
 
-        static QString prefix()
-        {
-            return "SPIN";
+    static QString defaults()
+    {
+        return prefix() + "/default";
+    }
+
+    static QString previous()
+    {
+        return prefix() + "/previous";
+    }
+
+    static QString settings(const QString &name, Section section = NO_SECTION)
+    {
+        QString path(prefix() + "/" + name);
+        QString sectionName;
+
+        switch (section) {
+        case NO_SECTION:
+            return path;
+        case INFO:
+            sectionName = "info";
+            break;
+        case MATERIALS:
+            sectionName = "materials";
+            break;
+        case SPEAKERS:
+            sectionName = "speakers";
+            break;
+        case PROCEDURE:
+            sectionName = "procedure";
+            break;
+        case OPTIONS:
+            sectionName = "options";
+            break;
+        default:
+            qFatal("non-existing section requested.");
         }
 
-        static QString defaults()
-        {
-            return prefix() + "/default";
-        }
+        return path + "/" + sectionName;
+    }
 
-        static QString previous()
-        {
-            return prefix() + "/previous";
-        }
+    static QString speakerSection(Headphone::Speaker which)
+    {
+        Q_ASSERT(which == Headphone::LEFT || which == Headphone::RIGHT);
 
-        static QString settings(const QString& name, Section section = NO_SECTION)
-        {
-            QString path(prefix() + "/" + name);
-            QString sectionName;
+        return which == Headphone::LEFT ? LEFT_STR : RIGHT_STR;
+    }
 
-            switch (section)
-            {
-                case NO_SECTION:
-                    return path;
-                case INFO:
-                    sectionName = "info";
-                    break;
-                case MATERIALS:
-                    sectionName = "materials";
-                    break;
-                case SPEAKERS:
-                    sectionName = "speakers";
-                    break;
-                case PROCEDURE:
-                    sectionName = "procedure";
-                    break;
-                case OPTIONS:
-                    sectionName = "options";
-                    break;
-                default:
-                    qFatal("non-existing section requested.");
-            }
+    static Headphone::Speaker speakerSection(QString which)
+    {
+        Q_ASSERT(which == LEFT_STR || which == RIGHT_STR);
 
-            return path + "/" + sectionName;
-        }
+        return which == LEFT_STR ? Headphone::LEFT : Headphone::RIGHT;
+    }
 
-        static QString speakerSection(Headphone::Speaker which)
-        {
-            Q_ASSERT(which == Headphone::LEFT || which == Headphone::RIGHT);
+    static QString speakerSection(uint angle)
+    {
+        return QString::number(angle % 360);
+    }
 
-            return which == Headphone::LEFT ? LEFT_STR : RIGHT_STR;
-        }
+    static QString stepsizesSection()
+    {
+        return "stepsizes";
+    }
 
-        static Headphone::Speaker speakerSection(QString which)
-        {
-            Q_ASSERT(which == LEFT_STR || which == RIGHT_STR);
+    // parameters
+    static QString name()
+    {
+        return "name";
+    }
 
-            return which == LEFT_STR ? Headphone::LEFT : Headphone::RIGHT;
-        }
+    static QString date()
+    {
+        return "date";
+    }
 
-        static QString speakerSection(uint angle)
-        {
-            return QString::number(angle % 360);
-        }
+    static QString speechmaterial()
+    {
+        return "speechmaterial";
+    }
 
-        static QString stepsizesSection()
-        {
-            return "stepsizes";
-        }
+    static QString speechcategory()
+    {
+        return "speechcategory";
+    }
 
-        //parameters
-        static QString name()
-        {
-            return "name";
-        }
+    static QString noisematerial()
+    {
+        return "noisematerial";
+    }
 
-        static QString date()
-        {
-            return "date";
-        }
+    static QString list()
+    {
+        return "list";
+    }
 
-        static QString speechmaterial()
-        {
-            return "speechmaterial";
-        }
+    static QString type()
+    {
+        return "type";
+    }
 
-        static QString speechcategory()
-        {
-            return "speechcategory";
-        }
+    static QString lockSpeech()
+    {
+        return "lockSpeech";
+    }
 
-        static QString noisematerial()
-        {
-            return "noisematerial";
-        }
+    static QString lockNoise()
+    {
+        return "lockNoise";
+    }
 
-        static QString list()
-        {
-            return "list";
-        }
+    static QString speechLevel()
+    {
+        return "speech";
+    }
 
-        static QString type()
-        {
-            return "type";
-        }
+    static QString noiseLevel()
+    {
+        return "noise";
+    }
 
-        static QString lockSpeech()
-        {
-            return "lockSpeech";
-        }
+    static QString adaptingMaterial()
+    {
+        return "adaptingMaterial";
+    }
 
-        static QString lockNoise()
-        {
-            return "lockNoise";
-        }
+    static QString repeatUntilCorrect()
+    {
+        return "repeatUntilCorrect";
+    }
 
-        static QString speechLevel()
-        {
-            return "speech";
-        }
+    static QString noiseStopsBetweenTrials()
+    {
+        return "noiseStopsBetweenTrials";
+    }
 
-        static QString noiseLevel()
-        {
-            return "noise";
-        }
+    static QString personBeforeScreen()
+    {
+        return "personBeforeScreen";
+    }
 
-        static QString adaptingMaterial()
-        {
-            return "adaptingMaterial";
-        }
+    static QString customScreen()
+    {
+        return "customScreen";
+    }
 
-        static QString repeatUntilCorrect()
-        {
-            return "repeatUntilCorrect";
-        }
+    static QString timeBeforeFirstStimulus()
+    {
+        return "timeBeforeFirstStimulus";
+    }
 
-        static QString noiseStopsBetweenTrials()
-        {
-            return "noiseStopsBetweenTrials";
-        }
+    static QString reinforcement()
+    {
+        return "reinforcement";
+    }
 
-        static QString personBeforeScreen()
-        {
-            return "personBeforeScreen";
-        }
+    static QString showResults()
+    {
+        return "showResults";
+    }
 
-        static QString customScreen()
-        {
-            return "customScreen";
-        }
+    static QString autoSaveResults()
+    {
+        return "autoSaveResults";
+    }
 
-        static QString timeBeforeFirstStimulus()
-        {
-            return "timeBeforeFirstStimulus";
-        }
+    static QString exitAfter()
+    {
+        return "exitAfter";
+    }
 
-        static QString reinforcement()
-        {
-            return "reinforcement";
-        }
+    static QString nbResponsesThatCount()
+    {
+        return "nbResponsesThatCount";
+    }
 
-        static QString showResults()
-        {
-            return "showResults";
-        }
+    static QString trialOrder()
+    {
+        return "trialOrder";
+    }
 
-        static QString autoSaveResults()
-        {
-            return "autoSaveResults";
-        }
+    static QString lastSavePath()
+    {
+        return "lastSavePath";
+    }
 
-        static QString exitAfter()
-        {
-            return "exitAfter";
-        }
+    static QString soundCard()
+    {
+        return "soundCard";
+    }
 
-        static QString nbResponsesThatCount()
-        {
-            return "nbResponsesThatCount";
-        }
+    // value conversions
+    static QString speakerType(SpeakerType type)
+    {
+        Q_ASSERT(type == HEADPHONE || type == FREE_FIELD);
 
-        static QString trialOrder()
-        {
-            return "trialOrder";
-        }
+        return type == HEADPHONE ? HEADPHONE_STR : FREE_FIELD_STR;
+    }
 
-        static QString lastSavePath()
-        {
-            return "lastSavePath";
-        }
+    static SpeakerType speakerType(QString type)
+    {
+        Q_ASSERT(type == HEADPHONE_STR || type == FREE_FIELD_STR);
 
-        static QString soundCard()
-        {
-            return "soundCard";
-        }
+        return type == HEADPHONE_STR ? HEADPHONE : FREE_FIELD;
+    }
 
-        //value conversions
-        static QString speakerType(SpeakerType type)
-        {
-            Q_ASSERT(type == HEADPHONE || type == FREE_FIELD);
+    static QString procedureType(ProcedureType type)
+    {
+        Q_ASSERT(type == CONSTANT || type == ADAPTIVE);
 
-            return type == HEADPHONE ? HEADPHONE_STR : FREE_FIELD_STR;
-        }
+        return type == CONSTANT ? CONSTANT_STR : ADAPTIVE_STR;
+    }
 
-        static SpeakerType speakerType(QString type)
-        {
-            Q_ASSERT(type == HEADPHONE_STR || type == FREE_FIELD_STR);
+    static ProcedureType procedureType(QString type)
+    {
+        Q_ASSERT(type == CONSTANT_STR || type == ADAPTIVE_STR);
 
-            return type == HEADPHONE_STR ? HEADPHONE : FREE_FIELD;
-        }
+        return type == CONSTANT_STR ? CONSTANT : ADAPTIVE;
+    }
 
-        static QString procedureType(ProcedureType type)
-        {
-            Q_ASSERT(type == CONSTANT || type == ADAPTIVE);
+    static QString repeatUntilCorrect(bool value)
+    {
+        return value ? "true" : "false";
+    }
 
-            return type == CONSTANT ? CONSTANT_STR : ADAPTIVE_STR;
-        }
+    static QString material(Material material)
+    {
+        Q_ASSERT(material == SPEECH || material == NOISE);
 
-        static ProcedureType procedureType(QString type)
-        {
-            Q_ASSERT(type == CONSTANT_STR || type == ADAPTIVE_STR);
+        return material == SPEECH ? SPEECH_STR : NOISE_STR;
+    }
 
-            return type == CONSTANT_STR ? CONSTANT : ADAPTIVE;
-        }
+    static Material material(QString material)
+    {
+        Q_ASSERT(material == SPEECH_STR || material == NOISE_STR);
 
-        static QString repeatUntilCorrect(bool value)
-        {
-             return value? "true" : "false";
-        }
+        return material == SPEECH_STR ? SPEECH : NOISE;
+    }
 
-        static QString material(Material material)
-        {
-            Q_ASSERT(material == SPEECH || material == NOISE);
+    static QString personBeforeScreen(Person person)
+    {
+        Q_ASSERT(person == EXPERIMENTER || person == SUBJECT);
 
-            return material == SPEECH ? SPEECH_STR : NOISE_STR;
-        }
+        return person == EXPERIMENTER ? EXPERIMENTER_STR : SUBJECT_STR;
+    }
 
-        static Material material(QString material)
-        {
-            Q_ASSERT(material == SPEECH_STR || material == NOISE_STR);
+    static Person personBeforeScreen(QString person)
+    {
+        Q_ASSERT(person == EXPERIMENTER_STR || person == SUBJECT_STR);
 
-            return material == SPEECH_STR ? SPEECH : NOISE;
-        }
+        return person == EXPERIMENTER_STR ? EXPERIMENTER : SUBJECT;
+    }
 
-        static QString personBeforeScreen(Person person)
-        {
-            Q_ASSERT(person == EXPERIMENTER || person == SUBJECT);
+    static QString trialOrder(Order order)
+    {
+        Q_ASSERT(order == ORDER_RANDOM || order == ORDER_SEQUENTIAL);
 
-            return person == EXPERIMENTER ? EXPERIMENTER_STR : SUBJECT_STR;
-        }
+        return order == ORDER_RANDOM ? RANDOM_STR : SEQUENTIAL_STR;
+    }
 
-        static Person personBeforeScreen(QString person)
-        {
-            Q_ASSERT(person == EXPERIMENTER_STR || person == SUBJECT_STR);
+    static Order trialOrder(QString order)
+    {
+        Q_ASSERT(order == RANDOM_STR || order == SEQUENTIAL_STR);
 
-            return person == EXPERIMENTER_STR ? EXPERIMENTER : SUBJECT;
-        }
+        return order == RANDOM_STR ? ORDER_RANDOM : ORDER_SEQUENTIAL;
+    }
 
-        static QString trialOrder(Order order)
-        {
-            Q_ASSERT(order == ORDER_RANDOM || order == ORDER_SEQUENTIAL);
+    static SoundCard soundCard(const QString &soundCard)
+    {
+        SoundCard out = SoundCard(0);
+        if (soundCard == RMEMULTIFACE_STR)
+            out = RmeMultiface;
+        else if (soundCard == RMEFIREFACEUC_STR)
+            out = RmeFirefaceUc;
+        else if (soundCard == LYNXONE_STR)
+            out = LynxOne;
+        else if (soundCard == DEFAULTSOUNDCARD_STR)
+            out = DefaultSoundcard;
+        else
+            qFatal("Unknown soundcard");
+        return out;
+    }
 
-            return order == ORDER_RANDOM ? RANDOM_STR : SEQUENTIAL_STR;
-        }
+    static QString soundCard(SoundCard soundCard)
+    {
+        QString out;
+        if (soundCard == RmeMultiface)
+            out = RMEMULTIFACE_STR;
+        else if (soundCard == RmeFirefaceUc)
+            out = RMEFIREFACEUC_STR;
+        else if (soundCard == LynxOne)
+            out = LYNXONE_STR;
+        else if (soundCard == DefaultSoundcard)
+            out = DEFAULTSOUNDCARD_STR;
+        else
+            qFatal("Unknown soundcard");
+        return out;
+    }
 
-        static Order trialOrder(QString order)
-        {
-            Q_ASSERT(order == RANDOM_STR || order == SEQUENTIAL_STR);
-
-            return order == RANDOM_STR ? ORDER_RANDOM : ORDER_SEQUENTIAL;
-        }
-
-        static SoundCard soundCard(const QString &soundCard)
-        {
-            SoundCard out = SoundCard(0);
-            if (soundCard == RMEMULTIFACE_STR)
-                out = RmeMultiface;
-            else if(soundCard == RMEFIREFACEUC_STR)
-                out = RmeFirefaceUc;
-            else if(soundCard == LYNXONE_STR)
-                out = LynxOne;
-            else if(soundCard == DEFAULTSOUNDCARD_STR)
-                out = DefaultSoundcard;
-            else
-                qFatal("Unknown soundcard");
-            return out;
-        }
-
-        static QString soundCard(SoundCard soundCard)
-        {
-            QString out;
-            if (soundCard == RmeMultiface)
-                out = RMEMULTIFACE_STR;
-            else if(soundCard == RmeFirefaceUc)
-                out = RMEFIREFACEUC_STR;
-            else if(soundCard == LynxOne)
-                out = LYNXONE_STR;
-            else if(soundCard == DefaultSoundcard)
-                out = DEFAULTSOUNDCARD_STR;
-            else
-                qFatal("Unknown soundcard");
-            return out;
-        }
-
-    private:
-        static const QString HEADPHONE_STR;
-        static const QString FREE_FIELD_STR;
-        static const QString CONSTANT_STR;
-        static const QString ADAPTIVE_STR;
-        static const QString SPEECH_STR;
-        static const QString NOISE_STR;
-        static const QString LEFT_STR;
-        static const QString RIGHT_STR;
-        static const QString EXPERIMENTER_STR;
-        static const QString SUBJECT_STR;
-        static const QString RANDOM_STR;
-        static const QString SEQUENTIAL_STR;
-        static const QString DEFAULTSOUNDCARD_STR;
-        static const QString RMEMULTIFACE_STR;
-        static const QString RMEFIREFACEUC_STR;
-        static const QString LYNXONE_STR;
+private:
+    static const QString HEADPHONE_STR;
+    static const QString FREE_FIELD_STR;
+    static const QString CONSTANT_STR;
+    static const QString ADAPTIVE_STR;
+    static const QString SPEECH_STR;
+    static const QString NOISE_STR;
+    static const QString LEFT_STR;
+    static const QString RIGHT_STR;
+    static const QString EXPERIMENTER_STR;
+    static const QString SUBJECT_STR;
+    static const QString RANDOM_STR;
+    static const QString SEQUENTIAL_STR;
+    static const QString DEFAULTSOUNDCARD_STR;
+    static const QString RMEMULTIFACE_STR;
+    static const QString RMEFIREFACEUC_STR;
+    static const QString LYNXONE_STR;
 };
 
 const QString DatabasePrivate::HEADPHONE_STR("headphone");
@@ -392,51 +382,47 @@ SpinUserSettingsDatabase::SpinUserSettingsDatabase()
 {
 }
 
-void SpinUserSettingsDatabase::save(const QString& name,
-                                    const SpinUserSettings& settings)
+void SpinUserSettingsDatabase::save(const QString &name,
+                                    const SpinUserSettings &settings)
 {
     QSettings db;
 
-    //remove previous settings with this name
+    // remove previous settings with this name
     db.beginGroup(DatabasePrivate::settings(name));
 
-    Q_FOREACH(const QString &key, db.allKeys())
+    Q_FOREACH (const QString &key, db.allKeys())
         db.remove(key);
 
     db.endGroup();
 
-    //info
-    db.beginGroup(DatabasePrivate::settings(
-                      name, DatabasePrivate::INFO));
+    // info
+    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::INFO));
     db.setValue(DatabasePrivate::name(), settings.subjectName());
     db.endGroup();
 
-    //materials
-    db.beginGroup(DatabasePrivate::settings(
-                      name, DatabasePrivate::MATERIALS));
+    // materials
+    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::MATERIALS));
     db.setValue(DatabasePrivate::speechmaterial(), settings.speechmaterial());
     db.setValue(DatabasePrivate::speechcategory(), settings.speechcategory());
     db.setValue(DatabasePrivate::noisematerial(), settings.noisematerial());
     db.setValue(DatabasePrivate::list(), settings.list());
     db.endGroup();
 
-    //speakers
-    db.beginGroup(DatabasePrivate::settings(
-                      name, DatabasePrivate::SPEAKERS));
+    // speakers
+    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::SPEAKERS));
 
     db.setValue(DatabasePrivate::lockSpeech(), settings.lockSpeechlevels());
     db.setValue(DatabasePrivate::lockNoise(), settings.lockNoiselevels());
 
     SpeakerLevels levels;
-    //TODO save noise jump
-    if (settings.speakerType() == HEADPHONE)
-    {
+    // TODO save noise jump
+    if (settings.speakerType() == HEADPHONE) {
         db.setValue(DatabasePrivate::type(),
                     DatabasePrivate::speakerType(HEADPHONE));
 
         Headphone::Speaker speaker = Headphone::LEFT;
 
-        for (int i = 0; i < 2; i++)   //do twice: each speaker
+        for (int i = 0; i < 2; i++) // do twice: each speaker
         {
             db.beginGroup(DatabasePrivate::speakerSection(speaker));
             levels = settings.speakerLevels(speaker);
@@ -449,17 +435,14 @@ void SpinUserSettingsDatabase::save(const QString& name,
             speaker = Headphone::RIGHT;
             db.endGroup();
         }
-    }
-    else
-    {
+    } else {
         db.setValue(DatabasePrivate::type(),
                     DatabasePrivate::speakerType(FREE_FIELD));
 
         QList<uint> angles = settings.speakerAngles();
 
         QList<uint>::const_iterator it;
-        for (it = angles.begin(); it != angles.end(); it++)
-        {
+        for (it = angles.begin(); it != angles.end(); it++) {
             db.beginGroup(DatabasePrivate::speakerSection(*it));
             levels = settings.speakerLevels(*it);
 
@@ -474,17 +457,13 @@ void SpinUserSettingsDatabase::save(const QString& name,
 
     db.endGroup();
 
-    //procedure
-    db.beginGroup(DatabasePrivate::settings(
-                      name, DatabasePrivate::PROCEDURE));
+    // procedure
+    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::PROCEDURE));
 
-    if (settings.procedureType() == CONSTANT)
-    {
+    if (settings.procedureType() == CONSTANT) {
         db.setValue(DatabasePrivate::type(),
                     DatabasePrivate::procedureType(CONSTANT));
-    }
-    else
-    {
+    } else {
         db.setValue(DatabasePrivate::type(),
                     DatabasePrivate::procedureType(ADAPTIVE));
         db.setValue(DatabasePrivate::adaptingMaterial(),
@@ -499,27 +478,24 @@ void SpinUserSettingsDatabase::save(const QString& name,
 
         db.endGroup();
         db.setValue(DatabasePrivate::repeatUntilCorrect(),
-                settings.repeatFirst());
+                    settings.repeatFirst());
     }
 
     db.endGroup();
 
-    //options
-    db.beginGroup(DatabasePrivate::settings(
-                      name, DatabasePrivate::OPTIONS));
+    // options
+    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::OPTIONS));
     db.setValue(DatabasePrivate::noiseStopsBetweenTrials(),
                 settings.noiseStopsBetweenTrials());
 
-    if (settings.customScreen().isEmpty())
-    {
-        db.setValue(DatabasePrivate::personBeforeScreen(),
+    if (settings.customScreen().isEmpty()) {
+        db.setValue(
+            DatabasePrivate::personBeforeScreen(),
             DatabasePrivate::personBeforeScreen(settings.personBeforeScreen()));
 
         if (db.contains(DatabasePrivate::customScreen()))
             db.remove(DatabasePrivate::customScreen());
-    }
-    else
-    {
+    } else {
         db.setValue(DatabasePrivate::customScreen(), settings.customScreen());
 
         if (db.contains(DatabasePrivate::personBeforeScreen()))
@@ -541,8 +517,7 @@ void SpinUserSettingsDatabase::save(const QString& name,
     db.endGroup();
 }
 
-
-bool SpinUserSettingsDatabase::remove(const QString& name)
+bool SpinUserSettingsDatabase::remove(const QString &name)
 {
     if (!savedSettings().contains(name))
         return false;
@@ -554,8 +529,8 @@ bool SpinUserSettingsDatabase::remove(const QString& name)
     return true;
 }
 
-bool SpinUserSettingsDatabase::rename(const QString& oldName,
-                                      const QString& newName)
+bool SpinUserSettingsDatabase::rename(const QString &oldName,
+                                      const QString &newName)
 {
     if (!savedSettings().contains(oldName))
         return false;
@@ -565,23 +540,23 @@ bool SpinUserSettingsDatabase::rename(const QString& oldName,
     return true;
 }
 
-SpinUserSettings SpinUserSettingsDatabase::load(const QString& name)
+SpinUserSettings SpinUserSettingsDatabase::load(const QString &name)
 {
     if (!savedSettings().contains(name))
-        throw(ApexStringException(
-                  "No saved setting in SPIN with the name " + name));
+        throw(ApexStringException("No saved setting in SPIN with the name " +
+                                  name));
 
     SpinUserSettings settings;
     QSettings db;
 
-    //info
+    // info
     db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::INFO));
     QString subjectName = db.value(DatabasePrivate::name()).toString();
     settings.setSubjectName(subjectName);
     db.endGroup();
 
-    //materials
-    //we don't want to write toString() all the time:)
+// materials
+// we don't want to write toString() all the time:)
 #define value(str) value(str).toString()
     db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::MATERIALS));
     settings.setSpeechmaterial(db.value(DatabasePrivate::speechmaterial()));
@@ -591,41 +566,38 @@ SpinUserSettings SpinUserSettingsDatabase::load(const QString& name)
     db.endGroup();
 #undef value
 
-    //speakers
-    //TODO load noise jump
+    // speakers
+    // TODO load noise jump
     db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::SPEAKERS));
 
-    settings.setLockSpeechlevels(db.value(DatabasePrivate::lockSpeech()).toBool());
-    settings.setLockNoiselevels(db.value(DatabasePrivate::lockNoise()).toBool());
+    settings.setLockSpeechlevels(
+        db.value(DatabasePrivate::lockSpeech()).toBool());
+    settings.setLockNoiselevels(
+        db.value(DatabasePrivate::lockNoise()).toBool());
 
     settings.setSpeakerType(DatabasePrivate::speakerType(
-                                db.value(DatabasePrivate::type()).toString()));
+        db.value(DatabasePrivate::type()).toString()));
 
-    Q_FOREACH(QString speaker, db.childGroups())
-    {
+    Q_FOREACH (QString speaker, db.childGroups()) {
         db.beginGroup(speaker);
         SpeakerLevels levels;
 
-        Q_FOREACH(QString key, db.childKeys())
-        {
+        Q_FOREACH (QString key, db.childKeys()) {
             double level = db.value(key).toDouble();
 
-            if (key == DatabasePrivate::noiseLevel())
-            {
+            if (key == DatabasePrivate::noiseLevel()) {
                 levels.noise = level;
                 levels.hasNoise = true;
-            }
-            else
-            {
+            } else {
                 levels.speech = level;
                 levels.hasSpeech = true;
             }
         }
 
         if (settings.speakerType() == HEADPHONE)
-            settings.addLevels(levels, DatabasePrivate::speakerSection(speaker));
-        else
-        {
+            settings.addLevels(levels,
+                               DatabasePrivate::speakerSection(speaker));
+        else {
             bool ok;
             settings.addLevels(levels, speaker.toUInt(&ok));
             Q_ASSERT(ok);
@@ -636,22 +608,19 @@ SpinUserSettings SpinUserSettingsDatabase::load(const QString& name)
 
     db.endGroup();
 
-    //procedure
-    db.beginGroup(DatabasePrivate::settings(
-                      name, DatabasePrivate::PROCEDURE));
+    // procedure
+    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::PROCEDURE));
 
     settings.setProcedureType(DatabasePrivate::procedureType(
-                                  db.value(DatabasePrivate::type()).toString()));
+        db.value(DatabasePrivate::type()).toString()));
 
-    if (settings.procedureType() == ADAPTIVE)
-    {
-        settings.setAdaptingMaterial(DatabasePrivate::material(db.value(
-                             DatabasePrivate::adaptingMaterial()).toString()));
+    if (settings.procedureType() == ADAPTIVE) {
+        settings.setAdaptingMaterial(DatabasePrivate::material(
+            db.value(DatabasePrivate::adaptingMaterial()).toString()));
 
         db.beginGroup(DatabasePrivate::stepsizesSection());
 
-        Q_FOREACH(QString trial, db.childKeys())
-        {
+        Q_FOREACH (QString trial, db.childKeys()) {
             bool iOk, dOk;
             settings.addStepsize(db.value(trial).toDouble(&dOk),
                                  trial.toUInt(&iOk));
@@ -662,43 +631,42 @@ SpinUserSettings SpinUserSettingsDatabase::load(const QString& name)
         db.endGroup();
 
         settings.setRepeatFirst(
-                db.value(DatabasePrivate::repeatUntilCorrect()).toBool());
+            db.value(DatabasePrivate::repeatUntilCorrect()).toBool());
     }
 
     db.endGroup();
     db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::OPTIONS));
-    settings.setNoiseStopsBetweenTrials(db.value(
-                  DatabasePrivate::noiseStopsBetweenTrials()).toBool());
+    settings.setNoiseStopsBetweenTrials(
+        db.value(DatabasePrivate::noiseStopsBetweenTrials()).toBool());
 
-    if (db.contains(DatabasePrivate::personBeforeScreen()))
-    {
+    if (db.contains(DatabasePrivate::personBeforeScreen())) {
         settings.setPersonBeforeScreen(DatabasePrivate::personBeforeScreen(
-                    db.value(DatabasePrivate::personBeforeScreen()).toString()));
-    }
-    else
-    {
-        settings.setCustomScreen(db.value(DatabasePrivate::customScreen())
-                                            .toString());
+            db.value(DatabasePrivate::personBeforeScreen()).toString()));
+    } else {
+        settings.setCustomScreen(
+            db.value(DatabasePrivate::customScreen()).toString());
     }
 
-    settings.setTimeBeforeFirstStimulus(db.value(
-                  DatabasePrivate::timeBeforeFirstStimulus()).toDouble());
-    settings.setReinforcement(db.value(DatabasePrivate::reinforcement()).toBool());
+    settings.setTimeBeforeFirstStimulus(
+        db.value(DatabasePrivate::timeBeforeFirstStimulus()).toDouble());
+    settings.setReinforcement(
+        db.value(DatabasePrivate::reinforcement()).toBool());
     settings.setShowResults(db.value(DatabasePrivate::showResults()).toBool());
-    settings.setAutoSaveResults(db.value(DatabasePrivate::autoSaveResults()).toBool());
+    settings.setAutoSaveResults(
+        db.value(DatabasePrivate::autoSaveResults()).toBool());
     settings.setExitAfter(db.value(DatabasePrivate::exitAfter()).toBool());
-    settings.setNbResponsesThatCount(db.value(
-                  DatabasePrivate::nbResponsesThatCount()).toUInt());
+    settings.setNbResponsesThatCount(
+        db.value(DatabasePrivate::nbResponsesThatCount()).toUInt());
     settings.setTrialOrder(DatabasePrivate::trialOrder(
-                           db.value(DatabasePrivate::trialOrder()).toString()));
+        db.value(DatabasePrivate::trialOrder()).toString()));
     settings.setSoundCard(DatabasePrivate::soundCard(
-                           db.value(DatabasePrivate::soundCard()).toString()));
+        db.value(DatabasePrivate::soundCard()).toString()));
     db.endGroup();
 
     return settings;
 }
 
-void SpinUserSettingsDatabase::setLastSavePath(const QString& path)
+void SpinUserSettingsDatabase::setLastSavePath(const QString &path)
 {
     QSettings db;
     db.beginGroup(DatabasePrivate::prefix());
@@ -726,33 +694,5 @@ QStringList SpinUserSettingsDatabase::savedSettings()
     return db.childGroups();
 }
 
-}//ns data
-}//ns spin
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+} // ns data
+} // ns spin

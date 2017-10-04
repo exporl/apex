@@ -28,10 +28,11 @@
 using namespace spin;
 using namespace spin::gui;
 
-StartLevelWidget::StartLevelWidget(QWidget *parent) : QWidget(parent),
-                                   widgets(new Ui::StartLevelWidget),
-                                   dBVal(this),
-                                   noiseJump(RANDOM)
+StartLevelWidget::StartLevelWidget(QWidget *parent)
+    : QWidget(parent),
+      widgets(new Ui::StartLevelWidget),
+      dBVal(this),
+      noiseJump(RANDOM)
 {
     dBVal.setDecimals(2);
 
@@ -55,38 +56,38 @@ void StartLevelWidget::setupConnections()
 {
     connect(widgets->speechCheck, SIGNAL(toggled(bool)),
             widgets->speechStartLine, SLOT(setEnabled(bool)));
-    connect(widgets->noiseCheck, SIGNAL(toggled(bool)),
-            widgets->noiseStartLine, SLOT(setEnabled(bool)));
+    connect(widgets->noiseCheck, SIGNAL(toggled(bool)), widgets->noiseStartLine,
+            SLOT(setEnabled(bool)));
     connect(widgets->speechCheck, SIGNAL(toggled(bool)),
             widgets->speechStartLine, SLOT(setFocus()));
-    connect(widgets->noiseCheck, SIGNAL(toggled(bool)),
-            widgets->noiseStartLine, SLOT(setFocus()));
+    connect(widgets->noiseCheck, SIGNAL(toggled(bool)), widgets->noiseStartLine,
+            SLOT(setFocus()));
 
-    connect(widgets->speechCheck, SIGNAL(toggled(bool)),
-            this, SIGNAL(speechUsedChanged(bool)));
-    connect(widgets->noiseCheck, SIGNAL(toggled(bool)),
-            this, SIGNAL(noiseUsedChanged(bool)));
+    connect(widgets->speechCheck, SIGNAL(toggled(bool)), this,
+            SIGNAL(speechUsedChanged(bool)));
+    connect(widgets->noiseCheck, SIGNAL(toggled(bool)), this,
+            SIGNAL(noiseUsedChanged(bool)));
 
-    connect(widgets->speechCheck, SIGNAL(toggled(bool)),
-            this, SIGNAL(contentsChanged()));
-    connect(widgets->noiseCheck, SIGNAL(toggled(bool)),
-            this, SIGNAL(contentsChanged()));
-    connect(widgets->speechStartLine, SIGNAL(textChanged(QString)),
-            this, SLOT(speechlevelChanged(QString)));
-    connect(widgets->noiseStartLine, SIGNAL(textChanged(QString)),
-            this, SLOT(noiselevelChanged(QString)));
-    connect(this, SIGNAL(noiselevelChanged(double)),
-            this, SIGNAL(contentsChanged()));
-    connect(this, SIGNAL(speechlevelChanged(double)),
-            this, SIGNAL(contentsChanged()));
+    connect(widgets->speechCheck, SIGNAL(toggled(bool)), this,
+            SIGNAL(contentsChanged()));
+    connect(widgets->noiseCheck, SIGNAL(toggled(bool)), this,
+            SIGNAL(contentsChanged()));
+    connect(widgets->speechStartLine, SIGNAL(textChanged(QString)), this,
+            SLOT(speechlevelChanged(QString)));
+    connect(widgets->noiseStartLine, SIGNAL(textChanged(QString)), this,
+            SLOT(noiselevelChanged(QString)));
+    connect(this, SIGNAL(noiselevelChanged(double)), this,
+            SIGNAL(contentsChanged()));
+    connect(this, SIGNAL(speechlevelChanged(double)), this,
+            SIGNAL(contentsChanged()));
 
-    connect(widgets->showStartPointLbl, SIGNAL(linkActivated(QString)),
-            this, SLOT(showNoiseStartPointDialog()));
+    connect(widgets->showStartPointLbl, SIGNAL(linkActivated(QString)), this,
+            SLOT(showNoiseStartPointDialog()));
 
-/*    connect(widgets->noiseStartLine, SIGNAL(textChanged(QString)),
-            this, SLOT(printChange(QString)));
-    connect(widgets->speechStartLine, SIGNAL(textChanged(QString)),
-            this, SLOT(printChange(QString)));*/
+    /*    connect(widgets->noiseStartLine, SIGNAL(textChanged(QString)),
+                this, SLOT(printChange(QString)));
+        connect(widgets->speechStartLine, SIGNAL(textChanged(QString)),
+                this, SLOT(printChange(QString)));*/
 }
 
 void StartLevelWidget::setupValidators()
@@ -119,7 +120,7 @@ bool StartLevelWidget::hasLevels() const
 
 double StartLevelWidget::speechLevel() const
 {
-    //Q_ASSERT(hasSpeechLevel());
+    // Q_ASSERT(hasSpeechLevel());
 
     if (widgets->speechStartLine->text().isEmpty())
         return 0.0;
@@ -129,7 +130,7 @@ double StartLevelWidget::speechLevel() const
 
 double StartLevelWidget::noiseLevel() const
 {
-    //Q_ASSERT(hasNoiseLevel());
+    // Q_ASSERT(hasNoiseLevel());
 
     if (widgets->noiseStartLine->text().isEmpty())
         return 0.0;
@@ -144,16 +145,14 @@ data::SpeakerLevels StartLevelWidget::speakerLevels(bool *hasLevels) const
 
     levels.speech = speechLevel();
 
-    if (hasSpeechLevel())
-    {
+    if (hasSpeechLevel()) {
         levels.hasSpeech = true;
         *hasLevels = true;
     }
 
     levels.noise = noiseLevel();
 
-    if (hasNoiseLevel())
-    {
+    if (hasNoiseLevel()) {
         levels.hasNoise = true;
         *hasLevels = true;
     }
@@ -165,16 +164,14 @@ void StartLevelWidget::setSpeakerLevels(const data::SpeakerLevels &levels)
 {
     clear();
 
-    if (levels.hasSpeech)
-    {
+    if (levels.hasSpeech) {
         widgets->speechCheck->setChecked(true);
-//         widgets->speechStartLine->setText(QString::number(levels.speech));
+        //         widgets->speechStartLine->setText(QString::number(levels.speech));
         widgets->speechStartLine->setLevel(levels.speech);
     }
-    if (levels.hasNoise)
-    {
+    if (levels.hasNoise) {
         widgets->noiseCheck->setChecked(true);
-//         widgets->noiseStartLine->setText(QString::number(levels.noise));
+        //         widgets->noiseStartLine->setText(QString::number(levels.noise));
         widgets->noiseStartLine->setLevel(levels.noise);
     }
 }
@@ -225,8 +222,7 @@ void StartLevelWidget::updateNoiseStartPoint(double to)
 
     widgets->showStartPointLbl->setText(link);
 
-    if (to != noiseJump)
-    {
+    if (to != noiseJump) {
         noiseJump = to;
         Q_EMIT contentsChanged();
     }
@@ -250,13 +246,11 @@ void StartLevelWidget::speechlevelChanged(QString level)
 
 bool StartLevelWidget::hasAllObligedFields(QWidget **w)
 {
-    if (hasNoiseLevel() && widgets->noiseStartLine->text().isEmpty())
-    {
+    if (hasNoiseLevel() && widgets->noiseStartLine->text().isEmpty()) {
         *w = widgets->noiseStartLine;
         return false;
     }
-    if (hasSpeechLevel() && widgets->speechStartLine->text().isEmpty())
-    {
+    if (hasSpeechLevel() && widgets->speechStartLine->text().isEmpty()) {
         *w = widgets->speechStartLine;
         return false;
     }
@@ -268,15 +262,3 @@ void StartLevelWidget::printChange(QString to)
 {
     qCDebug(APEX_RS) << objectName() << ": changed to " << to;
 }
-
-
-
-
-
-
-
-
-
-
-
-

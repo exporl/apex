@@ -61,41 +61,40 @@ using apex::data::gc_eChild;
 using apex::data::gc_eNormal;
 
 const QString defaultStyleSheet(
-//        "QPushButton[role=\"none\"]{background-color: yellow}"
-        "QPushButton[role=\"highlight\"]{background-color: #ffff90}\n"
-        "QPushButton[role=\"positive\"]{background-color: green}\n"
-        "QPushButton[role=\"negative\"]{background-color: red}\n");
+    //        "QPushButton[role=\"none\"]{background-color: yellow}"
+    "QPushButton[role=\"highlight\"]{background-color: #ffff90}\n"
+    "QPushButton[role=\"positive\"]{background-color: green}\n"
+    "QPushButton[role=\"negative\"]{background-color: red}\n");
 
-ApexMainWindow::ApexMainWindow( QWidget* /*a_pParent*/ ) :
-        ApexMainWndBase(),
-        m_rd(0),
-        m_config(0),
-        m_pMRU( 0 ),
-        m_pPanel( 0 ),
-        m_pCentral( 0 ),
-        paused(false),
-        m_sSavefileName(),
-        runningScreen(),
-        m_pCurFeedback()
+ApexMainWindow::ApexMainWindow(QWidget * /*a_pParent*/)
+    : ApexMainWndBase(),
+      m_rd(0),
+      m_config(0),
+      m_pMRU(0),
+      m_pPanel(0),
+      m_pCentral(0),
+      paused(false),
+      m_sSavefileName(),
+      runningScreen(),
+      m_pCurFeedback()
 {
-    //setup
+    // setup
     statusBar()->hide();
 
-    //create the mru list
-    m_pMRU.reset( new MRU( fileMenu ) );
+    // create the mru list
+    m_pMRU.reset(new MRU(fileMenu));
 
+    // create the main widget
+    m_pCentral.reset(new ApexCentralWidget(this));
+    setCentralWidget(m_pCentral.data());
 
-    //create the main widget
-    m_pCentral.reset( new ApexCentralWidget( this ) );
-    setCentralWidget( m_pCentral.data() );
-
-    //setup status reporting
-    //FIXME I don't think this should be here
+    // setup status reporting
+    // FIXME I don't think this should be here
     screenStatus = new ScreenStatusReporter();
     connect(ErrorHandler::instance(), SIGNAL(itemAdded(apex::StatusItem)),
             screenStatus, SLOT(addItem(apex::StatusItem)));
-    connect(this, SIGNAL(statusReportingChanged()),
-            this, SLOT(updateStatusReporting()));
+    connect(this, SIGNAL(statusReportingChanged()), this,
+            SLOT(updateStatusReporting()));
 #ifdef Q_OS_ANDROID
     screenStatus->showMaximized();
 
@@ -105,13 +104,15 @@ ApexMainWindow::ApexMainWindow( QWidget* /*a_pParent*/ ) :
     QApplication::setFont(appFont);
 #endif
 
-    //ready
+    // ready
     Initted();
 }
 
-void ApexMainWindow::setExperimentRunDelegate(ExperimentRunDelegate* p_rd) {
-    m_rd=p_rd;
-    connect(m_rd, SIGNAL(showMessage(QString)), this, SLOT(AddStatusMessage(QString)));
+void ApexMainWindow::setExperimentRunDelegate(ExperimentRunDelegate *p_rd)
+{
+    m_rd = p_rd;
+    connect(m_rd, SIGNAL(showMessage(QString)), this,
+            SLOT(AddStatusMessage(QString)));
 }
 
 ApexMainWindow::~ApexMainWindow()
@@ -120,65 +121,63 @@ ApexMainWindow::~ApexMainWindow()
     delete screenStatus;
 }
 
-void ApexMainWindow::SetIcon( const QString& ac_sIcon )
+void ApexMainWindow::SetIcon(const QString &ac_sIcon)
 {
-    setWindowIcon (QPixmap (ac_sIcon));
+    setWindowIcon(QPixmap(ac_sIcon));
 }
 
-void ApexMainWindow::ApplyConfig(const data::ScreensData* c)
+void ApexMainWindow::ApplyConfig(const data::ScreensData *c)
 {
     qApp->setStyleSheet(c->apexStyle());
 
-    m_config=c;
-    const data::ScreensData& config = *c;
-
-
+    m_config = c;
+    const data::ScreensData &config = *c;
 
     m_pPanel.reset(0);
 
-    if ( config.hasPanelEnabled() )
-    {
-        if ( config.m_eMode == data::gc_eNormal || !config.hasPanelMovie() )
-        {
-            Panel* p = new Panel( centralWidget(), c );
-            if ( !p->mp_bSetConfig( config ) )//FIXME memory leak!!!
-                throw ApexStringException( "ApexMainWindow::ApplyConfig: couldn't create the panel." );
+    if (config.hasPanelEnabled()) {
+        if (config.m_eMode == data::gc_eNormal || !config.hasPanelMovie()) {
+            Panel *p = new Panel(centralWidget(), c);
+            if (!p->mp_bSetConfig(config)) // FIXME memory leak!!!
+                throw ApexStringException(
+                    "ApexMainWindow::ApplyConfig: couldn't create the panel.");
             m_pPanel.reset(p);
             m_pPanel->mp_SetProgressSteps(100);
-            m_pCentral->mp_SetPanel( p );
-            connect( p->getSignalSlotProxy(), SIGNAL( ms_Start() ), SIGNAL( startClicked() ) );
-            connect( p->getSignalSlotProxy(), SIGNAL( ms_Stop() ), SIGNAL( stopClicked() )  );
-            connect( p->getSignalSlotProxy(), SIGNAL( ms_Pause() ), SIGNAL( pauseClicked() ) );
-            connect( p->getSignalSlotProxy(), SIGNAL( ms_Panic() ), SIGNAL( StopOutput() ) );
-            connect( p->getSignalSlotProxy(), SIGNAL( ms_Repeat() ), SIGNAL( RepeatOutput() ) );
-        }
-        else
-        {
+            m_pCentral->mp_SetPanel(p);
+            connect(p->getSignalSlotProxy(), SIGNAL(ms_Start()),
+                    SIGNAL(startClicked()));
+            connect(p->getSignalSlotProxy(), SIGNAL(ms_Stop()),
+                    SIGNAL(stopClicked()));
+            connect(p->getSignalSlotProxy(), SIGNAL(ms_Pause()),
+                    SIGNAL(pauseClicked()));
+            connect(p->getSignalSlotProxy(), SIGNAL(ms_Panic()),
+                    SIGNAL(StopOutput()));
+            connect(p->getSignalSlotProxy(), SIGNAL(ms_Repeat()),
+                    SIGNAL(RepeatOutput()));
+        } else {
 #ifdef FLASH
-            ChildModePanel* p = new ChildModePanel( centralWidget() );
-            if ( !p->mp_bSetConfig( config ) )
-                throw ApexStringException( "ApexMainWindow::ApplyConfig: couldn't create the panel." );
-            m_pPanel.reset( p );
-            m_pCentral->mp_SetPanel( p );
+            ChildModePanel *p = new ChildModePanel(centralWidget());
+            if (!p->mp_bSetConfig(config))
+                throw ApexStringException(
+                    "ApexMainWindow::ApplyConfig: couldn't create the panel.");
+            m_pPanel.reset(p);
+            m_pCentral->mp_SetPanel(p);
 #else
-            throw ApexStringException( "ApexMainWindow::ApplyConfig: can't do childmode with panel when FLASH is not defined" );
+            throw ApexStringException("ApexMainWindow::ApplyConfig: can't do "
+                                      "childmode with panel when FLASH is not "
+                                      "defined");
 #endif
         }
-    }
-    else
-    {
-        m_pCentral->mp_SetPanel( 0 );
+    } else {
+        m_pCentral->mp_SetPanel(0);
     }
 
-    if ( config.m_eMode == gc_eChild )
-    {
-        m_pCentral->setBackgroundColor( Qt::white );
-        m_pCentral->mp_SetHighColor( sc_DefaultBGColor );
-    }
-    else
-    {
-        m_pCentral->setBackgroundColor( sc_DefaultBGColor );
-        m_pCentral->mp_SetHighColor( Qt::white );
+    if (config.m_eMode == gc_eChild) {
+        m_pCentral->setBackgroundColor(Qt::white);
+        m_pCentral->mp_SetHighColor(sc_DefaultBGColor);
+    } else {
+        m_pCentral->setBackgroundColor(sc_DefaultBGColor);
+        m_pCentral->mp_SetHighColor(Qt::white);
     }
 
     if (!config.hasMenuEnabled())
@@ -187,78 +186,81 @@ void ApexMainWindow::ApplyConfig(const data::ScreensData* c)
     if (config.hasFullScreenEnabled())
         setWindowState(windowState() | Qt::WindowFullScreen);
 
-//  m_pCentral->setStyle
+    //  m_pCentral->setStyle
 
     m_pCentral->mp_LayoutNow();
     if (m_pPanel)
-        m_pPanel->mp_Show( config.hasPanelEnabled() );
+        m_pPanel->mp_Show(config.hasPanelEnabled());
 
     m_pCentral->repaint();
 }
 
-void ApexMainWindow::SetScreen( gui::ScreenRunDelegate* ac_Screen )
+void ApexMainWindow::SetScreen(gui::ScreenRunDelegate *ac_Screen)
 {
-    //do nothing if it's the same screen
-    if ( runningScreen == ac_Screen )
-    {
+    // do nothing if it's the same screen
+    if (runningScreen == ac_Screen) {
         runningScreen->clearText();
         return;
     }
 
-    //show, connect and lay out the new screen
-    if ( runningScreen ) {
+    // show, connect and lay out the new screen
+    if (runningScreen) {
         runningScreen->getWidget()->setParent(0);
         ClearScreen();
     }
 
     runningScreen = ac_Screen;
 
-    //m_pCentral->mp_SetScreen( runningScreen->getLayout() );
+    // m_pCentral->mp_SetScreen( runningScreen->getLayout() );
     runningScreen->getWidget()->setStyleSheet(
-        defaultStyleSheet + m_rd->GetData().screensData()->style()
-    );
+        defaultStyleSheet + m_rd->GetData().screensData()->style());
 
     m_pCentral->setScreenWidget(runningScreen->getWidget());
 
     m_pCentral->mp_LayoutNow();
-    EnableScreen( false );
+    EnableScreen(false);
     runningScreen->clearText();
     runningScreen->showWidgets();
 }
 
-gui::ScreenRunDelegate* ApexMainWindow::setScreen(const QString& id)
+gui::ScreenRunDelegate *ApexMainWindow::setScreen(const QString &id)
 {
-    gui::ScreenRunDelegate* s = m_rd->GetScreen(id);
+    gui::ScreenRunDelegate *s = m_rd->GetScreen(id);
     SetScreen(s);
     return s;
 }
 
-ScreenRunDelegate* ApexMainWindow::currentScreen() const
+ScreenRunDelegate *ApexMainWindow::currentScreen() const
 {
     return runningScreen;
 }
 
-void ApexMainWindow::setAnswer(const QString& answer)
+void ApexMainWindow::setAnswer(const QString &answer)
 {
     if (runningScreen != 0)
         runningScreen->setAnswer(answer);
 }
 
-void ApexMainWindow::EnableScreen( const bool ac_bEnable /*= true*/ )
+void ApexMainWindow::EnableScreen(const bool ac_bEnable /*= true*/)
 {
-    if ( runningScreen )
-    {
-        runningScreen->enableWidgets( ac_bEnable );
+    if (runningScreen) {
+        runningScreen->enableWidgets(ac_bEnable);
 
         ReclaimFocus();
 
-        if (ac_bEnable && ApexControl::Get().GetCurrentExperimentRunDelegate().GetAutoAnswer()) {
+        if (ac_bEnable &&
+            ApexControl::Get()
+                .GetCurrentExperimentRunDelegate()
+                .GetAutoAnswer()) {
 
-            const data::ButtonGroup* b = runningScreen->getScreen()->getButtonGroup();
+            const data::ButtonGroup *b =
+                runningScreen->getScreen()->getButtonGroup();
             if (!b) {
-                QMessageBox::warning(0, tr("No buttongroup found"), tr("Error : no buttongroup was found, can't automatically select a button"), QString(tr("OK")));
+                QMessageBox::warning(0, tr("No buttongroup found"),
+                                     tr("Error : no buttongroup was found, "
+                                        "can't automatically select a button"),
+                                     QString(tr("OK")));
                 return;
-
             }
             data::ButtonGroup::const_iterator i = b->begin();
             int number = randomGenerator.nextDouble() * b->size();
@@ -266,24 +268,22 @@ void ApexMainWindow::EnableScreen( const bool ac_bEnable /*= true*/ )
             for (int c = 0; c < number; ++c)
                 ++i;
 
-            QString elem=(*i);
-            qCDebug(APEX_RS, "Automatically selecting %s", qPrintable (elem));
-
+            QString elem = (*i);
+            qCDebug(APEX_RS, "Automatically selecting %s", qPrintable(elem));
 
             static ScreenResult result;
             result.clear();
 
-            result[ runningScreen->getScreen()->getButtonGroup()->getID() ] = elem;
+            result[runningScreen->getScreen()->getButtonGroup()->getID()] =
+                elem;
 
-            runningScreen->addInterestingTexts( result );
+            runningScreen->addInterestingTexts(result);
 
+            // QMetaObject::invokeMethod (this, "Answered",
+            // Qt::QueuedConnection, Q_ARG (const ScreenResult*, &result));
 
-            //QMetaObject::invokeMethod (this, "Answered", Qt::QueuedConnection, Q_ARG (const ScreenResult*, &result));
-
-            Q_EMIT Answered( &result );
-
+            Q_EMIT Answered(&result);
         }
-
     }
 }
 
@@ -299,92 +299,99 @@ bool ApexMainWindow::screenEnabled() const
 
 void ApexMainWindow::ReclaimFocus()
 {
-    if (QApplication::focusWidget()==0)
+    if (QApplication::focusWidget() == 0)
         MenuBar->setFocus();
 }
 
 /******************************************** FEEDBACK ************************/
 
 void ApexMainWindow::feedback(ScreenElementRunDelegate::FeedbackMode mode,
-                              const QString& elementId)
+                              const QString &elementId)
 {
-    //the element
-    if (runningScreen != 0)
-    {
+    // the element
+    if (runningScreen != 0) {
         runningScreen->feedback(mode, elementId);
-        m_rd->modFeedback()->highLight(elementId);      // TODO: implement positive and negative feedback
+        m_rd->modFeedback()->highLight(
+            elementId); // TODO: implement positive and negative feedback
         m_pCurFeedback = runningScreen->getFeedBackElement();
     }
 
-    //the panel
-    if (m_pPanel != 0 && mode != ScreenElementRunDelegate::HighlightFeedback )
+    // the panel
+    if (m_pPanel != 0 && mode != ScreenElementRunDelegate::HighlightFeedback)
         m_pPanel->feedBack(mode);
 }
 
-void ApexMainWindow::HighLight( const QString& ac_sID )
+void ApexMainWindow::HighLight(const QString &ac_sID)
 {
-    feedback( ScreenElementRunDelegate::HighlightFeedback, ac_sID );
+    feedback(ScreenElementRunDelegate::HighlightFeedback, ac_sID);
 }
 
 void ApexMainWindow::EndFeedBack()
 {
-    if ( m_pCurFeedback )
-        runningScreen->feedback( ScreenElementRunDelegate::NoFeedback, m_pCurFeedback );
-    if ( m_pPanel )
-        m_pPanel->feedBack( ScreenElementRunDelegate::NoFeedback );
+    if (m_pCurFeedback)
+        runningScreen->feedback(ScreenElementRunDelegate::NoFeedback,
+                                m_pCurFeedback);
+    if (m_pPanel)
+        m_pPanel->feedBack(ScreenElementRunDelegate::NoFeedback);
     m_rd->modFeedback()->clear();
     m_pCentral->repaint();
 }
 
 void ApexMainWindow::EndHighLight()
 {
-    if ( m_pCurFeedback )
-        runningScreen->feedback( ScreenElementRunDelegate::NoFeedback, m_pCurFeedback );
+    if (m_pCurFeedback)
+        runningScreen->feedback(ScreenElementRunDelegate::NoFeedback,
+                                m_pCurFeedback);
     m_rd->modFeedback()->clear();
     m_pCentral->repaint();
 }
 
-void ApexMainWindow::AnswerFromElement( ScreenElementRunDelegate* ac_Element )
+void ApexMainWindow::AnswerFromElement(ScreenElementRunDelegate *ac_Element)
 {
     static ScreenResult result;
     result.clear();
 
-    //add element id if buttongroup
-    if ( runningScreen->getScreen()->getButtonGroup() )
-    {
-        if ( runningScreen->getScreen()->getButtonGroup()->IsElement( ac_Element->getID() ) )
-            result[ runningScreen->getScreen()->getButtonGroup()->getID() ] = ac_Element->getID();
+    // add element id if buttongroup
+    if (runningScreen->getScreen()->getButtonGroup()) {
+        if (runningScreen->getScreen()->getButtonGroup()->IsElement(
+                ac_Element->getID()))
+            result[runningScreen->getScreen()->getButtonGroup()->getID()] =
+                ac_Element->getID();
     }
 
-    if (runningScreen->getScreen()->elementById(ac_Element->getID())->elementType() == ScreenElement::Picture
-            || runningScreen->getScreen()->elementById(ac_Element->getID())->elementType() == ScreenElement::Button) {
+    if (runningScreen->getScreen()
+                ->elementById(ac_Element->getID())
+                ->elementType() == ScreenElement::Picture ||
+        runningScreen->getScreen()
+                ->elementById(ac_Element->getID())
+                ->elementType() == ScreenElement::Button) {
         result[ac_Element->getID()] = QString();
     }
 
-    runningScreen->addInterestingTexts( result );
-    runningScreen->addScreenParameters( result );
+    runningScreen->addInterestingTexts(result);
+    runningScreen->addScreenParameters(result);
     result.setLastClickPosition(ac_Element->getClickPosition());
 
     qCDebug(APEX_RS) << "***Answered" << result;
-    Q_EMIT Answered( &result );
+    Q_EMIT Answered(&result);
 }
 
-/******************************************** STATE ***************************************************************************/
+/******************************************** STATE
+ * ***************************************************************************/
 
-//TODO remove
+// TODO remove
 void ApexMainWindow::Paused()
 {
-    const data::ScreensData* config = m_rd->GetData().screensData();
-    if ( m_pPanel && config->m_eMode == gc_eNormal )
-        ( (Panel*) m_pPanel.data() )->mp_Paused();
+    const data::ScreensData *config = m_rd->GetData().screensData();
+    if (m_pPanel && config->m_eMode == gc_eNormal)
+        ((Panel *)m_pPanel.data())->mp_Paused();
 }
 
 void ApexMainWindow::setPaused(bool paused)
 {
-    if (paused != this->paused)
-    {
+    if (paused != this->paused) {
         this->paused = paused;
-        static_cast<Panel*>(m_pPanel.data())->setPaused(paused);
+        static_cast<Panel *>(m_pPanel.data())->setPaused(paused);
     }
 }
 
@@ -395,52 +402,51 @@ bool ApexMainWindow::isPaused() const
 
 void ApexMainWindow::Initted()
 {
-    EnableOpen        ( true  );
-    EnableStart       ( false );
-    EnableStop        ( false );
-    EnableRepeat      ( false );
-    EnablePause       ( false );
-    EnableSave        ( false );
-    EnableExperiment  ( false );
-    EnableCalibration ( false );
+    EnableOpen(true);
+    EnableStart(false);
+    EnableStop(false);
+    EnableRepeat(false);
+    EnablePause(false);
+    EnableSave(false);
+    EnableExperiment(false);
+    EnableCalibration(false);
 }
 
 void ApexMainWindow::Started()
 {
-    EnableStart       ( false );
-    EnableStop        ( false );
-    EnableRepeat      ( false );
-    EnablePause       ( true  );
-    EnableSave        ( true  );
+    EnableStart(false);
+    EnableStop(false);
+    EnableRepeat(false);
+    EnablePause(true);
+    EnableSave(true);
 }
 
 void ApexMainWindow::Stopped()
 {
-    EnableStart       ( true  );
-    EnableStop        ( false );
-    EnableRepeat      ( false );
-    EnablePause       ( false );
-    EnableSave        ( false );
+    EnableStart(true);
+    EnableStop(false);
+    EnableRepeat(false);
+    EnablePause(false);
+    EnableSave(false);
 }
 
 void ApexMainWindow::ExperimentLoaded()
 {
-    EnableOpen       ( false );
-    EnableStart      ( true  );
-    EnableStop       ( false );
-    EnablePause      ( false );
-    EnableSave       ( false );
-    EnableExperiment ( true  );
-    EnableAutoAnswer ( true  );
+    EnableOpen(false);
+    EnableStart(true);
+    EnableStop(false);
+    EnablePause(false);
+    EnableSave(false);
+    EnableExperiment(true);
 }
 
 void ApexMainWindow::Finished()
 {
     Initted();
     Clear();
-    EnableScreen( false );
+    EnableScreen(false);
     m_sSavefileName = "";
-    setWindowState(windowState() &~ Qt::WindowFullScreen);
+    setWindowState(windowState() & ~Qt::WindowFullScreen);
 #ifndef Q_OS_ANDROID // the menuBar()->isHidden check would be cleaner but
                      // QMenuBar is always hidden on android
     menuBar()->show();
@@ -449,9 +455,8 @@ void ApexMainWindow::Finished()
 
 void ApexMainWindow::ClearScreen()
 {
-    if ( runningScreen )
-    {
-        m_pCentral->mp_SetScreen( 0 );
+    if (runningScreen) {
+        m_pCentral->mp_SetScreen(0);
         runningScreen->hideWidgets();
     }
     runningScreen = 0;
@@ -461,23 +466,24 @@ void ApexMainWindow::ClearScreen()
 void ApexMainWindow::Clear()
 {
     m_pCentral->mp_ClearContent();
-    if ( m_pPanel )
-        m_pPanel->mp_Show( false );
-    ClearScreen(); //FIXME Michael Hofmann: Rename method to sth. useful,
+    if (m_pPanel)
+        m_pPanel->mp_Show(false);
+    ClearScreen(); // FIXME Michael Hofmann: Rename method to sth. useful,
     // clearscreen seems to not work because old experiment is not valid anymore
     runningScreen = 0; // Workaround
 }
 
-/******************************************** MRU ***************************************************************************/
+/******************************************** MRU
+ * ***************************************************************************/
 
-MRU* ApexMainWindow::GetMru()
+MRU *ApexMainWindow::GetMru()
 {
     return m_pMRU.data();
 }
 
-const QString& ApexMainWindow::GetOpenDir() const
+const QString &ApexMainWindow::GetOpenDir() const
 {
-//    qCDebug(APEX_RS, "ApexMainWindow::GetOpenDir");
+    //    qCDebug(APEX_RS, "ApexMainWindow::GetOpenDir");
     return m_pMRU->openDir();
 }
 
@@ -486,19 +492,20 @@ void ApexMainWindow::MruLoad()
     m_pMRU->loadFromFile();
 }
 
-void ApexMainWindow::SetOpenDir( const QString& ac_sDir )
+void ApexMainWindow::SetOpenDir(const QString &ac_sDir)
 {
-    m_pMRU->setOpenDir( ac_sDir );
+    m_pMRU->setOpenDir(ac_sDir);
 }
 
-/******************************************** ENABLERS ***************************************************************************/
+/******************************************** ENABLERS
+ * ***************************************************************************/
 
-void ApexMainWindow::EnableStart( const bool ac_bEnable )
+void ApexMainWindow::EnableStart(const bool ac_bEnable)
 {
-    if ( m_pPanel )
-        m_pPanel->mp_EnableStart( ac_bEnable );
+    if (m_pPanel)
+        m_pPanel->mp_EnableStart(ac_bEnable);
 
-    experimentStartAction->setEnabled( ac_bEnable );
+    experimentStartAction->setEnabled(ac_bEnable);
 }
 
 bool ApexMainWindow::startEnabled() const
@@ -506,12 +513,12 @@ bool ApexMainWindow::startEnabled() const
     return experimentStartAction->isEnabled();
 }
 
-void ApexMainWindow::EnableStop ( const bool ac_bEnable )
+void ApexMainWindow::EnableStop(const bool ac_bEnable)
 {
-    if ( m_pPanel )
-        m_pPanel->mp_EnableStop( ac_bEnable );
+    if (m_pPanel)
+        m_pPanel->mp_EnableStop(ac_bEnable);
 
-    experimentStopAction->setEnabled( ac_bEnable );
+    experimentStopAction->setEnabled(ac_bEnable);
 }
 
 bool ApexMainWindow::stopEnabled() const
@@ -519,21 +526,16 @@ bool ApexMainWindow::stopEnabled() const
     return experimentStopAction->isEnabled();
 }
 
-void ApexMainWindow::EnableRepeat ( const bool ac_bEnable )
+void ApexMainWindow::EnableRepeat(const bool ac_bEnable)
 {
-    if ( m_pPanel )
-        m_pPanel->mp_EnableRepeat( ac_bEnable );
+    if (m_pPanel)
+        m_pPanel->mp_EnableRepeat(ac_bEnable);
     stimulusRepeatAction->setEnabled(ac_bEnable);
 }
 
-void ApexMainWindow::EnableSkip( const bool ac_bEnable /* = true  */ )
+void ApexMainWindow::EnableSkip(const bool ac_bEnable /* = true  */)
 {
-    experimentSkipAction->setEnabled (ac_bEnable);
-}
-
-void ApexMainWindow::EnableAutoAnswer( const bool ac_bEnable /* = true  */ )
-{
-    experimentAutoAnswerAction->setEnabled (ac_bEnable);
+    experimentSkipAction->setEnabled(ac_bEnable);
 }
 
 void ApexMainWindow::EnableSelectSoundcard(const bool ac_bEnable)
@@ -541,12 +543,12 @@ void ApexMainWindow::EnableSelectSoundcard(const bool ac_bEnable)
     selectSoundcardAction->setEnabled(ac_bEnable);
 }
 
-void ApexMainWindow::EnablePause( const bool ac_bEnable )
+void ApexMainWindow::EnablePause(const bool ac_bEnable)
 {
-    if ( m_pPanel )
-        m_pPanel->mp_EnablePause( ac_bEnable );
+    if (m_pPanel)
+        m_pPanel->mp_EnablePause(ac_bEnable);
 
-    experimentPauseAction->setEnabled( ac_bEnable );
+    experimentPauseAction->setEnabled(ac_bEnable);
 }
 
 bool ApexMainWindow::pauseEnabled() const
@@ -564,28 +566,29 @@ bool ApexMainWindow::repeatEnabled() const
     return stimulusRepeatAction->isEnabled();
 }
 
-void ApexMainWindow::EnableSave( const bool ac_bEnable )
+void ApexMainWindow::EnableSave(const bool ac_bEnable)
 {
-    fileSaveAsAction->setEnabled (ac_bEnable);
+    fileSaveAsAction->setEnabled(ac_bEnable);
 }
 
-void ApexMainWindow::EnableOpen( const bool ac_bEnable )
+void ApexMainWindow::EnableOpen(const bool ac_bEnable)
 {
-    fileOpenAction->setEnabled (ac_bEnable);
-    m_pMRU->enable( ac_bEnable );
+    fileOpenAction->setEnabled(ac_bEnable);
+    m_pMRU->enable(ac_bEnable);
 }
 
-void ApexMainWindow::EnableExperiment( const bool ac_bEnable )
+void ApexMainWindow::EnableExperiment(const bool ac_bEnable)
 {
-    experimentMenu->setEnabled (ac_bEnable);
+    experimentMenu->setEnabled(ac_bEnable);
 }
 
-void ApexMainWindow::EnableCalibration( const bool ac_bEnable )
+void ApexMainWindow::EnableCalibration(const bool ac_bEnable)
 {
-    calibrateMenu->setEnabled (ac_bEnable);
+    calibrateMenu->setEnabled(ac_bEnable);
 }
 
-/******************************************** MISC SLOTS ***************************************************************************/
+/******************************************** MISC SLOTS
+ * ***************************************************************************/
 
 // void ApexMainWindow::SetNumTrials( const unsigned ac_nTrials )
 // {
@@ -605,20 +608,22 @@ void ApexMainWindow::setProgress(double percentage)
         m_pPanel->mp_SetProgress(percentage);
 }
 
-void ApexMainWindow::AddStatusMessage( const QString& ac_sMessage )
+void ApexMainWindow::AddStatusMessage(const QString &ac_sMessage)
 {
-    const data::ScreensData* config = m_rd->GetData().screensData();
-    if ( m_pPanel && config->m_eMode == gc_eNormal )
-        m_pPanel->mp_SetText( ac_sMessage );
+    const data::ScreensData *config = m_rd->GetData().screensData();
+    if (m_pPanel && config->m_eMode == gc_eNormal)
+        m_pPanel->mp_SetText(ac_sMessage);
 }
 
 void ApexMainWindow::helpAbout()
 {
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("APEX 3"));
-    msgBox.setText(tr("APEX v3.1 %1\n"
-                "All copyrights ExpORL, KULeuven\n"
-                "Contact tom.francart@med.kuleuven.be for more information").arg(ApexTools::fetchVersion()));
+    msgBox.setText(
+        tr("APEX v3.1 %1\n"
+           "All copyrights ExpORL, KULeuven\n"
+           "Contact tom.francart@med.kuleuven.be for more information")
+            .arg(ApexTools::fetchVersion()));
     msgBox.setDetailedText(ApexTools::fetchDiffstat());
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.setDefaultButton(QMessageBox::Ok);
@@ -627,8 +632,8 @@ void ApexMainWindow::helpAbout()
 
 void ApexMainWindow::helpContents()
 {
-    QMessageBox::information (NULL, tr("APEX 3"),
-            tr("Sorry but there are no help files yet."));
+    QMessageBox::information(NULL, tr("APEX 3"),
+                             tr("Sorry but there are no help files yet."));
 }
 
 void ApexMainWindow::helpDeletePluginCache()
@@ -646,8 +651,8 @@ void ApexMainWindow::helpEditApexconfig()
     ApexControl::Get().editApexconfig();
 }
 
-
-/******************************************** MISC ***************************************************************************/
+/******************************************** MISC
+ * ***************************************************************************/
 
 void ApexMainWindow::closeEvent(QCloseEvent *evt)
 {
@@ -665,14 +670,30 @@ void ApexMainWindow::closeEvent(QCloseEvent *evt)
     }
 }
 
-QWidget* apex::gui::ApexMainWindow::centralWidget()
+QWidget *apex::gui::ApexMainWindow::centralWidget()
 {
     return m_pCentral.data();
 }
 
-//FIXME I think ApexControl should handle status reporting
+// FIXME I think ApexControl should handle status reporting
 void ApexMainWindow::updateStatusReporting()
 {
     screenStatus->show();
     screenStatus->raise();
+}
+
+void ApexMainWindow::quickWidgetBugHide()
+{
+#ifdef Q_OS_ANDROID
+    screenStatus->hide();
+    this->hide();
+#endif
+}
+
+void ApexMainWindow::quickWidgetBugShow()
+{
+#ifdef Q_OS_ANDROID
+    this->show();
+    this->raise();
+#endif
 }

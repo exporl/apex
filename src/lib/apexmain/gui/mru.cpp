@@ -31,18 +31,17 @@
 
 namespace
 {
-const QString recentFilesGroup( "recentFiles" );
-const QString fileKey( "file" );
-const QString recentDirGroup( "recentDirs" );
-const QString dirKey( "dir" );
-const size_t  sc_nMaxItems = 10;
+const QString recentFilesGroup("recentFiles");
+const QString fileKey("file");
+const QString recentDirGroup("recentDirs");
+const QString dirKey("dir");
+const size_t sc_nMaxItems = 10;
 }
 
 namespace apex
 {
-MRU::MRU( QMenu* const ac_pMenuToMru ) :
-    m_menu( ac_pMenuToMru ),
-    m_items( new MRUvector() )
+MRU::MRU(QMenu *const ac_pMenuToMru)
+    : m_menu(ac_pMenuToMru), m_items(new MRUvector())
 {
 }
 
@@ -86,65 +85,67 @@ void MRU::saveToFile()
     settings.sync();
 }
 
-void MRU::setOpenDir( const QString& dirName )
+void MRU::setOpenDir(const QString &dirName)
 {
     m_openDirName = dirName;
 }
 
-const QString& MRU::openDir() const
+const QString &MRU::openDir() const
 {
     //    qCDebug(APEX_RS, "MRU::mf_sGetOpenDir");
     return m_openDirName;
 }
 
-void MRU::addAndSave(const QString &item, const bool enable){
+void MRU::addAndSave(const QString &item, const bool enable)
+{
     addItem(item, enable);
     setOpenDir(QFileInfo(item).absolutePath());
     saveToFile();
 }
 
-void MRU::addItem( const QString& item, const bool enable )
+void MRU::addItem(const QString &item, const bool enable)
 {
     const size_t size = m_items->size();
-    if( !size )
+    if (!size)
         m_menu->addSeparator();
     else {
-        //check duplicate
+        // check duplicate
         MRUvector::iterator it = m_items->begin();
-        while( it != m_items->end() ) {
-            if( (*it)->text() == item ) {
-                std::iter_swap(it, (m_items->end()-1));
+        while (it != m_items->end()) {
+            if ((*it)->text() == item) {
+                std::iter_swap(it, (m_items->end() - 1));
                 return;
             }
             ++it;
         }
     }
-     if (!QFileInfo::exists(item))
-         return;
-    MRUAction* p = new MRUAction( m_menu, item );
-    if( size + 1 >= sc_nMaxItems ) {
+    if (!QFileInfo::exists(item))
+        return;
+    MRUAction *p = new MRUAction(m_menu, item);
+    if (size + 1 >= sc_nMaxItems) {
         MRUvector::iterator it = m_items->begin();
-        m_menu->removeAction (*it);
-        m_items->erase( it );
+        m_menu->removeAction(*it);
+        m_items->erase(it);
     }
-    m_items->push_back( p );
-    m_menu->addAction (p);
-    p->setEnabled( enable );
-    connect( p, SIGNAL( Activated( const QString& ) ), this, SIGNAL( Released(const QString&) ) );
+    m_items->push_back(p);
+    m_menu->addAction(p);
+    p->setEnabled(enable);
+    connect(p, SIGNAL(Activated(const QString &)), this,
+            SIGNAL(Released(const QString &)));
 }
 
 void MRU::removeAllItems()
 {
     disconnect();
-    std::for_each( m_items->begin(), m_items->end(), appcore::Deleter() );
+    std::for_each(m_items->begin(), m_items->end(), appcore::Deleter());
     m_items->clear();
 }
 
-void MRU::enable( const bool enable )
+void MRU::enable(const bool enable)
 {
     MRUvector::const_iterator it = m_items->begin();
-    while( it != m_items->end()){
-        (*it)->setEnabled( enable );
+    while (it != m_items->end()) {
+        (*it)->setEnabled(enable);
         ++it;
     }
 }
@@ -152,11 +153,10 @@ void MRU::enable( const bool enable )
 QStringList MRU::items(bool filterNonExistingFiles) const
 {
     QStringList result;
-    Q_FOREACH (MRUAction* action, *m_items) {
+    Q_FOREACH (MRUAction *action, *m_items) {
         if (!filterNonExistingFiles || QFileInfo(action->text()).exists())
             result << action->text();
     }
     return result;
 }
-
 }

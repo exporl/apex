@@ -21,20 +21,17 @@
 
 #include "rawmemorybundle.h"
 
- #include <QtGlobal>        // Q_ASSERT
+#include <QtGlobal> // Q_ASSERT
 
 using namespace utils;
 using namespace streamapp;
 
-RawMemoryBundler::RawMemoryBundler() :
-  mv_nPos( 0 ),
-  m_pMem( 0 )
+RawMemoryBundler::RawMemoryBundler() : mv_nPos(0), m_pMem(0)
 {
 }
 
-RawMemoryBundler::RawMemoryBundler( RawMemory* const ac_pTargetBundle ) :
-  mv_nPos( 0 ),
-  m_pMem( ac_pTargetBundle )
+RawMemoryBundler::RawMemoryBundler(RawMemory *const ac_pTargetBundle)
+    : mv_nPos(0), m_pMem(ac_pTargetBundle)
 {
 }
 
@@ -42,33 +39,30 @@ RawMemoryBundler::~RawMemoryBundler()
 {
 }
 
-void RawMemoryBundler::mp_SetBundle( RawMemory* const ac_pToBundle )
+void RawMemoryBundler::mp_SetBundle(RawMemory *const ac_pToBundle)
 {
-  m_pMem = PtrCheck( ac_pToBundle );
-  mv_nPos = 0;
+    m_pMem = PtrCheck(ac_pToBundle);
+    mv_nPos = 0;
 }
 
-void RawMemoryBundler::mp_SetWritePosition( const unsigned ac_nByteOffset )
+void RawMemoryBundler::mp_SetWritePosition(const unsigned ac_nByteOffset)
 {
-  Q_ASSERT( m_pMem );
-  mv_nPos = ac_nByteOffset;
+    Q_ASSERT(m_pMem);
+    mv_nPos = ac_nByteOffset;
 }
 
 RawMemoryAccess RawMemoryBundler::mf_GetBundledData() const
 {
-  Q_ASSERT( m_pMem );
-  return m_pMem->mf_GetAccess( 0, mv_nPos );
+    Q_ASSERT(m_pMem);
+    return m_pMem->mf_GetAccess(0, mv_nPos);
 }
 
-RawMemoryUnBundler::RawMemoryUnBundler() :
-  mv_nPos( 0 ),
-  mc_pMem( 0 )
+RawMemoryUnBundler::RawMemoryUnBundler() : mv_nPos(0), mc_pMem(0)
 {
 }
 
-RawMemoryUnBundler::RawMemoryUnBundler( RawMemoryAccess* const ac_pTargetBundle ) :
-  mv_nPos( 0 ),
-  mc_pMem( ac_pTargetBundle )
+RawMemoryUnBundler::RawMemoryUnBundler(RawMemoryAccess *const ac_pTargetBundle)
+    : mv_nPos(0), mc_pMem(ac_pTargetBundle)
 {
 }
 
@@ -76,14 +70,14 @@ RawMemoryUnBundler::~RawMemoryUnBundler()
 {
 }
 
-void RawMemoryUnBundler::mp_SetBundle( const RawMemoryAccess* const ac_pBundle )
+void RawMemoryUnBundler::mp_SetBundle(const RawMemoryAccess *const ac_pBundle)
 {
-  mc_pMem = PtrCheck( ac_pBundle );
-  mv_nPos = 0;
+    mc_pMem = PtrCheck(ac_pBundle);
+    mv_nPos = 0;
 }
 
-void RawMemoryUnBundler::mp_SetReadPosition( const unsigned ac_nByteOffset )
+void RawMemoryUnBundler::mp_SetReadPosition(const unsigned ac_nByteOffset)
 {
-  Q_ASSERT( mc_pMem && ac_nByteOffset < mc_pMem->mf_nGetSize() );
-  mv_nPos = ac_nByteOffset;
+    Q_ASSERT(mc_pMem && ac_nByteOffset < mc_pMem->mf_nGetSize());
+    mv_nPos = ac_nByteOffset;
 }

@@ -41,22 +41,22 @@ void TestSyl::vocoder()
     const unsigned sampleRate = 44100;
 
     // Load vocoder plugin
-    PluginFilterCreator* vocoderCreator = NULL;
+    PluginFilterCreator *vocoderCreator = NULL;
     Q_FOREACH (PluginFilterCreator *creator,
-            PluginLoader().availablePlugins<PluginFilterCreator>()) {
-        if (creator->availablePlugins().contains (QLatin1String("vocoder"))) {
+               PluginLoader().availablePlugins<PluginFilterCreator>()) {
+        if (creator->availablePlugins().contains(QLatin1String("vocoder"))) {
             vocoderCreator = creator;
             break;
         }
     }
     if (!vocoderCreator)
-        QFAIL ("Unable to find vocoder plugin.");
+        QFAIL("Unable to find vocoder plugin.");
 
-    QScopedPointer<PluginFilterInterface> vocoderFilter
-        (vocoderCreator->createFilter (QLatin1String("vocoder"), channels, blockSize,
-                                        sampleRate));
+    QScopedPointer<PluginFilterInterface> vocoderFilter(
+        vocoderCreator->createFilter(QLatin1String("vocoder"), channels,
+                                     blockSize, sampleRate));
     if (!vocoderFilter)
-        QFAIL ("Unable to instantiate vocoder filter instance.");
+        QFAIL("Unable to instantiate vocoder filter instance.");
     vocoderFilter->resetParameters();
 
     // Set parameters and prepare filter
@@ -66,62 +66,63 @@ void TestSyl::vocoder()
     QString lowpassFilterFilename(directory.path() + "/lowpass.bin");
     QString carriersFilename(directory.path() + "/carriers.wav");
 
-    if (!vocoderFilter->setParameter (QLatin1String("filterbank"), -1, filterBankFilename))
-        QFAIL (qPrintable (vocoderFilter->errorMessage()));
-    if (!vocoderFilter->setParameter (QLatin1String("lowpass"), -1, lowpassFilterFilename))
-        QFAIL (qPrintable (vocoderFilter->errorMessage()));
-    if (!vocoderFilter->setParameter (QLatin1String("carriers"), -1, carriersFilename))
-        QFAIL (qPrintable (vocoderFilter->errorMessage()));
+    if (!vocoderFilter->setParameter(QLatin1String("filterbank"), -1,
+                                     filterBankFilename))
+        QFAIL(qPrintable(vocoderFilter->errorMessage()));
+    if (!vocoderFilter->setParameter(QLatin1String("lowpass"), -1,
+                                     lowpassFilterFilename))
+        QFAIL(qPrintable(vocoderFilter->errorMessage()));
+    if (!vocoderFilter->setParameter(QLatin1String("carriers"), -1,
+                                     carriersFilename))
+        QFAIL(qPrintable(vocoderFilter->errorMessage()));
 
-    if (!vocoderFilter->prepare (0))
-        QFAIL (qPrintable (vocoderFilter->errorMessage()));
+    if (!vocoderFilter->prepare(0))
+        QFAIL(qPrintable(vocoderFilter->errorMessage()));
 
     // Read asa.wav
     QString asaFilename(directory.path() + "/asa.wav");
-    QByteArray filePath =
-        QFile::encodeName(asaFilename);
+    QByteArray filePath = QFile::encodeName(asaFilename);
     SF_INFO readSfinfo;
     readSfinfo.format = 0;
-    SNDFILE* asaFile = sf_open(filePath, SFM_READ, &readSfinfo);
+    SNDFILE *asaFile = sf_open(filePath, SFM_READ, &readSfinfo);
     if (!asaFile) {
         setErrorMessage(QString("Unable to open input file %1: %2")
-                .arg(QFile::decodeName(filePath),
-                    QString::fromLocal8Bit(sf_strerror(NULL))));
+                            .arg(QFile::decodeName(filePath),
+                                 QString::fromLocal8Bit(sf_strerror(NULL))));
         return false;
     }
     QVector<double> asa;
-    asa.resize(readSfinfo.channels*readSfinfo.frames);
+    asa.resize(readSfinfo.channels * readSfinfo.frames);
     asaLength = readSfinfo.frames;
     sf_readf_double(carriersFile, asa.data(), asaLength);
     sf_close(asaFile);
 
     // Apply vocoder to asa.wav
-    QVector<double*> asaData = asa.data();
-    vocoderFilter->process (asaData.data());
+    QVector<double *> asaData = asa.data();
+    vocoderFilter->process(asaData.data());
     vocoderFilter.reset();
 
     // Read asa_vocoded.wav (vocoded in MATLAB)
     QString asaVocodedFilename(directory.path() + "/asa_vocoded.wav");
-    QByteArray filePath =
-        QFile::encodeName(asaVocodedFilename);
+    QByteArray filePath = QFile::encodeName(asaVocodedFilename);
     SF_INFO readSfinfo;
     readSfinfo.format = 0;
-    SNDFILE* asaVocodedFile = sf_open(filePath, SFM_READ, &readSfinfo);
+    SNDFILE *asaVocodedFile = sf_open(filePath, SFM_READ, &readSfinfo);
     if (!asaVocodedFile) {
         setErrorMessage(QString("Unable to open input file %1: %2")
-                .arg(QFile::decodeName(filePath),
-                    QString::fromLocal8Bit(sf_strerror(NULL))));
+                            .arg(QFile::decodeName(filePath),
+                                 QString::fromLocal8Bit(sf_strerror(NULL))));
         return false;
     }
     QVector<double> asaVocoded;
-    asaVocoded.resize(readSfinfo.channels*readSfinfo.frames);
+    asaVocoded.resize(readSfinfo.channels * readSfinfo.frames);
     asaVocodedLength = readSfinfo.frames;
     sf_readf_double(carriersFile, asaVocoded.data(), asaVocodedLength);
     sf_close(asaVocodedFile);
-    QVector<double*> asaVocodedData = asaVocoded.data();
+    QVector<double *> asaVocodedData = asaVocoded.data();
 
     // Compare with reference signal asa_vocoded.wav
-    ARRAYFUZZCOMP (asaData, asaVocodedData, delta, asaLength);
+    ARRAYFUZZCOMP(asaData, asaVocodedData, delta, asaLength);
 
     TEST_EXCEPTIONS_CATCH
 }

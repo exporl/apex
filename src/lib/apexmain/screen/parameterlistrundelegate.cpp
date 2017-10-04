@@ -37,12 +37,11 @@
 
 namespace
 {
-    struct ModelData
-    {
-        QString id;
-        QString name;
-        QString value;
-    };
+struct ModelData {
+    QString id;
+    QString name;
+    QString value;
+};
 }
 
 namespace apex
@@ -50,79 +49,81 @@ namespace apex
 namespace rundelegates
 {
 
-class ParameterListRunDelegate::Model
-    : public QAbstractTableModel, public QList<ModelData>
+class ParameterListRunDelegate::Model : public QAbstractTableModel,
+                                        public QList<ModelData>
 {
 public:
-    int rowCount( const QModelIndex& ) const;
-    int columnCount( const QModelIndex& ) const;
-    QVariant data (
-        const QModelIndex & index, int role = Qt::DisplayRole ) const;
-    QVariant headerData(
-        int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    int rowCount(const QModelIndex &) const;
+    int columnCount(const QModelIndex &) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const;
     void dataChanged();
 
-    int rowIndex(const QString& id);
+    int rowIndex(const QString &id);
 };
 
-int ParameterListRunDelegate::Model::rowCount( const QModelIndex& index ) const {
-    if ( index.isValid() )
+int ParameterListRunDelegate::Model::rowCount(const QModelIndex &index) const
+{
+    if (index.isValid())
         return 0;
     else
         return count();
 }
-int ParameterListRunDelegate::Model::columnCount( const QModelIndex& index ) const {
-    if ( index.isValid() )
+int ParameterListRunDelegate::Model::columnCount(const QModelIndex &index) const
+{
+    if (index.isValid())
         return 0;
     else
         return 2;
 }
 
-void ParameterListRunDelegate::Model::dataChanged() {
+void ParameterListRunDelegate::Model::dataChanged()
+{
     beginResetModel();
     endResetModel();
 }
 
 int ParameterListRunDelegate::Model::rowIndex(const QString &id)
 {
-    for (int i=0; i<length(); ++i)
+    for (int i = 0; i < length(); ++i)
         if (at(i).id == id)
             return i;
     return -1;
 }
 
-QVariant ParameterListRunDelegate::Model::data(
-    const QModelIndex& index, int role ) const
+QVariant ParameterListRunDelegate::Model::data(const QModelIndex &index,
+                                               int role) const
 {
-    if ( role != Qt::DisplayRole ) return QVariant();
-    switch( index.column() )
-    {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+    switch (index.column()) {
     case 0:
-        return at( index.row() ).name;
+        return at(index.row()).name;
     case 1:
-        return at( index.row() ).value;
+        return at(index.row()).value;
     default:
-        Q_ASSERT( false );
+        Q_ASSERT(false);
         return QVariant();
     }
 }
 
 QVariant ParameterListRunDelegate::Model::headerData(
-    int section, Qt::Orientation orientation, int role ) const
+    int section, Qt::Orientation orientation, int role) const
 {
-    if ( role != Qt::DisplayRole ) return QVariant();
-    if ( orientation != Qt::Horizontal ) return QVariant();
-    switch( section )
-    {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+    switch (section) {
     case 0:
-        return tr( "Name" );
+        return tr("Name");
     case 1:
-        return tr( "Value" );
+        return tr("Value");
     default:
         return QVariant();
     }
 }
-
 
 /* class LabelDelegate : public QItemDelegate
 {
@@ -131,7 +132,8 @@ QVariant ParameterListRunDelegate::Model::headerData(
     public:
         LabelDelegate(QObject *parent = 0);
 
-        QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+        QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem
+&option,
                               const QModelIndex &index) const;
 
         void setEditorData(QWidget *editor, const QModelIndex &index) const;
@@ -139,56 +141,59 @@ QVariant ParameterListRunDelegate::Model::headerData(
                           const QModelIndex &index) const;
 
         void updateEditorGeometry(QWidget *editor,
-                                  const QStyleOptionViewItem &option, const QModelIndex &index) const;
+                                  const QStyleOptionViewItem &option, const
+QModelIndex &index) const;
 };
 
-QWidget *LabelDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+QWidget *LabelDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem
+&option,
                       const QModelIndex &index) const {
 
 
                       }
 
-                      void LabelDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const;
-                      void LabelDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+                      void LabelDelegate::setEditorData(QWidget *editor, const
+QModelIndex &index) const;
+                      void LabelDelegate::setModelData(QWidget *editor,
+QAbstractItemModel *model,
                           const QModelIndex &index) const;
 
                       void LabelDelegate::updateEditorGeometry(QWidget *editor,
-                                  const QStyleOptionViewItem &option, const QModelIndex &index) const;
+                                  const QStyleOptionViewItem &option, const
+QModelIndex &index) const;
 
 */
 
 ParameterListRunDelegate::ParameterListRunDelegate(
-        ExperimentRunDelegate* p_exprd,
-    const ParameterListElement* e, QWidget* parent ) :
-      QTableView( parent ),
+    ExperimentRunDelegate *p_exprd, const ParameterListElement *e,
+    QWidget *parent)
+    : QTableView(parent),
       ScreenElementRunDelegate(p_exprd, e),
-      element( e ),
-      model( new Model )
+      element(e),
+      model(new Model)
 {
     QTableView::setObjectName(element->getID());
     setStyleSheet(element->getStyle());
-    setModel( model );
+    setModel(model);
     verticalHeader()->hide();
-    horizontalHeader()->setSectionsClickable( false );
+    horizontalHeader()->setSectionsClickable(false);
     resizeColumnsToContents();
 
-
-    for ( ParameterListElement::ParameterListT::const_iterator it=
-          element->getParameterList().begin();
-          it!=element->getParameterList().end(); ++it)
-    {
+    for (ParameterListElement::ParameterListT::const_iterator it =
+             element->getParameterList().begin();
+         it != element->getParameterList().end(); ++it) {
         ModelData d;
 
         d.name = (*it).GetName();
         d.id = (*it).id;
-        model->push_back( d );
+        model->push_back(d);
     }
     model->dataChanged();
     resizeColumnsToContents();
 
-    ParameterManager* mgr = p_exprd->GetParameterManager();
-    connect(mgr, SIGNAL(parameterChanged(QString, QVariant)),
-            this, SLOT(updateParameter(QString, QVariant)));
+    ParameterManager *mgr = p_exprd->GetParameterManager();
+    connect(mgr, SIGNAL(parameterChanged(QString, QVariant)), this,
+            SLOT(updateParameter(QString, QVariant)));
 
     // FIXME: set initial parameter values
 }
@@ -197,26 +202,26 @@ ParameterListRunDelegate::~ParameterListRunDelegate()
 {
 }
 
-QWidget* ParameterListRunDelegate::getWidget()
+QWidget *ParameterListRunDelegate::getWidget()
 {
     return this;
 }
 
-//void ParameterListRunDelegate::newStimulus( stimulus::Stimulus* stimulus )
-void ParameterListRunDelegate::updateParameter(const QString& id,
-                                                const QVariant& value)
+// void ParameterListRunDelegate::newStimulus( stimulus::Stimulus* stimulus )
+void ParameterListRunDelegate::updateParameter(const QString &id,
+                                               const QVariant &value)
 {
     QString newValue(value.toString());
 
-    for (int i=0; i<model->length(); ++i) {
+    for (int i = 0; i < model->length(); ++i) {
         if (model->at(i).id == id) {
 
-            QString expression( element->getParameterList().at(i).expression );
-            if (! expression.isEmpty()) {
-                newValue=QString::number( ParseExpression(expression,
-                                                          value.toDouble()));
+            QString expression(element->getParameterList().at(i).expression);
+            if (!expression.isEmpty()) {
+                newValue = QString::number(
+                    ParseExpression(expression, value.toDouble()));
             } else {
-                newValue=value.toString();
+                newValue = value.toString();
             }
 
             model->operator[](i).value = newValue;
@@ -225,10 +230,9 @@ void ParameterListRunDelegate::updateParameter(const QString& id,
 
     model->dataChanged();
     resizeColumnsToContents();
-
 }
 
-const ScreenElement* ParameterListRunDelegate::getScreenElement() const
+const ScreenElement *ParameterListRunDelegate::getScreenElement() const
 {
     return element;
 }
@@ -238,7 +242,5 @@ const ScreenElement* ParameterListRunDelegate::getScreenElement() const
     connect( d, SIGNAL( newStimulus( stimulus::Stimulus* ) ),
              this, SLOT( newStimulus( stimulus::Stimulus* ) ) );
 }*/
-
 }
 }
-

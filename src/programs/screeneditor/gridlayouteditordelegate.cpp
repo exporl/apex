@@ -29,180 +29,180 @@
 
 namespace apex
 {
-  namespace editor
-  {
+namespace editor
+{
 
-    ScreenElement* GridLayoutEditorDelegate::getScreenElement()
-    {
-      return element;
+ScreenElement *GridLayoutEditorDelegate::getScreenElement()
+{
+    return element;
+}
+
+int GridLayoutEditorDelegate::getPropertyCount()
+{
+    return LayoutEditorDelegate::getPropertyCount() + 2;
+}
+
+QString GridLayoutEditorDelegate::getPropertyName(int nr)
+{
+    if (nr < LayoutEditorDelegate::getPropertyCount())
+        return LayoutEditorDelegate::getPropertyName(nr);
+    switch (nr - LayoutEditorDelegate::getPropertyCount()) {
+    case 0:
+        return tr("width");
+    case 1:
+        return tr("height");
+    default:
+        qFatal("unknown parameter number");
+        return QString();
     }
+}
 
-    int GridLayoutEditorDelegate::getPropertyCount()
-    {
-      return LayoutEditorDelegate::getPropertyCount() + 2;
+QVariant GridLayoutEditorDelegate::getPropertyData(int nr, int role)
+{
+    if (nr < LayoutEditorDelegate::getPropertyCount())
+        return LayoutEditorDelegate::getPropertyData(nr, role);
+    switch (nr - LayoutEditorDelegate::getPropertyCount()) {
+    case 0:
+        if (role == Qt::DisplayRole)
+            return element->getWidth();
+        else
+            return QVariant();
+    case 1:
+        if (role == Qt::DisplayRole)
+            return element->getHeight();
+        else
+            return QVariant();
+    default:
+        qFatal("unknown parameter number");
+        return QVariant();
     }
+}
 
-    QString GridLayoutEditorDelegate::getPropertyName( int nr )
-    {
-      if ( nr < LayoutEditorDelegate::getPropertyCount() )
-        return LayoutEditorDelegate::getPropertyName( nr );
-      switch( nr - LayoutEditorDelegate::getPropertyCount() )
-      {
-      case 0: return tr( "width" );
-      case 1: return tr( "height" );
-      default: qFatal( "unknown parameter number" ); return QString();
-      }
-    }
-
-    QVariant GridLayoutEditorDelegate::getPropertyData( int nr, int role )
-    {
-      if ( nr < LayoutEditorDelegate::getPropertyCount() )
-        return LayoutEditorDelegate::getPropertyData( nr, role );
-      switch( nr - LayoutEditorDelegate::getPropertyCount() )
-      {
-      case 0:
-        if ( role == Qt::DisplayRole )
-          return element->getWidth();
-        else return QVariant();
-      case 1:
-        if ( role == Qt::DisplayRole )
-          return element->getHeight();
-        else return QVariant();
-      default:
-        qFatal( "unknown parameter number" ); return QVariant();
-      }
-    }
-
-    PropertyType GridLayoutEditorDelegate::getPropertyType( int nr )
-    {
-      if ( nr < LayoutEditorDelegate::getPropertyCount() )
-        return LayoutEditorDelegate::getPropertyType( nr );
-      switch( nr - LayoutEditorDelegate::getPropertyCount() )
-      {
-      case 0: return IntPropertyType;
-      case 1: return IntPropertyType;
-      default:
-        qFatal( "unknown parameter number" );
+PropertyType GridLayoutEditorDelegate::getPropertyType(int nr)
+{
+    if (nr < LayoutEditorDelegate::getPropertyCount())
+        return LayoutEditorDelegate::getPropertyType(nr);
+    switch (nr - LayoutEditorDelegate::getPropertyCount()) {
+    case 0:
         return IntPropertyType;
-      }
+    case 1:
+        return IntPropertyType;
+    default:
+        qFatal("unknown parameter number");
+        return IntPropertyType;
     }
+}
 
-    bool GridLayoutEditorDelegate::setProperty( int nr, const QVariant& v )
-    {
-      if ( nr < LayoutEditorDelegate::getPropertyCount() )
-        return LayoutEditorDelegate::setProperty( nr, v );
-      // no element declarations in switch
-      bool harmlesschange;
-      int nval;
-      int oldval;
-      int msgret;
-      switch( nr - LayoutEditorDelegate::getPropertyCount() )
-      {
-      case 0:
-        if ( v.type() != QVariant::Int ) return false;
+bool GridLayoutEditorDelegate::setProperty(int nr, const QVariant &v)
+{
+    if (nr < LayoutEditorDelegate::getPropertyCount())
+        return LayoutEditorDelegate::setProperty(nr, v);
+    // no element declarations in switch
+    bool harmlesschange;
+    int nval;
+    int oldval;
+    int msgret;
+    switch (nr - LayoutEditorDelegate::getPropertyCount()) {
+    case 0:
+        if (v.type() != QVariant::Int)
+            return false;
         nval = v.toInt();
-        if ( nval <= 0 ) return false;
+        if (nval <= 0)
+            return false;
         oldval = element->getWidth();
-        if ( nval < oldval )
-        {
-          element->setWidth( nval );
-          harmlesschange =
-            checkHarmlessChange( element );
-          element->setWidth( oldval );
-        }
-        else harmlesschange = true;
+        if (nval < oldval) {
+            element->setWidth(nval);
+            harmlesschange = checkHarmlessChange(element);
+            element->setWidth(oldval);
+        } else
+            harmlesschange = true;
 
-        if ( !harmlesschange )
-        {
-          msgret = QMessageBox::warning(
-            this, tr( "GridLayout width change" ),
-            tr( "Changing the gridlayout width will delete child elements.\n"
-                "Do you want to continue ?" ),
-            tr( "Continue" ), tr( "Cancel" ), QString(), 0, 1 );
-          harmlesschange = ( msgret == 0 );
+        if (!harmlesschange) {
+            msgret = QMessageBox::warning(
+                this, tr("GridLayout width change"),
+                tr("Changing the gridlayout width will delete child elements.\n"
+                   "Do you want to continue ?"),
+                tr("Continue"), tr("Cancel"), QString(), 0, 1);
+            harmlesschange = (msgret == 0);
         }
 
-        if ( harmlesschange )
-        {
-          element->setWidth( nval );
-          fixupChildren( element );
-          updateLayout( screenWidget->getElementToDelegateMap() );
-          return true;
-        }
-        else
-          return false;
-      case 1: // height
-        if ( v.type() != QVariant::Int ) return false;
+        if (harmlesschange) {
+            element->setWidth(nval);
+            fixupChildren(element);
+            updateLayout(screenWidget->getElementToDelegateMap());
+            return true;
+        } else
+            return false;
+    case 1: // height
+        if (v.type() != QVariant::Int)
+            return false;
         nval = v.toInt();
-        if ( nval <= 0 ) return false;
+        if (nval <= 0)
+            return false;
         oldval = element->getHeight();
-        if ( nval < oldval )
-        {
-          element->setHeight( nval );
-          harmlesschange =
-            checkHarmlessChange( element );
-          element->setHeight( oldval );
-        }
-        else harmlesschange = true;
+        if (nval < oldval) {
+            element->setHeight(nval);
+            harmlesschange = checkHarmlessChange(element);
+            element->setHeight(oldval);
+        } else
+            harmlesschange = true;
 
-        if ( !harmlesschange )
-        {
-          msgret = QMessageBox::warning(
-            this, tr( "GridLayout width change" ),
-            tr( "Changing the gridlayout height will delete child elements.\n"
-                "Do you want to continue ?" ),
-            tr( "Continue" ), tr( "Cancel" ), QString(), 0, 1 );
-          harmlesschange = ( msgret == 0 );
+        if (!harmlesschange) {
+            msgret = QMessageBox::warning(this, tr("GridLayout width change"),
+                                          tr("Changing the gridlayout height "
+                                             "will delete child elements.\n"
+                                             "Do you want to continue ?"),
+                                          tr("Continue"), tr("Cancel"),
+                                          QString(), 0, 1);
+            harmlesschange = (msgret == 0);
         }
 
-        if ( harmlesschange )
-        {
-          element->setHeight( nval );
-          fixupChildren( element );
-          updateLayout( screenWidget->getElementToDelegateMap() );
-          return true;
-        }
-        else
-          return false;
-      default:
-        qFatal( "unknown parameter number" );
+        if (harmlesschange) {
+            element->setHeight(nval);
+            fixupChildren(element);
+            updateLayout(screenWidget->getElementToDelegateMap());
+            return true;
+        } else
+            return false;
+    default:
+        qFatal("unknown parameter number");
         return false;
-      }
     }
+}
 
-    GridLayoutEditorDelegate::GridLayoutEditorDelegate(
-      GridLayoutElement* e, QWidget* parent, ScreenWidget* widget,
-      elementToDelegateMapT& elementToDelegateMap )
-      : LayoutEditorDelegate( parent, widget ),
-        element( e ),
-        gridlayout( 0 )
-    {
-      e->fillChildrenWithEmpties( widget->getScreen() );
-      updateLayout( elementToDelegateMap );
-    }
+GridLayoutEditorDelegate::GridLayoutEditorDelegate(
+    GridLayoutElement *e, QWidget *parent, ScreenWidget *widget,
+    elementToDelegateMapT &elementToDelegateMap)
+    : LayoutEditorDelegate(parent, widget), element(e), gridlayout(0)
+{
+    e->fillChildrenWithEmpties(widget->getScreen());
+    updateLayout(elementToDelegateMap);
+}
 
-    void GridLayoutEditorDelegate::updateLayout( elementToDelegateMapT& elementToDelegateMap )
-    {
-      QGridLayout* oldlayout = gridlayout;
-      gridlayout = new QGridLayout();
-      setLayout( gridlayout );
-      delete oldlayout;
-      updateLayoutChildren( elementToDelegateMap );
-    }
+void GridLayoutEditorDelegate::updateLayout(
+    elementToDelegateMapT &elementToDelegateMap)
+{
+    QGridLayout *oldlayout = gridlayout;
+    gridlayout = new QGridLayout();
+    setLayout(gridlayout);
+    delete oldlayout;
+    updateLayoutChildren(elementToDelegateMap);
+}
 
-    QGridLayout* GridLayoutEditorDelegate::getLayout()
-    {
-      return gridlayout;
-    }
+QGridLayout *GridLayoutEditorDelegate::getLayout()
+{
+    return gridlayout;
+}
 
-    void GridLayoutEditorDelegate::addItemToLayout( QWidget* widget, ScreenElement* e )
-    {
-        gridlayout->addWidget( widget, e->getY(), e->getX() );
-    }
+void GridLayoutEditorDelegate::addItemToLayout(QWidget *widget,
+                                               ScreenElement *e)
+{
+    gridlayout->addWidget(widget, e->getY(), e->getX());
+}
 
-    GridLayoutEditorDelegate::~GridLayoutEditorDelegate()
-    {
-      screenWidget->delegateDeleted( this );
-    }
-  }
+GridLayoutEditorDelegate::~GridLayoutEditorDelegate()
+{
+    screenWidget->delegateDeleted(this);
+}
+}
 }

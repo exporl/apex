@@ -36,18 +36,24 @@ class APEXTOOLS_EXPORT XmlUtils
     Q_DECLARE_TR_FUNCTIONS(XmlUtils)
 public:
     static bool writeDocument(const QDomDocument &doc, const QString &fileName);
+    static bool appendDocument(const QDomDocument &doc,
+                               const QString &fileName);
     static QString nodeToString(const QDomNode &node);
     static void removeComments(QDomDocument *doc);
     static QDomDocument parseString(const QString &toParse,
                                     const QUrl &schemaUrl = QUrl(),
                                     const QString &fileName = QString(),
                                     bool removeComments = true);
-    static QDomDocument parseDocument(const QString &fileName, const QUrl &schemaUrl = QUrl());
+    static QDomDocument parseDocument(const QString &fileName,
+                                      const QUrl &schemaUrl = QUrl());
     static QString richText(const QDomElement &node);
 
-    static QDomElement createTextElement(QDomDocument *doc, const QString &tag, const QString &value);
-    static QDomElement createTextElement(QDomDocument *doc, const QString &tag, double value);
-    static QDomElement createTextElement(QDomDocument *doc, const QString &tag, const QDateTime &value);
+    static QDomElement createTextElement(QDomDocument *doc, const QString &tag,
+                                         const QString &value);
+    static QDomElement createTextElement(QDomDocument *doc, const QString &tag,
+                                         double value);
+    static QDomElement createTextElement(QDomDocument *doc, const QString &tag,
+                                         const QDateTime &value);
 
     static QDomElement createRichTextElement(QDomDocument *doc,
                                              const QString &tag,
@@ -55,7 +61,6 @@ public:
 
     static void setText(QDomElement *element, const QString &value);
 };
-
 }
 
 #endif

@@ -2,7 +2,7 @@
 
 APEXEXECUTABLE=
 ACTION=test
-REFERENCEURL=https://exporl.med.kuleuven.be/apex/apex_reference_output.tgz
+REFERENCEURL=https://github.com/exporl/apex3-test-reference
 CLEAN=false
 SKIP=false
 VERBOSE=false
@@ -11,6 +11,7 @@ JOBS=4
 TIMEOUT=800
 EXPERIMENTS=
 TAPFILE=
+EXTRAPARAMS=
 
 parsecmd() {
     while [ $# -gt 0 ]; do
@@ -67,6 +68,11 @@ parsecmd() {
             JOBS=$2
             shift
             ;;
+        -p|--parameters) # [STRING]
+            # specify additional parameters to be passed to the executable
+            EXTRAPARAMS=$2
+            shift
+            ;;
         -h|--help) #
             # this help
             printf "Usage: $0 [OPTION]...\n\n"
@@ -106,7 +112,7 @@ prereq() {
 }
 
 runapex() {
-    local APEXPARAMS="--record --virtual-soundcard --deterministic --autoanswer --autostart --autosaveresults --exitafter"
+    local APEXPARAMS="--record --virtual-soundcard --deterministic --autoanswer --autostart --autosaveresults --exitafter  $EXTRAPARAMS"
     brownmsg "Running $APEXEXECUTABLE" $APEXPARAMS "$1"
     # allow Ctrl-C interrupt by relaying any SIGINT to the process group of timeout, and exiting the script
     trap 'kill -INT -$pid; exit' INT
@@ -117,12 +123,14 @@ runapex() {
 }
 
 downloadreference() {
-    local REFERENCEFILE=${1##*/}
-    if [[ ! -f "$2/$REFERENCEFILE" ]]; then
+    if [[ ! -f "$2/LICENSE" ]]; then
         brownmsg "Fetching reference from $1"
-        wget -O "$2/$REFERENCEFILE" "$1"
-        brownmsg "Unpacking reference from $2/$REFERENCEFILE"
-        tar xf "$2/$REFERENCEFILE" -C "$2"
+        git clone --depth 1 $1 $2
+    else
+        pushd $2
+        git fetch --depth 1
+        git checkout origin/master
+        popd
     fi
 }
 
@@ -208,18 +216,27 @@ runtest() {
     [[ "$ACTION" == "store" ]] && return
 
     local TESTPARTFAILED=false
-    local REFERENCEWAVS="$(cd "$REFERENCEDIR"; find -regex "\./$EXPERIMENTBASENAME-[0-9]+.wav")"
-    local RESULTSWAVS="$(cd "$RESULTSDIR"; find -regex "\./$EXPERIMENTBASENAME-[0-9]+.wav")"
+    local REFERENCEWAVS="$(find "$REFERENCEDIR" -regex "$REFERENCEDIR/$EXPERIMENTBASENAME-[0-9]+.wav")"
+    local RESULTSWAVS="$(find "$RESULTSDIR" -regex "$RESULTSDIR/$EXPERIMENTBASENAME-[0-9]+.wav")"
     brownmsg "Checking wav output ($(wc -l <<< "$REFERENCEWAVS") files)"
-    if diff -u --label reference <(echo "$REFERENCEWAVS") --label results <(echo "$RESULTSWAVS"); then
-        for i in $REFERENCEWAVS; do
-            # only compare raw wav data
-            if ! cmp -s <(sox "$REFERENCEDIR/$i" -t raw - 2> /dev/null) <(sox "$RESULTSDIR/$i" -t raw - 2> /dev/null); then
-                failtest "$i changed" "wav-contents"
+    if diff -u --label reference <(echo -e "$REFERENCEWAVS" | xargs -L1 basename) \
+            --label results <(echo -e "$RESULTSWAVS" | xargs -L1 basename); then
+        if [[ "$2" =~ continuous ]]; then
+            RESULT=$("$APEXROOT"/tools/linux-experimenttest-audio-compare-functions.py \
+                                continuous "$REFERENCEWAVS" "$RESULTSWAVS")
+            if [[ "$RESULT" != "True" ]]; then
                 TESTPARTFAILED=true
-                break
+                failtest "wav files differ" "wav"
             fi
-        done
+        else
+            RESULT=$("$APEXROOT"/tools/linux-experimenttest-audio-compare-functions.py \
+                                filewise "$REFERENCEWAVS" "$RESULTSWAVS")
+            if [[ "$RESULT" != "True" ]]; then
+                TESTPARTFAILED=true
+                failtest "wav files differ" "wav"
+            fi
+
+        fi
     else
         failtest "Different number of WAV files" "wav-count"
         TESTPARTFAILED=true
@@ -286,7 +303,7 @@ bluemsg() {
 
 parsecmd "$@"
 
-APEXROOT="$(cd "$(dirname ${BASH_SOURCE[0]})/.." && pwd)"
+APEXROOT="$(cd "$(dirname $(readlink -f ${BASH_SOURCE[0]}))/.." && pwd)"
 OUTPUTDIR="$APEXROOT/.build/test"
 REFERENCEROOT="$OUTPUTDIR/reference"
 RESULTSROOT="$OUTPUTDIR/results"
@@ -349,7 +366,7 @@ trytest() {
 }
 
 # exports so the parallel runtest can access them
-export REFERENCEROOT RESULTSROOT APEXROOT TIMEOUT APEXEXECUTABLE OUTPUTDIR TAPFILE SKIP NORESULTS
+export REFERENCEROOT RESULTSROOT APEXROOT TIMEOUT APEXEXECUTABLE OUTPUTDIR TAPFILE SKIP NORESULTS EXTRAPARAMS AUDIO_COMPARE_FUNCTION
 export -f runtest parsestatus skiptest oktest failtest redmsg greenmsg brownmsg bluemsg runapex trytest split
 echo $EXPERIMENTS | xargs -d ' ' -n 1 -I % -P $JOBS bash -c 'trytest %'
 

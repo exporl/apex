@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bertha:experiment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/bertha/1.0/experiment ../schema/experiment.xsd"
+    xmlns:bertha="http://med.kuleuven.be/exporl/bertha/1.0/experiment">
+    <blocks>
+        <block id="fftblock">
+            <plugin>OlaFft</plugin>
+            <parameter name="fftLength">2048</parameter>
+        </block>
+        <block id="ifftblock">
+            <plugin>OlaIfft</plugin>
+            <parameter name="fftLength">2048</parameter>
+        </block>
+    </blocks>
+    <connections>
+        <connection>
+            <from id="device" port="capture-1"/>
+            <to id="fftblock" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="fftblock" port="output-1"/>
+            <to id="ifftblock" port="input-1"/>
+        </connection>
+        <connection>
+            <from id="ifftblock" port="output-1"/>
+            <to id="device" port="playback-1"/>
+        </connection>
+    </connections>
+    <device id="device">
+        <driver>File</driver>
+        <samplerate>44100</samplerate>
+        <blocksize>512</blocksize>
+        <playbackports>1</playbackports>
+        <captureports>1</captureports>
+        <parameter name="inputFile">INPUTFILEPLACEHOLDER</parameter>
+        <parameter name="outputFile">OUTPUTFILEPLACEHOLDER</parameter>
+    </device>
+</bertha:experiment>

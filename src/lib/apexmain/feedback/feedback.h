@@ -1,29 +1,31 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_FEEDBACK_FEEDBACK_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_FEEDBACK_FEEDBACK_H_
 
-#include <QString>
 #include "feedback/pluginfeedbackinterface.h"
+#include <QString>
 
-namespace apex {
+namespace apex
+{
 
 class FeedbackPrivate;
-namespace data {
+namespace data
+{
 class ScreensData;
 }
 
 class Feedback
 {
 public:
-    Feedback(const data::ScreensData* data);
+    Feedback(const data::ScreensData *data);
     ~Feedback();
 
-    void loadPlugin(const QString& name,
-                    const FeedbackPluginParameters& params);
+    void loadPlugin(const QString &name,
+                    const FeedbackPluginParameters &params);
 
     //! initialize all plugins
     void initialize();
 
-    void highLight(const QString& element);
+    void highLight(const QString &element);
 
     //! Indicate that the response was correct (thumbs up)
     void showPositive();
@@ -34,15 +36,10 @@ public:
     //! Remove all feedback (highlight & positive/negative)
     void clear();
 
-
-
 private:
-    FeedbackPrivate* d;
+    FeedbackPrivate *d;
 };
 
-
-
-}       // ns apex
-
+} // ns apex
 
 #endif

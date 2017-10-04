@@ -50,7 +50,7 @@ namespace apex
 namespace stimulus
 {
 
-class CohDeviceThread: public QThread
+class CohDeviceThread : public QThread
 {
 public:
     CohDeviceThread();
@@ -63,25 +63,26 @@ Q_GLOBAL_STATIC(CohDeviceThread, cohDeviceThread)
 // with the CohClients; put all calls the clients in a separate thread, and use
 // asynchronous Qt signal/slot magic with some macro sugar to relay to it
 #define RELAY(obj, slot) RELAY_ARGS(obj, slot, QGenericReturnArgument())
-#define RELAY_ARGS(obj, slot, ...) \
-    do { \
-        if (!QMetaObject::invokeMethod(&obj, slot, Qt::BlockingQueuedConnection, __VA_ARGS__)) { \
-            qCCritical(APEX_COH, "Unable to relay to thread"); \
-        } else if (!obj.p->commandError.isEmpty()) { \
-            throw Exception(obj.p->commandError); \
-        } \
+#define RELAY_ARGS(obj, slot, ...)                                             \
+    do {                                                                       \
+        if (!QMetaObject::invokeMethod(                                        \
+                &obj, slot, Qt::BlockingQueuedConnection, __VA_ARGS__)) {      \
+            qCCritical(APEX_COH, "Unable to relay to thread");                 \
+        } else if (!obj.p->commandError.isEmpty()) {                           \
+            throw Exception(obj.p->commandError);                              \
+        }                                                                      \
     } while (0)
-#define RELAY_WRAP(command) \
-    Q_ASSERT(QThread::currentThread() == cohDeviceThread); \
-    p->commandError.clear(); \
-    QMutexLocker locker(&p->deviceLock); \
-    try { \
-        command; \
-    } catch (const std::exception &e) { \
-        p->commandError = QString::fromLocal8Bit(e.what()); \
+#define RELAY_WRAP(command)                                                    \
+    Q_ASSERT(QThread::currentThread() == cohDeviceThread);                     \
+    p->commandError.clear();                                                   \
+    QMutexLocker locker(&p->deviceLock);                                       \
+    try {                                                                      \
+        command;                                                               \
+    } catch (const std::exception &e) {                                        \
+        p->commandError = QString::fromLocal8Bit(e.what());                    \
     }
 
-class CohDeviceWorker: public QObject
+class CohDeviceWorker : public QObject
 {
     Q_OBJECT
 public Q_SLOTS:
@@ -111,7 +112,7 @@ public:
     bool isPlaying;
     // is the device ready to be started?
     bool isReady;
-    data::ApexMap* map;
+    data::ApexMap *map;
     int triggerType;
     QString deviceName;
     // how many powerup frames to send before starting streaming
@@ -133,17 +134,18 @@ public:
 
 CohDeviceThread::CohDeviceThread()
 {
+    qCDebug(APEX_THREADS, "Constructing CohDeviceThread");
 }
 
 CohDeviceThread::~CohDeviceThread()
 {
+    qCDebug(APEX_THREADS, "Destroying CohDeviceThread");
     // Wait for the thread to finish before we destruct it
     this->quit();
     this->wait();
 }
 
 // CohDeviceWorker =============================================================
-
 
 void CohDeviceWorker::setup()
 {
@@ -193,7 +195,8 @@ bool CohDevicePrivate::waitUntil(Coh::Status state, int timeout)
 
 bool CohDevicePrivate::waitUntil(const QSet<Coh::Status> &states, int timeout)
 {
-    qCDebug(APEX_COH) << "waitUntil for device" << deviceName << "in states" << states << "until" << timeout;
+    qCDebug(APEX_COH) << "waitUntil for device" << deviceName << "in states"
+                      << states << "until" << timeout;
 
     QTime timer;
     timer.start();
@@ -218,9 +221,8 @@ bool CohDevicePrivate::waitUntil(const QSet<Coh::Status> &states, int timeout)
 
 // CohDevice ===================================================================
 
-CohDevice::CohDevice(data::CohDeviceData* params) :
-    OutputDevice(params),
-    dataPtr(new CohDevicePrivate)
+CohDevice::CohDevice(data::CohDeviceData *params)
+    : OutputDevice(params), dataPtr(new CohDevicePrivate)
 {
     E_D(CohDevice);
 
@@ -234,18 +236,21 @@ CohDevice::CohDevice(data::CohDeviceData* params) :
     d->stimulusLength = 0;
     d->volume = params->volume();
 #ifdef Q_OS_WIN32
-    d->driverName = apex::MainConfigFileParser::Get().data().cohDriverName(d->deviceName);
+    d->driverName =
+        apex::MainConfigFileParser::Get().data().cohDriverName(d->deviceName);
 #else
     static int dumpFileCounter = 0;
-    d->driverName = QString::fromLatin1("protoslave: dump: coh-stimulus-dump-%1.txt")
-        .arg(++dumpFileCounter);
+    d->driverName =
+        QString::fromLatin1("protoslave: dump: coh-stimulus-dump-%1.txt")
+            .arg(++dumpFileCounter);
 #endif
 
     d->worker.p = d;
     d->worker.moveToThread(cohDeviceThread);
     cohDeviceThread->start();
 
-    qCDebug(APEX_COH, "Initializing %s (%s)", qPrintable(d->driverName), qPrintable(d->deviceName));
+    qCDebug(APEX_COH, "Initializing %s (%s)", qPrintable(d->driverName),
+            qPrintable(d->deviceName));
 
     RELAY(d->worker, "setup");
 
@@ -284,7 +289,7 @@ void CohDevice::RemoveAll()
     StopAll();
 }
 
-void CohDevice::SetSequence(const DataBlockMatrix* sequence)
+void CohDevice::SetSequence(const DataBlockMatrix *sequence)
 {
     E_D(CohDevice);
 
@@ -305,7 +310,7 @@ void CohDevice::SetSequence(const DataBlockMatrix* sequence)
 
     for (unsigned j = 0; j < nPar; ++j) {
         for (unsigned i = 0; i < nSeq; ++i) {
-            CohDataBlock* pCur = (CohDataBlock*)(*sequence)(j, i);
+            CohDataBlock *pCur = (CohDataBlock *)(*sequence)(j, i);
             if (pCur) {
                 AddInput(*pCur);
                 d->isReady = true;
@@ -314,7 +319,7 @@ void CohDevice::SetSequence(const DataBlockMatrix* sequence)
     }
 }
 
-void CohDevice::AddInput(const DataBlock& dataBlock)
+void CohDevice::AddInput(const DataBlock &dataBlock)
 {
     E_D(CohDevice);
 
@@ -324,15 +329,18 @@ void CohDevice::AddInput(const DataBlock& dataBlock)
         float powerup_period = 70;
         QScopedPointer<CohSequence> powerups(new CohSequence(d->powerupCount));
         powerups->append(new CohNullStimulus(powerup_period, false));
-        RELAY_ARGS(d->worker, "send", QGenericReturnArgument(), Q_ARG(coh::CohSequence*, powerups.data()));
+        RELAY_ARGS(d->worker, "send", QGenericReturnArgument(),
+                   Q_ARG(coh::CohSequence *, powerups.data()));
         d->stimulusLength += d->powerupCount * powerup_period;
         d->isPowerupSent = true;
     }
 
-    QScopedPointer<CohSequence> sequence(static_cast<const CohDataBlock&>(dataBlock)
-            .mappedData(d->map, d->volume));
+    QScopedPointer<CohSequence> sequence(
+        static_cast<const CohDataBlock &>(dataBlock).mappedData(d->map,
+                                                                d->volume));
     d->stimulusLength += ciSequenceLength(sequence.data());
-    RELAY_ARGS(d->worker, "send", QGenericReturnArgument(), Q_ARG(coh::CohSequence*, sequence.data()));
+    RELAY_ARGS(d->worker, "send", QGenericReturnArgument(),
+               Q_ARG(coh::CohSequence *, sequence.data()));
 
     d->showStatus();
 }
@@ -353,22 +361,30 @@ void CohDevice::PlayAll(void)
         return;
     }
 
-    RELAY_ARGS(d->worker, "start", QGenericReturnArgument(), Q_ARG(coh::Coh::TriggerMode,
-                d->triggerType == data::TRIGGER_IN ? Coh::External :
-                d->triggerType == data::TRIGGER_OUT ? Coh::Bilateral : Coh::Immediate));
+    RELAY_ARGS(
+        d->worker, "start", QGenericReturnArgument(),
+        Q_ARG(coh::Coh::TriggerMode, d->triggerType == data::TRIGGER_IN
+                                         ? Coh::External
+                                         : d->triggerType == data::TRIGGER_OUT
+                                               ? Coh::Bilateral
+                                               : Coh::Immediate));
     d->showStatus();
 
-    if ((d->triggerType == data::TRIGGER_IN && !d->waitUntil(Coh::Waiting, 5000)) ||
-        (d->triggerType != data::TRIGGER_IN && !d->waitUntil(Coh::Streaming, 5000))) {
+    if ((d->triggerType == data::TRIGGER_IN &&
+         !d->waitUntil(Coh::Waiting, 5000)) ||
+        (d->triggerType != data::TRIGGER_IN &&
+         !d->waitUntil(Coh::Streaming, 5000))) {
         RELAY(d->worker, "stop");
         d->isPlaying = false;
 
-        QMessageBox::critical(0, "Timeout",
-                QL1S("Timeout waiting for L34\n") +
-                    (d->triggerType == data::TRIGGER_IN ?
-                        QL1S("Check the trigger switch on the POD and restart the experiment.") :
-                        QL1S("Check your stimuli and the hardware.")),
-                QMessageBox::Abort, QMessageBox::NoButton);
+        QMessageBox::critical(
+            0, "Timeout",
+            QL1S("Timeout waiting for L34\n") +
+                (d->triggerType == data::TRIGGER_IN
+                     ? QL1S("Check the trigger switch on the POD and restart "
+                            "the experiment.")
+                     : QL1S("Check your stimuli and the hardware.")),
+            QMessageBox::Abort, QMessageBox::NoButton);
         throw Exception(tr("L34 timeout passed"));
     }
 
@@ -390,20 +406,24 @@ bool CohDevice::AllDone()
     if (d->stimulusLength) {
         int sleeptime = d->stimulusLength / 1000 - d->timeSinceStart.elapsed();
         if (sleeptime > 0) {
-            qCDebug(APEX_COH, "Waiting %d ms for stimulation to end (total stimulus duration=%d ms)",
+            qCDebug(APEX_COH, "Waiting %d ms for stimulation to end (total "
+                              "stimulus duration=%d ms)",
                     sleeptime, d->stimulusLength / 1000);
             QThread::msleep(sleeptime);
             qCDebug(APEX_COH, "End wait");
         }
     }
 
-    if (!d->waitUntil(QSet<Coh::Status>() << Coh::Stopped << Coh::Idle, 60000)) {
+    if (!d->waitUntil(QSet<Coh::Status>() << Coh::Stopped << Coh::Idle,
+                      60000)) {
         if (d->triggerType == data::TRIGGER_IN) {
             qCDebug(APEX_COH, "Timeout waiting for 'stopped' status");
             qCDebug(APEX_COH, "Trigger did probably not occur.");
-            QMessageBox::critical(0, "Timeout",  QString("Timeout waiting for 'stopped' status\n"
+            QMessageBox::critical(
+                0, "Timeout",
+                QString("Timeout waiting for 'stopped' status\n"
                         "Check that the soundcard is set as master device."),
-                    QMessageBox::Abort, QMessageBox::NoButton);
+                QMessageBox::Abort, QMessageBox::NoButton);
         } else {
             qCDebug(APEX_COH, "Timeout waiting for 'stopped' status");
             qCDebug(APEX_COH, "Check all connections.");
@@ -415,13 +435,15 @@ bool CohDevice::AllDone()
     return true;
 }
 
-bool CohDevice::SetParameter(const QString &type, int channel, const QVariant &value)
+bool CohDevice::SetParameter(const QString &type, int channel,
+                             const QVariant &value)
 {
     E_D(CohDevice);
 
     Q_UNUSED(channel);
 
-    qCDebug(APEX_COH, "SetParameter %s=%s", qPrintable(type), qPrintable(value.toString()));
+    qCDebug(APEX_COH, "SetParameter %s=%s", qPrintable(type),
+            qPrintable(value.toString()));
 
     if (type == "volume") {
         bool ok;
@@ -429,7 +451,8 @@ bool CohDevice::SetParameter(const QString &type, int channel, const QVariant &v
         if (!ok)
             return false;
         d->volume = qBound(0.0f, volume, 100.0f);
-        qCDebug(APEX_COH, "Set volume to %s", qPrintable(QString::number(d->volume)));
+        qCDebug(APEX_COH, "Set volume to %s",
+                qPrintable(QString::number(d->volume)));
         mv_bNeedsRestore = true;
         return true;
     }
@@ -462,7 +485,6 @@ void CohDevice::SetSilenceBefore(double)
 {
     qCCritical(APEX_COH, "SetSilenceBefore not implemented");
 }
-
 }
 }
 

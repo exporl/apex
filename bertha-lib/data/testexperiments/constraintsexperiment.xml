@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bertha:experiment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://med.kuleuven.be/exporl/bertha/1.0/experiment ../schema/experiment.xsd"
+    xmlns:bertha="http://med.kuleuven.be/exporl/bertha/1.0/experiment">
+    <blocks>
+        <block id="block1">
+            <plugin>TypeTesting</plugin>
+            <parameter name="m_int">20000</parameter>
+            <parameter name="m_float">-15000</parameter>
+            <parameter name="m_double">22000</parameter>
+            <parameter name="m_vector">[101 5 22 -200]</parameter>
+            <parameter name="m_doubleVector">[[101][5 22][-200 2.345]]</parameter>
+            <parameter name="m_bool">false</parameter>
+            <parameter name="m_enum">One</parameter>
+        </block>
+    </blocks>
+    <connections>
+        <connection>
+            <from id="block1" port="output-1"/>
+            <to id="device" port="playback-1"/>
+        </connection>
+    </connections>
+    <device id="device">
+        <driver>File</driver>
+        <samplerate>44100</samplerate>
+        <blocksize>44100</blocksize>
+        <playbackports>1</playbackports>
+        <captureports>0</captureports>
+    </device>
+</bertha:experiment>
+

@@ -22,6 +22,8 @@
 #include "interactiveparametersdialog.h"
 #include "ui_parameterdialog.h"
 
+#include "apextools/apextools.h"
+
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
@@ -29,8 +31,8 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QScroller>
 #include <QScrollBar>
+#include <QScroller>
 #include <QSpinBox>
 
 namespace apex
@@ -38,11 +40,12 @@ namespace apex
 
 // ParameterDialog =============================================================
 
-InteractiveParametersDialog::InteractiveParametersDialog(InteractiveParameters* data, QWidget *parent) :
-    QDialog(parent),
-    InteractiveParameters::Callback(),
-    ui(new Ui::ParameterDialog),
-    data(data)
+InteractiveParametersDialog::InteractiveParametersDialog(
+    InteractiveParameters *data, QWidget *parent)
+    : QDialog(parent),
+      InteractiveParameters::Callback(),
+      ui(new Ui::ParameterDialog),
+      data(data)
 {
     buildWidgets();
 }
@@ -67,9 +70,8 @@ void InteractiveParametersDialog::buildWidgets()
     QScroller::grabGesture(area->viewport(), QScroller::LeftMouseButtonGesture);
     area->horizontalScrollBar()->setEnabled(false);
     area->verticalScrollBar()->hide();
-    showMaximized();
 #endif
-
+    ApexTools::expandWidgetToWindow(this);
     QGridLayout *gridLayout = new QGridLayout(ui->parameters);
     Q_FOREACH (const InteractiveParameters::Entry &entry, data->entries()) {
         const unsigned line = gridLayout->rowCount();
@@ -77,83 +79,95 @@ void InteractiveParametersDialog::buildWidgets()
         const QString defaultValue = entry.defaultvalue;
         const int type = entry.type;
 
-        QWidget* widget = Q_NULLPTR;
+        QWidget *widget = Q_NULLPTR;
         switch (type) {
         case InteractiveParameters::IntValue: {
-            QSpinBox * const spinbox = new QSpinBox(this);
+            QSpinBox *const spinbox = new QSpinBox(this);
             spinbox->setRange(-999999999, 999999999);
             spinbox->setSingleStep(1);
             spinbox->setValue(defaultValue.toInt());
             widget = spinbox;
-            break; }
+            break;
+        }
         case InteractiveParameters::DoubleValue: {
-            QDoubleSpinBox * const spinbox = new QDoubleSpinBox(this);
+            QDoubleSpinBox *const spinbox = new QDoubleSpinBox(this);
             spinbox->setRange(-999999999, 999999999);
             spinbox->setSingleStep(0.1);
             spinbox->setValue(defaultValue.toDouble());
             widget = spinbox;
-            break; }
+            break;
+        }
         case InteractiveParameters::StringValue: {
-            QLineEdit * const edit = new QLineEdit(this);
+            QLineEdit *const edit = new QLineEdit(this);
             edit->setText(defaultValue);
             widget = edit;
-            break; }
+            break;
+        }
         case InteractiveParameters::BoolValue: {
-            QCheckBox * const checkbox = new QCheckBox(this);
-            checkbox->setChecked(defaultValue.toLower() == QLatin1String("true"));
+            QCheckBox *const checkbox = new QCheckBox(this);
+            checkbox->setChecked(defaultValue.toLower() ==
+                                 QLatin1String("true"));
             widget = checkbox;
-            break; }
+            break;
+        }
         case InteractiveParameters::ComboValue: {
-            QComboBox* const combobox = new QComboBox(this);
-            combobox->addItems( defaultValue.split("|"));
+            QComboBox *const combobox = new QComboBox(this);
+            combobox->addItems(defaultValue.split("|"));
             widget = combobox;
-            break; }
+            break;
+        }
         }
         gridLayout->addWidget(widget, line, 1);
         widget->setToolTip(description);
         widgets.append(widget);
 
-        QLabel * const label = new QLabel(description, this);
+        QLabel *const label = new QLabel(description, this);
         label->setBuddy(widget);
         widget->setToolTip(description);
         gridLayout->addWidget(label, line, 0);
     }
 
-    gridLayout->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum,
-                QSizePolicy::Expanding), gridLayout->rowCount(), 0);
+    gridLayout->addItem(
+        new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding),
+        gridLayout->rowCount(), 0);
 
     if (!widgets.isEmpty())
         widgets.value(0)->setFocus();
 }
 
-void InteractiveParametersDialog::apply() {
+bool InteractiveParametersDialog::apply()
+{
     QStringList results;
-    for(int i = 0; i < widgets.size(); ++i) {
-        const QWidget * const widget = widgets[i];
+    for (int i = 0; i < widgets.size(); ++i) {
+        const QWidget *const widget = widgets[i];
         const int type = data->entries().at(i).type;
 
         switch (type) {
         case InteractiveParameters::IntValue:
-            results << QString::number(dynamic_cast<const QSpinBox*>(widget)->value());
+            results << QString::number(
+                dynamic_cast<const QSpinBox *>(widget)->value());
             break;
         case InteractiveParameters::DoubleValue:
-            results << QString::number(dynamic_cast<const QDoubleSpinBox*>(widget)->value());
+            results << QString::number(
+                dynamic_cast<const QDoubleSpinBox *>(widget)->value());
             break;
         case InteractiveParameters::StringValue:
-            results << dynamic_cast<const QLineEdit*>(widget)->text();
+            results << dynamic_cast<const QLineEdit *>(widget)->text();
             break;
         case InteractiveParameters::BoolValue:
-            results << (dynamic_cast<const QAbstractButton*>(widget)
-                ->isChecked() ? QLatin1String("true") : QLatin1String("false"));
+            results
+                << (dynamic_cast<const QAbstractButton *>(widget)->isChecked()
+                        ? QLatin1String("true")
+                        : QLatin1String("false"));
             break;
         case InteractiveParameters::ComboValue:
-            results << dynamic_cast<const QComboBox*>(widget)->currentText();
+            results << dynamic_cast<const QComboBox *>(widget)->currentText();
             break;
         default:
             qFatal("invalid type: %u", type);
         }
     }
-    data->apply(results, this);
+    return data->apply(results, this);
 }
 
 } // namespace apex

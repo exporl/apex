@@ -29,7 +29,7 @@ using apex::writer::CorrectorWriter;
 using apex::data::CorrectorData;
 
 QDomElement CorrectorWriter::addElement(QDomElement *elem,
-        const CorrectorData& data)
+                                        const CorrectorData &data)
 {
     QDomDocument doc = elem->ownerDocument();
     QDomElement corrector = doc.createElement(QSL("corrector"));
@@ -47,34 +47,3 @@ QDomElement CorrectorWriter::addElement(QDomElement *elem,
     corrector.setAttribute(QSL("xsi:type"), type);
     return corrector;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

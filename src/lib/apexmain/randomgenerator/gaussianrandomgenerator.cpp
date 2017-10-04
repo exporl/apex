@@ -19,39 +19,39 @@
 
 #include "gaussianrandomgenerator.h"
 
-namespace apex {
+namespace apex
+{
 
-GaussianRandomGenerator::GaussianRandomGenerator(data::RandomGeneratorParameters* p_param)
- : RandomGenerator(p_param)
+GaussianRandomGenerator::GaussianRandomGenerator(
+    data::RandomGeneratorParameters *p_param)
+    : RandomGenerator(p_param)
 {
 }
-
 
 GaussianRandomGenerator::~GaussianRandomGenerator()
 {
 }
 
+QString GaussianRandomGenerator::GetNextValue()
+{
 
-QString GaussianRandomGenerator::GetNextValue() {
+    Q_ASSERT(0 && "not implemented");
+    /*if (m_param->m_nValueType==RandomGeneratorParameters::VALUE_INT) {
+            int result = (int) ApexTools::RandomRange((int)m_param->m_dMin,
+    (int)m_param->m_dMax);
+            return QString::number(result);
+    } else if (m_param->m_nValueType==RandomGeneratorParameters::VALUE_DOUBLE) {
+            double result = (double) ApexTools::RandomRange(m_param->m_dMin,
+    m_param->m_dMax);
+            return QString::number(result);
+    } else {
+            qCDebug(APEX_RS, "Error: not implemented");
+    }*/
 
-        Q_ASSERT(0 && "not implemented");
-        /*if (m_param->m_nValueType==RandomGeneratorParameters::VALUE_INT) {
-                int result = (int) ApexTools::RandomRange((int)m_param->m_dMin, (int)m_param->m_dMax);
-                return QString::number(result);
-        } else if (m_param->m_nValueType==RandomGeneratorParameters::VALUE_DOUBLE) {
-                double result = (double) ApexTools::RandomRange(m_param->m_dMin, m_param->m_dMax);
-                return QString::number(result);
-        } else {
-                qCDebug(APEX_RS, "Error: not implemented");
-        }*/
-
-  return QString();
-
+    return QString();
 }
 
 void GaussianRandomGenerator::doDeterministicGeneration()
 {
-
 }
-
 }

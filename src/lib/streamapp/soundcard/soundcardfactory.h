@@ -30,9 +30,9 @@
 #include "portaudiowrapper.h"
 #include "soundcard.h"
 
-#include <string>
-#include <QString>
 #include <QDebug>
+#include <QString>
+#include <string>
 
 namespace streamapp
 {
@@ -57,8 +57,9 @@ public:
      * @param a_sError receives soundcard error info, if any
      * @return an instance or 0 if it couldn't be created
      */
-    static ISoundCard *CreateSoundCard(const QString& cardName, const
-                                       gt_eDeviceType ac_eType, QString& a_sError );
+    static ISoundCard *CreateSoundCard(const QString &cardName,
+                                       const gt_eDeviceType ac_eType,
+                                       QString &a_sError);
 
     /**
      * Get a list of all available drivers for a type.
@@ -66,9 +67,9 @@ public:
      * @param a_sError receives soundcard error info, if any
      * @return a vector of strings
      */
-    static tStringVector GetDriverNames(gt_eDeviceType ac_eType, QString &a_sError);
+    static tStringVector GetDriverNames(gt_eDeviceType ac_eType,
+                                        QString &a_sError);
 };
-
 }
 
 #endif //#ifndef __SOUNDCARDWRAPPERFACTORY_H_

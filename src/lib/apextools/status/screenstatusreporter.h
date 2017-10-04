@@ -40,7 +40,7 @@ public:
     virtual ~ScreenStatusReporter();
 
 public Q_SLOTS:
-    void addItem(const apex::StatusItem& item);
+    void addItem(const apex::StatusItem &item);
 
 private Q_SLOTS:
     void updateLevels();
@@ -61,7 +61,6 @@ private:
     QAction *infoMessagesAction;
     QAction *debugMessagesAction;
 };
-
 }
 
 #endif

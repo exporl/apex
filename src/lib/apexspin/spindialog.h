@@ -31,7 +31,7 @@ class QListWidgetItem;
 
 namespace Ui
 {
-    class SpinMainWizard;
+class SpinMainWizard;
 }
 
 namespace spin
@@ -44,125 +44,122 @@ namespace gui
  */
 class APEXSPIN_EXPORT SpinDialog : public QWizard
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    SpinDialog();
+    virtual ~SpinDialog();
 
-        SpinDialog();
-        virtual ~SpinDialog();
+    QString getFileName();
+    const data::SpinUserSettings currentSettings();
 
-        QString getFileName();
-        const data::SpinUserSettings currentSettings();
+    virtual bool validateCurrentPage();
 
-        virtual bool validateCurrentPage();
+private:
+    void setupUi();
+    void setupConnections();
 
-    private:
+    /**
+     * Initializes validators for QLineEdits.
+     */
+    void setupValidators();
+    void setupDefaults();
+    void readConfig();
 
-        void setupUi();
-        void setupConnections();
+    /**
+     * Clears the widgets that can be changed by the user.
+     * This includes:
+     *  * All QLineEdits
+     *  * The QTableWidget
+     *  * All StartLevelWidgets (including those inside the FreeFieldWidget)
+     */
+    void clearWidgets();
 
-        /**
-         * Initializes validators for QLineEdits.
-         */
-        void setupValidators();
-        void setupDefaults();
-        void readConfig();
+    /**
+     * Sets focus to the given widget.
+     */
+    void setFocusTo(QWidget *widget);
 
-        /**
-         * Clears the widgets that can be changed by the user.
-         * This includes:
-         *  * All QLineEdits
-         *  * The QTableWidget
-         *  * All StartLevelWidgets (including those inside the FreeFieldWidget)
-         */
-        void clearWidgets();
+    /**
+     * Checks whether all obliged fields are filled in.
+     */
+    bool hasAllObligedFields();
 
-        /**
-         * Sets focus to the given widget.
-         */
-        void setFocusTo(QWidget *widget);
+    // some helper methods
+    data::Speechmaterial currentSpeechmaterial();
+    QString currentCategory();
 
-        /**
-         * Checks whether all obliged fields are filled in.
-         */
-        bool hasAllObligedFields();
+    Ui::SpinMainWizard *widgets;
+    data::SpinConfig configuration;
+    QString experimentFile;
 
-        //some helper methods
-        data::Speechmaterial currentSpeechmaterial();
-        QString currentCategory();
+    QMap<QWizardPage *, int> pageMap;
 
-        Ui::SpinMainWizard *widgets;
-        data::SpinConfig configuration;
-        QString experimentFile;
+    // validators
+    QDoubleValidator dBVal;
+    QDoubleValidator posdBVal;
+    QIntValidator uintVal;
 
-        QMap<QWizardPage*, int> pageMap;
+    // indicates whether the content of the dialog has changed
+    // since the last save
+    bool dialogContentsChanged;
 
-        //validators
-        QDoubleValidator dBVal;
-        QDoubleValidator posdBVal;
-        QIntValidator uintVal;
+    enum { INDEX_HP, INDEX_FF };
+    enum { INDEX_TRIAL = 0, INDEX_STEPSIZE = 1 };
 
-        //indicates whether the content of the dialog has changed
-        //since the last save
-        bool dialogContentsChanged;
+protected:
+    void closeEvent(QCloseEvent *event);
 
-        enum { INDEX_HP, INDEX_FF };
-        enum { INDEX_TRIAL = 0, INDEX_STEPSIZE = 1 };
+public slots:
 
-    protected:
+    void loadExperiment();
 
-        void closeEvent(QCloseEvent *event);
+private slots:
 
-    public slots:
+    // slots used for main tab
+    /**
+     * @return  True if the settings where actually saved, false if not
+     *          (user pressed cancel when entering settings name).
+     */
+    bool saveSettings(QString saveName = "");
+    void checkSettingsChange(QListWidgetItem *to, QListWidgetItem *from);
+    void loadSettings(const QString &name);
+    void removeSettings();
+    void renameSettings();
+    void updateSavedSettings();
+    bool createExperiment();
+    void updateMaterials();
+    void updateNoisematerial();
+    void updateNoiseCombo();
+    void updateListCombo();
+    void setNoiseDisabled(bool disnable);
 
-        void loadExperiment();
+    // slots used for the speakers tab
+    void updateSpeakersStack();
+    void updateAllSpeakerLevels(double speech, double noise);
+    void setUncorrelatedNoisesVisible(bool visible);
+    void setLockSpeechlevels(bool lock);
+    void setLockNoiselevels(bool lock);
+    void lockLevels();
+    void unlockLevels();
+    void updateSnrWidget();
+    void toggleWarning();
 
-    private slots:
+    // slots for the procedure tab
+    void updateProcedure();
+    void updateStepsizeBoxTitle();
+    void setToAdaptive();
+    void setToConstant();
+    void insertInStepsizeTable();
+    void removeFromStepsizeTable(int row, int col);
 
-        //slots used for main tab
-        /**
-         * @return  True if the settings where actually saved, false if not
-         *          (user pressed cancel when entering settings name).
-         */
-        bool saveSettings(QString saveName = "");
-        void checkSettingsChange(QListWidgetItem *to, QListWidgetItem *from);
-        void loadSettings(const QString& name);
-        void removeSettings();
-        void renameSettings();
-        void updateSavedSettings();
-        bool createExperiment();
-        void updateMaterials();
-        void updateNoisematerial();
-        void updateNoiseCombo();
-        void updateListCombo();
-        void setNoiseDisabled(bool disnable);
+    // slots for the options tab
+    void updateOptions();
 
-        //slots used for the speakers tab
-        void updateSpeakersStack();
-        void updateAllSpeakerLevels(double speech, double noise);
-        void setUncorrelatedNoisesVisible(bool visible);
-        void setLockSpeechlevels(bool lock);
-        void setLockNoiselevels(bool lock);
-        void lockLevels();
-        void unlockLevels();
-        void updateSnrWidget();
-        void toggleWarning();
-
-        //slots for the procedure tab
-        void updateProcedure();
-        void updateStepsizeBoxTitle();
-        void setToAdaptive();
-        void setToConstant();
-        void insertInStepsizeTable();
-        void removeFromStepsizeTable(int row, int col);
-
-        //slots for the options tab
-        void updateOptions();
-
-        void setContentsChanged();
+    void setContentsChanged();
 };
 
-} //ns gui
-} //ns spin
+} // ns gui
+} // ns spin
 
 #endif

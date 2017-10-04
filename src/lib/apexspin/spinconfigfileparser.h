@@ -41,8 +41,7 @@ struct CategoryMap;
 namespace parser
 {
 
-class APEXSPIN_EXPORT SpinConfigFileParser :
-    public apex::UpgradableXmlParser
+class APEXSPIN_EXPORT SpinConfigFileParser : public apex::UpgradableXmlParser
 {
     Q_OBJECT
 public:
@@ -55,23 +54,26 @@ private Q_SLOTS:
     void upgrade3_1_3();
 
 private:
-    void parsePrefix(const QDomElement &prefix, data::SpinConfig* into);
-    void parseSpeakers(const QDomElement &speakers, data::SpinConfig* into);
-    void parseNoises(const QDomElement &noises, data::SpinConfig* into);
-    void parseSpeech(const QDomElement &speechmat, data::SpinConfig* into);
-    void parseSpeechFiles(const QDomElement &speechfiles, data::SpinConfig* into,
-            const QString &path);
-    void parseSubjectScreen(const QDomElement &screen, data::SpinConfig* into);
-    void parseExperimenterScreenQuiet(const QDomElement &screen, data::SpinConfig* into);
-    void parseExperimenterScreenNoise(const QDomElement &screen, data::SpinConfig* into);
-    void parseCustomScreens(const QDomElement &screens, data::SpinConfig* into);
-    void parseIds(const QDomElement &ids, data::SpinConfig* into);
-    void parseGeneralData(const QDomElement &data, data::SpinConfig* into);
-    void parseSoundcardSetup(const QDomElement &data, data::SpinConfig* into);
-    void addLists(const QDomNodeList &lists, data::CategoryMap* into, const QString &category = QString());
-    QStringList expandWildcards(const QString &directory, const QString &fileIdentifier);
+    void parsePrefix(const QDomElement &prefix, data::SpinConfig *into);
+    void parseSpeakers(const QDomElement &speakers, data::SpinConfig *into);
+    void parseNoises(const QDomElement &noises, data::SpinConfig *into);
+    void parseSpeech(const QDomElement &speechmat, data::SpinConfig *into);
+    void parseSpeechFiles(const QDomElement &speechfiles,
+                          data::SpinConfig *into, const QString &path);
+    void parseSubjectScreen(const QDomElement &screen, data::SpinConfig *into);
+    void parseExperimenterScreenQuiet(const QDomElement &screen,
+                                      data::SpinConfig *into);
+    void parseExperimenterScreenNoise(const QDomElement &screen,
+                                      data::SpinConfig *into);
+    void parseCustomScreens(const QDomElement &screens, data::SpinConfig *into);
+    void parseIds(const QDomElement &ids, data::SpinConfig *into);
+    void parseGeneralData(const QDomElement &data, data::SpinConfig *into);
+    void parseSoundcardSetup(const QDomElement &data, data::SpinConfig *into);
+    void addLists(const QDomNodeList &lists, data::CategoryMap *into,
+                  const QString &category = QString());
+    QStringList expandWildcards(const QString &directory,
+                                const QString &fileIdentifier);
 };
-
 }
 }
 

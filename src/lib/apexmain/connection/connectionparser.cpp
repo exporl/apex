@@ -35,17 +35,17 @@ using namespace apex::data;
 using namespace apex::XMLKeys;
 using namespace apex::parser;
 
-ConnectionData* ConnectionParser::Parse(const QDomElement &node)
+ConnectionData *ConnectionParser::Parse(const QDomElement &node)
 {
     QScopedPointer<ConnectionData> data(new ConnectionData());
 
     for (QDomElement connNode = node.firstChildElement(); !connNode.isNull();
-            connNode = connNode.nextSiblingElement()) {
+         connNode = connNode.nextSiblingElement()) {
         const QString tag(connNode.tagName());
 
         if (tag == "from") {
-            for (QDomElement fromNode = connNode.firstChildElement(); !fromNode.isNull();
-                    fromNode = fromNode.nextSiblingElement()) {
+            for (QDomElement fromNode = connNode.firstChildElement();
+                 !fromNode.isNull(); fromNode = fromNode.nextSiblingElement()) {
                 const QString fromTag(fromNode.tagName());
                 if (fromTag == gc_sID) {
                     data->setFromId(fromNode.text());
@@ -59,17 +59,19 @@ ConnectionData* ConnectionParser::Parse(const QDomElement &node)
                     else if (!matchType.isEmpty())
                         qFatal("Invalid match type");
                 } else if (fromTag == gc_sChannel) {
-                    data->setFromChannel(fromNode.text().toInt(), fromNode.attribute(gc_sID));
+                    data->setFromChannel(fromNode.text().toInt(),
+                                         fromNode.attribute(gc_sID));
                 }
             }
         } else if (tag == "to") {
-            for (QDomElement toNode = connNode.firstChildElement(); !toNode.isNull();
-                    toNode = toNode.nextSiblingElement()) {
+            for (QDomElement toNode = connNode.firstChildElement();
+                 !toNode.isNull(); toNode = toNode.nextSiblingElement()) {
                 const QString toTag(toNode.tagName());
                 if (toTag == gc_sID)
                     data->setToId(toNode.text());
                 else if (toTag == gc_sChannel) {
-                    data->setToChannel(toNode.text().toInt(), toNode.attribute(gc_sID));
+                    data->setToChannel(toNode.text().toInt(),
+                                       toNode.attribute(gc_sID));
                 }
             }
         } else

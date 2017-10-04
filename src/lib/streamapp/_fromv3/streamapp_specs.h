@@ -28,36 +28,36 @@
   * <^>
   */
 
-  /**
-    * @file streamapp_specs.h
-    * enable or disable specific features depending
-    * on platform and macros from streamapp_conf.h.
-    */
+/**
+  * @file streamapp_specs.h
+  * enable or disable specific features depending
+  * on platform and macros from streamapp_conf.h.
+  */
 #ifndef __STR_STREAMAPP_SPECS_H__
 #define __STR_STREAMAPP_SPECS_H__
 
-  //only use tracking if available, this is the case
-  //with the custom heap or with MSVC only.
+// only use tracking if available, this is the case
+// with the custom heap or with MSVC only.
 #ifdef S_TRACK_MEMORY
-  #if !defined( S_WIN32 ) || defined( S_NO_ALLOCATOR_STUFF ) || defined ( __GNUC__ )
-    #undef S_TRACK_MEMORY
-  #endif
+#if !defined(S_WIN32) || defined(S_NO_ALLOCATOR_STUFF) || defined(__GNUC__)
+#undef S_TRACK_MEMORY
+#endif
 #endif
 
-#if defined( S_NO_ALLOCATOR_STUFF ) && !defined( S_NO_GLOBAL_OPERATOR_OVERLOAD )
-  #define S_NO_GLOBAL_OPERATOR_OVERLOAD
+#if defined(S_NO_ALLOCATOR_STUFF) && !defined(S_NO_GLOBAL_OPERATOR_OVERLOAD)
+#define S_NO_GLOBAL_OPERATOR_OVERLOAD
 #endif
 
-  //check if we're on a real pc
+// check if we're on a real pc
 #ifndef S_PC
-  #undef S_USE_QT_GRAPHICS
+#undef S_USE_QT_GRAPHICS
 #endif
 
-  //check if freetype can be used
-#if defined( S_USE_GRAPHICS ) && !defined( S_USE_NO_FREETYPE )
-  #if defined( S_PC ) || defined( S_ARM ) || defined( S_PSP )
-    #define S_USE_FREETYPE
-  #endif
+// check if freetype can be used
+#if defined(S_USE_GRAPHICS) && !defined(S_USE_NO_FREETYPE)
+#if defined(S_PC) || defined(S_ARM) || defined(S_PSP)
+#define S_USE_FREETYPE
+#endif
 #endif
 
 #endif //#ifndef __STR_STREAMAPP_SPECS_H__

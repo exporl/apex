@@ -19,56 +19,120 @@
 
 #include "dummysoundcard.h"
 
-#include <QVector>
+#include "apextools/global.h"
+
 #include <QDebug>
+#include <QTimer>
+#include <QVector>
 
 namespace streamapp
 {
 
+class DummyStreamProcessor : public QObject
+{
+    Q_OBJECT
+public:
+    DummyStreamProcessor(Callback *callback) : callback(callback)
+    {
+        timer = new QTimer(this);
+        timer->setInterval(10);
+        connect(timer, SIGNAL(timeout()), this, SLOT(processStream()));
+    }
+
+public Q_SLOTS:
+    void startProcessing()
+    {
+        timer->start();
+    }
+
+    void processStream()
+    {
+        if (callback != nullptr)
+            callback->mf_Callback();
+    }
+
+    void stopProcessing()
+    {
+        timer->stop();
+        Q_EMIT finished();
+    }
+
+Q_SIGNALS:
+    void finished();
+
+private:
+    Callback *callback;
+    QTimer *timer;
+};
+
 class DummyReader : public AudioFormatReader
 {
-    public:
+public:
+    DummyReader(const DummySoundcard *h) : host(h)
+    {
+    }
 
-        DummyReader(const DummySoundcard* h) : host(h) {}
+    mt_eBitMode mf_eBitMode() const
+    {
+        return MSBfloat32;
+    }
+    unsigned long mf_lSampleRate() const
+    {
+        return host->mf_lGetSampleRate();
+    }
+    unsigned mf_nChannels() const
+    {
+        return host->mf_nGetIChan();
+    }
+    unsigned long Read(void **, const unsigned n)
+    {
+        return n;
+    }
 
-        mt_eBitMode mf_eBitMode() const {return MSBfloat32;}
-        unsigned long mf_lSampleRate() const {return host->mf_lGetSampleRate();}
-        unsigned mf_nChannels() const {return host->mf_nGetIChan();}
-        unsigned long Read(void**, const unsigned n) {return n;}
-
-    private:
-
-        const DummySoundcard* const host;
+private:
+    const DummySoundcard *const host;
 };
 
 class DummyWriter : public AudioFormatWriter
 {
-    public:
+public:
+    DummyWriter(const DummySoundcard *h) : host(h)
+    {
+    }
 
-        DummyWriter(const DummySoundcard* h) : host(h) {}
+    mt_eBitMode mf_eBitMode() const
+    {
+        return MSBfloat32;
+    }
+    unsigned long mf_lSampleRate() const
+    {
+        return host->mf_lGetSampleRate();
+    }
+    unsigned mf_nChannels() const
+    {
+        return host->mf_nGetOChan();
+    }
+    unsigned long Write(const void **, const unsigned n)
+    {
+        return n;
+    }
 
-        mt_eBitMode mf_eBitMode() const {return MSBfloat32;}
-        unsigned long mf_lSampleRate() const {return host->mf_lGetSampleRate();}
-        unsigned mf_nChannels() const {return host->mf_nGetOChan();}
-        unsigned long Write(const void**, const unsigned n) {return n;}
-
-    private:
-
-        const DummySoundcard* const host;
+private:
+    const DummySoundcard *const host;
 };
 
-DummySoundcard::DummySoundcard(const QString& driverName) : state(Closed),
-                                                                callback(0)
+DummySoundcard::DummySoundcard(const QString &driverName) : state(Closed)
 {
     Q_UNUSED(driverName);
-
-    timer.setInterval(10);
-    connect(&timer, SIGNAL(timeout()), this, SLOT(doCallback()));
-    connect(this, SIGNAL(stopTimer()), &timer, SLOT(stop()));
+    qCDebug(APEX_THREADS, "Constructing DummySoundcard thread");
+    connect(&processingThread, &QObject::destroyed,
+            []() { qCDebug(APEX_THREADS, "Destroyed DummySoundcard thread"); });
 }
 
 DummySoundcard::~DummySoundcard()
 {
+    processingThread.quit();
+    processingThread.wait();
 }
 
 bool DummySoundcard::mp_bOpenDriver(const unsigned nInChannels,
@@ -76,8 +140,7 @@ bool DummySoundcard::mp_bOpenDriver(const unsigned nInChannels,
                                     const unsigned long sampleRate,
                                     const unsigned bufferSize)
 {
-    if (!mf_bIsOpen())
-    {
+    if (!mf_bIsOpen()) {
         this->nInChannels = nInChannels;
         this->nOutChannels = nOutChannels;
         this->sampleRate = sampleRate;
@@ -100,13 +163,22 @@ bool DummySoundcard::mf_bIsOpen() const
     return state == Opened;
 }
 
-bool DummySoundcard::mp_bStart(Callback& callback)
+bool DummySoundcard::mp_bStart(Callback &callback)
 {
-    if (mf_bIsOpen())
-    {
+    if (mf_bIsOpen()) {
         state = Running;
-        this->callback = &callback;
-        timer.start();
+        DummyStreamProcessor *streamProcessor =
+            new DummyStreamProcessor(&callback);
+        streamProcessor->moveToThread(&processingThread);
+        connect(this, SIGNAL(startProcessing()), streamProcessor,
+                SLOT(startProcessing()));
+        connect(this, SIGNAL(stopProcessing()), streamProcessor,
+                SLOT(stopProcessing()));
+        connect(streamProcessor, SIGNAL(finished()), streamProcessor,
+                SLOT(deleteLater()));
+        processingThread.start();
+
+        Q_EMIT startProcessing();
         return true;
     }
 
@@ -115,13 +187,9 @@ bool DummySoundcard::mp_bStart(Callback& callback)
 
 bool DummySoundcard::mp_bStop()
 {
-    if (mf_bIsRunning())
-    {
+    if (mf_bIsRunning()) {
         state = Opened;
-        callback = 0;
-        // mp_bStop is called from a different thread,
-        // so a stop signal to the timer
-        Q_EMIT stopTimer();
+        Q_EMIT stopProcessing();
         return true;
     }
 
@@ -186,7 +254,7 @@ unsigned DummySoundcard::mf_nGetIChan() const
     return 0;
 }
 
-const std::string& DummySoundcard::mf_sGetLastError() const
+const std::string &DummySoundcard::mf_sGetLastError() const
 {
     return lastError;
 }
@@ -195,20 +263,16 @@ void DummySoundcard::mp_ClearIOBuffers()
 {
 }
 
-AudioFormatReader* DummySoundcard::mf_pCreateReader() const
+AudioFormatReader *DummySoundcard::mf_pCreateReader() const
 {
     return new DummyReader(this);
 }
 
-AudioFormatWriter* DummySoundcard::mf_pCreateWriter() const
+AudioFormatWriter *DummySoundcard::mf_pCreateWriter() const
 {
     return new DummyWriter(this);
 }
 
-void DummySoundcard::doCallback()
-{
-    if (callback != 0)
-        callback->mf_Callback();
-}
+} // ns streamapp
 
-} //ns streamapp
+#include "dummysoundcard.moc"

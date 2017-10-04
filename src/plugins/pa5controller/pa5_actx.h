@@ -25,12 +25,14 @@
 class PA5Wnd;
 class QWidget;
 
-  /**
-    * Wrapper around the MFC ActiveX wrapper
-    * only reason for wrapper is that xercesc dosn't allow forward declaring properly,
-    * so we cannot #include <axwin.h> because it defines DOMDocument. shame...
-    * FIXME this is fixed by now probably.
-    ********************************************************************************** */
+/**
+  * Wrapper around the MFC ActiveX wrapper
+  * only reason for wrapper is that xercesc dosn't allow forward declaring
+  *properly,
+  * so we cannot #include <axwin.h> because it defines DOMDocument. shame...
+  * FIXME this is fixed by now probably.
+  **********************************************************************************
+  */
 class Pa5ActX
 {
 public:
@@ -39,12 +41,12 @@ public:
       * Tries to create the ActiveX instance.
       * Throws a ApexStringException on failure.
       */
-  Pa5ActX();
+    Pa5ActX();
 
     /**
       * Destructor.
       */
-  ~Pa5ActX();
+    ~Pa5ActX();
 
     /**
       * Connect to a Pa5
@@ -52,26 +54,26 @@ public:
       * @param DevNum the Pa5 id ( starts at 0 )
       * @return true if succeeded, else query GetError()
       */
-  bool Connect( long Interface, long DevNum );
+    bool Connect(long Interface, long DevNum);
 
     /**
       * Set the attenuation.
       * @param AttVal the value in dB
       * @return true if ok
       */
-  bool SetAtten( float AttVal );
+    bool SetAtten(float AttVal);
 
     /**
       * Get the current attenuation set.
       * @return the attenuation in dB
       */
-  float GetAtten();
+    float GetAtten();
 
     /**
       * Reset the connection.
       * @return false if failed
       */
-  bool Reset();
+    bool Reset();
 
     /**
       * Set user data
@@ -80,7 +82,7 @@ public:
       * @param Val ??
       * @return true if ok
       */
-  bool SetUser( long ParCode, float Val );
+    bool SetUser(long ParCode, float Val);
 
     /**
       * Display a text on the LCD screen
@@ -88,7 +90,7 @@ public:
       * @param Position the position in characters
       * @return true if ok
       */
-  bool Display( char* Text, long Position );
+    bool Display(char *Text, long Position);
 
     /**
       * Connect to a PA5
@@ -96,18 +98,18 @@ public:
       * @param DevNum the Pa5 id ( starts at 0 )
       * @return true if ok
       */
-  long ConnectPA5( char* IntName, long DevNum );
+    long ConnectPA5(char *IntName, long DevNum);
 
     /**
       * Get the error description.
       * Use this if a method returned false to see what's going on.
       * @return the error as QString
       */
-  QString GetError();
+    QString GetError();
 
 private:
-  QWidget*  m_pContainer;
-  PA5Wnd*   m_pObj;
+    QWidget *m_pContainer;
+    PA5Wnd *m_pObj;
 };
 
 #endif //__PA5DEVICEACTX_H__

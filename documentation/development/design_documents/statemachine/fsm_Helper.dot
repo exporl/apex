@@ -1,0 +1,5 @@
+digraph Helper {
+Response [label="Response", shape=circle];
+Stimuli [label="Stimuli", shape=circle];
+
+}

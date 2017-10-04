@@ -28,30 +28,32 @@
   * <^>
   */
 
-  /**
-    * @file streamapp_namespace.h
-    * Defines main namespace macros.
-    * We use a macro to allow having no
-    * main namespace at all.
-    */
+/**
+  * @file streamapp_namespace.h
+  * Defines main namespace macros.
+  * We use a macro to allow having no
+  * main namespace at all.
+  */
 
 #ifndef __STR_STREAMAPP_NAMESPACE_H__
 #define __STR_STREAMAPP_NAMESPACE_H__
 
 #ifdef streamapp_main_namespace
 
-  #define S_NAMESPACE_BEGIN       namespace streamapp_main_namespace{
-  #define S_NAMESPACE_END         }
-  #define S_NAMESPACE_USING       using namespace streamapp_main_namespace;
-  #define S_CLASS_USING( Class )  using streamapp_main_namespace::Class;
-  #define smn                     streamapp_main_namespace
+#define S_NAMESPACE_BEGIN                                                      \
+    namespace streamapp_main_namespace                                         \
+    {
+#define S_NAMESPACE_END }
+#define S_NAMESPACE_USING using namespace streamapp_main_namespace;
+#define S_CLASS_USING(Class) using streamapp_main_namespace::Class;
+#define smn streamapp_main_namespace
 
 #else
 
-  #define S_NAMESPACE_BEGIN
-  #define S_NAMESPACE_END
-  #define S_NAMESPACE_USING
-  #define S_CLASS_USING( Class )  using ::Class;
+#define S_NAMESPACE_BEGIN
+#define S_NAMESPACE_END
+#define S_NAMESPACE_USING
+#define S_CLASS_USING(Class) using ::Class;
 
 #endif
 

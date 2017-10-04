@@ -20,18 +20,17 @@
 #ifndef _APEX_SRC_PROGRAMS_SCREENEDITOR_IMAGEFILESDB_H_
 #define _APEX_SRC_PROGRAMS_SCREENEDITOR_IMAGEFILESDB_H_
 
-#include <vector>
 #include <QString>
+#include <vector>
 
 /**
  * This is a very simple class containing just a list of all Image
  * Files that the screeneditor has already seen.  It is a singleton.
  */
-struct ImageFilesDB
-{
+struct ImageFilesDB {
     std::vector<QString> files;
 
-    static ImageFilesDB& instance();
+    static ImageFilesDB &instance();
 
 private:
     ImageFilesDB();

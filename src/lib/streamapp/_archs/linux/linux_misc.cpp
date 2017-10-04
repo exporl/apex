@@ -26,16 +26,16 @@
 
 #include <iostream>
 
-void utils::Tracer::sf_TraceDebug( const std::string& text )
+void utils::Tracer::sf_TraceDebug(const std::string &text)
 {
-  std::cout << text.c_str() << std::endl;
+    std::cout << text.c_str() << std::endl;
 }
 
-void utils::Tracer::sf_TraceDebugPrintf( const char* format, ... )
+void utils::Tracer::sf_TraceDebugPrintf(const char *format, ...)
 {
-  static char buf[ sc_nMaxTextSize ];
-  va_list args;
-  va_start( args, format );
-  vsprintf( buf, format, args );
-  sf_TraceDebug( buf );
+    static char buf[sc_nMaxTextSize];
+    va_list args;
+    va_start(args, format);
+    vsprintf(buf, format, args);
+    sf_TraceDebug(buf);
 }

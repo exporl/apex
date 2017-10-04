@@ -28,23 +28,19 @@ namespace apex
 namespace data
 {
 
-
 /**
  * Parameter class for plugin filter
  * @author Tom Francart,,, <tom.francart@med.kuleuven.be>
  */
 class APEXDATA_EXPORT PluginFilterData : public FilterData
 {
-    public:
+public:
+    PluginFilterData();
+    ~PluginFilterData();
 
-        PluginFilterData();
-        ~PluginFilterData();
-
-        QString plugin() const;
+    QString plugin() const;
 };
-
 }
-
 }
 
 #endif

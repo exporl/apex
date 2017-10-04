@@ -35,34 +35,69 @@ public:
     GeneralParameters();
     ~GeneralParameters();
 
-    virtual bool SetParameter(const QString& p_name, const QString& p_id, const QString& p_value, const QDomElement &) Q_DECL_OVERRIDE;
+    virtual bool SetParameter(const QString &p_name, const QString &p_id,
+                              const QString &p_value,
+                              const QDomElement &) Q_DECL_OVERRIDE;
 
-    bool GetExitAfter() const { return m_bExitAfter; };
-    void setExitAfter(bool exit) {m_bExitAfter = exit;};
-    bool GetAutoSave() const { return m_bAutoSave; };
-    void setAutoSave(bool autoSave) { m_bAutoSave = autoSave; };
+    bool GetExitAfter() const
+    {
+        return m_bExitAfter;
+    };
+    void setExitAfter(bool exit)
+    {
+        m_bExitAfter = exit;
+    };
+    bool GetAutoSave() const
+    {
+        return m_bAutoSave;
+    };
+    void setAutoSave(bool autoSave)
+    {
+        m_bAutoSave = autoSave;
+    };
 
-      /**
-        * Wait for start.
-        * @return true if the start signal has to be emitted before the next trial starts
-        */
-    bool GetWaitForStart() const { return m_bWaitForStart; };
+    /**
+      * Wait for start.
+      * @return true if the start signal has to be emitted before the next trial
+     * starts
+      */
+    bool GetWaitForStart() const
+    {
+        return m_bWaitForStart;
+    };
 
-      /**
-        * Check if the skip shortcut (F7) can be used.
-        * @return true if allowed
-        */
-    bool GetAllowSkip() const { return m_bAllowSkip; };
+    /**
+      * Check if the skip shortcut (F7) can be used.
+      * @return true if allowed
+      */
+    bool GetAllowSkip() const
+    {
+        return m_bAllowSkip;
+    };
 
-    bool RunOutputTest() const { return m_bRunOutputTest; }
+    bool RunOutputTest() const
+    {
+        return m_bRunOutputTest;
+    }
 
-    const QString& OutputTestInput() const { return m_sOutputTestInput; }
+    const QString &OutputTestInput() const
+    {
+        return m_sOutputTestInput;
+    }
 
-    const QString& GetScriptLibrary() const { return m_scriptLibrary; }
+    const QString &GetScriptLibrary() const
+    {
+        return m_scriptLibrary;
+    }
 
-    const QVariantMap& scriptParameters() const;
+    void setScriptLibrary(const QString sl)
+    {
+        m_scriptLibrary = sl;
+    }
 
-    bool operator==(const GeneralParameters& other) const;
+    const QVariantMap &scriptParameters() const;
+
+    bool operator==(const GeneralParameters &other) const;
 
 private:
     bool m_bExitAfter;
@@ -75,7 +110,6 @@ private:
     QString m_scriptLibrary;
     QVariantMap m_scriptParameters;
 };
-
 }
 }
 #endif

@@ -27,11 +27,12 @@
 
 using namespace apex::data;
 
+Q_LOGGING_CATEGORY(proceduredata, "procedure.data")
+
 namespace apex
 {
 
-Choices::Choices(bool deterministic) :
-    m_nChoices(-1)
+Choices::Choices(bool deterministic) : m_nChoices(-1)
 {
     if (deterministic)
         mRandom.setSeed(0);
@@ -39,28 +40,28 @@ Choices::Choices(bool deterministic) :
 
 void Choices::setChoices(int c)
 {
-    Q_ASSERT(c>0);
+    Q_ASSERT(c > 0);
     mIntervals.reserve(c);
     for (int i = mIntervals.size(); i < c; ++i)
         mIntervals.append(QString());
 
-    m_nChoices=c;
+    m_nChoices = c;
 }
 
 int Choices::nChoices() const
 {
-//    Q_ASSERT(nChoices!=-1);
+    //    Q_ASSERT(nChoices!=-1);
     return m_nChoices;
 }
 
 int Choices::randomPosition() const
 {
-    if (stimulusIntervals.isEmpty() ) {
-        return mRandom.nextUInt( m_nChoices );
+    if (stimulusIntervals.isEmpty()) {
+        return mRandom.nextUInt(m_nChoices);
     }
     int pos;
     while (true) {
-        pos = mRandom.nextUInt( m_nChoices );
+        pos = mRandom.nextUInt(m_nChoices);
         if (stimulusIntervals.contains(pos))
             break;
     }
@@ -70,10 +71,8 @@ int Choices::randomPosition() const
 bool Choices::isValid() const
 {
     // check whether each valid stimulus interval < nChoices
-    Q_FOREACH (int interval, stimulusIntervals)
-    {
-        if (interval >= m_nChoices)
-        {
+    Q_FOREACH (int interval, stimulusIntervals) {
+        if (interval >= m_nChoices) {
             qCDebug(APEX_RS) << "interval" << interval << ">=" << m_nChoices;
             return false;
         }
@@ -89,10 +88,10 @@ bool Choices::hasMultipleIntervals() const
 
 void Choices::addStimulusInterval(int i)
 {
-     stimulusIntervals.append(i);
+    stimulusIntervals.append(i);
 }
 
- const QStringList& Choices::intervals() const
+const QStringList &Choices::intervals() const
 {
     return mIntervals;
 }
@@ -103,13 +102,12 @@ void Choices::setInterval(int number, QString id)
     for (int i = mIntervals.size(); i < number; ++i)
         mIntervals.append(QString());
 
-    mIntervals[number]=id;
+    mIntervals[number] = id;
 }
 
-
-int Choices::interval(const QString& element) const
+int Choices::interval(const QString &element) const
 {
-    int idx= mIntervals.indexOf(element);
+    int idx = mIntervals.indexOf(element);
     return idx;
 }
 
@@ -128,21 +126,21 @@ QList<int> Choices::selectedIntervals() const
     return stimulusIntervals;
 }
 
-bool Choices::operator==(const Choices& other) const
+bool Choices::operator==(const Choices &other) const
 {
-    return  nChoices() == other.nChoices() &&
-        intervals() == other.intervals() &&
-        stimulusIntervals == other.stimulusIntervals;
+    return nChoices() == other.nChoices() && intervals() == other.intervals() &&
+           stimulusIntervals == other.stimulusIntervals;
 }
 
-ProcedureData::ProcedureData() :
-    m_presentations( -1 ),
-    m_skip( 0 ),
-    m_order( SequentialOrder ),
-    m_input_during_stimulus( false ),
-    m_pause_between_stimuli(0),
-    m_time_before_first_stimulus(0),
-    m_uniquestandard(false)
+ProcedureData::ProcedureData()
+    : m_hasPluginTrials(false),
+      m_presentations(-1),
+      m_skip(0),
+      m_order(SequentialOrder),
+      m_input_during_stimulus(false),
+      m_pause_between_stimuli(0),
+      m_time_before_first_stimulus(0),
+      m_uniquestandard(false)
 {
     m_correctorData.reset(new CorrectorData());
     m_correctorData->setType(data::CorrectorData::EQUAL);
@@ -153,17 +151,17 @@ ProcedureData::ProcedureData() :
  * @param p_trial
  * @return
  */
-bool ProcedureData::AddTrial(TrialData* p_trial)
+bool ProcedureData::AddTrial(TrialData *p_trial)
 {
     m_trials.push_back(p_trial);
     return true;
 }
 
-TrialData*  ProcedureData::GetTrial(const QString& p_name) const
+TrialData *ProcedureData::GetTrial(const QString &p_name) const
 {
-    for (tTrialList::const_iterator p = m_trials.begin(); p != m_trials.end(); ++p)
-    {
-        if ( (*p)->GetID() == p_name)
+    for (tTrialList::const_iterator p = m_trials.begin(); p != m_trials.end();
+         ++p) {
+        if ((*p)->GetID() == p_name)
             return *p;
     }
 
@@ -173,15 +171,14 @@ TrialData*  ProcedureData::GetTrial(const QString& p_name) const
 ProcedureData::~ProcedureData()
 {
     tTrialList::iterator it = m_trials.begin();
-    while ( it != m_trials.end() )
-    {
+    while (it != m_trials.end()) {
         delete *it;
         it++;
     }
     m_trials.clear();
 }
 
-const Choices& ProcedureData::choices() const
+const Choices &ProcedureData::choices() const
 {
     return m_choices;
 }
@@ -226,9 +223,14 @@ bool ProcedureData::inputDuringStimulus() const
     return m_input_during_stimulus;
 }
 
-CorrectorData* ProcedureData::correctorData() const
+CorrectorData *ProcedureData::correctorData() const
 {
     return m_correctorData.data();
+}
+
+bool ProcedureData::hasPluginTrials() const
+{
+    return m_hasPluginTrials;
 }
 
 void ProcedureData::setPresentations(int presentations)
@@ -243,17 +245,17 @@ void ProcedureData::setSkip(int skip)
 
 void ProcedureData::setNumberOfChoices(int nb)
 {
-    m_choices.setChoices(  nb );
+    m_choices.setChoices(nb);
 }
 
-void ProcedureData::setDefaultStandard(const QString& defStd)
+void ProcedureData::setDefaultStandard(const QString &defStd)
 {
     m_defaultstandard = defStd;
 }
 
 void ProcedureData::setUniqueStandard(const bool u)
 {
-    m_uniquestandard=u;
+    m_uniquestandard = u;
 }
 
 void ProcedureData::setOrder(Order order)
@@ -286,46 +288,56 @@ void ProcedureData::setInterval(int number, QString id)
     m_choices.setInterval(number, id);
 }
 
-void ProcedureData::setCorrectorData(data::CorrectorData* correctorData)
+void ProcedureData::setCorrectorData(data::CorrectorData *correctorData)
 {
     m_correctorData.reset(correctorData);
 }
 
-#define ARE_EQUAL(a, b) \
-    ((a.data() == 0 && b.data() == 0) ? true :\
-    ((a.data() == 0 || b.data() == 0) ? false :\
-    *a == *b))
-
-bool ProcedureData::operator==(const ProcedureData& other) const
+void ProcedureData::setHasPluginTrials(bool h)
 {
-    return  m_id == other.m_id &&
-            ApexTools::haveSameContents(m_trials, other.m_trials) &&
-            m_skip == other.m_skip &&
-            m_choices == other.m_choices &&
-            m_presentations == other.m_presentations &&
-            m_defaultstandard == other.m_defaultstandard &&
-            m_order == other.m_order &&
-            m_input_during_stimulus == other.m_input_during_stimulus &&
-            m_pause_between_stimuli == other.m_pause_between_stimuli &&
-            m_time_before_first_stimulus == other.m_time_before_first_stimulus &&
-            m_uniquestandard == other.m_uniquestandard &&
-            ARE_EQUAL(m_correctorData, other.m_correctorData);
+    m_hasPluginTrials = h;
+}
+
+#define ARE_EQUAL(a, b)                                                        \
+    ((a.data() == 0 && b.data() == 0)                                          \
+         ? true                                                                \
+         : ((a.data() == 0 || b.data() == 0) ? false : *a == *b))
+
+bool ProcedureData::operator==(const ProcedureData &other) const
+{
+    return m_id == other.m_id &&
+           ApexTools::haveSameContents(m_trials, other.m_trials) &&
+           m_skip == other.m_skip && m_choices == other.m_choices &&
+           m_presentations == other.m_presentations &&
+           m_defaultstandard == other.m_defaultstandard &&
+           m_order == other.m_order &&
+           m_input_during_stimulus == other.m_input_during_stimulus &&
+           m_pause_between_stimuli == other.m_pause_between_stimuli &&
+           m_time_before_first_stimulus == other.m_time_before_first_stimulus &&
+           m_uniquestandard == other.m_uniquestandard &&
+           ARE_EQUAL(m_correctorData, other.m_correctorData) &&
+           m_hasPluginTrials == other.m_hasPluginTrials;
 }
 
 #ifdef PRINTPROCEDURECONFIG
-void  ProcedureData::SetID(const QString& p_id) {
-    qCDebug(APEX_RS, "ProcedureConfig: Set id: "+p_id); m_id=p_id;
+void ProcedureData::SetID(const QString &p_id)
+{
+    qCDebug(APEX_RS, "ProcedureConfig: Set id: " + p_id);
+    m_id = p_id;
 };
-const  ProcedureData::QString& GetID() const {
-    qCDebug(APEX_RS, "ProcedureConfig: Get id: "+m_id); return m_id;
+const ProcedureData::QString &GetID() const
+{
+    qCDebug(APEX_RS, "ProcedureConfig: Get id: " + m_id);
+    return m_id;
 };
 #else
-void  ProcedureData::SetID(const QString& p_id) {
-    m_id=p_id;
+void ProcedureData::SetID(const QString &p_id)
+{
+    m_id = p_id;
 };
-const QString& ProcedureData::GetID() const {
+const QString &ProcedureData::GetID() const
+{
     return m_id;
 };
 #endif
-
 }

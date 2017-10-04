@@ -37,26 +37,26 @@ S_NAMESPACE_BEGIN
 
 namespace win32
 {
-  namespace automation
-  {
+namespace automation
+{
 
-      /**
-        * Get a program ID for a CLSID.
-        * @param ac_ID the CLSID
-        * @param a_sProgID result
-        * @return true if ok, false if not found
+/**
+  * Get a program ID for a CLSID.
+  * @param ac_ID the CLSID
+  * @param a_sProgID result
+  * @return true if ok, false if not found
 
-    s_dll bool gf_bCLSIDToProgID( const CLSID& ac_ID, String& a_sProgID ) s_no_throw;*/
+s_dll bool gf_bCLSIDToProgID( const CLSID& ac_ID, String& a_sProgID )
+s_no_throw;*/
 
-      /**
-        * Get a CLSID for a program ID.
-        * @param ac_sProgID the prog ID
-        * @param a_ID result
-        * @return true if ok, false if not found
-        */
-    s_dll bool gf_bProgIDToCLSID( const char* ac_psProgID, CLSID& a_ID ) s_no_throw;
-
-  }
+/**
+  * Get a CLSID for a program ID.
+  * @param ac_sProgID the prog ID
+  * @param a_ID result
+  * @return true if ok, false if not found
+  */
+s_dll bool gf_bProgIDToCLSID(const char *ac_psProgID, CLSID &a_ID) s_no_throw;
+}
 }
 
 S_NAMESPACE_END

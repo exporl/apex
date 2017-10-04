@@ -24,16 +24,15 @@
 namespace apex
 {
 
-ParameterManager::ParameterManager(const data::ParameterManagerData& d) :
-                                                                    data(d)
+ParameterManager::ParameterManager(const data::ParameterManagerData &d)
+    : data(d)
 {
 }
 
-QVariant ParameterManager::parameterValue (const QString &id) const
+QVariant ParameterManager::parameterValue(const QString &id) const
 {
     data::Parameter name(data.parameterById(id));
-    if (!name.isValid())
-    {
+    if (!name.isValid()) {
         qCDebug(APEX_RS) << "ParameterManager: cannot get parameter" << id;
         return QVariant();
     }
@@ -44,54 +43,51 @@ QVariant ParameterManager::parameterValue (const QString &id) const
     return name.defaultValue();
 }
 
-data::ParameterValueMap ParameterManager::parametersForOwner(const QString& owner) const
+data::ParameterValueMap
+ParameterManager::parametersForOwner(const QString &owner) const
 {
 
     data::ParameterValueMap result;
 
     data::PMRuntimeSettings::const_iterator it;
-    for (it = paramValues.begin(); it != paramValues.end(); ++it)
-    {
-            if (it.key().owner() == owner)
-                    result.insert(it.key(), it.value().value);
+    for (it = paramValues.begin(); it != paramValues.end(); ++it) {
+        if (it.key().owner() == owner)
+            result.insert(it.key(), it.value().value);
     }
 
     return result;
 }
 
-
-
-void ParameterManager::setParameter(const QString& id, const QVariant& value,
+void ParameterManager::setParameter(const QString &id, const QVariant &value,
                                     bool canReset)
 {
     data::Parameter name(data.parameterById(id));
 
-    if (!name.isValid())
-    {
-        qCDebug(APEX_RS) << "ParameterManager::SetParameter: cannot set parameter"
-                 << id << "to value" << value.toString();
+    if (!name.isValid()) {
+        qCDebug(APEX_RS)
+            << "ParameterManager::SetParameter: cannot set parameter" << id
+            << "to value" << value.toString();
 
-        qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("ParameterManager",
-                                     QObject::tr("unknown parameter: %1").arg(id))));
+        qCCritical(APEX_RS, "%s",
+                   qPrintable(QSL("%1: %2").arg(
+                       "ParameterManager",
+                       QObject::tr("unknown parameter: %1").arg(id))));
         showContents();
-    }
-    else
-    {
+    } else {
         qCDebug(APEX_RS) << "ParameterManager::SetParameter: setting parameter"
-                 << id << "to value" << value.toString();
+                         << id << "to value" << value.toString();
 
-        paramValues.insert(name,data::ValueReset(value,canReset));
+        paramValues.insert(name, data::ValueReset(value, canReset));
         Q_EMIT parameterChanged(id, value);
     }
 }
 
-void ParameterManager::registerParameter(const QString& id,
-                                         const data::Parameter& name)
+void ParameterManager::registerParameter(const QString &id,
+                                         const data::Parameter &name)
 {
     data.registerParameter(id, name);
     Q_EMIT parameterChanged(id, parameterValue(id));
 }
-
 
 void ParameterManager::showContents() const
 {
@@ -101,10 +97,9 @@ void ParameterManager::showContents() const
     qCDebug(APEX_RS) << "==================";
 
     data::PMRuntimeSettings::const_iterator it;
-    for (it = paramValues.begin(); it != paramValues.end(); ++it)
-    {
+    for (it = paramValues.begin(); it != paramValues.end(); ++it) {
         qCDebug(APEX_RS).nospace() << "name=" << it.key().toString()
-                           << ", value=" << it.value().value.toString();
+                                   << ", value=" << it.value().value.toString();
     }
 
     qCDebug(APEX_RS) << "==================";
@@ -114,12 +109,10 @@ void ParameterManager::reset()
 {
     QStringList removedIds;
 
-    QMutableMapIterator<data::Parameter,data::ValueReset> it(paramValues);
-    while (it.hasNext())
-    {
+    QMutableMapIterator<data::Parameter, data::ValueReset> it(paramValues);
+    while (it.hasNext()) {
         it.next();
-        if (it.value().reset)
-        {
+        if (it.value().reset) {
             removedIds << it.key().id();
             it.remove();
         }
@@ -146,12 +139,12 @@ void ParameterManager::setAllToDefaultValue(bool force)
             paramValues[parameter].value = parameter.defaultValue();
 }
 
-void ParameterManager::resetParameter(const QString& id)
+void ParameterManager::resetParameter(const QString &id)
 {
     paramValues.remove(data.parameterById(id));
 }
 
-data::Parameter ParameterManager::parameter(const QString& id) const
+data::Parameter ParameterManager::parameter(const QString &id) const
 {
     return data.parameterById(id);
 }
@@ -165,5 +158,4 @@ void ParameterManager::setInternalState(data::PMRuntimeSettings n)
 {
     paramValues = n;
 }
-
 }

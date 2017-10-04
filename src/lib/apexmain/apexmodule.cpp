@@ -26,23 +26,20 @@ using namespace apex;
  * Returns the result of the module in XML format
  * @return
  */
-QString ApexModule::GetResultXML( ) const
+QString ApexModule::GetResultXML() const
 {
-        return tr("<undef/>");
+    return tr("<undef/>");
 }
 
 /**
  * Last words to the XML file after experiment is finished
  * @return
  */
-QString apex::ApexModule::GetEndXML( ) const
+QString apex::ApexModule::GetEndXML() const
 {
-        return QString();
+    return QString();
 }
 
-
-apex::ApexModule::ApexModule( ExperimentRunDelegate & p_rd ):
-        m_rd(p_rd)
+apex::ApexModule::ApexModule(ExperimentRunDelegate &p_rd) : m_rd(p_rd)
 {
-
 }

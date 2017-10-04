@@ -42,32 +42,28 @@ namespace apex
 
 class TrainingProcedure : public ProcedureInterface
 {
-    public:
+public:
+    TrainingProcedure(ProcedureApi *a, const data::ProcedureData *d,
+                      bool deterministic = false);
 
-        TrainingProcedure(ProcedureApi* a, const data::ProcedureData* d,
-                          bool deterministic = false);
+    data::Trial setupNextTrial();
+    QString firstScreen();
+    ResultHighlight processResult(const ScreenResult *screenResult);
+    double progress() const;
+    QString resultXml() const;
+    QString finalResultXml() const;
 
-        data::Trial setupNextTrial();
-        QString firstScreen();
-        ResultHighlight processResult(const ScreenResult* screenResult);
-        double progress() const;
-        QString resultXml() const;
-        QString finalResultXml() const;
+private:
+    int trialsDone;
+    int totalTrials;
+    QString currentTrial;
+    QString lastAnswer;
+    data::Trial lastTrial;
 
-    private:
+    QString previousAnswer;
 
-        int trialsDone;
-        int totalTrials;
-        QString currentTrial;
-        QString lastAnswer;
-        data::Trial lastTrial;
-
-        QString previousAnswer;
-
-        Random randomGenerator;
+    Random randomGenerator;
 };
-
-
 }
 
 #endif

@@ -1,0 +1,213 @@
+<apex:apex xmlns:apex="http://www.kuleuven.be/exporl/Lab/Apex"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1"
+    xsi:schemaLocation="http://www.kuleuven.be/exporl/Lab/Apex ../../../Checkouts/apex3/trunk/apex/schemas/apex-schema.xsd">
+
+    <procedure xsi:type="apex:pluginProcedureType">
+        <parameters>
+            <presentations>100</presentations>
+            <skip>0</skip>
+            <order>sequential</order>
+            <script>hrtf-select</script>
+        </parameters>
+        <trials>
+            <trial id="trial">
+                <screen id="screen"/>
+                <stimulus id="stimulus"/>
+            </trial>
+        </trials>
+    </procedure>
+
+    <corrector xsi:type="apex:isequal"/>
+
+    <screens>
+        <reinforcement>
+            <progressbar>true</progressbar>
+            <feedback length="300">false</feedback>
+        </reinforcement>
+
+        <screen id="screen">
+            <arcLayout type="full" id="main_layout" width="24">
+                <button id="angle0" x="7">
+                    <text>0</text>
+                </button>
+                <button id="angle15" x="8">
+                    <text>15</text>
+                </button>
+                <button id="angle30" x="9">
+                    <text>30</text>
+                </button>
+                <button id="angle45" x="10">
+                    <text>45</text>
+                </button>
+                <button id="angle60" x="11">
+                    <text>60</text>
+                </button>
+                <button id="angle75" x="12">
+                    <text>75</text>
+                </button>
+                <button id="angle90" x="13">
+                    <text>90</text>
+                </button>
+                <button id="angle105" x="14">
+                    <text>105</text>
+                </button>
+                <button id="angle120" x="15">
+                    <text>120</text>
+                </button>
+                <button id="angle135" x="16">
+                    <text>135</text>
+                </button>
+                <button id="angle150" x="17">
+                    <text>150</text>
+                </button>
+                <button id="angle165" x="18">
+                    <text>165</text>
+                </button>
+                <button id="angle180" x="19">
+                    <text>180</text>
+                </button>
+                <button id="angle195" x="20">
+                    <text>195</text>
+                </button>
+                <button id="angle210" x="21">
+                    <text>210</text>
+                </button>
+                <button id="angle225" x="22">
+                    <text>225</text>
+                </button>
+                <button id="angle240" x="23">
+                    <text>240</text>
+                </button>
+                <button id="angle255" x="24">
+                    <text>255</text>
+                </button>
+                <button id="angle270" x="1">
+                    <text>270</text>
+                </button>
+                <button id="angle285" x="2">
+                    <text>285</text>
+                </button>
+                <button id="angle300" x="3">
+                    <text>300</text>
+                </button>
+                <button id="angle315" x="4">
+                    <text>315</text>
+                </button>
+                <button id="angle330" x="5">
+                    <text>330</text>
+                </button>
+                <button id="angle345" x="6">
+                    <text>345</text>
+                </button>
+            </arcLayout>
+
+            <buttongroup id="buttongroup">
+                <button id="angle0"/>
+                <button id="angle15"/>
+                <button id="angle30"/>
+                <button id="angle45"/>
+                <button id="angle60"/>
+                <button id="angle75"/>
+                <button id="angle90"/>
+                <button id="angle105"/>
+                <button id="angle120"/>
+                <button id="angle135"/>
+                <button id="angle150"/>
+                <button id="angle165"/>
+                <button id="angle180"/>
+                <button id="angle195"/>
+                <button id="angle210"/>
+                <button id="angle225"/>
+                <button id="angle240"/>
+                <button id="angle255"/>
+                <button id="angle270"/>
+                <button id="angle285"/>
+                <button id="angle300"/>
+                <button id="angle315"/>
+                <button id="angle330"/>
+                <button id="angle345"/>
+            </buttongroup>
+            <default_answer_element>buttongroup</default_answer_element>
+        </screen>
+    </screens>
+
+    <datablocks>
+        <datablock id="rawdata">
+            <device>wavdevice</device>
+            <description>sample raw datablock</description>
+            <uri>text.wav</uri>
+        </datablock>
+    </datablocks>
+
+    <devices>
+        <device id="wavdevice" xsi:type="apex:wavDeviceType">
+            <driver>portaudio</driver>
+            <card>default</card>
+            <channels>2</channels>
+            <gain>0</gain>
+            <samplerate>44100</samplerate>
+            <buffersize>4096</buffersize>
+            <blocksize>16384</blocksize>
+        </device>
+    </devices>
+
+    <filters>
+        <filter id="hrtffilter" xsi:type="apex:pluginfilter">
+            <device>wavdevice</device>
+            <channels>4</channels>
+            <continuous>false</continuous>
+            <plugin>hrtf</plugin>
+            <parameter id="angle" name="angle">0</parameter>
+            <parameter name="uri">GHB_0_5s_20480_angle${angle}.bin</parameter>
+        </filter>
+    </filters>
+
+    <stimuli>
+        <fixed_parameters/>
+        <stimulus id="stimulus">
+            <description>Eenvoudige teststimulus</description>
+            <datablocks>
+                <datablock id="rawdata"/>
+            </datablocks>
+            <variableParameters/>
+            <fixedParameters/>
+        </stimulus>
+    </stimuli>
+
+
+    <connections>
+        <connection>
+            <from>
+                <id>_ALL_</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>hrtffilter</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+
+        <connection>
+            <from>
+                <id>hrtffilter</id>
+                <channel>0</channel>
+            </from>
+            <to>
+                <id>wavdevice</id>
+                <channel>0</channel>
+            </to>
+        </connection>
+
+        <connection>
+            <from>
+                <id>hrtffilter</id>
+                <channel>2</channel>
+            </from>
+            <to>
+                <id>wavdevice</id>
+                <channel>1</channel>
+            </to>
+        </connection>
+    </connections>
+
+</apex:apex>

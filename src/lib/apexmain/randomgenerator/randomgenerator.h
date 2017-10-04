@@ -20,10 +20,10 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_RANDOMGENERATOR_RANDOMGENERATOR_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_RANDOMGENERATOR_RANDOMGENERATOR_H_
 
-
 #include <qstring.h>
 
-namespace apex {
+namespace apex
+{
 namespace data
 {
 class RandomGeneratorParameters;
@@ -36,23 +36,23 @@ class ApexControl;
 class RandomGenerator
 {
 public:
-    RandomGenerator(data::RandomGeneratorParameters* p_param);
+    RandomGenerator(data::RandomGeneratorParameters *p_param);
 
     virtual ~RandomGenerator();
 
-    virtual QString GetNextValue()=0;
-    virtual const QString& GetLastValue() const { return m_lastValue;};
+    virtual QString GetNextValue() = 0;
+    virtual const QString &GetLastValue() const
+    {
+        return m_lastValue;
+    };
     virtual void doDeterministicGeneration() = 0;
 
-    QString& GetParameter() const;
+    QString &GetParameter() const;
 
-
-    protected:
-    data::RandomGeneratorParameters* m_param;
+protected:
+    data::RandomGeneratorParameters *m_param;
     QString m_lastValue;
-
 };
-
 }
 
 #endif

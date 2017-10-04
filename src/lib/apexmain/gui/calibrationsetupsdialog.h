@@ -46,7 +46,7 @@ public:
      *
      * @see CalibrationDatabase
      */
-    CalibrationSetupsDialog (QWidget *parent = NULL);
+    CalibrationSetupsDialog(QWidget *parent = NULL);
 
     /** Destroys the calibration setups dialog. */
     ~CalibrationSetupsDialog();

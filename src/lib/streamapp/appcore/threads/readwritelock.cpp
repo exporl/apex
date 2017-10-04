@@ -17,148 +17,140 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "locks.h"
 #include "readwritelock.h"
+#include "locks.h"
 #include "thread.h"
 
 #include <QtGlobal>
 
 //#include "utils/tracer.h"
 //#include "utils/stringutils.h"
-//using namespace utils;
+// using namespace utils;
 using namespace appcore;
 
-ReadWriteLock::ReadWriteLock() :
-  m_nWriters( 0 ),
-  m_nWritersWaiting( 0 ),
-  m_nWriterID( -1 ),
-  m_ReaderIDs( 3 ),
-  m_Readers( 3 ),
-  mc_Waiter(),
-  mc_Lock()
+ReadWriteLock::ReadWriteLock()
+    : m_nWriters(0),
+      m_nWritersWaiting(0),
+      m_nWriterID(-1),
+      m_ReaderIDs(3),
+      m_Readers(3),
+      mc_Waiter(),
+      mc_Lock()
 {
 }
 
 ReadWriteLock::~ReadWriteLock()
 {
-  Q_ASSERT( m_ReaderIDs.mf_nGetNumItems() == 0 );
-  Q_ASSERT( m_nWriters == 0 );
+    Q_ASSERT(m_ReaderIDs.mf_nGetNumItems() == 0);
+    Q_ASSERT(m_nWriters == 0);
 }
 
 void ReadWriteLock::mf_EnterRead() const
 {
-  const int nThreadID = IThread::mf_nGetCurrentThreadID();
-  const Lock L( mc_Lock);
+    const int nThreadID = IThread::mf_nGetCurrentThreadID();
+    const Lock L(mc_Lock);
 
-  for( ;; )
-  {
-      //get index if the reader is already reading
-    unsigned i;
-    for( i = 0 ; i < m_ReaderIDs.mf_nGetNumItems() ; ++i )
-      if( m_ReaderIDs.mf_GetRItem( i ) == nThreadID )
-        break;
+    for (;;) {
+        // get index if the reader is already reading
+        unsigned i;
+        for (i = 0; i < m_ReaderIDs.mf_nGetNumItems(); ++i)
+            if (m_ReaderIDs.mf_GetRItem(i) == nThreadID)
+                break;
 
-      //see if we can enter, this is the case if
-      //- there is a read lock already
-      //- there are no writers
-      //- one writer and the same
-    if( i < m_ReaderIDs.mf_nGetNumItems()     ||
-        m_nWriters + m_nWritersWaiting == 0   ||
-        ( nThreadID == m_nWriterID && m_nWriters > 0 ) )
-    {
-      if( i < m_ReaderIDs.mf_nGetNumItems() )
-      {
-        //m_Readers.mp_SetItem( i, m_Readers.mf_GetRItem( i ) + 1 );
-        ++m_Readers( i );
-        //Tracer::sf_TraceDebug( "incremented " + toString( nThreadID ) );
-      }
-      else
-      {
-        m_ReaderIDs.mp_AddItem( nThreadID );
-        m_Readers.mp_AddItem( 1 );
-        //Tracer::sf_TraceDebug( "added " + toString( nThreadID ) );
-      }
+        // see if we can enter, this is the case if
+        //- there is a read lock already
+        //- there are no writers
+        //- one writer and the same
+        if (i < m_ReaderIDs.mf_nGetNumItems() ||
+            m_nWriters + m_nWritersWaiting == 0 ||
+            (nThreadID == m_nWriterID && m_nWriters > 0)) {
+            if (i < m_ReaderIDs.mf_nGetNumItems()) {
+                // m_Readers.mp_SetItem( i, m_Readers.mf_GetRItem( i ) + 1 );
+                ++m_Readers(i);
+                // Tracer::sf_TraceDebug( "incremented " + toString( nThreadID )
+                // );
+            } else {
+                m_ReaderIDs.mp_AddItem(nThreadID);
+                m_Readers.mp_AddItem(1);
+                // Tracer::sf_TraceDebug( "added " + toString( nThreadID ) );
+            }
 
-      return;
+            return;
+        }
+
+        const UnLock UL(mc_Lock);
+        mc_Waiter.mf_eWaitForSignal(50);
     }
-
-    const UnLock UL( mc_Lock );
-    mc_Waiter.mf_eWaitForSignal( 50 );
-  }
 }
 
 void ReadWriteLock::mf_LeaveRead() const
 {
-  const int nThreadID = IThread::mf_nGetCurrentThreadID();
-  const Lock L( mc_Lock);
+    const int nThreadID = IThread::mf_nGetCurrentThreadID();
+    const Lock L(mc_Lock);
 
-    //find reader index
-  for( unsigned i = 0 ; i < m_ReaderIDs.mf_nGetNumItems() ; ++i ) //must be checked everytime here!!
-  {
-    if( m_ReaderIDs( i ) == nThreadID )
+    // find reader index
+    for (unsigned i = 0; i < m_ReaderIDs.mf_nGetNumItems();
+         ++i) // must be checked everytime here!!
     {
-        //decrement count
-      const unsigned nCount = m_Readers( i ) - 1;
+        if (m_ReaderIDs(i) == nThreadID) {
+            // decrement count
+            const unsigned nCount = m_Readers(i) - 1;
 
-        //remove or update count
-      if( nCount == 0 )
-      {
-        m_ReaderIDs.mp_RemoveItemAt( i );
-        m_Readers.mp_RemoveItemAt( i );
-        mc_Waiter.mp_SignalObject();
-        //Tracer::sf_TraceDebug( "removed " + toString( nThreadID ) );
-      }
-      else
-      {
-        m_Readers.mp_SetItem( i, nCount );
-        //Tracer::sf_TraceDebug( "decremented " + toString( nThreadID ) );
-      }
+            // remove or update count
+            if (nCount == 0) {
+                m_ReaderIDs.mp_RemoveItemAt(i);
+                m_Readers.mp_RemoveItemAt(i);
+                mc_Waiter.mp_SignalObject();
+                // Tracer::sf_TraceDebug( "removed " + toString( nThreadID ) );
+            } else {
+                m_Readers.mp_SetItem(i, nCount);
+                // Tracer::sf_TraceDebug( "decremented " + toString( nThreadID )
+                // );
+            }
+        }
     }
-  }
 }
 
 void ReadWriteLock::mf_EnterWrite() const
 {
-  const int nThreadID = IThread::mf_nGetCurrentThreadID();
-  const Lock L( mc_Lock);
+    const int nThreadID = IThread::mf_nGetCurrentThreadID();
+    const Lock L(mc_Lock);
 
-  for( ;; )
-  {
-      //see if we can enter
-      //this is the case if:
-      //- no readers/writers
-      //- one reader and the same
-      //- one writer and the same
-    if( m_ReaderIDs.mf_nGetNumItems() + m_nWriters == 0 ||
-        nThreadID == m_nWriterID ||
-        ( m_ReaderIDs.mf_nGetNumItems() == 1 && m_ReaderIDs.mf_GetRItem( 0 ) == nThreadID ) )
-    {
-      m_nWriterID = nThreadID;
-      ++m_nWriters;
-      //Tracer::sf_TraceDebug( "added w " + toString( nThreadID ) );
-      break;
+    for (;;) {
+        // see if we can enter
+        // this is the case if:
+        //- no readers/writers
+        //- one reader and the same
+        //- one writer and the same
+        if (m_ReaderIDs.mf_nGetNumItems() + m_nWriters == 0 ||
+            nThreadID == m_nWriterID ||
+            (m_ReaderIDs.mf_nGetNumItems() == 1 &&
+             m_ReaderIDs.mf_GetRItem(0) == nThreadID)) {
+            m_nWriterID = nThreadID;
+            ++m_nWriters;
+            // Tracer::sf_TraceDebug( "added w " + toString( nThreadID ) );
+            break;
+        }
+
+        // we couldn't enter so wait some time
+        ++m_nWritersWaiting;
+        mc_Lock.mf_Leave();
+        mc_Waiter.mf_eWaitForSignal(50);
+        mc_Lock.mf_Enter();
+        --m_nWritersWaiting;
     }
-
-      //we couldn't enter so wait some time
-    ++m_nWritersWaiting;
-    mc_Lock.mf_Leave();
-    mc_Waiter.mf_eWaitForSignal( 50 );
-    mc_Lock.mf_Enter();
-    --m_nWritersWaiting;
-  }
 }
 
 void ReadWriteLock::mf_LeaveWrite() const
 {
-  const Lock L( mc_Lock );
+    const Lock L(mc_Lock);
 
-  Q_ASSERT( m_nWriters > 0 && m_nWriterID == IThread::mf_nGetCurrentThreadID() );
+    Q_ASSERT(m_nWriters > 0 &&
+             m_nWriterID == IThread::mf_nGetCurrentThreadID());
 
-  if( --m_nWriters == 0 )
-  {
-    m_nWriterID = 0;
-    mc_Waiter.mp_SignalObject();
-    //Tracer::sf_TraceDebug( "removed w " + toString( m_nWriterID ) );
-  }
+    if (--m_nWriters == 0) {
+        m_nWriterID = 0;
+        mc_Waiter.mp_SignalObject();
+        // Tracer::sf_TraceDebug( "removed w " + toString( m_nWriterID ) );
+    }
 }
-

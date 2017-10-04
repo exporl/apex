@@ -28,7 +28,8 @@
 
 #include <vector>
 
-namespace apex {
+namespace apex
+{
 
 class TrialResult;
 class ScreenResult;
@@ -40,71 +41,75 @@ Apex result collector module
 */
 class ApexResultSink : public ApexModule
 {
-        Q_OBJECT
+    Q_OBJECT
 public:
-    ApexResultSink(ExperimentRunDelegate& p_rd);
+    ApexResultSink(ExperimentRunDelegate &p_rd);
 
     ~ApexResultSink();
 
-        virtual QString GetResultXML( ) const;
+    virtual QString GetResultXML() const;
 
-        public:         // slot replacements
-                //void NewTrial(const QString& p_name);
-                void SetFilename(const QString& p_filename);
-                const QString& GetFilename() const { return m_filename; }
-                bool IsSaved() const { return m_bSaved; }
+public: // slot replacements
+    // void NewTrial(const QString& p_name);
+    void SetFilename(const QString &p_filename);
+    const QString &GetFilename() const
+    {
+        return m_filename;
+    }
+    bool IsSaved() const
+    {
+        return m_bSaved;
+    }
 
-                /**
-                  * Extra XML will be appended to the results file
-                  */
-                void setExtraXml(const QString &x);
+    /**
+      * Extra XML will be appended to the results file
+      */
+    void setExtraXml(const QString &x);
 
-                static const QString c_fileFooter;
-                static const QString resultsExtension;          // .apx
-
+    static const QString c_fileFooter;
+    static const QString resultsExtension; // .apx
 
 public slots:
-                /*void NewStimulus(const QString& p_name);
-                void Answer(const ScreenResult& p_answer);
-                void NewAnswerCorrect(const bool p_correct);
-                void AnswerTime(const int p_time);*/
-                void Finished(bool askFilename=true);
+    /*void NewStimulus(const QString& p_name);
+    void Answer(const ScreenResult& p_answer);
+    void NewAnswerCorrect(const bool p_correct);
+    void AnswerTime(const int p_time);*/
+    void Finished(bool askFilename = true);
 
-                /*void SetCorrectAnswer(const unsigned p_answer);
-                void SetSaturation();
-                void SetTargetParam(const t_adaptParam p_param);*/
-                void CollectResults(const QString& trial, const QString& extraXml);
+    /*void SetCorrectAnswer(const unsigned p_answer);
+    void SetSaturation();
+    void SetTargetParam(const t_adaptParam p_param);*/
+    void CollectResults(const QString &trial, const QString &extraXml);
 
-        signals:
-                void Saved();                   // is emitted after Finished() did it's job
-                void collected(QString xml);
+signals:
+    void Saved(); // is emitted after Finished() did it's job
+    void collected(QString xml);
 
+private:
+    void SaveAs(bool askFilename = true);
+    bool Save(const QString &p_filename, const bool p_overwrite);
+    bool MakeFilenameUnique();
 
-        private:
-                void SaveAs(bool askFilename=true);
-                bool Save(const QString& p_filename, const bool p_overwrite );
-                bool MakeFilenameUnique( );
+    void PrintXMLHeader(QTextStream &out);
+    void PrintXMLFooter(QTextStream &out);
+    void
+    PrintIntro(QTextStream &out); // print general stuff about the experiment
 
-                void PrintXMLHeader(QTextStream& out);
-                void PrintXMLFooter(QTextStream& out);
-                void PrintIntro(QTextStream& out);                      // print general stuff about the experiment
+    const QString CollectEndResults();
 
-                const QString CollectEndResults();
-        private:
-//              TrialResult* currentTrial;
-                std::vector<TrialResult*> m_Results;
+private:
+    //              TrialResult* currentTrial;
+    std::vector<TrialResult *> m_Results;
 
-                QString m_filename;
-                QString m_extraXml;
-                QDateTime m_endTime;
-                bool m_bSaved;
+    QString m_filename;
+    QString m_extraXml;
+    QDateTime m_endTime;
+    bool m_bSaved;
 
-
-        /*      bool m_bSaturation;
-                int p_reversals;
-                bool p_defReversals;*/
+    /*      bool m_bSaturation;
+            int p_reversals;
+            bool p_defReversals;*/
 };
-
 }
 
 #endif

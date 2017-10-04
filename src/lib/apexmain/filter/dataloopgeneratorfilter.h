@@ -21,33 +21,40 @@
 
 #include <QString>
 
-namespace apex {
+namespace apex
+{
 
-    namespace data {
-        class FilterData;
+namespace data
+{
+class FilterData;
+}
+
+namespace stimulus
+{
+
+class DataLoopGeneratorFilter : public WavGenerator
+{
+public:
+    DataLoopGeneratorFilter(const QString &ac_sID, const QString &ac_sType,
+                            data::FilterData *pParams, unsigned long sr,
+                            unsigned bs)
+        : WavGenerator(ac_sID, ac_sType, pParams, sr, bs)
+    {
     }
 
-    namespace stimulus {
+    void SetSource(stimulus::DataBlock *s)
+    {
+        m_src = s;
+    };
+    stimulus::DataBlock *GetSource() const
+    {
+        Q_CHECK_PTR(m_src);
+        return m_src;
+    };
 
-class DataLoopGeneratorFilter: public WavGenerator {
-public:
-    DataLoopGeneratorFilter( const QString& ac_sID,
-                            const QString& ac_sType,
-                             data::FilterData* pParams,
-                                                   unsigned long sr, unsigned bs ) :
-    WavGenerator(ac_sID, ac_sType, pParams, sr, bs)
-    {}
-
-
-          void SetSource(stimulus::DataBlock* s) { m_src=s;};
-          stimulus::DataBlock* GetSource() const { Q_CHECK_PTR(m_src); return m_src; };
-
-    private:
-          stimulus::DataBlock* m_src;
-
+private:
+    stimulus::DataBlock *m_src;
 };
 
-
-    } // ns stimulus
+} // ns stimulus
 } // ns apex
-

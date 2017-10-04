@@ -29,37 +29,33 @@ namespace apex
 namespace data
 {
 
-void ParameterManagerData::registerParameter(const QString& id, const Parameter& pn)
+void ParameterManagerData::registerParameter(const QString &id,
+                                             const Parameter &pn)
 {
-    //qCDebug(APEX_RS) << "registering parameter" << id;
+    // qCDebug(APEX_RS) << "registering parameter" << id;
     if (!id.isEmpty())
         idMap[id] = pn;
 }
 
-
-
-Parameter ParameterManagerData::parameterById(const QString& id) const
+Parameter ParameterManagerData::parameterById(const QString &id) const
 {
     return idMap[id];
 }
 
-
 void ParameterManagerData::showContents() const
 {
 
+    qCDebug(APEX_RS) << "Registered parameters:";
+    qCDebug(APEX_RS) << "======================";
 
-            qCDebug(APEX_RS) << "Registered parameters:";
-            qCDebug(APEX_RS) << "======================";
-
-            IdParameterMap::const_iterator it;
-            for (it = idMap.begin(); it != idMap.end(); ++it)
-            {
-                qCDebug(APEX_RS).nospace() << "id=" << it.key() << ", name="
-                                   << it.value().toString();
-            }
+    IdParameterMap::const_iterator it;
+    for (it = idMap.begin(); it != idMap.end(); ++it) {
+        qCDebug(APEX_RS).nospace() << "id=" << it.key()
+                                   << ", name=" << it.value().toString();
+    }
 }
 
-bool ParameterManagerData::operator==(const ParameterManagerData& other) const
+bool ParameterManagerData::operator==(const ParameterManagerData &other) const
 {
     return idMap == other.idMap;
 }

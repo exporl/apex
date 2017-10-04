@@ -26,90 +26,88 @@ class FlashWidget;
 
 namespace apex
 {
-    class ExperimentRunDelegate;
-    namespace data
-    {
-        class ScreenElement;
-        class FlashPlayerElement;
-    }
+class ExperimentRunDelegate;
+namespace data
+{
+class ScreenElement;
+class FlashPlayerElement;
+}
 
-    namespace rundelegates
-    {
+namespace rundelegates
+{
 
-        using data::ScreenElement;
-        using data::FlashPlayerElement;
+using data::ScreenElement;
+using data::FlashPlayerElement;
 
-        /**
-        * The FlashPlayerRunDelegate class is an implementation of
-        * ScreenElementRunDelegate representing a FlashPlayerElement.
-        */
-        class FlashPlayerRunDelegate :
-                       public QObject,
-                       public ScreenElementRunDelegate
-        {
-            Q_OBJECT
-        public:
-            /**
-          * Constructor.
-          */
-            FlashPlayerRunDelegate( ExperimentRunDelegate* p_rd, QWidget* parent, const FlashPlayerElement* e );
+/**
+* The FlashPlayerRunDelegate class is an implementation of
+* ScreenElementRunDelegate representing a FlashPlayerElement.
+*/
+class FlashPlayerRunDelegate : public QObject, public ScreenElementRunDelegate
+{
+    Q_OBJECT
+public:
+    /**
+  * Constructor.
+  */
+    FlashPlayerRunDelegate(ExperimentRunDelegate *p_rd, QWidget *parent,
+                           const FlashPlayerElement *e);
 
-            /**
-          * Destructor.
-          */
-            ~FlashPlayerRunDelegate();
+    /**
+  * Destructor.
+  */
+    ~FlashPlayerRunDelegate();
 
-            /**
-        * Implementation of the ScreenElementRunDelegate method.
-        */
-            const ScreenElement* getScreenElement() const;
+    /**
+* Implementation of the ScreenElementRunDelegate method.
+*/
+    const ScreenElement *getScreenElement() const;
 
-            /**
-          * Implementation of the ScreenElementRunDelegate method.
-          */
-            QWidget* getWidget();
+    /**
+  * Implementation of the ScreenElementRunDelegate method.
+  */
+    QWidget *getWidget();
 
-            /**
-          * Implementation of the ScreenElementRunDelegate method.
-          */
-            void connectSlots( ScreenRunDelegate* d );
+    /**
+  * Implementation of the ScreenElementRunDelegate method.
+  */
+    void connectSlots(ScreenRunDelegate *d);
 
-            /**
-          * Implementation of the ScreenElementRunDelegate method.
-          */
-            void feedBack( const FeedbackMode& mode );
+    /**
+  * Implementation of the ScreenElementRunDelegate method.
+  */
+    void feedBack(const FeedbackMode &mode);
 
-            /**
-          * Implementation of the ScreenElementRunDelegate method.
-          */
-            virtual void setEnabled( const bool e = true );
+    /**
+  * Implementation of the ScreenElementRunDelegate method.
+  */
+    virtual void setEnabled(const bool e = true);
 
-        public slots:
-            /**
-          * Cllaed for clicks/keyboard shortcuts
-          */
-            void sendAnsweredSignal();
+public slots:
+    /**
+  * Cllaed for clicks/keyboard shortcuts
+  */
+    void sendAnsweredSignal();
 
-            /**
-          * Override to start/stop movie.
-          */
-            void setVisible( bool );
+    /**
+  * Override to start/stop movie.
+  */
+    void setVisible(bool);
 
-        signals:
-            void answered( ScreenElementRunDelegate* e );
+signals:
+    void answered(ScreenElementRunDelegate *e);
 
-        private:
-            void setMovie( const QString& path, const bool startNow = true );
-            void mp_StartWait();
+private:
+    void setMovie(const QString &path, const bool startNow = true);
+    void mp_StartWait();
 
-            const FlashPlayerElement* element;
-            FlashWidget* fw;
+    const FlashPlayerElement *element;
+    FlashWidget *fw;
 
-        private slots:
-            void movieFinished();
-        };
-
-    }
+private slots:
+    void movieFinished();
+};
+}
 }
 
 #endif

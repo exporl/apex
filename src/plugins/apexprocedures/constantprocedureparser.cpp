@@ -29,32 +29,31 @@ namespace apex
 namespace parser
 {
 
-ConstantProcedureParser::ConstantProcedureParser() :
-    ProcedureParsersParent()
+ConstantProcedureParser::ConstantProcedureParser() : ProcedureParsersParent()
 {
 }
 
-data::ProcedureData * ConstantProcedureParser::parse(const QDomElement &base)
+data::ProcedureData *ConstantProcedureParser::parse(const QDomElement &base)
 {
-    data::ConstantProcedureData* c = new data::ConstantProcedureData();
+    data::ConstantProcedureData *c = new data::ConstantProcedureData();
     ProcedureParsersParent::Parse(base, c);
     return c;
 }
 
 bool ConstantProcedureParser::trialsValid()
 {
-    return !currentConfig->GetTrials().isEmpty();
+    return !currentConfig->GetTrials().isEmpty() ||
+           currentConfig->hasPluginTrials();
 }
 
 void ConstantProcedureParser::SetProcedureParameters(const QDomElement &p_base)
 {
-    data::ConstantProcedureData* param
-            = dynamic_cast<data::ConstantProcedureData*>(currentConfig);
+    data::ConstantProcedureData *param =
+        dynamic_cast<data::ConstantProcedureData *>(currentConfig);
     parser::ConstantProcedureDataParser parser;
     parser.Parse(p_base, param);
 
     currentConfig = param;
 }
-
 }
 }

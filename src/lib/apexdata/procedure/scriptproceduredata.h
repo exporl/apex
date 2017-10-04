@@ -33,13 +33,12 @@ class ScriptProcedureDataParser;
 }
 namespace data
 {
-struct tScriptProcedureParameter
-{
+struct tScriptProcedureParameter {
     QString name;
     QString value;
-    tScriptProcedureParameter(const QString& p_name, const QString& p_value);
+    tScriptProcedureParameter(const QString &p_name, const QString &p_value);
 
-    bool operator==(const tScriptProcedureParameter& other) const;
+    bool operator==(const tScriptProcedureParameter &other) const;
 };
 
 typedef QList<tScriptProcedureParameter> tScriptProcedureParameterList;
@@ -49,36 +48,35 @@ typedef QList<tScriptProcedureParameter> tScriptProcedureParameterList;
 */
 class APEXDATA_EXPORT ScriptProcedureData : public ProcedureData
 {
-    public:
-        ScriptProcedureData();
+public:
+    ScriptProcedureData();
 
-        ~ScriptProcedureData();
+    ~ScriptProcedureData();
 
-        const QString script() const;
-        void setScript(const QString& p);
-        const QString adjustParameter() const;
-        void setAdjustParameter(const QString& p);
-        bool  debugger() const;
-        void setDebugger(bool p);
+    const QString script() const;
+    void setScript(const QString &p);
+    const QString adjustParameter() const;
+    void setAdjustParameter(const QString &p);
+    bool debugger() const;
+    void setDebugger(bool p);
 
-        virtual Type type() const;
-        virtual QString name() const ;
+    virtual Type type() const;
+    virtual QString name() const;
 
-        //! Return all parameters defined via <parameter name="bla">value</parameter> in the apex:/procedure/parameters section
-        const tScriptProcedureParameterList& customParameters() const;
-        void appendParameter(const QString& name, const QString& value);
+    //! Return all parameters defined via <parameter
+    //! name="bla">value</parameter> in the apex:/procedure/parameters section
+    const tScriptProcedureParameterList &customParameters() const;
+    void appendParameter(const QString &name, const QString &value);
 
-        bool operator==(const ScriptProcedureData& other) const;
+    bool operator==(const ScriptProcedureData &other) const;
 
-    private:
-        QString m_script;
-        QString m_adjust_parameter;
-        bool m_debugger;
+private:
+    QString m_script;
+    QString m_adjust_parameter;
+    bool m_debugger;
 
-        tScriptProcedureParameterList m_paramList;
-
+    tScriptProcedureParameterList m_paramList;
 };
-
 }
 }
 

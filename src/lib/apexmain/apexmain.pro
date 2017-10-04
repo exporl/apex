@@ -1,4 +1,4 @@
-CLEBS *= coh streamapp apextools apexdata apexwriters portaudio psignifit -ctags subdirsources pch asciicast builddll
+CLEBS *= coh streamapp apextools apexdata apexwriters portaudio psignifit -ctags subdirsources pch asciicast builddll commongui sndfile bertha +libgit2
 unix_CLEBS *= -jack
 
 DEFINES *= APEX_MAKEDLL
@@ -29,23 +29,11 @@ android {
     QT -= webkitwidgets
     QT += androidextras
 
-    HEADERS -= \
-        result/resultviewer.h \
-        result/webpageprocessor.h \
-        resultsink/rtresultsink.h \
-        runner/flowrunner.h \
-        runner/flowapi.h \
+     HEADERS -= \
         gui/flashwidget.h \
-        screen/htmlrundelegate.h \
         screen/flashplayerrundelegate.h
     SOURCES -= \
-        result/resultviewer.cpp \
-        result/webpageprocessor.cpp \
-        resultsink/rtresultsink.cpp \
-        runner/flowrunner.cpp \
-        runner/flowapi.cpp \
         gui/flashwidget.cpp \
-        screen/htmlrundelegate.cpp \
         screen/flashplayerrundelegate.cpp
 } else {
     HEADERS -= apexandroidnative.h
@@ -61,7 +49,6 @@ FORMS += \
     gui/parameterdialog.ui \
     gui/plugindialog.ui \
     gui/r216settings.ui \
-    gui/resultviewer.ui \
     gui/soundcarddialog.ui \
     gui/soundcardsdialog.ui \
     gui/startupdialog.ui \

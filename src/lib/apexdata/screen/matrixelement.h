@@ -35,53 +35,44 @@ namespace data
  * The ButtonElement is an implementation of a \ref
  * ScreenElement representing a "button".
  */
-class APEXDATA_EXPORT MatrixElement
-            : public ScreenElement
+class APEXDATA_EXPORT MatrixElement : public ScreenElement
 {
-    public:
+public:
+    struct MatrixButton {
+        QString name;
+        QString text;
 
-        struct MatrixButton
-        {
-            QString name;
-            QString text;
+        MatrixButton(const QString &n, const QString t) : name(n), text(t){};
 
-            MatrixButton(const QString& n, const QString t):
-                    name(n),
-                    text(t) {};
+        MatrixButton(){};
 
-            MatrixButton() {};
+        bool operator==(const MatrixButton &other) const;
+    };
 
-            bool operator==(const MatrixButton& other) const;
-        };
+    typedef QVector<QVector<MatrixButton>> tMatrixButtons;
 
-        typedef QVector< QVector<MatrixButton> > tMatrixButtons;
+    MatrixElement(const QString &id, ScreenElement *parent);
+    ~MatrixElement();
 
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
+    /**
+     * row and col are 1 based
+     */
+    void setButton(int row, int col, MatrixButton &button);
+    const tMatrixButtons &buttons() const;
 
-        MatrixElement(const QString& id, ScreenElement* parent);
-        ~MatrixElement();
+    void setAutoContinue(bool v);
+    bool autoContinue() const;
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+    bool operator==(const MatrixElement &other) const;
 
-
-        /**
-         * row and col are 1 based
-         */
-        void setButton(int row, int col, MatrixButton& button);
-        const tMatrixButtons& buttons() const;
-
-        void setAutoContinue(bool v);
-        bool autoContinue() const;
-
-        bool operator==(const MatrixElement& other) const;
-
-    private:
-        tMatrixButtons m_buttons;
-        bool m_autoContinue;
+private:
+    tMatrixButtons m_buttons;
+    bool m_autoContinue;
 };
-
 }
 }
 #endif

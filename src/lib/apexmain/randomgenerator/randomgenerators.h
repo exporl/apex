@@ -32,7 +32,7 @@ class RandomGenerator;
 
 namespace stimulus
 {
-    class Stimulus;
+class Stimulus;
 }
 
 /**
@@ -40,31 +40,27 @@ namespace stimulus
 */
 class RandomGenerators : public ApexModule
 {
-    public:
-        RandomGenerators(ExperimentRunDelegate& p_rd);
-        ~RandomGenerators();
+public:
+    RandomGenerators(ExperimentRunDelegate &p_rd);
+    ~RandomGenerators();
 
-        void AddGenerator(QString id, RandomGenerator* p_generator);
-        void doDeterministicGeneration();
+    void AddGenerator(QString id, RandomGenerator *p_generator);
+    void doDeterministicGeneration();
 
-        /**
-         * Send parameters from randomgenerators to parametermanager
-         */
-        void ApplyGenerators();
+    /**
+     * Send parameters from randomgenerators to parametermanager
+     */
+    void ApplyGenerators();
 
-        virtual QString GetResultXML() const;
+    virtual QString GetResultXML() const;
 
-    private:
+private:
+    QString GetXMLString(const QString &generator, const QString &parameter,
+                         const QString &value) const;
 
-            QString GetXMLString(const QString& generator,
-                                 const QString& parameter,
-                                 const QString& value) const;
-
-        QMap<QString, RandomGenerator*> m_generators;
-        mutable QStringList xmlresults;
-
+    QMap<QString, RandomGenerator *> m_generators;
+    mutable QStringList xmlresults;
 };
-
 }
 
 #endif

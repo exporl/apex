@@ -45,9 +45,12 @@ public:
      * @param a_Filters the map with filters for the current experiment
      * @param a_DBlocks the map with datablocks for the current experiment
      */
-    ConnectionRunDelegateCreator ( tConnectionsMap& a_VectorToFill, const tDeviceMap& a_Devs, const tFilterMap& a_Filters, const tDataBlockMap& a_DBlocks );
+    ConnectionRunDelegateCreator(tConnectionsMap &a_VectorToFill,
+                                 const tDeviceMap &a_Devs,
+                                 const tFilterMap &a_Filters,
+                                 const tDataBlockMap &a_DBlocks);
 
-    bool AddConnection (const data::ConnectionData& data);
+    bool AddConnection(const data::ConnectionData &data);
 
     /**
      * Try to make default connections.
@@ -71,21 +74,20 @@ private:
      * @param ac_Connection connection to check.
      * @return the same connection.
      */
-    const tConnection& mf_IsValid( const tConnection& ac_Connection ) const;
+    const tConnection &mf_IsValid(const tConnection &ac_Connection) const;
 
     /**
      * Add a Connection to the map.
      * Calls mf_IsValid().
      * @param ac_Connection the connection to add.
      */
-    void mp_AddConnection( const tConnection& ac_Connection );
+    void mp_AddConnection(const tConnection &ac_Connection);
 
-    const tDeviceMap&     m_Devices;
-    const tFilterMap&     m_Filters;
-    const tDataBlockMap&  m_DBlocks;
-    tConnectionsMap&      m_Connections;
+    const tDeviceMap &m_Devices;
+    const tFilterMap &m_Filters;
+    const tDataBlockMap &m_DBlocks;
+    tConnectionsMap &m_Connections;
 };
-
 }
 }
 

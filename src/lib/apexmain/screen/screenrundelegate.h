@@ -24,8 +24,8 @@
 
 #include "apextools/apextypedefs.h"
 
-#include "screen/rundelegatedefines.h"
-#include "screen/screenelementrundelegate.h"
+#include "rundelegatedefines.h"
+#include "screenelementrundelegate.h"
 
 #include <QLayout>
 #include <QObject>
@@ -67,71 +67,68 @@ using rundelegates::SpinBoxRunDelegate;
  */
 class ScreenRunDelegate : public QObject
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
+public:
+    ScreenRunDelegate(ExperimentRunDelegate *p_exprd,
+                      const data::Screen *screen, QWidget *parent,
+                      const QString &defaultFont, int defaultFontSize);
+    ~ScreenRunDelegate();
 
-        ScreenRunDelegate(ExperimentRunDelegate* p_exprd,
-                          const data::Screen* screen, QWidget* parent,
-                          const QString& defaultFont, int defaultFontSize );
-        ~ScreenRunDelegate();
+    QLayout *getLayout();
+    /**
+     * Return a widget containing the layout
+     */
+    QWidget *getWidget();
 
-        QLayout* getLayout();
-        /**
-         * Return a widget containing the layout
-         */
-        QWidget* getWidget();
+    void feedback(ScreenElementRunDelegate::FeedbackMode mode,
+                  const QString &feedbackElementId);
+    void feedback(ScreenElementRunDelegate::FeedbackMode mode,
+                  ScreenElementRunDelegate *feedbackElement);
 
+    void enableWidgets(bool enable);
+    bool widgetsEnabled() const;
+    void showWidgets();
+    void hideWidgets();
+    // clear user input if any
+    void clearText();
+    // add interesting texts from elements in the screen to the
+    // result
+    void addInterestingTexts(ScreenResult &result);
+    void addScreenParameters(ScreenResult &result);
 
-        void feedback(ScreenElementRunDelegate::FeedbackMode mode,
-                    const QString& feedbackElementId);
-        void feedback(ScreenElementRunDelegate::FeedbackMode mode,
-                      ScreenElementRunDelegate* feedbackElement);
+    const Screen *getScreen() const;
 
-        void enableWidgets( bool enable );
-        bool widgetsEnabled() const;
-        void showWidgets();
-        void hideWidgets();
-        // clear user input if any
-        void clearText();
-        // add interesting texts from elements in the screen to the
-        // result
-        void addInterestingTexts( ScreenResult& result );
-        void addScreenParameters( ScreenResult& result );
+    ScreenElementRunDelegate *getFeedBackElement();
+    QString getDefaultAnswerElement() const;
 
-        const Screen* getScreen() const;
+    /**
+     * Emits newAnswer(QString)
+     */
+    void setAnswer(const QString &answer);
 
-        ScreenElementRunDelegate* getFeedBackElement();
-        QString getDefaultAnswerElement() const;
+signals:
 
-        /**
-         * Emits newAnswer(QString)
-         */
-        void setAnswer(const QString& answer);
+    void answered(ScreenElementRunDelegate *);
+    void newStimulus(stimulus::Stimulus *);
+    void newAnswer(QString);
 
-    signals:
+private:
+    QLayout *layout;
+    QScopedPointer<QWidget> widget;
 
-        void answered( ScreenElementRunDelegate* );
-        void newStimulus( stimulus::Stimulus* );
-        void newAnswer(QString);
-
-    private:
-
-        QLayout* layout;
-        QScopedPointer<QWidget> widget;
-
-        const data::Screen* screen;
-        ScreenElementRunDelegate* feedbackElement;
-        ScreenElementRunDelegate* rootElement;
-        ElementToRunningMap elementToRunningMap;
-        spinBoxListT spinBoxList;     //!< list of all spin boxes, to be used for quickly having them set parameters, only necessary for performance
-        QString defaultFont;
-        int defaultFontSize;
-        bool enabled;
+    const data::Screen *screen;
+    ScreenElementRunDelegate *feedbackElement;
+    ScreenElementRunDelegate *rootElement;
+    ElementToRunningMap elementToRunningMap;
+    spinBoxListT spinBoxList; //!< list of all spin boxes, to be used for
+                              //! quickly having them set parameters, only
+    //! necessary for performance
+    QString defaultFont;
+    int defaultFontSize;
+    bool enabled;
 };
-
 }
-
 }
 
 #endif

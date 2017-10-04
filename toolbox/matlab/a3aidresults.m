@@ -12,8 +12,8 @@ end
 
 %stimuli=strread(results{I+1}, '%s\t');
 %scorrector=strread(results{I+2}, '%s\t');
-stimuli=strsplit(results{I+1},tb);
-scorrector=strsplit(results{I+2}, tb);
+stimuli=amt_strsplit(results{I+1},tb);
+scorrector=amt_strsplit(results{I+2}, tb);
 corrector=zeros(length(scorrector), 1);
 for i=1:length(scorrector)
     if (strcmp(scorrector(i),'true'))

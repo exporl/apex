@@ -29,28 +29,26 @@
 Q_DECLARE_LOGGING_CATEGORY(APEX_DUMMYFEEDBACKPLUGIN)
 Q_LOGGING_CATEGORY(APEX_DUMMYFEEDBACKPLUGIN, "apex.dummyfeedbackplugin")
 
-class dummyfeedbackpluginCreator :
-    public QObject,
-    public PluginFeedbackCreator
+class dummyfeedbackpluginCreator : public QObject, public PluginFeedbackCreator
 {
     Q_OBJECT
-    Q_INTERFACES (PluginFeedbackCreator)
-    Q_PLUGIN_METADATA (IID "apex.dummyfeedbackplugin")
+    Q_INTERFACES(PluginFeedbackCreator)
+    Q_PLUGIN_METADATA(IID "apex.dummyfeedbackplugin")
 public:
     virtual QStringList availablePlugins() const;
 
-    virtual PluginFeedbackInterface *createPluginFeedback
-        (const QString &name,
-         const FeedbackPluginParameters& params) const;
+    virtual PluginFeedbackInterface *
+    createPluginFeedback(const QString &name,
+                         const FeedbackPluginParameters &params) const;
 };
 
 class dummyfeedbackplugin : public QObject, public PluginFeedbackInterface
 {
-        Q_OBJECT
+    Q_OBJECT
 public:
-    dummyfeedbackplugin(const FeedbackPluginParameters& params);
+    dummyfeedbackplugin(const FeedbackPluginParameters &params);
 
-    void highLight(const QString& element);
+    void highLight(const QString &element);
 
     //! Indicate that the response was correct (thumbs up)
     void showPositive();
@@ -65,8 +63,7 @@ public:
     virtual QString errorString();
 
 private:
-    void showMessage(const QString& message);
-
+    void showMessage(const QString &message);
 };
 
 QStringList dummyfeedbackpluginCreator::availablePlugins() const
@@ -74,8 +71,8 @@ QStringList dummyfeedbackpluginCreator::availablePlugins() const
     return QStringList() << "dummyfeedbackplugin";
 }
 
-PluginFeedbackInterface * dummyfeedbackpluginCreator::createPluginFeedback
-    (const QString &name, const FeedbackPluginParameters& params) const
+PluginFeedbackInterface *dummyfeedbackpluginCreator::createPluginFeedback(
+    const QString &name, const FeedbackPluginParameters &params) const
 {
     if (name == "dummyfeedbackplugin")
         return new dummyfeedbackplugin(params);
@@ -83,24 +80,23 @@ PluginFeedbackInterface * dummyfeedbackpluginCreator::createPluginFeedback
     return NULL;
 }
 
-
-void dummyfeedbackplugin::showMessage(const QString& message)
+void dummyfeedbackplugin::showMessage(const QString &message)
 {
     qCDebug(APEX_DUMMYFEEDBACKPLUGIN) << "dummyfeedbackplugin: " << message;
 }
 
-dummyfeedbackplugin::dummyfeedbackplugin(const FeedbackPluginParameters& params)
+dummyfeedbackplugin::dummyfeedbackplugin(const FeedbackPluginParameters &params)
 {
     showMessage("constructor");
     qCDebug(APEX_DUMMYFEEDBACKPLUGIN, "Available parameters: ");
-    QPair<QString,QString> p;
-    Q_FOREACH( p, params) {
-        qCDebug(APEX_DUMMYFEEDBACKPLUGIN) << "(" << p.first << "," << p.second << ")";
+    QPair<QString, QString> p;
+    Q_FOREACH (p, params) {
+        qCDebug(APEX_DUMMYFEEDBACKPLUGIN) << "(" << p.first << "," << p.second
+                                          << ")";
     }
 }
 
-
-void dummyfeedbackplugin::highLight(const QString& element)
+void dummyfeedbackplugin::highLight(const QString &element)
 {
     showMessage("Highlighting " + element);
 }
@@ -126,4 +122,3 @@ QString dummyfeedbackplugin::errorString()
 }
 
 #include "dummyfeedbackplugin.moc"
-

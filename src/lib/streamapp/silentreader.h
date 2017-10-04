@@ -20,100 +20,101 @@
 #ifndef _APEX_SRC_LIB_STREAMAPP_SILENTREADER_H__
 #define _APEX_SRC_LIB_STREAMAPP_SILENTREADER_H__
 
-#include "defines.h"
 #include "audioformat.h"
+#include "defines.h"
 
 namespace streamapp
 {
 
+/**
+  * SilentReader
+  *   a reader that only produces zeros.
+  *   TODO optimize by using MSBfloat64
+  ************************************** */
+class SilentReader : public PositionableAudioFormatReader
+{
+public:
     /**
-      * SilentReader
-      *   a reader that only produces zeros.
-      *   TODO optimize by using MSBfloat64
-      ************************************** */
-  class SilentReader : public PositionableAudioFormatReader
-  {
-  public:
-      /**
-        * Constructor.
-        * @param ac_nChan the number of channels to generate
-        * @param ac_nFs the samplerate to work at
-        * @param ac_dLengthInMilliSeconds the length
-        */
-    SilentReader( const unsigned ac_nChan, const unsigned ac_nFs, const double ac_dLengthInMilliSeconds );
+      * Constructor.
+      * @param ac_nChan the number of channels to generate
+      * @param ac_nFs the samplerate to work at
+      * @param ac_dLengthInMilliSeconds the length
+      */
+    SilentReader(const unsigned ac_nChan, const unsigned ac_nFs,
+                 const double ac_dLengthInMilliSeconds);
 
-      /**
-        * Constructor.
-        * @param ac_nChan the number of channels to generate
-        * @param ac_nFs the samplerate to work at
-        * @param ac_nToGenerate the number of samples to generate
-        */
-    SilentReader( const unsigned ac_nChan, const unsigned ac_nFs, const unsigned long ac_nToGenerate );
+    /**
+      * Constructor.
+      * @param ac_nChan the number of channels to generate
+      * @param ac_nFs the samplerate to work at
+      * @param ac_nToGenerate the number of samples to generate
+      */
+    SilentReader(const unsigned ac_nChan, const unsigned ac_nFs,
+                 const unsigned long ac_nToGenerate);
 
-      /**
-        * Destructor.
-        */
+    /**
+      * Destructor.
+      */
     virtual ~SilentReader();
 
-      /**
-        * Implementation of the AudioFormat method.
-        */
+    /**
+      * Implementation of the AudioFormat method.
+      */
     INLINE virtual unsigned mf_nChannels() const
     {
-      return mc_nChannels;
+        return mc_nChannels;
     }
 
-      /**
-        * Implementation of the AudioFormat method.
-        */
+    /**
+      * Implementation of the AudioFormat method.
+      */
     INLINE unsigned long mf_lSampleRate() const
     {
-      return mc_lSampleRate;
+        return mc_lSampleRate;
     }
 
-      /**
-        * Implementation of the AudioFormat method.
-        */
+    /**
+      * Implementation of the AudioFormat method.
+      */
     INLINE AudioFormat::mt_eBitMode mf_eBitMode() const
     {
-      return AudioFormat::MSBint32;
+        return AudioFormat::MSBint32;
     }
 
-      /**
-        * Implementation of the AudioFormatReader method.
-        */
-    unsigned long Read( void** a_pBuf, const unsigned ac_nSamples );
+    /**
+      * Implementation of the AudioFormatReader method.
+      */
+    unsigned long Read(void **a_pBuf, const unsigned ac_nSamples);
 
-      /**
-        * Implementation of the PositionableAudioFormatReader method.
-        */
+    /**
+      * Implementation of the PositionableAudioFormatReader method.
+      */
     INLINE unsigned long mf_lSamplesLeft() const;
 
-      /**
-        * Implementation of the PositionableAudioFormatReader method.
-        */
+    /**
+      * Implementation of the PositionableAudioFormatReader method.
+      */
     INLINE unsigned long mf_lTotalSamples() const;
 
-      /**
-        * Implementation of the PositionableAudioFormatReader method.
-        */
+    /**
+      * Implementation of the PositionableAudioFormatReader method.
+      */
     INLINE unsigned long mf_lCurrentPosition() const;
 
-      /**
-        * Implementation of the PositionableAudioFormatReader method.
-        */
-    void  mp_SeekPosition( const unsigned long ac_nPosition );
+    /**
+      * Implementation of the PositionableAudioFormatReader method.
+      */
+    void mp_SeekPosition(const unsigned long ac_nPosition);
 
-  private:
+private:
     const unsigned long mc_lSampleRate;
     const unsigned long mc_lSamples;
-    const unsigned      mc_nChannels;
-    unsigned long       mv_lGenerated;
+    const unsigned mc_nChannels;
+    unsigned long mv_lGenerated;
 
-    SilentReader( const SilentReader& );
-    SilentReader& operator = ( const SilentReader& );
-  };
-
+    SilentReader(const SilentReader &);
+    SilentReader &operator=(const SilentReader &);
+};
 }
 
 #endif //#ifndef _APEX_SRC_LIB_STREAMAPP_SILENTREADER_H__

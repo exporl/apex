@@ -23,9 +23,15 @@
 
 #include "apextools/global.h"
 
+#include "common/debug.h"
 #include "common/testutils.h"
 
 #include "calibrationadmintest.h"
+
+void CalibrationAdminTest::initTestCase()
+{
+    cmn::enableCoreDumps(QCoreApplication::applicationFilePath());
+}
 
 void CalibrationAdminTest::init()
 {
@@ -34,19 +40,20 @@ void CalibrationAdminTest::init()
     HardwareSetups globals = cd.globalHardwareSetups();
 
     localSetup.name = "testLocal";
-    while(locals.contains(localSetup.name)) {
+    while (locals.contains(localSetup.name)) {
         localSetup.name += "0";
     }
     localSetup.location = Setup::LOCAL;
 
     globalSetup.name = "testGlobal";
-    while(globals.contains(globalSetup.name)) {
+    while (globals.contains(globalSetup.name)) {
         globalSetup.name += "0";
     }
     globalSetup.location = Setup::GLOBAL;
 
     invalidSetup.name = "testInvalid";
-    while(globals.contains(invalidSetup.name) || locals.contains(invalidSetup.name)) {
+    while (globals.contains(invalidSetup.name) ||
+           locals.contains(invalidSetup.name)) {
         invalidSetup.name += "0";
     }
 
@@ -54,38 +61,41 @@ void CalibrationAdminTest::init()
     addSetup(globalSetup);
 }
 
-void CalibrationAdminTest::addSetup(Setup& s)
+void CalibrationAdminTest::addSetup(Setup &s)
 {
-    QSettings* settings = NULL;
+    QSettings *settings = NULL;
 
-    if(s.location == Setup::LOCAL) {
+    if (s.location == Setup::LOCAL) {
         settings = Settings().local();
     } else {
         settings = Settings().global();
     }
 
-    QStringList newSetups = settings->value(DatabaseNames::hardwareSetup).toStringList();
+    QStringList newSetups =
+        settings->value(DatabaseNames::hardwareSetup).toStringList();
     newSetups.append(s.name);
     settings->setValue(DatabaseNames::hardwareSetup, newSetups);
 
-    settings->setValue(DatabaseNames::data(s.name, "profile1", "param", "key"), 2);
+    settings->setValue(DatabaseNames::data(s.name, "profile1", "param", "key"),
+                       2);
 
     settings->sync();
 }
 
-void CalibrationAdminTest::removeSetup(Setup& s)
+void CalibrationAdminTest::removeSetup(Setup &s)
 {
-    QSettings* settings = NULL;
+    QSettings *settings = NULL;
 
-    if(s.location == Setup::LOCAL) {
+    if (s.location == Setup::LOCAL) {
         settings = Settings().local();
     } else {
         settings = Settings().global();
     }
 
-    QStringList setups = settings->value(DatabaseNames::hardwareSetup).toStringList();
+    QStringList setups =
+        settings->value(DatabaseNames::hardwareSetup).toStringList();
     setups.removeOne(s.name);
-    if(setups.isEmpty()) {
+    if (setups.isEmpty()) {
         settings->remove(DatabaseNames::hardwareSetup);
     } else {
         settings->setValue(DatabaseNames::hardwareSetup, setups);
@@ -111,26 +121,26 @@ void CalibrationAdminTest::testMakeGlobalLocal()
 #ifdef Q_OS_UNIX
     QSKIP("Unable to access global calib profiles on unix");
 #endif
-    //Set initial values
+    // Set initial values
     CalibrationDatabase cd;
     int amountSetups = cd.hardwareSetups().count();
     int amountLocalSetups = cd.localHardwareSetups().count();
     int amountGlobalSetups = cd.globalHardwareSetups().count();
-    QSettings* localSettings = Settings().local();
-    QSettings* globalSettings = Settings().global();
+    QSettings *localSettings = Settings().local();
+    QSettings *globalSettings = Settings().global();
 
-    //Move the hardware setup
+    // Move the hardware setup
     cd.makeLocal(cd.setup(globalSetup.name));
     globalSetup.location = Setup::LOCAL;
 
-    //Check if the hardware setup is moved
+    // Check if the hardware setup is moved
     QCOMPARE(cd.hardwareSetups().count(), amountSetups);
     QCOMPARE(cd.localHardwareSetups().count(), amountLocalSetups + 1);
     QCOMPARE(cd.globalHardwareSetups().count(), amountGlobalSetups - 1);
     QVERIFY(cd.localHardwareSetups().contains(globalSetup.name));
     QVERIFY(!cd.globalHardwareSetups().contains(globalSetup.name));
 
-    //Check if the profile is moved
+    // Check if the profile is moved
     localSettings->beginGroup(DatabaseNames::data(globalSetup.name));
     QCOMPARE(localSettings->childGroups().count(), 1);
     localSettings->endGroup();
@@ -150,9 +160,9 @@ void CalibrationAdminTest::testMakeLocalLocal()
     try {
         cd.makeLocal(cd.setup(localSetup.name));
         QFAIL("Making a local hardware setup local should fail.");
-    } catch(const std::domain_error&) {
+    } catch (const std::domain_error &) {
         // expected
-    } catch(...) {
+    } catch (...) {
         QFAIL("makeLocal throws the wrong error.");
     }
 
@@ -167,9 +177,9 @@ void CalibrationAdminTest::testMakeInvalidLocal()
     try {
         cd.makeLocal(cd.setup(invalidSetup.name));
         QFAIL("Making a invalid hardware setup local should fail.");
-    } catch(const std::range_error&) {
+    } catch (const std::range_error &) {
         // expected
-    } catch(...) {
+    } catch (...) {
         QFAIL("makeLocal throws the wrong error.");
     }
 
@@ -183,26 +193,26 @@ void CalibrationAdminTest::testMakeLocalGlobal()
 #ifdef Q_OS_UNIX
     QSKIP("Unable to access global calib profiles on unix");
 #endif
-    //Set initial values
+    // Set initial values
     CalibrationDatabase cd;
     int amountSetups = cd.hardwareSetups().count();
     int amountLocalSetups = cd.localHardwareSetups().count();
     int amountGlobalSetups = cd.globalHardwareSetups().count();
-    QSettings* localSettings = Settings().local();
-    QSettings* globalSettings = Settings().global();
+    QSettings *localSettings = Settings().local();
+    QSettings *globalSettings = Settings().global();
 
-    //Move the hardware setup
+    // Move the hardware setup
     cd.makeGlobal(cd.setup(localSetup.name));
     localSetup.location = Setup::GLOBAL;
 
-    //Check if the hardware setup is moved
+    // Check if the hardware setup is moved
     QCOMPARE(cd.hardwareSetups().count(), amountSetups);
     QCOMPARE(cd.localHardwareSetups().count(), amountLocalSetups - 1);
     QCOMPARE(cd.globalHardwareSetups().count(), amountGlobalSetups + 1);
     QVERIFY(!cd.localHardwareSetups().contains(localSetup.name));
     QVERIFY(cd.globalHardwareSetups().contains(localSetup.name));
 
-    //Check if the profile is moved
+    // Check if the profile is moved
     localSettings->beginGroup(DatabaseNames::data(globalSetup.name));
     QCOMPARE(localSettings->childGroups().count(), 0);
     localSettings->endGroup();
@@ -222,9 +232,9 @@ void CalibrationAdminTest::testMakeGlobalGlobal()
     try {
         cd.makeGlobal(cd.setup(globalSetup.name));
         QFAIL("Making a gloabl hardware setup local should fail.");
-    } catch(const std::domain_error&) {
+    } catch (const std::domain_error &) {
         // expected
-    } catch(...) {
+    } catch (...) {
         QFAIL("makeLocal throws the wrong error.");
     }
 
@@ -239,9 +249,9 @@ void CalibrationAdminTest::testMakeInvalidGlobal()
     try {
         cd.makeGlobal(cd.setup(invalidSetup.name));
         QFAIL("Making a invalid hardware setup local should fail.");
-    } catch(const std::range_error&) {
+    } catch (const std::range_error &) {
         // expected
-    } catch(...) {
+    } catch (...) {
         QFAIL("makeLocal throws the wrong error.");
     }
 
@@ -283,13 +293,12 @@ int main(int argc, char *argv[])
 
     app.setOrganizationName(apex::organizationName);
     app.setApplicationName(apex::applicationName);
-    app.setOrganizationDomain (apex::organizationDomain);
+    app.setOrganizationDomain(apex::organizationDomain);
 
     CalibrationAdminTest tc;
 
     try {
         return QTest::qExec(&tc, argc, argv);
-    } catch(...) {
-
+    } catch (...) {
     }
 }

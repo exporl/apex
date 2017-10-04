@@ -20,7 +20,6 @@
 #ifndef _APEX_SRC_PLUGINS_APEXPROCEDURES_PROCEDUREDATAPARSER_H_
 #define _APEX_SRC_PLUGINS_APEXPROCEDURES_PROCEDUREDATAPARSER_H_
 
-
 #include "apextools/xml/xmltools.h"
 
 #include <QCoreApplication>
@@ -43,13 +42,13 @@ public:
      * Parse the given xml data structure into the given data structure
      * does not take ownership of p_data
      */
-    void Parse(const QDomElement &p_base, data::ProcedureData* p_data);
+    void Parse(const QDomElement &p_base, data::ProcedureData *p_data);
 
 protected:
-    virtual bool SetParameter(const QString &tag, const QString &id, const QString &value,
-                                const QDomElement &node, data::ProcedureData* data);
+    virtual bool SetParameter(const QString &tag, const QString &id,
+                              const QString &value, const QDomElement &node,
+                              data::ProcedureData *data);
 };
-
 }
 }
 

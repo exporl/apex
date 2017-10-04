@@ -52,10 +52,16 @@
     </device>
   </devices>
   <stimuli>
+    <fixed_parameters>
+      <parameter id="testparam"/>
+    </fixed_parameters>
     <stimulus id="stimulus1">
       <datablocks>
         <datablock id="rawdata1"/>
       </datablocks>
+      <fixedParameters>
+        <parameter id="testparam">somevalue</parameter>
+      </fixedParameters>
     </stimulus>
   </stimuli>
   <connections>

@@ -34,12 +34,12 @@ namespace apex
 namespace rundelegates
 {
 
-const ScreenElement* CheckBoxRunDelegate::getScreenElement() const
+const ScreenElement *CheckBoxRunDelegate::getScreenElement() const
 {
     return element;
 }
 
-QWidget* CheckBoxRunDelegate::getWidget()
+QWidget *CheckBoxRunDelegate::getWidget()
 {
     return this;
 }
@@ -60,56 +60,54 @@ const QString CheckBoxRunDelegate::getText() const
     return QString::number(state);
 }
 
-void CheckBoxRunDelegate::resizeEvent(QResizeEvent* e)
+void CheckBoxRunDelegate::resizeEvent(QResizeEvent *e)
 {
     QCheckBox::resizeEvent(e);
-    setFont (initialFont);
-    ApexTools::shrinkTillItFits(this, getText(), QSize (2, 2));
+    setFont(initialFont);
+    ApexTools::shrinkTillItFits(this, getText(), QSize(2, 2));
 }
 
-void CheckBoxRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
+void CheckBoxRunDelegate::connectSlots(gui::ScreenRunDelegate *d)
 {
-    connect( this, SIGNAL( answered( ScreenElementRunDelegate* ) ),
-             d, SIGNAL( answered( ScreenElementRunDelegate* ) ) );
+    connect(this, SIGNAL(answered(ScreenElementRunDelegate *)), d,
+            SIGNAL(answered(ScreenElementRunDelegate *)));
 }
 
 void CheckBoxRunDelegate::sendAnsweredSignal()
 {
-    Q_EMIT answered( this );
+    Q_EMIT answered(this);
 }
 
-CheckBoxRunDelegate::CheckBoxRunDelegate(ExperimentRunDelegate* p_exprd,
-        QWidget* parent, const data::CheckBoxElement* e, const QFont& defaultFont) :
-    QCheckBox(parent),
-    ScreenElementRunDelegate(p_exprd, e),
-    element(e)
+CheckBoxRunDelegate::CheckBoxRunDelegate(ExperimentRunDelegate *p_exprd,
+                                         QWidget *parent,
+                                         const data::CheckBoxElement *e,
+                                         const QFont &defaultFont)
+    : QCheckBox(parent), ScreenElementRunDelegate(p_exprd, e), element(e)
 {
-   QCheckBox::setText(e->getText());
+    QCheckBox::setText(e->getText());
 
-   QFont font = defaultFont;
-   if (element->getFontSize() != -1)
-       font.setPointSize(element->getFontSize());
-   QCheckBox::setFont(font);
+    QFont font = defaultFont;
+    if (element->getFontSize() != -1)
+        font.setPointSize(element->getFontSize());
+    QCheckBox::setFont(font);
 
-   QPalette plt;
-   plt.setColor(QPalette::WindowText, Qt::red);
-   QCheckBox::setPalette(plt);
-   initialFont = font;
+    QPalette plt;
+    plt.setColor(QPalette::WindowText, Qt::red);
+    QCheckBox::setPalette(plt);
+    initialFont = font;
 
-   QCheckBox::setCheckState(element->getChecked());
+    QCheckBox::setCheckState(element->getChecked());
 }
 
 void CheckBoxRunDelegate::clearText()
 {
 
-   QCheckBox::setCheckState(element->getChecked());
+    QCheckBox::setCheckState(element->getChecked());
 }
 
-const data::CheckBoxElement* CheckBoxRunDelegate::GetElement() const
+const data::CheckBoxElement *CheckBoxRunDelegate::GetElement() const
 {
     return element;
 }
-
 }
 }
-

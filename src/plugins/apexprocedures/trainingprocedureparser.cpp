@@ -33,9 +33,9 @@ TrainingProcedureParser::TrainingProcedureParser()
 {
 }
 
-data::ProcedureData* TrainingProcedureParser::parse(const QDomElement &base)
+data::ProcedureData *TrainingProcedureParser::parse(const QDomElement &base)
 {
-    data::TrainingProcedureData* data = new data::TrainingProcedureData();
+    data::TrainingProcedureData *data = new data::TrainingProcedureData();
     ProcedureParsersParent::Parse(base, data);
     return data;
 }
@@ -47,12 +47,12 @@ bool TrainingProcedureParser::trialsValid()
 
 void TrainingProcedureParser::SetProcedureParameters(const QDomElement &p_base)
 {
-    data::TrainingProcedureData* param = dynamic_cast<data::TrainingProcedureData*>(currentConfig);
+    data::TrainingProcedureData *param =
+        dynamic_cast<data::TrainingProcedureData *>(currentConfig);
     parser::TrainingProcedureDataParser parser;
     parser.Parse(p_base, param);
 
     currentConfig = param;
 }
-
 }
 }

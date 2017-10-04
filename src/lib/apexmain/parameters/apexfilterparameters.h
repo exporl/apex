@@ -31,8 +31,11 @@ public:
     ApexFilterParameters();
     virtual ~ApexFilterParameters();
 
-    virtual void SetParameter( const QString& ac_sType, const QString& ac_sValue );
-    virtual void SetParameter( const QString& ac_sType, const QString& ac_sValue, const QString& ac_sOptionalID, const QString& ac_sOptionalChannel );
+    virtual void SetParameter(const QString &ac_sType,
+                              const QString &ac_sValue);
+    virtual void SetParameter(const QString &ac_sType, const QString &ac_sValue,
+                              const QString &ac_sOptionalID,
+                              const QString &ac_sOptionalChannel);
 
     unsigned mf_nChannels() const
     {
@@ -46,7 +49,6 @@ protected:
 typedef ApexFilterParameters FilterParameters;
 typedef ApexFilterParameters::const_iterator FilterParametersCIt;
 typedef ApexFilterParameters::iterator FilterParametersIt;
-
 }
 }
 

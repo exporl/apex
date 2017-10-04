@@ -38,7 +38,7 @@ public:
     QString selectedFile() const;
 
 private:
-    StartupDialogPrivate * const d;
+    StartupDialogPrivate *const d;
 };
 
 } // namespace apex

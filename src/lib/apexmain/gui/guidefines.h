@@ -25,17 +25,17 @@
 
 namespace apex
 {
-  namespace gui
-  {
-    //const QColor      sc_DefaultBGColor( 32, 27, 122 );
-    const QColor      sc_DefaultBGColor( 0x13, 0xa8, 0x9e );
-    const QColor      sc_DefaultPanelColor( 212, 208, 200 );
-    const QString     sc_sDefaultFont( "Tahoma"/*"Helvetica"*/ );
-    const QString     sc_sDefaultElementFont( "Helvetica" );
-    const unsigned    sc_nDefaultFontSize   = 20;
-    const unsigned    sc_nMaxElementsInRow  = 30;
-    const unsigned    sc_nMaxElementsInCol  = 30;
-  }
+namespace gui
+{
+// const QColor      sc_DefaultBGColor( 32, 27, 122 );
+const QColor sc_DefaultBGColor(0x13, 0xa8, 0x9e);
+const QColor sc_DefaultPanelColor(212, 208, 200);
+const QString sc_sDefaultFont("Tahoma" /*"Helvetica"*/);
+const QString sc_sDefaultElementFont("Helvetica");
+const unsigned sc_nDefaultFontSize = 20;
+const unsigned sc_nMaxElementsInRow = 30;
+const unsigned sc_nMaxElementsInCol = 30;
+}
 }
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_GUI_GUIDEFINES_H_

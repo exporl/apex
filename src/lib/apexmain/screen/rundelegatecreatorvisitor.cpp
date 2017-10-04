@@ -40,10 +40,7 @@
 #include "screen/checkboxrundelegate.h"
 #include "screen/gridlayoutrundelegate.h"
 
-// TODO ANDROID htmlrundelegate uses webkitwidgets
-#ifndef Q_OS_ANDROID
 #include "screen/htmlrundelegate.h"
-#endif
 
 #include "screen/labelrundelegate.h"
 #include "screen/matrixrundelegate.h"
@@ -66,12 +63,13 @@ namespace apex
 namespace rundelegates
 {
 RunDelegateCreatorVisitor::RunDelegateCreatorVisitor(
-    ExperimentRunDelegate* p_exprd,
-    QWidget* p,
-    ElementToRunningMap& etrm,
-    const QFont& df)
-        : parent(p), elementToRunningMap(etrm), defaultFont(df),
-                 lastcreated(0),  m_rd(p_exprd)
+    ExperimentRunDelegate *p_exprd, QWidget *p, ElementToRunningMap &etrm,
+    const QFont &df)
+    : parent(p),
+      elementToRunningMap(etrm),
+      defaultFont(df),
+      lastcreated(0),
+      m_rd(p_exprd)
 {
 }
 
@@ -79,61 +77,61 @@ RunDelegateCreatorVisitor::~RunDelegateCreatorVisitor()
 {
 }
 
-void RunDelegateCreatorVisitor::visitAnswerLabel(
-    const AnswerLabelElement* e)
+void RunDelegateCreatorVisitor::visitAnswerLabel(const AnswerLabelElement *e)
 {
-    AnswerLabelRunDelegate* d = new AnswerLabelRunDelegate(m_rd, parent, e, defaultFont);
+    AnswerLabelRunDelegate *d =
+        new AnswerLabelRunDelegate(m_rd, parent, e, defaultFont);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-void RunDelegateCreatorVisitor::visitArcLayout(
-    const ArcLayoutElement* e)
+void RunDelegateCreatorVisitor::visitArcLayout(const ArcLayoutElement *e)
 {
-    ArcLayoutRunDelegate* d =
-        new ArcLayoutRunDelegate(m_rd, e, parent, elementToRunningMap, defaultFont);
+    ArcLayoutRunDelegate *d = new ArcLayoutRunDelegate(
+        m_rd, e, parent, elementToRunningMap, defaultFont);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-void RunDelegateCreatorVisitor::visitButton(const ButtonElement* e)
+void RunDelegateCreatorVisitor::visitButton(const ButtonElement *e)
 {
-    ButtonRunDelegate* d = new ButtonRunDelegate(m_rd,  parent, e, defaultFont);
+    ButtonRunDelegate *d = new ButtonRunDelegate(m_rd, parent, e, defaultFont);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-void RunDelegateCreatorVisitor::visitMatrix(const MatrixElement* e)
+void RunDelegateCreatorVisitor::visitMatrix(const MatrixElement *e)
 {
-    MatrixRunDelegate* d = new MatrixRunDelegate(m_rd,  parent, e);
+    MatrixRunDelegate *d = new MatrixRunDelegate(m_rd, parent, e);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-
-void RunDelegateCreatorVisitor::visitCheckBox(const CheckBoxElement* e)
+void RunDelegateCreatorVisitor::visitCheckBox(const CheckBoxElement *e)
 {
-    CheckBoxRunDelegate* d = new CheckBoxRunDelegate(m_rd, parent, e, defaultFont);
+    CheckBoxRunDelegate *d =
+        new CheckBoxRunDelegate(m_rd, parent, e, defaultFont);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-void RunDelegateCreatorVisitor::visitSpinBox(const SpinBoxElement* e)
+void RunDelegateCreatorVisitor::visitSpinBox(const SpinBoxElement *e)
 {
-    SpinBoxRunDelegate* d = new SpinBoxRunDelegate(m_rd, parent, e, defaultFont);
+    SpinBoxRunDelegate *d =
+        new SpinBoxRunDelegate(m_rd, parent, e, defaultFont);
     elementToRunningMap[e] = d;
-    //spinBoxList.push_back(d);
+    // spinBoxList.push_back(d);
     lastcreated = d;
 }
 
-void RunDelegateCreatorVisitor::visitSlider(const SliderElement* e)
+void RunDelegateCreatorVisitor::visitSlider(const SliderElement *e)
 {
-    SliderRunDelegate* d = new SliderRunDelegate(m_rd, parent, e, defaultFont);
+    SliderRunDelegate *d = new SliderRunDelegate(m_rd, parent, e, defaultFont);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-void RunDelegateCreatorVisitor::visitEmpty(const EmptyElement* /*e*/)
+void RunDelegateCreatorVisitor::visitEmpty(const EmptyElement * /*e*/)
 {
     // this is intentional..  we don't show empty elements, in fact
     // they really shouldn't be here at all
@@ -142,85 +140,85 @@ void RunDelegateCreatorVisitor::visitEmpty(const EmptyElement* /*e*/)
 }
 
 #ifdef FLASH
-void RunDelegateCreatorVisitor::visitFlashPlayer(const FlashPlayerElement* e)
+void RunDelegateCreatorVisitor::visitFlashPlayer(const FlashPlayerElement *e)
 {
     lastcreated = new FlashPlayerRunDelegate(m_rd, parent, e);
     elementToRunningMap[e] = lastcreated;
 }
 #else
-void RunDelegateCreatorVisitor::visitFlashPlayer(const FlashPlayerElement* /*e*/)
+void RunDelegateCreatorVisitor::visitFlashPlayer(
+    const FlashPlayerElement * /*e*/)
 {
     lastcreated = 0;
 }
 #endif
 
-void RunDelegateCreatorVisitor::visitGridLayout(const GridLayoutElement* e)
+void RunDelegateCreatorVisitor::visitGridLayout(const GridLayoutElement *e)
 {
-    GridLayoutRunDelegate* glrd = new GridLayoutRunDelegate( m_rd,
-                                      e, parent, elementToRunningMap, defaultFont);
+    GridLayoutRunDelegate *glrd = new GridLayoutRunDelegate(
+        m_rd, e, parent, elementToRunningMap, defaultFont);
     elementToRunningMap[e] = glrd;
     lastcreated = glrd;
 }
 
-void RunDelegateCreatorVisitor::visitLabel(const LabelElement* e)
+void RunDelegateCreatorVisitor::visitLabel(const LabelElement *e)
 {
-    LabelRunDelegate* d = new LabelRunDelegate( m_rd, parent, e, defaultFont);
+    LabelRunDelegate *d = new LabelRunDelegate(m_rd, parent, e, defaultFont);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-void RunDelegateCreatorVisitor::visitParameterList(const ParameterListElement* e)
+void RunDelegateCreatorVisitor::visitParameterList(
+    const ParameterListElement *e)
 {
-    ParameterListRunDelegate* d = new ParameterListRunDelegate( m_rd, e, parent);
+    ParameterListRunDelegate *d = new ParameterListRunDelegate(m_rd, e, parent);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-void RunDelegateCreatorVisitor::visitParameterLabel(const ParameterLabelElement* e)
+void RunDelegateCreatorVisitor::visitParameterLabel(
+    const ParameterLabelElement *e)
 {
-    ParameterLabelRunDelegate* d = new ParameterLabelRunDelegate( m_rd, parent, e,
-                                                               defaultFont);
+    ParameterLabelRunDelegate *d =
+        new ParameterLabelRunDelegate(m_rd, parent, e, defaultFont);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-
-void RunDelegateCreatorVisitor::visitPicture(const PictureElement* e)
+void RunDelegateCreatorVisitor::visitPicture(const PictureElement *e)
 {
-    PictureRunDelegate* d = new PictureRunDelegate(m_rd, parent, e);
+    PictureRunDelegate *d = new PictureRunDelegate(m_rd, parent, e);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-void RunDelegateCreatorVisitor::visitPictureLabel(const PictureLabelElement* e)
+void RunDelegateCreatorVisitor::visitPictureLabel(const PictureLabelElement *e)
 {
-    PictureLabelRunDelegate* d = new PictureLabelRunDelegate(m_rd, parent, e);
+    PictureLabelRunDelegate *d = new PictureLabelRunDelegate(m_rd, parent, e);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-void RunDelegateCreatorVisitor::visitTextEdit(const TextEditElement* e)
+void RunDelegateCreatorVisitor::visitTextEdit(const TextEditElement *e)
 {
-    TextEditRunDelegate* d = new TextEditRunDelegate(m_rd, parent, e, defaultFont);
+    TextEditRunDelegate *d =
+        new TextEditRunDelegate(m_rd, parent, e, defaultFont);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
 
-// TODO ANDROID htmlrundelegate uses webkitwidgets
-#ifndef Q_OS_ANDROID
-void RunDelegateCreatorVisitor::visitHtml(const HtmlElement* e)
+void RunDelegateCreatorVisitor::visitHtml(const HtmlElement *e)
 {
-    HtmlRunDelegate* d = new HtmlRunDelegate(m_rd, parent, e);
+    HtmlRunDelegate *d = new HtmlRunDelegate(m_rd, parent, e);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }
-#endif
 
-ScreenElementRunDelegate* RunDelegateCreatorVisitor::createRunDelegate(
-    const ScreenElement* e)
+ScreenElementRunDelegate *
+RunDelegateCreatorVisitor::createRunDelegate(const ScreenElement *e)
 {
     e->visit(this);
-    ScreenElementRunDelegate* ret = lastcreated;
+    ScreenElementRunDelegate *ret = lastcreated;
     if (ret->getWidget())
         ret->getWidget()->hide();
     lastcreated = 0;
@@ -228,4 +226,3 @@ ScreenElementRunDelegate* RunDelegateCreatorVisitor::createRunDelegate(
 }
 }
 }
-

@@ -29,11 +29,9 @@ using namespace apex;
 using namespace apex::stimulus;
 using namespace streamapp;
 
-WavFader::WavFader ( const QString& ac_sID, data::WavFaderParameters* a_pParams,
-                   unsigned long sr, unsigned bs) :
-        WavFilter ( ac_sID, a_pParams, sr, bs ),
-        m_pProc ( 0 ),
-        m_Params ( a_pParams )
+WavFader::WavFader(const QString &ac_sID, data::WavFaderParameters *a_pParams,
+                   unsigned long sr, unsigned bs)
+    : WavFilter(ac_sID, a_pParams, sr, bs), m_pProc(0), m_Params(a_pParams)
 {
     mp_Init();
 }
@@ -45,35 +43,36 @@ WavFader::~WavFader()
 void WavFader::mp_Init()
 {
     m_bFadeIn = m_Params->isFadeIn();
-    mp_SetFadeLength ( m_Params->length() );
-    switch ( m_Params->type() )
-    {
-        case data::WavFaderParameters::LINEAR :
-            m_pProc = new Gate ( m_Params->numberOfChannels(), GetBlockSize(),
-                                 m_bFadeIn ? tFadeFunc::smf_dLinearFadeIn : tFadeFunc::smf_dLinearFadeOut );
-            break;
-        case data::WavFaderParameters::COSINE :
-            m_pProc = new Gate ( m_Params->numberOfChannels(), GetBlockSize(),
-                                 m_bFadeIn ? tFadeFunc::smf_dCosineFadeIn : tFadeFunc::smf_dCosineFadeOut );
-            break;
-        default:
-            Q_ASSERT ( "unknown type" );
+    mp_SetFadeLength(m_Params->length());
+    switch (m_Params->type()) {
+    case data::WavFaderParameters::LINEAR:
+        m_pProc = new Gate(m_Params->numberOfChannels(), GetBlockSize(),
+                           m_bFadeIn ? tFadeFunc::smf_dLinearFadeIn
+                                     : tFadeFunc::smf_dLinearFadeOut);
+        break;
+    case data::WavFaderParameters::COSINE:
+        m_pProc = new Gate(m_Params->numberOfChannels(), GetBlockSize(),
+                           m_bFadeIn ? tFadeFunc::smf_dCosineFadeIn
+                                     : tFadeFunc::smf_dCosineFadeOut);
+        break;
+    default:
+        Q_ASSERT("unknown type");
     }
     m_pProc->setMutedAfterwards(!m_bFadeIn);
 }
 
-streamapp::IStreamProcessor* WavFader::GetStrProc() const
+streamapp::IStreamProcessor *WavFader::GetStrProc() const
 {
-    Q_ASSERT ( m_pProc );
+    Q_ASSERT(m_pProc);
     return m_pProc;
 }
 
-bool WavFader::SetParameter ( const QString& type, const int channel, const QVariant& value )
+bool WavFader::SetParameter(const QString &type, const int channel,
+                            const QVariant &value)
 {
-    Q_UNUSED ( channel );
-    if ( type == "length" )
-    {
-        mp_SetFadeLength ( value.toDouble() );
+    Q_UNUSED(channel);
+    if (type == "length") {
+        mp_SetFadeLength(value.toDouble());
         return true;
     }
     return false;
@@ -82,32 +81,30 @@ bool WavFader::SetParameter ( const QString& type, const int channel, const QVar
 void WavFader::Reset()
 {
     //..and get back to original length
-    mp_SetFadeLength ( m_Params->length() );
+    mp_SetFadeLength(m_Params->length());
 }
 
 void WavFader::Prepare()
 {
-    //called before stream starts, so reset sample counter..
+    // called before stream starts, so reset sample counter..
     m_pProc->mp_Reset();
 }
 
-void WavFader::mp_SetFadeLength ( const double ac_dMSec )
+void WavFader::mp_SetFadeLength(const double ac_dMSec)
 {
-    //qCDebug(APEX_RS, "WavFader: setting fade length to %f", ac_dMSec);
-    m_dFadeLength = dataconversion::gf_nSamplesFromMsec< unsigned > ( GetSampleRate(), ac_dMSec );
+    // qCDebug(APEX_RS, "WavFader: setting fade length to %f", ac_dMSec);
+    m_dFadeLength = dataconversion::gf_nSamplesFromMsec<unsigned>(
+        GetSampleRate(), ac_dMSec);
 }
 
-void WavFader::mp_SetStreamLength ( const unsigned long ac_nSamples )
+void WavFader::mp_SetStreamLength(const unsigned long ac_nSamples)
 {
-    //qCDebug(APEX_RS, "Streamlength: %lu samples", ac_nSamples);
-    if ( m_bFadeIn )
-    {
-        m_pProc->mp_SetGateOn ( 0 );
-        m_pProc->mp_SetGateLength ( m_dFadeLength );
-    }
-    else
-    {
-        m_pProc->mp_SetGateOn ( ( double ) ac_nSamples - m_dFadeLength );
-        m_pProc->mp_SetGateLength ( m_dFadeLength );
+    // qCDebug(APEX_RS, "Streamlength: %lu samples", ac_nSamples);
+    if (m_bFadeIn) {
+        m_pProc->mp_SetGateOn(0);
+        m_pProc->mp_SetGateLength(m_dFadeLength);
+    } else {
+        m_pProc->mp_SetGateOn((double)ac_nSamples - m_dFadeLength);
+        m_pProc->mp_SetGateLength(m_dFadeLength);
     }
 }

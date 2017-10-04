@@ -35,25 +35,25 @@ namespace data
  * The TextEditElement is an implementation of a \ref
  * ScreenElement representing a "text edit".
  */
-class APEXDATA_EXPORT TextEditElement
-            : public ScreenElement
+class APEXDATA_EXPORT TextEditElement : public ScreenElement
 {
-        QString text;
-        QString inputMask;
-    public:
-        TextEditElement(const QString& id, ScreenElement* parent);
-        ~TextEditElement();
+    QString text;
+    QString inputMask;
 
-        ElementTypeT elementType() const;
-        void visit(ScreenElementVisitor* v);
-        void visit(ScreenElementVisitor* v) const;
+public:
+    TextEditElement(const QString &id, ScreenElement *parent);
+    ~TextEditElement();
 
-        void setText(const QString& t);
-        const QString getText() const;
-        void setInputMask(const QString& t);
-        const QString getInputMask() const;
+    ElementTypeT elementType() const;
+    void visit(ScreenElementVisitor *v);
+    void visit(ScreenElementVisitor *v) const;
 
-        bool operator==(const TextEditElement& other) const;
+    void setText(const QString &t);
+    const QString getText() const;
+    void setInputMask(const QString &t);
+    const QString getInputMask() const;
+
+    bool operator==(const TextEditElement &other) const;
 };
 }
 }

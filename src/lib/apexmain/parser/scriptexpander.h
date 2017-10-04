@@ -20,7 +20,6 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_PARSER_SCRIPTEXPANDER_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_PARSER_SCRIPTEXPANDER_H_
 
-
 #include <QCoreApplication>
 #include <QString>
 
@@ -48,24 +47,22 @@ public:
      * boxes will be shown
      */
     ScriptExpander(const QString &fileName, const QString &libraryFile,
-            const QVariantMap &scriptParameters, QWidget* parent = 0);
+                   const QVariantMap &scriptParameters, QWidget *parent = 0);
 
     /**
      * Take a base element of type xmlGeneratingPluginType and expand
      * it to a new tree containing plain XML
      * function: function to be called in script
      */
-    void ExpandScript(const QDomNode &base, const QString& function);
+    void ExpandScript(const QDomNode &base, const QString &function);
 
     QString fileName;
     QString m_libraryFile;
     QVariantMap m_scriptParameters;
 
-    QWidget* m_parent;
+    QWidget *m_parent;
 };
-
 }
 }
 
 #endif
-

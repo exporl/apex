@@ -21,11 +21,10 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    ScreenElementCreator::~ScreenElementCreator()
-    {
-    }
-
-  }
+namespace editor
+{
+ScreenElementCreator::~ScreenElementCreator()
+{
+}
+}
 }

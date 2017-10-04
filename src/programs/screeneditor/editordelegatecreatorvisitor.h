@@ -28,62 +28,60 @@ class QWidget;
 
 namespace apex
 {
-  namespace editor
-  {
-    using data::ScreenElementVisitor;
-    using data::AnswerLabelElement;
-    using data::ArcLayoutElement;
-    using data::ButtonElement;
-    using data::EmptyElement;
-    using data::FlashPlayerElement;
-    using data::GridLayoutElement;
-    using data::LabelElement;
-    using data::ScreenElement;
-    using data::ParameterListElement;
-    using data::PictureElement;
-    using data::PictureLabelElement;
-    using data::TextEditElement;
+namespace editor
+{
+using data::ScreenElementVisitor;
+using data::AnswerLabelElement;
+using data::ArcLayoutElement;
+using data::ButtonElement;
+using data::EmptyElement;
+using data::FlashPlayerElement;
+using data::GridLayoutElement;
+using data::LabelElement;
+using data::ScreenElement;
+using data::ParameterListElement;
+using data::PictureElement;
+using data::PictureLabelElement;
+using data::TextEditElement;
 
-    class ScreenElementEditorDelegate;
-    class ScreenWidget;
+class ScreenElementEditorDelegate;
+class ScreenWidget;
 
-    /**
-     * The EditorDelegateCreatorVisitor class is a class that is used
-     * to create a ScreenElementEditorDelegate for a given
-     * ScreenElement.  I did not name it
-     * ScreenElementEditorDelegateCreatorVisitor for brevity ;)
-     *
-     * It is an implementation of the ScreenElementVisitor class in
-     * order to avoid having a big ugly switch in the code...
-     */
-    class EditorDelegateCreatorVisitor
-      : public ScreenElementVisitor
-    {
-      QWidget* parent;
-      ScreenWidget* widget;
-      ScreenElementEditorDelegate* lastcreated;
-      elementToDelegateMapT& elementToDelegateMap;
-    public:
-      EditorDelegateCreatorVisitor(
-        QWidget* parent, ScreenWidget* widget, elementToDelegateMapT& elementToDelegateMap );
+/**
+ * The EditorDelegateCreatorVisitor class is a class that is used
+ * to create a ScreenElementEditorDelegate for a given
+ * ScreenElement.  I did not name it
+ * ScreenElementEditorDelegateCreatorVisitor for brevity ;)
+ *
+ * It is an implementation of the ScreenElementVisitor class in
+ * order to avoid having a big ugly switch in the code...
+ */
+class EditorDelegateCreatorVisitor : public ScreenElementVisitor
+{
+    QWidget *parent;
+    ScreenWidget *widget;
+    ScreenElementEditorDelegate *lastcreated;
+    elementToDelegateMapT &elementToDelegateMap;
 
-      ScreenElementEditorDelegate* createEditorDelegate(
-        ScreenElement* e );
+public:
+    EditorDelegateCreatorVisitor(QWidget *parent, ScreenWidget *widget,
+                                 elementToDelegateMapT &elementToDelegateMap);
 
-      ~EditorDelegateCreatorVisitor();
-      void visitAnswerLabel( AnswerLabelElement* e );
-      void visitArcLayout( ArcLayoutElement* e );
-      void visitButton( ButtonElement* e );
-      void visitEmpty( EmptyElement* e );
-      void visitFlashPlayer( FlashPlayerElement* e );
-      void visitGridLayout( GridLayoutElement* e );
-      void visitLabel( LabelElement* e );
-      void visitParameterList( ParameterListElement* e );
-      void visitPicture( PictureElement* e );
-      void visitPictureLabel( PictureLabelElement* e );
-      void visitTextEdit( TextEditElement* e );
-    };
+    ScreenElementEditorDelegate *createEditorDelegate(ScreenElement *e);
 
-  }
+    ~EditorDelegateCreatorVisitor();
+    void visitAnswerLabel(AnswerLabelElement *e);
+    void visitArcLayout(ArcLayoutElement *e);
+    void visitButton(ButtonElement *e);
+    void visitEmpty(EmptyElement *e);
+    void visitFlashPlayer(FlashPlayerElement *e);
+    void visitGridLayout(GridLayoutElement *e);
+    void visitLabel(LabelElement *e);
+    void visitParameterList(ParameterListElement *e);
+    void visitPicture(PictureElement *e);
+    void visitPictureLabel(PictureLabelElement *e);
+    void visitTextEdit(TextEditElement *e);
+};
+}
 }
 #endif

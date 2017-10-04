@@ -20,7 +20,7 @@ class MultiProcedureData;
 class MultiProcedure : public ProcedureInterface
 {
 public:
-    MultiProcedure(ProcedureApi* api, const data::ProcedureData* data);
+    MultiProcedure(ProcedureApi *api, const data::ProcedureData *data);
 
     QString firstScreen();
     data::Trial setupNextTrial();
@@ -38,12 +38,13 @@ private:
 public:
     void setNextProcedure();
     void nextIndex();
-private:
 
-    //A vector that indicates if the procedure with a certain index can still
-    // set up valid trials. The order should correspond with the field procedures.
+private:
+    // A vector that indicates if the procedure with a certain index can still
+    // set up valid trials. The order should correspond with the field
+    // procedures.
     QVector<bool> valid;
-    QVector<ProcedureInterface*> procedures;
+    QVector<ProcedureInterface *> procedures;
     void initProcedures();
 };
 }

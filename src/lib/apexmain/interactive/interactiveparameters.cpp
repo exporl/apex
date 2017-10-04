@@ -28,19 +28,23 @@
 
 #include "interactiveparameters.h"
 
+#include "../mainconfigfileparser.h"
+
 #include <QFileInfo>
 #include <QTemporaryFile>
 
 namespace apex
 {
 
-InteractiveParameters::InteractiveParameters(const QDomDocument &document) :
-    document_(document)
+InteractiveParameters::InteractiveParameters(const QDomDocument &document)
+    : document_(document)
 {
-    QDomElement base = document_.elementsByTagName(QSL("interactive")).item(0).toElement();
+    QDomElement base =
+        document_.elementsByTagName(QSL("interactive")).item(0).toElement();
 
-    for (QDomElement currentNode = base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
+    for (QDomElement currentNode = base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
         const QString tag = currentNode.tagName();
         if (tag != QL1S("entry"))
             qFatal("invalid tag: %s", qPrintable(tag));
@@ -49,10 +53,17 @@ InteractiveParameters::InteractiveParameters(const QDomDocument &document) :
         const QString type = currentNode.attribute(QSL("type"));
         const QString description = currentNode.attribute(QSL("description"));
         const QString defaultValue = currentNode.attribute(QSL("default"));
+        const QString constraint = currentNode.attribute(
+            QSL("constraint"),
+            MainConfigFileParser::Get().data().interactiveConstraint(xpath));
 
         if (xpath.isEmpty() && description.isEmpty())
-            qCCritical(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg(QObject::tr("Interactive"),
-                    QObject::tr("Interactive entries should contain an expression or "
+            qCCritical(
+                APEX_RS, "%s",
+                qPrintable(QSL("%1: %2").arg(
+                    QObject::tr("Interactive"),
+                    QObject::tr(
+                        "Interactive entries should contain an expression or "
                         "a description"))));
 
         ValueType valueType;
@@ -69,7 +80,9 @@ InteractiveParameters::InteractiveParameters(const QDomDocument &document) :
         else
             qFatal("invalid type: %s", qPrintable(type));
 
-        mEntries.append(Entry(xpath, valueType, description, defaultValue));
+        mEntries.append(
+            Entry(xpath, valueType, description, defaultValue,
+                  QRegExp(constraint.isEmpty() ? QSL(".*") : constraint)));
     }
 }
 
@@ -80,56 +93,82 @@ QString InteractiveParameters::tempFileName() const
     return tmpFile.fileName();
 }
 
-XPathProcessor* InteractiveParameters::getXPathProcessor(QString *filename)
+XPathProcessor *InteractiveParameters::getXPathProcessor(QString *filename)
 {
     *filename = tempFileName();
     XmlUtils::writeDocument(document_, *filename);
     return new XPathProcessor(*filename);
 }
 
-void InteractiveParameters::finishXPathProcessor(XPathProcessor* xpathProcessor, const QString &filename)
+void InteractiveParameters::finishXPathProcessor(XPathProcessor *xpathProcessor,
+                                                 const QString &filename)
 {
     xpathProcessor->save(filename);
     apex::ApexPaths paths;
     QString fileschema = paths.GetExperimentSchemaPath();
-    document_ = XmlUtils::parseDocument(filename, QUrl::fromLocalFile(fileschema));
+    document_ =
+        XmlUtils::parseDocument(filename, QUrl::fromLocalFile(fileschema));
     delete xpathProcessor;
     QFile(filename).remove();
 }
 
-void InteractiveParameters::applyExpressions(const QMap<QString, QString> &expressions)
+data::ParameterDialogResults InteractiveParameters::applyExpressions(
+    const QMap<QString, QString> &expressions)
 {
     QString filename;
-    XPathProcessor* xpathProcessor = getXPathProcessor(&filename);
+    XPathProcessor *xpathProcessor = getXPathProcessor(&filename);
+    data::ParameterDialogResults results;
 
     QList<QString> keys = expressions.keys();
     for (unsigned i = 0; i < unsigned(keys.count()); ++i) {
         const QString xpath = keys.at(i);
 
-        for(int i = 0; i<mEntries.count(); ++i){
+        for (int i = 0; i < mEntries.count(); ++i) {
             Entry *tmpEntry = &mEntries[i];
-            if(tmpEntry->xpath == xpath) {
+            if (tmpEntry->xpath == xpath) {
                 mEntries.removeAt(i);
                 break;
             }
         }
 
-        xpathProcessor->transform(xpath, expressions.value(xpath));
+        bool success;
+        try {
+            xpathProcessor->transform(xpath, expressions.value(xpath));
+            success = true;
+        } catch (const std::exception &e) {
+            qCWarning(APEX_RS,
+                      "xpath expression %s with value %s did not apply",
+                      qPrintable(xpath), qPrintable(expressions.value(xpath)));
+            success = false;
+        }
+        results.append(data::ParameterDialogResult(
+            xpath, QString(), expressions.value(xpath), success));
     }
 
     finishXPathProcessor(xpathProcessor, filename);
+    return results;
 }
 
-void InteractiveParameters::apply(const QStringList &entryResults, Callback* callback)
+bool InteractiveParameters::apply(const QStringList &entryResults,
+                                  Callback *callback)
 {
     QString filename;
-    XPathProcessor* xpathProcessor = getXPathProcessor(&filename);
+    XPathProcessor *xpathProcessor = getXPathProcessor(&filename);
 
     for (unsigned i = 0; i < unsigned(mEntries.size()); ++i) {
         Entry *entry = &mEntries[i];
         const QString xpath = entry->xpath;
         entry->result = entryResults.at(i);
         entry->succeeded = false;
+
+        if (!entry->constraint.exactMatch(entry->result)) {
+            callback->warning(tr("Entry %1 with value %2 didn't pass "
+                                 "constraint \"%3\".\nValue was not applied.")
+                                  .arg(xpath)
+                                  .arg(entry->result)
+                                  .arg(entry->constraint.pattern()));
+            return false;
+        }
 
         if (xpath.isEmpty()) {
             qCDebug(APEX_RS, "Empty xpath expression found, not transforming");
@@ -144,6 +183,7 @@ void InteractiveParameters::apply(const QStringList &entryResults, Callback* cal
     }
 
     finishXPathProcessor(xpathProcessor, filename);
+    return true;
 }
 
 QDomDocument InteractiveParameters::document() const
@@ -156,13 +196,13 @@ QList<InteractiveParameters::Entry> InteractiveParameters::entries() const
     return mEntries;
 }
 
-data::ParameterDialogResults* InteractiveParameters::results() const
+data::ParameterDialogResults *InteractiveParameters::results() const
 {
-    data::ParameterDialogResults* result = new data::ParameterDialogResults;
+    data::ParameterDialogResults *result = new data::ParameterDialogResults;
 
     Q_FOREACH (const Entry &entry, mEntries)
-        result->push_back(data::ParameterDialogResult(entry.xpath,
-                    entry.description, entry.result, entry.succeeded));
+        result->push_back(data::ParameterDialogResult(
+            entry.xpath, entry.description, entry.result, entry.succeeded));
 
     return result;
 }

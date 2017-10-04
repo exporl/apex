@@ -20,18 +20,17 @@
 #ifndef _APEX_SRC_PROGRAMS_SCREENEDITOR_FLASHFILESDB_H_
 #define _APEX_SRC_PROGRAMS_SCREENEDITOR_FLASHFILESDB_H_
 
-#include <vector>
 #include <QString>
+#include <vector>
 
 /**
  * This is a very simple class containing just a list of all Flash
  * Files that the screeneditor has already seen.  It is a singleton.
  */
-struct FlashFilesDB
-{
+struct FlashFilesDB {
     std::vector<QString> files;
 
-    static FlashFilesDB& instance();
+    static FlashFilesDB &instance();
 
 private:
     FlashFilesDB();

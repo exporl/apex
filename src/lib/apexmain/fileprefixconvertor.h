@@ -24,25 +24,20 @@
 
 #include <QCoreApplication>
 
-namespace apex {
+namespace apex
+{
 
+/**
+ * Converts a FilePrefix into a real path name
+ */
+class FilePrefixConvertor
+{
+    Q_DECLARE_TR_FUNCTIONS(FilePrefixConvertor);
 
-    /**
-     * Converts a FilePrefix into a real path name
-     */
-    class FilePrefixConvertor {
-        Q_DECLARE_TR_FUNCTIONS(FilePrefixConvertor);
-        public:
-            static QString convert(data::FilePrefix p);
-            static QString addPrefix(data::FilePrefix p, const QString& file);
-
-    };
-
-
+public:
+    static QString convert(data::FilePrefix p);
+    static QString addPrefix(data::FilePrefix p, const QString &file);
+};
 }
 
-
-
 #endif
-
-

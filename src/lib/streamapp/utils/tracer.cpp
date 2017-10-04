@@ -22,7 +22,7 @@ using namespace utils;
 
 namespace
 {
-  Tracer* pCurTracer = 0;
+Tracer *pCurTracer = 0;
 }
 
 Tracer::Tracer()
@@ -33,18 +33,19 @@ Tracer::~Tracer()
 {
 }
 
-void Tracer::sf_SetCurrentTracer( Tracer* const ac_pTracer, const bool ac_bDeletePrevious /*= false*/ )
+void Tracer::sf_SetCurrentTracer(Tracer *const ac_pTracer,
+                                 const bool ac_bDeletePrevious /*= false*/)
 {
-  Tracer* const pOld = pCurTracer;
-  pCurTracer = ac_pTracer;
-  if( ac_bDeletePrevious && pOld != 0 )
-    delete pOld;
+    Tracer *const pOld = pCurTracer;
+    pCurTracer = ac_pTracer;
+    if (ac_bDeletePrevious && pOld != 0)
+        delete pOld;
 }
 
-void Tracer::sf_Trace( const String& ac_sMessage )
+void Tracer::sf_Trace(const String &ac_sMessage)
 {
-  if( pCurTracer )
-    pCurTracer->mp_TraceOne( ac_sMessage );
+    if (pCurTracer)
+        pCurTracer->mp_TraceOne(ac_sMessage);
 }
 
 bool Tracer::sv_bTraceAll = false;

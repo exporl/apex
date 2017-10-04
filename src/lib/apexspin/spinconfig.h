@@ -37,8 +37,7 @@ namespace spin
 namespace data
 {
 
-struct APEXSPIN_EXPORT Speechtoken
-{
+struct APEXSPIN_EXPORT Speechtoken {
     QString id;
     QString file;
     QString text;
@@ -47,29 +46,27 @@ struct APEXSPIN_EXPORT Speechtoken
 /**
  * List of speech tokens, part of a speechmaterial
  */
-struct List : QVector<Speechtoken>
-{
-    QString id; //FIXME change to unsigned
+struct List : QVector<Speechtoken> {
+    QString id; // FIXME change to unsigned
 
     void addToken(QString id, QString file, QString text);
 };
 
-struct APEXSPIN_EXPORT Speaker
-{
+struct APEXSPIN_EXPORT Speaker {
     unsigned channel;
     unsigned angle;
 };
 
-struct Category : QMap<QString, List>
-{
-    Category() : hasRms(false){}
+struct Category : QMap<QString, List> {
+    Category() : hasRms(false)
+    {
+    }
 
     double rms;
     bool hasRms;
 };
 
-struct CategoryMap : QMap<QString, Category>
-{
+struct CategoryMap : QMap<QString, Category> {
     void addList(List list, QString category = "");
     void setRms(QString category, double rms);
     const QList<QString> categories() const;
@@ -84,8 +81,7 @@ struct CategoryMap : QMap<QString, Category>
     double rms(QString category) const;
 };
 
-struct APEXSPIN_EXPORT Speechmaterial
-{
+struct APEXSPIN_EXPORT Speechmaterial {
     QString id;
     double rms;
     uint valuesForMean;
@@ -98,19 +94,17 @@ struct APEXSPIN_EXPORT Speechmaterial
     double rmsOfCategory(QString category) const;
 };
 
-struct Noise
-{
+struct Noise {
     QString id;
     QString name;
     QString description;
     QString file;
     double rms;
-    QString speechmaterial; //empty if none
-    QString category; //the category of the speechmaterial (empty if none)
+    QString speechmaterial; // empty if none
+    QString category; // the category of the speechmaterial (empty if none)
 };
 
-struct CustomScreen
-{
+struct CustomScreen {
     QString id;
     QString screen;
 };
@@ -124,43 +118,44 @@ struct CustomScreen
 class APEXSPIN_EXPORT SpinConfig
 {
     Q_DECLARE_TR_FUNCTIONS(SpinConfig);
-public:
 
+public:
     SpinConfig();
 
-    ~SpinConfig(){}
+    ~SpinConfig()
+    {
+    }
 
-    //getters
-    const apex::data::FilePrefix& prefix() const;
-    const QVector<Speaker>& speaker_setup() const;
-    const QMap<QString, Noise>& noises() const;
-    const QMap<QString, Speechmaterial>& speechmaterials() const;
+    // getters
+    const apex::data::FilePrefix &prefix() const;
+    const QVector<Speaker> &speaker_setup() const;
+    const QMap<QString, Noise> &noises() const;
+    const QMap<QString, Speechmaterial> &speechmaterials() const;
 
-    const Speechmaterial& speechmaterial(QString id) const;
-    const Noise& noise(QString id) const;
-    QVector<Noise> noisesBySpeechmaterial(
-        QString speechmaterial,
-        QString category = "") const;
+    const Speechmaterial &speechmaterial(QString id) const;
+    const Noise &noise(QString id) const;
+    QVector<Noise> noisesBySpeechmaterial(QString speechmaterial,
+                                          QString category = "") const;
     const List list(QString id, QString speechmaterial,
-                        QString category = "") const;
+                    QString category = "") const;
 
     /**
         * Returns a string holding the entire xml node that represents the
         * screen that is used when the subject sits before the monitor.
         */
-    const QString& subjectScreen() const;
+    const QString &subjectScreen() const;
 
     /**
         * Returns a string holding the entire xml node that represents the
         * screen that is used when experimenter sits before the monitor.
         */
-    const QString& experimenterScreenQuiet() const;
-    const QString& experimenterScreenNoise() const;
+    const QString &experimenterScreenQuiet() const;
+    const QString &experimenterScreenNoise() const;
     QStringList customScreensDescriptions() const;
-    QString customScreen(const QString& description) const;
-    QString customScreenId(const QString& description) const;
-    const QString& textId() const;
-    const QString& gainId() const;
+    QString customScreen(const QString &description) const;
+    QString customScreenId(const QString &description) const;
+    const QString &textId() const;
+    const QString &gainId() const;
 
     /**
       * All signals will be scaled by APEX to internalRMS (dBFS)
@@ -175,7 +170,8 @@ public:
     double defaultCalibration() const;
 
     double noiseRms(QString noiseId) const;
-    double speechRms(QString speechId, QString speechCategory = QString()) const;
+    double speechRms(QString speechId,
+                     QString speechCategory = QString()) const;
     uint angleOfChannel(uint channel) const;
     uint channelOfAngle(uint angle) const;
     QList<uint> channelList(SpeakerType which) const;
@@ -184,22 +180,22 @@ public:
     unsigned int soundcardBlocksize() const;
     QString soundcardDriver() const;
 
-
-    //setters
-    void setPrefix(const apex::data::FilePrefix& prefix);
+    // setters
+    void setPrefix(const apex::data::FilePrefix &prefix);
     void addSpeaker(unsigned channel, unsigned angle);
     void addNoise(QString id, QString file, double rms, QString name = "",
-                    QString description = "", QString speechmaterial = "",
-                    QString speechcategory = "");
-    void addSpeechmaterial(QString id, double rms, CategoryMap categoryMap,
-                    uint valuesForMean = defaults::NB_RESPONSES_THAT_COUNT);
-    void setSubjectScreen(const QString& screen);
-    void setExperimenterScreenQuiet(const QString& screen);
-    void setExperimenterScreenNoise(const QString& screen);
-    void addCustomScreen(const QString& description, const QString& id,
-                            const QString& screen);
-    void setTextId(const QString& id);
-    void setGainId(const QString& id);
+                  QString description = "", QString speechmaterial = "",
+                  QString speechcategory = "");
+    void
+    addSpeechmaterial(QString id, double rms, CategoryMap categoryMap,
+                      uint valuesForMean = defaults::NB_RESPONSES_THAT_COUNT);
+    void setSubjectScreen(const QString &screen);
+    void setExperimenterScreenQuiet(const QString &screen);
+    void setExperimenterScreenNoise(const QString &screen);
+    void addCustomScreen(const QString &description, const QString &id,
+                         const QString &screen);
+    void setTextId(const QString &id);
+    void setGainId(const QString &id);
     void setInternalRms(double rms);
     void setDefaultCalibration(double d);
 
@@ -207,12 +203,11 @@ public:
     void setSoundcardBlocksize(unsigned int v);
     void setSoundcardDriver(QString v);
 
-    //tools
+    // tools
     void showContent();
 
 private:
-
-    //TODO make private data structure
+    // TODO make private data structure
     apex::data::FilePrefix filePrefix;
     //<speaker_setup>
     QVector<Speaker> speakers;
@@ -240,6 +235,6 @@ private:
 };
 
 } // ns data
-} //ns spin
+} // ns spin
 
 #endif

@@ -19,44 +19,49 @@
 #include "settings.h"
 
 const QString DatabaseNames::prefix = "Calibration";
-const QString DatabaseNames::hardwareSetup = DatabaseNames::prefix + "/config/hardware";
-const QString DatabaseNames::currentHardwareSetup = DatabaseNames::prefix + "/config/current";
+const QString DatabaseNames::hardwareSetup =
+    DatabaseNames::prefix + "/config/hardware";
+const QString DatabaseNames::currentHardwareSetup =
+    DatabaseNames::prefix + "/config/current";
 
 QString DatabaseNames::prepare(const QString &value)
 {
-    return QString (value).replace ('/', '_');
+    return QString(value).replace('/', '_');
 }
 
-QString DatabaseNames::data (const QString &setup,
-        const QString &profile,
-        const QString &name, const QString &key)
+QString DatabaseNames::data(const QString &setup, const QString &profile,
+                            const QString &name, const QString &key)
 {
-    QString result (prefix + "/data");
+    QString result(prefix + "/data");
     if (setup.isEmpty())
         return result;
-    result += "/" + prepare (setup);
+    result += "/" + prepare(setup);
     if (profile.isEmpty())
         return result;
-    result += "/" + prepare (profile);
+    result += "/" + prepare(profile);
     if (name.isEmpty())
         return result;
-    result += "/" + prepare (name);
+    result += "/" + prepare(name);
     if (key.isEmpty())
         return result;
-    result += "/" + prepare (key);
+    result += "/" + prepare(key);
     return result;
 }
 
-QSettings* Settings::local()
+QSettings *Settings::local()
 {
-    static QScopedPointer<QSettings> localSettings(new QSettings(QSettings::UserScope, QSettings().organizationName(), QSettings().applicationName()));
+    static QScopedPointer<QSettings> localSettings(
+        new QSettings(QSettings::UserScope, QSettings().organizationName(),
+                      QSettings().applicationName()));
     localSettings->setFallbacksEnabled(false);
     return localSettings.data();
 }
 
-QSettings* Settings::global()
+QSettings *Settings::global()
 {
-    static QScopedPointer<QSettings> globalSettings(new QSettings(QSettings::SystemScope, QSettings().organizationName(), QSettings().applicationName()));
+    static QScopedPointer<QSettings> globalSettings(
+        new QSettings(QSettings::SystemScope, QSettings().organizationName(),
+                      QSettings().applicationName()));
     globalSettings->setFallbacksEnabled(false);
     return globalSettings.data();
 }

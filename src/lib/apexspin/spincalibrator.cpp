@@ -21,56 +21,54 @@
 namespace spin
 {
 
-struct CalibrationParameter
-{
+struct CalibrationParameter {
     double target;
     double output;
 
-    bool operator==(const CalibrationParameter& other) const;
-    bool operator!=(const CalibrationParameter& other) const;
+    bool operator==(const CalibrationParameter &other) const;
+    bool operator!=(const CalibrationParameter &other) const;
 
     /**
      * @return output - other.output
      */
-    double differenceWith(const CalibrationParameter& other);
+    double differenceWith(const CalibrationParameter &other);
 };
 
-//hardware setup => (profile => (parametername => parameters))
-typedef QMap<QString, QMap<QString, QMap<QString, CalibrationParameter> > > CalibrationMap;
+// hardware setup => (profile => (parametername => parameters))
+typedef QMap<QString, QMap<QString, QMap<QString, CalibrationParameter>>>
+    CalibrationMap;
 
 class SpinCalibratorPrivate
 {
-    public:
+public:
+    SpinCalibratorPrivate(const data::SpinConfig &config,
+                          const data::SpinUserSettings &settings,
+                          QWidget *parent);
+    ~SpinCalibratorPrivate();
 
-        SpinCalibratorPrivate(const data::SpinConfig& config,
-                              const data::SpinUserSettings& settings,
-                              QWidget* parent);
-        ~SpinCalibratorPrivate();
+    bool calibrate(bool *changesMade = 0);
+    void propagateChanges();
 
-        bool calibrate(bool* changesMade = 0);
-        void propagateChanges();
+private:
+    void saveSpinParameters(CalibrationMap *to = 0);
 
-    private:
+    CalibrationMap spinParameters;
 
-        void saveSpinParameters(CalibrationMap* to = 0);
-
-        CalibrationMap spinParameters;
-
-        apex::data::ExperimentData* experimentData;
-        apex::ExperimentRunDelegate* runDelegate;
-        apex::Calibrator* calibrator;
+    apex::data::ExperimentData *experimentData;
+    apex::ExperimentRunDelegate *runDelegate;
+    apex::Calibrator *calibrator;
 };
 
-}//ns spin
+} // ns spin
 
 using namespace spin;
 
-//SpinCalibrator **************************************************************
+// SpinCalibrator **************************************************************
 
-SpinCalibrator::SpinCalibrator(const data::SpinConfig& config,
-                               const data::SpinUserSettings& settings,
-                               QWidget* parent) :
-                           priv(new SpinCalibratorPrivate(config, settings, parent))
+SpinCalibrator::SpinCalibrator(const data::SpinConfig &config,
+                               const data::SpinUserSettings &settings,
+                               QWidget *parent)
+    : priv(new SpinCalibratorPrivate(config, settings, parent))
 {
 }
 
@@ -79,7 +77,7 @@ SpinCalibrator::~SpinCalibrator()
     delete priv;
 }
 
-bool SpinCalibrator::calibrate(bool* changesMade)
+bool SpinCalibrator::calibrate(bool *changesMade)
 {
     return priv->calibrate(changesMade);
 }
@@ -89,21 +87,21 @@ void SpinCalibrator::propagateChanges()
     priv->propagateChanges();
 }
 
+// SpinCalibratorPrivate *******************************************************
 
-//SpinCalibratorPrivate *******************************************************
-
-SpinCalibratorPrivate::SpinCalibratorPrivate(const data::SpinConfig& config,
-                                             const data::SpinUserSettings& settings,
-                                             QWidget* parent)
+SpinCalibratorPrivate::SpinCalibratorPrivate(
+    const data::SpinConfig &config, const data::SpinUserSettings &settings,
+    QWidget *parent)
 {
     SpinExperimentCreator creator(config, settings);
     creator.createExperimentFile(TEMP_FILE);
     apex::ExperimentParser parser(TEMP_FILE);
-    experimentData = parser.parse(true);
-    runDelegate = new apex::ExperimentRunDelegate(*experimentData,
-                                                  apex::MainConfigFileParser::Get().data(), parent);
+    experimentData = parser.parse(true, true);
+    runDelegate = new apex::ExperimentRunDelegate(
+        *experimentData, apex::MainConfigFileParser::Get().data(), parent);
     runDelegate->makeModules();
-    calibrator = new apex::Calibrator(runDelegate, *experimentData->calibrationData());
+    calibrator =
+        new apex::Calibrator(runDelegate, *experimentData->calibrationData());
 }
 
 SpinCalibratorPrivate::~SpinCalibratorPrivate()
@@ -115,15 +113,14 @@ SpinCalibratorPrivate::~SpinCalibratorPrivate()
     QFile::remove(TEMP_FILE);
 }
 
-bool SpinCalibratorPrivate::calibrate(bool* changesMade)
+bool SpinCalibratorPrivate::calibrate(bool *changesMade)
 {
     saveSpinParameters();
 
     if (!calibrator->calibrate(true))
         return false;
 
-    if (changesMade != 0)
-    {
+    if (changesMade != 0) {
         qCDebug(APEX_RS) << "checking for changes";
         CalibrationMap newParameters;
         saveSpinParameters(&newParameters);
@@ -142,92 +139,85 @@ void SpinCalibratorPrivate::propagateChanges()
     if (newParameters == spinParameters)
         return;
 
-    //find the changed hardware setup
+    // find the changed hardware setup
     QString changedSetup;
-    Q_FOREACH (QString setup, newParameters.keys())
-    {
+    Q_FOREACH (QString setup, newParameters.keys()) {
         if (newParameters[setup] != spinParameters[setup])
             changedSetup = setup;
     }
 
     Q_ASSERT(!changedSetup.isNull());
 
-    //find the profile that has been changed and all profiles that need
-    //to be changed
+    // find the profile that has been changed and all profiles that need
+    // to be changed
     QString changedProfile;
     QStringList profilesToChange;
-    Q_FOREACH (QString profile, newParameters[changedSetup].keys())
-    {
-        if (profile.startsWith(constants::CALIBRATION_PROFILE))
-        {
+    Q_FOREACH (QString profile, newParameters[changedSetup].keys()) {
+        if (profile.startsWith(constants::CALIBRATION_PROFILE)) {
             if (newParameters[changedSetup][profile] !=
-                spinParameters[changedSetup][profile])
-            {
+                spinParameters[changedSetup][profile]) {
                 changedProfile = profile;
-            }
-            else
+            } else
                 profilesToChange << profile;
         }
     }
 
-    //find the changed parameters, check how they changed and store in a map
+    // find the changed parameters, check how they changed and store in a map
     QMap<QString, double> changedParameters;
     Q_FOREACH (QString parameter,
-               newParameters[changedSetup][changedProfile].keys())
-    {
+               newParameters[changedSetup][changedProfile].keys()) {
         CalibrationParameter oldParam =
-                    spinParameters[changedSetup][changedProfile][parameter];
+            spinParameters[changedSetup][changedProfile][parameter];
         CalibrationParameter newParam =
-                    newParameters[changedSetup][changedProfile][parameter];
+            newParameters[changedSetup][changedProfile][parameter];
 
         if (oldParam != newParam)
-            changedParameters.insert(parameter, newParam.differenceWith(oldParam));
+            changedParameters.insert(parameter,
+                                     newParam.differenceWith(oldParam));
     }
 
-    //ok everything is known. adjust the parameters and store in the database
+    // ok everything is known. adjust the parameters and store in the database
     apex::CalibrationDatabase db;
 
-    Q_FOREACH (QString profile, profilesToChange)
-    {
-        Q_FOREACH (QString parameter, newParameters[changedSetup][profile].keys())
-        {
-            if (changedParameters.contains(parameter))
-            {
+    Q_FOREACH (QString profile, profilesToChange) {
+        Q_FOREACH (QString parameter,
+                   newParameters[changedSetup][profile].keys()) {
+            if (changedParameters.contains(parameter)) {
                 CalibrationParameter paramData =
-                        spinParameters[changedSetup][profile][parameter];
-                double newOutput = paramData.output + changedParameters[parameter];
+                    spinParameters[changedSetup][profile][parameter];
+                double newOutput =
+                    paramData.output + changedParameters[parameter];
 
-                db.calibrate(changedSetup, profile, parameter,
-                             paramData.target, newOutput);
+                db.calibrate(changedSetup, profile, parameter, paramData.target,
+                             newOutput);
             }
         }
     }
 }
 
-
-void SpinCalibratorPrivate::saveSpinParameters(spin::CalibrationMap* to)
+void SpinCalibratorPrivate::saveSpinParameters(spin::CalibrationMap *to)
 {
     apex::CalibrationDatabase db;
     CalibrationMap parameters;
 
-    Q_FOREACH (QString setup, db.hardwareSetups())
-    {
-        Q_FOREACH (QString profile, db.calibrationProfiles(setup))
-        {
+    Q_FOREACH (QString setup, db.hardwareSetups()) {
+        Q_FOREACH (QString profile, db.calibrationProfiles(setup)) {
             if (!profile.startsWith(constants::CALIBRATION_PROFILE))
                 continue;
 
-            Q_FOREACH (QString parameterName, db.parameterNames(setup, profile))
-            {
+            Q_FOREACH (QString parameterName,
+                       db.parameterNames(setup, profile)) {
                 qCDebug(APEX_RS) << "getting parameter for";
                 qCDebug(APEX_RS) << "    " << setup;
                 qCDebug(APEX_RS) << "    " << profile;
                 qCDebug(APEX_RS) << "    " << parameterName;
-                CalibrationParameter& parameter =
-                                parameters[setup][profile][parameterName];
+                CalibrationParameter &parameter =
+                    parameters[setup][profile][parameterName];
 
-                parameter.output = db.outputParameter(setup, profile, parameterName);
-                parameter.target = db.targetAmplitude(setup, profile, parameterName);
+                parameter.output =
+                    db.outputParameter(setup, profile, parameterName);
+                parameter.target =
+                    db.targetAmplitude(setup, profile, parameterName);
             }
         }
     }
@@ -238,17 +228,17 @@ void SpinCalibratorPrivate::saveSpinParameters(spin::CalibrationMap* to)
         *to = parameters;
 }
 
-bool CalibrationParameter::operator==(const CalibrationParameter& other) const
+bool CalibrationParameter::operator==(const CalibrationParameter &other) const
 {
     return output == other.output && target == other.target;
 }
 
-bool CalibrationParameter::operator!=(const CalibrationParameter& other) const
+bool CalibrationParameter::operator!=(const CalibrationParameter &other) const
 {
     return !(*this == other);
 }
 
-double CalibrationParameter::differenceWith(const CalibrationParameter& other)
+double CalibrationParameter::differenceWith(const CalibrationParameter &other)
 {
     return output - other.output;
 }

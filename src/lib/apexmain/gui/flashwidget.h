@@ -1,18 +1,19 @@
+#include <QPushButton>
 #include <QString>
 #include <QWidget>
-#include <QPushButton>
 
 class FlashWidgetPrivate;
 
 /**
  * FlashWidget wraps a Flash ActiveX object in a QWidget using QAxWidget
  */
-class FlashWidget: public QWidget
+class FlashWidget : public QWidget
 {
     Q_OBJECT
     friend class FlashWidgetPrivate;
+
 public:
-    FlashWidget(QWidget* parent=0);
+    FlashWidget(QWidget *parent = 0);
     ~FlashWidget();
 
     /**
@@ -42,7 +43,7 @@ public:
     int readyState() const;
 
     void setAutoFillBackground(bool s);
-    void setPalette(const QPalette& p);
+    void setPalette(const QPalette &p);
     void setShortcut(const QKeySequence &key);
 
 Q_SIGNALS:
@@ -54,7 +55,5 @@ Q_SIGNALS:
     void finished();
 
 private:
-    FlashWidgetPrivate* d;
+    FlashWidgetPrivate *d;
 };
-
-

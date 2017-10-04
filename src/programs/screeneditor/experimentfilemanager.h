@@ -20,62 +20,62 @@
 #ifndef _APEX_SRC_PROGRAMS_SCREENEDITOR_EXPERIMENTFILEMANAGER_H_
 #define _APEX_SRC_PROGRAMS_SCREENEDITOR_EXPERIMENTFILEMANAGER_H_
 
-#include <vector>
 #include <QObject>
 #include <memory>
+#include <vector>
 
 namespace apex
 {
-  namespace data
-  {
-    class Screen;
-  }
-  namespace editor
-  {
-    using data::Screen;
+namespace data
+{
+class Screen;
+}
+namespace editor
+{
+using data::Screen;
 
-    class ScreenEditor;
-    class ScreenEditorExperimentData;
+class ScreenEditor;
+class ScreenEditorExperimentData;
+
+/**
+ * The ExperimentFileManager class is responsible in the
+ * screeneditor program for managing an Apex experiment file.  It
+ * is created with a given file.
+ *
+ * This class uses the \ref ScreenEditorExperimentFileParser for
+ * parsing and saving the experiment file.
+ *
+ * This class can open \ref ScreenEditor's for the screens in the
+ * Experiment, and connects signals on the ScreenEditors to
+ * appropriate slots, so that screens and the experiment can be
+ * properly saved, and a screen can be added.
+ */
+class ExperimentFileManager : public QObject
+{
+    Q_OBJECT
+    QScopedPointer<ScreenEditorExperimentData> data;
+    QString filename;
+    std::vector<ScreenEditor *> editors;
+
+public:
+    ExperimentFileManager(QObject *parent, const QString &file);
+    ~ExperimentFileManager();
 
     /**
-     * The ExperimentFileManager class is responsible in the
-     * screeneditor program for managing an Apex experiment file.  It
-     * is created with a given file.
-     *
-     * This class uses the \ref ScreenEditorExperimentFileParser for
-     * parsing and saving the experiment file.
-     *
-     * This class can open \ref ScreenEditor's for the screens in the
-     * Experiment, and connects signals on the ScreenEditors to
-     * appropriate slots, so that screens and the experiment can be
-     * properly saved, and a screen can be added.
+     * Open a \ref ScreenEditor for every screen in the experiment,
+     * and connect its relevant signals to the proper slots in this
+     * class.
      */
-    class ExperimentFileManager
-      : public QObject
-    {
-      Q_OBJECT
-      QScopedPointer<ScreenEditorExperimentData> data;
-      QString filename;
-      std::vector<ScreenEditor*> editors;
-    public:
-      ExperimentFileManager( QObject* parent, const QString& file );
-      ~ExperimentFileManager();
+    void openScreenEditors();
+private slots:
+    void newScreen();
+    void saveScreen(ScreenEditor *se, Screen *s);
+    void saveAllAs();
+    void saveAllScreens();
 
-      /**
-       * Open a \ref ScreenEditor for every screen in the experiment,
-       * and connect its relevant signals to the proper slots in this
-       * class.
-       */
-      void openScreenEditors();
-    private slots:
-      void newScreen();
-      void saveScreen( ScreenEditor* se, Screen* s );
-      void saveAllAs();
-      void saveAllScreens();
-    private:
-      void showScreenEditor( Screen* s );
-    };
-
-  }
+private:
+    void showScreenEditor(Screen *s);
+};
+}
 }
 #endif

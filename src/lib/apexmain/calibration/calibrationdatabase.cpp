@@ -47,61 +47,67 @@ public:
         return prefix() + "/config/current";
     }
 
-    static QString data (const QString &setup = QString(),
-            const QString &profile = QString(),
-            const QString &name = QString(), const QString &key = QString())
+    static QString data(const QString &setup = QString(),
+                        const QString &profile = QString(),
+                        const QString &name = QString(),
+                        const QString &key = QString())
     {
-        QString result (prefix() + "/data");
+        QString result(prefix() + "/data");
         if (setup.isEmpty())
             return result;
-        result += "/" + prepare (setup);
+        result += "/" + prepare(setup);
         if (profile.isEmpty())
             return result;
-        result += "/" + prepare (profile);
+        result += "/" + prepare(profile);
         if (name.isEmpty())
             return result;
-        result += "/" + prepare (name);
+        result += "/" + prepare(name);
         if (key.isEmpty())
             return result;
-        result += "/" + prepare (key);
+        result += "/" + prepare(key);
         return result;
     }
 
-
-    static QString parameter (const QString &setup, const QString &profile,
-            const QString &name)
+    static QString parameter(const QString &setup, const QString &profile,
+                             const QString &name)
     {
-        return data (setup, profile, name, "parameter");
+        return data(setup, profile, name, "parameter");
     }
 
-    static QString target (const QString &setup, const QString &profile,
-            const QString &name)
+    static QString target(const QString &setup, const QString &profile,
+                          const QString &name)
     {
-        return data (setup, profile, name, "target");
+        return data(setup, profile, name, "target");
     }
 
-    static QString prepare (const QString &value)
+    static QString prepare(const QString &value)
     {
-        return QString (value).replace ('/', '_');
+        return QString(value).replace('/', '_');
     }
 
-    static QSettings* getQSettings(bool global = false)
+    static QSettings *getQSettings(bool global = false)
     {
-        QSettings* newSettings = new QSettings();
-        if(global) {
-            newSettings = new QSettings(QSettings::SystemScope, QSettings().organizationName(), QSettings().applicationName());
+        QSettings *newSettings = new QSettings();
+        if (global) {
+            newSettings = new QSettings(QSettings::SystemScope,
+                                        QSettings().organizationName(),
+                                        QSettings().applicationName());
         }
 
         settings.reset(newSettings);
         return newSettings;
     }
 
-    static bool isGlobal(const QString& setup)
+    static bool isGlobal(const QString &setup)
     {
-        QSettings settings(QSettings::SystemScope, QSettings().organizationName(), QSettings().applicationName());
-        QStringList globalSetups = settings.value(hardwareSetups()).toStringList();
+        QSettings settings(QSettings::SystemScope,
+                           QSettings().organizationName(),
+                           QSettings().applicationName());
+        QStringList globalSetups =
+            settings.value(hardwareSetups()).toStringList();
         return globalSetups.contains(setup);
     }
+
 private:
     static QScopedPointer<QSettings> settings;
 };
@@ -109,7 +115,7 @@ QScopedPointer<QSettings> CalibrationDatabasePrivate::settings;
 
 class CalibrationSetupHandler : public QXmlDefaultHandler
 {
-    Q_DECLARE_TR_FUNCTIONS (GenericXmlHandler)
+    Q_DECLARE_TR_FUNCTIONS(GenericXmlHandler)
 public:
     CalibrationSetupHandler();
 
@@ -117,13 +123,12 @@ public:
     QString errorExceptionString() const;
 
     // Reimplementing QXmlErrorHandler and QXmlContentHandler
-    bool startElement (const QString &namespaceURI,
-            const QString &localName, const QString &qName,
-            const QXmlAttributes &attributes);
-    bool endElement (const QString &namespaceURI, const QString &localName,
-            const QString &qName);
-    bool characters (const QString &str);
-    bool fatalError (const QXmlParseException &exception);
+    bool startElement(const QString &namespaceURI, const QString &localName,
+                      const QString &qName, const QXmlAttributes &attributes);
+    bool endElement(const QString &namespaceURI, const QString &localName,
+                    const QString &qName);
+    bool characters(const QString &str);
+    bool fatalError(const QXmlParseException &exception);
     QString errorString() const;
 
     QString hardwareSetup() const;
@@ -149,9 +154,9 @@ private:
 class CalibrationSetupGenerator
 {
 public:
-    CalibrationSetupGenerator (const QString &setup);
+    CalibrationSetupGenerator(const QString &setup);
 
-    void write (QIODevice *device);
+    void write(QIODevice *device);
 
     const QString setup;
 
@@ -161,7 +166,7 @@ public:
 // CalibrationDatabase =========================================================
 
 CalibrationDatabase::CalibrationDatabase()
-    // No private data yet
+// No private data yet
 {
 }
 
@@ -171,218 +176,237 @@ CalibrationDatabase::~CalibrationDatabase()
 
 QStringList CalibrationDatabase::hardwareSetups() const
 {
-    QStringList local = QSettings().value(CalibrationDatabasePrivate::hardwareSetups()).toStringList();
-    QStringList global = QSettings(QSettings::SystemScope, QSettings().organizationName(), QSettings().applicationName()).value(CalibrationDatabasePrivate::hardwareSetups()).toStringList();
+    QStringList local = QSettings()
+                            .value(CalibrationDatabasePrivate::hardwareSetups())
+                            .toStringList();
+    QStringList global =
+        QSettings(QSettings::SystemScope, QSettings().organizationName(),
+                  QSettings().applicationName())
+            .value(CalibrationDatabasePrivate::hardwareSetups())
+            .toStringList();
     QStringList both(local);
     both.append(global);
 
     return both;
 }
 
-QStringList CalibrationDatabase::calibrationProfiles
-    (const QString &setup) const
+QStringList CalibrationDatabase::calibrationProfiles(const QString &setup) const
 {
-    QSettings* settings = CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup));
-    settings->beginGroup (CalibrationDatabasePrivate::data (setup));
+    QSettings *settings = CalibrationDatabasePrivate::getQSettings(
+        CalibrationDatabasePrivate::isGlobal(setup));
+    settings->beginGroup(CalibrationDatabasePrivate::data(setup));
     return settings->childGroups();
 }
 
-QStringList CalibrationDatabase::parameterNames (const QString &setup,
-        const QString &profile) const
+QStringList CalibrationDatabase::parameterNames(const QString &setup,
+                                                const QString &profile) const
 {
-    QSettings* settings = CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup));
-    settings->beginGroup (CalibrationDatabasePrivate::data (setup, profile));
+    QSettings *settings = CalibrationDatabasePrivate::getQSettings(
+        CalibrationDatabasePrivate::isGlobal(setup));
+    settings->beginGroup(CalibrationDatabasePrivate::data(setup, profile));
     return settings->childGroups();
 }
 
-unsigned CalibrationDatabase::calibrationCount (const QString &setup) const
+unsigned CalibrationDatabase::calibrationCount(const QString &setup) const
 {
     unsigned result = 0;
-    QSettings* settings = CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup));
+    QSettings *settings = CalibrationDatabasePrivate::getQSettings(
+        CalibrationDatabasePrivate::isGlobal(setup));
 
-    settings->beginGroup (CalibrationDatabasePrivate::data (setup));
+    settings->beginGroup(CalibrationDatabasePrivate::data(setup));
     Q_FOREACH (const QString &profile, settings->childGroups()) {
-        settings->beginGroup (profile);
+        settings->beginGroup(profile);
         result += settings->childGroups().count();
         settings->endGroup();
     }
     return result;
 }
 
-void CalibrationDatabase::addHardwareSetup (const QString &setup)
+void CalibrationDatabase::addHardwareSetup(const QString &setup)
 {
     QSettings settings;
 
-    QStringList hardwareSetups = settings.value
-        (CalibrationDatabasePrivate::hardwareSetups()).toStringList();
-    if (!hardwareSetups.contains (setup))
-        settings.setValue (CalibrationDatabasePrivate::hardwareSetups(),
-                hardwareSetups << setup);
+    QStringList hardwareSetups =
+        settings.value(CalibrationDatabasePrivate::hardwareSetups())
+            .toStringList();
+    if (!hardwareSetups.contains(setup))
+        settings.setValue(CalibrationDatabasePrivate::hardwareSetups(),
+                          hardwareSetups << setup);
 }
 
-void CalibrationDatabase::renameHardwareSetup (const QString &setup,
-        const QString &newName)
+void CalibrationDatabase::renameHardwareSetup(const QString &setup,
+                                              const QString &newName)
 {
     if (newName == setup)
         return;
-    addHardwareSetup (newName);
-    Q_FOREACH (const QString &profile, calibrationProfiles (setup))
-        Q_FOREACH (const QString &name, parameterNames (setup, profile))
-            calibrate (newName, profile, name,
-                    targetAmplitude (setup, profile, name),
-                    outputParameter (setup, profile, name));
-    removeHardwareSetup (setup);
+    addHardwareSetup(newName);
+    Q_FOREACH (const QString &profile, calibrationProfiles(setup))
+        Q_FOREACH (const QString &name, parameterNames(setup, profile))
+            calibrate(newName, profile, name,
+                      targetAmplitude(setup, profile, name),
+                      outputParameter(setup, profile, name));
+    removeHardwareSetup(setup);
 }
 
-void CalibrationDatabase::removeHardwareSetup (const QString &setup)
+void CalibrationDatabase::removeHardwareSetup(const QString &setup)
 {
     QSettings settings;
 
-    QStringList hardwareSetups = settings.value
-        (CalibrationDatabasePrivate::hardwareSetups()).toStringList();
-    hardwareSetups.removeAll (setup);
-    settings.setValue (CalibrationDatabasePrivate::hardwareSetups(),
-            hardwareSetups);
+    QStringList hardwareSetups =
+        settings.value(CalibrationDatabasePrivate::hardwareSetups())
+            .toStringList();
+    hardwareSetups.removeAll(setup);
+    settings.setValue(CalibrationDatabasePrivate::hardwareSetups(),
+                      hardwareSetups);
 
-    settings.remove (CalibrationDatabasePrivate::data (setup));
+    settings.remove(CalibrationDatabasePrivate::data(setup));
 }
 
-bool CalibrationDatabase::isCalibrated (const QString &setup,
-        const QString &profile, const QString &name) const
+bool CalibrationDatabase::isCalibrated(const QString &setup,
+                                       const QString &profile,
+                                       const QString &name) const
 {
-    QSettings* settings = CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup));
+    QSettings *settings = CalibrationDatabasePrivate::getQSettings(
+        CalibrationDatabasePrivate::isGlobal(setup));
 
-    return settings->contains (CalibrationDatabasePrivate::parameter
-            (setup, profile, name)) &&
-        settings->contains (CalibrationDatabasePrivate::target
-            (setup, profile, name));
+    return settings->contains(
+               CalibrationDatabasePrivate::parameter(setup, profile, name)) &&
+           settings->contains(
+               CalibrationDatabasePrivate::target(setup, profile, name));
 }
 
-bool CalibrationDatabase::isGlobal(const QString &setup) const {
+bool CalibrationDatabase::isGlobal(const QString &setup) const
+{
     return CalibrationDatabasePrivate::isGlobal(setup);
 }
 
-double CalibrationDatabase::targetAmplitude (const QString &setup,
-        const QString &profile, const QString &name) const
+double CalibrationDatabase::targetAmplitude(const QString &setup,
+                                            const QString &profile,
+                                            const QString &name) const
 {
-    return CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup))->value(
-                CalibrationDatabasePrivate::target(setup, profile, name)).toDouble();
+    return CalibrationDatabasePrivate::getQSettings(
+               CalibrationDatabasePrivate::isGlobal(setup))
+        ->value(CalibrationDatabasePrivate::target(setup, profile, name))
+        .toDouble();
 }
 
-double CalibrationDatabase::outputParameter (const QString &setup,
-        const QString &profile, const QString &name) const
+double CalibrationDatabase::outputParameter(const QString &setup,
+                                            const QString &profile,
+                                            const QString &name) const
 {
-    return CalibrationDatabasePrivate::getQSettings(CalibrationDatabasePrivate::isGlobal(setup))->value(
-                CalibrationDatabasePrivate::parameter(setup, profile, name)).toDouble();
+    return CalibrationDatabasePrivate::getQSettings(
+               CalibrationDatabasePrivate::isGlobal(setup))
+        ->value(CalibrationDatabasePrivate::parameter(setup, profile, name))
+        .toDouble();
 }
 
-void CalibrationDatabase::calibrate (const QString &setup,
-        const QString &profile, const QString &name,
-        double target, double parameter)
+void CalibrationDatabase::calibrate(const QString &setup,
+                                    const QString &profile, const QString &name,
+                                    double target, double parameter)
 {
-    addHardwareSetup (setup);
+    addHardwareSetup(setup);
 
     QSettings settings;
-    settings.setValue (CalibrationDatabasePrivate::parameter
-            (setup, profile, name), parameter);
-    settings.setValue (CalibrationDatabasePrivate::target
-            (setup, profile, name), target);
+    settings.setValue(
+        CalibrationDatabasePrivate::parameter(setup, profile, name), parameter);
+    settings.setValue(CalibrationDatabasePrivate::target(setup, profile, name),
+                      target);
 }
 
-void CalibrationDatabase::remove (const QString &setup,
-        const QString &profile, const QString &name)
+void CalibrationDatabase::remove(const QString &setup, const QString &profile,
+                                 const QString &name)
 {
-    QSettings().remove (CalibrationDatabasePrivate::data (setup, profile,
-                name));
+    QSettings().remove(CalibrationDatabasePrivate::data(setup, profile, name));
 }
 
 QString CalibrationDatabase::currentHardwareSetup() const
 {
-    return QSettings().value
-        (CalibrationDatabasePrivate::currentHardwareSetup()).toString();
+    return QSettings()
+        .value(CalibrationDatabasePrivate::currentHardwareSetup())
+        .toString();
 }
 
-void CalibrationDatabase::setCurrentHardwareSetup (const QString &setup)
+void CalibrationDatabase::setCurrentHardwareSetup(const QString &setup)
 {
-    QSettings().setValue
-        (CalibrationDatabasePrivate::currentHardwareSetup(), setup);
+    QSettings().setValue(CalibrationDatabasePrivate::currentHardwareSetup(),
+                         setup);
 }
 
 // XML stuff ===================================================================
 
-void CalibrationDatabase::exportHardwareSetup (const QString &setup,
-        const QString &fileName) const
+void CalibrationDatabase::exportHardwareSetup(const QString &setup,
+                                              const QString &fileName) const
 {
-    QFile file (fileName);
+    QFile file(fileName);
     // No QFile::Text so we always create linux line endings
-    if (!file.open (QFile::WriteOnly))
-        throw ApexStringException
-            (QString ("Unable to open calibration file %1: %2")
-                .arg (fileName, file.errorString()));
+    if (!file.open(QFile::WriteOnly))
+        throw ApexStringException(
+            QString("Unable to open calibration file %1: %2")
+                .arg(fileName, file.errorString()));
 
-    CalibrationSetupGenerator (setup).write (&file);
+    CalibrationSetupGenerator(setup).write(&file);
 }
 
-QString CalibrationDatabase::importHardwareSetup (const QString &fileName)
+QString CalibrationDatabase::importHardwareSetup(const QString &fileName)
 {
     CalibrationSetupHandler handler;
     QXmlSimpleReader reader;
-    reader.setContentHandler (&handler);
-    reader.setErrorHandler (&handler);
+    reader.setContentHandler(&handler);
+    reader.setErrorHandler(&handler);
 
-    QFile file (fileName);
-    if (!file.open (QFile::ReadOnly | QFile::Text))
-        throw ApexStringException
-            (QString ("Unable to open calibration file %1: %2")
-                .arg (fileName, file.errorString()));
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+        throw ApexStringException(
+            QString("Unable to open calibration file %1: %2")
+                .arg(fileName, file.errorString()));
 
-    QXmlInputSource xmlInputSource (&file);
-    if (!reader.parse (xmlInputSource)) {
+    QXmlInputSource xmlInputSource(&file);
+    if (!reader.parse(xmlInputSource)) {
         const QString setup = handler.hardwareSetup();
         if (!setup.isEmpty())
-            CalibrationDatabase().removeHardwareSetup (setup);
-        throw ApexStringException
-            (QString ("Unable to read calibration file %1: %2")
-                .arg (fileName, handler.errorExceptionString()));
+            CalibrationDatabase().removeHardwareSetup(setup);
+        throw ApexStringException(
+            QString("Unable to read calibration file %1: %2")
+                .arg(fileName, handler.errorExceptionString()));
     }
     return handler.hardwareSetup();
 }
 
 // CalibrationSetupHandler =====================================================
 
-CalibrationSetupHandler::CalibrationSetupHandler() :
-    root (false),
-    calibration (false)
+CalibrationSetupHandler::CalibrationSetupHandler()
+    : root(false), calibration(false)
 {
 }
 
-bool CalibrationSetupHandler::startElement (const QString
-        &namespaceURI, const QString &localName, const QString &qName,
-        const QXmlAttributes &attributes)
+bool CalibrationSetupHandler::startElement(const QString &namespaceURI,
+                                           const QString &localName,
+                                           const QString &qName,
+                                           const QXmlAttributes &attributes)
 {
-    Q_UNUSED (namespaceURI);
-    Q_UNUSED (localName);
+    Q_UNUSED(namespaceURI);
+    Q_UNUSED(localName);
 
     if (!root && qName != "calibrationsetup") {
-        errorMessage = tr ("Invalid root element.");
+        errorMessage = tr("Invalid root element.");
         return false;
     }
 
     if (qName == "calibrationsetup") {
-        const QString version = attributes.value ("version");
+        const QString version = attributes.value("version");
         if (!version.isEmpty() && version != "1.0") {
-            errorMessage = tr ("Unsupported version.");
+            errorMessage = tr("Unsupported version.");
             return false;
         }
         root = true;
     } else if (qName == "profile") {
-        currentProfile = attributes.value ("name");
+        currentProfile = attributes.value("name");
     } else if (qName == "calibration") {
         calibration = true;
     } else if (qName == "name" || qName == "target" || qName == "parameter") {
         // Do nothing, everything is done in #endElement
     } else {
-        errorMessage = tr ("Unknown tag: %1").arg (qName);
+        errorMessage = tr("Unknown tag: %1").arg(qName);
         return false;
     }
 
@@ -390,20 +414,21 @@ bool CalibrationSetupHandler::startElement (const QString
     return true;
 }
 
-bool CalibrationSetupHandler::endElement (const QString &namespaceURI,
-        const QString &localName, const QString &qName)
+bool CalibrationSetupHandler::endElement(const QString &namespaceURI,
+                                         const QString &localName,
+                                         const QString &qName)
 {
-    Q_UNUSED (namespaceURI);
-    Q_UNUSED (localName);
+    Q_UNUSED(namespaceURI);
+    Q_UNUSED(localName);
 
     if (qName == "name" && !calibration) {
         setup = currentText;
-        const QSet<QString> setups = QSet<QString>::fromList
-            (CalibrationDatabase().hardwareSetups());
-        if (setups.contains (setup)) {
+        const QSet<QString> setups =
+            QSet<QString>::fromList(CalibrationDatabase().hardwareSetups());
+        if (setups.contains(setup)) {
             for (unsigned i = 1;; ++i) {
-                const QString newSetup = QString ("%2 %1").arg (i).arg (setup);
-                if (!setups.contains (newSetup)) {
+                const QString newSetup = QString("%2 %1").arg(i).arg(setup);
+                if (!setups.contains(newSetup)) {
                     setup = newSetup;
                     break;
                 }
@@ -416,15 +441,15 @@ bool CalibrationSetupHandler::endElement (const QString &namespaceURI,
     } else if (qName == "parameter") {
         currentParameter = currentText.toDouble();
     } else if (qName == "calibration") {
-        CalibrationDatabase().calibrate (setup, currentProfile,
-                currentName, currentTarget, currentParameter);
+        CalibrationDatabase().calibrate(setup, currentProfile, currentName,
+                                        currentTarget, currentParameter);
         calibration = false;
     }
 
     return true;
 }
 
-bool CalibrationSetupHandler::characters (const QString &str)
+bool CalibrationSetupHandler::characters(const QString &str)
 {
     currentText += str;
     return true;
@@ -435,12 +460,12 @@ bool CalibrationSetupHandler::characters (const QString &str)
 // the message passed in exception is either the error string returned by
 // #errorString() or some internal error message if, e.g., the xml code was
 // malformed
-bool CalibrationSetupHandler::fatalError (const QXmlParseException &exception)
+bool CalibrationSetupHandler::fatalError(const QXmlParseException &exception)
 {
-    errorException = tr ("Fatal error on line %1, column %2: %3")
-        .arg (exception.lineNumber())
-        .arg (exception.columnNumber())
-        .arg (exception.message());
+    errorException = tr("Fatal error on line %1, column %2: %3")
+                         .arg(exception.lineNumber())
+                         .arg(exception.columnNumber())
+                         .arg(exception.message());
     return false;
 }
 
@@ -461,64 +486,64 @@ QString CalibrationSetupHandler::hardwareSetup() const
 
 // CalibrationSetupGenerator ===================================================
 
-static QString xmlIndent (unsigned depth, unsigned indentSize = 4)
+static QString xmlIndent(unsigned depth, unsigned indentSize = 4)
 {
-    return QString (indentSize * depth, ' ');
+    return QString(indentSize * depth, ' ');
 }
 
-static QString xmlEscapedText (const QString &text)
+static QString xmlEscapedText(const QString &text)
 {
     QString result = text;
-    result.replace ("&", "&amp;");
-    result.replace ("<", "&lt;");
-    result.replace (">", "&gt;");
+    result.replace("&", "&amp;");
+    result.replace("<", "&lt;");
+    result.replace(">", "&gt;");
     return result;
 }
 
-static QString xmlEscapedAttribute (const QString &text)
+static QString xmlEscapedAttribute(const QString &text)
 {
-    QString result = xmlEscapedText (text);
-    result.replace ("\"", "&quot;");
-    result.prepend ("\"");
-    result.append ("\"");
+    QString result = xmlEscapedText(text);
+    result.replace("\"", "&quot;");
+    result.prepend("\"");
+    result.append("\"");
     return result;
 }
 
-CalibrationSetupGenerator::CalibrationSetupGenerator (const QString &setup) :
-    setup (setup)
+CalibrationSetupGenerator::CalibrationSetupGenerator(const QString &setup)
+    : setup(setup)
 {
 }
 
-void CalibrationSetupGenerator::write (QIODevice *device)
+void CalibrationSetupGenerator::write(QIODevice *device)
 {
-    out.setDevice (device);
-    out.setCodec ("UTF-8");
+    out.setDevice(device);
+    out.setCodec("UTF-8");
     out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
         << "<!DOCTYPE calibrationsetup>\n"
         << "<calibrationsetup version=\"1.0\">\n";
 
-    out << xmlIndent (1) << "<name>" << xmlEscapedText (setup) << "</name>\n";
+    out << xmlIndent(1) << "<name>" << xmlEscapedText(setup) << "</name>\n";
 
     const CalibrationDatabase db;
 
-    Q_FOREACH (const QString &profile, db.calibrationProfiles (setup)) {
-        out << xmlIndent (1) << "<profile name="
-            << xmlEscapedAttribute (profile) << ">\n";
-        Q_FOREACH (const QString &name, db.parameterNames (setup, profile)) {
-            const QString target = QString::number (db.targetAmplitude
-                (setup, profile, name), 'g', 10);
-            const QString parameter = QString::number (db.outputParameter
-                (setup, profile, name), 'g', 10);
-            out << xmlIndent (2) << "<calibration>\n";
-            out << xmlIndent (3) << "<name>"
-                << xmlEscapedText (name) << "</name>\n";
-            out << xmlIndent (3) << "<target>"
-                << xmlEscapedText (target) << "</target>\n";
-            out << xmlIndent (3) << "<parameter>"
-                << xmlEscapedText (parameter) << "</parameter>\n";
-            out << xmlIndent (2) << "</calibration>\n";
+    Q_FOREACH (const QString &profile, db.calibrationProfiles(setup)) {
+        out << xmlIndent(1) << "<profile name=" << xmlEscapedAttribute(profile)
+            << ">\n";
+        Q_FOREACH (const QString &name, db.parameterNames(setup, profile)) {
+            const QString target = QString::number(
+                db.targetAmplitude(setup, profile, name), 'g', 10);
+            const QString parameter = QString::number(
+                db.outputParameter(setup, profile, name), 'g', 10);
+            out << xmlIndent(2) << "<calibration>\n";
+            out << xmlIndent(3) << "<name>" << xmlEscapedText(name)
+                << "</name>\n";
+            out << xmlIndent(3) << "<target>" << xmlEscapedText(target)
+                << "</target>\n";
+            out << xmlIndent(3) << "<parameter>" << xmlEscapedText(parameter)
+                << "</parameter>\n";
+            out << xmlIndent(2) << "</calibration>\n";
         }
-        out << xmlIndent (1) << "</profile>\n";
+        out << xmlIndent(1) << "</profile>\n";
     }
     out << "</calibrationsetup>\n";
 }

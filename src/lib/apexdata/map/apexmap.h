@@ -20,9 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXDATA_MAP_APEXMAP_H_
 #define _EXPORL_SRC_LIB_APEXDATA_MAP_APEXMAP_H_
 
-
-#include "channelmap.h"
 #include "apextools/global.h"
+#include "channelmap.h"
 
 #include <QCoreApplication> //tr
 #include <QMap>
@@ -40,38 +39,36 @@ struct ApexMapPrivate;
  * @author Tom Francart,,,
  */
 class APEXDATA_EXPORT ApexMap : public QMap<int, ChannelMap>
-        //FIXME [job refactory] find a better name...
-        // [Tom] L34Map
+// FIXME [job refactory] find a better name...
+// [Tom] L34Map
 {
-        Q_DECLARE_TR_FUNCTIONS(ApexMap)
+    Q_DECLARE_TR_FUNCTIONS(ApexMap)
 
-    public:
+public:
+    ApexMap();
+    ApexMap(const ApexMap &other);
+    ~ApexMap();
 
-        ApexMap();
-        ApexMap(const ApexMap& other);
-        ~ApexMap();
+    int numberOfElectrodes() const;
+    void setNumberOfElectrodes(int nb);
 
-        int numberOfElectrodes() const;
-        void setNumberOfElectrodes(int nb);
+    ChannelMap defaultMap() const;
+    void setDefaultMap(const ChannelMap &map);
 
-        ChannelMap defaultMap() const;
-        void setDefaultMap(const ChannelMap& map);
+    const QString toXml() const;
 
-        const QString toXml() const;
+    //! Return true if a T and C level and electrode is present for channels
+    //! 1-22
+    bool isComplete() const;
 
-        //! Return true if a T and C level and electrode is present for channels
-        //! 1-22
-        bool isComplete() const;
+    ApexMap &operator=(const ApexMap &other);
+    bool operator==(const ApexMap &other);
 
-        ApexMap& operator=(const ApexMap& other);
-        bool operator==(const ApexMap& other);
-
-    private:
-
-        ApexMapPrivate* d;
+private:
+    ApexMapPrivate *d;
 };
 
-}//ns data
-}//ns apex
+} // ns data
+} // ns apex
 
 #endif

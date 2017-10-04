@@ -20,36 +20,46 @@
 #include "settings.h"
 #include <QSettings>
 
-HardwareSetup::HardwareSetup() {}
-HardwareSetup::HardwareSetup(const QString& name, bool isLocal) : name_(name), isLocal_(isLocal) {}
+HardwareSetup::HardwareSetup()
+{
+}
+HardwareSetup::HardwareSetup(const QString &name, bool isLocal)
+    : name_(name), isLocal_(isLocal)
+{
+}
 
-QString HardwareSetup::name() const {
+QString HardwareSetup::name() const
+{
     return name_;
 }
 
-bool HardwareSetup::isGlobal() const {
+bool HardwareSetup::isGlobal() const
+{
     return !isLocal();
 }
 
-bool HardwareSetup::isLocal() const {
+bool HardwareSetup::isLocal() const
+{
     return isLocal_;
 }
 
-bool HardwareSetup::operator ==(const HardwareSetup& other) const {
+bool HardwareSetup::operator==(const HardwareSetup &other) const
+{
     return name() == other.name() && isGlobal() == other.isGlobal();
 }
 
-QStringList HardwareSetup::profiles() const {
-    QSettings* settings = 0;
+QStringList HardwareSetup::profiles() const
+{
+    QSettings *settings = 0;
 
-    //It is impossible to have a hardware setup that is global and local
-    if(isGlobal()) {
+    // It is impossible to have a hardware setup that is global and local
+    if (isGlobal()) {
         settings = Settings().global();
-    } else if(isLocal()) {
+    } else if (isLocal()) {
         settings = Settings().local();
     }
 
-    settings->beginGroup (DatabaseNames::data(name()));
+    settings->beginGroup(DatabaseNames::data(name()));
     QStringList result = settings->childGroups();
     settings->endGroup();
 

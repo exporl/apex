@@ -29,8 +29,7 @@ QtMessageHandler ErrorHandler::oldHandler = NULL;
 
 // ErrorHandler ================================================================
 
-ErrorHandler::ErrorHandler() :
-    nbErrors(0)
+ErrorHandler::ErrorHandler() : nbErrors(0)
 {
     globalInstance = this;
     qRegisterMetaType<apex::StatusItem>();
@@ -49,10 +48,12 @@ ErrorHandler *ErrorHandler::instance()
 }
 
 void ErrorHandler::messageOutput(QtMsgType type,
-        const QMessageLogContext &context, const QString &msg)
+                                 const QMessageLogContext &context,
+                                 const QString &msg)
 {
     QString source = QString::fromLatin1("%2 (%3: %1, %4)")
-        .arg(context.line).arg(context.category, context.file, context.function);
+                         .arg(context.line)
+                         .arg(context.category, context.file, context.function);
     StatusItem item(StatusItem::Unused, source, msg);
     switch (type) {
     case QtDebugMsg:
@@ -73,7 +74,8 @@ void ErrorHandler::messageOutput(QtMsgType type,
     }
     if (ErrorHandler *instance = ErrorHandler::instance())
         QMetaObject::invokeMethod(instance, "addItem", Qt::AutoConnection,
-                QGenericReturnArgument(), Q_ARG(apex::StatusItem, item));
+                                  QGenericReturnArgument(),
+                                  Q_ARG(apex::StatusItem, item));
     oldHandler(type, context, msg);
 }
 
@@ -82,7 +84,8 @@ void ErrorHandler::addItem(const StatusItem &item)
     if ((item.level() & (StatusItem::Fatal | StatusItem::Critical)) > 0)
         nbErrors++;
 
-    static const QMetaMethod signal = QMetaMethod::fromSignal(&ErrorHandler::itemAdded);
+    static const QMetaMethod signal =
+        QMetaMethod::fromSignal(&ErrorHandler::itemAdded);
     if (isSignalConnected(signal))
         Q_EMIT itemAdded(item);
     else
@@ -106,5 +109,4 @@ void ErrorHandler::connectNotify(const QMetaMethod &signal)
             Q_EMIT itemAdded(queuedItems.dequeue());
     }
 }
-
 }

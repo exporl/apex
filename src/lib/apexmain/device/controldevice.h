@@ -24,37 +24,41 @@
 
 #include <QObject>
 
-namespace apex {
+namespace apex
+{
 
-namespace device {
+namespace device
+{
 
 /**
-Interfaces for devices that do not output samples but rather control stuff, like mixers or external attenuators
+Interfaces for devices that do not output samples but rather control stuff, like
+mixers or external attenuators
 
         @author Tom Francart,,, <tom.francart@med.kuleuven.be>
 */
-class ControlDevice : public QObject,
-                      public IApexDevice
+class ControlDevice : public QObject, public IApexDevice
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    ControlDevice( data::DeviceData* a_pParameters );
+    ControlDevice(data::DeviceData *a_pParameters);
 
     ~ControlDevice();
 
 public Q_SLOTS:
     /*
-     *  Can be used for synchronizing ControlDevice output with OutputDevice output
-     *  Currently used by oscController plugin- signal stimulusStarted is emitted from OutputDevice (wavdevice)
-     *  This slot is called inside plugincontroller (inherits from this class) which then calls the plugin's playStimulus method
+     *  Can be used for synchronizing ControlDevice output with OutputDevice
+     * output
+     *  Currently used by oscController plugin- signal stimulusStarted is
+     * emitted from OutputDevice (wavdevice)
+     *  This slot is called inside plugincontroller (inherits from this class)
+     * which then calls the plugin's playStimulus method
      *  Connection happens in experimentcontrol.cpp @ loadExperiment()
      */
-    virtual void syncControlDeviceOutput()    {    }
-
+    virtual void syncControlDeviceOutput()
+    {
+    }
 };
-
 }
-
 }
 
 #endif

@@ -28,8 +28,9 @@
 using namespace apex;
 using apex::data::FilePrefix;
 
-QDomElement apex::writer::FilePrefixWriter::addElement(QDomDocument *doc,
-        const data::FilePrefix &d)
+QDomElement
+apex::writer::FilePrefixWriter::addElement(QDomDocument *doc,
+                                           const data::FilePrefix &d)
 {
     QDomElement result = XmlUtils::createTextElement(doc, "prefix", d.value());
     if (d.type() == FilePrefix::PREFIX_MAINCONFIG)

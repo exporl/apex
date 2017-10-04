@@ -22,26 +22,26 @@
 
 #include "win32_headers.h"
 
-  //some timer ripped from the net, seems ok
+// some timer ripped from the net, seems ok
 class CTIMER
 {
 public:
-  CTIMER();
-  ~CTIMER();
+    CTIMER();
+    ~CTIMER();
 
-  void InitTimers();
-  void WaitTillMS(__int64);
-  bool HasPassedMS(__int64);
-  bool HasPassedSinceStartMS(__int64);
-  DWORD GetPassedMS();
-  DWORD GetPassed(int);
+    void InitTimers();
+    void WaitTillMS(__int64);
+    bool HasPassedMS(__int64);
+    bool HasPassedSinceStartMS(__int64);
+    DWORD GetPassedMS();
+    DWORD GetPassed(int);
 
-  DWORD sinceprev();
+    DWORD sinceprev();
 
 protected:
-  __int64 LASTCALL;
-  __int64 prev;
-  static __int64 TicksPerMS;
+    __int64 LASTCALL;
+    __int64 prev;
+    static __int64 TicksPerMS;
 };
 
 #endif //#ifndef SOMETIMERRR_H

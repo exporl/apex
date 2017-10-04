@@ -30,7 +30,7 @@ class APEXTOOLS_EXPORT ApexException : public std::exception
 {
 };
 
-class APEXTOOLS_EXPORT ApexStringException: public ApexException
+class APEXTOOLS_EXPORT ApexStringException : public ApexException
 {
 public:
     ApexStringException(const QString &message);
@@ -41,24 +41,23 @@ private:
     const QByteArray message;
 };
 
-class APEXTOOLS_EXPORT TrialDataNotFoundException: public ApexException
+class APEXTOOLS_EXPORT TrialDataNotFoundException : public ApexException
 {
 public:
     virtual const char *what() const throw() Q_DECL_OVERRIDE;
 };
 
-class APEXTOOLS_EXPORT ApexConnectionBetweenDifferentDevicesException :
-    public ApexStringException
+class APEXTOOLS_EXPORT ApexConnectionBetweenDifferentDevicesException
+    : public ApexStringException
 {
 public:
-    ApexConnectionBetweenDifferentDevicesException(const QString& message);
+    ApexConnectionBetweenDifferentDevicesException(const QString &message);
 };
 
-class APEXTOOLS_EXPORT ParseException: public ApexException
+class APEXTOOLS_EXPORT ParseException : public ApexException
 {
 public:
     virtual const char *what() const throw() Q_DECL_OVERRIDE;
 };
 
 #endif
-

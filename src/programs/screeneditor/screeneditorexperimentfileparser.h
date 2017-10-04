@@ -52,16 +52,17 @@ class ScreenEditorExperimentData
 {
     friend class ScreenEditorExperimentFileParser;
 
-    typedef std::map<const Screen*, QDomElement > screenToElementMapT;
+    typedef std::map<const Screen *, QDomElement> screenToElementMapT;
     QDomDocument expDocument;
     QDomElement screensElement;
 
     screenToElementMapT screenToElementMap;
+
 public:
     ~ScreenEditorExperimentData();
-    ScreensData* screens;
-    void storeScreenChanges( const Screen* s );
-    void addScreen( Screen* s );
+    ScreensData *screens;
+    void storeScreenChanges(const Screen *s);
+    void addScreen(Screen *s);
 };
 
 /**
@@ -92,10 +93,9 @@ public:
     * instance is transferred to the caller.
     */
     ScreenEditorExperimentData *parse(const QString &file);
-    void save( const ScreenEditorExperimentData* d, const QString& file );
+    void save(const ScreenEditorExperimentData *d, const QString &file);
     static QString schemaLoc;
 };
-
 }
 }
 #endif

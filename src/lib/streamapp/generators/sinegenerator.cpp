@@ -21,32 +21,33 @@
 
 using namespace streamapp;
 
-SineGenerator::SineGenerator( const unsigned       ac_nChan,
-                              const unsigned       ac_nBufferSize,
-                              const unsigned long  ac_lSampleRate ) :
-  mc_nChan( ac_nChan ),
-  mc_nSize( ac_nBufferSize ),
-  mc_dSampleRate( (double) ac_lSampleRate  ),
-  mv_dSignalAmp( 1.0 ),
-  m_dFrequency( 1.0 ),
-  m_dPhase( 0.0 ),
-  m_dTime( 0.0 ),
-  m_Buf( ac_nChan , ac_nBufferSize , true )
-{}
-
-SineGenerator::~SineGenerator(  )
-{}
-
-const Stream& SineGenerator::Read()
+SineGenerator::SineGenerator(const unsigned ac_nChan,
+                             const unsigned ac_nBufferSize,
+                             const unsigned long ac_lSampleRate)
+    : mc_nChan(ac_nChan),
+      mc_nSize(ac_nBufferSize),
+      mc_dSampleRate((double)ac_lSampleRate),
+      mv_dSignalAmp(1.0),
+      m_dFrequency(1.0),
+      m_dPhase(0.0),
+      m_dTime(0.0),
+      m_Buf(ac_nChan, ac_nBufferSize, true)
 {
-  for( unsigned j = 0 ; j < mc_nSize ; ++j )
-  {
-    ++m_dTime;
-    const double t = m_dTime / mc_dSampleRate;
-    const double d = mv_dSignalAmp * sin( m_dFrequency * t + m_dPhase );
-    for( unsigned i = 0 ; i < mc_nChan ; ++i )
-      m_Buf.mp_Set( i, j, d );
-  }
+}
 
-  return m_Buf;
+SineGenerator::~SineGenerator()
+{
+}
+
+const Stream &SineGenerator::Read()
+{
+    for (unsigned j = 0; j < mc_nSize; ++j) {
+        ++m_dTime;
+        const double t = m_dTime / mc_dSampleRate;
+        const double d = mv_dSignalAmp * sin(m_dFrequency * t + m_dPhase);
+        for (unsigned i = 0; i < mc_nChan; ++i)
+            m_Buf.mp_Set(i, j, d);
+    }
+
+    return m_Buf;
 }

@@ -22,14 +22,10 @@
 
 // include streamapp typedefs..
 
-
-#include "streamapp/typedefs.h"
 #include "streamapp/containers/matrix.h"
+#include "streamapp/typedefs.h"
 
 using namespace streamapp;
-
-
-
 
 class QString;
 
@@ -40,17 +36,9 @@ namespace stimulus
 {
 class DataBlock;
 
-
-
-
 typedef MatrixStorage<QString> PlayMatrix;
-typedef MatrixStorage<DataBlock*> DataBlockMatrix;
-
-
+typedef MatrixStorage<DataBlock *> DataBlockMatrix;
 }
-
 }
-
 
 #endif
-

@@ -50,6 +50,7 @@ class Stimulus
 {
     friend class StimulusFactory;
     friend class ExperimentConfigFileParser;
+
 public:
     /**
      * Constructor.
@@ -58,7 +59,7 @@ public:
      * @param ac_fixParams fixed parameters, cannot be changed
      * @param ac_varParams parameters that can be changed during the experiment
      */
-    Stimulus( const data::StimulusData& data );
+    Stimulus(const data::StimulusData &data);
 
     /**
      * Destructor.
@@ -71,67 +72,67 @@ public:
      */
     const QString GetID() const;
 
-
     /**
      * Get the playmatrix.
      * @return const pointer
      */
-    PlayMatrix* GetPlayMatrix() const
+    PlayMatrix *GetPlayMatrix() const
     {
         return mc_PlayMatrix;
     }
 
-    void SetPlayMatrix(PlayMatrix* pm)
+    void SetPlayMatrix(PlayMatrix *pm)
     {
-        mc_PlayMatrix=pm;
+        mc_PlayMatrix = pm;
     }
 
     /**
      * Get the fixed parameters.
      * @return a pointer
      */
-    const data::StimulusParameters* GetFixParameters() const;
+    const data::StimulusParameters *GetFixParameters() const;
 
     /**
      * Get the variable parameters.
      * It is allowed to change the parameters (eg by adaptiveprocedure).
      * @return a pointer
      */
-    const data::StimulusParameters* GetVarParameters() const;
+    const data::StimulusParameters *GetVarParameters() const;
 
     /**
      * Get the map with datablocks ordered per device.
      * @return unmutable tQStringVectorMap
      */
-    const tQStringVectorMap& GetDeviceDataBlocks() const
+    const tQStringVectorMap &GetDeviceDataBlocks() const
     {
         return m_DeviceDataBlocks;
     }
-
 
     /**
      * Get the map with datablocks ordered per device.
      * Used when a class needs to set a parameter on the devices' datablocks.
      * @return mutable tQStringVectorMap
      */
-    tQStringVectorMap& ModDeviceDataBlocks()
+    tQStringVectorMap &ModDeviceDataBlocks()
     {
         return m_DeviceDataBlocks;
     }
 
-    const data::StimulusData* data() const {return &m_data;}
+    const data::StimulusData *data() const
+    {
+        return &m_data;
+    }
 
-    void ConstructDevDBlockMap( const tDeviceMap& ac_Devices, tDataBlockMap& a_DataBlocks );
+    void ConstructDevDBlockMap(const tDeviceMap &ac_Devices,
+                               tDataBlockMap &a_DataBlocks);
 
 private:
-
     const data::StimulusData m_data;
-    PlayMatrix*  mc_PlayMatrix;
-    tQStringVectorMap m_DeviceDataBlocks; //datablocks ordered per device
-    //const QString id;
+    PlayMatrix *mc_PlayMatrix;
+    tQStringVectorMap m_DeviceDataBlocks; // datablocks ordered per device
+    // const QString id;
 };
-
 }
 }
 
-#endif //STIMULUS_H
+#endif // STIMULUS_H

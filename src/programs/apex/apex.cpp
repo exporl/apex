@@ -26,26 +26,45 @@
 #include "common/debug.h"
 
 #include <QApplication>
+#include <QMessageBox>
 
 #ifdef WIN32
 #include <windows.h>
 #endif
 
+#if defined(Q_OS_ANDROID)
+#include <QtWebView/QtWebView>
+#endif
+
 using namespace apex;
 using namespace cmn;
+
+static void coreDumpCallback(const QString &path)
+{
+    QMessageBox::critical(
+        nullptr, QSL("Apex crashed"),
+        QString::fromLatin1("Apex has crashed, please send %1 to the Apex "
+                            "developers at exporladmin@ls.kuleuven.be. Along "
+                            "with the contents of the details section found in "
+                            "help->about on the Apex main screen.")
+            .arg(path));
+}
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+#if defined(Q_OS_ANDROID)
+    QtWebView::initialize();
+#endif
     app.setApplicationName(applicationName);
     app.setOrganizationName(organizationName);
     app.setOrganizationDomain(organizationDomain);
 
-    enableCoreDumps(QCoreApplication::applicationFilePath());
+    enableCoreDumps(QCoreApplication::applicationFilePath(), coreDumpCallback);
 
-    // make sure apex does not crash if the user tries to close the console window
-    // disabled until we can make sure that apex is still closable if not
-    // responding/crashing
+// make sure apex does not crash if the user tries to close the console window
+// disabled until we can make sure that apex is still closable if not
+// responding/crashing
 #if defined(Q_OS_WIN32) && 0
     HWND console = GetConsoleWindow();
     if (console) {
@@ -56,5 +75,6 @@ int main(int argc, char *argv[])
 #endif
 
     ErrorHandler handler;
-    return ApexControl().exec();
+    ApexControl apexControl;
+    return QCoreApplication::exec();
 }

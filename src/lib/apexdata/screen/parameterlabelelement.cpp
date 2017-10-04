@@ -22,50 +22,57 @@
 #include "parameterlabelelement.h"
 #include "screenelementvisitor.h"
 
-namespace apex {
-namespace data {
+namespace apex
+{
+namespace data
+{
 
-ParameterLabelElement::ParameterLabelElement( const QString& id, ScreenElement* parent ):
-        ParametersContainerElement(id,parent) {
-
+ParameterLabelElement::ParameterLabelElement(const QString &id,
+                                             ScreenElement *parent)
+    : ParametersContainerElement(id, parent)
+{
 }
 
-
-ParameterLabelElement::~ParameterLabelElement() {
-
+ParameterLabelElement::~ParameterLabelElement()
+{
 }
 
-ScreenElement::ElementTypeT ParameterLabelElement::elementType() const {
+ScreenElement::ElementTypeT ParameterLabelElement::elementType() const
+{
     return ParameterLabel;
 }
 
-void ParameterLabelElement::visit( ScreenElementVisitor* v )  {
-    v->visitParameterLabel( this );
+void ParameterLabelElement::visit(ScreenElementVisitor *v)
+{
+    v->visitParameterLabel(this);
 }
 
-void ParameterLabelElement::visit( ScreenElementVisitor* v ) const {
-    v->visitParameterLabel( this );
+void ParameterLabelElement::visit(ScreenElementVisitor *v) const
+{
+    v->visitParameterLabel(this);
 }
 
-
-bool ParameterLabelElement::setParameter(ParameterData d) {
-    if (! CheckExpression(d.expression))
-        throw ApexStringException(QString(
-            tr("Invalid expression %1 in parameterlabel %2")).arg(d.expression).arg(getID()));
+bool ParameterLabelElement::setParameter(ParameterData d)
+{
+    if (!CheckExpression(d.expression))
+        throw ApexStringException(
+            QString(tr("Invalid expression %1 in parameterlabel %2"))
+                .arg(d.expression)
+                .arg(getID()));
     parameterData = d;
 
     return true;
 }
 
-
-ParameterData ParameterLabelElement::getParameter() const {
+ParameterData ParameterLabelElement::getParameter() const
+{
     return parameterData;
 }
 
-bool ParameterLabelElement::operator==(const ParameterLabelElement& other) const
+bool ParameterLabelElement::operator==(const ParameterLabelElement &other) const
 {
-    return  ScreenElement::operator==(other) &&
-            parameterData == other.parameterData;
+    return ScreenElement::operator==(other) &&
+           parameterData == other.parameterData;
 }
 
 } // ns data

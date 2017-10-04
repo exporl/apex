@@ -19,50 +19,47 @@
 
 #include "picturebuttonwidget.h"
 
-#include <QPushButton>
 #include <QPaintEvent>
-#include <QPixmap>
 #include <QPainter>
+#include <QPixmap>
 #include <QPoint>
+#include <QPushButton>
 
-
-
-void PictureButtonWidget::setPixmap(QPixmap p) {
-        pixmap=p;
-}
-
-void PictureButtonWidget::setBorderSize(int s) {
-        bordersize=s;
-}
-
-
-PictureButtonWidget::PictureButtonWidget(QWidget* parent):
-        QPushButton(parent),
-        bordersize(0)
+void PictureButtonWidget::setPixmap(QPixmap p)
 {
-   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    pixmap = p;
 }
 
-
-void PictureButtonWidget::paintEvent(QPaintEvent* e)
+void PictureButtonWidget::setBorderSize(int s)
 {
-        QPushButton::paintEvent(e);
-        QPainter painter(this);
-        QRect rect(QPoint(), size());
-        rect.adjust(bordersize,bordersize,-bordersize,-bordersize);
-        painter.drawPixmap( rect, pixmap, pixmap.rect() );
+    bordersize = s;
 }
 
+PictureButtonWidget::PictureButtonWidget(QWidget *parent)
+    : QPushButton(parent), bordersize(0)
+{
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+}
 
-void PictureButtonWidget::mousePressEvent( QMouseEvent* ev )
+void PictureButtonWidget::paintEvent(QPaintEvent *e)
+{
+    QPushButton::paintEvent(e);
+    QPainter painter(this);
+    QRect rect(QPoint(), size());
+    rect.adjust(bordersize, bordersize, -bordersize, -bordersize);
+    painter.drawPixmap(rect, pixmap, pixmap.rect());
+}
+
+void PictureButtonWidget::mousePressEvent(QMouseEvent *ev)
 {
     QPushButton::mousePressEvent(ev);
 
     const QPoint pi = ev->pos();
     QPointF pf;
-    pf.setX( ((qreal) pi.x()) / this->width() );
-    pf.setY( ((qreal) pi.y()) / this->height() );
-    Q_EMIT mousePressed( pf );
+    pf.setX(((qreal)pi.x()) / this->width());
+    pf.setY(((qreal)pi.y()) / this->height());
+    Q_EMIT mousePressed(pf);
 
-    //qCDebug(APEX_RS, "Clicked PictureButtonWidget at (%f, %f)", pf.x(), pf.y());
+    // qCDebug(APEX_RS, "Clicked PictureButtonWidget at (%f, %f)", pf.x(),
+    // pf.y());
 }

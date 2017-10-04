@@ -19,30 +19,28 @@
 
 #include "iddata.h"
 
-namespace apex {
+namespace apex
+{
 
-namespace data {
+namespace data
+{
 
 IdData::IdData()
 {
 }
 
-
 IdData::~IdData()
 {
 }
 
-const QString& IdData::id() const
+const QString &IdData::id() const
 {
     return identification;
 }
 
-void IdData::setId(const QString& id)
+void IdData::setId(const QString &id)
 {
     identification = id;
 }
-
-
 }
-
 }

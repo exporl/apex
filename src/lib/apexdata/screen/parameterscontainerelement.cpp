@@ -27,9 +27,9 @@ namespace apex
 namespace data
 {
 
-ParametersContainerElement::ParametersContainerElement(
-    const QString& id, ScreenElement* parent )
-        : ScreenElement( id, parent )
+ParametersContainerElement::ParametersContainerElement(const QString &id,
+                                                       ScreenElement *parent)
+    : ScreenElement(id, parent)
 {
 }
 
@@ -37,21 +37,16 @@ ParametersContainerElement::~ParametersContainerElement()
 {
 }
 
-
-bool ParametersContainerElement::CheckExpression(const QString& p_expr)
+bool ParametersContainerElement::CheckExpression(const QString &p_expr)
 {
     if (p_expr.isEmpty())
         return true;
 
-    static QRegExp re( parameterExpressionRegexpData );
+    static QRegExp re(parameterExpressionRegexpData);
     return re.exactMatch(p_expr);
 }
 
-
-const char ParametersContainerElement::parameterExpressionRegexpData[] = "^(-?\\d*\\.?\\d*)\\s*\\*\\s*x\\s*([+-])\\s*(\\d+\\.?\\d*)$";
-
-
-
+const char ParametersContainerElement::parameterExpressionRegexpData[] =
+    "^(-?\\d*\\.?\\d*)\\s*\\*\\s*x\\s*([+-])\\s*(\\d+\\.?\\d*)$";
 }
 }
-

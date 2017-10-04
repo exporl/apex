@@ -20,8 +20,13 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_WAVDEVICEIO_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_WAVSTIMULUS_WAVDEVICEIO_H_
 
+#include "bertha/experimentdata.h"
+
 #include <QObject>
+#include <QSharedPointer>
 #include <QVector>
+
+#include "berthabuffer.h"
 
 class QString;
 class QStringList;
@@ -69,7 +74,6 @@ class ApexProcessorCallback;
 class WavDeviceBufferThread;
 class WavDeviceSoundcardCallback;
 
-
 typedef QVector<double> tGains;
 
 /**
@@ -83,7 +87,8 @@ public:
     /**
      * Constructor.
      */
-    WavDeviceIO(const data::WavDeviceData* const ac_Config );
+    WavDeviceIO(const data::WavDeviceData *const ac_Config,
+                const bertha::ExperimentData &data, bool useBertha);
 
     /**
      * Destructor.
@@ -94,18 +99,17 @@ public:
      * Status flag as returned by SetSoundCard.
      * @see WavDeviceFactory for descriptions.
      */
-    enum mt_eOpenStatus
-        {
-            mc_eOK,
-            mc_eDriverNotExist,
-            mc_eBadInputChannel,
-            mc_eBadOutputChannel,
-            mc_eBadSampleRate,
-            mc_eBadBufferSize,
-            mc_eDefBufferSize,
-            mc_eInitError,
-            mc_eUnknownError
-        };
+    enum mt_eOpenStatus {
+        mc_eOK,
+        mc_eDriverNotExist,
+        mc_eBadInputChannel,
+        mc_eBadOutputChannel,
+        mc_eBadSampleRate,
+        mc_eBadBufferSize,
+        mc_eDefBufferSize,
+        mc_eInitError,
+        mc_eUnknownError
+    };
 
     /**
      * Try to open the soundcard, and initialize everything.
@@ -114,18 +118,22 @@ public:
      * to setup callbacks and buffering etc.
      * @param ac_Config reference to the config details
      * @param driver overrides the driver set in ac_Config
-     * @param ac_bTryDefaultBufferSize if true and the buffersize specified in ac_Config
-     * is invalid for the soundcard, try to open the card with it's default buffersize.
-     * Using this size will always succeed (unless the other parameters are wrong off course).
-     * If the default size was used this way and the card was opened successfully,
+     * @param ac_bTryDefaultBufferSize if true and the buffersize specified in
+     * ac_Config
+     * is invalid for the soundcard, try to open the card with it's default
+     * buffersize.
+     * Using this size will always succeed (unless the other parameters are
+     * wrong off course).
+     * If the default size was used this way and the card was opened
+     * successfully,
      * mc_eDefBufferSize is returned.
      * @param a_sErr set to soundcard specific error code if opening fails
      * @return mc_eOk for success, else use mf_sGetErrorString()
      */
-    mt_eOpenStatus mp_eSetSoundcard( const data::WavDeviceData& ac_Config,
-                                     const QString& driver,
-                                     const QString& card,
-                                     const bool ac_bTryDefaultBufferSize, QString& a_sErr );
+    mt_eOpenStatus mp_eSetSoundcard(const data::WavDeviceData &ac_Config,
+                                    const QString &driver, const QString &card,
+                                    const bool ac_bTryDefaultBufferSize,
+                                    QString &a_sErr);
 
     /**
      * Get the default buffersize for the card that was
@@ -143,7 +151,7 @@ public:
      * @param ac_eReason the error code returned by mp_eSetSoundcard()
      * @return an error string, empty if mc_eOk was passed in
      */
-    static QString sf_sGetErrorString(const mt_eOpenStatus& ac_eReason);
+    static QString sf_sGetErrorString(const mt_eOpenStatus &ac_eReason);
 
     /**
      * Get a list with all soundcard drivernames.
@@ -158,7 +166,7 @@ public:
      * @param ac_Config the data
      * @return a string
      */
-    static QString sf_sGetDriverName(const data::WavDeviceData& ac_Config);
+    static QString sf_sGetDriverName(const data::WavDeviceData &ac_Config);
 
     /**
      * Set the dirvername acquired by
@@ -166,42 +174,46 @@ public:
      * @param ac_sDriverName drivername
      * @param a_Config the data
      */
-    static void sf_SetDriverName(const QString& ac_sDriverName, data::WavDeviceData& a_Config);
-
+    static void sf_SetDriverName(const QString &ac_sDriverName,
+                                 data::WavDeviceData &a_Config);
 
     /**
      * Add an inputstream to the ConnectionManager.
      * @param a_pItem the InputStream
      * @param ac_sID the ID
-     * @param ac_bAddToEofCheck true if the item needs registering for checking EOF
+     * @param ac_bAddToEofCheck true if the item needs registering for checking
+     * EOF
      */
-    void mp_AddConnectItem(PositionableInputStream* a_pItem, const QString& ac_sID, const bool ac_bAddToEofCheck);
+    void mp_AddConnectItem(PositionableInputStream *a_pItem,
+                           const QString &ac_sID, const bool ac_bAddToEofCheck);
 
     /**
      * Add a processor to the ConnectionManager.
      * @param a_pItem the IStreamProcessor
      * @param ac_sID the ID
      */
-    void mp_AddConnectItem(ConnectItem* a_pItem, const QString& ac_sID);
+    void mp_AddConnectItem(ConnectItem *a_pItem, const QString &ac_sID);
 
     /**
      * Add a connection.
      * @param ac_Connection the connect info
-     * @param ac_bMixToFile if true, connection is also routed to fileoutput, if any
+     * @param ac_bMixToFile if true, connection is also routed to fileoutput, if
+     * any
      */
-    void mp_AddConnection(const tConnection& ac_Connection, const bool ac_bMixToFile);
+    void mp_AddConnection(const tConnection &ac_Connection,
+                          const bool ac_bMixToFile);
 
     /**
      * Remove a connection.
      * @param ac_Connection the connect info
      */
-    void mp_RemoveConnection(const tConnection& ac_Connection);
+    void mp_RemoveConnection(const tConnection &ac_Connection);
 
     /**
      * Remove all connection s for an item.
      * @param ac_sID the connect item's ID
      */
-    void mp_RemoveConnection(const QString& ac_sID);
+    void mp_RemoveConnection(const QString &ac_sID);
 
     /**
      * Remove connection and add again with
@@ -210,7 +222,9 @@ public:
      * @param ac_nNewChannel new channel
      * @param ac_bIsFromConnection true for from, false for to connection
      */
-    void mp_RewireConnection(tConnection& a_Connection, const int ac_nNewChannel, const bool ac_bIsFromConnection);
+    void mp_RewireConnection(tConnection &a_Connection,
+                             const int ac_nNewChannel,
+                             const bool ac_bIsFromConnection);
 
     /**
      * Check if all inputs (wavefiles) are connected.
@@ -231,8 +245,7 @@ public:
      * Stop an item from playing.
      * @param ac_sID the ID
      */
-    void mp_PausePlay(const QString& ac_sID);
-
+    void mp_PausePlay(const QString &ac_sID);
 
     /**
      * Start the soundcard.
@@ -264,7 +277,6 @@ public:
      */
     void mf_WaitUntilDone() const;
 
-
     /**
      * Set the output's gain.
      * Sets the gain of the final stage,
@@ -288,8 +300,10 @@ public:
     virtual void Reset();
 
     static void showSoundcardDialog(unsigned sampleRate = 0);
-    static void addPortaudioDevicesToGui(SoundcardsDialog* soundcardsDialog, unsigned sampleRate);
-    static int deviceNameToPortaudioId(const QString& hostApi, const QString& device);
+    static void addPortaudioDevicesToGui(SoundcardsDialog *soundcardsDialog,
+                                         unsigned sampleRate);
+    static int deviceNameToPortaudioId(const QString &hostApi,
+                                       const QString &device);
 
     /**
      * Send all parameters to the matrix mixer
@@ -298,9 +312,9 @@ public:
 
     int GetBlockSize() const;
 
-    static const unsigned     sc_nMaxBusInputs;
-    static const QString  sc_sOutputName;
-    static const QString  sc_sOffLineOutputName;
+    static const unsigned sc_nMaxBusInputs;
+    static const QString sc_sOutputName;
+    static const QString sc_sOffLineOutputName;
 
     /**
      * The size, in samples per channel, of the stream
@@ -310,27 +324,35 @@ public:
      * else there's no point in using a buffer.
      */
     //      static const unsigned     sc_nBufferWriteSize;
-    //      static const unsigned     sc_nMinBufferSize;      //! minimal buffer size, is set to 2*sc_nBufferWriteSize
+    //      static const unsigned     sc_nMinBufferSize;      //! minimal buffer
+    //      size, is set to 2*sc_nBufferWriteSize
 
-    bool                        mv_bContinuous;
-    bool                        mv_bConnectError;
-    EofCheck*                   m_pEofCheck;
-    ConnectionManager*          m_pConnMan;
-    ApexOutputCallback*         m_pMainOutput;
-    ISoundCard*                 m_pCard;
-    //unsigned                    m_nDefaultBufSize;
-    unsigned                    m_soundcardBufferSize;        //! buffer size that the soundcard uses, is not necessarily the same as the buffersize in wavdevicedata
-    unsigned                    m_blockSize;
-    BufferDropCheck*            m_pSoundcardBufferDropCheck;
-    BufferDropCallback*         m_pSoundcardbufferDroppedCallback;
-    BufferDropCallback*         m_pBigBufferDroppedCallback;
-    AudioFormatWriterStream*    m_pSoundcardWriterStream; //only keep this for getting clipped samples..
-    BufferedProcessing*         m_pBuffer;
-    Channel*                    m_pSoundcardWriterCallback;
-    WavDeviceBufferThread*      m_pBufferThread;
-    WavDeviceSoundcardCallback* m_pSoundcardCallback;
+    bool mv_bContinuous;
+    bool mv_bConnectError;
+    EofCheck *m_pEofCheck;
+    ConnectionManager *m_pConnMan;
+    ApexOutputCallback *m_pMainOutput;
+    ISoundCard *m_pCard;
+    // unsigned                    m_nDefaultBufSize;
+    unsigned m_soundcardBufferSize; //! buffer size that the soundcard uses, is
+                                    //! not necessarily the same as the
+                                    //! buffersize in wavdevicedata
+    unsigned m_blockSize;
+    BufferDropCheck *m_pSoundcardBufferDropCheck;
+    BufferDropCallback *m_pSoundcardbufferDroppedCallback;
+    BufferDropCallback *m_pBigBufferDroppedCallback;
+    AudioFormatWriterStream *m_pSoundcardWriterStream; // only keep this for
+                                                       // getting clipped
+                                                       // samples..
+    BufferedProcessing *m_pBuffer;
+    Channel *m_pSoundcardWriterCallback;
+    WavDeviceBufferThread *m_pBufferThread;
+    WavDeviceSoundcardCallback *m_pSoundcardCallback;
+    QSharedPointer<BerthaBuffer> berthaBuffer;
 
-    const data::WavDeviceData&  mc_Config;
+    const data::WavDeviceData &mc_Config;
+    bertha::ExperimentData berthaData;
+    bool useBertha;
 
 Q_SIGNALS:
     void stimulusStarted();
@@ -340,7 +362,7 @@ private:
      * Init callbacks, buffer, file output.
      * @param ac_Config reference to the config details
      */
-    void mp_InitIO( );
+    void mp_InitIO();
 
     /**
      * Delete everything that was not new'd in the ctor.
@@ -355,7 +377,6 @@ private:
      */
     tGains m_gains;
 };
-
 }
 }
 

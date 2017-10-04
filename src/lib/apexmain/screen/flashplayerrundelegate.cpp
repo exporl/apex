@@ -35,34 +35,32 @@
 using namespace apex::rundelegates;
 using namespace apex;
 
-FlashPlayerRunDelegate::FlashPlayerRunDelegate(
-        ExperimentRunDelegate* p_rd,
-        QWidget* parent,
-        const FlashPlayerElement* e ) :
-        ScreenElementRunDelegate(p_rd, e),
-        element( e )
+FlashPlayerRunDelegate::FlashPlayerRunDelegate(ExperimentRunDelegate *p_rd,
+                                               QWidget *parent,
+                                               const FlashPlayerElement *e)
+    : ScreenElementRunDelegate(p_rd, e), element(e)
 {
     fw = new FlashWidget(parent);
     if (!fw->initialized())
-        throw( ApexStringException(
-                tr("FlashPlayer: could not create flash object. "
-                   "Check whether flash is installed on your computer." ) ));
+        throw(ApexStringException(
+            tr("FlashPlayer: could not create flash object. "
+               "Check whether flash is installed on your computer.")));
 
-    //fw->hide();
+    // fw->hide();
     // Get BG color from parent
 
     // FIXME: for some reason this does not get the right color blue/white
     /*QPalette np = parent->palette();
     np.setColor(QPalette::Active, QPalette::Window, element->getBGColor());
-    np.setColor(QPalette::Active, QPalette::Button, apex::gui::sc_DefaultBGColor);
+    np.setColor(QPalette::Active, QPalette::Button,
+    apex::gui::sc_DefaultBGColor);
     fw->setPalette(np);*/
 
     fw->setAutoFillBackground(true);
     // set absolute file path for movie
     setMovie(e->getDefault(), true);
 
-    QObject::connect(fw, SIGNAL(clicked()),
-                     this, SLOT(sendAnsweredSignal()));
+    QObject::connect(fw, SIGNAL(clicked()), this, SLOT(sendAnsweredSignal()));
 
     fw->setShortcut(e->getShortCut());
 }
@@ -71,58 +69,57 @@ FlashPlayerRunDelegate::~FlashPlayerRunDelegate()
 {
 }
 
-const ScreenElement* FlashPlayerRunDelegate::getScreenElement() const
+const ScreenElement *FlashPlayerRunDelegate::getScreenElement() const
 {
     return element;
 }
 
 void FlashPlayerRunDelegate::sendAnsweredSignal()
 {
-    Q_EMIT answered( this );
+    Q_EMIT answered(this);
 }
 
-void FlashPlayerRunDelegate::connectSlots( ScreenRunDelegate* d )
+void FlashPlayerRunDelegate::connectSlots(ScreenRunDelegate *d)
 {
-    connect( this, SIGNAL( answered( ScreenElementRunDelegate* ) ),
-             d, SIGNAL( answered( ScreenElementRunDelegate* ) ) );
+    connect(this, SIGNAL(answered(ScreenElementRunDelegate *)), d,
+            SIGNAL(answered(ScreenElementRunDelegate *)));
     // [Tom] changed from SLOT to SIGNAL
 }
 
-void FlashPlayerRunDelegate::setMovie( const QString& path, const bool startNow )
+void FlashPlayerRunDelegate::setMovie(const QString &path, const bool startNow)
 {
-    QString absPath(
-            ApexTools::addPrefix(path,
-            FilePrefixConvertor::convert(element->prefix())));
+    QString absPath(ApexTools::addPrefix(
+        path, FilePrefixConvertor::convert(element->prefix())));
     absPath = QFileInfo(absPath).absoluteFilePath();
 
-    //qCDebug(APEX_RS, "Flash movie absolute path: %s", qPrintable(absPath));
+    // qCDebug(APEX_RS, "Flash movie absolute path: %s", qPrintable(absPath));
 
-    if( !fw->loadMovie( absPath ) )
-        throw( ApexStringException(
-                tr("FlashPlayer: could not load movie %1").arg( path) ) );
-    if( startNow )
+    if (!fw->loadMovie(absPath))
+        throw(ApexStringException(
+            tr("FlashPlayer: could not load movie %1").arg(path)));
+    if (startNow)
         mp_StartWait();
 }
 
 void FlashPlayerRunDelegate::mp_StartWait()
 {
-   /* apex::ApexControl& ctrl( apex::ApexControl::Get() );
-    const int c_nEvtID = ctrl.mf_nGetScreenElementFinishedEvent();
-    if( c_nEvtID != 0 )
-    {
-        ctrl.mf_pGetControlThread()->mp_StartWaitOnPoll< FlashWidget >( 5000, c_nEvtID,
-                                                                        &FlashWidget::isFinished, this );
-    }*/
+    /* apex::ApexControl& ctrl( apex::ApexControl::Get() );
+     const int c_nEvtID = ctrl.mf_nGetScreenElementFinishedEvent();
+     if( c_nEvtID != 0 )
+     {
+         ctrl.mf_pGetControlThread()->mp_StartWaitOnPoll< FlashWidget >( 5000,
+     c_nEvtID,
+                                                                         &FlashWidget::isFinished,
+     this );
+     }*/
     connect(fw, SIGNAL(finished()), this, SLOT(movieFinished()));
     fw->play();
 }
 
-void FlashPlayerRunDelegate::feedBack(const FeedbackMode& mode)
+void FlashPlayerRunDelegate::feedBack(const FeedbackMode &mode)
 {
-    if (element->getOverrideFeedback())
-    {
-        switch (mode)
-        {
+    if (element->getOverrideFeedback()) {
+        switch (mode) {
         case NoFeedback:
             setMovie(element->getDefault());
             break;
@@ -136,41 +133,39 @@ void FlashPlayerRunDelegate::feedBack(const FeedbackMode& mode)
             setMovie(element->getNegative());
             break;
         };
-    }
-    else
-    {
+    } else {
         ScreenElementRunDelegate::feedBack(mode);
     }
 }
 
-void FlashPlayerRunDelegate::setEnabled( const bool e )
+void FlashPlayerRunDelegate::setEnabled(const bool e)
 {
     bool value = e;
-    if (element->getDisabled())     // never enable if disabled==true
-        value=false;
+    if (element->getDisabled()) // never enable if disabled==true
+        value = false;
 
     fw->setEnabled(e);
 }
 
-void FlashPlayerRunDelegate::setVisible( bool b )
+void FlashPlayerRunDelegate::setVisible(bool b)
 {
-    fw->setVisible( b );
-    if( b )
+    fw->setVisible(b);
+    if (b)
         mp_StartWait();
     else
         fw->stop();
 }
 
-QWidget* FlashPlayerRunDelegate::getWidget()
+QWidget *FlashPlayerRunDelegate::getWidget()
 {
     return fw;
 }
 
-//FIXME!!!
+// FIXME!!!
 void FlashPlayerRunDelegate::movieFinished()
 {
-    //apex::ApexControl& ctrl( apex::ApexControl::Get() );
-    //const int c_nEvtID = ctrl.mf_nGetScreenElementFinishedEvent();
-    //ctrl.mf_pGetControlThread()->mp_StartWaitOnTimer(0,c_nEvtID );
-    //disconnect(fw, SIGNAL(finished()), this, SLOT(movieFinished()));
+    // apex::ApexControl& ctrl( apex::ApexControl::Get() );
+    // const int c_nEvtID = ctrl.mf_nGetScreenElementFinishedEvent();
+    // ctrl.mf_pGetControlThread()->mp_StartWaitOnTimer(0,c_nEvtID );
+    // disconnect(fw, SIGNAL(finished()), this, SLOT(movieFinished()));
 }

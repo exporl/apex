@@ -47,38 +47,40 @@ MultiProcedureParser::MultiProcedureParser()
 {
 }
 
-data::MultiProcedureData* MultiProcedureParser::parse(const QDomElement &base)
+data::MultiProcedureData *MultiProcedureParser::parse(const QDomElement &base)
 {
-    data::MultiProcedureData* config = new data::MultiProcedureData();
+    data::MultiProcedureData *config = new data::MultiProcedureData();
     currentConfig = config;
-    currentConfig->SetID( base.attribute(gc_sID) );
+    currentConfig->SetID(base.attribute(gc_sID));
 
     Q_CHECK_PTR(currentConfig);
 
     // parse different procedures and add to config
-    for (QDomElement currentNode = base.firstChildElement(); !currentNode.isNull();
-            currentNode = currentNode.nextSiblingElement()) {
+    for (QDomElement currentNode = base.firstChildElement();
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement()) {
         const QString tag = currentNode.tagName();
-        if (tag=="parameters") {
-            SetProcedureParameters((QDomElement )currentNode);
-        } else if (tag=="procedure") {
+        if (tag == "parameters") {
+            SetProcedureParameters((QDomElement)currentNode);
+        } else if (tag == "procedure") {
             const QString type = currentNode.attribute(QSL("xsi:type"));
-            data::ProcedureData* data;
+            data::ProcedureData *data;
 
-            //FIXME This code only works for 5 types of procedures. If a user
+            // FIXME This code only works for 5 types of procedures. If a user
             // defines a new plugin with new procedures, this code will fail
             // because no corresponding parser can be found.
             // In fact, there is a class ExperimentParser with a function
             // ParseProcedure that will look for every parser of procedure in a
             // plugin. So this function should be used, but this function is in
             // apexmain, while we are in apexprocedures.
-            //Potential solution: use the same strategy as the function
+            // Potential solution: use the same strategy as the function
             // initProcedures in MultiProcedures does, in more detail: the call
             // to the api. So MultiProcedureParser should have a parent that
-            // exposes an api that contains a method that can return ProcedureData
+            // exposes an api that contains a method that can return
+            // ProcedureData
             // for a given DOM element. So this api should use a function like
             // ParseProcedure of ExperimentParser.
-            ProcedureParsersParent* parser = NULL;
+            ProcedureParsersParent *parser = NULL;
 
             if (type == "apex:constantProcedure") {
                 parser = new ConstantProcedureParser();
@@ -108,7 +110,6 @@ data::MultiProcedureData* MultiProcedureParser::parse(const QDomElement &base)
     return config;
 }
 
-
 bool MultiProcedureParser::trialsValid()
 {
     return true;
@@ -116,13 +117,12 @@ bool MultiProcedureParser::trialsValid()
 
 void MultiProcedureParser::SetProcedureParameters(const QDomElement &p_base)
 {
-    data::MultiProcedureData* param
-            = dynamic_cast<data::MultiProcedureData*>(currentConfig);
+    data::MultiProcedureData *param =
+        dynamic_cast<data::MultiProcedureData *>(currentConfig);
     parser::MultiProcedureDataParser parser;
     parser.Parse(p_base, param);
 
     currentConfig = param;
 }
-
 }
 }

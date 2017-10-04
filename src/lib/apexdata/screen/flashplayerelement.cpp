@@ -26,10 +26,8 @@ namespace apex
 namespace data
 {
 
-FlashPlayerElement::FlashPlayerElement(
-    const QString& id, ScreenElement* parent)
-        : ScreenElement(id, parent),
-        overrideFeedback(false)
+FlashPlayerElement::FlashPlayerElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent), overrideFeedback(false)
 {
 }
 
@@ -57,32 +55,32 @@ QString FlashPlayerElement::getNegative() const
     return negativePath;
 }
 
-void FlashPlayerElement::setDefault(const QString& p)
+void FlashPlayerElement::setDefault(const QString &p)
 {
     defaultPath = p;
 }
 
-void FlashPlayerElement::setPositive(const QString& p)
+void FlashPlayerElement::setPositive(const QString &p)
 {
     positivePath = p;
 }
 
-void FlashPlayerElement::setNegative(const QString& p)
+void FlashPlayerElement::setNegative(const QString &p)
 {
     negativePath = p;
 }
 
-void FlashPlayerElement::setHighlight(const QString& p)
+void FlashPlayerElement::setHighlight(const QString &p)
 {
     highlightPath = p;
 }
 
-void FlashPlayerElement::visit(ScreenElementVisitor* v)
+void FlashPlayerElement::visit(ScreenElementVisitor *v)
 {
     v->visitFlashPlayer(this);
 }
 
-void FlashPlayerElement::visit(ScreenElementVisitor* v) const
+void FlashPlayerElement::visit(ScreenElementVisitor *v) const
 {
     v->visitFlashPlayer(this);
 }
@@ -102,16 +100,14 @@ ScreenElement::ElementTypeT FlashPlayerElement::elementType() const
     return FlashPlayer;
 }
 
-bool FlashPlayerElement::operator==(const FlashPlayerElement& other) const
+bool FlashPlayerElement::operator==(const FlashPlayerElement &other) const
 {
-    return  ScreenElement::operator==(other) &&
-            defaultPath == other.defaultPath &&
-            highlightPath == other.highlightPath &&
-            positivePath == other.positivePath &&
-            negativePath == other.negativePath &&
-            overrideFeedback == other.overrideFeedback;
-}
-
+    return ScreenElement::operator==(other) &&
+           defaultPath == other.defaultPath &&
+           highlightPath == other.highlightPath &&
+           positivePath == other.positivePath &&
+           negativePath == other.negativePath &&
+           overrideFeedback == other.overrideFeedback;
 }
 }
-
+}

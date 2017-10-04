@@ -28,9 +28,8 @@ namespace apex
 namespace data
 {
 
-ButtonElement::ButtonElement( const QString& id, ScreenElement* parent )
-    : ScreenElement( id, parent ),
-      txt( QObject::tr( "<No text set>" ) )
+ButtonElement::ButtonElement(const QString &id, ScreenElement *parent)
+    : ScreenElement(id, parent), txt(QObject::tr("<No text set>"))
 {
 }
 
@@ -38,7 +37,7 @@ ButtonElement::~ButtonElement()
 {
 }
 
-void ButtonElement::setText( const QString& t )
+void ButtonElement::setText(const QString &t)
 {
     txt = t;
 }
@@ -48,14 +47,14 @@ QString ButtonElement::text() const
     return txt;
 }
 
-void ButtonElement::visit( ScreenElementVisitor* v )
+void ButtonElement::visit(ScreenElementVisitor *v)
 {
-    v->visitButton( this );
+    v->visitButton(this);
 }
 
-void ButtonElement::visit( ScreenElementVisitor* v ) const
+void ButtonElement::visit(ScreenElementVisitor *v) const
 {
-    v->visitButton( this );
+    v->visitButton(this);
 }
 
 ScreenElement::ElementTypeT ButtonElement::elementType() const
@@ -63,11 +62,9 @@ ScreenElement::ElementTypeT ButtonElement::elementType() const
     return Button;
 }
 
-bool ButtonElement::operator==(const ButtonElement& other) const
+bool ButtonElement::operator==(const ButtonElement &other) const
 {
     return ScreenElement::operator==(other) && txt == other.txt;
 }
-
 }
 }
-

@@ -28,47 +28,48 @@ class QLabel;
 
 namespace apex
 {
-  namespace data
-  {
-    class ScreenElement;
-  }
+namespace data
+{
+class ScreenElement;
+}
 
-  namespace editor
-  {
-    using data::ScreenElement;
+namespace editor
+{
+using data::ScreenElement;
 
-    /**
-     * The LabelEditorDelegateBase class is a common base class for
-     * ScreenElementEditorDelegate classes that show a label on
-     * screen.  Classes inheriting this class don't necessarily
-     * represent a ScreenElement that is some kind of label, but
-     * e.g. PictureElement uses this class in order to show a label
-     * showing the information about the picture.
-     */
-    class LabelEditorDelegateBase
-      : public QFrame, public ScreenElementEditorDelegate
-    {
-      Q_OBJECT
+/**
+ * The LabelEditorDelegateBase class is a common base class for
+ * ScreenElementEditorDelegate classes that show a label on
+ * screen.  Classes inheriting this class don't necessarily
+ * represent a ScreenElement that is some kind of label, but
+ * e.g. PictureElement uses this class in order to show a label
+ * showing the information about the picture.
+ */
+class LabelEditorDelegateBase : public QFrame,
+                                public ScreenElementEditorDelegate
+{
+    Q_OBJECT
 
-    public:
-      LabelEditorDelegateBase( ScreenElement* e, QWidget* parent, ScreenWidget* w );
-      QFrame* getWidget();
-      virtual const QString getText() const = 0;
+public:
+    LabelEditorDelegateBase(ScreenElement *e, QWidget *parent, ScreenWidget *w);
+    QFrame *getWidget();
+    virtual const QString getText() const = 0;
 
-      bool setProperty( int nr, const QVariant& v );
-    protected:
-      bool eventFilter( QObject* o, QEvent* e );
+    bool setProperty(int nr, const QVariant &v);
 
-      void mouseReleaseEvent( QMouseEvent* ev );
-      void resizeEvent( QResizeEvent* e );
-      void paintEvent( QPaintEvent* e );
-      void resetText();
-    private:
-      QLabel* label;
-      void setLabelGeometry();
-      QFont getFont();
-    };
+protected:
+    bool eventFilter(QObject *o, QEvent *e);
 
-  }
+    void mouseReleaseEvent(QMouseEvent *ev);
+    void resizeEvent(QResizeEvent *e);
+    void paintEvent(QPaintEvent *e);
+    void resetText();
+
+private:
+    QLabel *label;
+    void setLabelGeometry();
+    QFont getFont();
+};
+}
 }
 #endif

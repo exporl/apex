@@ -35,16 +35,14 @@ namespace data
  */
 class APEXDATA_EXPORT WavFilterParameters : public FilterData
 {
-    public:
+public:
+    WavFilterParameters();
+    virtual ~WavFilterParameters();
 
-        WavFilterParameters();
-        virtual ~WavFilterParameters();
-
-        double gain() const;
-        double baseGain() const;
-        bool invertGain() const;
+    double gain() const;
+    double baseGain() const;
+    bool invertGain() const;
 };
-
 
 /**
  * @class WavFaderParameters
@@ -52,39 +50,32 @@ class APEXDATA_EXPORT WavFilterParameters : public FilterData
  */
 class APEXDATA_EXPORT WavFaderParameters : public WavFilterParameters
 {
-    public:
+public:
+    /**
+     * Type of fade.
+     */
+    enum FadeType { INVALID, LINEAR, COSINE };
 
-        /**
-         * Type of fade.
-         */
-        enum FadeType
-        {
-            INVALID,
-            LINEAR,
-            COSINE
-        };
+    WavFaderParameters();
+    ~WavFaderParameters();
 
-        WavFaderParameters();
-        ~WavFaderParameters();
+    /**
+     * Get the fader type.
+     * @return one of @ref FadeType
+     */
+    FadeType type() const;
 
-        /**
-         * Get the fader type.
-         * @return one of @ref FadeType
-         */
-        FadeType type() const;
+    /**
+     * Get the fade length, in mSec.
+     */
+    double length() const;
 
-        /**
-         * Get the fade length, in mSec.
-         */
-        double length() const;
-
-        /**
-         * Get fade direction.
-         * @return true for fadein, false for fadeout
-         */
-        bool isFadeIn() const;
+    /**
+     * Get fade direction.
+     * @return true for fadein, false for fadeout
+     */
+    bool isFadeIn() const;
 };
-
 
 /**
  * @class WavGeneratorParameters
@@ -92,62 +83,59 @@ class APEXDATA_EXPORT WavFaderParameters : public WavFilterParameters
  */
 class APEXDATA_EXPORT WavGeneratorParameters : public WavFilterParameters
 {
-    public:
+public:
+    WavGeneratorParameters();
+    ~WavGeneratorParameters();
 
-        WavGeneratorParameters();
-        ~WavGeneratorParameters();
-
-        /**
-         * Check if generator should be continuous.
-         * @return true if so
-         */
-        bool isContinuous() const;
-        virtual bool isGenerator() const;
-
+    /**
+     * Check if generator should be continuous.
+     * @return true if so
+     */
+    bool isContinuous() const;
+    virtual bool isGenerator() const;
 };
 
 /**
  * @class SinglePulseGeneratorParameters
  * @brief Parameters for SinglePulseGenerator.
  */
-class APEXDATA_EXPORT SinglePulseGeneratorParameters : public WavGeneratorParameters
+class APEXDATA_EXPORT SinglePulseGeneratorParameters
+    : public WavGeneratorParameters
 {
-    public:
+public:
+    SinglePulseGeneratorParameters();
+    ~SinglePulseGeneratorParameters();
 
-        SinglePulseGeneratorParameters();
-        ~SinglePulseGeneratorParameters();
+    /**
+     * Get the pulse width.
+     * @return width in samples
+     */
+    unsigned pulseWidth() const;
 
-        /**
-         * Get the pulse width.
-         * @return width in samples
-         */
-        unsigned pulseWidth() const;
-
-        /**
-         * Get the polarity.
-         * @return true for positive
-         */
-        bool polarity() const;
+    /**
+     * Get the polarity.
+     * @return true for positive
+     */
+    bool polarity() const;
 };
 
 /**
  * @class DataLoopGeneratorParameters
  * @brief Parameters for DataLoopGenerator.
  */
-class APEXDATA_EXPORT DataLoopGeneratorParameters : public WavGeneratorParameters
+class APEXDATA_EXPORT DataLoopGeneratorParameters
+    : public WavGeneratorParameters
 {
-    public:
+public:
+    DataLoopGeneratorParameters();
+    ~DataLoopGeneratorParameters();
 
-        DataLoopGeneratorParameters();
-        ~DataLoopGeneratorParameters();
-
-        /**
-         * Check if the loop should start at a random position.
-         * @return true if so.
-         */
-        bool startsWithRandomJump() const;
-        double jump() const;
-
+    /**
+     * Check if the loop should start at a random position.
+     * @return true if so.
+     */
+    bool startsWithRandomJump() const;
+    double jump() const;
 };
 
 /**
@@ -156,25 +144,22 @@ class APEXDATA_EXPORT DataLoopGeneratorParameters : public WavGeneratorParameter
  */
 class APEXDATA_EXPORT SineGeneratorParameters : public WavGeneratorParameters
 {
-    public:
+public:
+    SineGeneratorParameters();
+    ~SineGeneratorParameters();
 
-        SineGeneratorParameters();
-        ~SineGeneratorParameters();
+    /**
+     * Get the sine's frequency.
+     * @return frequency in Hz.
+     */
+    double frequency() const;
 
-        /**
-         * Get the sine's frequency.
-         * @return frequency in Hz.
-         */
-        double frequency() const;
-
-        /**
-         * Get the sine's phase.
-         * @return phase in milliseconds.
-         */
-        double phase() const;
+    /**
+     * Get the sine's phase.
+     * @return phase in milliseconds.
+     */
+    double phase() const;
 };
-
-
 }
 }
 

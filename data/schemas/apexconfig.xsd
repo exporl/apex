@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-        targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.4/experiment"
-        xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+        targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.5/experiment"
+        xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.5/experiment">
 
         <xs:annotation>
             <xs:documentation xml:lang="en-US">
@@ -79,13 +79,43 @@
                         </xs:complexType>
                     </xs:element>
 
+                    <xs:element name="bertha" type="xs:boolean" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Use bertha for audio processing.
+                                When not provided this defaults to true.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+
+                    <xs:element name="interactive" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="constraints" minOccurs="0">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="constraint" minOccurs="0" maxOccurs="unbounded">
+                                                <xs:complexType>
+                                                    <xs:simpleContent>
+                                                        <xs:extension base="xs:string">
+                                                            <xs:attribute name="expression" type="xs:string"></xs:attribute>
+                                                        </xs:extension>
+                                                    </xs:simpleContent>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                    <xs:unique name="unique-expression">
+                                        <xs:selector xpath="./constraint"/>
+                                        <xs:field xpath="@expression"/>
+                                    </xs:unique>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+
                 </xs:sequence>
                 <xs:attribute name="version" use="required" type="xs:positiveInteger"></xs:attribute>
             </xs:complexType>
-
         </xs:element>
-
-
-
-
     </xs:schema>

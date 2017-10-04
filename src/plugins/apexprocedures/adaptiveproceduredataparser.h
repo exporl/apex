@@ -32,7 +32,7 @@ class AdaptiveProcedureData;
 namespace parser
 {
 
-class AdaptiveProcedureDataParser: public ProcedureDataParser
+class AdaptiveProcedureDataParser : public ProcedureDataParser
 {
 public:
     AdaptiveProcedureDataParser();
@@ -41,19 +41,19 @@ public:
      * Parse the given xml data structure into the given parameters structure
      * does not take ownership of p_parameters
      */
-    void Parse(const QDomElement &p_base, data::AdaptiveProcedureData* p_data);
+    void Parse(const QDomElement &p_base, data::AdaptiveProcedureData *p_data);
 
-    bool CheckParameters(data::AdaptiveProcedureData* data);
+    bool CheckParameters(data::AdaptiveProcedureData *data);
 
 protected:
     virtual bool SetParameter(const QString &tag, const QString &id,
-            const QString &value, const QDomElement &node,
-            data::ProcedureData* data) Q_DECL_OVERRIDE;
+                              const QString &value, const QDomElement &node,
+                              data::ProcedureData *data) Q_DECL_OVERRIDE;
 
 private:
-    bool ParseStepSizes(const QDomElement &p_base, data::AdaptiveProcedureData* data);
+    bool ParseStepSizes(const QDomElement &p_base,
+                        data::AdaptiveProcedureData *data);
 };
-
 }
 }
 

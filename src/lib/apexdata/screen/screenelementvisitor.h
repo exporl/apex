@@ -83,49 +83,48 @@ class HtmlElement;
  */
 class APEXDATA_EXPORT ScreenElementVisitor
 {
-    public:
-        virtual ~ScreenElementVisitor();
+public:
+    virtual ~ScreenElementVisitor();
 
-        virtual void visitAnswerLabel(const AnswerLabelElement* e);
-        virtual void visitArcLayout(const ArcLayoutElement* e);
-        virtual void visitButton(const ButtonElement* e);
-        virtual void visitMatrix(const MatrixElement* e);
-        virtual void visitSpinBox(const SpinBoxElement* e);
-        virtual void visitSlider(const SliderElement* e);
-        virtual void visitCheckBox(const CheckBoxElement* e);
-        virtual void visitEmpty(const EmptyElement* e);
-        virtual void visitFlashPlayer(const FlashPlayerElement* e);
-        virtual void visitGridLayout(const GridLayoutElement* e);
-        virtual void visitLabel(const LabelElement* e);
-        virtual void visitParameterList(const ParameterListElement* e);
-        virtual void visitParameterLabel(const ParameterLabelElement* e);
-        virtual void visitPicture(const PictureElement* e);
-        virtual void visitPictureLabel(const PictureLabelElement* e);
-        virtual void visitTextEdit(const TextEditElement* e);
-        virtual void visitHtml(const HtmlElement* e);
-        virtual void visitTwoPartLayout(const TwoPartLayoutElement* e);
+    virtual void visitAnswerLabel(const AnswerLabelElement *e);
+    virtual void visitArcLayout(const ArcLayoutElement *e);
+    virtual void visitButton(const ButtonElement *e);
+    virtual void visitMatrix(const MatrixElement *e);
+    virtual void visitSpinBox(const SpinBoxElement *e);
+    virtual void visitSlider(const SliderElement *e);
+    virtual void visitCheckBox(const CheckBoxElement *e);
+    virtual void visitEmpty(const EmptyElement *e);
+    virtual void visitFlashPlayer(const FlashPlayerElement *e);
+    virtual void visitGridLayout(const GridLayoutElement *e);
+    virtual void visitLabel(const LabelElement *e);
+    virtual void visitParameterList(const ParameterListElement *e);
+    virtual void visitParameterLabel(const ParameterLabelElement *e);
+    virtual void visitPicture(const PictureElement *e);
+    virtual void visitPictureLabel(const PictureLabelElement *e);
+    virtual void visitTextEdit(const TextEditElement *e);
+    virtual void visitHtml(const HtmlElement *e);
+    virtual void visitTwoPartLayout(const TwoPartLayoutElement *e);
 
-        virtual void visitAnswerLabel(AnswerLabelElement* e);
-        virtual void visitArcLayout(ArcLayoutElement* e);
-        virtual void visitButton(ButtonElement* e);
-        virtual void visitMatrix(MatrixElement* e);
-        virtual void visitSpinBox(SpinBoxElement* e);
-        virtual void visitSlider(SliderElement* e);
-        virtual void visitCheckBox(CheckBoxElement* e);
-        virtual void visitEmpty(EmptyElement* e);
-        virtual void visitFlashPlayer(FlashPlayerElement* e);
-        virtual void visitGridLayout(GridLayoutElement* e);
-        virtual void visitLabel(LabelElement* e);
-        virtual void visitParameterList(ParameterListElement* e);
-        virtual void visitParameterLabel(ParameterLabelElement* e);
-        virtual void visitPicture(PictureElement* e);
-        virtual void visitPictureLabel(PictureLabelElement* e);
-        virtual void visitTextEdit(TextEditElement* e);
-        virtual void visitHtml(HtmlElement* e);
-        virtual void visitTwoPartLayout(TwoPartLayoutElement* e);
+    virtual void visitAnswerLabel(AnswerLabelElement *e);
+    virtual void visitArcLayout(ArcLayoutElement *e);
+    virtual void visitButton(ButtonElement *e);
+    virtual void visitMatrix(MatrixElement *e);
+    virtual void visitSpinBox(SpinBoxElement *e);
+    virtual void visitSlider(SliderElement *e);
+    virtual void visitCheckBox(CheckBoxElement *e);
+    virtual void visitEmpty(EmptyElement *e);
+    virtual void visitFlashPlayer(FlashPlayerElement *e);
+    virtual void visitGridLayout(GridLayoutElement *e);
+    virtual void visitLabel(LabelElement *e);
+    virtual void visitParameterList(ParameterListElement *e);
+    virtual void visitParameterLabel(ParameterLabelElement *e);
+    virtual void visitPicture(PictureElement *e);
+    virtual void visitPictureLabel(PictureLabelElement *e);
+    virtual void visitTextEdit(TextEditElement *e);
+    virtual void visitHtml(HtmlElement *e);
+    virtual void visitTwoPartLayout(TwoPartLayoutElement *e);
 };
 }
 }
-
 
 #endif

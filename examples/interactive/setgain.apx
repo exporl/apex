@@ -152,10 +152,9 @@
   </stimuli>
   <connections/>
   <interactive>
-    <entry type="string" default="" description="subject ID"/>
+    <entry type="string" default="" description="subject ID" constraint="[a-zA-Z][0-3][0-9][a-zA-Z][0-9][0-9][a-zA-Z]"/>
     <entry type="int" expression="apex:apex/devices/device/gain" default="0" description="output gain"/>
     <entry type="int" expression="apex:apex/procedure/parameters/presentations" default="2" description="presentations"/>
-    <entry type="string" expression="invalid" default="invalid" description="invalid"/>
     <entry type="string" default="" description="No Expression"/>
     <entry type="int" expression="apex:apex/screens/reinforcement/feedback/@length" default="300" description="feedback length"/>
     <entry type="string" expression="apex:apex/screens/screen/gridLayout/button[1]/text" default="knop 1" description="button 1 text"/>

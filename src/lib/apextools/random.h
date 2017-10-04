@@ -32,11 +32,11 @@
 namespace apex
 {
 
-class APEXTOOLS_EXPORT Random: public cmn::Random
+class APEXTOOLS_EXPORT Random : public cmn::Random
 {
 public:
     Random();
-    Random(const Random& other);
+    Random(const Random &other);
     Random(quint64 seed);
 
     unsigned nextUInt();
@@ -51,4 +51,3 @@ private:
 } // namespace cmn
 
 #endif
-

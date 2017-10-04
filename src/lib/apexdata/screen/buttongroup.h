@@ -36,60 +36,59 @@ namespace data
  */
 class APEXDATA_EXPORT ButtonGroup
 {
-    public:
-        /**
-         * Constructor.
-         * @param ac_sID a unique identifier
-         */
-        ButtonGroup(const QString& ac_sID);
+public:
+    /**
+     * Constructor.
+     * @param ac_sID a unique identifier
+     */
+    ButtonGroup(const QString &ac_sID);
 
-        /**
-         * Used to iterate the button ids. I know it looks strange but M$VC
-         * cannot handle template inheritance across libraries...
-         */
-        struct APEXDATA_EXPORT const_iterator
+    /**
+     * Used to iterate the button ids. I know it looks strange but M$VC
+     * cannot handle template inheritance across libraries...
+     */
+    struct APEXDATA_EXPORT const_iterator {
+        const_iterator(const QList<QString>::const_iterator &it);
+        const_iterator()
         {
-            const_iterator(const QList<QString>::const_iterator& it);
-            const_iterator() {}
-
-            const_iterator& operator=(const QList<QString>::const_iterator& it);
-            const_iterator& operator++(); //prefix++
-            const_iterator  operator++(int); //postfix++
-            bool operator==(const const_iterator& other) const;
-            bool operator!=(const const_iterator& other) const;
-            const QString& operator*() const;
-
-            private:
-
-                QList<QString>::const_iterator it;
-        };
-
-        QList<QString>::const_iterator begin() const;
-        QList<QString>::const_iterator end() const;
-        int size() const;
-        void append(const QString& id);
-
-        const QString getID() const
-        {
-            return id;
         }
 
-        /**
-         * Check whether the buttongroup contains an element with
-         * the given ID
-         * @param ac_sID
-         */
-        bool IsElement(const QString& ac_sID) const;
+        const_iterator &operator=(const QList<QString>::const_iterator &it);
+        const_iterator &operator++();   // prefix++
+        const_iterator operator++(int); // postfix++
+        bool operator==(const const_iterator &other) const;
+        bool operator!=(const const_iterator &other) const;
+        const QString &operator*() const;
 
-        bool operator==(const ButtonGroup& other) const;
-        bool operator!=(const ButtonGroup& other) const;
     private:
+        QList<QString>::const_iterator it;
+    };
 
-        QList<QString> buttonIds;
+    QList<QString>::const_iterator begin() const;
+    QList<QString>::const_iterator end() const;
+    int size() const;
+    void append(const QString &id);
 
-        const QString id;
+    const QString getID() const
+    {
+        return id;
+    }
+
+    /**
+     * Check whether the buttongroup contains an element with
+     * the given ID
+     * @param ac_sID
+     */
+    bool IsElement(const QString &ac_sID) const;
+
+    bool operator==(const ButtonGroup &other) const;
+    bool operator!=(const ButtonGroup &other) const;
+
+private:
+    QList<QString> buttonIds;
+
+    const QString id;
 };
-
 }
 }
 

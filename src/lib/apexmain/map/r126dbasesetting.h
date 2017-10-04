@@ -22,22 +22,22 @@
 
 #include <qstring.h>
 
-namespace r126{
+namespace r126
+{
 
-    //! supported R126 Database version mubers
-  enum eR126VersionNumber
-  {
-    UNKNOWNR126VERSION  = 0,
-    R126VERSION_1_3     = 1,
-    R126VERSION_2_0     = 2,
-    R126VERSION_2_1     = 3
-  };
+//! supported R126 Database version mubers
+enum eR126VersionNumber {
+    UNKNOWNR126VERSION = 0,
+    R126VERSION_1_3 = 1,
+    R126VERSION_2_0 = 2,
+    R126VERSION_2_1 = 3
+};
 
-    //!contains version number and server name
-    //!creates the connection string
-  class R126DataBaseSettings
-  {
-  public:
+//! contains version number and server name
+//! creates the connection string
+class R126DataBaseSettings
+{
+public:
     R126DataBaseSettings()
     {
     }
@@ -45,62 +45,68 @@ namespace r126{
     {
     }
 
-    void mf_Set( const eR126VersionNumber ac_eVersion, const QString& ac_sServer )
+    void mf_Set(const eR126VersionNumber ac_eVersion, const QString &ac_sServer)
     {
-      m_eVersion = ac_eVersion;
-      m_sServer  = ac_sServer;
-      mf_UpdateData();
+        m_eVersion = ac_eVersion;
+        m_sServer = ac_sServer;
+        mf_UpdateData();
     }
 
     const eR126VersionNumber mf_eGetVersion() const
     {
-      return m_eVersion;
+        return m_eVersion;
     }
 
-    const QString& mf_sGetServerName() const
+    const QString &mf_sGetServerName() const
     {
-      return m_sServer;
+        return m_sServer;
     }
 
-      //!returns empty string if version is not supported
-    const QString& mf_sGetConnectionString() const
+    //! returns empty string if version is not supported
+    const QString &mf_sGetConnectionString() const
     {
-      return m_sConnectionString;
+        return m_sConnectionString;
     }
 
-  private:
+private:
     void mf_UpdateData()
     {
-      m_sConnectionString = "";
-      switch( m_eVersion )
-      {
+        m_sConnectionString = "";
+        switch (m_eVersion) {
         case R126VERSION_1_3:
-          //User = sa; No pass
-          m_sConnectionString = "Provider=SQLOLEDB.1;Persist Security Info = False;"
-            "User ID = sa;Initial Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data Source=";
-          m_sConnectionString += m_sServer;
-          break;
+            // User = sa; No pass
+            m_sConnectionString =
+                "Provider=SQLOLEDB.1;Persist Security Info = False;"
+                "User ID = sa;Initial Catalog=NucleusR126_Database;Network "
+                "Library=DBMSSOCN;Data Source=";
+            m_sConnectionString += m_sServer;
+            break;
         case R126VERSION_2_0:
-          //User = sa; No pass
-          m_sConnectionString = "Provider=SQLOLEDB.1;Persist Security Info = False;"
-            "User ID = NucleusR126;Password=wallaby;Initial Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data Source=";
-          m_sConnectionString += m_sServer;
-          break;
+            // User = sa; No pass
+            m_sConnectionString =
+                "Provider=SQLOLEDB.1;Persist Security Info = False;"
+                "User ID = NucleusR126;Password=wallaby;Initial "
+                "Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data "
+                "Source=";
+            m_sConnectionString += m_sServer;
+            break;
 
         case R126VERSION_2_1:
-          //User = NucleusR126; Pass = wallaby
-          m_sConnectionString = "Provider=SQLOLEDB.1;Persist Security Info = False;"
-            "User ID = NucleusR126;Password=wallaby;Initial Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data Source=";
-          m_sConnectionString += m_sServer;
-          m_sConnectionString += "\\COCHLEAR";
-          break;
-      }
+            // User = NucleusR126; Pass = wallaby
+            m_sConnectionString =
+                "Provider=SQLOLEDB.1;Persist Security Info = False;"
+                "User ID = NucleusR126;Password=wallaby;Initial "
+                "Catalog=NucleusR126_Database;Network Library=DBMSSOCN;Data "
+                "Source=";
+            m_sConnectionString += m_sServer;
+            m_sConnectionString += "\\COCHLEAR";
+            break;
+        }
     }
     eR126VersionNumber m_eVersion;
-    QString            m_sServer;
-    QString            m_sConnectionString;
-  };
-
+    QString m_sServer;
+    QString m_sConnectionString;
+};
 }
 
 #endif //#ifndef _EXPORL_SRC_LIB_APEXMAIN_MAP_R126DBASESETTING_H_

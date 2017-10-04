@@ -47,13 +47,12 @@ class MapFactory
 public:
     MapFactory();
 
-    virtual data::ApexMap* GetMap(const QDomElement &p_base);
+    virtual data::ApexMap *GetMap(const QDomElement &p_base);
 
     virtual ~MapFactory();
 
-    static data::ApexMap* R126ToApexMap(const R126NucleusMAPRecord* p_map);
+    static data::ApexMap *R126ToApexMap(const R126NucleusMAPRecord *p_map);
 };
-
 }
 
 #endif

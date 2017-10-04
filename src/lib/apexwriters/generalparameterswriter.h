@@ -47,9 +47,8 @@ public:
      *@return the created element
      */
     static QDomElement addElement(QDomDocument *doc,
-            const data::GeneralParameters& data);
+                                  const data::GeneralParameters &data);
 };
-
 }
 }
 

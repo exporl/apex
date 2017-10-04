@@ -1,0 +1,47 @@
+package coh;
+
+option optimize_for = LITE_RUNTIME;
+
+message ProtoSlaveCommand {
+    message MetaData {
+        required string key = 1;
+        optional string stringvalue = 2;
+        optional sint32 intvalue = 3;
+        optional double doublevalue = 4;
+        optional bool boolvalue = 5;
+    }
+
+    message Stimulus {
+        required bool trigger = 1;
+    }
+
+    message Null {
+        required sint32 period_cycles = 1;
+    }
+
+    message Biphasic {
+        required sint32 active_electrode = 1;
+        required sint32 reference_electrode = 2;
+        required sint32 period_cycles = 3;
+        required int32 current_level = 4;
+        required sint32 phase_width_cycles = 5;
+        required sint32 phase_gap_cycles = 6;
+    }
+
+    message Codacs {
+        required sint32 amplitude = 1;
+        required sint32 period_cycles = 2;
+    }
+
+    message Sequence {
+        required int32 number_repeats = 1;
+        repeated ProtoSlaveCommand command = 2;
+    }
+
+    optional Stimulus stimulus = 1;
+    optional Null null = 2;
+    optional Biphasic biphasic = 3;
+    optional Codacs codacs = 4;
+    optional Sequence sequence = 5;
+    optional MetaData metadata = 6;
+}

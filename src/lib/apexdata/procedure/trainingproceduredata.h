@@ -29,19 +29,18 @@ namespace data
 /**
 @author Tom Francart,,,
 */
-    class APEXDATA_EXPORT TrainingProcedureData : public ProcedureData
+class APEXDATA_EXPORT TrainingProcedureData : public ProcedureData
 {
-    public:
-        TrainingProcedureData();
+public:
+    TrainingProcedureData();
 
-        ~TrainingProcedureData();
+    ~TrainingProcedureData();
 
-        virtual Type type() const;
-        virtual QString name() const;
+    virtual Type type() const;
+    virtual QString name() const;
 
-    private:
+private:
 };
-
 }
 }
 

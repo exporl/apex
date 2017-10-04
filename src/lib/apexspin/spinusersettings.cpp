@@ -19,32 +19,32 @@
 
 #include "spinusersettings.h"
 
+#include "apextools/exceptions.h"
+
 #include <cmath>
 
 using namespace spin::data;
 
 // Options =====================================================================
 
-Options::Options() :
-    noiseStops(false),
-    personBeforeScreen(INVALID_PERSON),
-    timeBeforeFirstStimulus(0),
-    reinforcement(true),
-    showResults(true),
-    autoSaveResults(false),
-    nbResponsesThatCount(0),
-    trialOrder(ORDER_INVALID),
-    soundCard(DefaultSoundcard)
+Options::Options()
+    : noiseStops(false),
+      personBeforeScreen(INVALID_PERSON),
+      timeBeforeFirstStimulus(0),
+      reinforcement(true),
+      showResults(true),
+      autoSaveResults(false),
+      nbResponsesThatCount(0),
+      trialOrder(ORDER_INVALID),
+      soundCard(DefaultSoundcard),
+      generatePluginProcedure(true)
 {
 }
 
 // SpeakerLevels ===============================================================
 
-SpeakerLevels::SpeakerLevels() :
-    noise(0),
-    speech(0),
-    hasNoise(false),
-    hasSpeech(false)
+SpeakerLevels::SpeakerLevels()
+    : noise(0), speech(0), hasNoise(false), hasSpeech(false)
 {
 }
 
@@ -77,10 +77,8 @@ bool SpeakerLevels::bothEnabled() const
 
 // Procedure ===================================================================
 
-Procedure::Procedure():
-    type(INVALID_PROCEDURE),
-    adaptingMaterial(NO_MATERIAL),
-    repeatFirst(true)
+Procedure::Procedure()
+    : type(INVALID_PROCEDURE), adaptingMaterial(NO_MATERIAL), repeatFirst(true)
 {
 }
 
@@ -137,6 +135,11 @@ SoundCard SpinUserSettings::soundCard() const
 void SpinUserSettings::setSoundCard(SoundCard value)
 {
     options.soundCard = value;
+}
+
+void SpinUserSettings::setGeneratePluginProcedure(bool value)
+{
+    options.generatePluginProcedure = value;
 }
 
 void SpinUserSettings::setSubjectName(const QString &subject)
@@ -228,7 +231,7 @@ void SpinUserSettings::setPersonBeforeScreen(Person person)
     options.personBeforeScreen = person;
 }
 
-void SpinUserSettings::setCustomScreen(const QString& screen)
+void SpinUserSettings::setCustomScreen(const QString &screen)
 {
     options.customScreen = screen;
 }
@@ -267,7 +270,7 @@ void SpinUserSettings::setNbResponsesThatCount(uint nb)
 
 void SpinUserSettings::setTrialOrder(Order order)
 {
-    Q_ASSERT(order == ORDER_RANDOM ||  order == ORDER_SEQUENTIAL);
+    Q_ASSERT(order == ORDER_RANDOM || order == ORDER_SEQUENTIAL);
 
     options.trialOrder = order;
 }
@@ -284,6 +287,11 @@ void SpinUserSettings::setNoiseJump(int channel, double jump)
     options.noiseJumps.insert(channel, jump);
 }
 
+bool SpinUserSettings::generatePluginProcedure() const
+{
+    return options.generatePluginProcedure;
+}
+
 void SpinUserSettings::setLockSpeechlevels(bool lock)
 {
     speakers.lockSpeech = lock;
@@ -294,37 +302,38 @@ void SpinUserSettings::setLockNoiselevels(bool lock)
     speakers.lockNoise = lock;
 }
 
-const QString& SpinUserSettings::subjectName() const
+const QString &SpinUserSettings::subjectName() const
 {
     return info.subjectName;
 }
 
-const QString& SpinUserSettings::speechmaterial() const
+const QString &SpinUserSettings::speechmaterial() const
 {
     return materials.speechmaterial;
 }
 
-const QString& SpinUserSettings::speechcategory() const
+const QString &SpinUserSettings::speechcategory() const
 {
     return materials.speechcategory;
 }
 
-const QString& SpinUserSettings::noisematerial() const
+const QString &SpinUserSettings::noisematerial() const
 {
     return materials.noisematerial;
 }
 
-const QString& SpinUserSettings::list() const
+const QString &SpinUserSettings::list() const
 {
     return materials.list;
 }
 
-const SpeakerType& SpinUserSettings::speakerType() const
+const SpeakerType &SpinUserSettings::speakerType() const
 {
     return speakers.type;
 }
 
-const SpeakerLevels& SpinUserSettings::speakerLevels(Headphone::Speaker which) const
+const SpeakerLevels &
+SpinUserSettings::speakerLevels(Headphone::Speaker which) const
 {
     Q_ASSERT(speakers.type == HEADPHONE);
     Q_ASSERT(which == Headphone::LEFT || which == Headphone::RIGHT);
@@ -349,19 +358,19 @@ QList<uint> SpinUserSettings::speakerAngles() const
     return speakers.freeField.angles();
 }
 
-const ProcedureType& SpinUserSettings::procedureType() const
+const ProcedureType &SpinUserSettings::procedureType() const
 {
     return procedure.type;
 }
 
-const Material& SpinUserSettings::adaptingMaterial() const
+const Material &SpinUserSettings::adaptingMaterial() const
 {
     Q_ASSERT(procedure.type == ADAPTIVE);
 
     return procedure.adaptingMaterial;
 }
 
-const QMap<uint, double>& SpinUserSettings::stepsizes() const
+const QMap<uint, double> &SpinUserSettings::stepsizes() const
 {
     Q_ASSERT(procedure.type == ADAPTIVE);
 
@@ -380,12 +389,12 @@ bool SpinUserSettings::noiseStopsBetweenTrials() const
     return options.noiseStops;
 }
 
-const Person& SpinUserSettings::personBeforeScreen() const
+const Person &SpinUserSettings::personBeforeScreen() const
 {
     return options.personBeforeScreen;
 }
 
-const QString& SpinUserSettings::customScreen() const
+const QString &SpinUserSettings::customScreen() const
 {
     return options.customScreen;
 }
@@ -432,7 +441,7 @@ uint SpinUserSettings::numberOfChannelsInUse() const
     if (speakers.type == FREE_FIELD)
         return speakers.freeField.numberOfChannelsInUse();
 
-    qFatal("unknown speaker type");
+    throw ApexStringException(tr("unknown speaker type"));
 
     // make the compiler happy
     return 0;
@@ -440,17 +449,16 @@ uint SpinUserSettings::numberOfChannelsInUse() const
 
 double SpinUserSettings::noiseJump(int channel) const
 {
-    Q_ASSERT((speakerType() == FREE_FIELD &&
-                speakerLevels(channel).hasNoise) ||
+    Q_ASSERT((speakerType() == FREE_FIELD && speakerLevels(channel).hasNoise) ||
              (speakerType() != FREE_FIELD &&
-                speakerLevels((Headphone::Speaker)channel).hasNoise));
+              speakerLevels((Headphone::Speaker)channel).hasNoise));
 
     return options.noiseJumps[channel];
 }
 
 double SpinUserSettings::dBAOfInternalRms() const
 {
-    //return calibration.dBAOfInternalRms();TODO
+    // return calibration.dBAOfInternalRms();TODO
     return 60.0;
 }
 
@@ -459,16 +467,16 @@ double SpinUserSettings::snr() const
     SpeakerLevels levels;
 
     if (speakerType() == data::HEADPHONE) {
-        //look for a speaker with levels
+        // look for a speaker with levels
         SpeakerLevels levelsL = speakerLevels(Headphone::LEFT);
         SpeakerLevels levelsR = speakerLevels(Headphone::RIGHT);
 
         if (levelsL.bothEnabled() && levelsR.bothEnabled()) {
             if (levelsL.noise != levelsR.noise)
-                qFatal("Invalid noise configuration");  // FIXME: show error message
+                throw ApexStringException(tr("Invalid noise configuration"));
 
-            if ( levelsL.speech != levelsR.speech)
-                qFatal("Invalid speech configuration");  // FIXME: show error message
+            if (levelsL.speech != levelsR.speech)
+                throw ApexStringException(tr("Invalid speech configuration"));
         }
 
         if (levelsL.bothEnabled())
@@ -480,42 +488,40 @@ double SpinUserSettings::snr() const
         if (levelsR.hasSpeech & levelsL.hasNoise & !levelsR.hasNoise)
             return levelsR.speech - levelsL.noise;
 
+        throw ApexStringException(
+            tr("called without a suitable channel with both speech and noise"));
+        return 0; // keep compiler happy
 
-        qFatal("%s: called without a suitable channel with both speech and noise",
-                Q_FUNC_INFO);
-        return 0;           // keep compiler happy
+    } else { // free field
+        double speechLevelLin = 0;
+        int speechCount = 0;
+        double noiseLevelLin = 0;
+        int noiseCount = 0;
 
-    } else { //free field
-        double speechLevelLin=0;
-        int speechCount=0;
-        double noiseLevelLin=0;
-        int noiseCount=0;
-
-        //look for a speaker with levels
+        // look for a speaker with levels
         Q_FOREACH (uint angle, speakerAngles()) {
             levels = speakerLevels(angle);
 
             if (levels.hasSpeech) {
                 speechCount++;
-                speechLevelLin += pow(10, levels.speech/10);
+                speechLevelLin += pow(10, levels.speech / 10);
             }
 
             if (levels.hasNoise) {
                 noiseCount++;
-                noiseLevelLin += pow(10, levels.noise/10);
+                noiseLevelLin += pow(10, levels.noise / 10);
             }
         }
 
         if (procedureType() == ADAPTIVE) {
-            if ( adaptingMaterial() == data::SPEECH && speechCount!=1)
-                qFatal("SNR not defined");
-            if ( adaptingMaterial() == data::NOISE && noiseCount!=1)
-                qFatal("SNR not defined");
+            if (adaptingMaterial() == data::SPEECH && speechCount != 1)
+                throw ApexStringException(tr("SNR not defined"));
+            if (adaptingMaterial() == data::NOISE && noiseCount != 1)
+                throw ApexStringException(tr("SNR not defined"));
         }
 
-        return 10*log10(speechLevelLin/noiseLevelLin);
+        return 10 * log10(speechLevelLin / noiseLevelLin);
     }
-
 }
 
 double SpinUserSettings::speechLevel() const
@@ -523,13 +529,13 @@ double SpinUserSettings::speechLevel() const
     SpeakerLevels levels;
 
     if (speakerType() == data::HEADPHONE) {
-        //look for a speaker with levels
+        // look for a speaker with levels
         SpeakerLevels levelsL = speakerLevels(Headphone::LEFT);
         SpeakerLevels levelsR = speakerLevels(Headphone::RIGHT);
 
-        if (levelsL.hasSpeech && levelsR.hasSpeech
-                && ( levelsL.speech != levelsR.speech)) {
-                qFatal("Invalid speech configuration");  // FIXME: show error message
+        if (levelsL.hasSpeech && levelsR.hasSpeech &&
+            (levelsL.speech != levelsR.speech)) {
+            throw ApexStringException(tr("Invalid speech configuration"));
         }
 
         if (levelsL.hasSpeech)
@@ -537,25 +543,25 @@ double SpinUserSettings::speechLevel() const
         if (levelsR.hasSpeech)
             return levelsR.speech;
 
-        qFatal("%s: called without a suitable channel with both speech and noise",
-                Q_FUNC_INFO);
-        return 0;           // keep compiler happy
+        throw ApexStringException(
+            tr("called without a suitable channel with both speech and noise"));
+        return 0; // keep compiler happy
 
-    } else { //free field
-        double speechLevelLin=0;
-        int speechCount=0;
+    } else { // free field
+        double speechLevelLin = 0;
+        int speechCount = 0;
 
-        //look for a speaker with levels
+        // look for a speaker with levels
         Q_FOREACH (uint angle, speakerAngles()) {
             levels = speakerLevels(angle);
 
             if (levels.hasSpeech) {
                 speechCount++;
-                speechLevelLin += pow(10, levels.speech/10);
+                speechLevelLin += pow(10, levels.speech / 10);
             }
         }
 
-        return 10*log10(speechLevelLin);
+        return 10 * log10(speechLevelLin);
     }
 }
 
@@ -564,35 +570,35 @@ bool SpinUserSettings::snrDefined() const
     SpeakerLevels levels;
 
     if (speakerType() == data::HEADPHONE) {
-        //look for a speaker with levels
+        // look for a speaker with levels
         SpeakerLevels levelsL = speakerLevels(Headphone::LEFT);
         SpeakerLevels levelsR = speakerLevels(Headphone::RIGHT);
 
-        if (levelsR.hasSpeech && levelsR.hasNoise &&
-                levelsL.hasSpeech && levelsL.hasNoise) {
-            if ( (levelsL.speech-levelsL.noise) !=
-                    (levelsR.speech-levelsR.noise) )
+        if (levelsR.hasSpeech && levelsR.hasNoise && levelsL.hasSpeech &&
+            levelsL.hasNoise) {
+            if ((levelsL.speech - levelsL.noise) !=
+                (levelsR.speech - levelsR.noise))
                 return false;
             else
                 return true;
         }
 
-        if ( (levelsR.hasSpeech && levelsR.hasNoise)  ||
-                (levelsL.hasSpeech && levelsL.hasNoise))
+        if ((levelsR.hasSpeech && levelsR.hasNoise) ||
+            (levelsL.hasSpeech && levelsL.hasNoise))
             return true;
 
         return false;
 
-    } else { //free field
+    } else { // free field
         bool foundLevels = false;
         double currentSNR = -120;
 
-        //look for a speaker with levels
-        Q_FOREACH(uint angle, speakerAngles()) {
+        // look for a speaker with levels
+        Q_FOREACH (uint angle, speakerAngles()) {
             levels = speakerLevels(angle);
 
             if (levels.hasSpeech && levels.hasNoise) {
-                double newSNR = levels.speech-levels.noise;
+                double newSNR = levels.speech - levels.noise;
                 if (!foundLevels) {
                     foundLevels = true;
                     currentSNR = newSNR;
@@ -610,19 +616,17 @@ bool SpinUserSettings::snrDefined() const
     }
 }
 
-
 bool SpinUserSettings::hasNoise() const
 {
-    if (speakerType() == data::HEADPHONE)
-    {
-        //look for a speaker with levels
+    if (speakerType() == data::HEADPHONE) {
+        // look for a speaker with levels
         SpeakerLevels levelsL = speakerLevels(Headphone::LEFT);
         SpeakerLevels levelsR = speakerLevels(Headphone::RIGHT);
 
         if (levelsL.hasNoise || levelsR.hasNoise)
             return true;
-    } else { //free field
-        //look for a speaker with levels
+    } else { // free field
+        // look for a speaker with levels
         Q_FOREACH (uint angle, speakerAngles()) {
             SpeakerLevels levels = speakerLevels(angle);
 
@@ -643,7 +647,7 @@ bool SpinUserSettings::lockNoiselevels() const
     return speakers.lockNoise;
 }
 
-//extra
+// extra
 void SpinUserSettings::print() const
 {
     QString text("settings:\n");
@@ -652,41 +656,38 @@ void SpinUserSettings::print() const
     text += QString("speechcategory: %1\n").arg(speechcategory());
     text += QString("noisematerial: %1\n").arg(noisematerial());
     text += QString("list: %1\n").arg(list());
-    text += QString("speaker type: %1\n").arg(
-                speakerType() == HEADPHONE ? "headphone" : "free field");
+    text += QString("speaker type: %1\n")
+                .arg(speakerType() == HEADPHONE ? "headphone" : "free field");
 
     if (speakerType() == HEADPHONE) {
-        text += QString("\tleft: %1\n").arg(
-                    speakerLevels(Headphone::LEFT).toString());
-        text += QString("\tright: %1\n").arg(
-                    speakerLevels(Headphone::RIGHT).toString());
+        text += QString("\tleft: %1\n")
+                    .arg(speakerLevels(Headphone::LEFT).toString());
+        text += QString("\tright: %1\n")
+                    .arg(speakerLevels(Headphone::RIGHT).toString());
     } else {
         QList<uint> angles = speakers.freeField.angles();
 
         QList<uint>::const_iterator it;
-        for (it = angles.begin(); it != angles.end(); it++)
-        {
+        for (it = angles.begin(); it != angles.end(); it++) {
             text += QString("\t%1: %2\n")
-                    .arg(*it)
-                    .arg(speakers.freeField.levels(*it).toString());
+                        .arg(*it)
+                        .arg(speakers.freeField.levels(*it).toString());
         }
     }
 
-    text += QString("procedure type: %1\n").arg(
-                procedureType() == CONSTANT ? "constant" : "adaptive");
+    text += QString("procedure type: %1\n")
+                .arg(procedureType() == CONSTANT ? "constant" : "adaptive");
 
     if (procedureType() == ADAPTIVE) {
-        text += QString("adapting material: %1\n").arg(
-                    adaptingMaterial() == SPEECH ? "speech" : "noise");
+        text += QString("adapting material: %1\n")
+                    .arg(adaptingMaterial() == SPEECH ? "speech" : "noise");
 
         QMap<uint, double> steps = stepsizes();
         text += "stepsizes:\n";
 
         QMap<uint, double>::const_iterator it;
         for (it = steps.begin(); it != steps.end(); it++) {
-            text += QString("\ttrial %1: %2dB\n")
-                    .arg(it.key())
-                    .arg(it.value());
+            text += QString("\ttrial %1: %2dB\n").arg(it.key()).arg(it.value());
         }
     }
 

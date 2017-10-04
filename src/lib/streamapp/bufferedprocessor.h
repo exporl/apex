@@ -20,145 +20,144 @@
 #ifndef _APEX_SRC_LIB_STREAMAPP_BUFFEREDPROCESSOR_H__
 #define _APEX_SRC_LIB_STREAMAPP_BUFFEREDPROCESSOR_H__
 
-#include "stream.h"
 #include "appcore/threads/criticalsection.h"
+#include "stream.h"
 
 namespace str3amapp
 {
-  namespace containers
-  {
-    template< class tType, class tCritSection >
-    class CircularLogic;
-  }
+namespace containers
+{
+template <class tType, class tCritSection>
+class CircularLogic;
+}
 }
 using namespace str3amapp;
 
 namespace streamapp
 {
 
-  class Callback;
-  class BufferReader;
-  class BufferWriter;
+class Callback;
+class BufferReader;
+class BufferWriter;
+
+/**
+  * BufferedProcessing
+  *   class providing an InputStream and OutputStream
+  *   that read and write the same circular buffer.
+  *   This is used to decouple two stream systems from
+  *   each other, so that one can do heavy procesing in
+  *   a seperate thread and write the result in here, while
+  *   eg the soundcard thread just has to read from the buffer
+  *   using a simple copy, wihout having to bother with the
+  *   processing.
+  *   @note see CircularLogic for multi-threading info
+
+  *   TODO add callbacks for buffer overrun/underrun
+  ************************************************************ */
+class BufferedProcessing
+{
+public:
+    /**
+      * Constructor.
+      * @param ac_nInputBufferSize the buffersize for the writer part
+      * @param ac_nOutputBufferSize the buffersize reader part
+      * @param ac_nChannels number of channels
+      * @param ac_nBufferSize the buffer's max size
+      */
+    BufferedProcessing(const unsigned ac_nInputBufferSize,
+                       const unsigned ac_nOutputBufferSize,
+                       const unsigned ac_nChannels,
+                       const unsigned ac_nBufferSize);
 
     /**
-      * BufferedProcessing
-      *   class providing an InputStream and OutputStream
-      *   that read and write the same circular buffer.
-      *   This is used to decouple two stream systems from
-      *   each other, so that one can do heavy procesing in
-      *   a seperate thread and write the result in here, while
-      *   eg the soundcard thread just has to read from the buffer
-      *   using a simple copy, wihout having to bother with the
-      *   processing.
-      *   @note see CircularLogic for multi-threading info
-
-      *   TODO add callbacks for buffer overrun/underrun
-      ************************************************************ */
-  class BufferedProcessing
-  {
-  public:
-      /**
-        * Constructor.
-        * @param ac_nInputBufferSize the buffersize for the writer part
-        * @param ac_nOutputBufferSize the buffersize reader part
-        * @param ac_nChannels number of channels
-        * @param ac_nBufferSize the buffer's max size
-        */
-    BufferedProcessing( const unsigned ac_nInputBufferSize,
-                        const unsigned ac_nOutputBufferSize,
-                        const unsigned ac_nChannels,
-                        const unsigned ac_nBufferSize );
-
-      /**
-        * Destructor.
-        */
+      * Destructor.
+      */
     ~BufferedProcessing();
 
-      /**
-        * Get the InputStream part.
-        * Used to read from the buffer.
-        * @return a reference
-        */
-    InputStream& mf_GetInputStream();
+    /**
+      * Get the InputStream part.
+      * Used to read from the buffer.
+      * @return a reference
+      */
+    InputStream &mf_GetInputStream();
 
-      /**
-        * Get the OutputStream part.
-        * Used to write to the buffer.
-        * @return a reference
-        */
-    OutputStream& mf_GetOutputStream();
+    /**
+      * Get the OutputStream part.
+      * Used to write to the buffer.
+      * @return a reference
+      */
+    OutputStream &mf_GetOutputStream();
 
-
-      /**
-        * Check how much samples are currently buffered.
-        * @return number of samples available to the InputStream
-        */
+    /**
+      * Check how much samples are currently buffered.
+      * @return number of samples available to the InputStream
+      */
     unsigned mf_nGetNumInBuffer() const;
 
-      /**
-        * Check how much samples can currently be buffered.
-        * @return number of samples available to the OutputStream
-        */
+    /**
+      * Check how much samples can currently be buffered.
+      * @return number of samples available to the OutputStream
+      */
     unsigned mf_nGetNumFree() const;
 
-      /**
-        * Empty the buffer.
-        */
+    /**
+      * Empty the buffer.
+      */
     void mp_Reset();
 
-      /**
-        * Get the size of the buffer.
-        * @return size as set in ctor
-        */
-    INLINE const unsigned& mf_nGetBufferSize() const
+    /**
+      * Get the size of the buffer.
+      * @return size as set in ctor
+      */
+    INLINE const unsigned &mf_nGetBufferSize() const
     {
-      return m_Buffer.mf_nGetBufferSize();
+        return m_Buffer.mf_nGetBufferSize();
     }
 
-      /**
-        * Get the write size of the buffer.
-        * @return size as set in ctor
-        */
-    INLINE const unsigned& mf_nGetInputBufferSize() const
+    /**
+      * Get the write size of the buffer.
+      * @return size as set in ctor
+      */
+    INLINE const unsigned &mf_nGetInputBufferSize() const
     {
-      return mc_nInputBufferSize;
+        return mc_nInputBufferSize;
     }
 
-      /**
-        * Get the read size of the buffer.
-        * @return size as set in ctor
-        */
-    INLINE const unsigned& mf_nGetOutputBufferSize() const
+    /**
+      * Get the read size of the buffer.
+      * @return size as set in ctor
+      */
+    INLINE const unsigned &mf_nGetOutputBufferSize() const
     {
-      return mc_nOutputBufferSize;
+        return mc_nOutputBufferSize;
     }
 
-
-      /**
-        * Set the callback to call when the writer
-        * tries to write more then available.
-        * @param a_pCallback a pointer, 0 to reset
-        */
-    INLINE void mp_InstallBufferOverrunCallback( Callback* a_pCallback )
+    /**
+      * Set the callback to call when the writer
+      * tries to write more then available.
+      * @param a_pCallback a pointer, 0 to reset
+      */
+    INLINE void mp_InstallBufferOverrunCallback(Callback *a_pCallback)
     {
-      m_pOverRun = a_pCallback;
+        m_pOverRun = a_pCallback;
     }
 
-      /**
-        * Set the callback to call when the reader
-        * tries to read more then available.
-        * @param a_pCallback a pointer, 0 to reset
-        */
-    INLINE void mp_InstallBufferUnderrunCallback( Callback* a_pCallback )
+    /**
+      * Set the callback to call when the reader
+      * tries to read more then available.
+      * @param a_pCallback a pointer, 0 to reset
+      */
+    INLINE void mp_InstallBufferUnderrunCallback(Callback *a_pCallback)
     {
-      m_pUnderRun = a_pCallback;
+        m_pUnderRun = a_pCallback;
     }
 
-  private:
+private:
     friend class BufferReader;
     friend class BufferWriter;
 
-    typedef containers::CircularLogic< double*, appcore::CriticalSection > mt_Fifo;
+    typedef containers::CircularLogic<double *, appcore::CriticalSection>
+        mt_Fifo;
 
     const unsigned mc_nInputBufferSize;
     const unsigned mc_nOutputBufferSize;
@@ -166,19 +165,17 @@ namespace streamapp
     const unsigned mc_nBufferSize;
 
     StreamBuf m_Buffer;
-    mt_Fifo*  m_pFifo;
+    mt_Fifo *m_pFifo;
 
-    BufferReader* m_pReader;
-    BufferWriter* m_pWriter;
+    BufferReader *m_pReader;
+    BufferWriter *m_pWriter;
 
-    Callback* m_pOverRun;
-    Callback* m_pUnderRun;
+    Callback *m_pOverRun;
+    Callback *m_pUnderRun;
 
-    BufferedProcessing( const BufferedProcessing& );
-    BufferedProcessing& operator = ( const BufferedProcessing& );
-  };
-
-
+    BufferedProcessing(const BufferedProcessing &);
+    BufferedProcessing &operator=(const BufferedProcessing &);
+};
 }
 
 #endif //#ifndef _APEX_SRC_LIB_STREAMAPP_BUFFEREDPROCESSOR_H__

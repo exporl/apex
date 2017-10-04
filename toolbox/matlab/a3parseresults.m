@@ -9,7 +9,7 @@ if (isempty(I))
 end
 
 %% parse header
-fields=strsplit(d{I}(8:end), ';');
+fields=amt_strsplit(d{I}(8:end), ';');
 
 S=strmatch('START', d);
 if (isempty(S))
@@ -26,7 +26,7 @@ len=E-S-1;
 %s=struct;
 
 for l=1:len
-    t=strsplit(d{l+S}, ';');
+    t=amt_strsplit(d{l+S}, ';');
 
     if (length(t) ~= length(fields))
         error('Header does not match data');

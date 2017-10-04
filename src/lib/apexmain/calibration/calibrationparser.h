@@ -35,7 +35,6 @@ class CalibrationParser
 public:
     data::CalibrationData *Parse(const QDomElement &a_pBase);
 };
-
 }
 }
 

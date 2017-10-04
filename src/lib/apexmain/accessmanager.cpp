@@ -9,9 +9,9 @@
 
 using namespace apex;
 
-AccessManager::AccessManager(QObject * parent ):
-    QNetworkAccessManager(parent)
-{}
+AccessManager::AccessManager(QObject *parent) : QNetworkAccessManager(parent)
+{
+}
 
 QUrl AccessManager::transformApexUrl(QUrl url) const
 {
@@ -27,11 +27,11 @@ QUrl AccessManager::transformApexUrl(QUrl url) const
     newUrl.setPath(fi.filePath());
     newUrl.setScheme("file");
 
-    if (! QFile::exists(fi.filePath())) {
-        Q_FOREACH(const QString &prefix, dirs) {
+    if (!QFile::exists(fi.filePath())) {
+        Q_FOREACH (const QString &prefix, dirs) {
             QString newpath(prefix + "/" + fi.filePath());
-            if ( QFile::exists( newpath )) {
-                newUrl.setPath( newpath );
+            if (QFile::exists(newpath)) {
+                newUrl.setPath(newpath);
                 break;
             }
         }
@@ -40,22 +40,27 @@ QUrl AccessManager::transformApexUrl(QUrl url) const
     return newUrl;
 }
 
-QNetworkReply * AccessManager::createRequest (Operation op, const QNetworkRequest& req, QIODevice* outgoingData)
+QNetworkReply *AccessManager::createRequest(Operation op,
+                                            const QNetworkRequest &req,
+                                            QIODevice *outgoingData)
 {
     QNetworkRequest newreq(req);
-    //qCDebug(APEX_RS) << "createRequest " << req.url();
+    // qCDebug(APEX_RS) << "createRequest " << req.url();
 
     // if scheme "apex" is used, try to find the file in some apex data paths
-    if ( req.url().scheme() == "apex") {
+    if (req.url().scheme() == "apex") {
         newreq.setUrl(transformApexUrl(req.url()));
     }
 
-    if (newreq.url().isLocalFile() && !QFile::exists(newreq.url().toLocalFile()))
-        qCWarning(APEX_RS, "%s", qPrintable(QSL("%1: %2").arg("AccessManager",
-                                       tr("Resource not found: %1").arg(req.url().toString()))));
+    if (newreq.url().isLocalFile() &&
+        !QFile::exists(newreq.url().toLocalFile()))
+        qCWarning(APEX_RS, "%s",
+                  qPrintable(QSL("%1: %2").arg(
+                      "AccessManager",
+                      tr("Resource not found: %1").arg(req.url().toString()))));
 
     qCDebug(APEX_RS) << "createRequest " << newreq.url();
-    return QNetworkAccessManager::createRequest( op, newreq, outgoingData );
+    return QNetworkAccessManager::createRequest(op, newreq, outgoingData);
 }
 
 QUrl AccessManager::prepare(QUrl url) const
@@ -64,7 +69,11 @@ QUrl AccessManager::prepare(QUrl url) const
     QFileInfo fi(url.path());
     if (url.isRelative() || url.scheme() == "file") {
         if (fi.isRelative()) {
-            QString correctPath = QUrl::fromUserInput(QDir::toNativeSeparators(QDir::current().path() + "/" + fi.filePath())).path();
+            QString correctPath =
+                QUrl::fromUserInput(
+                    QDir::toNativeSeparators(QDir::current().path() + "/" +
+                                             fi.filePath()))
+                    .path();
 
             correctUrl.setPath(correctPath);
             correctUrl.setScheme("file");

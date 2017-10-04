@@ -36,9 +36,10 @@ using namespace cmn;
 namespace apex
 {
 
-QString ApexPaths::GetSchemaPath(const QString& filename)
+QString ApexPaths::GetSchemaPath(const QString &filename)
 {
-    return Paths::searchFile(QL1S("schemas/") + filename, Paths::dataDirectories());
+    return Paths::searchFile(QL1S("schemas/") + filename,
+                             Paths::dataDirectories());
 }
 
 QString ApexPaths::GetExperimentSchemaPath()
@@ -61,11 +62,13 @@ QString ApexPaths::GetApexConfigFilePath()
     return GetConfigFilePath(QL1S("apexconfig.xml"));
 }
 
-QString ApexPaths::GetConfigFilePath(const QString& filename)
+QString ApexPaths::GetConfigFilePath(const QString &filename)
 {
-    QString result = Paths::searchFile(filename, QStringList() << GetUserConfigFilePath());
+    QString result =
+        Paths::searchFile(filename, QStringList() << GetUserConfigFilePath());
     if (result.isEmpty())
-        result = Paths::searchFile(QL1S("config/") + filename, Paths::dataDirectories());
+        result = Paths::searchFile(QL1S("config/") + filename,
+                                   Paths::dataDirectories());
     return result;
 }
 
@@ -73,11 +76,13 @@ QString ApexPaths::GetUserConfigFilePath()
 {
     QString result;
 #if defined(Q_OS_WIN)
-    QSettings settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders",
-                        QSettings::NativeFormat);
-    result = settings.value("AppData").toString() +  "\\ExpORL";
+    QSettings settings("HKEY_CURRENT_"
+                       "USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Exp"
+                       "lorer\\Shell Folders",
+                       QSettings::NativeFormat);
+    result = settings.value("AppData").toString() + "\\ExpORL";
 #elif defined(Q_OS_ANDROID)
-    // not supported
+// not supported
 #else
     result = QDir::homePath() + "/.config/ExpORL";
 #endif
@@ -90,12 +95,13 @@ QString ApexPaths::GetUserConfigFilePath()
 
 QString ApexPaths::GetNonBinaryPluginPath()
 {
-    return Paths::searchDirectory(QL1S("pluginprocedures"), Paths::dataDirectories());
+    return Paths::searchDirectory(QL1S("pluginprocedures"),
+                                  Paths::dataDirectories());
 }
 
 QString ApexPaths::GetScriptsPath()
 {
-    return Paths::searchDirectory(QL1S("resultsviewer"), Paths::dataDirectories());
+    return Paths::searchDirectory(QL1S("resultsviewer"),
+                                  Paths::dataDirectories());
 }
-
 }

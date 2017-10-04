@@ -11,8 +11,8 @@ namespace data
 class ExperimentData;
 }
 
-APEX_EXPORT bool setupOutputRecording(data::ExperimentData* data);
-
+APEX_EXPORT bool setupOutputRecording(data::ExperimentData *data,
+                                      bool useBertha);
 }
 
 #endif

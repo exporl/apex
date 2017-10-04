@@ -36,24 +36,25 @@ namespace data
 class ParameterDialogResults;
 }
 
-class InteractiveParametersDialog : public QDialog, public InteractiveParameters::Callback
+class InteractiveParametersDialog : public QDialog,
+                                    public InteractiveParameters::Callback
 {
     Q_OBJECT
 public:
-    InteractiveParametersDialog(InteractiveParameters* data, QWidget *parent);
+    InteractiveParametersDialog(InteractiveParameters *data, QWidget *parent);
     virtual ~InteractiveParametersDialog();
 
-    void apply();
+    bool apply();
     virtual void warning(const QString &message) Q_DECL_OVERRIDE;
+
 private:
     void buildWidgets();
     bool dialogResult();
 
-    QList<QWidget*> widgets;
+    QList<QWidget *> widgets;
     QScopedPointer<Ui::ParameterDialog> ui;
-    QScopedPointer<InteractiveParameters> data;
+    InteractiveParameters *data;
 };
-
 }
 
 #endif

@@ -26,29 +26,28 @@ namespace apex
 namespace data
 {
 
-struct ParameterDialogResultPrivate
-{
-        QString xpath;
-        QString description;
-        QString newValue;
-        bool    succeeded;
+struct ParameterDialogResultPrivate {
+    QString xpath;
+    QString description;
+    QString newValue;
+    bool succeeded;
 };
 
-ParameterDialogResult::ParameterDialogResult() :
-                                    d(new ParameterDialogResultPrivate())
+ParameterDialogResult::ParameterDialogResult()
+    : d(new ParameterDialogResultPrivate())
 {
 }
 
-ParameterDialogResult::ParameterDialogResult(const ParameterDialogResult& other) :
-                                d(new ParameterDialogResultPrivate(*other.d))
+ParameterDialogResult::ParameterDialogResult(const ParameterDialogResult &other)
+    : d(new ParameterDialogResultPrivate(*other.d))
 {
 }
 
-ParameterDialogResult::ParameterDialogResult(const QString& xpath,
-                                             const QString& description,
-                                             const QString& newValue,
-                                             const bool succeeded) :
-                                        d(new ParameterDialogResultPrivate())
+ParameterDialogResult::ParameterDialogResult(const QString &xpath,
+                                             const QString &description,
+                                             const QString &newValue,
+                                             const bool succeeded)
+    : d(new ParameterDialogResultPrivate())
 {
     d->xpath = xpath;
     d->description = description;
@@ -56,32 +55,28 @@ ParameterDialogResult::ParameterDialogResult(const QString& xpath,
     d->succeeded = succeeded;
 }
 
-
 QString ParameterDialogResult::xpath() const
 {
     return d->xpath;
 }
-
 
 QString ParameterDialogResult::description() const
 {
     return d->description;
 }
 
-
 QString ParameterDialogResult::newValue() const
 {
     return d->newValue;
 }
-
 
 bool ParameterDialogResult::succeeded() const
 {
     return d->succeeded;
 }
 
-ParameterDialogResult& ParameterDialogResult::operator=(
-                                            const ParameterDialogResult& other)
+ParameterDialogResult &ParameterDialogResult::
+operator=(const ParameterDialogResult &other)
 {
     if (this != &other)
         *d = *other.d;
@@ -89,36 +84,35 @@ ParameterDialogResult& ParameterDialogResult::operator=(
     return *this;
 }
 
-
-bool ParameterDialogResult::operator<(const apex::data::ParameterDialogResult&) const
+bool ParameterDialogResult::
+operator<(const apex::data::ParameterDialogResult &) const
 {
     Q_ASSERT(false);
     return false;
 }
 
-bool ParameterDialogResult::operator==(const ParameterDialogResult& other) const
+bool ParameterDialogResult::operator==(const ParameterDialogResult &other) const
 {
-    return  d->xpath == other.d->xpath &&
-            d->description == other.d->description &&
-            d->newValue == other.d->newValue &&
-            d->succeeded == other.d->succeeded;
+    return d->xpath == other.d->xpath &&
+           d->description == other.d->description &&
+           d->newValue == other.d->newValue &&
+           d->succeeded == other.d->succeeded;
 }
 
-//class ParameterDialogResults
+// class ParameterDialogResults
 
 ParameterDialogResults::ParameterDialogResults()
 {
 }
 
-
 ParameterDialogResults::~ParameterDialogResults()
 {
 }
 
-bool ParameterDialogResults::operator==(const ParameterDialogResults& other) const
+bool ParameterDialogResults::
+operator==(const ParameterDialogResults &other) const
 {
     return ApexTools::haveSameContents(*this, other);
 }
-
 }
 }

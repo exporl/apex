@@ -31,12 +31,12 @@ namespace apex
 namespace rundelegates
 {
 
-const ScreenElement* SliderRunDelegate::getScreenElement() const
+const ScreenElement *SliderRunDelegate::getScreenElement() const
 {
     return element;
 }
 
-QWidget* SliderRunDelegate::getWidget()
+QWidget *SliderRunDelegate::getWidget()
 {
     return this;
 }
@@ -53,68 +53,66 @@ bool SliderRunDelegate::hasInterestingText() const
 
 const QString SliderRunDelegate::getText() const
 {
-        int sliderValue = QSlider::value();
-        return QString::number(sliderValue);
+    int sliderValue = QSlider::value();
+    return QString::number(sliderValue);
 }
 
-void SliderRunDelegate::resizeEvent( QResizeEvent* e )
+void SliderRunDelegate::resizeEvent(QResizeEvent *e)
 {
-    QSlider::resizeEvent (e);
-    setFont (initialFont);
-    ApexTools::shrinkTillItFits (this, getText(), QSize (2, 2));
+    QSlider::resizeEvent(e);
+    setFont(initialFont);
+    ApexTools::shrinkTillItFits(this, getText(), QSize(2, 2));
 
-  if (element->GetReset()) {
-          if (element->HasDefault()){
-                qCDebug(APEX_RS, "Reset me!!!!\n");
-        QSlider::setValue((int)element->GetValue());
-          }
-          else {
+    if (element->GetReset()) {
+        if (element->HasDefault()) {
+            qCDebug(APEX_RS, "Reset me!!!!\n");
+            QSlider::setValue((int)element->GetValue());
+        } else {
             QSlider::setValue(0);
-          }
-  }
+        }
+    }
 }
 
-void SliderRunDelegate::connectSlots( gui::ScreenRunDelegate* d )
+void SliderRunDelegate::connectSlots(gui::ScreenRunDelegate *d)
 {
-    connect( this, SIGNAL( answered( ScreenElementRunDelegate* ) ),
-             d, SIGNAL( answered( ScreenElementRunDelegate* ) ) );
+    connect(this, SIGNAL(answered(ScreenElementRunDelegate *)), d,
+            SIGNAL(answered(ScreenElementRunDelegate *)));
 }
-
 }
 }
 
 void apex::rundelegates::SliderRunDelegate::sendAnsweredSignal()
 {
-    Q_EMIT answered( this );
+    Q_EMIT answered(this);
 }
 
 apex::rundelegates::SliderRunDelegate::SliderRunDelegate(
-        ExperimentRunDelegate* p_exprd,
-    QWidget* parent, const SliderElement* e, const QFont& defaultFont ) :
-      QSlider( e->GetOrient(), parent ),
+    ExperimentRunDelegate *p_exprd, QWidget *parent, const SliderElement *e,
+    const QFont &defaultFont)
+    : QSlider(e->GetOrient(), parent),
       ScreenElementRunDelegate(p_exprd, e),
-      element( e )
+      element(e)
 {
     /*QSlider::setText( e->getText() );
     if ( !element->getShortCut().isEmpty() )
         QSlider::setAccel( e->getShortCut() );
 
-        connect( this, SIGNAL( valueChanged(int) ), this, SLOT( sendAnsweredSignal() ) );*/
+        connect( this, SIGNAL( valueChanged(int) ), this, SLOT(
+    sendAnsweredSignal() ) );*/
 
     QFont font = defaultFont;
-    if ( element->getFontSize() != -1 )
-        font.setPointSize( element->getFontSize() );
-    QSlider::setFont( font );
+    if (element->getFontSize() != -1)
+        font.setPointSize(element->getFontSize());
+    QSlider::setFont(font);
     initialFont = font;
 
-        QSlider::setMinimum((int)element->GetMin());
+    QSlider::setMinimum((int)element->GetMin());
     QSlider::setMaximum((int)element->GetMax());
-        if (element->HasDefault()){
+    if (element->HasDefault()) {
         QSlider::setValue((int)element->GetValue());
-        }
-        QSlider::setTickPosition((QSlider::TickPosition)element->GetTickPos());
-        QSlider::setTickInterval((int)element->GetTickInt());
-        QSlider::setSingleStep(element->GetStepSize());
-        QSlider::setPageStep(element->GetPageSize());
-
+    }
+    QSlider::setTickPosition((QSlider::TickPosition)element->GetTickPos());
+    QSlider::setTickInterval((int)element->GetTickInt());
+    QSlider::setSingleStep(element->GetStepSize());
+    QSlider::setPageStep(element->GetPageSize());
 }

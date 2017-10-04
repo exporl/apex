@@ -27,15 +27,12 @@
 namespace apex
 {
 
-class APEX_EXPORT UpgradableXmlParser :
-    public QObject
+class APEX_EXPORT UpgradableXmlParser : public QObject
 {
     Q_OBJECT
 public:
-    UpgradableXmlParser(const QString &fileName,
-            const QString &schema,
-            const QString &schemaUrl,
-            const QString &nameSpace);
+    UpgradableXmlParser(const QString &fileName, const QString &schema,
+                        const QString &schemaUrl, const QString &nameSpace);
     virtual ~UpgradableXmlParser();
 
     QDomDocument loadAndUpgradeDom(bool removeComments = true);
@@ -50,7 +47,6 @@ protected:
     QString schemaUrl;
     QString nameSpace;
 };
-
 }
 
 #endif

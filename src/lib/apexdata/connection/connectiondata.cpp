@@ -27,45 +27,40 @@ namespace apex
 namespace data
 {
 
-struct ConnectionDataPrivate
-{
+struct ConnectionDataPrivate {
     ConnectionDataPrivate();
 
     MatchType matchType;
-    QString   fromId;        //!< the element where the connection originates
-    QString   toId;          //!< the element where the connection ends
-    int       fromChannel;   //!< the originating channel
-    int       toChannel;     //!< the ending channel
-    QString   fromChannelId; //!< optional ID, used when changing connections as a variable parameter
-    QString   toChannelId;   //!< optional ID, used when changing connections as a variable parameter
-    QString   deviceId;
+    QString fromId;        //!< the element where the connection originates
+    QString toId;          //!< the element where the connection ends
+    int fromChannel;       //!< the originating channel
+    int toChannel;         //!< the ending channel
+    QString fromChannelId; //!< optional ID, used when changing connections as a
+                           //! variable parameter
+    QString toChannelId;   //!< optional ID, used when changing connections as a
+                           //! variable parameter
+    QString deviceId;
 };
-
 }
-
 }
 
 using namespace apex::data;
 
-//struct ConnectionDataPrivate
+// struct ConnectionDataPrivate
 
-
-ConnectionDataPrivate::ConnectionDataPrivate() : matchType(MATCH_NAME),
-                                                 fromChannel(0),
-                                                 toChannel(0)
+ConnectionDataPrivate::ConnectionDataPrivate()
+    : matchType(MATCH_NAME), fromChannel(0), toChannel(0)
 {
 }
 
-
-//class ConnectionData
+// class ConnectionData
 
 ConnectionData::ConnectionData() : d(new ConnectionDataPrivate())
 {
 }
 
-
-ConnectionData::ConnectionData(const ConnectionData& other) :
-         d(new ConnectionDataPrivate(*other.d))
+ConnectionData::ConnectionData(const ConnectionData &other)
+    : d(new ConnectionDataPrivate(*other.d))
 {
 }
 
@@ -73,8 +68,6 @@ ConnectionData::~ConnectionData()
 {
     delete d;
 }
-
-
 
 void ConnectionData::setMatchType(MatchType t)
 {
@@ -86,17 +79,17 @@ MatchType ConnectionData::matchType() const
     return d->matchType;
 }
 
-const QString& ConnectionData::fromId() const
+const QString &ConnectionData::fromId() const
 {
     return d->fromId;
 }
 
-void ConnectionData::setFromId(const QString& id)
+void ConnectionData::setFromId(const QString &id)
 {
     d->fromId = id;
 }
 
-const QString& ConnectionData::fromChannelId() const
+const QString &ConnectionData::fromChannelId() const
 {
     return d->fromChannelId;
 }
@@ -106,7 +99,7 @@ int ConnectionData::fromChannel() const
     return d->fromChannel;
 }
 
-void ConnectionData::setFromChannel(int channel, const QString& channelId)
+void ConnectionData::setFromChannel(int channel, const QString &channelId)
 {
     if (channel < -1)
         channel = -1;
@@ -115,17 +108,17 @@ void ConnectionData::setFromChannel(int channel, const QString& channelId)
     d->fromChannelId = channelId;
 }
 
-const QString& ConnectionData::toId() const
+const QString &ConnectionData::toId() const
 {
     return d->toId;
 }
 
-void ConnectionData::setToId(const QString& id)
+void ConnectionData::setToId(const QString &id)
 {
     d->toId = id;
 }
 
-const QString& ConnectionData::toChannelId() const
+const QString &ConnectionData::toChannelId() const
 {
     return d->toChannelId;
 }
@@ -135,7 +128,7 @@ int ConnectionData::toChannel() const
     return d->toChannel;
 }
 
-void ConnectionData::setToChannel(int channel, const QString& channelId)
+void ConnectionData::setToChannel(int channel, const QString &channelId)
 {
     if (channel < -1)
         channel = -1;
@@ -144,16 +137,14 @@ void ConnectionData::setToChannel(int channel, const QString& channelId)
     d->toChannelId = channelId;
 }
 
-bool ConnectionData::duplicateOf(const ConnectionData& c)
+bool ConnectionData::duplicateOf(const ConnectionData &c)
 {
-    return (c.fromId() == d->fromId) &&
-           (c.toId() == d->toId) &&
+    return (c.fromId() == d->fromId) && (c.toId() == d->toId) &&
            (c.fromChannel() == d->fromChannel) &&
            (c.toChannel() == d->toChannel);
 }
 
-
-ConnectionData& ConnectionData::operator=(const ConnectionData& other)
+ConnectionData &ConnectionData::operator=(const ConnectionData &other)
 {
     if (this != &other)
         *d = *other.d;
@@ -161,16 +152,14 @@ ConnectionData& ConnectionData::operator=(const ConnectionData& other)
     return *this;
 }
 
-
-bool ConnectionData::operator==(const ConnectionData& other)
+bool ConnectionData::operator==(const ConnectionData &other)
 {
-    return  d->fromId == other.d->fromId &&
-            d->toId == other.d->toId &&
-            d->fromChannel == other.d->fromChannel &&
-            d->toChannel == other.d->toChannel &&
-            d->fromChannelId == other.d->fromChannelId &&
-            d->toChannelId == other.d->toChannelId &&
-            d->deviceId == other.d->deviceId;
+    return d->fromId == other.d->fromId && d->toId == other.d->toId &&
+           d->fromChannel == other.d->fromChannel &&
+           d->toChannel == other.d->toChannel &&
+           d->fromChannelId == other.d->fromChannelId &&
+           d->toChannelId == other.d->toChannelId &&
+           d->deviceId == other.d->deviceId;
 }
 
 QString ConnectionData::device() const
@@ -193,7 +182,7 @@ ConnectionsData::~ConnectionsData()
         delete at(i);
 }
 
-bool ConnectionsData::operator==(const ConnectionsData& other)
+bool ConnectionsData::operator==(const ConnectionsData &other)
 {
     return ApexTools::haveSameContents(*this, other);
 }

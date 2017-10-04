@@ -29,46 +29,44 @@ namespace apex
 
 namespace data
 {
-    class ScreenElement;
-    class CheckBoxElement;
+class ScreenElement;
+class CheckBoxElement;
 }
 
 namespace rundelegates
 {
 
-class CheckBoxRunDelegate :
-    public QCheckBox,
-    public ScreenElementRunDelegate
+class CheckBoxRunDelegate : public QCheckBox, public ScreenElementRunDelegate
 {
     Q_OBJECT
 public:
-    CheckBoxRunDelegate(ExperimentRunDelegate* p_exprd, QWidget* parent,
-            const data::CheckBoxElement* e, const QFont& defaultFont);
+    CheckBoxRunDelegate(ExperimentRunDelegate *p_exprd, QWidget *parent,
+                        const data::CheckBoxElement *e,
+                        const QFont &defaultFont);
 
-    const data::ScreenElement* getScreenElement() const;
+    const data::ScreenElement *getScreenElement() const;
 
-    QWidget* getWidget();
+    QWidget *getWidget();
     bool hasText() const;
     bool hasInterestingText() const;
     const QString getText() const;
     void clearText();
     void connectSlots(gui::ScreenRunDelegate *d);
-    const data::CheckBoxElement* GetElement() const;
+    const data::CheckBoxElement *GetElement() const;
 
 protected:
-    void resizeEvent(QResizeEvent* e);
+    void resizeEvent(QResizeEvent *e);
 
 public Q_SLOTS:
     void sendAnsweredSignal();
 
 Q_SIGNALS:
-    void answered(ScreenElementRunDelegate*);
+    void answered(ScreenElementRunDelegate *);
 
 private:
     QFont initialFont;
-    const data::CheckBoxElement* element;
+    const data::CheckBoxElement *element;
 };
-
 }
 }
 

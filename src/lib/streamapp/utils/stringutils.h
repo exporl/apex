@@ -22,50 +22,53 @@
 
 #include <iostream>
 #include <sstream>
-#include <vector>
 #include <string>
+#include <vector>
 #include <math.h>
 
 #ifdef _MSC_VER
-#pragma warning ( disable : 4267 ) //size_t to unsigned int
+#pragma warning(disable : 4267) // size_t to unsigned int
 #endif
 
-  /**
-    * Convert from string to anything else.
-    * @param s the string
-    * @return the requested type
-    */
-template<typename T> T stringTo( const std::string& s )
+/**
+  * Convert from string to anything else.
+  * @param s the string
+  * @return the requested type
+  */
+template <typename T>
+T stringTo(const std::string &s)
 {
-  std::istringstream iss( s );
-  T x;
-  iss >> x;
-  return x;
+    std::istringstream iss(s);
+    T x;
+    iss >> x;
+    return x;
 }
 
-  /**
-    * Convert anything to string.
-    * @param x the requested type
-    * @return the string
-    */
-template<typename T> std::string toString( const T& x )
+/**
+  * Convert anything to string.
+  * @param x the requested type
+  * @return the string
+  */
+template <typename T>
+std::string toString(const T &x)
 {
-  std::ostringstream oss;
-  oss << x;
-  return oss.str();
+    std::ostringstream oss;
+    oss << x;
+    return oss.str();
 }
 
-  /**
-    * Print vector contents to std::cout.
-    * Uses toString().
-    * @param ac_Vector the vector to print
-    */
-template<typename T> void PrintVector( const std::vector<T>& ac_Vector )
+/**
+  * Print vector contents to std::cout.
+  * Uses toString().
+  * @param ac_Vector the vector to print
+  */
+template <typename T>
+void PrintVector(const std::vector<T> &ac_Vector)
 {
-  const std::vector<std::string>::size_type n = ac_Vector.size();
-  for( std::vector<std::string>::size_type i = 0 ; i < n ; ++i )
-    std::cout << toString( ac_Vector.at( i ) ).c_str() << std::endl ;
-  std::cout << std::endl;
+    const std::vector<std::string>::size_type n = ac_Vector.size();
+    for (std::vector<std::string>::size_type i = 0; i < n; ++i)
+        std::cout << toString(ac_Vector.at(i)).c_str() << std::endl;
+    std::cout << std::endl;
 }
 
 #endif //#ifndef STRINGUTILS_H

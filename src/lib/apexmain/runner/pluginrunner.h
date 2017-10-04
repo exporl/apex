@@ -43,20 +43,19 @@ public:
         * If name is not specified, a dialog will be shown with all available
         * plugins. Otherwise only the plugin matching name will be loaded
         */
-    bool select(const QString& name) Q_DECL_OVERRIDE;
-    void selectFromDir(const QString& path) Q_DECL_OVERRIDE;
+    bool select(const QString &name) Q_DECL_OVERRIDE;
+    void selectFromDir(const QString &path) Q_DECL_OVERRIDE;
 
 private:
     QString path;
-    QMap<QString, PluginRunnerInterface*> interfaces;
+    QMap<QString, PluginRunnerInterface *> interfaces;
 
 public slots:
-    void pluginSelected(QAbstractButton*);
+    void pluginSelected(QAbstractButton *);
 
 signals:
-    void errorMessage(const QString&, const QString&);
+    void errorMessage(const QString &, const QString &);
 };
-
 }
 
 #endif

@@ -35,237 +35,245 @@
 
 namespace apex
 {
-  namespace editor
-  {
-    class ParameterListModel
-      : public QAbstractTableModel
-    {
-      Q_OBJECT
+namespace editor
+{
+class ParameterListModel : public QAbstractTableModel
+{
+    Q_OBJECT
 
-      ParameterListElement* element;
-    public:
-      ParameterListModel( ParameterListEditorDelegate* del, ParameterListElement* el );
-      int rowCount ( const QModelIndex & parent ) const;
-      int columnCount ( const QModelIndex & parent ) const;
-      QVariant data ( const QModelIndex & index, int role ) const;
-      QVariant headerData ( int section, Qt::Orientation orientation, int role ) const;
-      void reset();
-      Qt::ItemFlags flags( const QModelIndex& index ) const;
-      bool setData(const QModelIndex &index, const QVariant &value,
-                   int role);
-    };
+    ParameterListElement *element;
 
-    ParameterListEditorDelegate::ParameterListEditorDelegate(
-      ParameterListElement* e, QWidget* parent, ScreenWidget* w )
-      : QFrame( parent ),
-        ScreenElementEditorDelegate( w ),
-        table( 0 ),
-        element( e ),
-        model( 0 )
-    {
-      QVBoxLayout* layout = new QVBoxLayout( this );
+public:
+    ParameterListModel(ParameterListEditorDelegate *del,
+                       ParameterListElement *el);
+    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role) const;
+    void reset();
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
+};
 
-      QLabel* label = new QLabel( tr( "Parameter List" ), this );
-      layout->addWidget( label );
+ParameterListEditorDelegate::ParameterListEditorDelegate(
+    ParameterListElement *e, QWidget *parent, ScreenWidget *w)
+    : QFrame(parent),
+      ScreenElementEditorDelegate(w),
+      table(0),
+      element(e),
+      model(0)
+{
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-      table = new QTableView( this );
-      model = new ParameterListModel( this, element );
-      table->setModel( model );
-      layout->addWidget( table );
-      table->verticalHeader()->hide();
-      table->horizontalHeader()->resizeSection( 0, 85 );
-      table->horizontalHeader()->resizeSection( 1, 100 );
-      table->horizontalHeader()->resizeSection( 2, 150 );
+    QLabel *label = new QLabel(tr("Parameter List"), this);
+    layout->addWidget(label);
 
-      QHBoxLayout* buttonlayout = new QHBoxLayout();
-      QPushButton* addButton = new QPushButton( "Add..", this );
-      buttonlayout->addWidget( addButton );
-      connect( addButton, SIGNAL( clicked() ),
-               this, SLOT( addButtonClicked() ) );
-      QPushButton* delButton = new QPushButton( "Remove..", this );
-      buttonlayout->addWidget( delButton );
-      connect( delButton, SIGNAL( clicked() ),
-               this, SLOT( removeButtonClicked() ) );
+    table = new QTableView(this);
+    model = new ParameterListModel(this, element);
+    table->setModel(model);
+    layout->addWidget(table);
+    table->verticalHeader()->hide();
+    table->horizontalHeader()->resizeSection(0, 85);
+    table->horizontalHeader()->resizeSection(1, 100);
+    table->horizontalHeader()->resizeSection(2, 150);
 
-      layout->addLayout( buttonlayout );
-      setFrameShape( QFrame::Box );
-    }
+    QHBoxLayout *buttonlayout = new QHBoxLayout();
+    QPushButton *addButton = new QPushButton("Add..", this);
+    buttonlayout->addWidget(addButton);
+    connect(addButton, SIGNAL(clicked()), this, SLOT(addButtonClicked()));
+    QPushButton *delButton = new QPushButton("Remove..", this);
+    buttonlayout->addWidget(delButton);
+    connect(delButton, SIGNAL(clicked()), this, SLOT(removeButtonClicked()));
 
-    ParameterListEditorDelegate::~ParameterListEditorDelegate()
-    {
-      screenWidget->delegateDeleted( this );
-    }
+    layout->addLayout(buttonlayout);
+    setFrameShape(QFrame::Box);
+}
 
-    QFrame* ParameterListEditorDelegate::getWidget()
-    {
-      return this;
-    }
+ParameterListEditorDelegate::~ParameterListEditorDelegate()
+{
+    screenWidget->delegateDeleted(this);
+}
 
-    ScreenElement* ParameterListEditorDelegate::getScreenElement()
-    {
-      return element;
-    }
+QFrame *ParameterListEditorDelegate::getWidget()
+{
+    return this;
+}
 
-    int ParameterListEditorDelegate::getPropertyCount()
-    {
-      return ScreenElementEditorDelegate::getPropertyCount();
-    }
+ScreenElement *ParameterListEditorDelegate::getScreenElement()
+{
+    return element;
+}
 
-    QString ParameterListEditorDelegate::getPropertyName( int nr )
-    {
-      return ScreenElementEditorDelegate::getPropertyName( nr);
-    }
+int ParameterListEditorDelegate::getPropertyCount()
+{
+    return ScreenElementEditorDelegate::getPropertyCount();
+}
 
-    QVariant ParameterListEditorDelegate::getPropertyData( int nr, int role )
-    {
-      return ScreenElementEditorDelegate::getPropertyData( nr, role );
-    }
+QString ParameterListEditorDelegate::getPropertyName(int nr)
+{
+    return ScreenElementEditorDelegate::getPropertyName(nr);
+}
 
-    PropertyType ParameterListEditorDelegate::getPropertyType( int nr )
-    {
-      return ScreenElementEditorDelegate::getPropertyType( nr );
-    }
+QVariant ParameterListEditorDelegate::getPropertyData(int nr, int role)
+{
+    return ScreenElementEditorDelegate::getPropertyData(nr, role);
+}
 
-    bool ParameterListEditorDelegate::setProperty( int nr, const QVariant& v )
-    {
-      return ScreenElementEditorDelegate::setProperty( nr, v );
-    }
+PropertyType ParameterListEditorDelegate::getPropertyType(int nr)
+{
+    return ScreenElementEditorDelegate::getPropertyType(nr);
+}
 
-    void ParameterListEditorDelegate::mouseReleaseEvent( QMouseEvent* e )
-    {
-      handleMouseReleaseEvent( e, this );
-    }
+bool ParameterListEditorDelegate::setProperty(int nr, const QVariant &v)
+{
+    return ScreenElementEditorDelegate::setProperty(nr, v);
+}
 
-    int ParameterListModel::rowCount( const QModelIndex & parent ) const
-    {
-      if ( parent.isValid() ) return 0;
-      else return element->getParameterList().size();
-    }
+void ParameterListEditorDelegate::mouseReleaseEvent(QMouseEvent *e)
+{
+    handleMouseReleaseEvent(e, this);
+}
 
-    int ParameterListModel::columnCount( const QModelIndex & parent ) const
-    {
-      if ( parent.isValid() ) return 0;
-      else return 3;
-    }
+int ParameterListModel::rowCount(const QModelIndex &parent) const
+{
+    if (parent.isValid())
+        return 0;
+    else
+        return element->getParameterList().size();
+}
 
-    QVariant ParameterListModel::data( const QModelIndex & index, int role ) const
-    {
-      if ( index.parent().isValid() ) return QVariant();
-      int row = index.row();
-      int col = index.column();
-      data::ParameterData d = element->getParameterList()[row];
-      if ( role == Qt::DisplayRole || role == Qt::EditRole )
-      {
-        switch( col )
-        {
-        case 0: return d.id;
-        case 1: return d.name;
-        case 2: return d.expression;
+int ParameterListModel::columnCount(const QModelIndex &parent) const
+{
+    if (parent.isValid())
+        return 0;
+    else
+        return 3;
+}
+
+QVariant ParameterListModel::data(const QModelIndex &index, int role) const
+{
+    if (index.parent().isValid())
+        return QVariant();
+    int row = index.row();
+    int col = index.column();
+    data::ParameterData d = element->getParameterList()[row];
+    if (role == Qt::DisplayRole || role == Qt::EditRole) {
+        switch (col) {
+        case 0:
+            return d.id;
+        case 1:
+            return d.name;
+        case 2:
+            return d.expression;
         }
-      }
-      return QVariant();
     }
+    return QVariant();
+}
 
-    QVariant ParameterListModel::headerData( int section, Qt::Orientation orientation, int role ) const
-    {
-      if ( orientation != Qt::Horizontal ) return QVariant();
-      if ( role == Qt::DisplayRole )
-      {
-        switch( section )
-        {
-        case 0: return tr( "id" );
-        case 1: return tr( "name" );
-        case 2: return tr( "expression" );
+QVariant ParameterListModel::headerData(int section,
+                                        Qt::Orientation orientation,
+                                        int role) const
+{
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+        case 0:
+            return tr("id");
+        case 1:
+            return tr("name");
+        case 2:
+            return tr("expression");
         }
-      }
-      return QVariant();
     }
+    return QVariant();
+}
 
-    ParameterListModel::ParameterListModel(
-      ParameterListEditorDelegate* del, ParameterListElement* el )
-      : QAbstractTableModel( del ), element( el )
-    {
-    }
+ParameterListModel::ParameterListModel(ParameterListEditorDelegate *del,
+                                       ParameterListElement *el)
+    : QAbstractTableModel(del), element(el)
+{
+}
 
-    void ParameterListEditorDelegate::removeButtonClicked()
-    {
-      QModelIndexList l = table->selectionModel()->selectedIndexes();
-      if ( l.size() > 1 )
-      {
-        QMessageBox::warning( this, tr( "Select a single parameter to remove" ),
-                              tr( "Please select only one parameter at a time." ),
-                              QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
+void ParameterListEditorDelegate::removeButtonClicked()
+{
+    QModelIndexList l = table->selectionModel()->selectedIndexes();
+    if (l.size() > 1) {
+        QMessageBox::warning(this, tr("Select a single parameter to remove"),
+                             tr("Please select only one parameter at a time."),
+                             QMessageBox::Ok, QMessageBox::NoButton,
+                             QMessageBox::NoButton);
         return;
-      } else if ( l.size() == 0 ) {
-        QMessageBox::warning( this, tr( "Select a parameter to remove" ),
-                              tr( "Please select a parameter to be removed." ),
-                              QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
+    } else if (l.size() == 0) {
+        QMessageBox::warning(this, tr("Select a parameter to remove"),
+                             tr("Please select a parameter to be removed."),
+                             QMessageBox::Ok, QMessageBox::NoButton,
+                             QMessageBox::NoButton);
         return;
-      } else {
+    } else {
         QModelIndex index = l[0];
         int row = index.row();
-        element->removeParameter( row );
+        element->removeParameter(row);
         model->reset();
-      }
     }
+}
 
-    void ParameterListEditorDelegate::addButtonClicked()
-    {
-      QString parameterID;
-      int i = 1;
-      while ( true )
-      {
-        parameterID = "parameter" + QString::number( i++ );
-        if ( !element->parameterIDTaken( parameterID ) )
-          break;
-      }
-      element->addParameter(
-        parameterID,
-        "<No name set>" );
-      model->reset();
+void ParameterListEditorDelegate::addButtonClicked()
+{
+    QString parameterID;
+    int i = 1;
+    while (true) {
+        parameterID = "parameter" + QString::number(i++);
+        if (!element->parameterIDTaken(parameterID))
+            break;
     }
+    element->addParameter(parameterID, "<No name set>");
+    model->reset();
+}
 
-    void ParameterListModel::reset()
-    {
-      QAbstractTableModel::beginResetModel();
-      QAbstractTableModel::endResetModel();
-    }
+void ParameterListModel::reset()
+{
+    QAbstractTableModel::beginResetModel();
+    QAbstractTableModel::endResetModel();
+}
 
-    Qt::ItemFlags ParameterListModel::flags( const QModelIndex& index ) const
-    {
-      return QAbstractTableModel::flags( index ) | Qt::ItemIsEditable;
-    }
+Qt::ItemFlags ParameterListModel::flags(const QModelIndex &index) const
+{
+    return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
+}
 
-    bool ParameterListModel::setData(const QModelIndex &index, const QVariant &value,
-                                     int role)
-    {
-      if ( role != Qt::EditRole ) return false;
-      if ( index.parent().isValid() ) return false;
-      if ( value.type() != QVariant::String ) return false;
-      QString s = value.toString();
-      int row = index.row();
-      int col = index.column();
-      switch( col )
-      {
-      case 0: // id
-        if ( element->setParameterID( row, s ) ) {
-          reset();
-          return true;
+bool ParameterListModel::setData(const QModelIndex &index,
+                                 const QVariant &value, int role)
+{
+    if (role != Qt::EditRole)
+        return false;
+    if (index.parent().isValid())
+        return false;
+    if (value.type() != QVariant::String)
+        return false;
+    QString s = value.toString();
+    int row = index.row();
+    int col = index.column();
+    switch (col) {
+    case 0: // id
+        if (element->setParameterID(row, s)) {
+            reset();
+            return true;
         }
-      case 1: // name
-        element->setParameterName( row, s );
+    case 1: // name
+        element->setParameterName(row, s);
         reset();
         return true;
-      case 2: // expr
-        if ( element->setParameterExpression( row, s ) ) {
-          reset();
-          return true;
+    case 2: // expr
+        if (element->setParameterExpression(row, s)) {
+            reset();
+            return true;
         }
-      }
-      return false;
     }
-
-  }
+    return false;
+}
+}
 }
 
 #include "parameterlisteditordelegate.moc"

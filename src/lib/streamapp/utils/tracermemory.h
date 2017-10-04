@@ -20,82 +20,82 @@
 #ifndef __TRACERMEMORY_H__
 #define __TRACERMEMORY_H__
 
-#include "tracer.h"
-#include "containers/rawmemory.h"
 #include "appcore/threads/locks.h"
+#include "containers/rawmemory.h"
+#include "tracer.h"
 using namespace appcore;
 using namespace streamapp;
 
 namespace utils
 {
 
+/**
+  * TracerMemory
+  *   a Tracer implementation that logs to memory.
+  *   All messages are placed in a RawMemory block
+  *   as subsequent null-terminated strings.
+  *   When the maximum size is reached, half of the
+  *   block is cleared, the rest is shifted down.
+  ************************************************ */
+class TracerMemory : public Tracer
+{
+public:
     /**
-      * TracerMemory
-      *   a Tracer implementation that logs to memory.
-      *   All messages are placed in a RawMemory block
-      *   as subsequent null-terminated strings.
-      *   When the maximum size is reached, half of the
-      *   block is cleared, the rest is shifted down.
-      ************************************************ */
-  class TracerMemory : public Tracer
-  {
-  public:
-      /**
-        * Constructor.
-        * @param ac_nInitSize the initial size of the memory
-        * @param ac_nMaxSize the maximum size of the memory
-        */
-    TracerMemory( const unsigned ac_nInitSize = 1024, const unsigned ac_nMaxSize = 4096 );
+      * Constructor.
+      * @param ac_nInitSize the initial size of the memory
+      * @param ac_nMaxSize the maximum size of the memory
+      */
+    TracerMemory(const unsigned ac_nInitSize = 1024,
+                 const unsigned ac_nMaxSize = 4096);
 
-      /**
-        * Destructor.
-        */
+    /**
+      * Destructor.
+      */
     ~TracerMemory();
 
-      /**
-        * Set to call sf_TraceDebug() when a message is traced.
-        * @param ac_bSet true for yes
-        */
-    void mp_SetTraceDebug( const bool ac_bSet = true )
+    /**
+      * Set to call sf_TraceDebug() when a message is traced.
+      * @param ac_bSet true for yes
+      */
+    void mp_SetTraceDebug(const bool ac_bSet = true)
     {
-      mv_bDebug = ac_bSet;
+        mv_bDebug = ac_bSet;
     }
 
-      /**
-        * Get a reference to the memory block.
-        * @return a const reference. Const Is Good.
-        */
-    const RawMemory& mf_GetTrace() const
+    /**
+      * Get a reference to the memory block.
+      * @return a const reference. Const Is Good.
+      */
+    const RawMemory &mf_GetTrace() const
     {
-      return m_Trace;
+        return m_Trace;
     }
 
-      /**
-        * Get the actual number of bytes traced in the memory.
-        * @return the number
-        */
-    const unsigned& mf_nGetTraceLength() const
+    /**
+      * Get the actual number of bytes traced in the memory.
+      * @return the number
+      */
+    const unsigned &mf_nGetTraceLength() const
     {
-      return mv_nWritePoint;
+        return mv_nWritePoint;
     }
 
-  protected:
-      /**
-        * Implementation of the Tracer method.
-        */
-    void mp_TraceOne( const String& ac_sMessage );
+protected:
+    /**
+      * Implementation of the Tracer method.
+      */
+    void mp_TraceOne(const String &ac_sMessage);
 
-  private:
-    RawMemory             m_Trace;
-    bool                  mv_bDebug;
-    unsigned              mv_nWritePoint;
-    const unsigned        mc_nMaxSize;
+private:
+    RawMemory m_Trace;
+    bool mv_bDebug;
+    unsigned mv_nWritePoint;
+    const unsigned mc_nMaxSize;
     const CriticalSection mc_Lock;
 
-    TracerMemory( const TracerMemory& );
-    TracerMemory& operator = ( const TracerMemory& );
-  };
-
+    TracerMemory(const TracerMemory &);
+    TracerMemory &operator=(const TracerMemory &);
+};
 }
 
 #endif //#ifndef __TRACERMEMORY_H__

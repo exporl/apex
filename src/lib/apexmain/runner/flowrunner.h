@@ -17,39 +17,49 @@
  * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#ifndef FLOWRUNNER_H
-#define FLOWRUNNER_H
+#ifndef _EXPORL_SRC_LIB_APEXMAIN_RUNNER_FLOWRUNNER_H_
+#define _EXPORL_SRC_LIB_APEXMAIN_RUNNER_FLOWRUNNER_H_
 
 #include "experimentrunner.h"
-#include <QWebView>
 
-namespace apex {
-    class FlowApi;
+#include "commongui/webview.h"
+#include "common/websocketserver.h"
 
-class FlowRunner : public ExperimentRunner {
+namespace apex
+{
+
+class FlowRunnerPrivate;
+
+class FlowRunner : public ExperimentRunner
+{
     Q_OBJECT
 public:
-    virtual bool select(const QString& path) Q_DECL_OVERRIDE;
-    virtual void selectFromDir(const QString& path) Q_DECL_OVERRIDE;
+    FlowRunner();
+    ~FlowRunner();
 
-    virtual void makeVisible() Q_DECL_OVERRIDE;
-    virtual void makeInvisible() Q_DECL_OVERRIDE;
+    bool select(const QString &path) Q_DECL_OVERRIDE;
+    void selectFromDir(const QString &path) Q_DECL_OVERRIDE;
 
-public slots:
-    virtual void select(data::ExperimentData* data);
+    void makeVisible() Q_DECL_OVERRIDE;
+    void makeInvisible() Q_DECL_OVERRIDE;
 
-signals:
-    void errorMessage(const QString& source, const QString& message);
-    void setResultsFilePath(const QString& filepath);
-    void foundExpressions(const QMap<QString, QString>& expressions);
-    void savedFile(const QString& filePath);
+public Q_SLOTS:
+
+    void select(data::ExperimentData *data);
+    void setupView();
+    void cleanup();
+
+Q_SIGNALS:
+    void savedFile(const QString &filePath);
+    void errorMessage(const QString &source, const QString &message);
+    void setResultsFilePath(const QString &filepath);
+
+private Q_SLOTS:
+    void onSavedFile(const QString &filePath);
 
 private:
-    QString path;
-    QWebView *view;
-    FlowApi* api;
+    FlowRunnerPrivate *d;
 };
+}
 
-} // ns apex
-
-#endif // FLOWRUNNER_H
+#endif

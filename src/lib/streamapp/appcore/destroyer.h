@@ -25,54 +25,55 @@
 namespace appcore
 {
 
+/**
+  * Destroyer
+  *   the element that is set 'doomed'
+  *   will be deleted when the destructor is called.
+  ************************************************** */
+template <class tType>
+class Destroyer
+{
+public:
     /**
-      * Destroyer
-      *   the element that is set 'doomed'
-      *   will be deleted when the destructor is called.
-      ************************************************** */
-  template <class tType>
-  class Destroyer
-  {
-  public:
-      /**
-        * Constructor.
-        */
-    Destroyer() :
-      m_pDoomed( 0 )
-    {}
+      * Constructor.
+      */
+    Destroyer() : m_pDoomed(0)
+    {
+    }
 
-      /**
-        * Destructor.
-        * Deletes the doomed object, if any.
-        */
+    /**
+      * Destructor.
+      * Deletes the doomed object, if any.
+      */
     ~Destroyer()
     {
-      delete m_pDoomed;
+        delete m_pDoomed;
     }
 
-      /**
-        * Set the single doomed object.
-        * Must be used only once.
-        * @param a_pDoomed the object to be deleted
-        */
-    void SetDoomed( tType* a_pDoomed )
+    /**
+      * Set the single doomed object.
+      * Must be used only once.
+      * @param a_pDoomed the object to be deleted
+      */
+    void SetDoomed(tType *a_pDoomed)
     {
-      if( m_pDoomed )
-        Q_ASSERT( 0 && "this destroyer object already has a resource assigned to it" );
-      m_pDoomed = a_pDoomed;
+        if (m_pDoomed)
+            Q_ASSERT(
+                0 &&
+                "this destroyer object already has a resource assigned to it");
+        m_pDoomed = a_pDoomed;
     }
 
-  private:
-      /**
-        * Prevent users from making copies of a
-        * Destroyer to avoid double deletion.
-        */
-    Destroyer( const Destroyer<tType>& );
-    void operator= ( const Destroyer<tType>& );
+private:
+    /**
+      * Prevent users from making copies of a
+      * Destroyer to avoid double deletion.
+      */
+    Destroyer(const Destroyer<tType> &);
+    void operator=(const Destroyer<tType> &);
 
-    tType* m_pDoomed;
-  };
-
+    tType *m_pDoomed;
+};
 }
 
-#endif  //#ifndef __DESTROYER_H_
+#endif //#ifndef __DESTROYER_H_

@@ -31,52 +31,54 @@ using apex::writer::GeneralParametersWriter;
 using apex::data::GeneralParameters;
 
 QDomElement GeneralParametersWriter::addElement(QDomDocument *doc,
-        const GeneralParameters& data)
+                                                const GeneralParameters &data)
 {
     QDomElement rootElement = doc->documentElement();
     QDomElement general = doc->createElement(QSL("general"));
     rootElement.appendChild(general);
 
-    //exitafter
+    // exitafter
     if (data.GetExitAfter()) {
-        general.appendChild(XmlUtils::createTextElement(doc, "exitafter",
-                    ApexTools::boolToString(true)));
+        general.appendChild(XmlUtils::createTextElement(
+            doc, "exitafter", ApexTools::boolToString(true)));
     }
 
-    //autosave
+    // autosave
     if (data.GetAutoSave()) {
-        general.appendChild(XmlUtils::createTextElement(doc, "autosave",
-                    ApexTools::boolToString(true)));
+        general.appendChild(XmlUtils::createTextElement(
+            doc, "autosave", ApexTools::boolToString(true)));
     }
 
-    //waitforstart
+    // waitforstart
     if (data.GetWaitForStart()) {
-        general.appendChild(XmlUtils::createTextElement(doc, "waitforstart",
-                    ApexTools::boolToString(true)));
+        general.appendChild(XmlUtils::createTextElement(
+            doc, "waitforstart", ApexTools::boolToString(true)));
     }
 
-    //allowskip
+    // allowskip
     if (data.GetAllowSkip()) {
-        general.appendChild(XmlUtils::createTextElement(doc, "allowskip",
-                    ApexTools::boolToString(true)));
+        general.appendChild(XmlUtils::createTextElement(
+            doc, "allowskip", ApexTools::boolToString(true)));
     }
 
-    //runoutputtest
+    // runoutputtest
     if (data.RunOutputTest()) {
-        general.appendChild(XmlUtils::createTextElement(doc, "runoutputtest",
-                    ApexTools::boolToString(true)));
+        general.appendChild(XmlUtils::createTextElement(
+            doc, "runoutputtest", ApexTools::boolToString(true)));
     }
 
-    //outputtestinput
+    // outputtestinput
     QString input = data.OutputTestInput();
     if (!input.isEmpty()) {
-        general.appendChild(XmlUtils::createTextElement(doc, "outputtestinput", input));
+        general.appendChild(
+            XmlUtils::createTextElement(doc, "outputtestinput", input));
     }
 
-    //scriptlibrary
+    // scriptlibrary
     QString lib = data.GetScriptLibrary();
     if (!lib.isEmpty()) {
-        general.appendChild(XmlUtils::createTextElement(doc, "scriptlibrary", lib));
+        general.appendChild(
+            XmlUtils::createTextElement(doc, "scriptlibrary", lib));
     }
 
     return general;
