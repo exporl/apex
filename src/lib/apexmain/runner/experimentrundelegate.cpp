@@ -1,20 +1,20 @@
 /******************************************************************************
  * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
  *                                                                            *
- * This file is part of APEX 3.                                               *
+ * This file is part of APEX 4.                                               *
  *                                                                            *
- * APEX 3 is free software: you can redistribute it and/or modify             *
+ * APEX 4 is free software: you can redistribute it and/or modify             *
  * it under the terms of the GNU General Public License as published by       *
  * the Free Software Foundation, either version 2 of the License, or          *
  * (at your option) any later version.                                        *
  *                                                                            *
- * APEX 3 is distributed in the hope that it will be useful,                  *
+ * APEX 4 is distributed in the hope that it will be useful,                  *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
  * GNU General Public License for more details.                               *
  *                                                                            *
  * You should have received a copy of the GNU General Public License          *
- * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
 #include "apexdata/calibration/calibrationdata.h"
@@ -89,6 +89,8 @@
 #include "stimulus/filtertypes.h"
 #include "stimulus/playmatrix.h"
 #include "stimulus/stimulusoutput.h"
+
+#include "../study/studymodule.h"
 
 #include "timer/apextimer.h"
 
@@ -171,6 +173,7 @@ public:
     QScopedPointer<stimulus::StimulusOutput> mod_output;
     QScopedPointer<Feedback> mod_feedback;
     QScopedPointer<TrialStartTime> mod_trialStartTime;
+    QScopedPointer<StudyModule> studyModule;
     bertha::ExperimentData berthaExperimentData;
 
     ModuleList modules; // list of the modules above
@@ -240,6 +243,7 @@ void ExperimentRunDelegate::makeModules()
     d->mod_trialStartTime.reset(new TrialStartTime(*this));
     d->mod_randomgenerators.reset(
         rgFactory.GetRandomGenerators(*this, experiment.randomGenerators()));
+    d->studyModule.reset(new StudyModule(*this));
 
     d->mod_resultsink.reset(new ApexResultSink(*this));
 
@@ -260,7 +264,7 @@ void ExperimentRunDelegate::makeModules()
     d->modules << d->mod_screen.data() << d->mod_controllers.data()
                << d->mod_output.data() << d->mod_resultsink.data()
                << d->mod_timer.data() << d->mod_randomgenerators.data()
-               << d->mod_trialStartTime.data();
+               << d->mod_trialStartTime.data() << d->studyModule.data();
 
     // only add calibrator if configuration exists
     // must be last module added since it requires others
@@ -478,30 +482,8 @@ void ExperimentRunDelegate::MakeDatablocks()
             experiment.deviceById(dbData->device())->deviceType();
 
         if (devicetype == TYPE_WAVDEVICE) {
-            if (d->useBertha) {
-                bertha::BlockData dataBlock(dbData->id(),
-                                            QSL("ApexCompatibleDataBlock"));
-                if (dbData->nbChannels() != 0) {
-                    dataBlock.setOutputPorts(dbData->nbChannels());
-                } else if (filename.startsWith(QSL("silence:"))) {
-                    dataBlock.setOutputPorts(
-                        d->berthaExperimentData.device().inputPorts());
-                } else {
-                    int channels;
-                    try {
-                        channels = SndFile::channels(filename);
-                    } catch (...) {
-                        qCWarning(APEX_RS,
-                                  "Couldn't determine channels of datablock %s",
-                                  qPrintable(filename));
-                        channels = 1;
-                    }
-                    dataBlock.setOutputPorts(channels);
-                }
-                dataBlock.setParameter(QSL("filename"), filename);
-                dataBlock.setParameter(QSL("loops"), dbData->nbLoops());
-                d->berthaExperimentData.addBlock(dataBlock);
-            }
+            if (d->useBertha)
+                MakeBerthaDataBlock(*dbData);
             db = new WavDataBlock(*dbData, filename, this);
         } else if (devicetype == TYPE_COH) {
 
@@ -583,6 +565,33 @@ void ExperimentRunDelegate::MakeBerthaExperimentData()
             d->devices[devData->id()] = device;
         }
     }
+}
+
+void ExperimentRunDelegate::MakeBerthaDataBlock(
+    const data::DatablockData &dataBlockData)
+{
+    QString filename = FilePrefixConvertor::addPrefix(dataBlockData.prefix(),
+                                                      dataBlockData.file());
+    bertha::BlockData dataBlock(dataBlockData.id(),
+                                QSL("ApexCompatibleDataBlock"));
+    if (dataBlockData.nbChannels() != 0) {
+        dataBlock.setOutputPorts(dataBlockData.nbChannels());
+    } else if (filename.startsWith(QSL("silence:"))) {
+        dataBlock.setOutputPorts(d->berthaExperimentData.device().inputPorts());
+    } else {
+        int channels;
+        try {
+            channels = SndFile::channels(filename);
+        } catch (...) {
+            qCWarning(APEX_RS, "Couldn't determine channels of datablock %s",
+                      qPrintable(filename));
+            channels = 1;
+        }
+        dataBlock.setOutputPorts(channels);
+    }
+    dataBlock.setParameter(QSL("filename"), filename);
+    dataBlock.setParameter(QSL("loops"), dataBlockData.nbLoops());
+    d->berthaExperimentData.addBlock(dataBlock);
 }
 
 void ExperimentRunDelegate::FillDataBlockConnections(
@@ -760,6 +769,16 @@ void ExperimentRunDelegate::MakeStimuli()
             newStim->GetPlayMatrix(), d->datablocks,
             *experiment.connectionsData());
         d->stimuli[it.key()] = newStim;
+    }
+
+    /* FixDuplicateIDs might have added more datablocks. */
+    if (d->useBertha) {
+        Q_FOREACH (const QString &dataBlockId, d->datablocks.keys()) {
+            if (!d->berthaExperimentData.blockExists(dataBlockId)) {
+                MakeBerthaDataBlock(
+                    d->datablocks[dataBlockId]->GetParameters());
+            }
+        }
     }
 }
 
@@ -1080,6 +1099,11 @@ Feedback *ExperimentRunDelegate::modFeedback() const
 stimulus::StimulusOutput *ExperimentRunDelegate::modOutput() const
 {
     return d->mod_output.data();
+}
+
+StudyModule *ExperimentRunDelegate::modStudy() const
+{
+    return d->studyModule.data();
 }
 
 RandomGenerators *ExperimentRunDelegate::modRandomGenerators() const

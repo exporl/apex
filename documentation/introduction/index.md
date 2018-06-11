@@ -44,7 +44,7 @@ flexible auditory research platform using acoustic or electric stimuli
 for adults and young children”, Journal of Neuroscience Methods, 142,
 pp. 131-136, 2005.
 
-Main features of Apex3
+Main features of APEX 4
 ----------------------
 
 -   No programming is required to set up an experiment.
@@ -207,9 +207,9 @@ Overview of the user manual
 ---------------------------
 
 | ------------------- | ------------------------------------------------- |
-| Basic concepts      | Discusses the basic concepts of Apex3.            |
+| Basic concepts      | Discusses the basic concepts of APEX 4.            |
 | Creating experiment | Describes the structure of experiment files.      |
-| Scripting           | Describes how to automate (script) tasks in Apex3.|
+| Scripting           | Describes how to automate (script) tasks in APEX 4.|
 | Examples            | Discusses 4 example experiments in detail.        |
 | Examplestrategies   | Shows how to implement some common features of psychophysical and perceptual experiments.                                                               |
 | Results             | Shows result files can be analyzed.               |

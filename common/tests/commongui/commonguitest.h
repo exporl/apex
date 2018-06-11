@@ -40,6 +40,8 @@ class CommonGuiTest : public QObject
 private Q_SLOTS:
     void webViewTest();
     void webViewWebSocketsTest();
+
+    void listPickerTest();
 };
 
 #endif

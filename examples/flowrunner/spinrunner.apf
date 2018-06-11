@@ -1,0 +1,569 @@
+<!-- @doc
+     @what: Example HTML file for the flow runner
+     @description: The flow runner allows to chain multiple experiments together. When first started this HTML page will be shown, and after the experiment the user will be returned to this page.
+     @how: the function api.runExperiment allows to start a new experiment. When the experiment is finished, the function callback will be called by APEX, with as argument the name of the results file. The api is only accessible from within functions that are called by buttons. The api returns promises, for more information on promises: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+  -->
+<html>
+  <head>
+    <title>SPIN Runner</title>
+
+    <link rel="stylesheet" href="external/themes/apex-theme.min.css" />
+    <link rel="stylesheet" href="external/themes/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="external/themes/jquery.mobile.structure-1.4.5.min.css" />
+
+    <script src="js/polyfill.js" type="text/javascript"> </script>
+    <script src="js/commonwebsocket.js" type="text/javascript"> </script>
+    <script src="js/flowapi.js" type="text/javascript"> </script>
+
+    <script src="external/jquery-1.11.1.min.js"></script>
+    <script>
+        var materials =
+        [{
+            name: "LIST Man",
+            category: "man",
+            id: "listman",
+            experiment: "SPIN-LIST-man_01-LISTman_ltass",
+            enabled: true
+        },
+        {
+            name: "LIST Vrouw",
+            category: "vrouw",
+            id: "listvrouw",
+            experiment: "SPIN-LIST-vrouw_01-LISTvrouw_ltass",
+            enabled: true
+        },
+        {
+            name: "Lilliput",
+            id: "lilliput",
+            experiment: "SPIN-Lilliput_1-lilliput_ltass",
+            enabled: false
+        },
+        {
+            name: "NVA",
+            id: "nva",
+            experiment: "SPIN-NVA_16-NVA_ltass",
+            enabled: true
+        },
+        {
+            name: "VU man",
+            category: "man",
+            id: "vuman",
+            experiment: "SPIN-VU-man_1-VUman_ltass",
+            enabled: true
+        },
+        {
+            name: "VU vrouw",
+            category: "vrouw",
+            id: "vuvrouw",
+            experiment: "SPIN-VU-vrouw_1-VUvrouw_ltass",
+            enabled: true
+        }];
+
+        var noises = [];
+
+        var setup =
+        {
+            material: {},
+            list: "",
+            ear: "",
+            spintype: "",
+            noisevol:0,
+            speechvol:0
+        };
+
+        var currentScreen = 0;
+        var screens =
+        [{
+            name: "Patient",
+            id: "name_screen"
+        },
+        {
+            name: "Spraakmateriaal",
+            id: "mat_screen"
+        },
+        {
+            name: "Lijst",
+            id: "list_screen"
+        },
+        {
+            name: "Oor",
+            id: "ear_screen"
+        },
+        {
+            name: "Intensiteit",
+            id: "vol_screen"
+        }];
+
+        function showFirstScreen()
+        {
+            if(currentScreen > 0)
+            {
+                $("#"+screens[currentScreen].id).hide();
+                currentScreen = 0;
+            }
+            $("#"+screens[currentScreen].id).show();
+            setScreenTitle();
+        }
+
+        function showNextScreen()
+        {
+            $("#"+screens[currentScreen].id).hide();
+            currentScreen++;
+            currentScreen = currentScreen%screens.length;
+            $("#"+screens[currentScreen].id).show();
+            setScreenTitle();
+        }
+
+        function setScreenTitle()
+        {
+            $("#screentitle > h2").html(screens[currentScreen].name);
+        }
+
+        var TESTSTRING =
+        "";
+
+      function apicheck() {
+          if (typeof api !== "undefined")
+              api.onReady(init);
+          else
+              setTimeout(apicheck, 100);
+      }
+
+      $(document).ready(function(){
+          setTimeout(apicheck,100);
+      });
+
+      /* This function is called once the api is available */
+      function init() {
+          prepareForms();
+          showFirstScreen();
+
+          api.on("savedFile", reset);
+
+          setup.noisevol = $("input[id='noisefield']").val();
+          setup.speechvol = $("input[id='speechfield']").val();
+      }
+
+      function logResults(filename) {
+          api.readFile(filename).then(function(content) {
+              console.log(content);
+          });
+      }
+
+      function spinExperiment(filename)
+      {
+        api.absoluteFilePath(filename).then(
+              function(filePath) { ///apex:apex/general[1]/scriptparameters[1]/parameter[1]
+                  //general stuff
+                  expressions = {
+                    "apex:apex/general[1]/scriptparameters[1]/parameter[@name='targetlist']" : setup.list.id.split('_').join(' ')
+                  };
+                  // w name
+                  if(setup.name !== null)
+                  {
+                    $.extend(expressions, {
+                        "apex:apex/results[1]/subject[1]" : setup.name
+                    });
+                  }
+                  // with noise
+                  if(setup.spintype === "noise")
+                  {
+                      var targetAmp = "apex:apex/filters[1]/filter[@id='amplifier_channel"+otherEar()+"']/basegain[1]";
+                      var targetNoiseloop = "apex:apex/filters[1]/filter[@id='dataloop_channel"+otherEar()+"']/basegain[1]";
+                      $.extend(expressions, {
+                        "apex:apex/general[1]/scriptparameters[1]/parameter[@name='targetscreen']" : "experimenter_screen_noise",
+                        "apex:apex/procedure[1]/parameters[1]/start_value[1]" : String(parseInt(setup.speechvol) - parseInt(setup.noisevol)),
+                        "apex:apex/calibration[1]/parameters[1]/parameter[@id='gain0']/targetamplitude[1]" : setup.noisevol,
+                        "apex:apex/calibration[1]/parameters[1]/parameter[@id='gain1']/targetamplitude[1]" : setup.noisevol
+                      });
+                      expressions[targetAmp] = "-120"; //can't have dynamic keys via object literals
+                      expressions[targetNoiseloop] = "-120";
+                  }
+                  // no noise
+                  if(setup.spintype === "silence")
+                  {
+                      var targetAmp = "apex:apex/filters[1]/filter[@id='amplifier_channel"+otherEar()+"']/basegain[1]";
+                      $.extend(expressions, {
+                        "apex:apex/general[1]/scriptparameters[1]/parameter[@name='targetscreen']" : "experimenter_screen_quiet",
+                        "apex:apex/procedure[1]/parameters[1]/start_value[1]" : setup.speechvol,
+                        "apex:apex/calibration[1]/parameters[1]/parameter[@id='gain0']/targetamplitude[1]" : "0",
+                        "apex:apex/calibration[1]/parameters[1]/parameter[@id='gain1']/targetamplitude[1]" : "0",
+                        "apex:apex/filters[1]/filter[@id='dataloop_channel0']/gain[1]" : "-140",
+                        "apex:apex/filters[1]/filter[@id='dataloop_channel1']/gain[1]" : "-140"
+                      });
+                      expressions[targetAmp] = "-120";
+                  }
+
+                  api.runExperiment(filePath, expressions);
+
+              });
+      }
+
+      function otherEar()
+      {
+        return 1-parseInt(setup.ear);
+      }
+
+      currentLists = [];
+      // adds an array of elements of ~form {id:x,name:x} to a <ul>, uses id for value and name for label
+      // is used for both materials and their lists (type arg specifies for special behavior)
+      function addLists(selectId,items, type)
+      {
+        if(type === "list")
+        {
+            // check if there are existing handlers to remove
+            if(currentLists.length > 0)
+            {
+                $.each(currentLists, function (i, item) {
+                    $(item).off();
+                });
+            }
+            currentLists = [];
+        }
+
+        $.each(items, function (i, item) {
+
+            if(type === "list")
+                currentLists.push('#listselect_'+item.id);
+
+            if(type === "material" && item.enabled !== null && !item.enabled)
+                return true; // continue in each-loop if this material is disabled
+
+            $('#'+selectId+'').append(
+                $('<li>').append(
+                    $('<a>').attr('href','#').attr('id','listselect_'+item.id).append(item.name)));
+
+            $('#listselect_'+item.id).click(function()
+            {
+                setup[type] = item;
+
+                if(item.category !== null)
+                    setup.category = item.category;
+
+                if(type === "material")
+                {
+                    //load lists
+                    console.log("loading lists");
+                    loadMaterialLists();
+                }
+
+                showNextScreen();
+            });
+        });
+
+        $('#'+selectId+'').listview("refresh");
+        //$('select').selectmenu('refresh',true);
+      }
+
+      var extractedLists = [];
+      function loadMaterialLists()
+      {
+        //empty existing list
+        $("#spin_list").empty();
+
+        //check which material was chosen
+        //use material.filename and api.loadFile to get js file (has list of lists)
+        //load js file to see which keys are in speechmaterial obj
+        //use Object.keys(speechmaterial) to get array
+        //addLists("spin_list",items,"list")
+        api.absoluteFilePath("apx/" + setup.material.experiment + ".js").then(
+              function(filePath) {
+                  return api.readFile(filePath);
+              }).then(function(content)
+              {
+                eval(content);
+                extractedLists = Object.keys(speechmaterial).sort(naturalCompare);
+                extractedLists = extractedLists.map(function(l){ return { id: l.split(' ').join('_'),name: l}; });
+                addLists("spin_list", extractedLists, "list");
+          });
+      }
+
+      // fills first list of materials, hides stuff, adds listeners to buttons, etc
+      function prepareForms()
+      {
+        //name input
+        $("#name_ok").click(function()
+        {
+            if($("#namefield").val().length > 0)
+            {
+                setup.name = $("#namefield").val();
+            }
+            showNextScreen();
+        });
+
+        $("#name_skip").click(function()
+        {
+            showNextScreen();
+        });
+
+        var mats = materials.map(function(m){ return m.name; });
+        addLists("spin_mat",materials, "material");
+
+        // ear buttons
+        $("input[name='side_radio']").change(function()
+        {
+            console.log("clicked ear");
+            setup.ear = $("input[name='side_radio']").val();
+            showNextScreen();
+        });
+
+        // vol/intensity buttons
+        $("input[name='spin_type']").change(function()
+        {
+            console.log("clicked spintype");
+            //showNextScreen();
+            if(this.id === "spin_type_silence")
+            {
+                $("#vol_snr").hide();
+                $("#vol_noise").hide();
+                $("#vol_speech").show();
+            }
+            else{
+                $("#vol_snr").show();
+                $("#vol_noise").show();
+                $("#vol_speech").show();
+            }
+            setup.spintype = $("input[name='spin_type']:checked").val();
+        });
+
+        //noise vol/intensity
+        $("input[id='noisefield']").change(function()
+        {
+            setup.noisevol = $("input[id='noisefield']").val();
+            //set speech
+            $("input[id='speechfield']").val(parseInt($("input[id='noisefield']").val()) + parseInt($("input[id='snrfield']").val()));
+            setup.speechvol = $("input[id='speechfield']").val();
+        });
+
+        //speech vol/intensity
+        $("input[id='speechfield']").change(function()
+        {
+            setup.speechvol = $("input[id='speechfield']").val();
+
+            //set snr field
+            //$("input[id='snrfield']").val(parseInt($("input[id='speechfield']").val()) - parseInt($("input[id='noisefield']").val()));
+
+            //set noise
+            $("input[id='noisefield']").val(parseInt($("input[id='speechfield']").val()) - parseInt($("input[id='snrfield']").val()));
+            setup.noise = $("input[id='noisefield']").val();
+        });
+
+        //snr vol/intensity
+        $("input[id='snrfield']").change(function()
+        {
+            //setup.speechvol = $("input[id='snrfield']").val();
+            $("input[id='speechfield']").val(parseInt($("input[id='noisefield']").val()) + parseInt($("input[id='snrfield']").val()));
+            setup.noisevol = $("input[id='noisefield']").val();
+            setup.speechvol = $("input[id='speechfield']").val();
+        });
+
+        $("#vol_noise,#vol_speech,#vol_snr").hide();
+
+        // start experiment button
+        $("#startexp").click(function()
+        {
+            if($("input[name='spin_type']:checked").length > 0) // checks if noise/silence radio was pressed before starting exp
+            {
+                spinExperiment("apx/"+setup.material.experiment+".apx");
+                $("#startbtn").hide();
+            }
+        });
+      }
+
+      function back()
+      {
+        if(currentScreen == 0) return;
+        $("#"+screens[currentScreen].id).hide();
+        currentScreen--;
+        currentScreen = currentScreen%screens.length;
+        $("#"+screens[currentScreen].id).show();
+    }
+
+    function naturalCompare(a, b) {
+        var ax = [], bx = [];
+
+        a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+        b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+
+        while(ax.length && bx.length) {
+            var an = ax.shift();
+            var bn = bx.shift();
+            var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+            if(nn) return nn;
+        }
+
+        return ax.length - bx.length;
+    }
+
+    function reset()
+    {
+        document.getElementById('spinform').reset();
+
+        showFirstScreen();
+
+        $("#vol_snr").hide();
+        $("#vol_noise").hide();
+        $("#vol_speech").hide();
+
+        setup =
+        {
+            material: {},
+            list: "",
+            ear: "",
+            spintype: "",
+            noisevol:0,
+            speechvol:0
+        };
+
+        setup.noisevol = $("input[id='noisefield']").val();
+        setup.speechvol = $("input[id='speechfield']").val();
+
+        $("#startbtn").show();
+    }
+
+    function changeSNR(n)
+    {
+        $("input[id='snrfield']").val( parseFloat($("input[id='snrfield']").val()) + n);
+        $("input[id='snrfield']").trigger("change");
+    }
+
+    function changeVol(type, n)
+    {
+        $("input[id='"+type+"field']").val( parseFloat($("input[id='"+type+"field']").val()) + n);
+        $("input[id='"+type+"field']").trigger("change");
+    }
+    </script>
+
+    <script src="external/jquery.mobile-1.4.5.min.js"></script>
+
+    <style>
+        h2
+        {
+            color: #2F3843;
+        }
+        .subcontainer
+        {
+            display: none;
+        }
+
+        .ui-content ​.ui-listview​ .ui-li-divider
+        {
+            font-family: Sans-Serif;
+        }​
+
+        #vol_screen label
+        {
+            display: block;
+            padding-top: 8px;
+        }
+    </style>
+  </head>
+  <body>
+
+      <div class="container">
+
+      <form id="spinform">
+        <div id="header" style="margin-bottom:5px;display: block">
+            <table width="100%">
+            <tr>
+                <td width="50">
+                    <a href="#" onclick="back()" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-iconshadow="false" style="float: left; box-shadow: none;">No text</a>
+                </td>
+                <td align="center">
+                    <div id="screentitle"><h2>Spraak in ruis testen</h2></div>
+                </td>
+            </tr>
+            </table>
+        </div>
+
+        <div class="subcontainer" id="name_screen">
+            <div id="nameform">
+                    <label for="namefield">Naam</label>
+                    <span class="desc">Optioneel</span>
+                    <input id="namefield" type="text" class="apexresetfield"></input>
+            </div>
+
+            <a id="name_ok" href="#" data-role="button" data-inline="true" data-theme="b">Ok</a>
+            <a id="name_skip" href="#" data-role="button" data-inline="true">Overslaan</a>
+
+        </div>
+
+        <div class="subcontainer" id="mat_screen">
+            <ul id="spin_mat" data-role="listview" data-inset="true" data-divider-theme="a" >
+                <!--<li data-role="list-divider">Spraakmateriaal</li>-->
+            </ul>
+        </div>
+
+        <div class="subcontainer" id="list_screen">
+
+            <ul id="spin_list" data-role="listview" data-inset="true" data-divider-theme="a" >
+                <!--<li data-role="list-divider">Lijst</li>-->
+           </ul>
+
+        </div>
+
+        <div class="subcontainer" id="ear_screen">
+            <fieldset data-role="controlgroup" data-type="horizontal">
+                <label for="side_left">Links</label>
+                <input type="radio" name="side_radio" id="side_left" value="0" class="apexreset">
+                <label for="side_right">Rechts</label>
+                <input type="radio" name="side_radio" id="side_right" value="1" class="apexreset">
+            </fieldset>
+        </div>
+
+        <div class="subcontainer" id="vol_screen">
+                <fieldset data-role="controlgroup" data-type="horizontal">
+                    <legend></legend>
+                    <label for="spin_type_noise">Ruis</label>
+                    <input type="radio" name="spin_type" id="spin_type_noise" value="noise" class="apexreset" selected>
+
+                    <label for="spin_type_silence">Stilte</label>
+                    <input type="radio" name="spin_type" id="spin_type_silence" value="silence" class="apexreset">
+                </fieldset>
+
+                <div id="vol_noise">
+                    <label for="noisefield" style="text-align:center">Ruis</label>
+                    <span class="desc" style="display:block;text-align:center">Intensiteit in dB</span>
+                    <fieldset class="ui-grid-d">
+                        <div class="ui-block-a"><a onclick="changeVol('noise',-2);" data-role="button">- 2</a></div>
+                        <div class="ui-block-b"><a onclick="changeVol('noise',-1);" data-role="button">-</a></div>
+                        <div class="ui-block-c"><input id="noisefield" type="number" data-role="stepper" value="65" min="0" max="120" step="5" class="apexresetfield" style="height:2.7em; background-color: #e0eeee"></input></div>
+                        <div class="ui-block-d"><a onclick="changeVol('noise',1);" data-role="button">+</a></div>
+                        <div class="ui-block-e"><a onclick="changeVol('noise',2);" data-role="button">+ 2</a></div>
+                    </fieldset>
+                </div>
+
+                <div id="vol_speech">
+                    <label for="speechfield" style="text-align:center">Spraak</label>
+                    <span class="desc" style="display:block;text-align:center">Intensiteit in dB</span>
+                    <fieldset class="ui-grid-d">
+                        <div class="ui-block-a"><a onclick="changeVol('speech',-2);" data-role="button">- 2</a></div>
+                        <div class="ui-block-b"><a onclick="changeVol('speech',-1);" data-role="button">-</a></div>
+                        <div class="ui-block-c"><input id="speechfield" type="number" data-role="stepper" value="63" min="0" max="120" step="5" class="apexresetfield" style="height:2.7em; background-color: #e0eeee"></input></div>
+                        <div class="ui-block-d"><a onclick="changeVol('speech',1);" data-role="button">+</a></div>
+                        <div class="ui-block-e"><a onclick="changeVol('speech',2);" data-role="button">+ 2</a></div>
+                    </fieldset>
+                </div>
+
+                <div id="vol_snr">
+                    <label for="snrfield" style="text-align:center">SNR</label>
+                    <span class="desc" style="display:block;text-align:center">Verschil spraak & ruis</span>
+                    <fieldset class="ui-grid-d">
+                        <div class="ui-block-a"><a onclick="changeVol('snr',-2);" data-role="button">- 2</a></div>
+                        <div class="ui-block-b"><a onclick="changeVol('snr',-1);" data-role="button">-</a></div>
+                        <div class="ui-block-c"><input id="snrfield" type="number" data-role="stepper" value="-2" min="-40" max="40" step="5" class="apexresetfield" style="height:2.7em; background-color: #e0eeee"></input></div>
+                        <div class="ui-block-d"><a onclick="changeVol('snr',1);" data-role="button">+</a></div>
+                        <div class="ui-block-e"><a onclick="changeVol('snr',2);" data-role="button">+ 2</a></div>
+                    </fieldset>
+                </div>
+
+                <div id="startbtn">
+                    <input type="button" data-icon="arrow-r" data-iconpos="right" value="Start experiment" id="startexp">
+                </div>
+        </div>
+        </form>
+
+      </div>
+
+  </body>
+</html>

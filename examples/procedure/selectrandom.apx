@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
   <!-- @doc
   @what: Test of random stimulus output when more than one stimulus defined in the experiment
   @description: Random selection of stimuli in a trial if there are more than one (=> sequential presentation of stimuli => more trials) - When you click on 1, 'een', 'twee', 'drie' is presented randomly in both ears

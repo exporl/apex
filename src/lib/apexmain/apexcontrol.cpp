@@ -18,6 +18,8 @@
 
 #include "device/soundcardsettings.h"
 
+#include "study/studymanager.h"
+
 #include "gui/connectiondialog.h"
 #include "gui/mainwindow.h"
 #include "gui/mru.h"
@@ -34,6 +36,8 @@
 
 #include "stimulus/stimuluscontrol.h"
 #include "stimulus/stimulusoutput.h"
+
+#include "study/studymodule.h"
 
 #include "wavstimulus/soundcarddisplayer.h"
 #include "wavstimulus/wavdeviceio.h"
@@ -64,6 +68,14 @@ ApexControl *ApexControl::instance = NULL;
 ApexControl::ApexControl(bool launchStandalone)
     : mod_experimentselector(new SimpleRunner),
       m_Wnd(new gui::ApexMainWindow()),
+      recordExperiments(false),
+      dummySoundcard(false),
+      autoStartExperiments(false),
+      deterministicRandom(false),
+      noResults(false),
+      autoSaveResults(false),
+      exitAfter(false),
+      useBertha(true),
       launchStandalone(launchStandalone)
 {
     instance = this;
@@ -85,14 +97,24 @@ ApexControl::ApexControl(bool launchStandalone)
     connect(m_Wnd, SIGNAL(autoAnswerClicked()), this, SLOT(enableAutoAnswer()));
     connect(m_Wnd, SIGNAL(showStimulus()), this, SLOT(ShowStimulus()));
     connect(m_Wnd, SIGNAL(recalibrateClicked()), this, SLOT(calibrate()));
-    connect(m_Wnd, SIGNAL(createShortcut()), this, SLOT(createShortcut()));
+#ifdef Q_OS_ANDROID
+    connect(m_Wnd, SIGNAL(createShortcutToFile()),
+            apex::android::ApexAndroidBridge::instance(),
+            SLOT(createShortcutToFile()));
+    connect(m_Wnd, SIGNAL(createShortcutToRunner()),
+            apex::android::ApexAndroidBridge::instance(),
+            SLOT(createShortcutToRunner()));
+#endif
     connect(m_Wnd, SIGNAL(startGdbServer()), this, SLOT(startGdbServer()));
+    connect(m_Wnd, SIGNAL(openStudyManager()), this, SLOT(openStudyManager()));
     connect(mod_experimentselector.data(),
             SIGNAL(selected(data::ExperimentData *)), this,
             SLOT(newExperiment(data::ExperimentData *)));
     connect(mod_experimentselector.data(),
             SIGNAL(errorMessage(QString, QString)), this,
             SLOT(errorMessage(QString, QString)));
+    connect(mod_experimentselector.data(), SIGNAL(setResultsFilePath(QString)),
+            this, SLOT(setResultsFilePath(QString)));
 
     // make sure to quit when everything is closed
     connect(QCoreApplication::instance(), SIGNAL(lastWindowClosed()), this,
@@ -144,8 +166,9 @@ void ApexControl::StartUp()
     }
 
 #ifdef Q_OS_ANDROID
-    android::ApexAndroidMethods::signalApexInitialized();
+    android::ApexAndroidBridge::signalApexInitialized();
 #endif
+    Q_EMIT apexInitialized();
 }
 
 // parse mainconfig
@@ -165,9 +188,9 @@ bool ApexControl::configure()
         APEX_RS, "%s",
         qPrintable(QSL("%1: %2").arg(
             "APEX",
-            tr("The APEX 3 binaries use the Nokia Qt framework available\n"
+            tr("The APEX 4 binaries use the Nokia Qt framework available\n"
                "under the GNU General Public License (GPL version 2) on:\n"
-               "http://qt.nokia.com/. The APEX 3 source code and\n"
+               "http://qt.nokia.com/. The APEX 4 source code and\n"
                "binaries are available under the GNU General Public License\n"
                "(GPL version 2) on http://www.kuleuven.be/exporl/apex."))));
 
@@ -299,7 +322,7 @@ void ApexControl::parseCommandLine()
     QString experimentfile = parser.positionalArguments().value(0);
     bool listSoundcards = parser.isSet(QSL("soundcards"));
     mSaveFilename = parser.value(QSL("resultsfile"));
-    QString pluginRunner = parser.value(QSL("pluginrunner"));
+    bool pluginRunner = parser.isSet(QSL("pluginrunner"));
     recordExperiments = parser.isSet(QSL("record"));
     dummySoundcard = parser.isSet(QSL("virtual-soundcard"));
     autoStartExperiments = parser.isSet(QSL("autostart"));
@@ -328,17 +351,19 @@ void ApexControl::parseCommandLine()
         return;
     }
 
-    if (!pluginRunner.isEmpty()) {
+    if (pluginRunner) {
         mod_experimentselector.reset(new PluginRunner());
 
         connect(mod_experimentselector.data(),
-                SIGNAL(Selected(data::ExperimentData *)), this,
+                SIGNAL(selected(data::ExperimentData *)), this,
                 SLOT(newExperiment(data::ExperimentData *)));
+        connect(mod_experimentselector.data(), SIGNAL(selected(QString)), this,
+                SLOT(fileOpen(QString)));
         connect(mod_experimentselector.data(),
                 SIGNAL(errorMessage(const QString &, const QString &)), this,
                 SLOT(errorMessage(const QString &, const QString &)));
 
-        mod_experimentselector->select(pluginRunner);
+        mod_experimentselector->select(parser.value(QSL("pluginrunner")));
         return;
     }
 
@@ -354,8 +379,11 @@ void ApexControl::parseCommandLine()
             m_Wnd->SetOpenDir(url.absoluteFilePath());
             fileOpen();
         }
-    } else if (!launchStandalone)
+    }
+#ifndef Q_OS_ANDROID
+    else
         showStartupDialog();
+#endif
 }
 
 bool ApexControl::newExperiment(data::ExperimentData *data)
@@ -365,6 +393,11 @@ bool ApexControl::newExperiment(data::ExperimentData *data)
 
     if (experimentControl && experimentControl->isRunning())
         return false;
+
+    QString resultsFilePath =
+        StudyManager::instance()->newExperiment(data->fileName());
+    if (!resultsFilePath.isEmpty())
+        setResultsFilePath(resultsFilePath);
 
     experimentControl.reset();
     experimentControl.reset(new ExperimentControl(flags));
@@ -417,7 +450,8 @@ bool ApexControl::newExperiment(data::ExperimentData *data)
         qCCritical(APEX_RS, "ApexControl: FAILED");
     }
 
-    m_Wnd->SetOpenDir(QFileInfo(experimentData->fileName()).absolutePath());
+    if (!StudyManager::instance()->belongsToActiveStudy(data->fileName()))
+        m_Wnd->SetOpenDir(QFileInfo(experimentData->fileName()).absolutePath());
 
     if (ErrorHandler::instance()->numberOfErrors())
         return false;
@@ -425,7 +459,7 @@ bool ApexControl::newExperiment(data::ExperimentData *data)
     qCInfo(APEX_RS, "ApexControl: DONE");
     experimentControl->start();
 #ifdef Q_OS_ANDROID
-    android::ApexAndroidMethods::signalExperimentStarted();
+    android::ApexAndroidBridge::signalExperimentStarted();
 #endif
     return true;
 }
@@ -445,7 +479,7 @@ void ApexControl::afterExperiment()
     stimulusControl.reset();
 
 #ifdef Q_OS_ANDROID
-    android::ApexAndroidMethods::signalExperimentFinished();
+    android::ApexAndroidBridge::signalExperimentFinished();
 #endif
 
     if (quit)
@@ -469,6 +503,8 @@ void ApexControl::setupIo()
             SLOT(playStimulus(QString, double)));
     connect(stimulusControl.data(), SIGNAL(stimulusPlayed()), io,
             SLOT(onStimulusPlayed()));
+    connect(experimentControl.data(), SIGNAL(experimentDone()),
+            runDelegate->modStudy(), SLOT(experimentDone()));
 }
 
 bool ApexControl::isExperimentRunning() const
@@ -478,42 +514,26 @@ bool ApexControl::isExperimentRunning() const
 
 void ApexControl::fileOpen(const QString &file)
 {
-    if (file.endsWith(".apf")) {
-        mod_experimentselector.reset(new FlowRunner());
-        connect(mod_experimentselector.data(),
-                SIGNAL(selected(data::ExperimentData *)), this,
-                SLOT(newExperiment(data::ExperimentData *)));
-        connect(mod_experimentselector.data(),
-                SIGNAL(errorMessage(QString, QString)), this,
-                SLOT(errorMessage(QString, QString)));
+    mod_experimentselector.reset(new SimpleRunner());
+
+    connect(mod_experimentselector.data(),
+            SIGNAL(selected(data::ExperimentData *)), this,
+            SLOT(newExperiment(data::ExperimentData *)));
+    connect(mod_experimentselector.data(),
+            SIGNAL(errorMessage(QString, QString)), this,
+            SLOT(errorMessage(QString, QString)));
+    connect(mod_experimentselector.data(), SIGNAL(setResultsFilePath(QString)),
+            this, SLOT(setResultsFilePath(QString)));
+    if (!StudyManager::instance()->belongsToActiveStudy(file))
         connect(mod_experimentselector.data(), SIGNAL(opened(QString)),
                 m_Wnd->GetMru(), SLOT(addAndSave(QString)));
-        connect(mod_experimentselector.data(),
-                SIGNAL(setResultsFilePath(QString)), this,
-                SLOT(setResultsFilePath(QString)));
+
+    if (file.isEmpty())
+        mod_experimentselector->selectFromDir(m_Wnd->GetOpenDir());
+    else if (QFileInfo(file).isDir())
+        mod_experimentselector->selectFromDir(file);
+    else
         mod_experimentselector->select(file);
-    } else {
-        mod_experimentselector.reset(new SimpleRunner());
-
-        connect(mod_experimentselector.data(), SIGNAL(opened(QString)),
-                m_Wnd->GetMru(), SLOT(addAndSave(QString)));
-        connect(mod_experimentselector.data(),
-                SIGNAL(selected(data::ExperimentData *)), this,
-                SLOT(newExperiment(data::ExperimentData *)));
-        connect(mod_experimentselector.data(),
-                SIGNAL(errorMessage(QString, QString)), this,
-                SLOT(errorMessage(QString, QString)));
-        connect(mod_experimentselector.data(),
-                SIGNAL(setResultsFilePath(QString)), this,
-                SLOT(setResultsFilePath(QString)));
-
-        if (file.isEmpty())
-            mod_experimentselector->selectFromDir(m_Wnd->GetOpenDir());
-        else if (QFileInfo(file).isDir())
-            mod_experimentselector->selectFromDir(file);
-        else
-            mod_experimentselector->select(file);
-    }
 }
 
 void ApexControl::saveExperiment()
@@ -620,18 +640,20 @@ void ApexControl::showStartupDialog()
         fileOpen(dialog.selectedFile());
 }
 
-void apex::ApexControl::startPluginRunner()
+void apex::ApexControl::startPluginRunner(const QString &runner)
 {
     mod_experimentselector.reset(new PluginRunner());
 
     connect(mod_experimentselector.data(),
-            SIGNAL(Selected(data::ExperimentData *)), this,
+            SIGNAL(selected(data::ExperimentData *)), this,
             SLOT(newExperiment(data::ExperimentData *)));
+    connect(mod_experimentselector.data(), SIGNAL(selected(QString)), this,
+            SLOT(fileOpen(QString)));
     connect(mod_experimentselector.data(),
             SIGNAL(errorMessage(const QString &, const QString &)), this,
             SLOT(errorMessage(const QString &, const QString &)));
 
-    mod_experimentselector->select(QString());
+    mod_experimentselector->select(runner);
 }
 
 void ApexControl::selectSoundcard()
@@ -675,32 +697,16 @@ void apex::ApexControl::calibrate()
         runDelegate->modCalibrator()->updateParameters();
 }
 
-void ApexControl::createShortcut()
-{
-#ifdef Q_OS_ANDROID
-    QFileDialog dlg(m_Wnd, tr("Create shortcut to experiment"));
-    QStringList docLocations =
-        QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
-    if (!docLocations.isEmpty())
-        dlg.setDirectory(docLocations.first());
-    dlg.setLabelText(QFileDialog::Accept, tr("Create"));
-    dlg.setFileMode(QFileDialog::ExistingFiles);
-    dlg.setViewMode(QFileDialog::List);
-    dlg.setNameFilter(tr("Apex experiment files (*.apx *.xml)"));
-    dlg.setDefaultSuffix(QSL("apx"));
-    ApexTools::expandWidgetToWindow(&dlg);
-    if (dlg.exec() == QDialog::Accepted) {
-        Q_FOREACH (const QString &file, dlg.selectedFiles())
-            android::ApexAndroidMethods::addShortcut(file);
-    }
-#endif
-}
-
 void ApexControl::startGdbServer()
 {
 #ifdef Q_OS_ANDROID
-    android::ApexAndroidMethods::startGdbServer();
+    android::ApexAndroidBridge::startGdbServer();
 #endif
+}
+
+void ApexControl::openStudyManager()
+{
+    StudyManager::instance()->showConfigurationDialog();
 }
 
 const ExperimentControl &ApexControl::getCurrentExperimentControl()

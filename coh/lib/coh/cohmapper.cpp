@@ -53,7 +53,8 @@ public:
     unsigned level(double magnitude)
     {
         if (magnitude < 0.0 || magnitude > 1.0)
-            throw Exception(tr("Magnitude out of bounds [0, 1]"));
+            throw Exception(
+                tr("Magnitude out of bounds [0, 1]: %1").arg(magnitude));
         return qRound(tLevel + (cLevel - tLevel) * volume * magnitude);
     }
 
@@ -94,6 +95,8 @@ public:
     double phaseWidth;
     double phaseGap;
     double period;
+    CohSequenceMapper::DefaultTrigger trigger;
+    bool firstTriggered;
 
     QMap<int, CohSequenceMapperChannel> channels;
 };
@@ -171,6 +174,17 @@ void CohSequenceMapperPrivate::visit(CohBiphasicStimulus *command)
                 mapped->setPhaseGap(phaseGap);
             if (copyable(mapped, Coh::Period))
                 mapped->setPeriod(period);
+            if (copyable(mapped, Coh::Trigger)) {
+                if (trigger == CohSequenceMapper::DefaultTrigger::AllTriggers)
+                    mapped->setTrigger(true);
+                else if (trigger ==
+                             CohSequenceMapper::DefaultTrigger::FirstTrigger &&
+                         !firstTriggered)
+                    mapped->setTrigger(true);
+                else
+                    mapped->setTrigger(false);
+                firstTriggered = true;
+            }
         }
         current->append(mapped.take());
         break;
@@ -210,6 +224,7 @@ CohSequenceMapper::CohSequenceMapper(CohSequence *sequence)
 
     d->sequence = sequence;
     d->has = 0;
+    d->trigger = DefaultTrigger::NoTriggers;
 }
 
 CohSequenceMapper::~CohSequenceMapper()
@@ -284,5 +299,14 @@ void CohSequenceMapper::setChannel(int channel, Coh::Electrode active,
 
     d->channels[channel] =
         CohSequenceMapperChannel(active, reference, t, c, volume);
+}
+
+void CohSequenceMapper::setDefaultTrigger(DefaultTrigger trigger)
+{
+    E_D(CohSequenceMapper);
+
+    d->has |= Coh::Trigger;
+    d->trigger = trigger;
+    d->firstTriggered = false;
 }
 }

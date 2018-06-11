@@ -40,7 +40,7 @@ clebsDependency(protobuf) {
 
     protobuf_decl.input = PROTOS
     protobuf_decl.output = $$OBJECTS_DIR/${QMAKE_FILE_BASE}.pb.h
-    protobuf_decl.commands = @echo compiling protobuf $< && $$PROTOBUFPROTOC --cpp_out=$$OBJECTS_DIR $$PROTOPATHS ${QMAKE_FILE_NAME}
+    protobuf_decl.commands = @echo compiling protobuf && $$PROTOBUFPROTOC --cpp_out=$$OBJECTS_DIR $$PROTOPATHS ${QMAKE_FILE_NAME}
     protobuf_decl.variable_out = GENERATED_FILES
 
     protobuf_impl.input = PROTOS
@@ -51,7 +51,7 @@ clebsDependency(protobuf) {
 
     protobuf_python.input = PYTHON_PROTOS
     protobuf_python.output = $$DESTDIR/${QMAKE_FILE_BASE}_pb2.py
-    protobuf_python.commands = @echo compiling protobuf ${QMAKE_FILE_NAME} && $$PROTOBUFPROTOC --python_out=$$DESTDIR $$PROTOPATHS ${QMAKE_FILE_NAME}
+    protobuf_python.commands = @echo compiling protobuf && $$PROTOBUFPROTOC --python_out=$$DESTDIR $$PROTOPATHS ${QMAKE_FILE_NAME}
     protobuf_python.variable_out = GENERATED_FILES
     protobuf_python.CONFIG += target_predeps
 

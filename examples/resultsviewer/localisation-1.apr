@@ -3,7 +3,7 @@
 <general>
     <apex_version>3.1.x</apex_version>
     <apex_version_git>(7962f3) -   Wed Nov 4 12:52:46 2015 +0100</apex_version_git>
-    <description> APEX 3 localisation experiment</description>
+    <description> APEX 4 localisation experiment</description>
     <startdate>2015-11-19T14:52:03</startdate>
     <enddate>2015-11-19T14:55:00</enddate>
     <duration unit="seconds">176</duration>

@@ -105,6 +105,22 @@
 #win32:LIBLOLIBDIR_DEBUG = $${LIBLOLIBDIR}/DebugDLL
 #win32:LIBLOINCLUDEDIR = $${LIBLOROOT}
 
+#win32:OPENSSLROOT = $$BASEDIR/../api/openssl
+#win32:OPENSSLBINDIR = $${OPENSSLROOT}/bin
+#win32:OPENSSLLIBDIR = $${OPENSSLROOT}/lib
+#win32:LIBSSLLIB = ssleay32
+#win32:LIBCRYPTOLIB = libeay32
+
+#win32:LIBSSH2ROOT = $$BASEDIR/../api/libssh2
+#win32:LIBSSH2BINDIR = $${LIBSSH2ROOT}/bin
+#win32:LIBSSH2LIBDIR = $${LIBSSH2ROOT}/lib
+#win32:LIBSSH2LIB = libssh2
+
+#win32:LIBGIT2ROOT = $$BASEDIR/../api/libgit2
+#win32:LIBGIT2BINDIR = $${LIBGIT2ROOT}/bin
+#win32:LIBGIT2LIBDIR = $${LIBGIT2ROOT}/lib
+#win32:LIBGIT2LIB = git2
+
 # Installation paths for Unix
 #unix:PREFIX = $$BASEDIR/bin/installed
 #unix:CONFDIR = /etc

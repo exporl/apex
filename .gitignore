@@ -28,3 +28,4 @@ documentation/doxygen/output/
 /android
 pkg-config_wrapper.sh
 *.so-deployment-settings.json
+.qmake.stash

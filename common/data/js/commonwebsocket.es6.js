@@ -65,7 +65,6 @@ class CommonSocket {
         this._webSocket.onmessage = this._onMessage;
         this._webSocket.onclose = this._closeHandler;
         this._webSocket.parent = this;
-
     }
 
     close() {
@@ -73,6 +72,12 @@ class CommonSocket {
             this._reject('Closing socket');
         this._webSocket.onclose = undefined;
         this._webSocket.close();
+    }
+
+    onOpen(callback) {
+        if (this._webSocket.readyState === WebSocket.OPEN)
+            callback();
+        this._webSocket.onopen = callback;
     }
 
     buildUserMessage(data) {
@@ -164,7 +169,7 @@ class CommonSocket {
             if (!this.parent._invokables.hasOwnProperty(method))
                 console.error('Invokable ' + method + ' not in invokables');
             this.parent._invokables[method].forEach(invokable => {
-                let returned = invokable.apply(this, args) ;
+                let returned = invokable.apply(this.parent, args) ;
                 this.parent.sendAsync(this.parent.buildReturnMessage(
                     returned, parsedMessage[returnIdField]));
             });

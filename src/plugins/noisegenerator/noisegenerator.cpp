@@ -22,6 +22,8 @@
 
 #include "common/random.h"
 
+#include <cmath>
+
 #include <QScopedPointer>
 
 class NoiseGeneratorCreator : public QObject, public PluginFilterCreator
@@ -62,6 +64,7 @@ private:
     bool deterministic;
     double baseGain;
     double gain;
+    bool invertGain;
 };
 
 static QScopedPointer<cmn::Random> randomGenerator;
@@ -83,6 +86,7 @@ void NoiseGenerator::resetParameters()
     deterministic = false;
     baseGain = 0;
     gain = 0;
+    invertGain = false;
 }
 
 bool NoiseGenerator::isValidParameter(const QString &type, int channel) const
@@ -92,6 +96,8 @@ bool NoiseGenerator::isValidParameter(const QString &type, int channel) const
     if (type == QL1S("basegain") && channel == -1)
         return true;
     if (type == QL1S("gain") && channel == -1)
+        return true;
+    if (type == QL1S("invertgain") && channel == -1)
         return true;
 
     setErrorMessage(
@@ -128,6 +134,11 @@ bool NoiseGenerator::setParameter(const QString &type, int channel,
         return false;
     }
 
+    if (type == QLatin1String("invertgain") && channel == -1) {
+        invertGain = value == QLatin1String("true");
+        return true;
+    }
+
     setErrorMessage(
         QString::fromLatin1("Unknown parameter %2 or invalid channel %1")
             .arg(channel)
@@ -149,7 +160,8 @@ bool NoiseGenerator::prepare(unsigned numberOfFrames)
 
 void NoiseGenerator::process(double *const *data)
 {
-    const double gainMult = std::pow(10.0, (gain + baseGain) / 20);
+    const double gainMult =
+        std::pow(10.0, ((invertGain ? -gain : gain) + baseGain) / 20);
     for (unsigned channel = 0; channel < channels; ++channel)
         for (unsigned i = 0; i < blockSize; ++i)
             data[channel][i] = randomGenerator->nextGaussian() * gainMult;

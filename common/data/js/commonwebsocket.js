@@ -91,6 +91,12 @@ var CommonSocket = function () {
             this._webSocket.close();
         }
     }, {
+        key: 'onOpen',
+        value: function onOpen(callback) {
+            if (this._webSocket.readyState === WebSocket.OPEN) callback();
+            this._webSocket.onopen = callback;
+        }
+    }, {
         key: 'buildUserMessage',
         value: function buildUserMessage(data) {
             var message = {};
@@ -189,7 +195,7 @@ var CommonSocket = function () {
                 var args = parsedMessage[argumentsField] || [];
                 if (!this.parent._invokables.hasOwnProperty(method)) console.error('Invokable ' + method + ' not in invokables');
                 this.parent._invokables[method].forEach(function (invokable) {
-                    var returned = invokable.apply(_this2, args);
+                    var returned = invokable.apply(_this2.parent, args);
                     _this2.parent.sendAsync(_this2.parent.buildReturnMessage(returned, parsedMessage[returnIdField]));
                 });
             } else {

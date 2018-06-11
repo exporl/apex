@@ -106,13 +106,13 @@ if [ "$STARTAPP" = "true" ]; then
     GDBPID=$(adb shell ps | grep libgdbserver.so | awk '{ print $2 }')
     [ -z "$GDBPID" ] || adb shell run-as "$APP" kill "$GDBPID"
     adb shell am force-stop "$APP"
-    adb forward tcp:5039 tcp:5039
     adb shell am start -n "$APP"/"$APP"."$ACTIVITY"
     APPPID=$(adb shell ps | grep "$APP" | awk '{ print $2 }')
     adb shell run-as "$APP" /data/data/"$APP"/lib/libgdbserver.so :5039 --attach "$APPPID" &
+    sleep 2 # some time to start the gdbserver
 fi
 
-sleep 2 # some time to start the gdbserver
+adb forward tcp:5039 tcp:5039
 "$NDK_ROOT"/bin/"$TARGET_HOST"-gdb "$DEVICE_LIBRARIES"/app_process \
                                -ex "set sysroot $NDK_ROOT/sysroot" \
                                -ex "set solib-search-path $ROOTDIR/bin/android-debug:$EXTRA_LIBS:$NDK_ROOT/sysroot/lib:$DEVICE_LIBRARIES:$DEVICE_LIBRARIES/vendor-lib:$DEVICE_LIBRARIES/system-lib" \

@@ -1,5 +1,5 @@
 function r=a3localsettings
-% return apex 3 toolbox settings
+% return APEX 4 toolbox settings
 
 % path to xalan, only necessary if APEX does not do the XSLT transformation
 r.xalancmd='/usr/bin/xalan';

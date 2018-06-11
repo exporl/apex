@@ -1,20 +1,20 @@
 /******************************************************************************
  * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
  *                                                                            *
- * This file is part of APEX 3.                                               *
+ * This file is part of APEX 4.                                               *
  *                                                                            *
- * APEX 3 is free software: you can redistribute it and/or modify             *
+ * APEX 4 is free software: you can redistribute it and/or modify             *
  * it under the terms of the GNU General Public License as published by       *
  * the Free Software Foundation, either version 2 of the License, or          *
  * (at your option) any later version.                                        *
  *                                                                            *
- * APEX 3 is distributed in the hope that it will be useful,                  *
+ * APEX 4 is distributed in the hope that it will be useful,                  *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
  * GNU General Public License for more details.                               *
  *                                                                            *
  * You should have received a copy of the GNU General Public License          *
- * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
 // ChannelMap.cpp: implementation of the CChannelMap class.
@@ -24,6 +24,8 @@
 #include "apextools/exceptions.h"
 
 #include "stimulus/nucleus/nicstream/stimulation_mode.h"
+
+#include "coh/cohmapper.h"
 
 #include "channelmap.h"
 
@@ -46,6 +48,7 @@ struct ChannelMapPrivate {
     int totalRate; /// Stimulation rate (Hz)
     double ipg;    /// Phase Gap     (microseconds)
     double minPw;  /// Phase Width
+    int trigger;
 };
 
 ChannelMapPrivate::ChannelMapPrivate()
@@ -179,6 +182,18 @@ int ChannelMap::modeToStimulationModeType(const QString &sMode)
         return RMP1_2;
 
     throw ApexStringException(tr("Invalid mode %1").arg(sMode));
+}
+
+int ChannelMap::triggerToTriggerType(const QString &trigger)
+{
+    if (trigger == "All")
+        return coh::CohSequenceMapper::DefaultTrigger::AllTriggers;
+    else if (trigger == "First")
+        return coh::CohSequenceMapper::DefaultTrigger::FirstTrigger;
+    else if (trigger == "None")
+        return coh::CohSequenceMapper::DefaultTrigger::NoTriggers;
+
+    throw ApexStringException(tr("Invalid trigger %1").arg(trigger));
 }
 
 int ChannelMap::referenceElectrode(int stim) const
@@ -450,6 +465,16 @@ int ChannelMap::totalRate() const
 void ChannelMap::setTotalRate(int rate)
 {
     d->totalRate = rate;
+}
+
+int ChannelMap::trigger() const
+{
+    return d->trigger;
+}
+
+void ChannelMap::setTrigger(int trigger)
+{
+    d->trigger = trigger;
 }
 
 ChannelMap &ChannelMap::operator=(const ChannelMap &other)

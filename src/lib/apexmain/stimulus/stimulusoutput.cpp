@@ -1,20 +1,20 @@
 /******************************************************************************
  * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
  *                                                                            *
- * This file is part of APEX 3.                                               *
+ * This file is part of APEX 4.                                               *
  *                                                                            *
- * APEX 3 is free software: you can redistribute it and/or modify             *
+ * APEX 4 is free software: you can redistribute it and/or modify             *
  * it under the terms of the GNU General Public License as published by       *
  * the Free Software Foundation, either version 2 of the License, or          *
  * (at your option) any later version.                                        *
  *                                                                            *
- * APEX 3 is distributed in the hope that it will be useful,                  *
+ * APEX 4 is distributed in the hope that it will be useful,                  *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
  * GNU General Public License for more details.                               *
  *                                                                            *
  * You should have received a copy of the GNU General Public License          *
- * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
 #include "apexdata/device/devicesdata.h"
@@ -694,7 +694,10 @@ bool StimulusOutput::HandleParam(const QString &ac_sID,
             qPrintable(ac_sID), qPrintable(ac_sValue.toString()));
     bool result = false;
     data::Parameter param(m_rd.GetParameterManager()->parameter(ac_sID));
-    if (m_rd.usingBertha()) {
+
+    /* Controllers and devices aren't owned by bertha */
+    if (m_rd.usingBertha() && !m_rd.GetControllers().contains(param.owner()) &&
+        !m_rd.GetDevices().contains(param.owner())) {
         BerthaBuffer *berthaBuffer =
             static_cast<WavDevice *>(
                 m_rd.GetDevice(m_rd.getBerthaExperimentData().device().id()))
@@ -703,9 +706,15 @@ bool StimulusOutput::HandleParam(const QString &ac_sID,
 
         QVariantList apexParam = QVariantList() << param.type()
                                                 << param.channel() << ac_sValue;
-        berthaBuffer->setParameter(param.owner(), QSL("parameter"),
-                                   QVariant(apexParam));
-        result = true;
+        try {
+            berthaBuffer->setParameter(param.owner(), QSL("parameter"),
+                                       QVariant(apexParam));
+            result = true;
+        } catch (...) {
+            qCWarning(
+                APEX_RS, "Unable to set parameter %s to %s in berthabuffer.",
+                qPrintable(param.type()), qPrintable(ac_sValue.toString()));
+        }
     } else {
         for (tFilterMapCIt itBf = m_pFilters.begin(); itBf != m_pFilters.end();
              ++itBf) {

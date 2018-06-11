@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.5/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.5/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/4.0.0/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment">
 
     <xs:include schemaLocation="datablocks.xsd"/>
     <xs:include schemaLocation="procedure.xsd"/>
@@ -11,7 +11,7 @@
     <xs:include schemaLocation="stimuli.xsd"/>
 
     <xs:annotation>
-        <xs:documentation xml:lang="en-US"> Apex experiment file schema. Describes an entire APEX 3
+        <xs:documentation xml:lang="en-US"> Apex experiment file schema. Describes an entire APEX 4
             experiment. An experiment consists of a series of trials. </xs:documentation>
     </xs:annotation>
     <xs:element name="apex">

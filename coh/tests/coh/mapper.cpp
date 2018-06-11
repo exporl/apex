@@ -37,19 +37,19 @@ void CohTest::mapper()
              "  Null: period nan trigger 0\n"
              "  Null: period 100.0 trigger 0\n"
              "  Biphasic: active 17 reference nan level 100 width nan gap nan "
-             "period nan channel nan magnitude nan trigger 0\n"
+             "period nan channel nan magnitude nan trigger nan\n"
              "  Biphasic: active 17 reference -3 level 100 width nan gap nan "
-             "period nan channel nan magnitude nan trigger 0\n"
+             "period nan channel nan magnitude nan trigger nan\n"
              "  Biphasic: active 17 reference -3 level 100 width 25.0 gap nan "
-             "period nan channel nan magnitude nan trigger 0\n"
+             "period nan channel nan magnitude nan trigger nan\n"
              "  Biphasic: active 17 reference -3 level 100 width 25.0 gap 8.0 "
-             "period nan channel nan magnitude nan trigger 0\n"
+             "period nan channel nan magnitude nan trigger nan\n"
              "  Biphasic: active 17 reference -3 level 100 width 25.0 gap 8.0 "
-             "period 100.0 channel nan magnitude nan trigger 0\n"
+             "period 100.0 channel nan magnitude nan trigger nan\n"
              "  Biphasic: active nan reference nan level nan width 25.0 gap "
-             "8.0 period 100.0 channel 1 magnitude 0.5 trigger 0\n"
+             "8.0 period 100.0 channel 1 magnitude 0.5 trigger nan\n"
              "  Biphasic: active 17 reference nan level nan width 25.0 gap 8.0 "
-             "period 100.0 channel 1 magnitude 0.5 trigger 0\n");
+             "period 100.0 channel 1 magnitude 0.5 trigger nan\n");
 
     CohNullStimulus *null = CohNullStimulus::incompleteStimulus();
     CohBiphasicStimulus *biphasic = CohBiphasicStimulus::incompleteStimulus();
@@ -61,7 +61,7 @@ void CohTest::mapper()
     null->setPeriod(100.0);
     sequence->append(new CohNullStimulus(*null));
 
-    biphasic->setTrigger(false);
+    //    biphasic->setTrigger(false);
     biphasic->setCurrentLevel(100);
     biphasic->setActiveElectrode(Coh::CI_ELECTRODE_IC17);
     sequence->append(new CohBiphasicStimulus(*biphasic));
@@ -75,7 +75,6 @@ void CohTest::mapper()
     sequence->append(new CohBiphasicStimulus(*biphasic));
 
     biphasic = CohBiphasicStimulus::incompleteStimulus();
-    biphasic->setTrigger(false);
     biphasic->setPhaseWidth(25.0);
     biphasic->setPhaseGap(8.0);
     biphasic->setPeriod(100.0);
@@ -108,6 +107,11 @@ void CohTest::mapper()
 
     mapper.setDefaultPeriod(50.0);
     result.replace(QL1S("period nan"), QL1S("period 50.0"));
+    QCOMPARE(CohSequenceMapper(mapper.map()).needsMapping() != 0, true);
+    QCOMPARE(dumpCohSequenceText(mapper.map()), result);
+
+    mapper.setDefaultTrigger(CohSequenceMapper::DefaultTrigger::AllTriggers);
+    result.replace(QSL("trigger nan"), QSL("trigger 1"));
     QCOMPARE(CohSequenceMapper(mapper.map()).needsMapping() != 0, true);
     QCOMPARE(dumpCohSequenceText(mapper.map()), result);
 

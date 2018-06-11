@@ -28,10 +28,10 @@ be affected and the name of the concrete element to select. Here the
 type is QPushButton and the name is button1. The latter name would be
 what you specify as an id in the experiment file.
 
-All elements used in Apex are listed [here](#table1). Several
+All elements used in APEX are listed [here](#table1). Several
 generic names of element are given in [here](#table2).
 
-In Apex, stylesheets can be specified at 3 levels: inside the
+In APEX, stylesheets can be specified at 3 levels: inside the
 `<screens>` element in the `<apex_style>` element: if placed here, every
 element on screen will be affected, including the panel buttons and the
 main menu. If placed in the `<style>` element, the stylesheet will

@@ -1,20 +1,20 @@
 /******************************************************************************
  * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
  *                                                                            *
- * This file is part of APEX 3.                                               *
+ * This file is part of APEX 4.                                               *
  *                                                                            *
- * APEX 3 is free software: you can redistribute it and/or modify             *
+ * APEX 4 is free software: you can redistribute it and/or modify             *
  * it under the terms of the GNU General Public License as published by       *
  * the Free Software Foundation, either version 2 of the License, or          *
  * (at your option) any later version.                                        *
  *                                                                            *
- * APEX 3 is distributed in the hope that it will be useful,                  *
+ * APEX 4 is distributed in the hope that it will be useful,                  *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
  * GNU General Public License for more details.                               *
  *                                                                            *
  * You should have received a copy of the GNU General Public License          *
- * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
 #include "apextools/global.h"
@@ -70,7 +70,10 @@ ApexMainWndBase::ApexMainWndBase(QWidget *parent, const char *name)
     showMessageWindowAction = new QAction("showMessageWindowAction", this);
     createShortcutToFileAction =
         new QAction("createShortcutToFileAction", this);
+    createShortcutToRunnerAction =
+        new QAction("createShortcutToRunnerAction", this);
     startGdbServerAction = new QAction("startGdbServerAction", this);
+    openStudyManagerAction = new QAction("openStudyManager", this);
 
     // menubar
     MenuBar = menuBar();
@@ -82,9 +85,9 @@ ApexMainWndBase::ApexMainWndBase(QWidget *parent, const char *name)
     fileMenu->addAction(selectSoundcardAction);
     fileMenu->addAction(fileSaveAsAction);
     fileMenu->addAction(createShortcutToFileAction);
+    fileMenu->addAction(createShortcutToRunnerAction);
     fileMenu->addAction(showMessageWindowAction);
-    fileMenu->addSeparator();
-    fileMenu->addAction(startGdbServerAction);
+    fileMenu->addAction(openStudyManagerAction);
     fileMenu->addSeparator();
     fileMenu->addAction(fileExitAction);
 
@@ -114,6 +117,7 @@ ApexMainWndBase::ApexMainWndBase(QWidget *parent, const char *name)
     helpMenu->addAction(helpShowPluginDialogAction);
     helpMenu->addAction(helpDeletePluginCacheAction);
     helpMenu->addAction(helpEditApexconfigAction);
+    helpMenu->addAction(startGdbServerAction);
     helpMenu->addSeparator();
     helpMenu->addAction(helpAboutAction);
 
@@ -162,12 +166,17 @@ ApexMainWndBase::ApexMainWndBase(QWidget *parent, const char *name)
     connect(showMessageWindowAction, SIGNAL(triggered()), this,
             SIGNAL(statusReportingChanged()));
     connect(createShortcutToFileAction, SIGNAL(triggered()), this,
-            SIGNAL(createShortcut()));
+            SIGNAL(createShortcutToFile()));
+    connect(createShortcutToRunnerAction, SIGNAL(triggered()), this,
+            SIGNAL(createShortcutToRunner()));
     connect(startGdbServerAction, SIGNAL(triggered()), this,
             SIGNAL(startGdbServer()));
+    connect(openStudyManagerAction, SIGNAL(triggered()), this,
+            SIGNAL(openStudyManager()));
 
 #ifndef Q_OS_ANDROID
     createShortcutToFileAction->setVisible(false);
+    createShortcutToRunnerAction->setVisible(false);
     startGdbServerAction->setVisible(false);
 #endif
 }
@@ -186,7 +195,7 @@ ApexMainWndBase::~ApexMainWndBase()
  */
 void ApexMainWndBase::languageChange()
 {
-    setWindowTitle(tr("APEX 3"));
+    setWindowTitle(tr("APEX 4"));
 
     fileOpenAction->setText(tr("&Open"));
     fileOpenAction->setShortcut(tr("Ctrl+O"));
@@ -231,8 +240,10 @@ void ApexMainWndBase::languageChange()
 
     showMessageWindowAction->setText(tr("Show message window"));
 
-    createShortcutToFileAction->setText(tr("Create Shortcut"));
+    createShortcutToFileAction->setText(tr("Create file shortcut"));
+    createShortcutToRunnerAction->setText(tr("Create runner shortcut"));
     startGdbServerAction->setText(tr("Start GDB server"));
+    openStudyManagerAction->setText(tr("Link a new study"));
 }
 
 void ApexMainWndBase::helpContents()

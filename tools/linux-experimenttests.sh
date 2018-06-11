@@ -2,7 +2,7 @@
 
 APEXEXECUTABLE=
 ACTION=test
-REFERENCEURL=https://github.com/exporl/apex3-test-reference
+REFERENCEURL=https://github.com/exporl/apex-test-reference
 CLEAN=false
 SKIP=false
 VERBOSE=false
@@ -12,6 +12,7 @@ TIMEOUT=800
 EXPERIMENTS=
 TAPFILE=
 EXTRAPARAMS=
+CONTINUOUSCOMPARE=
 
 parsecmd() {
     while [ $# -gt 0 ]; do
@@ -216,26 +217,27 @@ runtest() {
     [[ "$ACTION" == "store" ]] && return
 
     local TESTPARTFAILED=false
-    local REFERENCEWAVS="$(find "$REFERENCEDIR" -regex "$REFERENCEDIR/$EXPERIMENTBASENAME-[0-9]+.wav")"
-    local RESULTSWAVS="$(find "$RESULTSDIR" -regex "$RESULTSDIR/$EXPERIMENTBASENAME-[0-9]+.wav")"
+    local REFERENCEWAVS="$(find "$REFERENCEDIR" -regex "$REFERENCEDIR/$EXPERIMENTBASENAME-[0-9]+.wav" | sort)"
+    local RESULTSWAVS="$(find "$RESULTSDIR" -regex "$RESULTSDIR/$EXPERIMENTBASENAME-[0-9]+.wav" | sort)"
     brownmsg "Checking wav output ($(wc -l <<< "$REFERENCEWAVS") files)"
-    if diff -u --label reference <(echo -e "$REFERENCEWAVS" | xargs -L1 basename) \
-            --label results <(echo -e "$RESULTSWAVS" | xargs -L1 basename); then
-        if [[ "$2" =~ continuous ]]; then
+    if [ $(wc -l <<< "$REFERENCEWAVS") -eq $(wc -l <<< "$RESULTSWAVS") ]; then
+        if [[ "$2" =~ continuoussilence ]]; then
+            RESULT=$("$APEXROOT"/tools/linux-experimenttest-audio-compare-functions.py \
+                                compareexpectingcontinuoussilence \
+                                "$REFERENCEWAVS" "$RESULTSWAVS")
+        elif [[ "$2" =~ continuous ]]; then
             RESULT=$("$APEXROOT"/tools/linux-experimenttest-audio-compare-functions.py \
                                 continuous "$REFERENCEWAVS" "$RESULTSWAVS")
-            if [[ "$RESULT" != "True" ]]; then
-                TESTPARTFAILED=true
-                failtest "wav files differ" "wav"
-            fi
+        elif [ "$USEBERTHA" = "true" ]; then
+            RESULT=$("$APEXROOT"/tools/linux-experimenttest-audio-compare-functions.py \
+                                filewisetruncate "$REFERENCEWAVS" "$RESULTSWAVS")
         else
             RESULT=$("$APEXROOT"/tools/linux-experimenttest-audio-compare-functions.py \
                                 filewise "$REFERENCEWAVS" "$RESULTSWAVS")
-            if [[ "$RESULT" != "True" ]]; then
-                TESTPARTFAILED=true
-                failtest "wav files differ" "wav"
-            fi
-
+        fi
+        if [[ "$RESULT" != "True" ]]; then
+            TESTPARTFAILED=true
+            failtest "wav files differ" "wav"
         fi
     else
         failtest "Different number of WAV files" "wav-count"
@@ -365,8 +367,13 @@ trytest() {
     [[ ! -z "$NAME" ]] && runtest "$NAME" "$OPTIONS"
 }
 
+USEBERTHA=false
+if [[ ! "$EXTRAPARAMS" =~ "--disable-bertha" ]]; then
+    USEBERTHA=true
+fi
+
 # exports so the parallel runtest can access them
-export REFERENCEROOT RESULTSROOT APEXROOT TIMEOUT APEXEXECUTABLE OUTPUTDIR TAPFILE SKIP NORESULTS EXTRAPARAMS AUDIO_COMPARE_FUNCTION
+export REFERENCEROOT RESULTSROOT APEXROOT TIMEOUT APEXEXECUTABLE OUTPUTDIR TAPFILE SKIP NORESULTS EXTRAPARAMS AUDIO_COMPARE_FUNCTION USEBERTHA
 export -f runtest parsestatus skiptest oktest failtest redmsg greenmsg brownmsg bluemsg runapex trytest split
 echo $EXPERIMENTS | xargs -d ' ' -n 1 -I % -P $JOBS bash -c 'trytest %'
 

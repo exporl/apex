@@ -7,7 +7,7 @@ The vocoder needs 3 files:
     i.e. carriers.wav
 
 REMARKS:
-* The .bin files can be generated with a3iirfilter_write_bin.m, which can be found in the APEX 3 MATLAB Toolbox.
+* The .bin files can be generated with a3iirfilter_write_bin.m, which can be found in the APEX 4 MATLAB Toolbox.
 * The .wav file consists of N channels, i.e. 1 channel for each carrier
 * The .bin files have the following structure:
   * size  type    description

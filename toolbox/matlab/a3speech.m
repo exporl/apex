@@ -1,5 +1,5 @@
 function a3speech(p)
-% create apex 3 speech (in noise) experiment
+% create APEX 4 speech (in noise) experiment
 %
 
 p.script='a3speech';

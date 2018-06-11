@@ -9,7 +9,7 @@ children. Each example consists of 1) a general description, 2) the
 concept, and 3) the implementation in XML.
 
 It is advised to run the experiment before reading the details. The
-experiment files are stored in the Apex3 directory under in the Apex3
+experiment files are stored in the APEX 4 directory under in the APEX 4
 folder, together with sound files and figures of the respective
 experiments. Note again: if the experiment file has the extension “.apx”
 it remains an XML file that can be edited with OxygenXML. The results
@@ -4595,7 +4595,7 @@ and again, a word corresponding to one of these figures is routed to the
 sound card. This is repeated three times. The three words are embedded
 in noise at a certain signal-to-noise ratio. In this example the level
 of the noise is fixed and the level of the word varies. At the beginning
-of the experiment Apex3 queries for the SNR (signal to noise ratio, in
+of the experiment APEX 4 queries for the SNR (signal to noise ratio, in
 dB). After having entered this value four figures will appear. Press
 Start to start the experiment and to hear the first stimulus (speech in
 noise). After the experiment has finished the results are written to a
@@ -4604,7 +4604,7 @@ results file and the percentage correct is determined.
 ### Conceptual
 
 The experiment as described in the previous paragraph should first be
-translated to concepts understood by Apex3. The main concepts in this
+translated to concepts understood by APEX 4. The main concepts in this
 example are *datablock*, *stimulus*, *screen* and *procedure*.
 For each of the 3 words to be presented to the subject, a wave file is
 available on disk. For each wave file, a datablock is defined, and for
@@ -4681,7 +4681,7 @@ number of times.
     the device. Each trial is given an ID (arbitrary name), eg , such
     that it can be referred to later on or viewed in the results file.
 
--   the correct answer, to be used by Apex3 to determine whether the
+-   the correct answer, to be used by APEX 4 to determine whether the
     subject’s response is correct. Here, the subject gets the
     opportunity to click on one of four pictures. The result from the
     screen (the subject’s response) will be the ID of the element of the
@@ -4782,7 +4782,7 @@ contains several elements that can be referred to elsewhere in the
 experiment file (e.g., in above).
 
 -   a relative path is specified here (relative with respect to the
-    experiment file). Since Apex3 knows the location of the experiment
+    experiment file). Since APEX 4 knows the location of the experiment
     file, only the folder containing the wave files and pictures must
     be specified. It is also possible to give the absolute path,
     starting at the root. There are three ways to specify a prefix: by
@@ -4796,7 +4796,7 @@ experiment file (e.g., in above).
         hand bottom corner of the screen that indicates the percentage
         of trials that have been completed.
 
-    -   duration of time after response (in msec) that Apex3 waits
+    -   duration of time after response (in msec) that APEX 4 waits
         before presenting the next trial. During this interval, feedback
         can be displayed. In this case, no feedback (thumb up,
         thumb down) is given as the value is .
@@ -4825,7 +4825,7 @@ experiment file (e.g., in above).
     -   defines a group of screen elements, namely those (four figures)
         that are displayed on the screen. The ID is defined before.
 
-    -   As many elements can be defined in a screen, Apex3 has no way to
+    -   As many elements can be defined in a screen, APEX 4 has no way to
         know which element contains the subject’s response. If, for
         example, a text box is shown and 2 buttons, it is unclear which
         is to be used to determine whether the answer is correct or not.
@@ -4913,7 +4913,7 @@ example there is only 1 element. Its ID is set to . As an ID is unique
 for an entire experiment file, it can be used later on to refer to this
 device.
 
--   The attribute tells Apex3 that a sound card is used. The experiment
+-   The attribute tells APEX 4 that a sound card is used. The experiment
     only starts if all devices can be opened.
 
 -   specifies the software driver to be used for sound output. If
@@ -4960,13 +4960,13 @@ is amplified or attenuated using an amplifier filter (loop of ).
 contains individual elements, which specify a filter, or as a special
 case a generator (i.e., a filter without input channels).
 
--   on line \[xml:filter1\] the attribute tells Apex3 that a dataloop
+-   on line \[xml:filter1\] the attribute tells APEX 4 that a dataloop
     generator has to be created. This is a generator that takes a
     datablock and loops it infinitely. The datablock to be looped is
     specified by its ID . The dataloop generator itself is assigned the
     ID .
 
--   on line \[xml:filter2\] the attribute tells Apex3 that an amplifier
+-   on line \[xml:filter2\] the attribute tells APEX 4 that an amplifier
     has to be created. The gain of this amplifier will be varied to
     change the amplitude of the words and thus the SNR. It is assigned
     ID . The gain of the amplifier is made a variable parameter by
@@ -5080,7 +5080,7 @@ to \[xml:chd\]).
 
 A visual representation of connections (see Figure \[fig:ex1-output\])
 can be obtained by choosing “Show stimulus connections” under
-“Experiment”in the main Apex3 menu (top left menu bar).
+“Experiment”in the main APEX 4 menu (top left menu bar).
 
 ```xml
      <results>
@@ -5092,12 +5092,12 @@ can be obtained by choosing “Show stimulus connections” under
      </results>
 ```
 
-Even if is not specified in the experiment file Apex3 will deliver a
+Even if is not specified in the experiment file APEX 4 will deliver a
 results file in XML.
 
 -   URL of the html page to show in the results window. The page should
     have the appropriate java script methods embedded. More example
-    pages can be found in the Apex3 resultsviewer folder.
+    pages can be found in the APEX 4 resultsviewer folder.
 
 -   Parameters to be passed to the results page. Each parameter will be
     set in hash params.
@@ -5127,7 +5127,7 @@ results file in XML.
 
 If a small part of an experiment file has to be changed right before the
 start of an experiment (e.g. a start value, a gain value, the subject’s
-name), Apex3 can show the experimenter a small containing the elements
+name), APEX 4 can show the experimenter a small containing the elements
 to be changed. This is accomplished by defining the element in the
 experiment file.
 
@@ -5163,7 +5163,7 @@ method described by @PM79. In this adaptive procedure the first sentence
 is repeated with increasing level until it is identified correctly.
 Subsequently, the SRT is determined by increasing or decreasing the
 level in steps of 2 dB, according to the last response. Other decision
-procedures (eg 2-down 1-up) can also be implemented using Apex3. In this
+procedures (eg 2-down 1-up) can also be implemented using APEX 4. In this
 example the 5 sentences are scored on the basis of their keywords. The
 keywords are indicated in bold on the screen. The experimenter/clinician
 is seated in front of the screen and decides whether the subject has
@@ -5181,7 +5181,7 @@ data-label="fig:sentencenoise"></span>](example2sentenceinnoise.png)
 ### Conceptual
 
 The experiment as described in the previous paragraph should first be
-translated to concepts understood by Apex3. The main concepts in this
+translated to concepts understood by APEX 4. The main concepts in this
 example are *datablock*, *stimulus*, *screen*, *procedure*, a
 *variable* parameter (to change the gain) and *fixed Parameter* to
 show a sentence on the screen. For each sentence a datablock is defined,
@@ -5314,7 +5314,7 @@ certain number of times.
     that it can be referred to later on or viewed in the results file. A
     trial must be defined for all the sentences of the experiment.
 
--   the correct answer, to be used by Apex3 to determine whether the
+-   the correct answer, to be used by APEX 4 to determine whether the
     subject’s response is correct. In this example the experimenter will
     click on “correct” or “incorrect”. The result from the screen will
     be the ID of the element of the screen that was clicked ( or ).
@@ -5379,7 +5379,7 @@ contains element that is referred to in .
         hand bottom corner of the screen that indicates the percentage
         of trials that have been completed.
 
-    -   duration of the time after response (in msec) that Apex3 waits
+    -   duration of the time after response (in msec) that APEX 4 waits
         before presenting the next trial. During this interval feedback
         can be displayed. In this example, no feedback (thumb up,
         thumb down) is given as the value is .
@@ -5416,7 +5416,7 @@ contains element that is referred to in .
     -   can be specified in points
 
     -   defines a group of screen elements (those that are displayed on
-        the screen). As many elements can be defined in a screen, Apex3
+        the screen). As many elements can be defined in a screen, APEX 4
         has no way to know which element contains the
         subject’s response. Therefore, in the element is designated that
         contains the subject’s response. In the case of screen elements
@@ -5463,7 +5463,7 @@ contains element that is referred to in .
 contains a list of elements and a prefix.
 
 -   a relative path is specified here (relative with respect to the
-    experiment file). Since Apex3 knows the location of the experiment
+    experiment file). Since APEX 4 knows the location of the experiment
     file, only the folder containing the wave files and pictures must
     be specified. It is also possible to give the absolute path,
     starting at the root. There are 3 ways to specify a prefix: by
@@ -5500,7 +5500,7 @@ All devices defined in the experiment file are grouped in .The ID is set
 to . As an ID is unique for an entire experiment file, it can be used
 later on to refer to this device (eg in datablocks).
 
--   the attribute tells Apex3 that a sound card is used. The experiment
+-   the attribute tells APEX 4 that a sound card is used. The experiment
     only starts if all devices can be opened.
 
 -   specifies the software driver to be used for sound output. If
@@ -5539,11 +5539,11 @@ later on to refer to this device (eg in datablocks).
 contains individual elements, which specify a filter, or as a special
 case a generator (i.e., a filter without input channels).
 
--   The attribute tells Apex3 that a dataloop generator has to
+-   The attribute tells APEX 4 that a dataloop generator has to
     be created. This is a generator that takes a datablock and loops
     it infinitely. The datablock to be looped is specified by its ID .
 
--   on line \[xml:filter2\] the attribute tells Apex3 that an amplifier
+-   on line \[xml:filter2\] the attribute tells APEX 4 that an amplifier
     has to be created. The gain of this amplifier will be varied to
     change the amplitude of the words and thus the SNR. It is assigned
     ID . The gain of the amplifier is made a variable parameter by
@@ -5719,7 +5719,7 @@ This is repeated for all the sentences.
     pass through *amplifier*.
 
 A visual representation of connections can be obtained by choosing “Show
-stimulus connections” under “Experiment”in the main Apex3 menu (top left
+stimulus connections” under “Experiment”in the main APEX 4 menu (top left
 menu bar).
 
 ```xml
@@ -5734,12 +5734,12 @@ menu bar).
      </results>
 ```
 
-Even if is not specified in the experiment file Apex3 will save a
+Even if is not specified in the experiment file APEX 4 will save a
 results file in XML.
 
 -   URL of the html page to show in the results window. The page should
     have the appropriate java script methods embedded. More example
-    pages can be found in the Apex3 resultsviewer folder.
+    pages can be found in the APEX 4 resultsviewer folder.
 
 -   Parameters to be passed to the results page. Each parameter will be
     set in hash params. In this example, the result will be calculated
@@ -5769,7 +5769,7 @@ results file in XML.
 
 If a small part of an experiment file has to be changed right before the
 start of an experiment (e.g. a start value, a gain value, the subject’s
-name), Apex3 can show the experimenter a small containing the elements
+name), APEX 4 can show the experimenter a small containing the elements
 to be changed. This is accomplished by defining the element in the
 experiment file.
 
@@ -5804,7 +5804,7 @@ data-label="fig:gapdetection"></span>](example3gapdetection.png)
 ### Conceptual
 
 The experiment as described in the previous paragraph should first be
-translated to concepts understood by Apex3. The main concepts used here
+translated to concepts understood by APEX 4. The main concepts used here
 are *procedure*, *screens*, *datablocks* and *stimuli*.
 
 For each wave file (noise with or without a gap) a is defined, and for
@@ -5979,7 +5979,7 @@ chooses.
         progress bar will increase at every reversal while the number of
         trials varies.
 
-    -   duration of the time after response (in msec) that Apex3 waits
+    -   duration of the time after response (in msec) that APEX 4 waits
         before presenting the next trial. During this interval feedback
         can be displayed.
 
@@ -6001,7 +6001,7 @@ chooses.
         -   the left interval denotes “1”, the right one denotes “2”.
 
     -   defines a group of screen elements (those that are displayed on
-        the screen). As many elements can be defined in a screen, Apex3
+        the screen). As many elements can be defined in a screen, APEX 4
         has no way to know which element contains the
         subject’s response. Therefore, in the element is designated that
         contains the subject’s response. In the case of screen elements
@@ -6049,7 +6049,7 @@ chooses.
 
 contains a list of elements and a prefix.
 
--   : a relative path is specified here. Since Apex3 knows the location
+-   : a relative path is specified here. Since APEX 4 knows the location
     of the experiment file, only the folder containing the wave files
     and pictures must be specified.
 
@@ -6080,7 +6080,7 @@ is used in this example. The ID is set to soundcard. As an ID is unique
 for an entire experiment file, it can be used later on to refer to this
 device.
 
--   the attribute tells Apex3 that a sound card is used. The experiment
+-   the attribute tells APEX 4 that a sound card is used. The experiment
     only starts if all devices can be opened.
 
 -   specifies the software driver to be used for sound output. If
@@ -6199,7 +6199,7 @@ defines the auditory events, e.g. noise with gap and noise without gap.
     they are routed to 1 channel of the wavdevice.
 
 A visual representation of connections can be obtained by choosing “Show
-stimulus connections” under “Experiment”in the main Apex3 menu (top left
+stimulus connections” under “Experiment”in the main APEX 4 menu (top left
 menu bar).
 
 ```xml
@@ -6214,7 +6214,7 @@ menu bar).
      </results>
 ```
 
-Even if is not specified in the experiment file Apex3 will save a
+Even if is not specified in the experiment file APEX 4 will save a
 results file in XML. The results file will display the correct answers,
 the reversals, the entire sequence of responses, and the average
 threshold based on the number of reversals and the magnitude of the
@@ -6222,7 +6222,7 @@ corresponding gap parameter specified in the experiment file.
 
 -   URL of the html page to show in the results window. The page should
     have the appropriate java script methods embedded. More example
-    pages can be found in the Apex3 resultsviewer folder.
+    pages can be found in the APEX 4 resultsviewer folder.
 
 -   Parameters to be passed to the results page. Each parameter will be
     set in hash params.
@@ -6251,7 +6251,7 @@ corresponding gap parameter specified in the experiment file.
 
 defines some general parameters.
 
--   if Apex3 will close after the experiment has ended and results have
+-   if APEX 4 will close after the experiment has ended and results have
     been shown.
 
 Example 4: Gap detection in child mode
@@ -6339,7 +6339,7 @@ intro/outro movies.
         with smileys. The progress bar shows when a reversal occurs in
         an adaptive procedure (while the number of trials varies).
 
-    -   duration of the time after response (in msec) that Apex3 waits
+    -   duration of the time after response (in msec) that APEX 4 waits
         before presenting the next trial. During this interval feedback
         can be displayed
 
@@ -6376,7 +6376,7 @@ containing a car.
                 response (the trunk of an elephant)
 
 -   defines a group of screen elements (those that are displayed on
-    the screen). As many elements can be defined in a screen, Apex3 has
+    the screen). As many elements can be defined in a screen, APEX 4 has
     no way to know which element contains the subject’s response.
     Therefore, in the element is designated that contains the
     subject’s response. In the case of screen elements that are clicked

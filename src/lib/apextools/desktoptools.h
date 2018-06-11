@@ -11,6 +11,7 @@ class APEXTOOLS_EXPORT DesktopTools
 {
 public:
     static bool editFile(QString filename);
+    static bool openUrl(const QString &url);
 };
 };
 

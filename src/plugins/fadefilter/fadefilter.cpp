@@ -234,11 +234,19 @@ void FadeFilter::process(double *const *data)
         }
     }
 
+    if (fadeOutDuration != 0 && position >= longestRowLength) {
+        for (unsigned channel = 0; channel < channels; ++channel)
+            memset(data[channel], 0, blockSize * sizeof(double));
+        return;
+    }
+
     if (fadeOutDuration != 0 &&
         longestRowLength - fadeOutDuration < position + blockSize) {
         for (unsigned channel = 0; channel < channels; ++channel) {
             for (unsigned i = 0; i < blockSize; ++i) {
-                if (position + i >= longestRowLength - fadeOutDuration) {
+                if (position + i >= longestRowLength) {
+                    data[channel][i] = 0;
+                } else if (position + i >= longestRowLength - fadeOutDuration) {
                     if (type == QLatin1String("linear"))
                         data[channel][i] *=
                             (double)(longestRowLength - position - i) /

@@ -61,6 +61,7 @@ public:
     void setDevice(const DeviceData &device);
     DeviceData device() const;
 
+    bool blockExists(const QString &id) const;
     void addBlock(const BlockData &block);
     void removeBlockAt(int index);
     // throws if not found

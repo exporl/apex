@@ -22,6 +22,9 @@
 #include "apexmain/errorhandler.h"
 #include "apexmain/experimentio.h"
 #include "apexmain/gui/mainwindow.h"
+#include "apexmain/runner/flowrunner.h"
+
+#include "apexdata/experimentdata.h"
 
 #include "common/paths.h"
 #include "common/testutils.h"
@@ -33,8 +36,6 @@
 
 using namespace apex;
 using namespace cmn;
-
-static int waitTime = 500;
 
 static QAbstractButton *findButtonWithText(QWidget *widget, const QString &text)
 {
@@ -48,12 +49,43 @@ static QAbstractButton *findButtonWithText(QWidget *widget, const QString &text)
     return result;
 }
 
-void ApexMainTest::testRepeatButton()
+void ApexMainTest::testFlowRunner()
 {
-    TEST_EXCEPTIONS_TRY;
+    TEST_EXCEPTIONS_TRY
 
     ErrorHandler errorHandler;
     ApexControl control(true);
+    QSignalSpy initializedSpy(&control, SIGNAL(apexInitialized()));
+    QVERIFY(initializedSpy.wait());
+
+    QString fileName = Paths::searchFile(QSL("tests/libapex/testrunner.apf"),
+                                         Paths::dataDirectories());
+#ifdef Q_OS_ANDROID
+    QTemporaryDir dir;
+    QFile::copy(fileName, QDir(dir.path()).filePath(QSL("testrunner.apf")));
+    fileName = QDir(dir.path()).filePath(QSL("testrunner.apf"));
+    QFile::copy(Paths::searchFile(QSL("tests/libapex/extrasimple.apx"),
+                                  Paths::dataDirectories()),
+                QDir(dir.path()).filePath(QSL("extrasimple.apx")));
+#endif
+
+    FlowRunner runner;
+    QSignalSpy selectedSpy(&runner, SIGNAL(selected(data::ExperimentData *)));
+    runner.select(fileName);
+    QVERIFY(selectedSpy.wait());
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::testRepeatButton()
+{
+    TEST_EXCEPTIONS_TRY
+
+    ErrorHandler errorHandler;
+    ApexControl control(true);
+    QSignalSpy initializedSpy(&control, SIGNAL(apexInitialized()));
+    QVERIFY(initializedSpy.wait());
+
     QString fileName =
         Paths::searchFile(QSL("tests/libapex/panel-showrepeatbutton.apx"),
                           Paths::dataDirectories());
@@ -75,9 +107,8 @@ void ApexMainTest::testRepeatButton()
     QSignalSpy responseSpy(responseState, SIGNAL(entered()));
     QTest::mouseClick(findButtonWithText(control.mainWindow(), QSL("Start")),
                       Qt::LeftButton);
-
-    QVERIFY(runningTrialSpy.count() == 1 || runningTrialSpy.wait(waitTime));
-    QVERIFY(responseSpy.count() == 1 || responseSpy.wait(waitTime));
+    QVERIFY(runningTrialSpy.count() == 1 || runningTrialSpy.wait());
+    QVERIFY(responseSpy.count() == 1 || responseSpy.wait());
     QVERIFY(control.isExperimentRunning());
 
     /* Repeat trial */
@@ -86,7 +117,6 @@ void ApexMainTest::testRepeatButton()
     QState *restartState =
         stateMachine->findChild<QState *>(QSL("RestartingTrial"));
     QSignalSpy restartSpy(restartState, SIGNAL(entered()));
-
     QAbstractButton *repeatButton =
         findButtonWithText(control.mainWindow(), QSL("Repeat stimulus"));
     QVERIFY(repeatButton);
@@ -95,8 +125,8 @@ void ApexMainTest::testRepeatButton()
 
     QTest::mouseClick(repeatButton, Qt::LeftButton);
 
-    QVERIFY(repeatTrialSpy.count() == 1 || repeatTrialSpy.wait(waitTime));
+    QVERIFY(repeatTrialSpy.count() == 1 || repeatTrialSpy.wait());
     QVERIFY(restartSpy.count() == 1);
 
-    TEST_EXCEPTIONS_CATCH;
+    TEST_EXCEPTIONS_CATCH
 }

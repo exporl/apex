@@ -1,20 +1,20 @@
 /*****************************************************************************
 * Copyright (C) 2008  Job Noorman <jobnoorman@gmail.com>                     *
 *                                                                            *
-* This file is part of APEX 3.                                               *
+* This file is part of APEX 4.                                               *
 *                                                                            *
-* APEX 3 is free software: you can redistribute it and/or modify             *
+* APEX 4 is free software: you can redistribute it and/or modify             *
 * it under the terms of the GNU General Public License as published by       *
 * the Free Software Foundation, either version 2 of the License, or          *
 * (at your option) any later version.                                        *
 *                                                                            *
-* APEX 3 is distributed in the hope that it will be useful,                  *
+* APEX 4 is distributed in the hope that it will be useful,                  *
 * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
 * GNU General Public License for more details.                               *
 *                                                                            *
 * You should have received a copy of the GNU General Public License          *
-* along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+* along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
 *****************************************************************************/
 
 #include "screenstatusreporter.h"
@@ -33,6 +33,11 @@
 
 using namespace apex;
 
+/* Diplomatic rows have been started with less characters,
+ * so should be long enough.
+ */
+static const int maxLength = 280;
+
 static QColor sf_SetColor(StatusItem::Level level)
 {
     switch (level) {
@@ -50,7 +55,9 @@ static QColor sf_SetColor(StatusItem::Level level)
 }
 
 ScreenStatusReporter::ScreenStatusReporter()
-    : reportLevels(StatusItem::AllButDebug), list(new QTreeWidget(this))
+    : reportLevels(StatusItem::AllButDebug),
+      list(new QTreeWidget(this)),
+      longestStatusItem(0)
 {
     setAttribute(Qt::WA_DeleteOnClose, false);
     setAttribute(Qt::WA_QuitOnClose, false);
@@ -58,7 +65,7 @@ ScreenStatusReporter::ScreenStatusReporter()
     list->setColumnCount(3);
     list->setHeaderLabels(QStringList() << tr("Time") << tr("Source")
                                         << tr("Message"));
-    list->setUniformRowHeights(false);
+    list->setUniformRowHeights(true);
     list->setItemsExpandable(false);
     list->setIndentation(0);
     list->setRootIsDecorated(false);
@@ -127,9 +134,14 @@ ScreenStatusReporter::~ScreenStatusReporter()
 
 void ScreenStatusReporter::addItem(const StatusItem &item)
 {
-    QTreeWidgetItem *treeItem =
-        new QTreeWidgetItem(QStringList() << item.dateTime().time().toString()
-                                          << item.source() << item.message());
+    QStringRef statusMessage(&item.message(), 0,
+                             item.message().length() > maxLength
+                                 ? maxLength
+                                 : item.message().length());
+
+    QTreeWidgetItem *treeItem = new QTreeWidgetItem(
+        QStringList() << item.dateTime().time().toString() << item.source()
+                      << statusMessage.toString());
     for (unsigned i = 0; i < 3; ++i) {
         treeItem->setForeground(i, sf_SetColor(item.level()));
         treeItem->setTextAlignment(i, Qt::AlignTop);
@@ -137,13 +149,17 @@ void ScreenStatusReporter::addItem(const StatusItem &item)
     treeItem->setData(0, Qt::UserRole, (int)item.level());
     treeItem->setData(0, Qt::UserRole + 1, item.dateTime().time().toString() +
                                                "\t" + item.source() + "\t" +
-                                               item.message());
+                                               statusMessage.toString());
 
     list->addTopLevelItem(treeItem);
     treeItem->setHidden((reportLevels & item.level()) == 0);
 
     list->scrollToBottom();
-    list->resizeColumnToContents(2);
+    if (statusMessage.length() > longestStatusItem) {
+        list->resizeColumnToContents(2);
+        longestStatusItem = statusMessage.length();
+    }
+
     if (item.level() >= StatusItem::Critical)
         raise();
 }
@@ -191,4 +207,9 @@ void ScreenStatusReporter::hideEvent(QHideEvent *)
 void ScreenStatusReporter::showEvent(QShowEvent *)
 {
     Q_EMIT visibilityChanged(true);
+}
+
+void ScreenStatusReporter::resizeEvent(QResizeEvent *)
+{
+    list->resizeColumnToContents(2);
 }

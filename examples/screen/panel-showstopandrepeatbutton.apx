@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd">
   <!-- @doc
   @what: shows how to use a stopbutton & repeatbutton
   @description: A red stopbutton and a repeatbutton are displayed on the screen, just above the progressbar. When clicking the stopbutton, all output is immediately stopped & apex is shut down. When clicking the repeatbutton, the last stimulus is repeated.

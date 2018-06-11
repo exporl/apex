@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd">
   <!-- @doc
   @what: Loudness growth with categories
   @description: Participants have to judge the loudness of the stimuli presented in the left ear by clicking on the screen on the graphical rating scale. Apex remembers the position of the mouse click as a number between 0 and 1. Stimuli are presented in a pseudorandom order.

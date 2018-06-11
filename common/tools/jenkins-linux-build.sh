@@ -8,6 +8,7 @@ DEBUGRELEASE=release
 PBUILDER=false
 JOBS=1
 TIMEOUT=360
+LOCALCONFIG="tools/jenkins-linux-localconfig.pri"
 
 parsecmd() {
     while [ $# -gt 0 ]; do
@@ -46,6 +47,11 @@ parsecmd() {
             TIMEOUT=$2
             shift
             ;;
+        --local-config) #
+            # supply a custom localconfig
+            LOCALCONFIG=$2
+            shift
+            ;;
         -h|--help) #
             # this help
             echo "Usage: $0 [OPTION]..."
@@ -70,6 +76,7 @@ if [ "$PBUILDER" = "true" ]; then
     # the escaping is wrong, but this shouldn't matter for the arguments that we care about
     echo "su jenkins -c '$WORKSPACE/common/tools/jenkins-linux-build.sh $@ --no-pbuilder'" >> "$WORKSPACE/pbuilder-run.sh"
     chmod +x "$WORKSPACE/pbuilder-run.sh"
+    find "$WORKSPACE" -type d -exec chmod g+s {} \;
     sudo pbuilder execute --bindmounts ~jenkins -- "$WORKSPACE/pbuilder-run.sh"
     exit 0
 fi
@@ -78,7 +85,7 @@ if [ "$CLEAN" = "true" ]; then
     rm -rf bin .build
 fi
 
-cp tools/jenkins-linux-localconfig.pri localconfig.pri
+cp "$LOCALCONFIG" localconfig.pri
 
 rm -f *test-results.xml *.memcheck
 

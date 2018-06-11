@@ -1,12 +1,12 @@
 function temp=a3stimulus(id, datablocks,fixedparameters,variableparameters,simultaneous)
 % a3stimulus(id, datablocks,fixedparameters,variableparameters,simultaneous)
-% make simple stimulus with n datablocks in parallel
+% make simple stimulus with n datablocks
 % datablocks is a cell of datablocks
 % parameters is a struct of fixed parameters
-% if simultaneous==1, datablocks are put in parallel, otherwise in series
+% if simultaneous==1, datablocks are put in parallel, otherwise in series (default)
 
 if (nargin<5)
-    simultaneous=1;
+    simultaneous=0;
 end
 
 if (nargin<=2)
@@ -22,26 +22,17 @@ end
 
 temp=['<stimulus id="' id '">' lf];
 temp=[temp tb '<datablocks>' lf];
-if size(datablocks,2)>1
-    temp=[temp tb '<sequential>' lf];
+temp=[temp tb '<sequential>' lf];
+if size(datablocks,2)>1 && simultaneous
     temp=[temp tb '<simultaneous>' lf];
-else
-    temp=[temp tb '<sequential>' lf];
 end
 for iF=1:length(datablocks)
     temp=[temp tb tb '<datablock id="' datablocks{iF} '"/>' lf];
 end
-if size(datablocks,2)>1
+if simultaneous
     temp=[temp tb '</simultaneous>' lf];
-%     temp=[temp tb '<simultaneous>' lf];
-%     for iF=1:size(datablocks,2)
-%     temp=[temp tb tb '<datablock id="' datablocks{1,iF} '"/>' lf];
-%     temp=[temp tb '</simultaneous>' lf];
-%     end
-    temp=[temp tb '</sequential>' lf];
-else
-    temp=[temp tb '</sequential>' lf];
 end
+temp=[temp tb '</sequential>' lf];
 temp=[temp tb '</datablocks>' lf];
 
 temp=[temp tb '<variableParameters>' lf];

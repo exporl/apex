@@ -1,5 +1,5 @@
 function result=a3rme_asio(channels)
-% show apex 3 device for rme using the asio drivers
+% show APEX 4 device for rme using the asio drivers
 
 if (nargin<1)
     channels=2;

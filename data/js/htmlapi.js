@@ -17,15 +17,52 @@ var HtmlApi = function () {
     }
 
     _createClass(HtmlApi, [{
+        key: 'absoluteFilePath',
+        value: function absoluteFilePath(path) {
+            var msg = this._socket.buildInvokeMessage('absoluteFilePath', [path]);
+            return this._socket.sendBlocking(msg);
+        }
+    }, {
+        key: 'readFile',
+        value: function readFile(path) {
+            var msg = this._socket.buildInvokeMessage('readFile', [path]);
+            return this._socket.sendBlocking(msg);
+        }
+    }, {
+        key: 'onReady',
+        value: function onReady(callback) {
+            this._socket.onOpen(callback);
+        }
+    }, {
         key: 'on',
         value: function on(method, cb) {
             this._socket.on(method, cb);
         }
     }, {
+        key: 'loadScript',
+        value: function loadScript(path) {
+            var _this = this;
+
+            return this.absoluteFilePath(path).then(function (absolutePath) {
+                return _this.readFile(absolutePath).then(function (content) {
+                    var scriptElement = document.createElement('script');
+                    scriptElement.setAttribute('type', 'text/javascript');
+                    scriptElement.textContent = content;
+                    return new Promise(function (resolve, reject) {
+                        scriptElement.onload = resolve();
+                        document.head.appendChild(scriptElement);
+                        setTimeout(function () {
+                            reject('Script loading timed out');
+                        }, 5000);
+                    });
+                });
+            });
+        }
+    }, {
         key: 'answered',
         value: function answered() {
             var msg = this._socket.buildInvokeMessage('answered', []);
-            return this._socket.sendBlocking(msg);
+            this._socket.sendBlocking(msg);
         }
     }, {
         key: '_onMessage',
@@ -38,7 +75,8 @@ var HtmlApi = function () {
     }, {
         key: '_evaluateJavaScript',
         value: function _evaluateJavaScript(script) {
-            eval(script);
+            var result = eval(script);
+            this.sendBlocking(this.buildInvokeMessage('javascriptFinished', [result]));
         }
     }]);
 

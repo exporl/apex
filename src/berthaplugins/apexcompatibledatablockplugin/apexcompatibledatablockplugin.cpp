@@ -84,6 +84,7 @@ private:
 
     unsigned blockSize;
     unsigned sampleRate;
+    unsigned sampleFrames;
 
     QList<unsigned> triggers;
     unsigned totalProcessed;
@@ -160,7 +161,8 @@ QString ApexCompatibleDataBlockPlugin::prepare(unsigned nrOfFrames)
         SF_INFO readSfinfo;
         readSfinfo.format = 0;
         inputFile.reset(oldFileName, SFM_READ, &readSfinfo);
-        totalFrames = (triggers.last() + readSfinfo.frames);
+        sampleFrames = readSfinfo.frames;
+        totalFrames = (triggers.last() + sampleFrames);
         if (!inputFile)
             return tr("Unable to open input file %1: %2")
                 .arg(oldFileName, QString::fromLocal8Bit(sf_strerror(NULL)));
@@ -202,7 +204,6 @@ void ApexCompatibleDataBlockPlugin::process()
         totalProcessed += blockSize;
         return;
     }
-
     bool reachedFirstTrigger =
         triggers.isEmpty()
             ? true
@@ -217,8 +218,13 @@ void ApexCompatibleDataBlockPlugin::process()
     while (blockPos != blockSize) {
         if (!triggers.isEmpty() &&
             totalProcessed < triggers.at(currentTrigger)) {
-            blockPos++;
-            totalProcessed++;
+            unsigned wait =
+                (triggers.at(currentTrigger) - totalProcessed - blockPos) >
+                        blockSize
+                    ? blockSize - blockPos
+                    : (triggers.at(currentTrigger) - totalProcessed - blockPos);
+            blockPos += wait;
+            totalProcessed += wait;
             continue;
         }
 
@@ -234,7 +240,8 @@ void ApexCompatibleDataBlockPlugin::process()
         totalProcessed += readSize;
 
         if (currentTrigger + 1 < (unsigned)triggers.size() &&
-            totalProcessed >= triggers.at(currentTrigger + 1)) {
+            (totalProcessed >= triggers.at(currentTrigger) + sampleFrames ||
+             totalProcessed >= triggers.at(currentTrigger + 1))) {
             currentTrigger += 1;
             sf_seek(inputFile.get(), 0, SEEK_SET);
         } else if (getDonePlaying()) {

@@ -1,4 +1,4 @@
-% Apex 3 Matlab Toolbox (AMT)
+% APEX 4 Matlab Toolbox (AMT)
 %
 % $Rev$
 %

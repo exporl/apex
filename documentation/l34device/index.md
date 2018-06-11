@@ -2,7 +2,7 @@ Using cochlear implants from Cochlear
 =====================================
 
 To directly stimulate subjects using cochlear implants from Cochlear,
-Apex3 uses the NICv2 interface, provided by Cochlear. This interface is
+APEX 4 uses the NICv2 interface, provided by Cochlear. This interface is
 abstracted as the L34Device (to be used under ). It is always called
 L34, irrespective of the device that is used with NICv2 (which can be an
 L34 but also an SP12 or other devices).
@@ -10,31 +10,31 @@ L34 but also an SP12 or other devices).
 L34 setup
 ---------
 
-To use Apex3 with the L34 device, you need the L34 plugin, which is
+To use APEX 4 with the L34 device, you need the L34 plugin, which is
 provided on request, provided you sign the Cochlear NIC agreement.
 
 After obtaining the L34 plugin (in the form of the file ), copy it to
 the directory under the main APEX directory. You also need a properly
 setup Cochlear NICv2 environment. We refer to the NICv2 documentation on
-how to do this. For Apex3 it boils down to having the right version of
-NICv2 (the same Apex3 was compiled against) and having the Nucleus NIC
+how to do this. For APEX 4 it boils down to having the right version of
+NICv2 (the same APEX 4 was compiled against) and having the Nucleus NIC
 binaries directory in your path. If this part is setup correctly, you
 should be able to use the L34 device with device number 0 (the simulated
 device).
 
-Before starting an Apex3 experiment that uses the L34device, make sure
+Before starting an APEX 4 experiment that uses the L34device, make sure
 the appropriate devices are connected to the computer and the NIC
 environment is setup correctly.
 
 ### Debugging
 
-When using the L34 device, Apex3 starts a helper program (nic3slave.py).
-Apex3 communicates with the helper program (using domain sockets for
+When using the L34 device, APEX 4 starts a helper program (nic3slave.py).
+APEX 4 communicates with the helper program (using domain sockets for
 linux and named pipes for windows), and sends commands to the helper
 program. In turn the helper program communicates with the L34 device and
-executes those commands. Because Apex3 doesn’t communicate directly with
+executes those commands. Because APEX 4 doesn’t communicate directly with
 the L34 device, the L34 debug output needs to be piped from the helper
-program to Apex3. When you enable verbose in the device section of your
+program to APEX 4. When you enable verbose in the device section of your
 experiment file, this debug output will be printed in the apex message
 window.
 You will need to use the long notation when defining your device with
@@ -73,7 +73,7 @@ xml
 Either of these files can be generated using the Nucleus Matlab Toolbox,
 provided by cochlear. The most important difference between xml
 stimulation files and other simulation files, is that for the latter
-Apex3 will do channel mapping using a user map defined in the experiment
+APEX 4 will do channel mapping using a user map defined in the experiment
 file.
 
 ### Generating .qic files
@@ -107,7 +107,7 @@ device
     L34 connected. Note that triggering does not work properly with the
     simulated device.
 
-When using or files, Apex3 calculates the number of current units on the
+When using or files, APEX 4 calculates the number of current units on the
 basis of the defined map. The map can be either entered directly in the
 experiment file (inline) or derived from the Nucleus fitting software
 R126 (fromR126). The following map parameters should be defined: number

@@ -292,8 +292,7 @@ WebSocketServer::WebSocketServer(const QString &serverName)
 
 WebSocketServer::~WebSocketServer()
 {
-    E_D(WebSocketServer);
-    qDeleteAll(d->webSockets.begin(), d->webSockets.end());
+    stop();
     delete dataPtr;
 }
 

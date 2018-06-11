@@ -1,5 +1,5 @@
 function [B,A] = a3iirfilter_read_bin(filename)
-% Re .bin file with filter coefficients like expected by the APEX
+% Reads .bin file with filter coefficients like expected by the APEX
 % iirfilter plugin
   
 % /** IIR filter implemented in the frequency domain. The filter is implicitly

@@ -19,10 +19,18 @@
 #include "webview.h"
 
 #include <QAction>
+#include <QApplication>
+#include <QEventLoop>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMetaObject>
+#include <QMutex>
 #include <QScopedPointer>
+#include <QTimer>
+
+#if defined(WITH_WEBENGINE)
+#include <QWebEngineSettings>
+#endif
 
 namespace cmn
 {
@@ -32,14 +40,32 @@ class WebViewPrivate : public QObject
     Q_OBJECT
 
 public:
-    WebViewPrivate(QObject *parent) : QObject(parent)
+    WebViewPrivate(QObject *parent) : QObject(parent), callbacknr(0)
     {
     }
     ~WebViewPrivate()
     {
     }
+
+public Q_SLOTS:
+    void javascriptFinished(const QVariant &result)
+    {
+        lastJavascriptResult = result;
+        Q_EMIT receivedJavascript();
+    }
+
+Q_SIGNALS:
+    void receivedJavascript();
+
+public:
+    QMutex mutex;
+    int progress;
+    int callbacknr;
+    QVariant lastJavascriptResult;
 #if defined(ANDROID)
     QQuickWidget *webView;
+#elif defined(WITH_WEBENGINE)
+    QWebEngineView *webView;
 #else
     QWebView *webView;
 #endif
@@ -64,8 +90,14 @@ WebView::WebView() : dataPtr(new WebViewPrivate(this))
     d->webView->setSource(QSL("qrc:/commongui/webview.qml"));
     connect(d->webView->rootObject(), SIGNAL(loadingFinished()), this,
             SIGNAL(loadingFinished()));
-    connect(d->webView->rootObject(), SIGNAL(javascriptFinished(QVariant)),
-            this, SIGNAL(javascriptFinished(QVariant)));
+    connect(d->webView->rootObject(), SIGNAL(javascriptFinished(QVariant)), d,
+            SLOT(javascriptFinished(QVariant)));
+#elif defined(WITH_WEBENGINE)
+    d->webView = new QWebEngineView(this);
+    d->webView->settings()->setAttribute(
+        QWebEngineSettings::LocalContentCanAccessRemoteUrls, true);
+    connect(d->webView, SIGNAL(loadFinished(bool)), this,
+            SIGNAL(loadingFinished(bool)));
 #else
     QWebSettings::globalSettings()->setAttribute(
         QWebSettings::DeveloperExtrasEnabled, true);
@@ -90,6 +122,8 @@ void WebView::loadHtml(const QString &html, const QUrl &baseUrl)
     Q_UNUSED(baseUrl);
     QMetaObject::invokeMethod(d->webView->rootObject(), "loadHtml",
                               Q_ARG(QVariant, html));
+#elif defined(WITH_WEBENGINE)
+    d->webView->setHtml(html, baseUrl);
 #else
     d->webView->page()->mainFrame()->setHtml(html, baseUrl);
 #endif
@@ -101,26 +135,39 @@ void WebView::load(const QUrl &url)
 #if defined(ANDROID)
     QMetaObject::invokeMethod(d->webView->rootObject(), "load",
                               Q_ARG(QVariant, url));
+#elif defined(WITH_WEBENGINE)
+    d->webView->load(url);
 #else
     d->webView->page()->mainFrame()->load(url);
 #endif
 }
 
-void WebView::runJavaScript(const QString &script)
+QVariant WebView::runJavaScript(const QString &script, int timeout)
 {
     E_D(WebView);
 #if defined(ANDROID)
+    QEventLoop loop;
+    QTimer timer;
     QMetaObject::invokeMethod(d->webView->rootObject(), "runJavaScript",
                               Q_ARG(QVariant, script));
+    connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
+    connect(d, SIGNAL(receivedJavascript()), &loop, SLOT(quit()));
+    timer.start(timeout);
+    loop.exec();
+    return d->lastJavascriptResult;
+#elif defined(WITH_WEBENGINE)
+    Q_UNUSED(timeout);
+    d->webView->page()->runJavaScript(script);
+    return QVariant();
 #else
-    Q_EMIT javascriptFinished(
-        d->webView->page()->mainFrame()->evaluateJavaScript(script));
+    Q_UNUSED(timeout);
+    return d->webView->page()->mainFrame()->evaluateJavaScript(script);
 #endif
 }
 
 void WebView::addToJavaScriptWindowObject(const QString &name, QObject *object)
 {
-#if defined(ANDROID)
+#if defined(ANDROID) || defined(WITH_WEBENGINE)
     Q_UNUSED(name);
     Q_UNUSED(object);
 #else
@@ -131,7 +178,7 @@ void WebView::addToJavaScriptWindowObject(const QString &name, QObject *object)
 
 void WebView::setNetworkAccessManager(QNetworkAccessManager *accessManager)
 {
-#if defined(ANDROID)
+#if defined(ANDROID) || defined(WITH_WEBENGINE)
     Q_UNUSED(accessManager);
 #else
     E_D(WebView);
@@ -141,17 +188,15 @@ void WebView::setNetworkAccessManager(QNetworkAccessManager *accessManager)
 
 #if defined(ANDROID)
 QQuickWidget
+#elif defined(WITH_WEBENGINE)
+QWebEngineView
 #else
 QWebView
 #endif
 *WebView::webView()
 {
     E_D(WebView);
-#if defined(ANDROID)
     return d->webView;
-#else
-    return d->webView;
-#endif
 }
 
 void WebView::closeEvent(QCloseEvent *event)

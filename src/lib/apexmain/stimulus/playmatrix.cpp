@@ -1,20 +1,20 @@
 /******************************************************************************
  * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
  *                                                                            *
- * This file is part of APEX 3.                                               *
+ * This file is part of APEX 4.                                               *
  *                                                                            *
- * APEX 3 is free software: you can redistribute it and/or modify             *
+ * APEX 4 is free software: you can redistribute it and/or modify             *
  * it under the terms of the GNU General Public License as published by       *
  * the Free Software Foundation, either version 2 of the License, or          *
  * (at your option) any later version.                                        *
  *                                                                            *
- * APEX 3 is distributed in the hope that it will be useful,                  *
+ * APEX 4 is distributed in the hope that it will be useful,                  *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
  * GNU General Public License for more details.                               *
  *                                                                            *
  * You should have received a copy of the GNU General Public License          *
- * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
 #include "apexdata/connection/connectiondata.h"
@@ -154,24 +154,13 @@ void PlayMatrixCreator::sf_FixDuplicateIDs(PlayMatrix *a_pMatrix,
                         Q_ASSERT(pCopy);
                         a_DataBlocks[sCopy] = pCopy;
 
-                        // copy all connections from datablock
-                        // tConnections& curcs = a_Connections.find(
-                        // pOrig->GetDevice() ).value();
                         qCDebug(APEX_RS, "Size of connections map: %d",
                                 a_Connections.size());
-
-                        /*Q_ASSERT( a_Connections.contains( pOrig->GetDevice())
-                        );
-                        tConnections& curcs = a_Connections[ pOrig->GetDevice()
-                        ];
-                        for( tConnections::size_type i = 0 ; i < curcs.size() ;
-                        ++i )
-                        {*/
-                        for (data::ConnectionsData::const_iterator it =
-                                 a_Connections.begin();
-                             it != a_Connections.end(); ++it) {
-                            // const tConnection& cur = curcs.at( i );
-                            const data::ConnectionData *current = *it;
+                        QMutableListIterator<data::ConnectionData *>
+                            connectionsIt(a_Connections);
+                        while (connectionsIt.hasNext()) {
+                            const data::ConnectionData *current =
+                                connectionsIt.next();
                             qCDebug(APEX_RS) << "sCur=" << sCur;
                             qCDebug(APEX_RS) << "fromId() = "
                                              << current->fromId();
@@ -179,16 +168,8 @@ void PlayMatrixCreator::sf_FixDuplicateIDs(PlayMatrix *a_pMatrix,
                                 data::ConnectionData *newconnection =
                                     new data::ConnectionData(*current);
                                 newconnection->setFromId(sCopy);
-                                a_Connections.push_back(newconnection);
+                                connectionsIt.insert(newconnection);
                             }
-                            /*if( cur.m_sFromID == sCur )
-                            {
-                              tConnection newc = cur;
-                              newc.m_sFromID = sCopy;
-                              curcs.push_back( newc );
-                              qCDebug(APEX_RS, "Copying connection to %s",
-                            qPrintable( newc.m_sToID));
-                            }*/
                         }
                     }
                 }

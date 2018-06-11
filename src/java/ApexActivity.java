@@ -7,16 +7,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.Runtime;
@@ -32,6 +37,8 @@ import javax.net.ssl.X509TrustManager;
 
 public class ApexActivity extends QtActivity {
     private static final String TAG = "APEX";
+    private static final String ACTION_LOADRUNNER =
+        "be.kuleuven.med.exporl.apex.RUNNER";
     private boolean apexInitialized;
     private Intent lastIntent;
 
@@ -45,6 +52,7 @@ public class ApexActivity extends QtActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lastIntent = getIntent();
+        deleteTemporaryFiles();
     }
 
     @Override
@@ -75,25 +83,21 @@ public class ApexActivity extends QtActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void addShortcut(String path) {
+    public void createShortcutToFile(String path) {
         // Intent to start apex with a certain experiment
         Intent shortcutIntent =
             new Intent(getApplicationContext(), ApexActivity.class);
         shortcutIntent.setData(Uri.parse(path));
         shortcutIntent.setAction(Intent.ACTION_VIEW);
+        createShortcut(shortcutIntent, new File(path).getName());
+    }
 
-        // Intent to create shortcut
-        Intent addIntent = new Intent();
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
-                           new File(path).getName());
-        addIntent.putExtra(
-            Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-            Intent.ShortcutIconResource.fromContext(getApplicationContext(),
-                                                    R.drawable.ic_launcher));
-        addIntent.putExtra("duplicate", false);
-        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-        getApplicationContext().sendBroadcast(addIntent);
+    public void createShortcutToRunner(String runner) {
+        Intent shortcutIntent =
+            new Intent(getApplicationContext(), ApexActivity.class);
+        shortcutIntent.setAction(ACTION_LOADRUNNER);
+        shortcutIntent.putExtra(ACTION_LOADRUNNER, runner);
+        createShortcut(shortcutIntent, runner);
     }
 
     public void signalApexInitialized() {
@@ -198,6 +202,55 @@ public class ApexActivity extends QtActivity {
         }
     }
 
+    public void shareText(String text) {
+        Intent shareIntent = new Intent();
+        if (Patterns.WEB_URL.matcher(text).matches()) {
+            shareIntent.setAction(Intent.ACTION_VIEW);
+            shareIntent.setData(Uri.parse(text));
+        } else {
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+            shareIntent.setType("text/plain");
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share via"));
+    }
+
+    public boolean hasNetworkConnection() {
+        ConnectivityManager connectivityManager =
+            (ConnectivityManager)getApplicationContext().getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        return activeNetwork != null &&
+            activeNetwork.isConnectedOrConnecting() &&
+            activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    public void maximizeVolume() {
+        AudioManager audioManager =
+            (AudioManager)getApplicationContext().getSystemService(
+                Context.AUDIO_SERVICE);
+        audioManager.setStreamVolume(
+            AudioManager.STREAM_MUSIC,
+            audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+    }
+
+    public void sendToast(String text) {
+        class ToastWorker implements Runnable {
+            String message;
+            ToastWorker(String msg) {
+                message = msg;
+            }
+            @Override
+            public void run() {
+                Toast
+                    .makeText(getApplicationContext(), message,
+                              Toast.LENGTH_LONG)
+                    .show();
+            }
+        }
+        runOnUiThread(new ToastWorker(text));
+    }
+
     private void processLastIntent() {
         if (lastIntent == null || !apexInitialized)
             return;
@@ -206,17 +259,10 @@ public class ApexActivity extends QtActivity {
         Log.d(TAG, "Processing Intent with action: " + action);
         if (Intent.ACTION_VIEW.equals(action))
             ApexNativeMethods.fileOpen(lastIntent.getData().getPath());
-
+        else if (ACTION_LOADRUNNER.equals(action))
+            ApexNativeMethods.loadRunner(
+                lastIntent.getExtras().getString(ACTION_LOADRUNNER));
         lastIntent = null;
-    }
-
-    private void maximizeVolume() {
-        AudioManager audioManager =
-            (AudioManager)getApplicationContext().getSystemService(
-                Context.AUDIO_SERVICE);
-        audioManager.setStreamVolume(
-            AudioManager.STREAM_MUSIC,
-            audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
     }
 
     private String getValueFromSharedPreferences(String key) {
@@ -229,5 +275,62 @@ public class ApexActivity extends QtActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
         editor.commit();
+    }
+
+    private void createShortcut(Intent intent, String name) {
+        Intent addIntent = new Intent();
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+        addIntent.putExtra(
+            Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+            Intent.ShortcutIconResource.fromContext(getApplicationContext(),
+                                                    R.drawable.ic_launcher));
+        addIntent.putExtra("duplicate", false);
+        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        getApplicationContext().sendBroadcast(addIntent);
+    }
+
+    private void deleteTemporaryFiles() {
+        class FileDeleter implements Runnable {
+            File[] files;
+            FileDeleter(File[] f) {
+                files = f;
+            }
+            @Override
+            public void run() {
+                for (File file : files) {
+                    try {
+                        recursiveDelete(file);
+                    } catch (SecurityException e) {
+                        Log.e(TAG, "Unable to delete " + file.getName(), e);
+                    } catch (ApexException e) {
+                        Log.e(TAG, "Recursive delete failed", e);
+                    }
+                }
+            }
+        }
+
+        File filesDir = getApplicationContext().getFilesDir();
+        try {
+            File[] files = filesDir.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return file.getName().matches("APEX-[a-zA-Z0-9]{6}");
+                }
+            });
+            new Thread(new FileDeleter(files)).start();
+        } catch (SecurityException e) {
+            Log.e(TAG, "Unable to get list of temporary files.", e);
+        }
+    }
+
+    private void recursiveDelete(File file) throws ApexException {
+        if (!file.exists())
+            return;
+        if (file.isDirectory())
+            for (File child : file.listFiles())
+                recursiveDelete(child);
+        if (!file.delete())
+            throw new ApexException("Unable to delete file " + file.getName());
     }
 }

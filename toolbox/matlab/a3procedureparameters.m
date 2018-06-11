@@ -1,5 +1,5 @@
 function procedure=a3procedureparameters(p,type)
-% Create Apex3 procedure/parameters element
+% Create APEX4 procedure/parameters element
 
 TYPE_ADAPTIVE=1;
 TYPE_CONSTANT=2;

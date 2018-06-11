@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <procedure xsi:type="apex:adaptiveProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <skip>0</skip>
+      <order>sequential</order>
+      <uniquestandard>0</uniquestandard>
+      <corrector xsi:type="apex:isequal"/>
+      <time_before_first_trial>0</time_before_first_trial>
+      <input_during_stimulus>0</input_during_stimulus>
+      <nUp>1</nUp>
+      <nDown>1</nDown>
+      <adapt_parameter>gain</adapt_parameter>
+      <start_value>-2</start_value>
+      <stop_after_type>presentations</stop_after_type>
+      <stop_after>1</stop_after>
+      <larger_is_easier>true</larger_is_easier>
+      <repeat_first_until_correct>true</repeat_first_until_correct>
+      <stepsizes>
+        <change_after>trials</change_after>
+        <stepsize begin="0" size="2"/>
+      </stepsizes>
+    </parameters>
+    <trials>
+      <plugintrials/>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>1</progressbar>
+      <feedback>false</feedback>
+    </reinforcement>
+    <screen id="experimenter_screen_quiet">
+      <gridLayout rowstretch="1,2" width="1" height="2" id="main_layout">
+        <gridLayout row="1" rowstretch="1,1,2,2" width="2" height="4" columnstretch="1,4" id="parameter_layout" col="1">
+          <label row="1" id="snrlabel" col="1">
+            <text>level</text>
+          </label>
+          <parameterlabel row="1" id="snr" col="2">
+            <parameter>gain</parameter>
+          </parameterlabel>
+          <label row="2" id="sentence" col="1">
+            <text>zin</text>
+          </label>
+          <parameterlabel row="2" id="sentence" col="2">
+            <parameter>sentence</parameter>
+          </parameterlabel>
+        </gridLayout>
+        <gridLayout row="2" width="2" height="1" id="answer_layout" col="1">
+          <button id="correct" x="1" y="1">
+            <text>Correct</text>
+          </button>
+          <button id="wrong" x="2" y="1">
+            <text>Wrong</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="correct"/>
+        <button id="wrong"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+    <screen id="experimenter_screen_noise">
+      <gridLayout rowstretch="1,2" width="1" height="2" id="main_layout">
+        <gridLayout row="1" rowstretch="1,1,2,2" width="2" height="4" columnstretch="1,4" id="parameter_layout" col="1">
+          <label row="1" id="snrlabel" col="1">
+            <text>snr</text>
+          </label>
+          <parameterlabel row="1" id="snr" col="2">
+            <parameter>gain</parameter>
+          </parameterlabel>
+          <label row="2" id="sentence" col="1">
+            <text>zin</text>
+          </label>
+          <parameterlabel row="2" id="sentence" col="2">
+            <parameter>sentence</parameter>
+          </parameterlabel>
+        </gridLayout>
+        <gridLayout row="2" width="2" height="1" id="answer_layout" col="1">
+          <button id="correct" x="1" y="1">
+            <text>Correct</text>
+          </button>
+          <button id="wrong" x="2" y="1">
+            <text>Wrong</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="correct"/>
+        <button id="wrong"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix source="apexconfig">speechmaterials</prefix>
+    <datablock id="datablock_noise">
+      <device>soundcard</device>
+      <file>dutch/list/noise/wivineruis.wav</file>
+    </datablock>
+    <datablock id="datablock_silence">
+      <device>soundcard</device>
+      <file>silence:1000</file>
+    </datablock>
+    <plugindatablocks/>
+  </datablocks>
+  <devices>
+    <master>soundcard</master>
+    <device id="soundcard" xsi:type="apex:wavDeviceType">
+      <driver>asio</driver>
+      <card>default</card>
+      <channels>2</channels>
+      <gain channel="0" id="gain0">0</gain>
+      <gain channel="1" id="gain1">0</gain>
+      <samplerate>44100</samplerate>
+      <blocksize>8192</blocksize>
+      <padzero>1</padzero>
+    </device>
+  </devices>
+  <filters>
+    <filter id="amplifier" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>-5</basegain>
+      <invertgain>false</invertgain>
+      <gain id="gain">0</gain>
+    </filter>
+    <filter id="amplifier_channel0" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <invertgain>false</invertgain>
+      <gain>0</gain>
+    </filter>
+    <filter id="amplifier_channel1" xsi:type="apex:amplifier">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <basegain>0</basegain>
+      <invertgain>false</invertgain>
+      <gain>0</gain>
+    </filter>
+    <filter id="dataloop_channel0" xsi:type="apex:dataloop">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>true</continuous>
+      <datablock>datablock_noise</datablock>
+      <basegain>-5</basegain>
+      <invertgain>false</invertgain>
+      <gain id="noisegain_channel0">0</gain>
+      <randomjump>true</randomjump>
+      <jump>0</jump>
+    </filter>
+    <filter id="dataloop_channel1" xsi:type="apex:dataloop">
+      <device>soundcard</device>
+      <channels>1</channels>
+      <continuous>true</continuous>
+      <datablock>datablock_noise</datablock>
+      <basegain>-5</basegain>
+      <invertgain>false</invertgain>
+      <gain id="noisegain_channel1">0</gain>
+      <randomjump>true</randomjump>
+      <jump>0</jump>
+    </filter>
+  </filters>
+  <stimuli>
+    <fixed_parameters>
+      <parameter id="sentence"/>
+    </fixed_parameters>
+    <stimulus id="calibrationstimulus">
+      <datablocks>
+        <datablock id="datablock_silence"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">calibration</parameter>
+      </fixedParameters>
+    </stimulus>
+    <stimulus id="noisestimulus">
+      <datablocks>
+        <datablock id="datablock_noise"/>
+      </datablocks>
+      <fixedParameters>
+        <parameter id="sentence">calibration</parameter>
+      </fixedParameters>
+    </stimulus>
+    <pluginstimuli/>
+  </stimuli>
+  <connections>
+    <connection>
+      <from>
+        <id>_ALL_</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier_channel0</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier_channel0</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>dataloop_channel0</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>amplifier_channel1</id>
+        <channel>0</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>amplifier_channel1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+    <connection>
+      <from>
+        <id>dataloop_channel1</id>
+        <channel>0</channel>
+      </from>
+      <to>
+        <id>soundcard</id>
+        <channel>1</channel>
+      </to>
+    </connection>
+  </connections>
+  <calibration profile="spin-LISTvrouw_ltass">
+    <stimuli>
+      <stimulus id="calibrationstimulus"/>
+      <stimulus id="noisestimulus"/>
+    </stimuli>
+    <parameters>
+      <parameter id="gain0">
+        <targetamplitude>65</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>10</max>
+      </parameter>
+      <parameter id="gain1">
+        <targetamplitude>65</targetamplitude>
+        <calibrationamplitude>80</calibrationamplitude>
+        <mute>-150</mute>
+        <min>-50</min>
+        <max>10</max>
+      </parameter>
+    </parameters>
+  </calibration>
+  <results>
+    <page>apex:resultsviewer.html</page>
+    <resultparameters>
+      <parameter name="line_reversalsformean">6</parameter>
+    </resultparameters>
+    <showafterexperiment>true</showafterexperiment>
+  <subject></subject>
+  </results>
+  <general>
+    <allowskip>true</allowskip>
+    <scriptlibrary>SPIN-LIST-vrouw_01-LISTvrouw_ltass.js</scriptlibrary>
+  <scriptparameters>
+      <parameter name="targetlist">placeholder</parameter>
+      <parameter name="targetscreen">placeholder</parameter>
+    </scriptparameters>
+</general>
+</apex:apex>

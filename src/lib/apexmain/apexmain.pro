@@ -52,5 +52,6 @@ FORMS += \
     gui/soundcarddialog.ui \
     gui/soundcardsdialog.ui \
     gui/startupdialog.ui \
+    gui/studydialog.ui \
 
 CTAGSSRCDIRS = $${BASEDIR}/contrib $${BASEDIR}/mwffilter $${BASEDIR}/src $${BASEDIR}/bertha-lib $${BASEDIR}/coh $${BASEDIR}/common

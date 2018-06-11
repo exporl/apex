@@ -27,7 +27,7 @@ nmake testxml
 rem Store symbols
 if "%~2" == "storesymbols" (
    echo Adding symbols
-   "%SYMSTOREDIR%\symstore.exe" add /r /s %APEXSYMSTORE% /t "Apex" /v "Build %BUILD_NUMBER%" /f "bin\%RELEASETYPE%-installed\bin\*.*"
+   "%SYMSTOREDIR%\symstore.exe" add /r /s %APEXSYMSTORE% /t "Apex" /v "Build %BUILD_NUMBER%" /f "bin\%RELEASETYPE%\*.*"
 )
 
 rem Zipping and installer
@@ -48,7 +48,7 @@ if "%RELEASETYPE%" == "release" (
     "%WIXDIR%\heat.exe" dir "%ApexInstallPath%" -ag -var env.ApexInstallPath -o ".build\%RELEASETYPE%\apex_generated.wxs" -cg AllFilesGroup -dr INSTALLDIR -srd -t tools\jenkins-windows-wix-cutapexexe.xsl || goto :EOF
     "%WIXDIR%\candle.exe" -out ".build\%RELEASETYPE%\apex_generated.wixobj" ".build\%RELEASETYPE%\apex_generated.wxs"  || goto :EOF
     "%WIXDIR%\candle.exe" -out ".build\%RELEASETYPE%\apex_main.wixobj" tools\jenkins-windows-wix-main.wxs || goto :EOF
-    "%WIXDIR%\light.exe" -out apex_3.1.x.msi ".build\%RELEASETYPE%\apex_main.wixobj" ".build\%RELEASETYPE%\apex_generated.wixobj" -ext WixUIExtension  || goto :EOF
+    "%WIXDIR%\light.exe" -out apex_4.0.0.msi ".build\%RELEASETYPE%\apex_main.wixobj" ".build\%RELEASETYPE%\apex_generated.wixobj" -ext WixUIExtension  || goto :EOF
 )
 
 exit 0

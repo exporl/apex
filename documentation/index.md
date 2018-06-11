@@ -1,4 +1,4 @@
-# Apex 3 User Manual
+# APEX 4 User Manual
 
 ## Authors
 ### Astrid van Wieringen
@@ -6,7 +6,7 @@
 ### Tom Francart
 
 ### Contributing
-This is a preliminary version of the APEX 3 user manual. It
+This is a preliminary version of the APEX 4 user manual. It
 is still incomplete and bound to contain errors and inaccuracies.
 
 People are encouraged to contribute by introducing useful new information,

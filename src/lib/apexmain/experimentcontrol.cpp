@@ -640,7 +640,7 @@ void ExperimentControlPrivate::startNextTrial()
         Q_EMIT trialStarted();
         currentTrial = procedure->setupNextTrial();
 #ifdef Q_OS_ANDROID
-        android::ApexAndroidMethods::signalTrialStarted();
+        android::ApexAndroidBridge::signalTrialStarted();
 #endif
     } catch (const std::exception &e) {
         Q_EMIT errorMessage(ERROR_SOURCE, e.what());
@@ -897,13 +897,17 @@ void ExperimentControlPrivate::showResult()
                 if (rd->GetData().resultParameters()->showResultsAfter())
                     if (rd->modRTResultSink())
                         rd->modRTResultSink()->hide();
-                rv->show(true);
-                if (rd->GetData().resultParameters()->saveResults())
-                    rv->addtofile(rd->modResultSink()->GetFilename());
+
                 connect(rv, SIGNAL(viewClosed()), rv, SLOT(deleteLater()));
                 connect(rv, SIGNAL(viewClosed()), this,
                         SIGNAL(resultsShowed()));
+                rv->show(true);
+
+                if (rd->GetData().resultParameters()->saveResults())
+                    rv->addtofile(rd->modResultSink()->GetFilename());
             }
+        } else {
+            Q_EMIT resultsShowed();
         }
     }
 }

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment">
   <!-- @doc
   @what: highlighted stimulus + feedback with picture and highlighting for multiple stimuli
   @description: The currently playing stimulus/button is highlighted. When clicking a button, a feedback picture (thumb up or down) is shown in the right panel and the correct button is highlighted.

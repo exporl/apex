@@ -129,7 +129,7 @@ sub getifile_callback {
 }
 
 sub getofile_callback {
-	my @types=(["Apex 3 XML files", ".xml"],
+	my @types=(["APEX 4 XML files", ".xml"],
 				["All Files", "*"]);
 	$outputfile->insert( 0, $mw->getSaveFile(-filetypes => \@types,
       -initialfile=> 'Default',

@@ -12,6 +12,14 @@
 
 #include "apextoolstest.h"
 
+#include <openssl/bn.h>
+#include <openssl/pem.h>
+#include <openssl/rsa.h>
+
+#ifdef Q_OS_WIN32
+#include <windows.h>
+#endif
+
 #include <QTemporaryDir>
 
 using namespace apex;
@@ -227,6 +235,154 @@ void ApexToolsTest::testRecursiveCopy()
                                      destinationDir.filePath(QSL("dir6"))));
     QVERIFY(
         QFile::exists(destinationDir.filePath(QSL("dir6/dir2/dir3/file1"))));
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexToolsTest::testGenerateKeyPair()
+{
+    TEST_EXCEPTIONS_TRY
+
+    /* TODO
+     * On windows QTemporaryDir creation often fails in this particular test.
+     * No error messages are provided (they will be starting Qt5.6).
+     */
+    QTemporaryDir tempDir;
+    QDir dir(tempDir.path());
+    if (!tempDir.isValid())
+        qCWarning(APEX_RS, "QTemporary Directory creation failed.");
+    QString privateKeyPath = dir.filePath(QSL("mykey"));
+    QString publicKeyPath = dir.filePath(QSL("mykey.pub"));
+
+    ApexTools::generateKeyPair(QFile::encodeName(privateKeyPath));
+
+    QFile publicKeyFile(publicKeyPath);
+    QVERIFY(publicKeyFile.open(QIODevice::ReadOnly));
+
+    QList<QByteArray> publicKeyDatas =
+        publicKeyFile.readAll().split(QChar::Space);
+
+    QByteArray keyType = QSL("ssh-rsa").toUtf8();
+    QCOMPARE(publicKeyDatas.at(0), keyType);
+
+    QByteArray publicKeyData = QByteArray::fromBase64(publicKeyDatas.at(1));
+    QDataStream dataStream(&publicKeyData, QIODevice::ReadOnly);
+    quint32 typeSize;
+    dataStream >> typeSize;
+    QCOMPARE(typeSize, (quint32)keyType.size());
+    QByteArray keyType2(typeSize, QChar::Null);
+    dataStream.readRawData(keyType2.data(), typeSize);
+    quint32 exponentSize;
+    dataStream >> exponentSize;
+    QCOMPARE(exponentSize, (quint32)3);
+    QByteArray exponentData(exponentSize, QChar::Null);
+    dataStream.readRawData(exponentData.data(), exponentSize);
+    quint32 modulusSize;
+    dataStream >> modulusSize;
+    /* ignore the leading 0 */
+    QCOMPARE((modulusSize - 1) * 8, (quint32)2048);
+    QByteArray modulusData(modulusSize, QChar::Null);
+    dataStream.readRawData(modulusData.data(), modulusSize);
+
+    QSharedPointer<RSA> publicKey(RSA_new(), RSA_free);
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+    int charsUsed = BN_hex2bn(&publicKey->e, exponentData.toHex());
+#else
+    BIGNUM *e = NULL; /* RSA takes ownership */
+    int charsUsed = BN_hex2bn(&e, exponentData.toHex());
+#endif
+    QCOMPARE(charsUsed, exponentData.toHex().size());
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+    charsUsed = BN_hex2bn(&publicKey->n, modulusData.toHex().constData());
+#else
+    BIGNUM *n = NULL; /* RSA takes ownership */
+    charsUsed = BN_hex2bn(&n, modulusData.toHex());
+    RSA_set0_key(publicKey.data(), n, e, NULL);
+#endif
+    QCOMPARE(charsUsed, modulusData.toHex().size());
+
+    QSharedPointer<BIO> privateKeyFile(
+        BIO_new_file(QFile::encodeName(privateKeyPath), "r"), BIO_free_all);
+    QSharedPointer<RSA> privateKey(
+        PEM_read_bio_RSAPrivateKey(privateKeyFile.data(), NULL, NULL, NULL),
+        RSA_free);
+    QVERIFY(privateKey);
+
+    QString message = QSL("verify me!");
+    QByteArray signature(RSA_size(privateKey.data()), QChar::Null);
+    unsigned int signatureLength = 0;
+    int result =
+        RSA_sign(NID_sha1, (unsigned char *)message.toUtf8().constData(),
+                 message.length(), (unsigned char *)signature.data(),
+                 &signatureLength, privateKey.data());
+    QCOMPARE(result, 1);
+
+    result = RSA_verify(NID_sha1, (unsigned char *)message.toUtf8().constData(),
+                        message.length(), (unsigned char *)signature.data(),
+                        signatureLength, publicKey.data());
+    QCOMPARE(result, 1);
+
+    if (!tempDir.isValid()) {
+        publicKeyFile.close();
+        privateKeyFile.clear();
+        QVERIFY(QFile::setPermissions(privateKeyPath, QFileDevice::WriteOwner));
+        QVERIFY(QFile::setPermissions(publicKeyPath, QFileDevice::WriteOwner));
+        QVERIFY(QFile::remove(privateKeyPath));
+        QVERIFY(QFile::remove(publicKeyPath));
+    }
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexToolsTest::testRecursiveFind()
+{
+    TEST_EXCEPTIONS_TRY
+
+    QTemporaryDir source;
+    QDir sourceDir(source.path());
+    sourceDir.mkpath(sourceDir.filePath(QSL("dir1/dir2")));
+    QDir dir1(sourceDir.filePath(QSL("dir1")));
+    QDir dir2(dir1.filePath(QSL("dir2")));
+    QFile file1(sourceDir.filePath(QSL("file1.apx")));
+    QFile file2(dir1.filePath(QSL("file2.apx")));
+    QFile file3(dir2.filePath(QSL("file3.apx")));
+    QFile file4(dir2.filePath(QSL("file4.apz")));
+    QFile file5(dir2.filePath(QSL(".hidden.apx")));
+    file1.open(QIODevice::WriteOnly);
+    file2.open(QIODevice::WriteOnly);
+    file3.open(QIODevice::WriteOnly);
+    file4.open(QIODevice::WriteOnly);
+    file5.open(QIODevice::WriteOnly);
+    file1.close();
+    file2.close();
+    file3.close();
+    file4.close();
+    file5.close();
+
+#ifdef Q_OS_WIN32
+    QString path = file5.fileName();
+    wchar_t *pathUtf16 = (wchar_t *)path.utf16();
+    SetFileAttributes(pathUtf16,
+                      GetFileAttributes(pathUtf16) | FILE_ATTRIBUTE_HIDDEN);
+#endif
+
+    QCOMPARE(ApexTools::recursiveFind(source.path(),
+                                      QRegularExpression(QSL(".*[.]apx"))),
+             QStringList() << file1.fileName() << file2.fileName()
+                           << file3.fileName());
+    QCOMPARE(ApexTools::recursiveFind(
+                 source.path(), QRegularExpression(QSL(".*[.]apx")), true),
+             QStringList() << file1.fileName() << file2.fileName()
+                           << file3.fileName() << file5.fileName());
+    QVERIFY(
+        ApexTools::recursiveFind(QString(), QRegularExpression(QSL(".*[.]apx")))
+            .isEmpty());
+    QCOMPARE(ApexTools::recursiveFind(source.path(),
+                                      QRegularExpression(QSL(".*[.]apz"))),
+             QStringList() << file4.fileName());
+    QVERIFY(ApexTools::recursiveFind(source.path(),
+                                     QRegularExpression(QSL("[a-z[")))
+                .isEmpty());
 
     TEST_EXCEPTIONS_CATCH
 }

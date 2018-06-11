@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ListPicker</class>
+ <widget class="QDialog" name="ListPicker">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>439</width>
+    <height>411</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QListWidget" name="listWidget">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="gridSize">
+      <size>
+       <width>0</width>
+       <height>40</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="selectButton">
+     <property name="text">
+      <string>Select</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

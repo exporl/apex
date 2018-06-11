@@ -1,20 +1,20 @@
 /******************************************************************************
  * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
  *                                                                            *
- * This file is part of APEX 3.                                               *
+ * This file is part of APEX 4.                                               *
  *                                                                            *
- * APEX 3 is free software: you can redistribute it and/or modify             *
+ * APEX 4 is free software: you can redistribute it and/or modify             *
  * it under the terms of the GNU General Public License as published by       *
  * the Free Software Foundation, either version 2 of the License, or          *
  * (at your option) any later version.                                        *
  *                                                                            *
- * APEX 3 is distributed in the hope that it will be useful,                  *
+ * APEX 4 is distributed in the hope that it will be useful,                  *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
  * GNU General Public License for more details.                               *
  *                                                                            *
  * You should have received a copy of the GNU General Public License          *
- * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
 #include "rtresultsink.h"
@@ -31,6 +31,7 @@
 #include "common/websocketserver.h"
 
 #include <QFileDialog>
+#include <QMenuBar>
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QTimer>
@@ -69,6 +70,7 @@ public:
     QScopedPointer<WebView> webView;
     QScopedPointer<cmn::WebSocketServer> webSocketServer;
     QScopedPointer<ResultApi> resultApi;
+    QScopedPointer<QPrinter> printer;
 
     QUrl page;
     QMap<QString, QString> resultParameters;
@@ -85,7 +87,7 @@ RTResultSink::RTResultSink(QUrl p_page, QMap<QString, QString> resultParameters,
     d->extraScript = extraScript;
 
     AccessManager am;
-    ApexTools::recursiveCopy(am.prepare(d->page).toString(QUrl::RemoveScheme),
+    ApexTools::recursiveCopy(am.prepare(d->page).toLocalFile(),
                              d->temporaryDirectory.path());
     d->page =
         QUrl(QDir(d->temporaryDirectory.path()).filePath(d->page.fileName()));
@@ -103,10 +105,15 @@ RTResultSink::RTResultSink(QUrl p_page, QMap<QString, QString> resultParameters,
             SLOT(exportToPdf()));
     d->webSocketServer.reset(new WebSocketServer(QSL("RTResultSink")));
     d->webSocketServer->start();
+    d->resultApi->registerBaseMethods(d->webSocketServer.data());
     d->webSocketServer->on(QSL("psignifit"), d->resultApi.data(),
                            QSL("psignifit(QString)"));
     d->webSocketServer->on(QSL("exportToPdf"), d->resultApi.data(),
                            QSL("exportToPdf()"));
+
+    if (d->webView->menuBar()->actions().size() >= 1)
+        d->webView->menuBar()->actions().at(0)->menu()->addAction(
+            QSL("Print to pdf"), this, SLOT(exportToPdf()));
 }
 
 RTResultSink::~RTResultSink()
@@ -116,10 +123,12 @@ RTResultSink::~RTResultSink()
 
 void RTResultSink::setup()
 {
-    d->webView->runJavaScript(
-        QL1S("var api = new ResultApi('ws://127.0.0.1:") +
-        QString::number(d->webSocketServer->serverPort()) + QL1S("', '") +
-        d->webSocketServer->csrfToken() + QL1S("');"));
+    executeJavaScript(QL1S("var api = new ResultApi('ws://127.0.0.1:") +
+                      QString::number(d->webSocketServer->serverPort()) +
+                      QL1S("', '") + d->webSocketServer->csrfToken() +
+                      QL1S("');"));
+    executeJavaScript("setTimeout(function() { if (typeof initialize === "
+                      "'function') initialize(); }, 1500);");
     setJavascriptParameters(d->resultParameters);
     executeJavaScript(d->extraScript);
 }
@@ -261,29 +270,25 @@ void RTResultSink::newResults(QString xml)
 
 QVariant RTResultSink::evaluateJavascript(QString script)
 {
-    QEventLoop loop;
-    QTimer *timeoutTimer = new QTimer();
-    QVariant jsResult;
-    connect(d->webView.data(), &WebView::javascriptFinished,
-            [&](const QVariant &result) { jsResult = result; });
-    connect(timeoutTimer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    d->webView->runJavaScript(script);
-    timeoutTimer->start(5000);
-    loop.exec();
-
-    return jsResult;
+    return d->webView->runJavaScript(script);
 }
 
 void RTResultSink::exportToPdf()
 {
-#ifndef Q_OS_ANDROID
+#if !defined(Q_OS_ANDROID)
     QString filename(QFileDialog::getSaveFileName(
         0, tr("Export results page to PDF"), "", "*.pdf"));
 
-    QPrinter printer;
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName(filename);
-    d->webView->webView()->print(&printer);
+    d->printer.reset(new QPrinter);
+    d->printer->setOutputFormat(QPrinter::PdfFormat);
+    d->printer->setOutputFileName(filename);
+#if defined(WITH_WEBENGINE)
+    d->webView->webView()->page()->print(d->printer.data(),
+                                         [&](bool) { d->printer.reset(); });
+#else
+    d->webView->webView()->print(d->printer.data());
+    d->printer.reset();
+#endif
 #endif
 }
 
@@ -315,21 +320,15 @@ QByteArray RTResultSink::createCSVtext(const QString &resultFilePath)
     localWebView.load(url);
 
     QEventLoop loop;
-    QTimer *timeoutTimer = new QTimer();
+    QTimer timer;
     connect(&localWebView, SIGNAL(loadingFinished(bool)), &loop, SLOT(quit()));
-    connect(timeoutTimer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    timeoutTimer->start(1000);
+    connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
+    timer.start(1000);
     loop.exec();
 
-    QVariant jsResult;
-    connect(&localWebView, &WebView::javascriptFinished,
-            [&](const QVariant &result) { jsResult = result; });
-    connect(timeoutTimer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    localWebView.runJavaScript(
-        "process(\"" + ApexTools::escapeJavascriptString(xmlString) + "\")");
-    timeoutTimer->start(5000);
-    loop.exec();
-
-    return jsResult.toByteArray();
+    return localWebView
+        .runJavaScript("process(\"" +
+                       ApexTools::escapeJavascriptString(xmlString) + "\")")
+        .toByteArray();
 }
 }

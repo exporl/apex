@@ -54,6 +54,11 @@ var FlowApi = function () {
             return this._socket.sendBlocking(msg);
         }
     }, {
+        key: 'onReady',
+        value: function onReady(callback) {
+            this._socket.onOpen(callback);
+        }
+    }, {
         key: 'on',
         value: function on(method, cb) {
             this._socket.on(method, cb);

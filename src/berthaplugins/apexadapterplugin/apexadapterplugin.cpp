@@ -139,7 +139,8 @@ QList<BlockOutputPort *> ApexAdapterPlugin::outputPorts()
 
 QString ApexAdapterPlugin::prepare(unsigned nrOfFrames)
 {
-    apexFilter->prepare(nrOfFrames);
+    if (!apexFilter->prepare(nrOfFrames))
+        return apexFilter->errorMessage();
     return QString();
 }
 

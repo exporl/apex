@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.5/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.5/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.5/experiment.xsd">
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>2</presentations>
+      <order>sequential</order>
+    </parameters>
+    <trials>
+      <trial id="trial1">
+        <answer>btn_house</answer>
+        <screen id="screen1"/>
+        <stimulus id="stim_house"/>
+      </trial>
+      <trial id="trial2">
+        <answer>btn_mouse</answer>
+        <screen id="screen1"/>
+        <stimulus id="stim_mouse"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <screen id="screen1">
+      <gridLayout height="1" width="2">
+        <button row="1" col="1" id="btn_house">
+          <text>house</text>
+        </button>
+        <button row="1" col="2" id="btn_mouse">
+          <text>mouse</text>
+        </button>
+      </gridLayout>
+      <buttongroup id="buttongroup">
+        <button id="btn_house"/>
+        <button id="btn_mouse"/>
+      </buttongroup>
+      <default_answer_element>buttongroup</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="db_house">
+      <device>soundcard</device>
+      <file>silence:999</file>
+    </datablock>
+    <datablock id="db_mouse">
+      <device>soundcard</device>
+      <file>silence:999</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device xsi:type="apex:wavDeviceType" id="soundcard">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>10</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <fixed_parameters/>
+    <stimulus id="stim_house">
+      <datablocks>
+        <datablock id="db_house"/>
+      </datablocks>
+    </stimulus>
+    <stimulus id="stim_mouse">
+      <datablocks>
+        <datablock id="db_mouse"/>
+      </datablocks>
+    </stimulus>
+  </stimuli>
+</apex:apex>

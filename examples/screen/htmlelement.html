@@ -26,7 +26,20 @@
 
       timeoutID = 0;
       params = {};
-      function initialize()
+      answers = [];
+
+      function apicheck() {
+          if (typeof api !== "undefined")
+              api.onReady(setup);
+          else
+              setTimeout(apicheck, 100);
+      }
+
+      $(document).ready(function() {
+          setTimeout(apicheck, 100);
+      });
+
+      function setup()
       {
           // Receive parameters from apex by connecting a function which
           // receives (id,value) to the api's parameterChanged signal
@@ -94,7 +107,6 @@
       }
 
       function initJSON() {
-          answers = [];
           startTime = 0;
           answered = true;
       }
@@ -161,8 +173,6 @@
       function giveInstruction (s) {
           $("#instruction").html(s);
       }
-
-
     </script>
   </head>
   <body id="body">

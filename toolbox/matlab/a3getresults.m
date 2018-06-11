@@ -1,5 +1,5 @@
 function [results,parameters,general]=a3getresults(filename,script,forcetransform)
-% get results from an apex 3 results file
+% get results from an APEX 4 results file
 % transform first if necessary (check implementation on windows)
 %
 % Use a3interactiveresults to get interactive parameter values

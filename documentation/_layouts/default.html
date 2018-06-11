@@ -14,7 +14,7 @@
 
   <body>
     <div class="git-ribbon">
-      <a href="https://github.com/exporl/apex3-documentation/edit/master/{{ page.path }}"
+      <a href="{{ '/edit/master/' | append: page.path | prepend: site.github.repository_url }}"
          rel="me">
         Edit me on Github
       </a>
@@ -45,7 +45,12 @@
           </a>
         </p>
         <p class="view">
-          <a href="{{ '/apex3-documentation-schemas/' | absolute_url }}">
+          <a href="{{ '/flowrunner/' | absolute_url }}">
+            Grouping experiment files
+          </a>
+        </p>
+        <p class="view">
+          <a href="{{ '/apex-documentation-schemas/' | absolute_url }}">
             Schema documentation
           </a>
         </p>
@@ -95,8 +100,18 @@
           </a>
         </p>
         <p class="view">
+          <a href="{{ '/studies/' | absolute_url }}">
+            Studies
+          </a>
+        </p>
+        <p class="view">
           <a href="{{ '/bibliography/' | absolute_url }}">
             Bibliography
+          </a>
+        </p>
+        <p class="view">
+          <a href="{{ '/development/' | absolute_url }}">
+            Development
           </a>
         </p>
         <p class="view">
@@ -120,9 +135,6 @@
 
       </section>
       <footer>
-        {% if site.github.is_project_page %}
-        <p>This project is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-        {% endif %}
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>

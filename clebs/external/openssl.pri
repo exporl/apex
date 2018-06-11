@@ -3,8 +3,8 @@ clebsCheck(openssl) {
         isEmpty(OPENSSLROOT):OPENSSLROOT = $$BASEDIR/../api/libssl
         isEmpty(OPENSSLBINDIR):OPENSSLBINDIR = $${OPENSSLROOT}/bin
         isEmpty(OPENSSLLIBDIR):OPENSSLLIBDIR = $${OPENSSLROOT}/lib
-        isEmpty(LIBSSLLIB):LIBSSLLIB = libssl-1_1
-        isEmpty(LIBCRYPTOLIB):LIBCRYPTOLIB = libcrypto-1_1
+        isEmpty(LIBSSLLIB):LIBSSLLIB = ssleay32
+        isEmpty(LIBCRYPTOLIB):LIBCRYPTOLIB = libeay32
 
         exists($${OPENSSLROOT}/include/openssl/opensslv.h):CLEBS_DEPENDENCIES *= openssl
     }

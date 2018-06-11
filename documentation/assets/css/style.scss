@@ -3,6 +3,25 @@
 
 @import "{{ site.theme }}";
 
+footer {
+    z-index: -1;
+    bottom: 0px;
+    opacity: 0.5;
+    width: 500px;
+    padding-left: 360px;
+}
+
+header {
+    position: relative;
+    overflow-x: hidden;
+}
+
+@media print, screen and (max-width: 960px) {
+    footer {
+        padding-left: 0px;
+    }
+}
+
 .git-ribbon {
     background-color: white;
     overflow: hidden;

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
+<apex:apex version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd">
   <!-- @doc
   @what: Demonstrate the use of result parameters
   @description: Results are shown after the experiment is done.

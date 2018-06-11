@@ -95,6 +95,16 @@ bool MainConfigFileData::useBertha() const
     return bertha;
 }
 
+void MainConfigFileData::setStudyShareUrl(const QString &url)
+{
+    shareUrl = url;
+}
+
+QString MainConfigFileData::studyShareUrl() const
+{
+    return shareUrl;
+}
+
 void MainConfigFileData::addInteractiveConstraint(const QString &expression,
                                                   const QString &constraint)
 {

@@ -1,20 +1,20 @@
 /******************************************************************************
  * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
  *                                                                            *
- * This file is part of APEX 3.                                               *
+ * This file is part of APEX 4.                                               *
  *                                                                            *
- * APEX 3 is free software: you can redistribute it and/or modify             *
+ * APEX 4 is free software: you can redistribute it and/or modify             *
  * it under the terms of the GNU General Public License as published by       *
  * the Free Software Foundation, either version 2 of the License, or          *
  * (at your option) any later version.                                        *
  *                                                                            *
- * APEX 3 is distributed in the hope that it will be useful,                  *
+ * APEX 4 is distributed in the hope that it will be useful,                  *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
  * GNU General Public License for more details.                               *
  *                                                                            *
  * You should have received a copy of the GNU General Public License          *
- * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
 #include "apexdata/experimentdata.h"
@@ -27,6 +27,7 @@
 
 #include "apextools/apextools.h"
 #include "apextools/exceptions.h"
+#include "apextools/version.h"
 
 #include "apextools/status/screenstatusreporter.h"
 
@@ -618,11 +619,12 @@ void ApexMainWindow::AddStatusMessage(const QString &ac_sMessage)
 void ApexMainWindow::helpAbout()
 {
     QMessageBox msgBox;
-    msgBox.setWindowTitle(tr("APEX 3"));
+    msgBox.setWindowTitle(tr("APEX 4"));
     msgBox.setText(
-        tr("APEX v3.1 %1\n"
+        tr("APEX %1 %2\n"
            "All copyrights ExpORL, KULeuven\n"
            "Contact tom.francart@med.kuleuven.be for more information")
+            .arg(APEX_SCHEMA_VERSION)
             .arg(ApexTools::fetchVersion()));
     msgBox.setDetailedText(ApexTools::fetchDiffstat());
     msgBox.setStandardButtons(QMessageBox::Ok);
@@ -632,7 +634,7 @@ void ApexMainWindow::helpAbout()
 
 void ApexMainWindow::helpContents()
 {
-    QMessageBox::information(NULL, tr("APEX 3"),
+    QMessageBox::information(NULL, tr("APEX 4"),
                              tr("Sorry but there are no help files yet."));
 }
 

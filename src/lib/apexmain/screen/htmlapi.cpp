@@ -3,7 +3,7 @@
 namespace apex
 {
 
-HtmlAPI::HtmlAPI(QObject *parent) : QObject(parent)
+HtmlAPI::HtmlAPI(QObject *parent) : BaseApi(parent)
 {
 }
 

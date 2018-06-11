@@ -1,5 +1,6 @@
 Displaying and analysing results
 ================================
+Attachment: [Slides of Resultsviewer workshop (25/04/2018)](2018-04-25_ResultsviewerInfo_slideshow.pdf)
 
 The results XML file
 --------------------

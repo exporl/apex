@@ -65,6 +65,7 @@ private:
     double baseGain;
     double gain;
     double phase;
+    bool invertGain;
 };
 
 static QMap<QString, double> sineTimes;
@@ -89,6 +90,7 @@ void SineGenerator::resetParameters()
     phase = 0.0;
     baseGain = 0.0;
     gain = 0.0;
+    invertGain = false;
 }
 
 bool SineGenerator::isValidParameter(const QString &type, int channel) const
@@ -102,6 +104,8 @@ bool SineGenerator::isValidParameter(const QString &type, int channel) const
     if (type == QL1S("gain") && channel == -1)
         return true;
     if (type == QL1S("id") && channel == -1)
+        return true;
+    if (type == QL1S("invertgain") && channel == -1)
         return true;
 
     setErrorMessage(
@@ -138,6 +142,11 @@ bool SineGenerator::setParameter(const QString &type, int channel,
         return true;
     }
 
+    if (type == QLatin1String("invertgain") && channel == -1) {
+        invertGain = value == QLatin1String("true");
+        return true;
+    }
+
     setErrorMessage(
         QString::fromLatin1("Unknown parameter %2 or invalid channel %1")
             .arg(channel)
@@ -155,7 +164,8 @@ bool SineGenerator::prepare(unsigned numberOfFrames)
 
 void SineGenerator::process(double *const *data)
 {
-    const double gainMult = std::pow(10.0, (gain + baseGain) / 20);
+    const double gainMult =
+        std::pow(10.0, ((invertGain ? -gain : gain) + baseGain) / 20);
     for (unsigned i = 0; i < blockSize; ++i) {
         sineTimes[id]++;
         const double t = sineTimes[id] / sampleRate;

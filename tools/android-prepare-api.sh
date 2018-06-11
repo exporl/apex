@@ -78,7 +78,7 @@ if [ ! -d android-sdk-linux ]; then
     mkdir android-sdk-linux
     pushd android-sdk-linux
     unzip ../tools_r25.2.5-linux.zip 1>/dev/null
-    yes | ./tools/bin/sdkmanager "build-tools;23.0.3"  "platforms;android-14" "platform-tools"
+    yes | ./tools/bin/sdkmanager "build-tools;24.0.3" "platforms;android-14" "platform-tools"
     popd
 fi
 popd
@@ -98,23 +98,8 @@ fi
 popd
 
 # protobuf
-# to crosscompile protobuf we need a local build
-# while building apex makefiles are generated which use protoc, which defaults to the system protoc.
-# This is ok, because we couldn't use a crosscompiled protoc. Sadly there isn't a convenient way to
-# change the path of this protoc to our local x86 version. This means that the version
-# of the crosscompiled protobuf and the local/system protobuf need to be roughly the same.
-PROTOC_VERSION=$(protoc --version)
-pushd protobuf
-if [[ $PROTOC_VERSION == *" 3."* ]]; then
-    [ -d protobuf ] || git clone -q https://github.com/google/protobuf.git
-    pushd protobuf
-    git checkout 137d6a09bbbbfa801d653224703ddc59e3700704
-    popd
-fi
-if [[ $PROTOC_VERSION == *" 2."* ]]; then
-    [ -f protobuf-2.6.1.tar.gz ] || wget -q https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
-    [ -d protobuf ] || (tar -xf protobuf-2.6.1.tar.gz && mv protobuf-2.6.1 protobuf)
-fi
+[ -f protobuf-2.6.1.tar.gz ] || wget -q https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
+[ -d protobuf ] || (tar -xf protobuf-2.6.1.tar.gz && mv protobuf-2.6.1 protobuf)
 if [ ! -f $BUILD_LIBS/bin/protoc ]; then
     pushd protobuf
     ./autogen.sh
@@ -172,7 +157,7 @@ setarmv7env() {
 
     CURRENT_PREFIX=$HOST_ARMV7_LIBS
 
-    export OPENSSL_CROSSCOMPILE=android-armeabi
+    export OPENSSL_CROSSCOMPILE=android-armv7
 }
 
 setx86env() {
@@ -330,7 +315,7 @@ dobuild() {
     [ -d openssl ] || git clone -q https://github.com/openssl/openssl.git
     if [ ! -f $CURRENT_PREFIX/lib/libssl.a ]; then
         pushd openssl
-        git checkout -q OpenSSL_1_1_0f
+        git checkout -q OpenSSL_1_0_2-stable
         ./Configure no-ssl3 no-shared \
                     --prefix=$CURRENT_PREFIX \
                     --openssldir=$CURRENT_PREFIX/ssl \

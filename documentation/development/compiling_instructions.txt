@@ -13,7 +13,7 @@ You should install the required packages with the following command (works on Ub
         libxml2-dev chrpath libqt5scripttools5 libqt5xmlpatterns5 \
         libqt5xmlpatterns5-dev qtscript5-dev libqt5svg5-dev libqt5webkit5 libqt5webkit5-dev \
         qtmultimedia5-dev python-protobuf protobuf-compiler libprotobuf-dev xvfb liblo-dev libsndfile1-dev \
-        python-soundfile python-numpy libqt5websockets5-dev libgit2-dev
+        python-soundfile python-numpy libqt5websockets5-dev libgit2-dev libfftw3-dev
 
 2.1.2. Required development packages on fedora
 

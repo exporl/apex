@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="external/jquery-3.1.1.min.js"></script>
+    <script src="external/highcharts-custom.js"></script>
+    <link rel="stylesheet" type="text/css" href="resultsviewer.css"></link>
+    <script src="resultsviewer.js" type="text/javascript"> </script>
+    <script src="rv-internals.js" type="text/javascript"> </script>
+    <script src="resultsviewer-config.js" type="text/javascript"> </script>
+    <script src="js/polyfill.js" type="text/javascript"> </script>
+    <script src="js/commonwebsocket.js" type="text/javascript"> </script>
+    <script src="resultapi.js" type="text/javascript"> </script>
+    <script type="text/javascript">
+      function customCommand() {
+          return 'custom output';
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chartbuttonscontainer">
+    </div>
+    <div style="width:70%;margin: 0 auto;">
+      <div id="custombuttonscontainer"></div>
+      <hr>
+    </div>
+    <div id="customgraphcontainer" class="container"></div>
+    <div id="linecontainer" class="container"></div>
+    <div id="matrixcontainer" class="container"></div>
+    <div id="polarcontainer" class="container"></div>
+    <div id="textcontainer" class="container"></div>
+  </body>
+</html>

@@ -1,20 +1,20 @@
 /******************************************************************************
  * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
  *                                                                            *
- * This file is part of APEX 3.                                               *
+ * This file is part of APEX 4.                                               *
  *                                                                            *
- * APEX 3 is free software: you can redistribute it and/or modify             *
+ * APEX 4 is free software: you can redistribute it and/or modify             *
  * it under the terms of the GNU General Public License as published by       *
  * the Free Software Foundation, either version 2 of the License, or          *
  * (at your option) any later version.                                        *
  *                                                                            *
- * APEX 3 is distributed in the hope that it will be useful,                  *
+ * APEX 4 is distributed in the hope that it will be useful,                  *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
  * GNU General Public License for more details.                               *
  *                                                                            *
  * You should have received a copy of the GNU General Public License          *
- * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
 #include "apexdata/device/wavdevicedata.h"
@@ -251,6 +251,9 @@ WavDevice::WavDevice(data::WavDeviceData *p_data,
 
     //  synchronization connection (for outputdevices x controldevices)
     connect(&m_IO, SIGNAL(stimulusStarted()), this, SIGNAL(stimulusStarted()));
+
+    if (useBertha && !data->isSilent())
+        m_IO.mp_SetContinuous(true);
 }
 
 WavDevice::~WavDevice()
@@ -267,8 +270,11 @@ void WavDevice::AddFilter(Filter &ac_Filter)
         if (pFilter->mf_bWantsToKnowStreamLength())
             m_InformFilters.push_back(pFilter);
         WavGenerator *generator = dynamic_cast<WavGenerator *>(pFilter);
-        if (generator != nullptr && generator->GetStreamGen()->mf_bContinuous())
+        if (generator != nullptr &&
+            generator->GetStreamGen()->mf_bContinuous()) {
+            m_IO.berthaBuffer->addPermanentLeafNode(generator->GetID());
             m_IO.mp_SetContinuous(true);
+        }
         return;
     }
 
@@ -793,6 +799,13 @@ void WavDevice::Prepare()
 int WavDevice::GetBlockSize() const
 {
     return m_IO.GetBlockSize();
+}
+
+void WavDevice::EnableContinuousMode(bool e)
+{
+    OutputDevice::EnableContinuousMode(e);
+    if (useBertha)
+        m_IO.mp_SetContinuous(e);
 }
 
 WavDeviceIO *WavDevice::getWavDeviceIo()

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/experiment.xsd">
+<apex:apex version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd">
   <!-- @doc
     @what: Multiprocedure-order! - 3constantprocedures with the SAME procedure, parameters and trials (different stimuli)
     @description: 2 procedures => constantprocedure1: 2presentations/1trial => 2x - 2buttons: name of procedure & number: click on number (=1) if you have heard the stimulus (corresponding with the number)

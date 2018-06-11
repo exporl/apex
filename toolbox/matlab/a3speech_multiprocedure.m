@@ -1,5 +1,5 @@
 function a3speech_multiprocedure(p)
-% create apex 3 speech (in noise) experiment using multiple procedures
+% create APEX 4 speech (in noise) experiment using multiple procedures
 % (HABIL)
 
 p.script='a3speech';

@@ -1,4 +1,4 @@
-CLEBS *= +xml2 common subdirsources asciicast builddll
+CLEBS *= +xml2 common subdirsources asciicast builddll +openssl
 
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)
 

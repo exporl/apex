@@ -46,16 +46,17 @@ void CommonGuiTest::webViewTest()
     TEST_EXCEPTIONS_TRY
 
     WebView webView;
-    QSignalSpy spy(&webView, SIGNAL(javascriptFinished(QVariant)));
-    connect(&webView, &WebView::javascriptFinished,
-            [](const QVariant &result) { QCOMPARE(result.toInt(), 5); });
-    connect(&webView, &WebView::loadingFinished, [&webView]() {
-        webView.runJavaScript(QString::fromLatin1("gimme5()"));
-    });
+    QSignalSpy spy(&webView, SIGNAL(loadingFinished(bool)));
     webView.loadHtml(
         QL1S("<html><head><script>function gimme5() { return 5; } ") +
         QL1S("</script></head></html>"));
-    QVERIFY(wait(spy));
+    webView.show();
+    QVERIFY(spy.count() == 1 || spy.wait());
+
+#if !defined(WITH_WEBENGINE)
+    QCOMPARE(QVariant(5),
+             webView.runJavaScript(QString::fromLatin1("gimme5()")));
+#endif
 
     TEST_EXCEPTIONS_CATCH
 }
@@ -70,16 +71,15 @@ void CommonGuiTest::webViewWebSocketsTest()
 
     wsServer.start();
     wsServer.on(QSL("dummySlot"), &dummy, QSL("dummySlot(QString)"));
-    connect(&dummy, &DummyQObject::dummySignal,
-            [&dummy](const QString &myString) {
-                QCOMPARE(myString, QSL("testString"));
-            });
+    connect(&dummy, &DummyQObject::dummySignal, [](const QString &myString) {
+        QCOMPARE(myString, QSL("testString"));
+    });
     QSignalSpy connectedSpy(&wsServer, SIGNAL(newConnection()));
 
     WebView webView;
     QSignalSpy loadingSpy(&webView, SIGNAL(loadingFinished()));
     webView.loadHtml(QSL("<html><head></head></html>"));
-    QVERIFY(wait(loadingSpy));
+    QVERIFY(loadingSpy.count() == 1 || loadingSpy.wait());
 
     QFile polyfill(
         Paths::searchFile(QSL("js/polyfill.js"), Paths::dataDirectories()));

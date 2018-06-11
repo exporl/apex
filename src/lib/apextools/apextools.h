@@ -1,20 +1,20 @@
 /******************************************************************************
  * Copyright (C) 2008  Tom Francart <tom.francart@med.kuleuven.be>            *
  *                                                                            *
- * This file is part of APEX 3.                                               *
+ * This file is part of APEX 4.                                               *
  *                                                                            *
- * APEX 3 is free software: you can redistribute it and/or modify             *
+ * APEX 4 is free software: you can redistribute it and/or modify             *
  * it under the terms of the GNU General Public License as published by       *
  * the Free Software Foundation, either version 2 of the License, or          *
  * (at your option) any later version.                                        *
  *                                                                            *
- * APEX 3 is distributed in the hope that it will be useful,                  *
+ * APEX 4 is distributed in the hope that it will be useful,                  *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
  * GNU General Public License for more details.                               *
  *                                                                            *
  * You should have received a copy of the GNU General Public License          *
- * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
 #ifndef _APEX_SRC_LIB_APEXTOOLS_APEXTOOLS_H_
@@ -25,6 +25,7 @@
 #include <string>
 
 #include <QBitArray>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QSize>
 #include <QStringList>
@@ -48,6 +49,8 @@ Misc tools
 */
 class APEXTOOLS_EXPORT ApexTools
 {
+    Q_DECLARE_TR_FUNCTIONS(ApexTools)
+
 private:
     ApexTools();
 
@@ -58,6 +61,7 @@ public:
                                             QObject *privateObject);
 
     static QUuid getApexGUID();
+    static QString getUser();
     static QString MakeDirEnd(QString);
     static QString addPrefix(const QString &base, const QString &prefix);
     static QString absolutePath(const QString &path);
@@ -70,6 +74,9 @@ public:
     static bool recursiveCopy(const QString &sourcePath,
                               const QString &destinationPath,
                               bool force = false);
+    static QStringList recursiveFind(const QString &directory,
+                                     const QRegularExpression &regex,
+                                     bool includeHidden = false);
 
     static void ReplaceCharInString(QString &a_StringToSearch,
                                     const QChar &ac_ToReplace,
@@ -101,6 +108,9 @@ public:
      * Workaround for buggy Qt function
      */
     static QScriptValue QVariant2ScriptValue(QScriptEngine *e, QVariant var);
+
+    static void generateKeyPair(const QString &privateKeyPath,
+                                const QString &comment = QString());
 
     /**
      * This method does the same as QMap's operator== but it dereferences

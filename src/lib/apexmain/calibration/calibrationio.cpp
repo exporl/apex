@@ -34,6 +34,10 @@
 
 #include "calibrationio.h"
 
+#if defined(Q_OS_ANDROID)
+#include "../apexandroidnative.h"
+#endif
+
 #include <QMessageBox>
 #include <QThread>
 #include <QTimer>
@@ -124,6 +128,7 @@ public:
     QString currentStimulus;
     QScopedPointer<ClippingNotifier> clippingNotifier;
     bool looping;
+    bool playing;
 };
 
 // CalibrationIO ===============================================================
@@ -145,6 +150,7 @@ CalibrationIO::CalibrationIO(ExperimentRunDelegate *runDelegate,
                d->runDelegate->GetDevices()) {
         dev->EnableContinuousMode(false);
     }
+    d->playing = false;
 }
 
 CalibrationIO::~CalibrationIO()
@@ -183,7 +189,12 @@ void CalibrationIO::queueParameter(const QString &name, double value)
 
 void CalibrationIO::setParameter(const QString &name, double value)
 {
-    d->runDelegate->GetModOutput()->HandleParam(name, value);
+    if (!d->playing) {
+        queueParameter(name, value);
+    } else {
+        d->runDelegate->GetModOutput()->HandleParam(name, value);
+        d->runDelegate->GetModOutput()->PrepareClients();
+    }
 }
 
 void CalibrationIO::setLooping(bool looping)
@@ -214,6 +225,9 @@ void CalibrationIO::setLooping(bool looping)
 void CalibrationIO::startOutput()
 {
     qCDebug(APEX_RS, "startOutput()");
+#if defined(Q_OS_ANDROID)
+    apex::android::ApexAndroidBridge::forceAudioVolumeToMaximum();
+#endif
     try {
         stopOutput();
 
@@ -242,13 +256,27 @@ void CalibrationIO::startOutput()
         }
 
         Stimulus *stimulus = d->runDelegate->GetStimulus(d->currentStimulus);
-        // will also handle params from stimulus if there are any
+
+        /* Parameters are set from ExperimentControl,
+         * so all parameters from the calibrationstimulus are set here.
+         */
+        const QVariantMap &variableParameters(
+            stimulus->GetVarParameters()->map());
+        Q_FOREACH (const QString &key, variableParameters.keys())
+            d->runDelegate->GetParameterManager()->setParameter(
+                key, variableParameters.value(key), true);
+
+        const QVariantMap &fixedParameters(stimulus->GetFixParameters()->map());
+        Q_FOREACH (const QString &key, fixedParameters.keys())
+            d->runDelegate->GetParameterManager()->setParameter(
+                key, fixedParameters.value(key), true);
+
         qCDebug(APEX_RS, "loadStimulus()");
         d->stimulusOutput->LoadStimulus(stimulus, false);
         qCDebug(APEX_RS, "resumeDevides()");
         // use resume since this is not blocking
         d->stimulusOutput->ResumeDevices();
-
+        d->playing = true;
         // TODO CALIB this should be a real notification
         Q_EMIT playingChanged(true);
     } catch (std::exception &e) {
@@ -264,6 +292,7 @@ void CalibrationIO::stopOutput()
         d->stimulusOutput->StopDevices();
         d->stimulusOutput->UnLoadStimulus();
 
+        d->playing = false;
         // TODO CALIB this should be a real notification
         Q_EMIT playingChanged(false);
     } catch (std::exception &e) {

@@ -24,6 +24,8 @@
 
 #include <sndfile.h>
 
+#include <cmath>
+
 #include <QDir>
 #include <QFile>
 #include <QMap>
@@ -77,6 +79,7 @@ private:
     double gain;
     unsigned loops;
     bool deterministic;
+    bool invertGain;
 };
 
 static QMap<QString, unsigned> positions;
@@ -114,6 +117,7 @@ void DataLoopGenerator::resetParameters()
     gain = 0.0;
     loops = 1;
     deterministic = false;
+    invertGain = false;
 }
 
 bool DataLoopGenerator::isValidParameter(const QString &type, int channel) const
@@ -133,6 +137,8 @@ bool DataLoopGenerator::isValidParameter(const QString &type, int channel) const
     if (type == QL1S("deterministic") && channel == -1)
         return true;
     if (type == QL1S("id") && channel == -1)
+        return true;
+    if (type == QL1S("invertgain") && channel == -1)
         return true;
 
     setErrorMessage(
@@ -213,6 +219,11 @@ bool DataLoopGenerator::setParameter(const QString &type, int channel,
         return true;
     }
 
+    if (type == QLatin1String("invertgain") && channel == -1) {
+        invertGain = value == QLatin1String("true");
+        return true;
+    }
+
     return false;
 }
 
@@ -256,7 +267,7 @@ bool DataLoopGenerator::prepare(unsigned numberOfFrames)
 
     bool ran = positions.contains(id);
     if (jump && !ran) {
-        if (jump > (totalFrames / sampleRate)) {
+        if (jump > ((double)totalFrames / sampleRate)) {
             setErrorMessage(
                 QString::fromLatin1("Cannot jump past end of file"));
             return false;
@@ -283,7 +294,8 @@ void DataLoopGenerator::process(double *const *data)
     do {
         unsigned readSize =
             sf_readf_float(inputFile, scratch.data(), blockSize - blockPos);
-        const double gainMult = std::pow(10.0, (gain + baseGain) / 20);
+        const double gainMult =
+            std::pow(10.0, ((invertGain ? -gain : gain) + baseGain) / 20);
         for (unsigned j = 0; j < unsigned(channels); ++j) {
             for (unsigned i = 0; i < readSize; ++i)
                 data[j][blockPos + i] = gainMult * scratch[i * channels + j];

@@ -122,7 +122,7 @@
     
     <xsl:template match="apex:results" mode="html">
         <html xmlns="http://www.w3.org/1999/xhtml">
-            <h1>APEX 3 results file</h1>
+            <h1>APEX 4 results file</h1>
             <p>Jump to: <a href="#trials">Trials</a> 
              <xsl:if test="$proceduretype='adaptive'">
                 - <a href="#staircase">Staircase</a> 
@@ -270,7 +270,7 @@
         <xsl:apply-templates select="trial/procedure/reversal" mode="showreversals"/>
     </xsl:template>
     <xsl:template match="trial/procedure/reversal" mode="showreversals">
-        <!-- For apex 3.0: get previous trial-->
+        <!-- For APEX 4.0: get previous trial-->
         <!--xsl:variable name="stimname" select="../../preceding-sibling::trial[1]/procedure/parameter"/-->
         <!--xsl:value-of select="$stimname"/-->
         <xsl:value-of select="../parameter"/>

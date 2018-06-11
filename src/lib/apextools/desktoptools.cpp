@@ -23,4 +23,9 @@ bool DesktopTools::editFile(QString filename)
 #endif
     return result;
 }
+
+bool DesktopTools::openUrl(const QString &url)
+{
+    return QDesktopServices::openUrl(url);
+}
 }

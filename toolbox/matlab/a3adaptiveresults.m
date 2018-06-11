@@ -1,5 +1,5 @@
 function [sequence,stimuli]=a3adaptiveresults(filename,xsltscript,forcetransform)
-% Return adaptive staircase from APEX 3 results file
+% Return adaptive staircase from APEX 4 results file
 
 if (nargin<2)
     xsltscript='apexresult.xsl';

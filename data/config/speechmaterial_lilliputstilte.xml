@@ -1,0 +1,518 @@
+<apex:speechmaterialfile xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/spin.xsd">
+  <noises>
+    <noise id="lilliput_ltass_stilte">
+      <description>Long term average speech spectrum noise for Lilliput words</description>
+      <name>Lilliput</name>
+      <file>dutch/lilliput/weightednoise_nosilence28.4.wav</file>
+      <rms>-25</rms>
+      <speechmaterial>LilliputStilte</speechmaterial>
+    </noise>
+  </noises>
+  
+    <speechmaterial id="LilliputStilte">
+      <rms>-25</rms>
+      <list id="1">
+        <speechtoken id="zoet">
+          <file>dutch/lilliput/lp_zoet.wav</file>
+          <text>zoet</text>
+        </speechtoken>
+        <speechtoken id="hal">
+          <file>dutch/lilliput/lp_hal.wav</file>
+          <text>hal</text>
+        </speechtoken>
+        <speechtoken id="boef">
+          <file>dutch/lilliput/lp_boef.wav</file>
+          <text>boef</text>
+        </speechtoken>
+        <speechtoken id="lijn">
+          <file>dutch/lilliput/lp_lijn.wav</file>
+          <text>lijn</text>
+        </speechtoken>
+        <speechtoken id="zang">
+          <file>dutch/lilliput/lp_zang.wav</file>
+          <text>zang</text>
+        </speechtoken>
+        <speechtoken id="weer">
+          <file>dutch/lilliput/lp_weer.wav</file>
+          <text>weer</text>
+        </speechtoken>
+        <speechtoken id="raam">
+          <file>dutch/lilliput/lp_raam.wav</file>
+          <text>raam</text>
+        </speechtoken>
+        <speechtoken id="pier">
+          <file>dutch/lilliput/lp_pier.wav</file>
+          <text>pier</text>
+        </speechtoken>
+        <speechtoken id="boos">
+          <file>dutch/lilliput/lp_boos.wav</file>
+          <text>boos</text>
+        </speechtoken>
+        <speechtoken id="mis">
+          <file>dutch/lilliput/lp_mis.wav</file>
+          <text>mis</text>
+        </speechtoken>
+        <speechtoken id="god">
+          <file>dutch/lilliput/lp_god.wav</file>
+          <text>god</text>
+        </speechtoken>
+        <speechtoken id="ton">
+          <file>dutch/lilliput/lp_ton.wav</file>
+          <text>ton</text>
+        </speechtoken>
+      </list>
+      <list id="2">
+        <speechtoken id="hek">
+          <file>dutch/lilliput/lp_hek.wav</file>
+          <text>hek</text>
+        </speechtoken>
+        <speechtoken id="haas">
+          <file>dutch/lilliput/lp_haas.wav</file>
+          <text>haas</text>
+        </speechtoken>
+        <speechtoken id="maal">
+          <file>dutch/lilliput/lp_maal.wav</file>
+          <text>maal</text>
+        </speechtoken>
+        <speechtoken id="wel">
+          <file>dutch/lilliput/lp_wel.wav</file>
+          <text>wel</text>
+        </speechtoken>
+        <speechtoken id="veer">
+          <file>dutch/lilliput/lp_veer.wav</file>
+          <text>veer</text>
+        </speechtoken>
+        <speechtoken id="rijp">
+          <file>dutch/lilliput/lp_rijp.wav</file>
+          <text>rijp</text>
+        </speechtoken>
+        <speechtoken id="neus">
+          <file>dutch/lilliput/lp_neus.wav</file>
+          <text>neus</text>
+        </speechtoken>
+        <speechtoken id="bang">
+          <file>dutch/lilliput/lp_bang.wav</file>
+          <text>bang</text>
+        </speechtoken>
+        <speechtoken id="kom">
+          <file>dutch/lilliput/lp_kom.wav</file>
+          <text>kom</text>
+        </speechtoken>
+        <speechtoken id="geen">
+          <file>dutch/lilliput/lp_geen.wav</file>
+          <text>geen</text>
+        </speechtoken>
+        <speechtoken id="dood">
+          <file>dutch/lilliput/lp_dood.wav</file>
+          <text>dood</text>
+        </speechtoken>
+        <speechtoken id="lek">
+          <file>dutch/lilliput/lp_lek.wav</file>
+          <text>lek</text>
+        </speechtoken>
+      </list>
+      <list id="3">
+        <speechtoken id="laat">
+          <file>dutch/lilliput/lp_laat.wav</file>
+          <text>laat</text>
+        </speechtoken>
+        <speechtoken id="bus">
+          <file>dutch/lilliput/lp_bus.wav</file>
+          <text>bus</text>
+        </speechtoken>
+        <speechtoken id="nog">
+          <file>dutch/lilliput/lp_nog.wav</file>
+          <text>nog</text>
+        </speechtoken>
+        <speechtoken id="men">
+          <file>dutch/lilliput/lp_men.wav</file>
+          <text>men</text>
+        </speechtoken>
+        <speechtoken id="luid">
+          <file>dutch/lilliput/lp_luid.wav</file>
+          <text>luid</text>
+        </speechtoken>
+        <speechtoken id="juf">
+          <file>dutch/lilliput/lp_juf.wav</file>
+          <text>juf</text>
+        </speechtoken>
+        <speechtoken id="roos">
+          <file>dutch/lilliput/lp_roos.wav</file>
+          <text>roos</text>
+        </speechtoken>
+        <speechtoken id="ring">
+          <file>dutch/lilliput/lp_ring.wav</file>
+          <text>ring</text>
+        </speechtoken>
+        <speechtoken id="diep">
+          <file>dutch/lilliput/lp_diep.wav</file>
+          <text>diep</text>
+        </speechtoken>
+        <speechtoken id="val">
+          <file>dutch/lilliput/lp_val.wav</file>
+          <text>val</text>
+        </speechtoken>
+        <speechtoken id="zeer">
+          <file>dutch/lilliput/lp_zeer.wav</file>
+          <text>zeer</text>
+        </speechtoken>
+        <speechtoken id="kan">
+          <file>dutch/lilliput/lp_kan.wav</file>
+          <text>kan</text>
+        </speechtoken>
+      </list>
+      <list id="4">
+        <speechtoken id="heet">
+          <file>dutch/lilliput/lp_heet.wav</file>
+          <text>heet</text>
+        </speechtoken>
+        <speechtoken id="pang">
+          <file>dutch/lilliput/lp_pang.wav</file>
+          <text>pang</text>
+        </speechtoken>
+        <speechtoken id="dun">
+          <file>dutch/lilliput/lp_dun.wav</file>
+          <text>dun</text>
+        </speechtoken>
+        <speechtoken id="room">
+          <file>dutch/lilliput/lp_room.wav</file>
+          <text>room</text>
+        </speechtoken>
+        <speechtoken id="tam">
+          <file>dutch/lilliput/lp_tam.wav</file>
+          <text>tam</text>
+        </speechtoken>
+        <speechtoken id="hof">
+          <file>dutch/lilliput/lp_hof.wav</file>
+          <text>hof</text>
+        </speechtoken>
+        <speechtoken id="keer">
+          <file>dutch/lilliput/lp_keer.wav</file>
+          <text>keer</text>
+        </speechtoken>
+        <speechtoken id="been">
+          <file>dutch/lilliput/lp_been.wav</file>
+          <text>been</text>
+        </speechtoken>
+        <speechtoken id="poes">
+          <file>dutch/lilliput/lp_poes.wav</file>
+          <text>poes</text>
+        </speechtoken>
+        <speechtoken id="muis">
+          <file>dutch/lilliput/lp_muis.wav</file>
+          <text>muis</text>
+        </speechtoken>
+        <speechtoken id="lik">
+          <file>dutch/lilliput/lp_lik.wav</file>
+          <text>lik</text>
+        </speechtoken>
+        <speechtoken id="lied">
+          <file>dutch/lilliput/lp_lied.wav</file>
+          <text>lied</text>
+        </speechtoken>
+      </list>
+      <list id="5">
+        <speechtoken id="bel">
+          <file>dutch/lilliput/lp_bel.wav</file>
+          <text>bel</text>
+        </speechtoken>
+        <speechtoken id="koek">
+          <file>dutch/lilliput/lp_koek.wav</file>
+          <text>koek</text>
+        </speechtoken>
+        <speechtoken id="gang">
+          <file>dutch/lilliput/lp_gang.wav</file>
+          <text>gang</text>
+        </speechtoken>
+        <speechtoken id="beer">
+          <file>dutch/lilliput/lp_beer.wav</file>
+          <text>beer</text>
+        </speechtoken>
+        <speechtoken id="bak">
+          <file>dutch/lilliput/lp_bak.wav</file>
+          <text>bak</text>
+        </speechtoken>
+        <speechtoken id="mop">
+          <file>dutch/lilliput/lp_mop.wav</file>
+          <text>mop</text>
+        </speechtoken>
+        <speechtoken id="mijn">
+          <file>dutch/lilliput/lp_mijn.wav</file>
+          <text>mijn</text>
+        </speechtoken>
+        <speechtoken id="pel">
+          <file>dutch/lilliput/lp_pel.wav</file>
+          <text>pel</text>
+        </speechtoken>
+        <speechtoken id="rol">
+          <file>dutch/lilliput/lp_rol.wav</file>
+          <text>rol</text>
+        </speechtoken>
+        <speechtoken id="vier">
+          <file>dutch/lilliput/lp_vier.wav</file>
+          <text>vier</text>
+        </speechtoken>
+        <speechtoken id="hees">
+          <file>dutch/lilliput/lp_hees.wav</file>
+          <text>hees</text>
+        </speechtoken>
+        <speechtoken id="noot">
+          <file>dutch/lilliput/lp_noot.wav</file>
+          <text>noot</text>
+        </speechtoken>
+      </list>
+      <list id="6">
+        <speechtoken id="hak">
+          <file>dutch/lilliput/lp_hak.wav</file>
+          <text>hak</text>
+        </speechtoken>
+        <speechtoken id="haan">
+          <file>dutch/lilliput/lp_haan.wav</file>
+          <text>haan</text>
+        </speechtoken>
+        <speechtoken id="rijk">
+          <file>dutch/lilliput/lp_rijk.wav</file>
+          <text>rijk</text>
+        </speechtoken>
+        <speechtoken id="boom">
+          <file>dutch/lilliput/lp_boom.wav</file>
+          <text>boom</text>
+        </speechtoken>
+        <speechtoken id="lief">
+          <file>dutch/lilliput/lp_lief.wav</file>
+          <text>lief</text>
+        </speechtoken>
+        <speechtoken id="goed">
+          <file>dutch/lilliput/lp_goed.wav</file>
+          <text>goed</text>
+        </speechtoken>
+        <speechtoken id="vos">
+          <file>dutch/lilliput/lp_vos.wav</file>
+          <text>vos</text>
+        </speechtoken>
+        <speechtoken id="lat">
+          <file>dutch/lilliput/lp_lat.wav</file>
+          <text>lat</text>
+        </speechtoken>
+        <speechtoken id="rug">
+          <file>dutch/lilliput/lp_rug.wav</file>
+          <text>rug</text>
+        </speechtoken>
+        <speechtoken id="bek">
+          <file>dutch/lilliput/lp_bek.wav</file>
+          <text>bek</text>
+        </speechtoken>
+        <speechtoken id="hol">
+          <file>dutch/lilliput/lp_hol.wav</file>
+          <text>hol</text>
+        </speechtoken>
+        <speechtoken id="neer">
+          <file>dutch/lilliput/lp_neer.wav</file>
+          <text>neer</text>
+        </speechtoken>
+      </list>
+      <list id="7">
+        <speechtoken id="nek">
+          <file>dutch/lilliput/lp_nek.wav</file>
+          <text>nek</text>
+        </speechtoken>
+        <speechtoken id="huid">
+          <file>dutch/lilliput/lp_huid.wav</file>
+          <text>huid</text>
+        </speechtoken>
+        <speechtoken id="jaar">
+          <file>dutch/lilliput/lp_jaar.wav</file>
+          <text>jaar</text>
+        </speechtoken>
+        <speechtoken id="map">
+          <file>dutch/lilliput/lp_map.wav</file>
+          <text>map</text>
+        </speechtoken>
+        <speechtoken id="naam">
+          <file>dutch/lilliput/lp_naam.wav</file>
+          <text>naam</text>
+        </speechtoken>
+        <speechtoken id="vis">
+          <file>dutch/lilliput/lp_vis.wav</file>
+          <text>vis</text>
+        </speechtoken>
+        <speechtoken id="lang">
+          <file>dutch/lilliput/lp_lang.wav</file>
+          <text>lang</text>
+        </speechtoken>
+        <speechtoken id="bon">
+          <file>dutch/lilliput/lp_bon.wav</file>
+          <text>bon</text>
+        </speechtoken>
+        <speechtoken id="met">
+          <file>dutch/lilliput/lp_met.wav</file>
+          <text>met</text>
+        </speechtoken>
+        <speechtoken id="geef">
+          <file>dutch/lilliput/lp_geef.wav</file>
+          <text>geef</text>
+        </speechtoken>
+        <speechtoken id="dier">
+          <file>dutch/lilliput/lp_dier.wav</file>
+          <text>dier</text>
+        </speechtoken>
+        <speechtoken id="fel">
+          <file>dutch/lilliput/lp_fel.wav</file>
+          <text>fel</text>
+        </speechtoken>
+      </list>
+      <list id="8">
+        <speechtoken id="tang">
+          <file>dutch/lilliput/lp_tang.wav</file>
+          <text>tang</text>
+        </speechtoken>
+        <speechtoken id="woef">
+          <file>dutch/lilliput/lp_woef.wav</file>
+          <text>woef</text>
+        </speechtoken>
+        <speechtoken id="reus">
+          <file>dutch/lilliput/lp_reus.wav</file>
+          <text>reus</text>
+        </speechtoken>
+        <speechtoken id="poot">
+          <file>dutch/lilliput/lp_poot.wav</file>
+          <text>poot</text>
+        </speechtoken>
+        <speechtoken id="lam">
+          <file>dutch/lilliput/lp_lam.wav</file>
+          <text>lam</text>
+        </speechtoken>
+        <speechtoken id="tong">
+          <file>dutch/lilliput/lp_tong.wav</file>
+          <text>tong</text>
+        </speechtoken>
+        <speechtoken id="beek">
+          <file>dutch/lilliput/lp_beek.wav</file>
+          <text>beek</text>
+        </speechtoken>
+        <speechtoken id="hen">
+          <file>dutch/lilliput/lp_hen.wav</file>
+          <text>hen</text>
+        </speechtoken>
+        <speechtoken id="maag">
+          <file>dutch/lilliput/lp_maag.wav</file>
+          <text>maag</text>
+        </speechtoken>
+        <speechtoken id="rot">
+          <file>dutch/lilliput/lp_rot.wav</file>
+          <text>rot</text>
+        </speechtoken>
+        <speechtoken id="bier">
+          <file>dutch/lilliput/lp_bier.wav</file>
+          <text>bier</text>
+        </speechtoken>
+        <speechtoken id="vuil">
+          <file>dutch/lilliput/lp_vuil.wav</file>
+          <text>vuil</text>
+        </speechtoken>
+      </list>
+      <list id="9">
+        <speechtoken id="gaan">
+          <file>dutch/lilliput/lp_gaan.wav</file>
+          <text>gaan</text>
+        </speechtoken>
+        <speechtoken id="mier">
+          <file>dutch/lilliput/lp_mier.wav</file>
+          <text>mier</text>
+        </speechtoken>
+        <speechtoken id="wang">
+          <file>dutch/lilliput/lp_wang.wav</file>
+          <text>wang</text>
+        </speechtoken>
+        <speechtoken id="taal">
+          <file>dutch/lilliput/lp_taal.wav</file>
+          <text>taal</text>
+        </speechtoken>
+        <speechtoken id="lus">
+          <file>dutch/lilliput/lp_lus.wav</file>
+          <text>lus</text>
+        </speechtoken>
+        <speechtoken id="vol">
+          <file>dutch/lilliput/lp_vol.wav</file>
+          <text>vol</text>
+        </speechtoken>
+        <speechtoken id="boog">
+          <file>dutch/lilliput/lp_boog.wav</file>
+          <text>boog</text>
+        </speechtoken>
+        <speechtoken id="duin">
+          <file>dutch/lilliput/lp_duin.wav</file>
+          <text>duin</text>
+        </speechtoken>
+        <speechtoken id="rap">
+          <file>dutch/lilliput/lp_rap.wav</file>
+          <text>rap</text>
+        </speechtoken>
+        <speechtoken id="moes">
+          <file>dutch/lilliput/lp_moes.wav</file>
+          <text>moes</text>
+        </speechtoken>
+        <speechtoken id="pen">
+          <file>dutch/lilliput/lp_pen.wav</file>
+          <text>pen</text>
+        </speechtoken>
+        <speechtoken id="goot">
+          <file>dutch/lilliput/lp_goot.wav</file>
+          <text>goot</text>
+        </speechtoken>
+      </list>
+      <list id="10">
+        <speechtoken id="zat">
+          <file>dutch/lilliput/lp_zat.wav</file>
+          <text>zat</text>
+        </speechtoken>
+        <speechtoken id="voor">
+          <file>dutch/lilliput/lp_voor.wav</file>
+          <text>voor</text>
+        </speechtoken>
+        <speechtoken id="lach">
+          <file>dutch/lilliput/lp_lach.wav</file>
+          <text>lach</text>
+        </speechtoken>
+        <speechtoken id="was">
+          <file>dutch/lilliput/lp_was.wav</file>
+          <text>was</text>
+        </speechtoken>
+        <speechtoken id="mol">
+          <file>dutch/lilliput/lp_mol.wav</file>
+          <text>mol</text>
+        </speechtoken>
+        <speechtoken id="mat">
+          <file>dutch/lilliput/lp_mat.wav</file>
+          <text>mat</text>
+        </speechtoken>
+        <speechtoken id="zuur">
+          <file>dutch/lilliput/lp_zuur.wav</file>
+          <text>zuur</text>
+        </speechtoken>
+        <speechtoken id="roet">
+          <file>dutch/lilliput/lp_roet.wav</file>
+          <text>roet</text>
+        </speechtoken>
+        <speechtoken id="baas">
+          <file>dutch/lilliput/lp_baas.wav</file>
+          <text>baas</text>
+        </speechtoken>
+        <speechtoken id="ding">
+          <file>dutch/lilliput/lp_ding.wav</file>
+          <text>ding</text>
+        </speechtoken>
+        <speechtoken id="pijn">
+          <file>dutch/lilliput/lp_pijn.wav</file>
+          <text>pijn</text>
+        </speechtoken>
+        <speechtoken id="neef">
+          <file>dutch/lilliput/lp_neef.wav</file>
+          <text>neef</text>
+        </speechtoken>
+      </list>
+    </speechmaterial>
+    
+  
+  
+</apex:speechmaterialfile>

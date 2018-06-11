@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.4/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.4/experiment https://exporl.med.kuleuven.be/apex/schemas/3.1.4/apexconfig.xsd">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/apexconfig.xsd">
   <paths>
     <pluginScriptLibrary>pluginscriptlibrary.js</pluginScriptLibrary>
   </paths>
@@ -50,13 +50,18 @@
   </cohdrivers>
   <prefixes>
     <prefix id="regression">../stimuli</prefix>
-    <prefix id="speechmaterials">j:/speechmaterials</prefix>
+    <prefix id="speechmaterials">j:/GBW-0226_ExpORL/speechmaterials_0016</prefix>
     <prefix id="pictures">../../pictures</prefix>
   </prefixes>
   <bertha>true</bertha>
+  <studyshareurl>
+    https://exporl.med.kuleuven.be/apex-study
+  </studyshareurl>
   <interactive>
     <constraints>
-      <constraint expression="apex:apex/results[1]/subject[1]">[a-zA-Z][0-3][0-9][a-zA-Z][0-9][0-9][a-zA-Z]</constraint>
+      <constraint expression="apex:apex/results[1]/subject[1]">
+        ([a-zA-Z][0-3][0-9][a-zA-Z][0-9][0-9]){0,1}
+      </constraint>
     </constraints>
   </interactive>
 </apex:apex>

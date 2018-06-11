@@ -10,6 +10,9 @@ APIDIR=~jenkins/apex-android-extra-folder
 CLEAN=
 TESTS=true
 SDK_ROOT=~jenkins/apex-android-extra-folder/android/android-sdk-linux
+DEBUGRELEASE=debug
+KEYSTORE=
+KEYSTOREPWD=
 
 parsecmd() {
     while [ $# -gt 0 ]; do
@@ -34,6 +37,21 @@ parsecmd() {
             # Don't run the android tests. Needs an armv7 virtual device
             TESTS=false
             ;;
+        -r|--release) #
+            # build an unsigned release package
+            # implies --ks and --ks-pass
+            DEBUGRELEASE=release
+            ;;
+        --ks) #
+            # path to keystore, see apksigner tool for help
+            KEYSTORE=${2%/}
+            shift
+            ;;
+        --ks-pass) #
+            # password for the keystore, see apksigner tool for help
+            KEYSTOREPWD=${2%/}
+            shift
+            ;;
         -h|--help) #
             # this help
             echo "Usage: $0 [OPTION]..."
@@ -57,12 +75,19 @@ echo "SDK root: $SDK_ROOT"
 echo "API directory: $APIDIR"
 echo "Clean arguments: $CLEAN"
 
-cp tools/jenkins-android-localconfig.pri localconfig.pri
-
 if [ ! -d "$APIDIR" ]; then
     tools/android-prepare-api.sh --api-dir "$APIDIR"
 fi
-tools/android-build.sh --api-dir "$APIDIR" --build-apk --sdk "$SDK_ROOT" $CLEAN
+
+if [ "$DEBUGRELEASE" = "release" ];then
+    cp tools/jenkins-android-release-localconfig.pri localconfig.pri
+    tools/android-build.sh --api-dir "$APIDIR" --build-apk --sdk "$SDK_ROOT" $CLEAN \
+                           --release --ks "$KEYSTORE" --ks-pass "$KEYSTOREPWD"
+else
+    cp tools/jenkins-android-localconfig.pri localconfig.pri
+    tools/android-build.sh --api-dir "$APIDIR" --build-apk --sdk "$SDK_ROOT" $CLEAN
+fi
+
 if [ "$TESTS" = "true" ]; then
     rm -rf *test-results.xml
     tools/android-test.sh --apk "$ROOTDIR/bin/android-debug-installed/armv7/apex/bin/QtApp-debug.apk" --jenkins

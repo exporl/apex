@@ -57,6 +57,14 @@ ExperimentData &ExperimentData::operator=(const ExperimentData &other)
     return *this;
 }
 
+bool ExperimentData::blockExists(const QString &id) const
+{
+    Q_FOREACH (const BlockData &block, d->blocks)
+        if (block.id() == id)
+            return true;
+    return false;
+}
+
 void ExperimentData::addBlock(const BlockData &block)
 {
     const QString id = block.id();

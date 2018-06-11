@@ -41,7 +41,7 @@ void CommonTest::webSocketTest()
     wsServer.start(QHostAddress::LocalHost);
 
     connect(&webSocket, &QWebSocket::textMessageReceived,
-            [&webSocket](const QString &message) {
+            [](const QString &message) {
                 QJsonObject messageObject =
                     QJsonDocument::fromJson(message.toUtf8()).object();
                 QCOMPARE(messageObject.value(QSL("type")).toString(),

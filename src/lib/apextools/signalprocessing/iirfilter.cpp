@@ -90,7 +90,7 @@ QList<IirFilter *> IirFilter::load(const QString &filePath,
 
     The .bin-file can be generated with the MATLAB function
     a3iirfilter_write_bin.m,
-    which can be found in the APEX 3 MATLAB Toolbox.
+    which can be found in the APEX 4 MATLAB Toolbox.
     */
     QList<IirFilter *> result;
 

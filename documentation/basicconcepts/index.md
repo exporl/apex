@@ -4,19 +4,19 @@ Basic concepts
 Introduction
 ------------
 
-An Apex3 experiment is defined in an experiment file. Experiment files are
+An APEX 4 experiment is defined in an experiment file. Experiment files are
 defined in the XML format see [xml](#xml), and it is advised,
 but not compulsory, to use OxygenXML to edit the XML format see [introduction](../introduction#xmleditor).
 
 While experiment files can have any filename and any extension, it is
 advised to give your experiment file the extension , such that is
-immediately associated with Apex3. Also, there is a clear distinction between
+immediately associated with APEX 4. Also, there is a clear distinction between
 *experiment* files and *result* files, which will receive the extension *apr*.
 
 Terminology
 -----------
 
-Apex3 is based on a few basic concepts that are common to all psychophysical
+APEX 4 is based on a few basic concepts that are common to all psychophysical
 experiments. Here we define the concepts device, controller, datablock,
 stimulus, filter, screen, response, trial, procedure, experiment file,
 result, ID, parameter, and standard. How to implement these concepts in
@@ -24,22 +24,22 @@ an experiment file is explained in [Creating experiment files](../creatingexperi
 
 device
 
-:   is a system connected to the computer that can be controlled by Apex3.
+:   is a system connected to the computer that can be controlled by APEX 4.
     Devices can send signals to a transducer. Examples are sound cards
     and interfaces to cochlear implants (CIs). Devices can have
-    parameters that are controlled by Apex3.
+    parameters that are controlled by APEX 4.
 
 controller
 
 :   is a system connected to the computer that -unlike a filter- does
     not accept/transfer signals (e.g., gain), but has parameters that
-    are controlled by Apex3. An example is a programmable attenuator that
+    are controlled by APEX 4. An example is a programmable attenuator that
     controls the gain of an amplifier.
 
 datablock
 
 :   is an abstraction of a basic block of data that can be processed by
-    Apex3 and can be sent to a matching device. In the case of a sound card,
+    APEX 4 and can be sent to a matching device. In the case of a sound card,
     the datablock would be an audio signal in the form of a series of
     samples that is commonly stored on disk as a “wave file”.
 
@@ -53,7 +53,7 @@ stimulus
 
 filter
 
-:   is a data processor that runs inside Apex3 and that accepts a block of
+:   is a data processor that runs inside APEX 4 and that accepts a block of
     data, e.g., a certain number of samples from an audio file, and
     returns a processed version of the block of data. An example is an
     amplifier that multiplies each sample of the given block of data by
@@ -107,7 +107,7 @@ parameter
 standard
 
 :   In a multiple alternatives forced choice procedure the reference
-    signal is defined as the standard. Internally, Apex3 does not
+    signal is defined as the standard. Internally, APEX 4 does not
     differentiate between a stimulus and a standard. See example 2: the
     standard is defined under stimulus and should be referred to by its ID.
 
@@ -169,21 +169,21 @@ done.
 
 A schema describes the structure of the document and specifies where
 each element is allowed to occur. In addition it contains exhaustive
-documentation. The Apex3 schema’s are located under `/schemas`
-in the main Apex3 directory.
+documentation. The APEX 4 schema’s are located under `/schemas`
+in the main APEX 4 directory.
 
 A document is called *valid* when it adheres to the associated schema
 and if the document complies with the constraints expressed in it [^1].
 If the document is valid the experiment file should run directly after
-having opened it with Apex3 (although errors that are specific to Apex3 can still
-occur). Apex3 will generate warnings and errors if the experiment file is not
+having opened it with APEX 4 (although errors that are specific to APEX 4 can still
+occur). APEX 4 will generate warnings and errors if the experiment file is not
 valid [^2].
 
 For autocompletion and display of documentation it is
 necessary to work in OxygenXML. You need to associate the
 experiment file with the main schema, i.e. experiment.xsd. Click
 on `associate schema` in Oxygen (pushpin icon) and browse for
-experiment.xsd, which is usually located under the main Apex3 directory [^3].
+experiment.xsd, which is usually located under the main APEX 4 directory [^3].
 Click on OK. Once an XML-file is associated with the schema, you can check whether your document
 is well-formed (menu bar: red `v` icon, bottom row, left) and valid
 (menu bar: blue `v` icon, bottom row, second from left).
@@ -191,11 +191,11 @@ is well-formed (menu bar: red `v` icon, bottom row, left) and valid
 
 Try the following:
 
--   open the experiment file using Apex3. Run the experiment if you wish.
+-   open the experiment file using APEX 4. Run the experiment if you wish.
 
 -   open with OxygenXML
 
--   associate the Apex3 schema
+-   associate the APEX 4 schema
 
 -   check validity
 
@@ -206,7 +206,7 @@ Try the following:
 
 -   make the file invalid, e.g. by changing the name of an element
 
--   run with Apex3. Read error messages.
+-   run with APEX 4. Read error messages.
 
 -   undo the errors
 
@@ -249,4 +249,4 @@ experiment file.
 
 [^2]: by means of message window
 
-[^3]:  Apex3 schema can be found in the Apex3 directory structure under `schemas/experiment.xsd`
+[^3]:  APEX 4 schema can be found in the APEX 4 directory structure under `schemas/experiment.xsd`

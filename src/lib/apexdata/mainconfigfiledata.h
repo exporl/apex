@@ -39,6 +39,9 @@ public:
     void setBertha(bool value);
     bool useBertha() const;
 
+    void setStudyShareUrl(const QString &url);
+    QString studyShareUrl() const;
+
 private:
     QString m_experiment_schema;
     QString m_scripts_path;
@@ -49,6 +52,7 @@ private:
     QMap<QString, QString> cohDriverNames;
     QMap<QString, QString> interactiveConstraints;
     bool bertha;
+    QString shareUrl;
 };
 }
 }

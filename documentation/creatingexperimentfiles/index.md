@@ -1,9 +1,9 @@
 Creating experiment files
 =========================
 
-An Apex3 experiment file is an XML file. Like any XML file, it contains a root
+An APEX 4 experiment file is an XML file. Like any XML file, it contains a root
 element (`<apex/>`), which contains various main elements. The general structure
-of an Apex3 experiment file could be as follows:
+of an APEX 4 experiment file could be as follows:
 
 ```xml
     <?xml version='1.0' encoding='UTF-8'?>
@@ -76,7 +76,7 @@ the following attributes are necessary:
 ```
 
 For more information on name spaces and schema declarations, we refer to
-the XML specifications. For Apex3 it is sufficient to copy the text above.
+the XML specifications. For APEX 4 it is sufficient to copy the text above.
 Note that the namespace contains a version number, in the example 3.0.2.
 When APEX opens an experiment file with a lower schema version number
 than its own version number, it will attempt to upgrade the experiment
@@ -84,7 +84,7 @@ file to the new version. Any warnings or errors in the conversion
 process will be shown in the message window. Alternatively, you can
 manually upgrade the experiment file, by changing the version number,
 and fixing the validation errors that OxygenXML may show. Alternatively,
-you can use the apexupgrader tool in the Apex3 binaries folder. Drag your
+you can use the apexupgrader tool in the APEX 4 binaries folder. Drag your
 experiment file on top of the apexupgrader tool to start the
 conversation. Your upgraded file will have an ’.upgraded’ appended to
 the original file name.
@@ -92,17 +92,17 @@ the original file name.
 Although the abovementioned attributes are sufficient, one modification
 can be useful. If you use an XML editor with schema support (to allow
 autocompletion and showing documentation from the schema), it needs to
-know where the Apex3 schema(`experiment.xsd`) is located. This can be indicated by adding an
+know where the APEX 4 schema(`experiment.xsd`) is located. This can be indicated by adding an
 absolute or relative path to the apex schema to the attribute. If for
-example Apex3 is installed in the default location (`C:/Program Files/apex3`),
+example APEX 4 is installed in the default location (`C:/Program Files/apex4`),
 the result would be as
 follows:
 
 ```xml
     <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment"
-     xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment
-     file:C:/Program\%20Files/apex3/schemas/experiment.xsd>"
+     xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment"
+     xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment
+     file:C:/Program\%20Files/apex4/schemas/experiment.xsd>"
     ...
     </apex:apex>
 ```
@@ -114,9 +114,9 @@ connection:
 
 ```xml
     <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.1/experiment"
-     xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/3.1.1/experiment
-     https://exporl.med.kuleuven.be/apex/schemas/3.1.1/experiment.xsd">
+     xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment"
+     xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment
+     https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd">
     ...
     </apex:apex>
 ```
@@ -268,7 +268,7 @@ elements is given below.
 
     Other elements can be added to but are optional:
 
-    -   duration of time after response (in msec) that APEX 3 waits
+    -   duration of time after response (in msec) that APEX 4 waits
         before presenting the next trial. During this interval feedback
         can be displayed. If feedback is false, but a length is present,
         the specified time will be the time between two trials.
@@ -303,7 +303,7 @@ elements is given below.
 ### Datablocks <a name="datablocks"/>
 
 A datablock is an abstraction of a basic block of data that can be
-processed by Apex3 and can be sent to a matching device. In the case of a
+processed by APEX 4 and can be sent to a matching device. In the case of a
 sound card, the datablock would be an audio signal in the form of a
 series of samples that is commonly stored on disk as a so-called wave
 file.
@@ -329,9 +329,9 @@ it can be referred to elsewhere in the experiment file.
 
 ### Devices <a name="devices"/>
 
-A device is a system connected to the computer that can be controlled by Apex3
+A device is a system connected to the computer that can be controlled by APEX 4
 . Devices can send signals to a transducer. Examples are sound cards and
-interfaces to . Device(s) can have parameters that can be controlled by Apex3
+interfaces to . Device(s) can have parameters that can be controlled by APEX 4
 .
 
 ```xml
@@ -541,7 +541,7 @@ digital parameter corresponds to a certain physical magnitude , e.g.,
 determining which internal amplification is necessary for a given wave
 file to achieve a certain sound pressure level.
 
-Apex3 provides a GUI to ease calibration. Apex3 can
+APEX 4 provides a GUI to ease calibration. APEX 4 can
 only calibrate parameters, i.e., it can set a parameter to a certain
 value such that the resulting physical magnitude is the one defined in
 the experiment file in the element.
@@ -552,7 +552,7 @@ The calibration profile to be used must be specified in the element. For
 example if multiple experiment files are used for speech in noise tests,
 the calibration profile could be *SpeechInNoise*.
 
-As it is possible to use Apex3 on the same computer with the same experiment
+As it is possible to use APEX 4 on the same computer with the same experiment
 files and calibration profile in different contexts (e.g., different
 types of headphones, which have different calibration settings), makes
 use of the concept *hardware setup*. A hardware setup associates a label
@@ -567,7 +567,7 @@ If the calibration profile was calibrated before, but you wish to
 recalibrate or change the current hardware setup, select *Recalibrate*
 from the menu, select *Manage profiles* and add the desired label for
 the current hardware configuration, eg. “RME + headphones”, and click
-`Add` and `OK`. This configuration will also appear in the Apex3 window in
+`Add` and `OK`. This configuration will also appear in the APEX 4 window in
 the lower right hand corner. Under `Details...` the different
 calibration profiles that have been calibrated before will be shown.
 
@@ -579,13 +579,13 @@ to measure an accurate value with a measuring device or use the
 averaging function of the device. Enter the measured amplitude (in
 `Measured amplitude`) and click on ’`Correct output parameter`’.
 Repeat until the intended and measured values are the same. To save the
-result, click `apply`, and click on the OK button. Apex3 will store this
+result, click `apply`, and click on the OK button. APEX 4 will store this
 profile and retrieve it each time it is used.
 
 Important
 
 -   Remember to check whether the correct *Hardware setup* is selected
-    when starting an experiment. Apex3 will always use the hardware setup used
+    when starting an experiment. APEX 4 will always use the hardware setup used
     in the previous experiment unless otherwise specified.
 
 -   `Apply` and `OK`. Each calibrated parameter needs to be saved by
@@ -661,7 +661,7 @@ There are two types of parameters:
 fixed parameter:
 
 :   a fixed parameter is a property of a stimulus. It cannot be changed
-    by Apex3 at runtime and is defined when the experiment file is created. It
+    by APEX 4 at runtime and is defined when the experiment file is created. It
     can be used by the procedure to select a stimulus from a list, it
     can be shown on the screen or it can be used as a piece of
     information when analyzing results
@@ -693,7 +693,7 @@ variable parameter:
 
 :   a variable parameter is a property of an object of which the value
     can be changed at runtime. Variable parameters can be set by various
-    Apex3 modules. Examples of modules that can define variable parameters are
+    APEX 4 modules. Examples of modules that can define variable parameters are
     AdaptiveProcedure, Calibrator and Screen. Variable parameters can
     also be defined for a Stimulus. If a stimulus description contains a
     variable parameter, it will be set just before the stimulus
@@ -727,16 +727,16 @@ is made a variable parameter by assigning it ID
 ### Apexconfig <a name="apexconfig"/>
 
 The file is a configuration file that applies to all experiments. It is
-stored in the folder, under the main Apex3 folder. It includes common names
+stored in the folder, under the main APEX 4 folder. It includes common names
 of sound cards and drivers and prefixes that can be referred to from any
 experiment file.
 
-If the is not defined for the current system user the one in the Apex3 folder
+If the is not defined for the current system user the one in the APEX 4 folder
 will be used. It is, however, also possible to have an file per user. To
 add an file for a specific user, log in as the user, and copy the
 apexconfig.xml file to the folder . If the file is present in the latter
-folder, it will override the file in the config folder under the main Apex3
-directory. Apex3 can automatically make this copy when you click the “edit
+folder, it will override the file in the config folder under the main APEX 4
+directory. APEX 4 can automatically make this copy when you click the “edit
 apexconfig file” option in the help menu.
 
 Using prefixes <a name="prefixes"/>
@@ -753,7 +753,7 @@ This path can also be defined once in the file located in the directory
     <uri_prefix source="apexconfig">speechmaterials</uri_prefix>
 ```
 
-This is done by specifying the prefix ID in the Apex3 config file and setting
+This is done by specifying the prefix ID in the APEX 4 config file and setting
 the attribute to in the experiment file. You can specify a complete or
 part of it.
 
@@ -772,7 +772,7 @@ follows:
 If a prefix is specified inline (i.e.: as the content of the element),
 it is advisable to avoid using absolute paths. This makes your
 experiments portable to other computers. A relative path given in the
-element is always relative to the path of the experiment file. Since Apex3
+element is always relative to the path of the experiment file. Since APEX 4
 knows the location of the experiment file, only the folder containing
 the wave files (and pictures) must be specified.
 

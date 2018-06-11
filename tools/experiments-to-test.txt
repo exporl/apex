@@ -97,9 +97,14 @@ randomgenerator/uniform-int.xml:default
 randomgenerator/uniform-smallint.xml:default
 regression/128datablocks.apx:default
 regression/amplifier-invertgain.apx:default
-regression/continuous-silence.apx:continuous
+regression/continuous-fadefilter.apx:continuous
+regression/continuous-2filters-both-continuous.apx:continuous
+regression/continuous-silence.apx:continuoussilence
+regression/datablocks-combination.apx:default
 regression/datablock_loop.apx:default
+regression/datablocks-interleaved.apx:default
 regression/parameter-disabled-block.apx:default
+regression/wavgenerators-invertgain.apx:default
 #screenplugin/screenplugin-emptyresult.apx:default #empty javascript
 xmlplugin/autostimulus.apx:default
 xmlplugin/autotrials.apx:default

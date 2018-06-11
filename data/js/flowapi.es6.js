@@ -40,6 +40,10 @@ class FlowApi {
         return this._socket.sendBlocking(msg);
     }
 
+    onReady(callback) {
+        this._socket.onOpen(callback);
+    }
+
     on(method, cb) {
         this._socket.on(method, cb);
     }

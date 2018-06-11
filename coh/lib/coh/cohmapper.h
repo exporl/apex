@@ -31,6 +31,8 @@ class CohSequenceMapperPrivate;
 class COH_EXPORT CohSequenceMapper
 {
 public:
+    enum DefaultTrigger { NoTriggers = 0, FirstTrigger = 1, AllTriggers = 2 };
+
     CohSequenceMapper(CohSequence *sequence);
     virtual ~CohSequenceMapper();
 
@@ -42,6 +44,7 @@ public:
     void setChannel(int channel, Coh::Electrode active,
                     Coh::Electrode reference, unsigned t, unsigned c,
                     double volume);
+    void setDefaultTrigger(DefaultTrigger trigger);
 
     Coh::CommandProperties needsMapping();
     CohSequence *map();

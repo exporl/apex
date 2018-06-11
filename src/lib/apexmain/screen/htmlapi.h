@@ -3,18 +3,19 @@
 
 #include <QObject>
 
+#include "../baseapi.h"
+
 namespace apex
 {
 
-class HtmlAPI : public QObject
+class HtmlAPI : public BaseApi
 {
     Q_OBJECT
 public:
     explicit HtmlAPI(QObject *parent = 0);
 
 signals:
-    void answered();
-    void parameterChanged(const QString &id, const QVariant &value);
+    void javascriptFinished(const QVariant &result);
 
 public slots:
 };

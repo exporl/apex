@@ -1,4 +1,4 @@
-APEX 3 License
+APEX 4 License
 
 It is preliminary stated that Katholieke Universiteit Leuven, more specifically
 its Department of Neurosciences, ExpORL, for the purposes of this Agreement
@@ -6,50 +6,50 @@ represented by K.U. LEUVEN RESEARCH & DEVELOPMENT, Minderbroedersstraat 8a-box
 5105, B-3000 Leuven, Belgium, (hereinafter referred to as K.U.LEUVEN R&D) has
 agreed to grant you access to:
 
-  * APEX 3 Software (Binaries and Source Code);
+  * APEX 4 Software (Binaries and Source Code);
 
-  * APEX 3 User Manual;
+  * APEX 4 User Manual;
 
-  * APEX 3 Example Experiment Files; and
+  * APEX 4 Example Experiment Files; and
 
-  * APEX 3 Schema; as described in ANNEX I of this agreement and as developed
+  * APEX 4 Schema; as described in ANNEX I of this agreement and as developed
     by K.U.Leuven ExpORL, Dept. Neurosciences;
 
-(APEX 3 User Manual, APEX 3 Example Experiment Files, and APEX 3 Schema,
-hereinafter jointly referred to as “APEX 3 MATERIALS”)
+(APEX 4 User Manual, APEX 4 Example Experiment Files, and APEX 4 Schema,
+hereinafter jointly referred to as “APEX 4 MATERIALS”)
 
 for research purposes under the following conditions:
 
 
 
-1.Use of the APEX 3 MATERIALS
+1.Use of the APEX 4 MATERIALS
 
- 1. The APEX 3 Software (Binaries and Source Code) is provided to you by
+ 1. The APEX 4 Software (Binaries and Source Code) is provided to you by
     K.U.LEUVEN R&D under the GNU General Public License (GPL version 2) as
     described in Annex II of this agreement.
 
- 2. The APEX 3 Software contains the Trolltech QT framework available under the
+ 2. The APEX 4 Software contains the Trolltech QT framework available under the
     GNU General Public License (GPL version 2) on: http://trolltech.com/
     products/qt/.
 
  3. Subject to the terms and conditions of this Agreement K.U.LEUVEN R&D hereby
     grants you a non-exclusive, non-transferable, royalty-free license to use
-    the APEX 3 MATERIALS, solely for research purposes in your research
+    the APEX 4 MATERIALS, solely for research purposes in your research
     activities at the premises of your research institute.
 
  4. The grant of this license does not include the right to sub-license. The
     grant of this license does not include the right to offer for sale and sell
-    or otherwise distribute the APEX 3 MATERIALS directly or through third
+    or otherwise distribute the APEX 4 MATERIALS directly or through third
     parties.
 
  5. The grant of this license does not allow you to make changes or
-    modifications in the APEX 3 MATERIALS.
+    modifications in the APEX 4 MATERIALS.
 
 
 
 2.Warranty, Liability and Indemnity
 
- 1. The APEX 3 MATERIALS are provided on an "as is", "as available" basis
+ 1. The APEX 4 MATERIALS are provided on an "as is", "as available" basis
     without warranties of any kind either express or implied. To the fullest
     extent possible pursuant to the applicable law, K.U.LEUVEN R&D disclaims
     all warranties, express or implied, including, but not limited to, implied
@@ -57,31 +57,31 @@ for research purposes under the following conditions:
     non-infringement or other violation of rights. K.U.LEUVEN R&D does not
     warrant or make any representations regarding the use, validity, accuracy,
     or reliability of, or the results of the use of, or otherwise respecting,
-    the information and materials in the APEX 3 MATERIALS.
+    the information and materials in the APEX 4 MATERIALS.
 
  2. Under no circumstances, including, but not limited to, negligence, shall
     K.U.LEUVEN R&D or its suppliers be liable for any direct, indirect,
     special, incidental or consequential damages, or any other damages of any
     kind, including, but not limited to, loss of data or loss of profits
-    arising out of the use, or the inability to use APEX 3 MATERIALS or the
-    materials contained herein or accessed through, the APEX 3 MATERIALS, even
+    arising out of the use, or the inability to use APEX 4 MATERIALS or the
+    materials contained herein or accessed through, the APEX 4 MATERIALS, even
     if K.U.LEUVEN R&D or a K.U.LEUVEN R&D authorized representative has been
     advised of the possibility of such damages.
 
 3.Intellectual Property Rights
 
-K.U.LEUVEN R&D retains all title and ownership to the APEX 3 MATERIALS. Nothing
+K.U.LEUVEN R&D retains all title and ownership to the APEX 4 MATERIALS. Nothing
 in this Agreement shall preclude K.U.LEUVEN R&D from entering into agreements
-with third parties concerning the APEX 3 MATERIALS.
+with third parties concerning the APEX 4 MATERIALS.
 
 4.Publication
 
-If utilization of the APEX 3 MATERIALS results in outcomes which will be
-published,  you shall acknowledge K.U.LEUVEN R&D as the provider of the APEX 3
+If utilization of the APEX 4 MATERIALS results in outcomes which will be
+published,  you shall acknowledge K.U.LEUVEN R&D as the provider of the APEX 4
 MATERIALS and shall include a reference to the most recent APEX publication.
 Currently, the most recent publication is:
 
-  * Francart, T., van Wieringen, A. and Wouters, J., "APEX 3: a multi-purpose
+  * Francart, T., van Wieringen, A. and Wouters, J., "APEX 4: a multi-purpose
     test platform for auditory psychophysical experiments", Journal of
     Neuroscience Methods, Accepted for publication, 2008
 
@@ -97,11 +97,11 @@ in the manuscript.
 
 5.Feedback
 
-You shall provide K.U.LEUVEN R&D with feedback on the use of the APEX 3
+You shall provide K.U.LEUVEN R&D with feedback on the use of the APEX 4
 MATERIALS in your research. A copy of every publication reporting data obtained
-with the APEX 3 MATERIALS shall be sent to Tom.Francart@med.kuleuven.be and/or
+with the APEX 4 MATERIALS shall be sent to Tom.Francart@med.kuleuven.be and/or
 Jan.Wouters@med.kuleuven.be. K.U.LEUVEN R&D is permitted to use any information
-provided by you in making changes to the APEX 3 MATERIALS or APEX 3 Binaries.
+provided by you in making changes to the APEX 4 MATERIALS or APEX 4 Binaries.
 
 
 
@@ -114,7 +114,7 @@ provision of this Agreement.
 7.Complete Agreement
 
 This Agreement constitutes the entire agreement between the parties with
-respect to the use of the APEX 3 MATERIALS and supersedes all prior or
+respect to the use of the APEX 4 MATERIALS and supersedes all prior or
 contemporaneous understandings regarding such subject matter.  No amendment to
 or modification of this Agreement will be binding unless in writing and signed
 by K.U.LEUVEN R&D.
@@ -166,29 +166,29 @@ Signature:
 
                                     ANNEX I
 
-Description of the APEX 3 Software
+Description of the APEX 4 Software
 
-Apex 3 is a software platform for auditory psychophysical experiments. It
+APEX 4 is a software platform for auditory psychophysical experiments. It
 provides a generic means of setting up experiments without any programming.
 
-The APEX 3 binaries are created by compiling the APEX 3 source code. They can
+The APEX 4 binaries are created by compiling the APEX 4 source code. They can
 be executed using a compatible operating system without any further processing.
 
-Description of the APEX 3 User Manual
+Description of the APEX 4 User Manual
 
-The APEX 3 User manual consists of an explanation in English of the function of
-APEX 3 and the structure of Experiment Files.
+The APEX 4 User manual consists of an explanation in English of the function of
+APEX 4 and the structure of Experiment Files.
 
-Description of the APEX 3 Example Experiment Files
+Description of the APEX 4 Example Experiment Files
 
-The APEX 3 example experiment files are APEX 3 experiment files that illustrate
-the use of each feature of APEX 3.
+The APEX 4 example experiment files are APEX 4 experiment files that illustrate
+the use of each feature of APEX 4.
 
-Description of the APEX 3 Schema
+Description of the APEX 4 Schema
 
-The APEX 3 Schema describes the structure of APEX 3 Experiment Files. It
+The APEX 4 Schema describes the structure of APEX 4 Experiment Files. It
 specifies which XML Element can occur where and also contains documentation on
-each element in English. The APEX 3 Binaries use the APEX 3 Schema to test
+each element in English. The APEX 4 Binaries use the APEX 4 Schema to test
 whether a given experiment file is valid.
 
 
@@ -856,5 +856,5 @@ Public License instead of this License.
 
 
 
-APEX 3 license created August 22, 2011 page 10 of 10
+APEX 4 license created August 22, 2011 page 10 of 10
 

@@ -1,7 +1,11 @@
 function result=wraptag(tag,content,attributes,values)
 % result=wraptag(tag,content)
 if nargin<3
-    result=sprintf('<%s>%s</%s>', tag, content, tag);
+    if ~isempty(content)
+        result=sprintf('<%s>%s</%s>', tag, content, tag);
+    else
+        result=sprintf('<%s />', tag);
+    end
 else
     result = [];
     if ischar(attributes)
@@ -13,5 +17,9 @@ else
             result = sprintf('%s %s="%s"', result, attribute, value);
         end
     end
-    result=sprintf('<%s%s>%s</%s>', tag, result, content, tag);
+    if ~isempty(content)
+        result=sprintf('<%s%s>%s</%s>', tag, result, content, tag);
+    else
+        result=sprintf('<%s%s />', tag, result);
+    end
 end

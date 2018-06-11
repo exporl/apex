@@ -114,8 +114,10 @@ int ArcLayoutPrivate::doLayout(const QRect &rect, bool activate) const
     switch (arcType) {
     case ArcLayout::ARC_RIGHT:
         ++minimumArc;
+    /* Falls through. */
     case ArcLayout::ARC_TOP:
         ++minimumArc;
+    /* Falls through. */
     case ArcLayout::ARC_FULL:
     case ArcLayout::ARC_LEFT:
         ++minimumArc;

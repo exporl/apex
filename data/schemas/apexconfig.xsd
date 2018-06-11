@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-        targetNamespace="http://med.kuleuven.be/exporl/apex/3.1.5/experiment"
-        xmlns:apex="http://med.kuleuven.be/exporl/apex/3.1.5/experiment">
+        targetNamespace="http://med.kuleuven.be/exporl/apex/4.0.0/experiment"
+        xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment">
 
         <xs:annotation>
             <xs:documentation xml:lang="en-US">
@@ -85,6 +85,14 @@
                                 Use bertha for audio processing.
                                 When not provided this defaults to true.
                             </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+
+                    <xs:element name="studyshareurl" type="xs:anyURI" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>
+                            Url which will be opened on sharing the public key from the study dialog.
+                          </xs:documentation>
                         </xs:annotation>
                     </xs:element>
 

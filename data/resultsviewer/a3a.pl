@@ -8,7 +8,7 @@ unshift (@INC, $1);
 
 require('confusionmatrix.pl');
 
-# automatically analyse apex 3 results file
+# automatically analyse APEX 4 results file
 
 my $xsltproc = "xalan";
 my $apexprefix = "/home/tom/data/apex/apex/";

@@ -1,20 +1,20 @@
 /******************************************************************************
  * Copyright (C) 2016 Jonas Vanthornhout <jonasvanthornhout+apex@gmail.com>   *
  *                                                                            *
- * This file is part of APEX 3.                                               *
+ * This file is part of APEX 4.                                               *
  *                                                                            *
- * APEX 3 is free software: you can redistribute it and/or modify             *
+ * APEX 4 is free software: you can redistribute it and/or modify             *
  * it under the terms of the GNU General Public License as published by       *
  * the Free Software Foundation, either version 2 of the License, or          *
  * (at your option) any later version.                                        *
  *                                                                            *
- * APEX 3 is distributed in the hope that it will be useful,                  *
+ * APEX 4 is distributed in the hope that it will be useful,                  *
  * but WITHOUT ANY WARRANTY; without even the implied warranty of             *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              *
  * GNU General Public License for more details.                               *
  *                                                                            *
  * You should have received a copy of the GNU General Public License          *
- * along with APEX 3.  If not, see <http://www.gnu.org/licenses/>.            *
+ * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
 #include "flowrunner.h"
@@ -81,28 +81,32 @@ bool FlowRunner::select(const QString &path)
 
     d->flowApi.reset(new FlowApi(this, QFileInfo(path).absoluteDir()));
     d->webSocketServer.reset(new WebSocketServer(QSL("FlowRunner")));
-    d->webSocketServer->start();
+
+    try {
+        d->webSocketServer->start();
+    } catch (std::exception &e) {
+        qCWarning(APEX_RS, "Unable to setup flowrunner %s.", e.what());
+        return false;
+    }
+
     d->webSocketServer->on(QSL("runExperiment"), d->flowApi.data(),
                            QSL("runExperiment(QString,QString)"));
     d->webSocketServer->on(QSL("addExpression"), d->flowApi.data(),
                            QSL("addExpression(QString,QString)"));
     d->webSocketServer->on(QSL("clearExpressions"), d->flowApi.data(),
                            QSL("clearExpressions()"));
-    d->webSocketServer->on(QSL("absoluteFilePath"), d->flowApi.data(),
-                           QSL("absoluteFilePath(QString)"));
-    d->webSocketServer->on(QSL("readFile"), d->flowApi.data(),
-                           QSL("readFile(QString)"));
+    d->flowApi->registerBaseMethods(d->webSocketServer.data());
 
     d->webView.reset(new WebView);
     connect(d->webView.data(), SIGNAL(loadingFinished()), this,
             SLOT(setupView()));
     connect(d->webView.data(), SIGNAL(hidden()), this, SLOT(cleanup()));
 
-    QUrl url = QUrl::fromUserInput(
+    QString htmlPath =
         QDir(d->temporaryDirectory.path())
-            .filePath(QFileInfo(path).baseName() + QL1S(".html")));
-    ApexTools::recursiveCopy(path, url.toString(QUrl::RemoveScheme));
-    d->webView->load(url);
+            .filePath(QFileInfo(path).baseName() + QL1S(".html"));
+    ApexTools::recursiveCopy(path, htmlPath);
+    d->webView->load(QUrl::fromLocalFile(htmlPath));
 
     return true;
 }
@@ -113,8 +117,8 @@ void FlowRunner::setupView()
         QL1S("var api = new FlowApi('ws://127.0.0.1:") +
         QString::number(d->webSocketServer->serverPort()) + QL1S("', '") +
         d->webSocketServer->csrfToken() + QL1S("');"));
-    d->webView->runJavaScript(
-        "setTimeout(function() { initialize(); }, 1000);");
+    d->webView->runJavaScript("setTimeout(function() { if (typeof initialize "
+                              "=== 'function' ) initialize(); }, 1500);");
     makeVisible();
 }
 

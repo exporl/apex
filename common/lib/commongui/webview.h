@@ -30,6 +30,8 @@
 #if defined(ANDROID)
 #include <QQuickItem>
 #include <QQuickWidget>
+#elif defined(WITH_WEBENGINE)
+#include <QWebEngineView>
 #else
 #include <QWebFrame>
 #include <QWebView>
@@ -53,7 +55,10 @@ public:
      */
     void load(const QUrl &url);
     void loadHtml(const QString &html, const QUrl &baseUrl = QUrl());
-    void runJavaScript(const QString &script);
+    /* Is not blocking with QWebEngine. Always returns default-constructed
+     * QVariant.
+     */
+    QVariant runJavaScript(const QString &script, int timeout = 5000);
 
     /* Does not work on android */
     void addToJavaScriptWindowObject(const QString &name, QObject *object);
@@ -62,6 +67,8 @@ public:
 
 #if defined(ANDROID)
     QQuickWidget
+#elif defined(WITH_WEBENGINE)
+    QWebEngineView
 #else
     QWebView
 #endif
@@ -72,7 +79,6 @@ public:
 Q_SIGNALS:
     void hidden();
     void loadingFinished(bool = true);
-    void javascriptFinished(const QVariant &result);
 
 protected:
     void closeEvent(QCloseEvent *event);

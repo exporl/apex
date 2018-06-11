@@ -70,7 +70,9 @@ public:
     QAction *showMessageWindowAction;
     QAction *selectSoundcardAction;
     QAction *createShortcutToFileAction;
+    QAction *createShortcutToRunnerAction;
     QAction *startGdbServerAction;
+    QAction *openStudyManagerAction;
 
 Q_SIGNALS:
     void fileOpen();
@@ -88,8 +90,10 @@ Q_SIGNALS:
     void repeatTrial();
     void saveExperiment();
     void statusReportingChanged();
-    void createShortcut();
+    void createShortcutToFile();
+    void createShortcutToRunner();
     void startGdbServer();
+    void openStudyManager();
 
 public Q_SLOTS:
     virtual void helpContents();

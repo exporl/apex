@@ -1,5 +1,5 @@
 function r=a3localsettings(type)
-% return apex 3 toolbox settings
+% return APEX 4 toolbox settings
 
 if (nargin<1)
     type = '';
