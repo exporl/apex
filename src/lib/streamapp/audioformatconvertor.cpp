@@ -89,8 +89,8 @@ AudioFormatConvertor::ReadFromSource(AudioFormatReader *const a_cpSource,
         double **dest = Stream::mf_pGetArray();
 
         // read
-        nRead = (const unsigned)a_cpSource->Read(
-            (void **)(dest + ac_nSourceOffset), ac_nSamples);
+        nRead = (unsigned)a_cpSource->Read((void **)(dest + ac_nSourceOffset),
+                                           ac_nSamples);
         const unsigned nToDo = ac_nSourceOffset + nRead;
 
         if (mv_dGain != 1.0) {
@@ -110,7 +110,7 @@ AudioFormatConvertor::ReadFromSource(AudioFormatReader *const a_cpSource,
         StreamType **dest = Stream::mf_pGetArray();
 
         // read
-        nRead = (const unsigned)a_cpSource->Read((void **)src, ac_nSamples);
+        nRead = (unsigned)a_cpSource->Read((void **)src, ac_nSamples);
         const unsigned nToDo = ac_nSourceOffset + nRead;
 
         // convert

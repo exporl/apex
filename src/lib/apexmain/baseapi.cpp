@@ -41,6 +41,8 @@ void BaseApi::registerBaseMethods(WebSocketServer *webSocketServer)
     webSocketServer->on(QSL("readFile"), this, QSL("readFile(QString)"));
     webSocketServer->on(QSL("absoluteFilePath"), this,
                         QSL("absoluteFilePath(QString)"));
+    webSocketServer->on(QSL("writeFile"), this,
+                        QSL("writeFile(QString,QString)"));
 }
 
 QString BaseApi::readFile(const QString &fileName) const
@@ -54,4 +56,22 @@ QString BaseApi::absoluteFilePath(const QString &fileName) const
 {
     return baseDir.absoluteFilePath(fileName);
 }
+
+void BaseApi::writeFile(const QString &fileName, const QString &content) const
+{
+    // convert file URL to normal file path if necessary
+    QString path = fileName;
+    if (fileName.startsWith("file:///"))
+        path = fileName.right(fileName.size() - 8);
+
+    QFile file(path);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream streamFileOut(&file);
+        streamFileOut.setCodec("UTF-8");
+        streamFileOut << content;
+        streamFileOut.flush();
+        file.close();
+    } else
+        qCWarning(APEX_RS, "Could not access file path: %s", qPrintable(path));
 }
+} // namespace apex

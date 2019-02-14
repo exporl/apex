@@ -26,6 +26,8 @@
 #include "apexdata/experimentdata.h"
 #include "apexdata/result/resultparameters.h"
 
+#include "common/exception.h"
+#include "common/paths.h"
 #include "common/testutils.h"
 
 #include <QFile>
@@ -92,11 +94,6 @@ void ApexMainTest::testResultViewerConvertToCSV()
 #else
     TEST_EXCEPTIONS_TRY
 
-    // First, create the result parameters
-    data::ResultParameters rvparam;
-    rvparam.setShowResultsAfter(true);
-    rvparam.setSaveResults(false);
-
     // Fetch the filenames:
     QFETCH(QString, resultFilePath);
     QFETCH(QString, testFilePath);
@@ -107,7 +104,7 @@ void ApexMainTest::testResultViewerConvertToCSV()
         resultFileInfo.absoluteFilePath(); // To get the right path on all
     // operating systems.
 
-    apex::ResultViewer testViewer(&rvparam, resultFile);
+    apex::ResultViewer testViewer(resultFile);
 
     // Export the contents to a file:
     QFileInfo testFileInfo(testFilePath);
@@ -185,18 +182,18 @@ void ApexMainTest::testResultViewer_data()
            "td><td>-1,-3,-1,-3,3,-1,1</td></"
            "tr>\",\"meanrevs\":\"<tr><tdclass=\\\"dataname\\\">Mean(std)<br>"
            "last6reversals</"
-           "tdclass=\\\"dataname\\\"><td>-0.6667(&plusmn;2.134)</td></"
+           "tdclass=\\\"dataname\\\"><td>-0.6667(&plusmn;2.1344)</td></"
            "tr>\",\"meantrials\":\"<tr><tdclass=\\\"dataname\\\">Mean(std)<br>"
-           "last6trials</tdclass=\\\"dataname\\\"><td>0.6667(&plusmn1.374)</"
+           "last6trials</tdclass=\\\"dataname\\\"><td>0.667(&plusmn1.374)</"
            "td></"
            "tr>\",\"linedatatable\":\"<tableclass=\\\"datatable\\\"><tr><td>"
            "Parametervalues</td><td>-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1</td></"
            "tr><tr><td>Lastvalue</td><td>-1</td></tr><tr><td>Reversals</"
            "td><td>-1,-3,-1,-3,3,-1,1</td></"
            "tr><tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6reversals</"
-           "tdclass=\\\"dataname\\\"><td>-0.6667(&plusmn;2.134)</td></"
+           "tdclass=\\\"dataname\\\"><td>-0.6667(&plusmn;2.1344)</td></"
            "tr><tr><tdclass=\\\"dataname\\\">Mean(std)<br>last6trials</"
-           "tdclass=\\\"dataname\\\"><td>0.6667(&plusmn1.374)</td></tr></"
+           "tdclass=\\\"dataname\\\"><td>0.667(&plusmn1.374)</td></tr></"
            "table>\",\"paramtable\":\"<tableclass=\\\"stripedtable\\\"><tr><th>"
            "Trial</th><th>Answer</th><th>Correct</th><th>Parameter</th></"
            "tr><tr><td>1</td><td>wrong</"
@@ -403,52 +400,167 @@ void ApexMainTest::testResultViewer_data()
 
 void ApexMainTest::testResultViewer()
 {
-#if !defined(WITH_WEBENGINE)
+#if defined(Q_OS_ANDROID)
+    QSKIP("Skipped on Android");
+#elif defined(WITH_WEBENGINE)
+    QSKIP("Skipped with QWebEngine");
+#else
     TEST_EXCEPTIONS_TRY
 
-    // First, create the result parameters
-    data::ResultParameters rvparam;
-    rvparam.setShowResultsAfter(true);
-    rvparam.setSaveResults(false);
-
-    // Fetch the filenames:
     QFETCH(QString, resultFilePath);
     QFETCH(QString, resultViewerPath);
     QFETCH(QString, plotConfig);
     QFETCH(QString, testCommand);
     QFETCH(QString, plotDataJSON);
 
-    QFileInfo resultFileInfo(resultFilePath);
-    QString resultFile = resultFileInfo.absoluteFilePath();
-    // To get the right path on all operating systems.
+    QUrl ResultViewerUrl = QUrl::fromUserInput(resultViewerPath);
+    ResultParameters parameters;
 
-    // Read results file
-    QFile resultsFile(resultFilePath);
-    resultsFile.open(QIODevice::ReadOnly);
-    QByteArray resultsFileData = resultsFile.readAll();
-    resultsFile.close();
+    apex::RTResultSink resultSink(ResultViewerUrl,
+                                  parameters.resultParameters(),
+                                  parameters.extraScript());
 
-    QUrl ResultViewerUrl(QUrl::fromUserInput(resultViewerPath));
-    apex::RTResultSink resultSink(ResultViewerUrl, rvparam.resultParameters(),
-                                  rvparam.extraScript());
+    QSignalSpy(&resultSink, SIGNAL(loadingFinished(bool))).wait();
 
-    QSignalSpy spy(&resultSink, SIGNAL(loadingFinished(bool)));
-    QVERIFY(spy.wait());
-
-    resultSink.evaluateJavascript(plotConfig);
-    resultSink.newResults(resultsFileData);
+    resultSink.runJavaScript(plotConfig);
+    resultSink.newResults(readFileAsString(resultFilePath));
     resultSink.plot();
-    QCoreApplication::processEvents();
 
-    QString resultJSON = resultSink.evaluateJavascript(testCommand).toString();
+    QString resultJSON = resultSink.runJavaScript(testCommand);
 
-    resultJSON = resultJSON.simplified().replace(" ", "");
-    plotDataJSON = plotDataJSON.simplified().replace(" ", "");
-
-    QCOMPARE(resultJSON, plotDataJSON);
+    QCOMPARE(resultJSON.replace(" ", ""), plotDataJSON.replace(" ", ""));
 
     TEST_EXCEPTIONS_CATCH
-#else
-    QSKIP("Skipped with QWebEngine");
 #endif
 }
+
+void ApexMainTest::testResultViewerExtraScriptIsInjected()
+{
+#if defined(Q_OS_ANDROID)
+    QSKIP("Skipped on Android");
+#elif defined(WITH_WEBENGINE)
+    QSKIP("Skipped with QWebEngine");
+#else
+    TEST_EXCEPTIONS_TRY
+
+    QString resultfilePath = Paths::searchFile(
+        QL1S("tests/libapex/results-test-with-extra-script.apr"),
+        Paths::dataDirectories());
+
+    QDir::setCurrent(QFileInfo(resultfilePath).absolutePath());
+    ResultViewer resultViewer(resultfilePath);
+
+    RTResultSink *resultSink = resultViewer.getResultSink();
+
+    QSignalSpy(resultSink, SIGNAL(loadingFinished(bool))).wait();
+
+    QString actualTestCommandResult = resultSink->runJavaScript("extraScript");
+
+    QCOMPARE(actualTestCommandResult, QString("expected value"));
+
+    TEST_EXCEPTIONS_CATCH
+#endif
+}
+
+void ApexMainTest::testResultViewerResultParametersAreInjected()
+{
+#if defined(Q_OS_ANDROID)
+    QSKIP("Skipped on Android");
+#elif defined(WITH_WEBENGINE)
+    QSKIP("Skipped with QWebEngine");
+#else
+    TEST_EXCEPTIONS_TRY
+
+    QString resultfilePath = Paths::searchFile(
+        QL1S("tests/libapex/results-test-with-result-parameters.apr"),
+        Paths::dataDirectories());
+
+    QDir::setCurrent(QFileInfo(resultfilePath).absolutePath());
+    ResultViewer resultViewer(resultfilePath);
+
+    RTResultSink *resultSink = resultViewer.getResultSink();
+
+    QSignalSpy(resultSink, SIGNAL(loadingFinished(bool))).wait();
+
+    QString actualTestCommandResult = resultSink->runJavaScript("params.name");
+
+    QCOMPARE(actualTestCommandResult, QString("expected value"));
+
+    TEST_EXCEPTIONS_CATCH
+#endif
+}
+
+void ApexMainTest::testResultViewerCannotBeConstructedWithoutResultFile()
+{
+    TEST_EXCEPTIONS_TRY
+
+    QVERIFY_EXCEPTION_THROWN(ResultViewer("/path/to/unexisting/resultfile.apr"),
+                             Exception);
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::testResultViewerResultFileWithoutResultPageCanBeLoaded()
+{
+#if defined(Q_OS_ANDROID)
+    QSKIP("Skipped on Android");
+#elif defined(WITH_WEBENGINE)
+    QSKIP("Skipped with QWebEngine");
+#else
+    TEST_EXCEPTIONS_TRY
+
+    QString resultfilePath = Paths::searchFile(
+        QL1S("tests/libapex/results-test-without-result-page.apr"),
+        Paths::dataDirectories());
+
+    ResultViewer resultViewer(resultfilePath);
+
+    RTResultSink *resultSink = resultViewer.getResultSink();
+
+    QSignalSpy(resultSink, SIGNAL(loadingFinished(bool))).wait();
+
+    QString actualTestCommandResult =
+        resultSink->runJavaScript("'expected value'");
+
+    QCOMPARE(actualTestCommandResult, QString("expected value"));
+
+    TEST_EXCEPTIONS_CATCH
+#endif
+}
+
+void ApexMainTest::testResultViewerExtraScriptLoadedBeforeAnswersAreAdded()
+{
+#if defined(Q_OS_ANDROID)
+    QSKIP("Skipped on Android");
+#elif defined(WITH_WEBENGINE)
+    QSKIP("Skipped with QWebEngine");
+#else
+    TEST_EXCEPTIONS_TRY
+
+    QString resultfilePath =
+        Paths::searchFile(QL1S("tests/libapex/results-test-with-trials.apr"),
+                          Paths::dataDirectories());
+
+    QDir::setCurrent(QFileInfo(resultfilePath).absolutePath());
+    ResultViewer resultViewer(resultfilePath);
+
+    RTResultSink *resultSink = resultViewer.getResultSink();
+
+    QSignalSpy(resultSink, SIGNAL(loadingFinished(bool))).wait();
+
+    QString actualTestCommandResult =
+        resultSink->runJavaScript("document.body.innerHTML");
+
+    QCOMPARE(actualTestCommandResult.trimmed(),
+             QString("<trial>trial-1</trial>, <trial>trial-2</trial>"));
+
+    TEST_EXCEPTIONS_CATCH
+#endif
+}
+
+/*
+void ApexMainTest::testResultsProcessor()
+{
+    TODO
+}
+*/

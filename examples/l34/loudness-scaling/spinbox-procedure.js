@@ -1,6 +1,12 @@
+/* globals params, api, xml, ScriptProcedureInterface, Trial, ResultHighlight */
+/* exported getProcedure */
+
+var presentedLevel, minimumLevel;
+
 function spinboxprocedure()
 {
     presentedLevel = parseFloat(params["startCurrentLevel"]);
+    minimumLevel = parseFloat(params["minimumCurrentLevel"] || "0");
 }
 
 spinboxprocedure.prototype = new ScriptProcedureInterface();
@@ -17,7 +23,7 @@ spinboxprocedure.prototype.setupNextTrial = function ()
 if (this.button) {
         presentedLevel = this.button;
 
-        presentedLevel = presentedLevel > 255 ? 255 : presentedLevel < 0 ? 0 : presentedLevel;
+        presentedLevel = presentedLevel > 255 ? 255 : presentedLevel < minimumLevel ? minimumLevel : presentedLevel;
         //console.log("Next gain: " + gain);
     }
 
@@ -32,7 +38,7 @@ if (this.button) {
 
 spinboxprocedure.prototype.firstScreen = function()
 {
-    trials = api.trials();
+    var trials = api.trials();
     return trials[0].screen;
 }
 

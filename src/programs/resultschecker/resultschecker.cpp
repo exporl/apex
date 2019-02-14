@@ -368,6 +368,8 @@ void parseGeneral(QDomElement general, Results *results)
             // ignored
         } else if (tag == "device_id") {
             // ignored
+        } else if (tag == "stopped_by") {
+            // ignored
         } else {
             unknownTag(tag);
         }

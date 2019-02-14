@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-        targetNamespace="http://med.kuleuven.be/exporl/apex/4.0.0/experiment"
-        xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment">
+        targetNamespace="http://med.kuleuven.be/exporl/apex/4.0.1/experiment"
+        xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment">
 
         <xs:annotation>
             <xs:documentation xml:lang="en-US">
@@ -120,6 +120,17 @@
                                 </xs:element>
                             </xs:sequence>
                         </xs:complexType>
+                    </xs:element>
+
+                    <xs:element name="useInstallationWideSettings" type="xs:boolean" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Specify whether to use user-specific settings or installation-wide settings. User-specific settings are
+                                stored in a user specific location (on windows under [HKEY_CURRENT_USER\Software\ExpORL\APEX] in the
+                                registry, on linux in $HOME/.config/ExpORL/APEX.conf). Installation-wide settings are stored in the folder
+                                where the apex binary resides (e.g. /path/to/apex-installation/config/ExpORL/APEX.ini).
+                            </xs:documentation>
+                        </xs:annotation>
                     </xs:element>
 
                 </xs:sequence>

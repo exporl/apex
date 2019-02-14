@@ -130,12 +130,6 @@ private:
     QString screen() const;
 
     /**
-     * Returns wheter a silent datablock should be inserted before and after
-     * each datablock.
-     */
-    bool needSilentDatablocks() const;
-
-    /**
      * Returns the list that corresponds to the settings and config
      */
     data::List list() const;

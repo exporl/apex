@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <QDir>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QUrl>
 
 #include <QtGlobal>
@@ -105,10 +106,29 @@ QString ApexPaths::GetScriptsPath()
                                   Paths::dataDirectories());
 }
 
-QString ApexPaths::GetStudiesDirectory()
+QString ApexPaths::GetStudyManagerDirectory()
 {
-    QDir dataDir(Paths::filesDirectory().isEmpty() ? Paths::dataDirectory()
-                                                   : Paths::filesDirectory());
+
+#if defined(Q_OS_ANDROID)
+    QDir dataDir(
+        QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+#else
+    QDir dataDir(Paths::dataDirectory());
+#endif
     return dataDir.filePath(QSL("studymanager"));
 }
+
+QString ApexPaths::GetStudyRootPath()
+{
+    QDir appDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+    return appDir.absoluteFilePath(QSL("apexstudies"));
 }
+
+QString ApexPaths::GetStudyRootResultsWorkdirPath()
+{
+    QDir appDir(
+        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation));
+    return appDir.absoluteFilePath(QSL("apexstudies"));
+}
+
+} // namespace apex

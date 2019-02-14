@@ -29,6 +29,7 @@
 #include <QLoggingCategory>
 #include <QObject>
 #include <QStringList>
+#include <QTimer>
 
 Q_DECLARE_LOGGING_CATEGORY(APEX_OSC)
 Q_LOGGING_CATEGORY(APEX_OSC, "apex.osc")
@@ -47,6 +48,52 @@ public:
     createController(const QString &name) const;
 };
 
+class OscMessage : public QObject
+{
+    Q_OBJECT
+public:
+    OscMessage(const lo_address &oscAddress, const QString &prefix,
+               const QString &address, const QString &message)
+        : oscAddress(oscAddress),
+          prefix(prefix),
+          address(address),
+          message(message)
+    {
+    }
+
+public Q_SLOTS:
+    bool send()
+    {
+        qCDebug(
+            APEX_OSC, "Calling OSC SEND, %s, at time: %s", qPrintable(message),
+            qPrintable(QString::number(QDateTime::currentMSecsSinceEpoch())));
+        QString modifiedAddress = address;
+        modifiedAddress.replace(QL1S("-"), QL1S("/"));
+        if (!lo_send(oscAddress, QString::fromLatin1("/%1/%2")
+                                     .arg(prefix, modifiedAddress)
+                                     .toUtf8()
+                                     .data(),
+                     "s", message.toUtf8().data())) {
+            qCWarning(APEX_OSC, "OSC error %d: %s",
+                      lo_address_errno(oscAddress),
+                      lo_address_errstr(oscAddress));
+            Q_EMIT sent();
+            return false;
+        }
+        Q_EMIT sent();
+        return true;
+    }
+
+Q_SIGNALS:
+    void sent();
+
+private:
+    const lo_address &oscAddress;
+    QString prefix;
+    QString address;
+    QString message;
+};
+
 class OscController : public QObject, public PluginControllerInterface
 {
     Q_OBJECT
@@ -63,8 +110,6 @@ public:
     virtual bool prepare();
     virtual void playStimulus();
 
-    bool send(const QString &address, const QString &message);
-
 private:
     lo_address oscAddress;
     QString prefix;
@@ -75,6 +120,7 @@ private:
      * e.g.: "SPIN"
      */
     QString outputTrigger;
+    unsigned sendDelayMS;
 };
 
 // OscController ===============================================================
@@ -84,6 +130,7 @@ OscController::OscController()
     qCDebug(APEX_OSC, "Initializing osccontroller");
     oscAddress = lo_address_new(NULL, "9002");
     prefix = QL1S("apex");
+    sendDelayMS = 0;
 }
 
 OscController::~OscController()
@@ -96,6 +143,7 @@ void OscController::resetParameters()
 {
     qCDebug(APEX_OSC, "Resetting parameters");
     parameters.clear();
+    sendDelayMS = 0;
 }
 
 bool OscController::isValidParameter(const QString &type, int channel) const
@@ -121,6 +169,13 @@ bool OscController::setParameter(const QString &type, int channel,
         outputTrigger = value;
         return true;
     }
+    if (type == QL1S("senddelayms")) {
+        bool ok;
+        sendDelayMS = value.toUInt(&ok);
+        if (!ok)
+            sendDelayMS = 0;
+        return ok;
+    }
     // no idea why this one is set
     if (type == QL1S("plugin")) {
         return false;
@@ -138,13 +193,15 @@ bool OscController::prepare()
         i.next();
         if (i.key().contains(QL1S("prepare")) &&
             i.key().contains(parameters[QL1S("stimulustype")])) {
-            if (!send(i.key(), i.value()))
+            OscMessage message(oscAddress, prefix, i.key(), i.value());
+            if (!message.send())
                 return false;
         }
     }
 
-    return send(QL1S("prepareFinished"),
-                QString::number(QDateTime::currentMSecsSinceEpoch()));
+    OscMessage message(oscAddress, prefix, QL1S("prepareFinished"),
+                       QString::number(QDateTime::currentMSecsSinceEpoch()));
+    return message.send();
 }
 
 void OscController::playStimulus()
@@ -159,31 +216,19 @@ void OscController::playStimulus()
     while (i.hasNext()) {
         i.next();
         if (!i.key().contains(QL1S("prepare"))) {
-            if (!send(i.key(), i.value()))
-                qCDebug(APEX_OSC, "OSC message send failed");
+            OscMessage *message =
+                new OscMessage(oscAddress, prefix, i.key(), i.value());
+            qCDebug(APEX_OSC, "Osc playStimulus message with delay %d.",
+                    sendDelayMS);
+            connect(message, SIGNAL(sent()), message, SLOT(deleteLater()));
+            QTimer::singleShot(sendDelayMS, Qt::PreciseTimer, message,
+                               SLOT(send()));
         }
     }
 
-    send(QL1S("playStimulusFinished"),
-         QString::number(QDateTime::currentMSecsSinceEpoch()));
-}
-
-bool OscController::send(const QString &address, const QString &message)
-{
-    qCDebug(APEX_OSC, "Calling OSC SEND at time: %s",
-            qPrintable(QString::number(QDateTime::currentMSecsSinceEpoch())));
-    QString modifiedAddress = address;
-    modifiedAddress.replace(QL1S("-"), QL1S("/"));
-    if (!lo_send(oscAddress, QString::fromLatin1("/%1/%2")
-                                 .arg(prefix, modifiedAddress)
-                                 .toUtf8()
-                                 .data(),
-                 "s", message.toUtf8().data())) {
-        qCWarning(APEX_OSC, "OSC error %d: %s", lo_address_errno(oscAddress),
-                  lo_address_errstr(oscAddress));
-        return false;
-    }
-    return true;
+    OscMessage message(oscAddress, prefix, QL1S("playStimulusFinished"),
+                       QString::number(QDateTime::currentMSecsSinceEpoch()));
+    message.send();
 }
 
 // OscControllerCreator ========================================================

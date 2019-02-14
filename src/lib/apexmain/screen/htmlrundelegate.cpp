@@ -160,6 +160,10 @@ HtmlRunDelegate::HtmlRunDelegate(ExperimentRunDelegate *p_rd, QWidget *parent,
         Paths::searchFile(QSL("js/polyfill.js"), Paths::dataDirectories()),
         QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
     ApexTools::recursiveCopy(
+        Paths::searchFile(QSL("resultsviewer/resultsprocessor.js"),
+                          Paths::dataDirectories()),
+        QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
+    ApexTools::recursiveCopy(
         Paths::searchDirectory(QSL("resultsviewer/external"),
                                Paths::dataDirectories()),
         d->temporaryDirectory.path());
@@ -218,5 +222,5 @@ void HtmlRunDelegate::feedBack(const FeedbackMode &mode)
 {
     Q_UNUSED(mode);
 }
-}
-}
+} // namespace rundelegates
+} // namespace apex

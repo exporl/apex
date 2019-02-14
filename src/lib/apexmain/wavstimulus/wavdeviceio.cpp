@@ -736,12 +736,6 @@ void WavDeviceIO::mp_Start()
         return;
 
     if (m_pCard) {
-        double time = 1000 * ((double)(m_pBuffer->mf_nGetNumInBuffer() +
-                                       m_pCard->mf_nGetBufferSize()) /
-                              (double)mc_Config.sampleRate());
-        QTimer::singleShot(time, Qt::PreciseTimer, this,
-                           SIGNAL(stimulusStarted()));
-
         m_pSoundcardCallback->mp_Start(mv_bContinuous);
         if (useBertha)
             berthaBuffer->start();
@@ -766,6 +760,10 @@ void WavDeviceIO::mp_Start()
                     10); // wait while buffer thread fills the buffer
         }
 
+        QTimer::singleShot(1000 * ((double)(m_pBuffer->mf_nGetNumInBuffer() +
+                                            m_pCard->mf_nGetBufferSize()) /
+                                   (double)mc_Config.sampleRate()),
+                           Qt::PreciseTimer, this, SIGNAL(stimulusStarted()));
         m_pCard->mp_bStart(*m_pSoundcardCallback); // start play
     }
 }

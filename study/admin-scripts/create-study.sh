@@ -215,8 +215,10 @@ git config --file project.config "access.refs/heads/*.label-Verified" "-1..+1 gr
 git config --file project.config "access.refs/heads/*.label-Code-Review" "-2..+2 group $GROUPRW" "$GROUPRW\$"
 git config --file project.config "access.refs/changes/*.push" "group $GROUPRW"
 git config --file project.config "access.refs/for/*.push" "group $GROUPRW"
-# needed for gitweb
+# needed for gitweb?
 git config --file project.config "access.refs/*.read" "group $GROUPRW"
+# needed for gitweb
+git config --file project.config "access.refs/meta/config.read" "group $GROUPRW"
 
 # study type
 git config --file project.config "apex.studytype" "$STUDYTYPE"

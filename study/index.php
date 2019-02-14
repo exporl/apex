@@ -47,31 +47,23 @@
           $('#overview').show();
           $('#overview-generated-url').hide();
           $.get('listdevices.php', function(data) {
-              let parsed = JSON.parse(data);
+              var parsed = JSON.parse(data);
               $('#overview-devices').autocomplete({
                   source: parsed['personal'].concat(parsed['remaining'])
               });
           });
           $.get("liststudies.php", function(data) {
-              let parsed = JSON.parse(data);
+              var parsed = JSON.parse(data);
               $('#overview-studies').autocomplete({
                   source: parsed
               });
           });
-          let maxHeight = $('.overview-card').first().outerHeight();
+          var maxHeight = $('.overview-card').first().outerHeight();
           $('.overview-card').each(function(index) {
               if ($(this).height() > maxHeight)
                   maxHeight = $(this).outerHeight();
           });
           $('.overview-card').css('min-height', maxHeight);
-      }
-
-      function copyContents(element) {
-          let $temp = $('<input>');
-          $('body').append($temp);
-          $temp.val($(element).text()).select();
-          document.execCommand('copy');
-          $temp.remove();
       }
 
       function preFormPost(outputId, errorsId, successId, data) {
@@ -86,7 +78,7 @@
       }
 
       function parseFormOutput(outputId, errorsId, successId, data) {
-          let parsed = JSON.parse(data);
+          var parsed = JSON.parse(data);
           if (parsed.hasOwnProperty('errors')) {
               $(errorsId).show();
               $.each(parsed['errors'], function(index, value) {
@@ -114,47 +106,41 @@
           $('#study-deviceslist').hide()
           $('#studies-list').empty();
           $.get('liststudies.php', function(data) {
-              let parsed = JSON.parse(data).sort(function(a, b) {
-                  let loweredA = a.toLowerCase(),
+              var parsed = JSON.parse(data).sort(function(a, b) {
+                  var loweredA = a.toLowerCase(),
                       loweredB = b.toLowerCase();
                   return loweredA > loweredB ? 1 : loweredA < loweredB ? -1 : 0;
             });
             $('#studies-list>select').empty();
             $.each(parsed, function(index, value) {
-              $('#studies-list')
-                  .append('<option onclick="listStudyDevices(this);' +
-                          'showEditStudy(this);">' + value + '</option>');
+              $('#studies-list').append('<option>' + value + '</option>');
             });
           });
       }
 
-      function listStudyDevices(studyElement) {
-          let study = $(studyElement).text(),
-              payload = {};
+      function listStudyDevices(study) {
+          var payload = {};
           $('#study-deviceslist').hide()
           $('#study-deviceslist>tbody').empty();
           payload['study'] = study;
           $.post('listdevices.php', payload, function(data) {
-              let parsed = JSON.parse(data);
+              var parsed = JSON.parse(data);
               $.each(parsed['personal'].concat(parsed['remaining']), function(index, value) {
                   $('#study-deviceslist>tbody')
                       .append('<tr>'
                               +'<td>' + value + '</td>'
-                              +'<td><button type="button" class="btn btn-info"'
-                              + 'onclick="copyContents(this)">'
+                              +'<td><tt>'
                               + 'ssh://' + value + '@exporl-ssh.med.kuleuven.be:8444/' + study
-                              + '</button><small class="text-muted">'
-                              + ' (click to copy)</small></td></tr>');
+                              + '</tt></td></tr>');
               });
               $('#study-deviceslist').show()
           });
       }
 
-      function showEditStudy(studyElement) {
+      function showEditStudy(study) {
           resetForms();
           $('#addStudy').show();
           $('#studies-showAddStudy').show();
-          let study = $(studyElement).text();
           $('#addStudy-studyName').val(study);
           $('#addStudy-studyName').prop('disabled', true);
           $('#addStudy > form > .form-group:nth-child(3)').hide();
@@ -173,7 +159,7 @@
           $('#addStudy>button').hide();
           checkStudyName();
           $.get('account-exists.php', function(data) {
-              let exists = JSON.parse(data)[0] === 'true';
+              var exists = JSON.parse(data)[0] === 'true';
               if (exists) {
                   $('#addStudy-visitGerrit').hide();
                   $('#addStudy>form').show();
@@ -183,7 +169,7 @@
       }
 
       function checkStudyName() {
-          let currentYear = (new Date()).getFullYear();
+          var currentYear = (new Date()).getFullYear();
           if (!$('#addStudy-studyName').val().startsWith(String(currentYear)))
               $('#addStudy-studyName').val(
                   currentYear + '-' + $('#addStudy-studyName').val());
@@ -197,7 +183,7 @@
       }
 
       function addStudy() {
-          let outputId = '#addStudy-output',
+          var outputId = '#addStudy-output',
               errorsId = '#addStudy-errors',
               successId = '#addStudy-success',
               payload = {};
@@ -225,7 +211,7 @@
           $('#devices').show();
           $('#devices-list>tbody').empty();
           $.get('listdevices.php', function(data) {
-              let parsed = JSON.parse(data);
+              var parsed = JSON.parse(data);
               $.each(parsed['personal'].concat(parsed['remaining']), function(index, value) {
                   $('#devices-list>tbody').append('<tr><td>' + value + '</td></tr>');
               });
@@ -233,7 +219,7 @@
       }
 
       function addDevice() {
-          let outputId = '#addDevice-output',
+          var outputId = '#addDevice-output',
               errorsId = '#addDevice-errors',
               successId = '#addDevice-success',
               payload = {};
@@ -250,7 +236,7 @@
           $('#linkDeviceToStudy-devices').empty();
           $('#linkDeviceToStudy-studies').empty();
           $.get('listdevices.php', function(data) {
-              let parsed = JSON.parse(data);
+              var parsed = JSON.parse(data);
               parsed['personal'].forEach(function(value) {
                   $('#linkDeviceToStudy-devices').append(
                       '<option class="device-personal">'
@@ -264,7 +250,7 @@
                   linkDeviceToStudyShowPersonalDevices();
           });
           $.get('liststudies.php', function(data) {
-              let parsed = JSON.parse(data);
+              var parsed = JSON.parse(data);
               parsed.forEach(function(value) {
                   $('#linkDeviceToStudy-studies').append(
                       '<option>' + value + '</option>');
@@ -285,10 +271,10 @@
 
       function linkDeviceToStudyFillExperimentBranches() {
           $('#linkDeviceToStudy-branches').empty();
-          let payload = {};
+          var payload = {};
           payload['study'] = $('#linkDeviceToStudy-studies').val();
           $.post('listbranches.php', payload, function(data) {
-              let parsed = JSON.parse(data);
+              var parsed = JSON.parse(data);
               if (parsed.hasOwnProperty('branches')) {
                   parsed['branches'].forEach(function(value) {
                       $('#linkDeviceToStudy-branches').append(
@@ -299,7 +285,7 @@
       }
 
       function connectDeviceToStudy() {
-          let outputId = '#connectDeviceToStudy-output',
+          var outputId = '#connectDeviceToStudy-output',
               errorsId = '#connectDeviceToStudy-errors',
               successId = '#connectDeviceToStudy-success',
               payload = {};
@@ -386,7 +372,8 @@
           </div>
           <form>
             <div class="form-group">
-              <select multiple id="studies-list" class="form-control" size="20">
+              <select id="studies-list" class="form-control" size="20"
+                  onchange="listStudyDevices(this.value); showEditStudy(this.value);">
               </select>
             </div>
           </form>

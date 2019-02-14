@@ -8,7 +8,7 @@ et al., 2008). [^1], allows most auditory behavioral experiments to be
 performed without any programming, both for acoustic stimulation, direct
 electric stimulation via a CI or any combination of devices.
 
-This manual describes . The idea behind is that one should be able to
+This manual describes APEX. The idea behind is that one should be able to
 set up an experiment without any programming knowledge. It is a generic
 platform with abstract interfaces to the computer monitor, computer
 input devices such as keyboard, mouse, and touch screen, and output
@@ -24,7 +24,7 @@ experiment files and analysis of results files.
 Registration
 ------------
 
-After registration can be downloaded from
+After registration, APEX can be downloaded from
 <http://www.kuleuven.be/exporl/apex> and can be used free of charge. The
 hardware requirements are limited to a personal computer running the
 Linux or Windows operating system and the necessary stimulation devices.
@@ -84,7 +84,7 @@ Main features of APEX 4
 Getting help - documentation
 ----------------------------
 
-There are 4 forms of documentation available for :
+There are 4 forms of documentation available for APEX:
 
 The paper
 
@@ -139,7 +139,7 @@ The examples
 Basic setup
 -----------
 
-is installed by either running the installer (), or by simply copying
+APEX is installed by either running the installer (), or by simply copying
 the APEX folder to your computer. After installation, there is a main
 directory (default: ) under which the following subdirectories exist and
 contain the necessary files:
@@ -167,12 +167,12 @@ plugins
 
 amt
 
-:   contains the , for automatic generation or analysis of experiment
+:   contains the APEX 4 Matlab Toolbox, for automatic generation or analysis of experiment
     files (cf. appendix <span>\[</span>app:Matlab<span>\]</span>).
 
 examples
 
-:   contains example experiments for nearly every feature of
+:   contains example experiments for nearly every feature of APEX
 
 makes use of an experiment file. An experiment file contains all the
 necessary information to run an experiment, such as the layout of the
@@ -212,7 +212,7 @@ Overview of the user manual
 | Scripting           | Describes how to automate (script) tasks in APEX 4.|
 | Examples            | Discusses 4 example experiments in detail.        |
 | Examplestrategies   | Shows how to implement some common features of psychophysical and perceptual experiments.                                                               |
-| Results             | Shows result files can be analyzed.               |
+| Results             | Shows how result files can be analyzed.               |
 | L34                 | Describes the use of the L34 device               |
 | Matlab              | the Matlab toolbox                                |
 | Plugins             | Use of plugins                                    |

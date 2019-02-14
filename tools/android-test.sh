@@ -73,6 +73,8 @@ echo "Package: $APK"
     adb logcat -c
     adb shell "settings put system screen_off_timeout 120000"
 
+    adb shell rm -rf /sdcard/temp/tests/*
+
     for i in $ROOTDIR/*/tests/*/*.pro; do
         TARGET=$(grep TARGET "$i" | sed 's/.*=//;s/ //g')
         if [ -z "$TARGET" ]; then
@@ -95,17 +97,22 @@ echo "Package: $APK"
         adb shell am start -e applicationArguments "$ARGUMENTS" -n be.kuleuven.med.exporl.apex/be.kuleuven.med.exporl.apex.${TARGET^}Activity
         # allow Ctrl-C interrupt by relaying any SIGINT to the process group of timeout, and exiting the script
         trap 'kill -INT -$pid; exit' INT
-        timeout 120 bash -c "while [ ! -s $TARGET-results.xml ]; do adb pull /sdcard/temp/tests/$TARGET-results.xml $ROOTDIR || true; sleep 2; done" &
+        timeout 600 bash -c "while [ ! -s $TARGET-results.xml ]; do adb pull /sdcard/temp/tests/$TARGET-results.xml $ROOTDIR || true; sleep 5; done" &
         pid=$!
         wait $pid
         trap - INT
-        # wait until xml file is complete
-        sleep 2
+        sleep 1s
+    done
+
+    # wait until XML results are complete, then copy them over
+    sleep 10s
+    for i in $ROOTDIR/*/tests/*/*.pro; do
+        TARGET=$(grep TARGET "$i" | sed 's/.*=//;s/ //g')
         adb pull "/sdcard/temp/tests/$TARGET-results.xml" "$ROOTDIR" || true
         adb pull "/sdcard/temp/tests/$TARGET-results.txt" "$ROOTDIR" || true
     done
 
-    adb shell rm -rf /sdcard/temp/tests
+    #adb shell rm -rf /sdcard/temp/tests
     adb shell am force-stop be.kuleuven.med.exporl.apex
 
 ) 9> /tmp/jenkins-android-device.lock

@@ -22,14 +22,8 @@
 
 #include "apextools/global.h"
 
-#include <QUrl>
-
 namespace apex
 {
-namespace data
-{
-class ResultParameters;
-}
 
 class RTResultSink;
 
@@ -37,10 +31,10 @@ class APEX_EXPORT ResultViewer : public QObject
 {
     Q_OBJECT
 public:
-    ResultViewer(const data::ResultParameters *p_param,
-                 const QString &p_resultfile);
+    ResultViewer(const QString &p_resultfile);
     void show(bool ask);
     bool addtofile(const QString &p_filename);
+    RTResultSink *getResultSink();
 
     ~ResultViewer();
 
@@ -51,12 +45,12 @@ private Q_SLOTS:
     void loadingFinished(bool ok);
 
 private:
-    bool findResultPage();
+    QString findResultPage(const QString &resultFilePath);
+    QString findExtraScript(const QString &resultFilePath);
+    QMap<QString, QString> findResultParameters(const QString &resultFilePath);
 
-    const data::ResultParameters *m_pParam;
     QString m_sResultfile;
-    QUrl m_resultPagePath;
-    QScopedPointer<RTResultSink> rtResultSink;
+    QScopedPointer<RTResultSink> m_rtResultSink;
 };
 }
 

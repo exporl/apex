@@ -32,7 +32,8 @@ class APEX_EXPORT Study : public QObject
 public:
     Study(const QString &name, const QString &experimentsUrl,
           const QString &experimentsBranch, const QString &resultsUrl,
-          const QString &resultsBranch, const QString &rootPath);
+          const QString &resultsBranch, const QString &rootPath,
+          const QString &resultsWorkdirRootPath, const QString &keyPath);
     virtual ~Study();
 
     bool isPublic() const;
@@ -56,6 +57,7 @@ public:
     QString resultsBranch() const;
     QString experimentsPath() const;
     QString resultsPath() const;
+    QString keyPath() const;
 
     QString indexExperiment() const;
     QStringList experiments() const;
@@ -76,6 +78,6 @@ Q_SIGNALS:
 private:
     QScopedPointer<StudyPrivate> d;
 };
-}
+} // namespace apex
 
 #endif

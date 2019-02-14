@@ -121,6 +121,7 @@ signals:
     void outroDone();
     void errorMessage(const QString &source, const QString &message);
     void savedResults(QString filename);
+    void experimentClosed();
     void resultsShowed();
     /**
      * @brief parametersLoaded sends out the stimulus' params map
@@ -884,6 +885,7 @@ void ExperimentControlPrivate::showResult()
 {
     rd->modOutput()->CloseDevices();
     if (rd->modResultSink() != 0) {
+        rd->modResultSink()->setStopCondition(stopped);
         rd->modResultSink()->setExtraXml(procedure->finalResultXml());
         rd->modResultSink()->Finished();
         Q_EMIT savedResults(rd->modResultSink()->GetFilename());
@@ -892,8 +894,7 @@ void ExperimentControlPrivate::showResult()
             if (rd->GetData().resultParameters()->showResultsAfter() ||
                 rd->GetData().resultParameters()->saveResults()) {
                 ResultViewer *rv =
-                    new ResultViewer(rd->GetData().resultParameters(),
-                                     rd->modResultSink()->GetFilename());
+                    new ResultViewer(rd->modResultSink()->GetFilename());
                 if (rd->GetData().resultParameters()->showResultsAfter())
                     if (rd->modRTResultSink())
                         rd->modRTResultSink()->hide();
@@ -914,6 +915,8 @@ void ExperimentControlPrivate::showResult()
 
 void ExperimentControlPrivate::afterExperiment()
 {
+    Q_EMIT experimentClosed();
+
     io->finish();
     rd->modOutput()->releaseClients();
     rd->modOutput()->StopDevices();
@@ -1011,6 +1014,7 @@ ExperimentControl::ExperimentControl(Flags flags)
     connect(&d->machine, SIGNAL(finished()), this, SIGNAL(experimentDone()));
     connect(d, SIGNAL(savedResults(QString)), this,
             SIGNAL(savedResults(QString)));
+    connect(d, SIGNAL(experimentClosed()), this, SIGNAL(experimentClosed()));
 }
 
 ExperimentControl::~ExperimentControl()

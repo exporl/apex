@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd">
+ <procedure xsi:type="apex:pluginProcedure">
+  <parameters>
+   <presentations>100</presentations>
+   <skip>0</skip>
+   <order>sequential</order>
+   <corrector xsi:type="apex:isequal"/>
+   <script>spinbox-procedure.js</script>
+   <parameter name="startCurrentLevel">0</parameter>
+   <parameter name="minimumCurrentLevel">0</parameter>
+   <parameter name="parameter">presentedLevel</parameter>
+  </parameters>
+  <trials>
+   <plugintrials>
+    <script source="inline"/>
+   </plugintrials>
+  </trials>
+ </procedure>
+ <screens>
+  <reinforcement>
+   <progressbar>true</progressbar>
+   <feedback length="300">false</feedback>
+  </reinforcement>
+  <style>&#xd;
+   #matrixid_1_1{background-color: red;}&#xd;
+   #matrixid_1_2{background-color: orange;}&#xd;
+   #matrixid_1_3{background-color: yellow;}&#xd;
+   #matrixid_1_4{background-color: green;}&#xd;
+   #matrixid_1_5{background-color: darkcyan;}&#xd;
+   #matrixid_1_6{background-color: lightblue;}&#xd;
+   #matrixid_1_7{background-color: lavender;}&#xd;
+  </style>
+  <screen id="screen">
+   <gridLayout width="2" height="2">
+    <!--<label row="1" id="label" col="1">
+     <text>Luidheidschaal:</text>
+    </label>-->
+    <matrix row="1" id="matrixid" col="1">
+     <autocontinue>false</autocontinue>
+     <element row="1" col="1">
+      <name>Onuitstaanbaar</name>
+     </element>
+     <element row="2" col="1">
+      <name>Heel hard</name>
+     </element>
+     <element row="3" col="1">
+      <name>Hard</name>
+     </element>
+     <element row="4" col="1">
+      <name>Goed</name>
+     </element>
+     <element row="5" col="1">
+      <name>Zacht</name>
+     </element>
+     <element row="6" col="1">
+      <name>Heel zacht</name>
+     </element>
+     <element row="7" col="1">
+      <name>Onhoorbaar</name>
+     </element>
+    </matrix>
+    <spinBox row="2" id="spinbox" col="1">
+      <value>0</value>
+      <min>0</min>
+      <max>255</max>
+      <parameter>currentLevel</parameter>
+     </spinBox>
+     <button row="2" id="button" col="2">
+      <text>OK</text>
+     </button>
+   </gridLayout>
+   <default_answer_element>matrix</default_answer_element>
+  </screen>
+ </screens>
+ <datablocks>
+  <plugindatablocks>
+   <script source="inline"/>
+  </plugindatablocks>
+ </datablocks>
+ <devices>
+  <device xsi:type="apex:CohDeviceType" id="l34">
+   <device>L34-cic4-1</device>
+   <trigger>none</trigger>
+   <volume>0</volume>
+   <defaultmap>
+    <inline>
+     <number_electrodes>1</number_electrodes>
+     <mode>MP2</mode>
+     <pulsewidth>25</pulsewidth>
+     <pulsegap>8</pulsegap>
+     <period>500</period>
+     <channel comfort="255" electrode="1" number="1" threshold="0"/>
+     <channel comfort="255" electrode="2" number="2" threshold="0"/>
+     <channel comfort="255" electrode="3" number="3" threshold="0"/>
+     <channel comfort="255" electrode="4" number="4" threshold="0"/>
+     <channel comfort="255" electrode="5" number="5" threshold="0"/>
+     <channel comfort="255" electrode="6" number="6" threshold="0"/>
+     <channel comfort="255" electrode="7" number="7" threshold="0"/>
+     <channel comfort="255" electrode="8" number="8" threshold="0"/>
+     <channel comfort="255" electrode="9" number="9" threshold="0"/>
+     <channel comfort="255" electrode="10" number="10" threshold="0"/>
+     <channel comfort="255" electrode="11" number="11" threshold="0"/>
+     <channel comfort="255" electrode="12" number="12" threshold="0"/>
+     <channel comfort="255" electrode="13" number="13" threshold="0"/>
+     <channel comfort="255" electrode="14" number="14" threshold="0"/>
+     <channel comfort="255" electrode="15" number="15" threshold="0"/>
+     <channel comfort="255" electrode="16" number="16" threshold="0"/>
+     <channel comfort="255" electrode="17" number="17" threshold="0"/>
+     <channel comfort="255" electrode="18" number="18" threshold="0"/>
+     <channel comfort="255" electrode="19" number="19" threshold="0"/>
+     <channel comfort="255" electrode="20" number="20" threshold="0"/>
+     <channel comfort="255" electrode="21" number="21" threshold="0"/>
+     <channel comfort="255" electrode="22" number="22" threshold="0"/>
+    </inline>
+   </defaultmap>
+  </device>
+ </devices>
+ <filters/>
+ <stimuli>
+  <fixed_parameters>
+   <parameter id="currentLevel"/>
+  </fixed_parameters>
+  <pluginstimuli>
+   <script source="inline"/>
+  </pluginstimuli>
+ </stimuli>
+ <connections/>
+ <results>
+  <page>apex:resultsviewer_scatter.html</page>
+  <resultparameters/>
+  <showduringexperiment>false</showduringexperiment>
+  <showafterexperiment>true</showafterexperiment>
+  <saveprocessedresults>true</saveprocessedresults>
+ </results>
+ <interactive>
+  <entry default="" description="Subject" type="string"/>
+  <entry default="0" description="Starting (Maximum) Current Level" type="int" expression="/apex:apex/procedure[1]/parameters[1]/parameter[1]|/apex:apex/screens[1]/screen[1]/gridLayout[1]/spinBox[1]/value[1]"/>
+  <entry default="0" description="(Fixed) (Minimum) Current Level" type="int" expression="/apex:apex/procedure[1]/parameters[1]/parameter[2]|/apex:apex/general[1]/scriptparameters[1]/parameter[1]"/>
+  <entry default="500" description="Carrier frequency (Hz)" type="int" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[2]"/>
+  <entry default="40" description="Modulation frequency  (Hz)" type="int" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[3]"/>
+  <entry default="90" description="Modulation starting angle (degrees)" type="int" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[4]"/>
+  <entry default="cic4|cic3" description="Implant type" type="combo" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[5]"/>
+  <entry default="1.0" description="Duration (s)" type="double" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[6]"/>
+  <entry default="25" description="Phase width (us)" type="int" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[7]"/>
+  <entry default="8" description="Phase gap (us)" type="int" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[8]"/>
+  <entry default="11" description="Active Electrode (-3:22)" type="int" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[9]"/>
+  <entry default="-3" description="Reference Electrode (-3:22)" type="int" expression="/apex:apex/general[1]/scriptparameters[1]/parameter[10]"/>
+  <entry default="l34-cic4-0|l34-cic4-1|l34-cic3-0|l34-cic3-1" description="NIC device" type="combo" expression="/apex:apex/devices/device/device"/>
+ </interactive>
+ <general>
+  <exitafter>false</exitafter>
+  <autosave>true</autosave>
+  <scriptlibrary>cistim_am.js</scriptlibrary>
+  <scriptparameters>
+   <parameter name="minimum_currentlevel">0</parameter>
+   <parameter name="carrier_frequency">500</parameter>
+   <parameter name="modulation_frequency">40</parameter>
+   <parameter name="currentlevel_angle">90</parameter>
+   <parameter name="implant_type">cic4</parameter>
+   <parameter name="duration">1</parameter>
+   <parameter name="phase_width">25</parameter>
+   <parameter name="phase_gap">8</parameter>
+   <parameter name="active_electrode">11</parameter>
+   <parameter name="reference_electrode">-3</parameter>
+  </scriptparameters>
+ </general>
+</apex:apex>

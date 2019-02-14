@@ -154,8 +154,18 @@ public:
     QStringList customScreensDescriptions() const;
     QString customScreen(const QString &description) const;
     QString customScreenId(const QString &description) const;
-    const QString &textId() const;
-    const QString &gainId() const;
+    const QString &getSpeechtokenTextId() const;
+    const QString &getNSpeechtokenParts() const;
+    const QString &getSpeechtokenPart1Id() const;
+    const QString &getSpeechtokenPart2Id() const;
+    const QString &getSpeechtokenPart3Id() const;
+    const QString &getSpeechtokenPart4Id() const;
+    const QString &getSpeechtokenPart5Id() const;
+    const QString &getSpeechtokenPart6Id() const;
+    const QString &getSpeechtokenPart7Id() const;
+    const QString &getSpeechtokenPart8Id() const;
+    const QString &getSpeechtokenPart9Id() const;
+    const QString &getGainId() const;
 
     /**
       * All signals will be scaled by APEX to internalRMS (dBFS)
@@ -194,7 +204,17 @@ public:
     void setExperimenterScreenNoise(const QString &screen);
     void addCustomScreen(const QString &description, const QString &id,
                          const QString &screen);
-    void setTextId(const QString &id);
+    void setSpeechtokenTextId(const QString &id);
+    void setNSpeechtokenParts(const QString &id);
+    void setSpeechtokenPart1Id(const QString &id);
+    void setSpeechtokenPart2Id(const QString &id);
+    void setSpeechtokenPart3Id(const QString &id);
+    void setSpeechtokenPart4Id(const QString &id);
+    void setSpeechtokenPart5Id(const QString &id);
+    void setSpeechtokenPart6Id(const QString &id);
+    void setSpeechtokenPart7Id(const QString &id);
+    void setSpeechtokenPart8Id(const QString &id);
+    void setSpeechtokenPart9Id(const QString &id);
     void setGainId(const QString &id);
     void setInternalRms(double rms);
     void setDefaultCalibration(double d);
@@ -224,7 +244,17 @@ private:
     //<custom_screens>
     QMap<QString, CustomScreen> custScreens;
     //<id_setup>
-    QString txtId;
+    QString speechtokenTextId;
+    QString nSpeechtokenParts;
+    QString speechtokenPart1Id;
+    QString speechtokenPart2Id;
+    QString speechtokenPart3Id;
+    QString speechtokenPart4Id;
+    QString speechtokenPart5Id;
+    QString speechtokenPart6Id;
+    QString speechtokenPart7Id;
+    QString speechtokenPart8Id;
+    QString speechtokenPart9Id;
     QString snrId;
     //<general_setup>
     double intRms;

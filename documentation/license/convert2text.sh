@@ -1,1 +1,0 @@
-w3m -dump -M -no-graph -T text/html APEX3License.html >license.txt

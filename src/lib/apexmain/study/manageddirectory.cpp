@@ -32,6 +32,7 @@
 #include <QFile>
 #include <QMutex>
 #include <QSharedPointer>
+#include <QStandardPaths>
 #include <QTemporaryDir>
 #include <QThread>
 
@@ -82,8 +83,8 @@ public:
     int totalCommitCount();
     QString lastCommitMessage();
 
-    void init(const QDir &directory, bool bare);
-    void open(const QDir &directory);
+    void init(const QDir &repoPath, const QDir &workdirPath, bool bare = false);
+    void open(const QDir &repoPath);
     void close();
 
     void setRemote(const QString &url, const QString &branchName);
@@ -135,7 +136,8 @@ private:
 
     QMutex repoMutex;
     QSharedPointer<git_repository> repo;
-    QDir directory;
+    QDir repoPath;
+    QDir workdirPath;
 
     QString publicKey;
     QString privateKey;
@@ -258,27 +260,46 @@ QString ManagedDirectoryWorker::lastCommitMessage()
         .arg(QString::fromUtf8(git_commit_message(commit.data())));
 }
 
-void ManagedDirectoryWorker::init(const QDir &directory, bool bare)
+void ManagedDirectoryWorker::init(const QDir &repoPath, const QDir &workdirPath,
+                                  bool bare)
 {
     QMutexLocker locker(&repoMutex);
-    this->directory = directory;
+
+    this->repoPath = repoPath;
+    this->workdirPath = workdirPath;
+
+    git_repository_init_options initopts;
+    handleResult(git_repository_init_init_options(
+                     &initopts, GIT_REPOSITORY_INIT_OPTIONS_VERSION),
+                 tr("Unable to initialize init options"));
+
+    QByteArray workdirPathByteArray = QFile::encodeName(workdirPath.path());
+    initopts.workdir_path = workdirPathByteArray.data();
+
+    initopts.flags |= GIT_REPOSITORY_INIT_MKPATH;
+    if (bare) {
+        initopts.flags |= GIT_REPOSITORY_INIT_BARE;
+    }
+
     git_repository *repoPtr = nullptr;
-    handleResult(git_repository_init(&repoPtr,
-                                     QFile::encodeName(directory.path()), bare),
+    handleResult(git_repository_init_ext(
+                     &repoPtr, QFile::encodeName(repoPath.path()), &initopts),
                  tr("Unable to initialize repository"));
     repo = QSharedPointer<git_repository>(repoPtr, git_repository_free);
+
     setConfigValue(QSL("repostate"), QSL("clean"));
 }
 
-void ManagedDirectoryWorker::open(const QDir &directory)
+void ManagedDirectoryWorker::open(const QDir &repoPath)
 {
     QMutexLocker locker(&repoMutex);
-    this->directory = directory;
+    qCWarning(APEX_RS, "apex: opening!");
+    this->repoPath = repoPath;
     git_repository *repoPtr = nullptr;
     handleResult(
-        git_repository_open(&repoPtr, QFile::encodeName(directory.path())),
+        git_repository_open(&repoPtr, QFile::encodeName(repoPath.path())),
         tr("Unable to open repository %1, does it exists?")
-            .arg(directory.path()));
+            .arg(repoPath.path()));
     repo = QSharedPointer<git_repository>(repoPtr, git_repository_free);
     if (getConfigValue(QSL("repostate")) != QL1S("clean"))
         qCWarning(APEX_RS) << "Warning, repo in dirty state";
@@ -352,7 +373,7 @@ void ManagedDirectoryWorker::add(const QString &path)
     if (!repo)
         throw ApexStringException(tr("No repository opened"));
 
-    if (!directory.exists(path))
+    if (!workdirPath.exists(path))
         throw ApexStringException(
             tr("Unable to add nonexistent file %1 to directory").arg(path));
 
@@ -364,10 +385,10 @@ void ManagedDirectoryWorker::add(const QString &path)
     handleResult(git_repository_index(&indexPtr, repo.data()),
                  tr("Unable to open repo index"));
     QSharedPointer<git_index> index(indexPtr, git_index_free);
-    handleResult(
-        git_index_add_bypath(
-            index.data(), QFile::encodeName(directory.relativeFilePath(path))),
-        tr("Unable to add file to index"));
+    handleResult(git_index_add_bypath(
+                     index.data(),
+                     QFile::encodeName(workdirPath.relativeFilePath(path))),
+                 tr("Unable to add file to index"));
 
     handleResult(git_index_write(index.data()),
                  tr("Unable to write index to disk"));
@@ -692,7 +713,7 @@ QSharedPointer<git_remote> ManagedDirectoryWorker::findRemote()
     if (remotes.array.count != 1)
         qCWarning(APEX_RS,
                   "Number of remotes in Managed Directory %s is not 1, but %zu",
-                  qPrintable(directory.path()), remotes.array.count);
+                  qPrintable(repoPath.path()), remotes.array.count);
 
     git_remote *remote = nullptr;
     handleResult(
@@ -716,8 +737,10 @@ void ManagedDirectoryWorker::handleResult(int result, const QString &message)
 {
     const git_error *error = giterr_last();
     if (error != nullptr)
-        qCDebug(APEX_RS, "Managed directory %s | %s",
-                qPrintable(directory.path()), (error->message));
+        qCWarning(APEX_RS, "Managed directory [%s] (message: %s | result: %i | "
+                           "error: %s | klass: %i)",
+                  qPrintable(repoPath.path()), qPrintable(message), result,
+                  error->message, error->klass);
     giterr_clear();
 
     if (result < 0)
@@ -732,7 +755,8 @@ class ManagedDirectoryPrivate : public QObject
 public:
     QThread workerThread;
     ManagedDirectoryWorker worker;
-    QDir directory;
+    QDir repoPath;
+    QDir workdirPath;
 };
 
 /* ManagedDirectory========================================================== */
@@ -747,7 +771,8 @@ ManagedDirectory::ManagedDirectory(const QString &path, QObject *parent)
     : QObject(parent), d(new ManagedDirectoryPrivate)
 {
     setup();
-    d->directory = QDir(path);
+    d->repoPath = QDir(path);
+    d->workdirPath = QDir(path);
 }
 
 void ManagedDirectory::setup()
@@ -775,14 +800,10 @@ ManagedDirectory::~ManagedDirectory()
     git_libgit2_shutdown();
 }
 
-QString ManagedDirectory::path() const
-{
-    return d->directory.path();
-}
-
 bool ManagedDirectory::exists()
 {
-    return git_repository_open_ext(nullptr, QFile::encodeName(path()),
+    return git_repository_open_ext(nullptr,
+                                   QFile::encodeName(d->repoPath.path()),
                                    GIT_REPOSITORY_OPEN_NO_SEARCH, nullptr) == 0;
 }
 
@@ -816,15 +837,17 @@ int ManagedDirectory::totalCommitCount()
     return d->worker.totalCommitCount();
 }
 
-void ManagedDirectory::setPath(const QString &path)
+void ManagedDirectory::setPath(const QString &repoPath,
+                               const QString &workdirPath)
 {
     if (d->worker.isOpen()) {
         d->worker.close();
         qCWarning(APEX_RS, "Changing path while ManagedDirectory is opened or"
                            "initialized %s, closing repo.",
-                  qPrintable(path));
+                  qPrintable(workdirPath));
     }
-    d->directory = QDir(path);
+    d->repoPath = QDir(repoPath);
+    d->workdirPath = QDir(workdirPath);
 }
 
 void ManagedDirectory::setKeyPaths(const QString &publicKeyPath,
@@ -845,12 +868,12 @@ void ManagedDirectory::setAuthor(const QString &name, const QString &email)
 
 void ManagedDirectory::init(bool bare)
 {
-    d->worker.init(d->directory, bare);
+    d->worker.init(d->repoPath, d->workdirPath, bare);
 }
 
 void ManagedDirectory::open()
 {
-    d->worker.open(d->directory);
+    d->worker.open(d->repoPath);
 }
 
 void ManagedDirectory::close()
@@ -862,7 +885,7 @@ void ManagedDirectory::add(const QString &path)
 {
     QString relativePath = path;
     if (QFileInfo(relativePath).isAbsolute())
-        relativePath.remove(d->directory.canonicalPath() + QL1S("/"));
+        relativePath.remove(d->workdirPath.canonicalPath() + QL1S("/"));
 
     d->worker.add(relativePath);
     d->worker.commit();
@@ -873,7 +896,7 @@ void ManagedDirectory::add(const QStringList &paths)
     Q_FOREACH (const QString &path, paths) {
         QString relativePath = path;
         if (QFileInfo(relativePath).isAbsolute())
-            relativePath.remove(d->directory.canonicalPath() + QL1S("/"));
+            relativePath.remove(d->workdirPath.canonicalPath() + QL1S("/"));
         d->worker.add(relativePath);
     }
     d->worker.commit();

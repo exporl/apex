@@ -148,7 +148,6 @@ struct APEXSPIN_EXPORT Options {
     Order trialOrder;
     QMap<int, double> noiseJumps;
     SoundCard soundCard;
-    bool generatePluginProcedure;
 };
 
 class APEXSPIN_EXPORT SpinUserSettings
@@ -210,7 +209,6 @@ public:
     void setLockSpeechlevels(bool lock);
     void setLockNoiselevels(bool lock);
     void setSoundCard(SoundCard value);
-    void setGeneratePluginProcedure(bool value);
 
     // getters
     const QString &subjectName() const;
@@ -238,7 +236,6 @@ public:
     Order trialOrder() const;
     uint numberOfChannelsInUse() const;
     double noiseJump(int channel) const;
-    bool generatePluginProcedure() const;
 
     // [Tom] FIXME: this corresponds to defaultCalibration in spinconfig
     double dBAOfInternalRms() const;

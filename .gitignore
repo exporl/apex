@@ -29,3 +29,9 @@ documentation/doxygen/output/
 pkg-config_wrapper.sh
 *.so-deployment-settings.json
 .qmake.stash
+/node_modules
+.eslintrc
+eslint-errors*.tap
+/.idea
+CMakeLists.txt
+/*cmake*

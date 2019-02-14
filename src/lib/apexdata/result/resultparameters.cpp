@@ -34,7 +34,6 @@ ResultParameters::ResultParameters()
       m_showRealtime(false),
       m_showAfter(false),
       m_bSaveProcessedResults(false)
-
 {
 }
 
@@ -47,18 +46,17 @@ bool ResultParameters::Parse(const QDomElement &p_paramElement)
     for (QDomElement currentNode = p_paramElement.firstChildElement();
          !currentNode.isNull();
          currentNode = currentNode.nextSiblingElement()) {
+
         QString tag = currentNode.tagName();
-        QString id = currentNode.attribute(QSL("id"));
         QString value = currentNode.text();
 
-        SetParameter(tag, id, value, currentNode);
+        SetParameter(tag, value, currentNode);
     }
 
     return true;
 }
 
 bool ResultParameters::SetParameter(const QString &p_name,
-                                    const QString & /*p_id*/,
                                     const QString &p_value,
                                     const QDomElement &p_elem)
 {
@@ -98,10 +96,12 @@ const QString &ResultParameters::matlabScript() const
 {
     return m_matlabScript;
 }
+
 const QString &ResultParameters::subject() const
 {
     return m_subject;
 }
+
 void ResultParameters::setSubject(const QString &subject)
 {
     m_subject = subject;
@@ -111,6 +111,7 @@ bool ResultParameters::showResultsAfter() const
 {
     return m_showAfter;
 }
+
 void ResultParameters::setShowResultsAfter(bool show)
 {
     m_showAfter = show;
@@ -120,6 +121,7 @@ bool ResultParameters::saveResults() const
 {
     return m_bSaveProcessedResults;
 }
+
 void ResultParameters::setSaveResults(bool save)
 {
     m_bSaveProcessedResults = save;
@@ -129,10 +131,12 @@ const QUrl &ResultParameters::resultPage() const
 {
     return m_resultPage;
 }
+
 void ResultParameters::setResultPage(const QString &scriptname)
 {
     m_resultPage = scriptname;
 }
+
 bool ResultParameters::showRTResults() const
 {
     return m_showRealtime;
@@ -143,25 +147,30 @@ const QString ResultParameters::extraScript() const
     return m_extraScript;
 }
 
-tScriptParameters ResultParameters::resultParameters() const
+void ResultParameters::setExtraScript(const QString &extraScript)
 {
-    return mResultParameters;
+    m_extraScript = extraScript;
 }
 
-bool ResultParameters::operator==(const ResultParameters &other) const
+tScriptParameters ResultParameters::resultParameters() const
 {
-    return /*ApexParameters::operator==(other) &&*/
-        m_matlabScript == other.m_matlabScript &&
-        m_subject == other.m_subject &&
-        m_bSaveProcessedResults == other.m_bSaveProcessedResults &&
-        m_resultPage == other.m_resultPage &&
-        m_showRealtime == other.m_showRealtime &&
-        m_showAfter == other.m_showAfter;
+    return m_resultParameters;
 }
 
 void ResultParameters::setResultParameter(const QString &name,
                                           const QString &value)
 {
-    // mXsltParameters[name]=value;
-    mResultParameters.insert(name, value);
+    m_resultParameters.insert(name, value);
+}
+
+bool ResultParameters::operator==(const ResultParameters &other) const
+{
+    return m_matlabScript == other.m_matlabScript &&
+           m_subject == other.m_subject &&
+           m_extraScript == other.m_extraScript &&
+           m_resultParameters == other.m_resultParameters &&
+           m_resultPage == other.m_resultPage &&
+           m_showRealtime == other.m_showRealtime &&
+           m_showAfter == other.m_showAfter &&
+           m_bSaveProcessedResults == other.m_bSaveProcessedResults;
 }

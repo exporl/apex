@@ -138,8 +138,11 @@ private:
     bool useBertha;
     bool launchStandalone;
 
+    QString
+        calibrationSetup; // the calib to be used if useCalibrationSetup is true
+
     static ApexControl *instance;
 };
-}
+} // namespace apex
 
 #endif

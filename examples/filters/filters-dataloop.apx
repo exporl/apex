@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<apex:apex version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!-- @doc
   @what: Shows use of dataloop generator - wivineruis.wav should play !not! continuously over trials (see filters - noisegen - apex:dataloop)
   @description: When you click on the button 'wrong/correct', in both ears a noise stimulus is played and in the left ear 'silence-two(twee)'(=stimulus2)/'one-two(een-twee)'(=stimulus1) is presented

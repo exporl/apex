@@ -1,4 +1,5 @@
 #include "soundcardsettings.h"
+#include "apextools/settingsfactory.h"
 #include <QDebug>
 #include <QScopedPointer>
 #include <QSettings>
@@ -42,7 +43,7 @@ bool SoundcardSettings::hasData()
 QSettings *SoundcardSettings::getSettings()
 {
     static QScopedPointer<QSettings> settings(
-        new QSettings(apex::organizationName, apex::applicationName));
+        SettingsFactory().createSettings());
     return settings.data();
 }
 

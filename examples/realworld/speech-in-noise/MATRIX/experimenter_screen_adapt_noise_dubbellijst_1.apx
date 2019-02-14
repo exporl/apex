@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" 
-  xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd">
+  xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" 
+  xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd">
     <!--  @doc
    @what: Flemish MATRIX list 1, 60 dB
    @description: Speech in noise, adaptive procedure according to Brand and Kollmeier (2002). 

@@ -8,7 +8,9 @@ namespace data
 {
 
 MainConfigFileData::MainConfigFileData()
-    : m_plugin_script_library("pluginscriptlibrary.js"), bertha(true)
+    : m_plugin_script_library("pluginscriptlibrary.js"),
+      bertha(true),
+      installationWideSettingsEnabled(false)
 {
 }
 
@@ -115,6 +117,16 @@ QString
 MainConfigFileData::interactiveConstraint(const QString &expression) const
 {
     return interactiveConstraints.value(expression, QString());
+}
+
+void MainConfigFileData::enableInstallationWideSettings()
+{
+    installationWideSettingsEnabled = true;
+}
+
+bool MainConfigFileData::areInstallationWideSettingsEnabled() const
+{
+    return installationWideSettingsEnabled;
 }
 }
 }

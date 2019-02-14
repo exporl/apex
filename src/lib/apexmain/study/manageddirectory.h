@@ -35,7 +35,6 @@ public:
     virtual ~ManagedDirectory();
 
     /* Directory info */
-    QString path() const;
     bool exists();
     bool isOpen();
     /* May throw */
@@ -46,7 +45,7 @@ public:
     int totalCommitCount();
 
     /* Set directory parameters */
-    void setPath(const QString &path);
+    void setPath(const QString &repoPath, const QString &workdirPath);
     void setKeyPaths(const QString &publicKeyPath,
                      const QString &privateKeyPath);
     /* May throw */

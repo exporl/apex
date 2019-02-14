@@ -329,7 +329,28 @@ void SpinConfigFileParser::parseIds(const QDomElement &ids, SpinConfig *into)
 {
     Q_ASSERT(ids.tagName() == "id_setup");
     into->setGainId(ids.firstChildElement(QSL("gain")).text());
-    into->setTextId(ids.firstChildElement(QSL("text")).text());
+    into->setSpeechtokenTextId(
+        ids.firstChildElement(QSL("speechtokenText")).text());
+    into->setNSpeechtokenParts(
+        ids.firstChildElement(QSL("nSpeechtokenParts")).text());
+    into->setSpeechtokenPart1Id(
+        ids.firstChildElement(QSL("speechtokenPart1")).text());
+    into->setSpeechtokenPart2Id(
+        ids.firstChildElement(QSL("speechtokenPart2")).text());
+    into->setSpeechtokenPart3Id(
+        ids.firstChildElement(QSL("speechtokenPart3")).text());
+    into->setSpeechtokenPart4Id(
+        ids.firstChildElement(QSL("speechtokenPart4")).text());
+    into->setSpeechtokenPart5Id(
+        ids.firstChildElement(QSL("speechtokenPart5")).text());
+    into->setSpeechtokenPart6Id(
+        ids.firstChildElement(QSL("speechtokenPart6")).text());
+    into->setSpeechtokenPart7Id(
+        ids.firstChildElement(QSL("speechtokenPart7")).text());
+    into->setSpeechtokenPart8Id(
+        ids.firstChildElement(QSL("speechtokenPart8")).text());
+    into->setSpeechtokenPart9Id(
+        ids.firstChildElement(QSL("speechtokenPart9")).text());
 }
 
 void SpinConfigFileParser::parseGeneralData(const QDomElement &data,

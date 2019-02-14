@@ -48,6 +48,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void setResultsFilePath(QString filePath);
     void savedFile(QString filePath);
+    void experimentClosed();
 
 private:
     SimpleRunner *sr;

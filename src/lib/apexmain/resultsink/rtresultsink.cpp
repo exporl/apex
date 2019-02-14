@@ -21,6 +21,7 @@
 
 #include "apexdata/experimentdata.h"
 #include "apextools/apextools.h"
+#include "apextools/xml/xmltools.h"
 #include "runner/experimentrundelegate.h"
 
 #include "../accessmanager.h"
@@ -28,8 +29,11 @@
 #include "../gui/mainwindow.h"
 #include "resultapi.h"
 
+#include "commongui/webview.h"
+#include "common/paths.h"
 #include "common/websocketserver.h"
 
+#include <QDomElement>
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QPrintDialog>
@@ -92,14 +96,14 @@ RTResultSink::RTResultSink(QUrl p_page, QMap<QString, QString> resultParameters,
     d->page =
         QUrl(QDir(d->temporaryDirectory.path()).filePath(d->page.fileName()));
     d->page.setScheme(QSL("file"));
-    connect(d->webView.data(), SIGNAL(loadingFinished(bool)), this,
-            SIGNAL(loadingFinished(bool)));
-    connect(d->webView.data(), SIGNAL(loadingFinished(bool)), this,
-            SLOT(setup()));
+
     connect(d->webView.data(), SIGNAL(hidden()), this, SIGNAL(viewClosed()));
     connect(d->webView.data(), SIGNAL(hidden()), this, SLOT(hide()));
 
+    connect(d->webView.data(), SIGNAL(loadingFinished(bool)), this,
+            SLOT(setup(bool)));
     d->webView->load(d->page);
+
     d->resultApi.reset(new ResultApi);
     connect(d->resultApi.data(), SIGNAL(exportToPdf()), this,
             SLOT(exportToPdf()));
@@ -121,16 +125,17 @@ RTResultSink::~RTResultSink()
     delete d;
 }
 
-void RTResultSink::setup()
+void RTResultSink::setup(bool ok)
 {
-    executeJavaScript(QL1S("var api = new ResultApi('ws://127.0.0.1:") +
-                      QString::number(d->webSocketServer->serverPort()) +
-                      QL1S("', '") + d->webSocketServer->csrfToken() +
-                      QL1S("');"));
-    executeJavaScript("setTimeout(function() { if (typeof initialize === "
-                      "'function') initialize(); }, 1500);");
+    runJavaScript(QL1S("var api = new ResultApi('ws://127.0.0.1:") +
+                  QString::number(d->webSocketServer->serverPort()) +
+                  QL1S("', '") + d->webSocketServer->csrfToken() + QL1S("');"));
+    runJavaScript("setTimeout(function() { if (typeof initialize === "
+                  "'function') initialize(); }, 1500);");
     setJavascriptParameters(d->resultParameters);
-    executeJavaScript(d->extraScript);
+    runJavaScript(d->extraScript);
+
+    Q_EMIT loadingFinished(ok);
 }
 
 void RTResultSink::show()
@@ -176,17 +181,17 @@ void RTResultSink::newStimulusParameters(const QVariantMap &parameters)
             pstring.append("prepare();");
         }
     }
-    executeJavaScript(pstring);
+    runJavaScript(pstring);
 }
 
 void RTResultSink::trialStarted()
 {
-    executeJavaScript("trialStarted();");
+    runJavaScript("trialStarted();");
 }
 
 void RTResultSink::stimulusStarted()
 {
-    executeJavaScript("stimulusStarted();");
+    runJavaScript("stimulusStarted();");
 }
 
 void RTResultSink::setJavascriptParameters(
@@ -218,59 +223,44 @@ void RTResultSink::setJavascriptParameters(
                 rpstring.append("};");
             }
         }
-        executeJavaScript(rpstring);
+        runJavaScript(rpstring);
     }
-}
-
-void RTResultSink::executeJavaScript(QString JScode) const
-{
-    d->webView->runJavaScript(JScode);
 }
 
 void RTResultSink::newAnswer(QString xml, bool doPlot)
 {
-    qCDebug(APEX_RS, "RTResultSink::newAnswer");
-    QString code("newAnswer(\"" + ApexTools::escapeJavascriptString(xml) +
-                 "\");");
+    runJavaScript("newAnswer('" + ApexTools::escapeJavascriptString(xml) +
+                  "');");
     if (doPlot)
-        code += "plot();";
-    d->webView->runJavaScript(code);
+        plot();
 }
 
 void RTResultSink::plot()
 {
-    d->webView->runJavaScript("plot();");
+    runJavaScript("plot();");
 }
 
 void RTResultSink::newResults(QString xml)
 {
-    qCDebug(APEX_RS, "RTResultSink::newResults");
+    QDomElement document = XmlUtils::parseString(xml).documentElement();
 
-    QXmlStreamReader xsr(xml);
-    if (xsr.error() != QXmlStreamReader::NoError)
-        qCDebug(APEX_RS, "XMLStreamReader error: %s",
-                qPrintable(xsr.errorString()));
-    while (!xsr.atEnd()) {
-        qint64 start = xsr.characterOffset();
-        xsr.readNext();
-        if (xsr.error() != QXmlStreamReader::NoError)
-            qCDebug(APEX_RS, "XMLStreamReader error: %s",
-                    qPrintable(xsr.errorString()));
-        if (xsr.isStartElement() && xsr.name() == "trial") {
-            while (!(xsr.isEndElement() && xsr.name() == "trial")) {
-                xsr.readNext();
-            }
-            xsr.readNext();
-            qint64 end = xsr.characterOffset();
-            QString text(xml.mid(start - 1, end - start - 1));
-            newAnswer(text, false);
-        }
+    for (QDomElement currentNode = document.firstChildElement("trial");
+         !currentNode.isNull();
+         currentNode = currentNode.nextSiblingElement("trial")) {
+
+        QString value;
+        QTextStream stream(&value);
+        currentNode.save(stream, 4);
+
+        newAnswer(value.trimmed(), false);
     }
+
+    plot();
 }
 
-QVariant RTResultSink::evaluateJavascript(QString script)
+QString RTResultSink::runJavaScript(QString script) const
 {
-    return d->webView->runJavaScript(script);
+    return d->webView->runJavaScript(script).toString();
 }
 
 void RTResultSink::exportToPdf()

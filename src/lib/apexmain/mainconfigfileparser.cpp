@@ -120,6 +120,9 @@ bool MainConfigFileParser::parse()
             constraintNode.attribute(QSL("expression")), constraintNode.text());
     }
 
+    if (root.firstChildElement("useInstallationWideSettings").text() == "true")
+        m_data.enableInstallationWideSettings();
+
     return true;
 }
 

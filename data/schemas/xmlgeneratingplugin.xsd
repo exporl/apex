@@ -1,6 +1,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/4.0.0/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/4.0.1/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment">
     
     <xs:complexType name="xmlGeneratingPluginType">
         <xs:sequence>

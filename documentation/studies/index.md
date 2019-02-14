@@ -38,8 +38,11 @@ devices) on the studies page.
 
 4. Then go to `New...` on the `Studies` tab.
 
-5. Simple paste the url to your git repository inside the `Url` field.
-   Libgit2 can use http/https[^2] or ssh.
+5. Paste the url to your git repository inside the `Url` field.
+   Libgit2 can use http/https[^2] or ssh. 
+   In the the `https://exporl.med.kuleuven.be/apex-study/` web interface, this 
+   url can be copied from the 'Study' tab. The interface will create a user with the same name as your device, so an example url 
+   could be `ssh://3102237ea402b301@exporl-ssh.med.kuleuven.be:8444/name-of-repo`
 
 6. Uncheck `Upload results`. Select the branch containing the experiment files,
    and click `Link study`.

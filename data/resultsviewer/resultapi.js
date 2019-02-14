@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable no-unused-vars, no-undef */
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -36,6 +37,12 @@ var ResultApi = function () {
         key: 'readFile',
         value: function readFile(path) {
             var msg = this._socket.buildInvokeMessage('readFile', [path]);
+            return this._socket.sendBlocking(msg);
+        }
+    }, {
+        key: 'writeFile',
+        value: function writeFile(path, content) {
+            var msg = this._socket.buildInvokeMessage('writeFile', [path, content]);
             return this._socket.sendBlocking(msg);
         }
     }, {

@@ -22,46 +22,34 @@
 
 #include "apextools/global.h"
 
-#include "commongui/webview.h"
-#include "common/paths.h"
-
 #include <QObject>
 #include <QString>
 #include <QUrl>
-#include <QWidget>
 
 namespace apex
 {
 
-class ApexScreenResult;
 class RTResultSinkPrivate;
 
 class APEX_EXPORT RTResultSink : public QObject
 {
-
     Q_OBJECT
 public:
     RTResultSink(QUrl page, QMap<QString, QString> resultParameters =
                                 QMap<QString, QString>(),
                  QString extraScript = 0);
-
     ~RTResultSink();
 
-    QVariant evaluateJavascript(QString script);
+    void plot();
+    QString runJavaScript(QString script) const;
     void setJavascriptParameters(QMap<QString, QString> resultParameters) const;
-    void executeJavaScript(QString JScode) const;
-
     static QByteArray createCSVtext(const QString &resultFilePath);
+    void newResults(QString xml);
 
 public Q_SLOTS:
     void show();
     void hide();
-
     void newAnswer(QString xml, bool doPlot = true);
-    void plot();
-
-    void newResults(QString xml);
-
     void trialStarted();
     void stimulusStarted();
     void newStimulusParameters(const QVariantMap &params);
@@ -70,11 +58,11 @@ Q_SIGNALS:
     void loadingFinished(bool ok);
     void viewClosed();
 
-protected:
+private:
     RTResultSinkPrivate *d;
 
 private Q_SLOTS:
-    void setup();
+    void setup(bool ok);
     void exportToPdf();
 };
 }

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Configuration for apex SPIN runner -->
-<apex:spin xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/spin.xsd">
+<apex:spin xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/spin.xsd">
   <prefix source="apexconfig">speechmaterials</prefix>
   <noises>
     <noise id="icra5_250">
@@ -69,8 +69,18 @@
     <xslt_script>mao.xsl</xslt_script>
   </general_setup>
   <id_setup>
-    <gain>gain</gain>
-    <text>sentence</text>
+    <gain>SNR</gain>
+    <speechtokenText>speechtokenText</speechtokenText>
+    <nSpeechtokenParts>nSpeechtokenParts</nSpeechtokenParts>
+    <speechtokenPart1>speechtokenPart1</speechtokenPart1>
+    <speechtokenPart2>speechtokenPart2</speechtokenPart2>
+    <speechtokenPart3>speechtokenPart3</speechtokenPart3>
+    <speechtokenPart4>speechtokenPart4</speechtokenPart4>
+    <speechtokenPart5>speechtokenPart5</speechtokenPart5>
+    <speechtokenPart6>speechtokenPart6</speechtokenPart6>
+    <speechtokenPart7>speechtokenPart7</speechtokenPart7>
+    <speechtokenPart8>speechtokenPart8</speechtokenPart8>
+    <speechtokenPart9>speechtokenPart9</speechtokenPart9>
   </id_setup>
   <!-- If changing the id of one of the screens below, don't forget to also change
     this in spinexperimentconstants.h!-->
@@ -93,13 +103,13 @@
             <text>level</text>
           </label>
           <parameterlabel row="1" col="2" id="snr">
-            <parameter>gain</parameter>
+            <parameter>SNR</parameter>
           </parameterlabel>
           <label row="2" col="1" id="sentence">
             <text>zin</text>
           </label>
           <parameterlabel row="2" col="2" id="sentence">
-            <parameter>sentence</parameter>
+            <parameter>speechtokenText</parameter>
           </parameterlabel>
         </gridLayout>
         <gridLayout row="2" width="2" height="1" col="1" id="answer_layout">
@@ -126,13 +136,13 @@
             <text>snr</text>
           </label>
           <parameterlabel row="1" col="2" id="snr">
-            <parameter>gain</parameter>
+            <parameter>SNR</parameter>
           </parameterlabel>
           <label row="2" col="1" id="sentence">
             <text>zin</text>
           </label>
           <parameterlabel row="2" col="2" id="sentence">
-            <parameter>sentence</parameter>
+            <parameter>speechtokenText</parameter>
           </parameterlabel>
         </gridLayout>
         <gridLayout row="2" width="2" height="1" col="1" id="answer_layout">
@@ -159,14 +169,14 @@
             <text>snr</text>
           </label>
           <parameterlabel row="1" col="2" id="snr">
-            <parameter>gain</parameter>
+            <parameter>SNR</parameter>
           </parameterlabel>
           <label row="2" col="1" id="sentence">
             <text>woord</text>
           </label>
           <parameterlabel row="2" col="2" id="sentence">
             <fontsize>12</fontsize>
-            <parameter>sentence</parameter>
+            <parameter>speechtokenText</parameter>
           </parameterlabel>
         </gridLayout>
         <gridLayout row="2" width="2" height="1" col="1">
@@ -228,6 +238,336 @@
         </button>
       </gridLayout>
       <default_answer_element>matrix</default_answer_element>
+    </screen>
+    <screen id="VlMatrixScreenSubject" description="Flemish Matrix screen for Subject">
+      <gridLayout id="main" width="1" height="5" rowstretch="2,1,10,2,1">
+        <label id="instructions" col="1" row="1">
+          <text>Klik de woorden aan die u denkt gehoord te hebben. Als u een woord helemaal niet verstaan heeft, hoeft u niet te gokken.</text>
+        </label>
+        <matrix id="matrix_subject" col="1" row="3">
+          <fontsize>25</fontsize>
+          <autocontinue>false</autocontinue>
+          <element row="1" col="1">
+            <name>David</name>
+            <text>David</text>
+          </element>
+          <element row="2" col="1">
+            <name>Ellen</name>
+            <text>Ellen</text>
+          </element>
+          <element row="3" col="1">
+            <name>Emma</name>
+            <text>Emma</text>
+          </element>
+          <element row="4" col="1">
+            <name>Jacob</name>
+            <text>Jacob</text>
+          </element>
+          <element row="5" col="1">
+            <name>Jeroen</name>
+            <text>Jeroen</text>
+          </element>
+          <element row="6" col="1">
+            <name>Johan</name>
+            <text>Johan</text>
+          </element>
+          <element row="7" col="1">
+            <name>Lucas</name>
+            <text>Lucas</text>
+          </element>
+          <element row="8" col="1">
+            <name>Sara</name>
+            <text>Sara</text>
+          </element>
+          <element row="9" col="1">
+            <name>Sofie</name>
+            <text>Sofie</text>
+          </element>
+          <element row="10" col="1">
+            <name>Thomas</name>
+            <text>Thomas</text>
+          </element>
+          <element row="11" col="1">
+            <name></name>
+            <text>- PAS -</text>
+          </element>
+          <element row="1" col="2">
+            <name>draagt</name>
+            <text>draagt</text>
+          </element>
+          <element row="2" col="2">
+            <name>heeft</name>
+            <text>heeft</text>
+          </element>
+          <element row="3" col="2">
+            <name>kiest</name>
+            <text>kiest</text>
+          </element>
+          <element row="4" col="2">
+            <name>koopt</name>
+            <text>koopt</text>
+          </element>
+          <element row="5" col="2">
+            <name>krijgt</name>
+            <text>krijgt</text>
+          </element>
+          <element row="6" col="2">
+            <name>leent</name>
+            <text>leent</text>
+          </element>
+          <element row="7" col="2">
+            <name>maakt</name>
+            <text>maakt</text>
+          </element>
+          <element row="8" col="2">
+            <name>wint</name>
+            <text>wint</text>
+          </element>
+          <element row="9" col="2">
+            <name>ziet</name>
+            <text>ziet</text>
+          </element>
+          <element row="10" col="2">
+            <name>zoekt</name>
+            <text>zoekt</text>
+          </element>
+          <element row="11" col="2">
+            <name></name>
+            <text>- PAS -</text>
+          </element>
+          <element row="1" col="3">
+            <name>twee</name>
+            <text>twee</text>
+          </element>
+          <element row="2" col="3">
+            <name>drie</name>
+            <text>drie</text>
+          </element>
+          <element row="3" col="3">
+            <name>vier</name>
+            <text>vier</text>
+          </element>
+          <element row="4" col="3">
+            <name>vijf</name>
+            <text>vijf</text>
+          </element>
+          <element row="5" col="3">
+            <name>zes</name>
+            <text>zes</text>
+          </element>
+          <element row="6" col="3">
+            <name>acht</name>
+            <text>acht</text>
+          </element>
+          <element row="7" col="3">
+            <name>tien</name>
+            <text>tien</text>
+          </element>
+          <element row="8" col="3">
+            <name>elf</name>
+            <text>elf</text>
+          </element>
+          <element row="9" col="3">
+            <name>twaalf</name>
+            <text>twaalf</text>
+          </element>
+          <element row="10" col="3">
+            <name>veel</name>
+            <text>veel</text>
+          </element>
+          <element row="11" col="3">
+            <name></name>
+            <text>- PAS -</text>
+          </element>
+          <element row="1" col="4">
+            <name>beige</name>
+            <text>beige</text>
+          </element>
+          <element row="2" col="4">
+            <name>blauwe</name>
+            <text>blauwe</text>
+          </element>
+          <element row="3" col="4">
+            <name>bruine</name>
+            <text>bruine</text>
+          </element>
+          <element row="4" col="4">
+            <name>gele</name>
+            <text>gele</text>
+          </element>
+          <element row="5" col="4">
+            <name>grijze</name>
+            <text>grijze</text>
+          </element>
+          <element row="6" col="4">
+            <name>groene</name>
+            <text>groene</text>
+          </element>
+          <element row="7" col="4">
+            <name>paarse</name>
+            <text>paarse</text>
+          </element>
+          <element row="8" col="4">
+            <name>rode</name>
+            <text>rode</text>
+          </element>
+          <element row="9" col="4">
+            <name>witte</name>
+            <text>witte</text>
+          </element>
+          <element row="10" col="4">
+            <name>zwarte</name>
+            <text>zwarte</text>
+          </element>
+          <element row="11" col="4">
+            <name></name>
+            <text>- PAS -</text>
+          </element>
+          <element row="1" col="5">
+            <name>bedden</name>
+            <text>bedden</text>
+          </element>
+          <element row="2" col="5">
+            <name>boten</name>
+            <text>boten</text>
+          </element>
+          <element row="3" col="5">
+            <name>doeken</name>
+            <text>doeken</text>
+          </element>
+          <element row="4" col="5">
+            <name>dozen</name>
+            <text>dozen</text>
+          </element>
+          <element row="5" col="5">
+            <name>fietsen</name>
+            <text>fietsen</text>
+          </element>
+          <element row="6" col="5">
+            <name>jassen</name>
+            <text>jassen</text>
+          </element>
+          <element row="7" col="5">
+            <name>kousen</name>
+            <text>kousen</text>
+          </element>
+          <element row="8" col="5">
+            <name>manden</name>
+            <text>manden</text>
+          </element>
+          <element row="9" col="5">
+            <name>pennen</name>
+            <text>pennen</text>
+          </element>
+          <element row="10" col="5">
+            <name>ringen</name>
+            <text>ringen</text>
+          </element>
+          <element row="11" col="5">
+            <name></name>
+            <text>- PAS -</text>
+          </element>
+        </matrix>
+        
+        <gridLayout id="next_sentence" row="5" col="1" width="1" height="1">
+          <button id="next">
+            <text>Volgende zin</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <default_answer_element>matrix_subject</default_answer_element>
+    </screen>
+    <screen id="VlMatrixScreenExperimenter" description="Flemish Matrix screen for Experimenter">
+      <gridLayout id="main" width="1" height="7" rowstretch="1,1,3,1,2,3,1">
+        <gridLayout id="list" width="2" height="1" col="1" row="1" columnstretch="1,4">
+          <label id="list_label" col="1" row="1">
+            <text>lijst</text>
+          </label>
+          <parameterlabel id="list" col="2" row="1">
+            <parameter>list</parameter>
+          </parameterlabel>
+        </gridLayout>
+        <gridLayout id="SNR" width="2" height="1" col="1" row="2" columnstretch="1,4">
+          <label id="SNRlabel" col="1" row="1">
+            <text>SNR</text>
+          </label>
+          <parameterlabel id="SNR" col="2" row="1">
+            <parameter>SNR</parameter>
+          </parameterlabel>
+        </gridLayout>
+        <gridLayout id="words" width="5" height="1" col="1" row="4">
+          <parameterlabel id="name" col="1" row="1">
+            <bgcolor>yellow</bgcolor>
+            <parameter>speechtokenPart1</parameter>
+          </parameterlabel>      
+          <parameterlabel id="verb" col="2" row="1">
+            <bgcolor>yellow</bgcolor>
+            <parameter>speechtokenPart2</parameter>
+          </parameterlabel>
+          <parameterlabel id="number" col="3" row="1">
+            <bgcolor>yellow</bgcolor>
+            <parameter>speechtokenPart3</parameter>
+          </parameterlabel>
+          <parameterlabel id="color" col="4" row="1">
+            <bgcolor>yellow</bgcolor>
+            <parameter>speechtokenPart4</parameter>
+          </parameterlabel>
+          <parameterlabel id="object" col="5" row="1">
+            <bgcolor>yellow</bgcolor>
+            <parameter>speechtokenPart5</parameter>
+          </parameterlabel>
+        </gridLayout>
+        <matrix id="matrix_experimenter" col="1" row="5">
+          <fontsize>25</fontsize>
+          <autocontinue>false</autocontinue>
+          <element row="1" col="1">
+            <name>1</name>
+            <text>correct</text>
+          </element>
+          <element row="2" col="1">
+            <name>0</name>
+            <text>fout</text>
+          </element>
+          <element row="1" col="2">
+            <name>1</name>
+            <text>correct</text>
+          </element>
+          <element row="2" col="2">
+            <name>0</name>
+            <text>fout</text>
+          </element>
+          <element row="1" col="3">
+            <name>1</name>
+            <text>correct</text>
+          </element>
+          <element row="2" col="3">
+            <name>0</name>
+            <text>fout</text>
+          </element>
+          <element row="1" col="4">
+            <name>1</name>
+            <text>correct</text>
+          </element>
+          <element row="2" col="4">
+            <name>0</name>
+            <text>fout</text>
+          </element>
+          <element row="1" col="5">
+            <name>1</name>
+            <text>correct</text>
+          </element>
+          <element row="2" col="5">
+            <name>0</name>
+            <text>fout</text>
+          </element>
+        </matrix>
+        <gridLayout id="next_sentence" row="7" col="1" width="1" height="1">
+          <button id="next">
+            <text>Volgende zin</text>
+          </button>
+        </gridLayout>
+      </gridLayout>
+      <default_answer_element>matrix_experimenter</default_answer_element>
     </screen>
   </custom_screens>
 </apex:spin>

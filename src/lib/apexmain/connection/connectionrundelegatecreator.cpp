@@ -458,8 +458,7 @@ void ConnectionRunDelegateCreator::mf_ReportUnconnectedItems()
                 m_Checker.mp_eCheckFrom(sToID);
             /*if( eRes == details::ConnectionChecker::mc_eNoneConnected )
         details::f_ThrowNoneConnected( sToID );
-      else*/ if (
-                eRes == details::ConnectionChecker::mc_eSomeConnected)
+      else*/ if (eRes == details::ConnectionChecker::mc_eSomeConnected)
                 details::f_ReportNotAllOutputConnected(sToID);
         }
     }

@@ -1,4 +1,4 @@
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment">
   <!--  @doc
    @what: NVA word list nr. 30 level 65 dB
    @description: Speech in quiet, each word presented once in a fixed order

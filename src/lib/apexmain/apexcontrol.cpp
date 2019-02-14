@@ -12,8 +12,10 @@
 
 #include "apexwriters/experimentwriter.h"
 
+#include "calibration/calibrationdatabase.h"
 #include "calibration/calibrator.h"
 
+#include "apextools/settingsfactory.h"
 #include "common/paths.h"
 
 #include "device/soundcardsettings.h"
@@ -222,6 +224,14 @@ bool ApexControl::configure()
         return false;
     }
 
+    if (MainConfigFileParser::Get()
+            .data()
+            .areInstallationWideSettingsEnabled()) {
+        SettingsFactory::initializeForInstallationWideSettings();
+    } else {
+        SettingsFactory::initializeForUserSpecificSettings();
+    }
+
     qCInfo(APEX_RS, "ApexControl: Done");
     m_Wnd->SetOpenDir(
         Paths::searchDirectory(QL1S("examples"), Paths::dataDirectories()));
@@ -316,6 +326,9 @@ void ApexControl::parseCommandLine()
         QCommandLineOption(QSL("disable-bertha"),
                            tr("Disable bertha as audio backend for acoustic "
                               "experiments and use the old system")));
+    parser.addOption(QCommandLineOption(
+        QSL("calibrationsetup"),
+        tr("Specify calibration setup to be used in the experiment"), "Calib"));
 
     parser.process(*qApp);
 
@@ -331,9 +344,28 @@ void ApexControl::parseCommandLine()
     noResults = parser.isSet(QSL("noresults"));
     autoSaveResults = parser.isSet(QSL("autosaveresults"));
     exitAfter = parser.isSet(QSL("exitafter"));
+    bool useCalibrationSetup = parser.isSet(QSL("calibrationsetup"));
+    calibrationSetup = parser.value("calibrationsetup");
 
     /* command line argument overwrites config */
     useBertha = parser.isSet(QSL("disable-bertha")) ? false : useBertha;
+
+    if (useCalibrationSetup) {
+        if (CalibrationDatabase().hardwareSetups().contains(calibrationSetup)) {
+            qCInfo(APEX_RS, "%s", qPrintable(QSL("%1").arg(
+                                      tr("Setting calibration to setup \"%1\"")
+                                          .arg(calibrationSetup))));
+            CalibrationDatabase().setCurrentHardwareSetup(calibrationSetup);
+        } else {
+            qCInfo(
+                APEX_RS, "%s",
+                qPrintable(QSL("%1").arg(
+                    tr("Calibration setup \"%1\" does not exist! Reverting to "
+                       "default: \"%2\"")
+                        .arg(calibrationSetup,
+                             CalibrationDatabase().currentHardwareSetup()))));
+        }
+    }
 
     if (autoStartExperiments)
         flags |= ExperimentControl::AutoStart;
@@ -405,6 +437,8 @@ bool ApexControl::newExperiment(data::ExperimentData *data)
             this, SLOT(errorMessage(QString, QString)));
     connect(experimentControl.data(), SIGNAL(savedResults(QString)),
             mod_experimentselector.data(), SIGNAL(savedFile(QString)));
+    connect(experimentControl.data(), SIGNAL(experimentClosed()),
+            mod_experimentselector.data(), SIGNAL(experimentClosed()));
 
     ErrorHandler::instance()->clearCounters();
 

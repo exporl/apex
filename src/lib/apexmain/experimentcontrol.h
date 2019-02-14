@@ -83,7 +83,7 @@ Q_SIGNALS:
      */
     void experimentDone();
     void savedResults(QString filename);
-
+    void experimentClosed();
     void errorMessage(const QString &source, const QString &message);
 
 private:

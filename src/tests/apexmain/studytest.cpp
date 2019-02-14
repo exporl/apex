@@ -28,6 +28,7 @@
 
 #include "apextools/apextools.h"
 #include "apextools/exceptions.h"
+#include "apextools/settingsfactory.h"
 
 #include "common/testutils.h"
 
@@ -53,6 +54,7 @@ void ApexMainTest::testStudyDialog()
     QTimer::singleShot(5000, &dialog, SLOT(reject()));
     QTimer::singleShot(500, [&]() {
         QSignalSpy sharePublicKeySpy(&dialog, SIGNAL(sharePublicKey(QString)));
+        QTest::qWait(250);
         dialog.findChild<QAbstractButton *>(QSL("sharePublicKeyButton"))
             ->click();
         QCOMPARE(sharePublicKeySpy.count(), 1);
@@ -126,6 +128,7 @@ void ApexMainTest::testStudyDialog()
 
         /* different from experiments branch is valid */
         dialog.linkStudySetResultsBranch(QSL("resultsbranch"));
+        QTest::qWait(250);
         dialog.findChild<QLineEdit *>(QSL("experimentsUrlEdit"))->setFocus();
         dialog.findChild<QLineEdit *>(QSL("experimentsUrlEdit"))->clearFocus();
         QCOMPARE(experimentUrlSetSpy.count(), 2);
@@ -338,6 +341,7 @@ void ApexMainTest::testStudy()
     managedDir.init();
     QVERIFY(managedDir.exists());
     managedDir.setAuthor(QSL("dummy"), QSL("dummy@dummy.com"));
+
     QFile newFile(dir1.path() + QL1S("/index.apf"));
     QVERIFY(newFile.open(QIODevice::ReadWrite));
     newFile.write(QL1S("someData\n").data());
@@ -353,7 +357,7 @@ void ApexMainTest::testStudy()
 
     QTemporaryDir dir2;
     Study study(QSL("teststudy"), dir1.path(), QSL("master"), dir1.path(),
-                QSL("results"), dir2.path());
+                QSL("results"), dir2.path(), dir2.path(), dir2.path());
     QVERIFY(study.isPrivate());
     QVERIFY(study.statusMessage().isEmpty());
     QSignalSpy updateExperimentsDoneSpy(&study,
@@ -432,21 +436,20 @@ void ApexMainTest::testStudyManager()
     managedDir.add(newFile2.fileName());
 
     QTemporaryDir settingsDir;
-    QSettings::setDefaultFormat(QSettings::IniFormat);
-    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope,
-                       settingsDir.path());
+    apex::SettingsFactory::initialize(settingsDir.path());
 
     QTemporaryDir dir2;
     StudyManager manager;
     manager.setRootPath(dir2.path());
-    QVERIFY(QFile::exists(QDir(dir2.path()).filePath(QSL("id_rsa"))));
-    QVERIFY(QFile::exists(QDir(dir2.path()).filePath(QSL("id_rsa.pub"))));
+    QDir keyDir(ApexPaths::GetStudyManagerDirectory());
+    QVERIFY(QFile::exists(keyDir.filePath(QSL("id_rsa"))));
+    QVERIFY(QFile::exists(keyDir.filePath(QSL("id_rsa.pub"))));
 
     /* We rely on the comment having this format to make adding
      * a device to a gerrit instance for studies easier.
      * Account name and email are extracted from this comment.
      */
-    QFile publicKeyFile(QDir(dir2.path()).filePath(QSL("id_rsa.pub")));
+    QFile publicKeyFile(keyDir.filePath(QSL("id_rsa.pub")));
     publicKeyFile.open(QIODevice::ReadOnly);
     QString publicKeyData = QString::fromUtf8(publicKeyFile.readAll());
 #ifdef Q_OS_ANDROID
@@ -455,10 +458,12 @@ void ApexMainTest::testStudyManager()
                  .arg(android::ApexAndroidBridge::getDeviceSerialNumber())
                  .arg(android::ApexAndroidBridge::getDeviceSerialNumber()));
 #else
-    QCOMPARE(publicKeyData.split(' ').last(),
-             QString::fromLatin1("%1@%2")
-                 .arg(ApexTools::getUser())
-                 .arg(QHostInfo::localHostName()));
+    QString shortKeyUser = QHostInfo::localHostName();
+    QString longKeyUser = QString::fromLatin1("%1@%2")
+                              .arg(ApexTools::getUser())
+                              .arg(QHostInfo::localHostName());
+    QString keyUser = publicKeyData.split(' ').last();
+    QVERIFY(keyUser == shortKeyUser || keyUser == longKeyUser);
 #endif
 
     QSignalSpy studiesUpdatedSpy(
@@ -474,23 +479,24 @@ void ApexMainTest::testStudyManager()
     QVERIFY(manager.activeStudy());
     QVERIFY(manager.activeStudy()->isPublic());
 
-    QSettings settings;
-    settings.beginGroup(QSL("StudyManager"));
-    QCOMPARE(settings.value(QSL("activeStudy")).toString(),
+    QScopedPointer<QSettings> settings(
+        apex::SettingsFactory().createSettings());
+    settings->beginGroup(QSL("StudyManager"));
+    QCOMPARE(settings->value(QSL("activeStudy")).toString(),
              manager.activeStudy()->name());
-    int studyCount = settings.beginReadArray(QSL("studies"));
+    int studyCount = settings->beginReadArray(QSL("studies"));
     QCOMPARE(studyCount, 1);
     for (int i = 0; i < studyCount; ++i) {
-        settings.setArrayIndex(i);
-        QCOMPARE(settings.value(QSL("name")).toString(),
+        settings->setArrayIndex(i);
+        QCOMPARE(settings->value(QSL("name")).toString(),
                  manager.activeStudy()->name());
-        QCOMPARE(settings.value(QSL("experimentsUrl")).toString(),
+        QCOMPARE(settings->value(QSL("experimentsUrl")).toString(),
                  manager.activeStudy()->experimentsUrl());
-        QCOMPARE(settings.value(QSL("experimentsBranch")).toString(),
+        QCOMPARE(settings->value(QSL("experimentsBranch")).toString(),
                  manager.activeStudy()->experimentsBranch());
-        QCOMPARE(settings.value(QSL("resultsUrl")).toString(),
+        QCOMPARE(settings->value(QSL("resultsUrl")).toString(),
                  manager.activeStudy()->resultsUrl());
-        QCOMPARE(settings.value(QSL("resultsBranch")).toString(),
+        QCOMPARE(settings->value(QSL("resultsBranch")).toString(),
                  manager.activeStudy()->resultsBranch());
     }
 
@@ -606,9 +612,7 @@ void ApexMainTest::testStudyFull()
     TEST_EXCEPTIONS_TRY
 
     QTemporaryDir settingsDir;
-    QSettings::setDefaultFormat(QSettings::IniFormat);
-    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope,
-                       settingsDir.path());
+    apex::SettingsFactory::initialize(settingsDir.path());
 
     QTemporaryDir dir1;
     ManagedDirectory remoteDir(dir1.path());
@@ -624,8 +628,9 @@ void ApexMainTest::testStudyFull()
     QTemporaryDir dir2;
     StudyManager manager;
     manager.setRootPath(dir2.path());
-    QVERIFY(QFile::exists(QDir(dir2.path()).filePath(QSL("id_rsa"))));
-    QVERIFY(QFile::exists(QDir(dir2.path()).filePath(QSL("id_rsa.pub"))));
+    QDir keyDir(ApexPaths::GetStudyManagerDirectory());
+    QVERIFY(QFile::exists(keyDir.filePath(QSL("id_rsa"))));
+    QVERIFY(QFile::exists(keyDir.filePath(QSL("id_rsa.pub"))));
     QVERIFY(!manager.activeStudy());
     QPointer<StudyDialog> dialog = nullptr;
     QTimer::singleShot(500, [&]() {
@@ -889,6 +894,35 @@ void ApexMainTest::testManagedDirectory()
     QTemporaryDir dir6;
     ManagedDirectory managedDir6(dir6.path());
     QVERIFY_EXCEPTION_THROWN(managedDir6.open(), ApexException);
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::testManagedDirectoryWithExternalWorkdir()
+{
+    TEST_EXCEPTIONS_TRY
+
+    QTemporaryDir repo1;
+    QTemporaryDir workdir1;
+    ManagedDirectory managedDirectory1;
+    managedDirectory1.setPath(repo1.path(), workdir1.path());
+    managedDirectory1.init();
+    managedDirectory1.setAuthor(QSL("dummy"), QSL("dummy@dummy.com"));
+
+    QFile newFile(QDir(workdir1.path()).filePath("new-file"));
+    newFile.open(QIODevice::WriteOnly);
+    newFile.close();
+
+    managedDirectory1.add("new-file");
+
+    QTemporaryDir repo2;
+    ManagedDirectory managedDirectory2(repo2.path());
+    managedDirectory2.init(true);
+
+    managedDirectory1.setRemote(repo2.path());
+    managedDirectory1.push(Qt::ConnectionType::DirectConnection);
+
+    QVERIFY(managedDirectory2.lastCommitMessage().contains(QSL("new-file")));
 
     TEST_EXCEPTIONS_CATCH
 }

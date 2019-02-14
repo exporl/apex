@@ -1,0 +1,89 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>flowrunner tests</title>
+  <link href="external/mocha-5.2.0.css" rel="stylesheet" />
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <script src="external/chai-4.2.0.js"></script>
+  <script src="external/mocha-5.2.0.js"></script>
+
+  <script>
+    mocha.setup({
+      ui: 'bdd'
+    });
+  </script>
+
+  <script src="../listenrunner.js"></script>
+  <script src="conditions.test.js"></script>
+
+  <script>
+    function createCollector(runner) {
+      var n = 1;
+      var passes = 0;
+      var failures = 0;
+      var lines = [];
+      var result;
+
+      runner.on('start', function() {
+        lines.push('1..' + runner.grepTotal(runner.suite));
+      });
+
+      runner.on('test end', function() {
+        n++;
+      });
+
+      runner.on('pending', function(test) {
+        lines.push('ok ' + n + ' ' + title(test) + ' # SKIP -');
+      });
+
+      runner.on('pass', function(test) {
+        passes++;
+        lines.push('ok ' + n + ' ' + title(test));
+      });
+
+      runner.on('fail', function(test, err) {
+        failures++;
+        lines.push('not ok ' + n + ' ' + title(test))
+      });
+
+      runner.once('end', function() {
+        lines.push('# tests ' + (passes + failures));
+        lines.push('# pass ' + passes);
+        lines.push('# fail ' + failures);
+        result = lines.join("\n");
+      });
+
+      function title(test) {
+        return test.fullTitle().replace(/#/g, '');
+      }
+      
+      function getResult() {
+        return result;
+      } 
+
+      return {
+        getResult: getResult
+      };
+    }
+    
+    mocha.checkLeaks();
+    
+    var allDonePromise = new Promise(
+      function(resolve, reject) {
+        // delay mocha, otherwise start-listeners are registered too late
+        mocha.delay();
+        var runner = mocha.run();
+        var collector = createCollector(runner);
+        runner.once('end', function() {
+          resolve(collector.getResult());
+        });
+        // continue once all listeners are registered
+        runner.suite.run();
+      }
+    );
+  </script>
+</body>
+</html>

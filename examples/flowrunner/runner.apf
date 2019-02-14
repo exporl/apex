@@ -7,6 +7,11 @@
   <head>
     <title>Flow runner</title>
 
+    <!-- fix initial scaling-->
+    <script src="external/jquery-1.11.1.min.js"></script>
+    <script src="external/jquery.mobile-1.4.5.min.js"></script>
+    <meta name="viewport" content="width=device-width">
+
     <!-- (optional) stylesheet with modern UI/Apex look -->
     <link rel="stylesheet" href="external/themes/apex-theme.min.css" />
     <link rel="stylesheet" href="external/themes/jquery.mobile.icons.min.css" />

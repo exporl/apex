@@ -66,6 +66,12 @@ QDomElement ResultParametersWriter::addElement(QDomDocument *doc,
         }
     }
 
+    // resultscript
+    if (!data.extraScript().isEmpty()) {
+        result.appendChild(XmlUtils::createTextElement(doc, "resultscript",
+                                                       data.extraScript()));
+    }
+
     // showresultsduring
     if (data.showRTResults()) {
         result.appendChild(XmlUtils::createTextElement(

@@ -1,5 +1,5 @@
-#include "apextools/apextools.h"
 #include "apextools/apexpaths.h"
+#include "apextools/apextools.h"
 
 #include "apextools/signalprocessing/iirfilter.h"
 #include "apextools/signalprocessing/peakfilter.h"

@@ -1,4 +1,4 @@
-#define APEX_SCHEMA_VERSION "4.0.0"
+#define APEX_SCHEMA_VERSION "4.0.1"
 #define APEX_NAMESPACE                                                         \
     "http://med.kuleuven.be/exporl/apex/" APEX_SCHEMA_VERSION "/experiment"
 #define EXPERIMENT_SCHEMA_URL                                                  \

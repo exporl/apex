@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<apex:apex version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!-- @doc
   @what: Basegain of noise: 0 - Aapting device parameters - gain of device varies according to user input
   @description: Noise and a stimulus (one-een) are presented simultaneously in the left ear, when you click on 'higher/lower', you hear again the noise and stimulus in the left ear but the gain of the noise is adjusted with +2/-2 (=stepsize, see output box)

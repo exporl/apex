@@ -39,11 +39,9 @@ namespace apex
 class StudyPrivate
 {
 public:
-    void openManagedDirectory(ManagedDirectory &directory, const QString &path,
-                              const QString &url, const QString &branch)
+    void openManagedDirectory(ManagedDirectory &directory, const QString &url,
+                              const QString &branch)
     {
-        QDir rootDir(rootPath);
-        directory.setPath(path);
         if (directory.exists()) {
             directory.open();
         } else {
@@ -61,8 +59,9 @@ public:
                                     QHostInfo::localHostName()));
 #endif
         }
-        directory.setKeyPaths(rootDir.filePath(QSL("id_rsa.pub")),
-                              rootDir.filePath(QSL("id_rsa")));
+        QDir keyDir(keyPath);
+        directory.setKeyPaths(keyDir.filePath(QSL("id_rsa.pub")),
+                              keyDir.filePath(QSL("id_rsa")));
     }
 
     QString name;
@@ -71,9 +70,9 @@ public:
     QString resultsUrl;
     QString resultsBranch;
 
-    QString rootPath;
     QString experimentsPath;
-    QString resultsPath;
+    QString resultsWorkdirPath;
+    QString keyPath;
 
     ManagedDirectory experimentsDirectory;
     ManagedDirectory resultsDirectory;
@@ -81,7 +80,8 @@ public:
 
 Study::Study(const QString &name, const QString &experimentsUrl,
              const QString &experimentsBranch, const QString &resultsUrl,
-             const QString &resultsBranch, const QString &rootPath)
+             const QString &resultsBranch, const QString &rootPath,
+             const QString &resultsWorkdirRootPath, const QString &keyPath)
     : d(new StudyPrivate)
 {
     d->name = name;
@@ -89,14 +89,16 @@ Study::Study(const QString &name, const QString &experimentsUrl,
     d->experimentsBranch = experimentsBranch;
     d->resultsUrl = resultsUrl;
     d->resultsBranch = resultsBranch;
+    d->keyPath = keyPath;
 
-    d->rootPath = rootPath;
-    QDir rootDir(rootPath);
-    d->experimentsPath = rootDir.filePath(name + QL1S("/experiments"));
-    rootDir.mkpath(name + QL1S("/experiments"));
+    d->experimentsPath = QDir(rootPath).filePath(name + QL1S("/experiments"));
+    d->experimentsDirectory.setPath(d->experimentsPath, d->experimentsPath);
     if (isPrivate()) {
-        d->resultsPath = rootDir.filePath(name + QL1S("/results"));
-        rootDir.mkpath(name + QL1S("/results"));
+        QString resultsRepoPath =
+            QDir(rootPath).filePath(name + QL1S("/results"));
+        d->resultsWorkdirPath =
+            QDir(resultsWorkdirRootPath).filePath(name + QL1S("/results"));
+        d->resultsDirectory.setPath(resultsRepoPath, d->resultsWorkdirPath);
     }
 
     connect(&d->experimentsDirectory, SIGNAL(pullDone()), this,
@@ -131,16 +133,16 @@ bool Study::isPrivate() const
 void Study::updateExperiments()
 {
     if (!d->experimentsDirectory.isOpen())
-        d->openManagedDirectory(d->experimentsDirectory, d->experimentsPath,
-                                d->experimentsUrl, d->experimentsBranch);
+        d->openManagedDirectory(d->experimentsDirectory, d->experimentsUrl,
+                                d->experimentsBranch);
     d->experimentsDirectory.pull();
 }
 
 void Study::fetchExperiments(bool blocking)
 {
     if (!d->experimentsDirectory.isOpen())
-        d->openManagedDirectory(d->experimentsDirectory, d->experimentsPath,
-                                d->experimentsUrl, d->experimentsBranch);
+        d->openManagedDirectory(d->experimentsDirectory, d->experimentsUrl,
+                                d->experimentsBranch);
     d->experimentsDirectory.fetch(blocking ? Qt::BlockingQueuedConnection
                                            : Qt::QueuedConnection);
 }
@@ -148,8 +150,8 @@ void Study::fetchExperiments(bool blocking)
 void Study::checkoutExperiments(bool blocking)
 {
     if (!d->experimentsDirectory.isOpen())
-        d->openManagedDirectory(d->experimentsDirectory, d->experimentsPath,
-                                d->experimentsUrl, d->experimentsBranch);
+        d->openManagedDirectory(d->experimentsDirectory, d->experimentsUrl,
+                                d->experimentsBranch);
     d->experimentsDirectory.checkout(blocking ? Qt::BlockingQueuedConnection
                                               : Qt::QueuedConnection);
 }
@@ -163,8 +165,8 @@ void Study::addResult(const QString &path)
             tr("Result %1 doesn't belong to study %2").arg(path).arg(name()));
 
     if (!d->resultsDirectory.isOpen())
-        d->openManagedDirectory(d->resultsDirectory, d->resultsPath,
-                                d->resultsUrl, d->resultsBranch);
+        d->openManagedDirectory(d->resultsDirectory, d->resultsUrl,
+                                d->resultsBranch);
     d->resultsDirectory.add(path);
     updateResults();
 }
@@ -174,8 +176,8 @@ void Study::updateResults(bool blocking)
     if (isPublic())
         throw ApexStringException(tr("Results not supported by public study."));
     if (!d->resultsDirectory.isOpen())
-        d->openManagedDirectory(d->resultsDirectory, d->resultsPath,
-                                d->resultsUrl, d->resultsBranch);
+        d->openManagedDirectory(d->resultsDirectory, d->resultsUrl,
+                                d->resultsBranch);
 
     if (d->resultsDirectory.hasLocalRemote() ||
         d->resultsDirectory.commitsAheadOrigin() > 0)
@@ -190,8 +192,8 @@ void Study::pullResults()
     if (isPublic())
         throw ApexStringException(tr("Results not supported by public study."));
     if (!d->resultsDirectory.isOpen())
-        d->openManagedDirectory(d->resultsDirectory, d->resultsPath,
-                                d->resultsUrl, d->resultsBranch);
+        d->openManagedDirectory(d->resultsDirectory, d->resultsUrl,
+                                d->resultsBranch);
     d->resultsDirectory.pull();
 }
 
@@ -227,7 +229,12 @@ QString Study::experimentsPath() const
 
 QString Study::resultsPath() const
 {
-    return d->resultsPath;
+    return d->resultsWorkdirPath;
+}
+
+QString Study::keyPath() const
+{
+    return d->keyPath;
 }
 
 QString Study::indexExperiment() const
@@ -254,10 +261,10 @@ bool Study::belongsToStudy(const QString &path) const
     if (QDir::isAbsolutePath(path))
         return (path.startsWith(d->experimentsPath) &&
                 QDir(d->experimentsPath).exists(path)) ||
-               (isPrivate() && path.startsWith(d->resultsPath) &&
-                QDir(d->resultsPath).exists(path));
+               (isPrivate() && path.startsWith(d->resultsWorkdirPath) &&
+                QDir(d->resultsWorkdirPath).exists(path));
     return QDir(d->experimentsPath).exists(path) ||
-           (isPrivate() && QDir(d->resultsPath).exists(path));
+           (isPrivate() && QDir(d->resultsWorkdirPath).exists(path));
 }
 
 QString Study::makeResultsFilePath(const QString &experimentPath) const
@@ -288,10 +295,10 @@ QString Study::makeResultsFilePath(const QString &experimentPath) const
                      .toString(Qt::ISODate)
                      .remove(QChar('-'))
                      .remove(QChar(':')));
-    QString absoluteResultPath =
-        QDir::cleanPath(QDir(d->resultsPath).filePath(relativeResultPath));
+    QString absoluteResultPath = QDir::cleanPath(
+        QDir(d->resultsWorkdirPath).filePath(relativeResultPath));
 
-    QDir(d->resultsPath).mkpath(QFileInfo(relativeResultPath).path());
+    QDir(d->resultsWorkdirPath).mkpath(QFileInfo(relativeResultPath).path());
     return absoluteResultPath;
 }
 
@@ -299,8 +306,8 @@ QString Study::statusMessage()
 {
     try {
         if (!d->experimentsDirectory.isOpen())
-            d->openManagedDirectory(d->experimentsDirectory, d->experimentsPath,
-                                    d->experimentsUrl, d->experimentsBranch);
+            d->openManagedDirectory(d->experimentsDirectory, d->experimentsUrl,
+                                    d->experimentsBranch);
         return d->experimentsDirectory.lastCommitMessage();
     } catch (std::exception &e) {
         qCWarning(APEX_RS, "Unable to get study %s statusMessage: %s",
@@ -308,4 +315,4 @@ QString Study::statusMessage()
     }
     return QString();
 }
-}
+} // namespace apex

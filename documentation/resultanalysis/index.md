@@ -113,7 +113,7 @@ And all the resultsviewer code can be found in these files:
     <script src="resultsviewer-config.js" type="text/javascript"> </script>
 ```
 
-Rhe following div is used for interface elements:
+The following div is used for interface elements:
 
 ```xml
     <div id="chartbuttons"></div>

@@ -24,8 +24,9 @@
 
 #include <QDomDocument>
 #include <QNetworkReply>
-
 #include <QtTest>
+
+#include "apexdata/experimentdata.h"
 
 class QWebFrame;
 
@@ -79,6 +80,11 @@ private Q_SLOTS:
     void testResultViewerConvertToCSV();
     void testResultViewer_data();
     void testResultViewer();
+    void testResultViewerExtraScriptIsInjected();
+    void testResultViewerResultParametersAreInjected();
+    void testResultViewerCannotBeConstructedWithoutResultFile();
+    void testResultViewerResultFileWithoutResultPageCanBeLoaded();
+    void testResultViewerExtraScriptLoadedBeforeAnswersAreAdded();
     void testStandaloneUpgrader();
     void testSoundcardsDialog();
     void testSoundcardSettings();
@@ -97,6 +103,7 @@ private Q_SLOTS:
     void testStudyManager();
     void testStudyFull();
     void testManagedDirectory();
+    void testManagedDirectoryWithExternalWorkdir();
 
     void testFlowRunner();
 
@@ -105,6 +112,7 @@ private Q_SLOTS:
      */
     void testRepeatButton();
 
+    void testApexResultSink_resultscriptAndResultparameters();
     void cleanupTestCase();
 
 private:
@@ -115,6 +123,8 @@ private:
 
     void wait();
     QPair<QWebFrame *, apex::AccessManager *> initAccesManager();
+    apex::data::ExperimentData createExperimentData();
+    const QString readFileAsString(const QString &filePath);
 
 public:
     bool networkError;

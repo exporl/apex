@@ -21,6 +21,8 @@
 
 #include "mru.h"
 
+#include "apextools/settingsfactory.h"
+
 #include <QDebug>
 #include <QFileInfo>
 #include <QMenu>
@@ -53,36 +55,36 @@ MRU::~MRU()
 
 void MRU::loadFromFile()
 {
-    QSettings settings;
+    QScopedPointer<QSettings> settings(SettingsFactory().createSettings());
 
-    int size = settings.beginReadArray(recentFilesGroup);
+    int size = settings->beginReadArray(recentFilesGroup);
     for (int i = 0; i < size; ++i) {
-        settings.setArrayIndex(i);
-        addItem(settings.value(fileKey).toString());
+        settings->setArrayIndex(i);
+        addItem(settings->value(fileKey).toString());
     }
-    settings.endArray();
+    settings->endArray();
 
-    settings.beginGroup(recentDirGroup);
-    setOpenDir(settings.value(dirKey).toString());
-    settings.endGroup();
+    settings->beginGroup(recentDirGroup);
+    setOpenDir(settings->value(dirKey).toString());
+    settings->endGroup();
 }
 
 void MRU::saveToFile()
 {
-    QSettings settings;
+    QScopedPointer<QSettings> settings(SettingsFactory().createSettings());
 
-    settings.beginWriteArray(recentFilesGroup);
+    settings->beginWriteArray(recentFilesGroup);
     for (int i = 0; i < m_items->size(); ++i) {
-        settings.setArrayIndex(i);
-        settings.setValue(fileKey, m_items->at(i)->text());
+        settings->setArrayIndex(i);
+        settings->setValue(fileKey, m_items->at(i)->text());
     }
-    settings.endArray();
+    settings->endArray();
 
-    settings.beginGroup(recentDirGroup);
-    settings.setValue(dirKey, m_openDirName);
-    settings.endGroup();
+    settings->beginGroup(recentDirGroup);
+    settings->setValue(dirKey, m_openDirName);
+    settings->endGroup();
 
-    settings.sync();
+    settings->sync();
 }
 
 void MRU::setOpenDir(const QString &dirName)

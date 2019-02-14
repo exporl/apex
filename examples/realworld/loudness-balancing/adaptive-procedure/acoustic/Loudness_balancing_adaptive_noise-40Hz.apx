@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment">
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment">
   <!-- @doc
   @what: Loudness balancing using an adaptive procedure with acoustic stimuli
   @description: The gain of the left ear is always the same. The gain of the right ear is adaptively changed according to user input. The participant needs to judge if the left or the right ear is louder or where the sound is located in the head. Two staircases are mixed in order to prevent participants to notice patterns. One staircase starts at an intensity that should be lower than the balanced value, and one staircase that should be higher.

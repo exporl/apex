@@ -36,8 +36,7 @@ Options::Options()
       autoSaveResults(false),
       nbResponsesThatCount(0),
       trialOrder(ORDER_INVALID),
-      soundCard(DefaultSoundcard),
-      generatePluginProcedure(true)
+      soundCard(DefaultSoundcard)
 {
 }
 
@@ -137,11 +136,6 @@ void SpinUserSettings::setSoundCard(SoundCard value)
     options.soundCard = value;
 }
 
-void SpinUserSettings::setGeneratePluginProcedure(bool value)
-{
-    options.generatePluginProcedure = value;
-}
-
 void SpinUserSettings::setSubjectName(const QString &subject)
 {
     info.subjectName = subject;
@@ -194,7 +188,7 @@ void SpinUserSettings::addLevels(SpeakerLevels levels, Headphone::Speaker which)
 
 void SpinUserSettings::setProcedureType(ProcedureType type)
 {
-    Q_ASSERT(type == CONSTANT || type == ADAPTIVE);
+    Q_ASSERT(type == CONSTANT || type == ADAPTIVE || type == ADAPTIVE_BK);
 
     procedure.type = type;
 }
@@ -202,7 +196,7 @@ void SpinUserSettings::setProcedureType(ProcedureType type)
 void SpinUserSettings::setAdaptingMaterial(Material material)
 {
     Q_ASSERT(material == SPEECH || material == NOISE);
-    Q_ASSERT(procedure.type == ADAPTIVE);
+    Q_ASSERT(procedure.type == ADAPTIVE || procedure.type == ADAPTIVE_BK);
 
     procedure.adaptingMaterial = material;
 }
@@ -214,7 +208,7 @@ void SpinUserSettings::addStepsize(double stepsize, uint trial)
 
 void SpinUserSettings::setRepeatFirst(bool repeat)
 {
-    Q_ASSERT(procedure.type == ADAPTIVE);
+    Q_ASSERT(procedure.type == ADAPTIVE || procedure.type == ADAPTIVE_BK);
 
     procedure.repeatFirst = repeat;
 }
@@ -285,11 +279,6 @@ void SpinUserSettings::setNoiseJump(int channel, double jump)
     Q_ASSERT(jump >= RANDOM);
 
     options.noiseJumps.insert(channel, jump);
-}
-
-bool SpinUserSettings::generatePluginProcedure() const
-{
-    return options.generatePluginProcedure;
 }
 
 void SpinUserSettings::setLockSpeechlevels(bool lock)
@@ -365,7 +354,7 @@ const ProcedureType &SpinUserSettings::procedureType() const
 
 const Material &SpinUserSettings::adaptingMaterial() const
 {
-    Q_ASSERT(procedure.type == ADAPTIVE);
+    Q_ASSERT(procedure.type == ADAPTIVE || procedure.type == ADAPTIVE_BK);
 
     return procedure.adaptingMaterial;
 }
@@ -379,7 +368,7 @@ const QMap<uint, double> &SpinUserSettings::stepsizes() const
 
 bool SpinUserSettings::repeatFirst() const
 {
-    Q_ASSERT(procedure.type == ADAPTIVE);
+    Q_ASSERT(procedure.type == ADAPTIVE || procedure.type == ADAPTIVE_BK);
 
     return procedure.repeatFirst;
 }
@@ -513,7 +502,7 @@ double SpinUserSettings::snr() const
             }
         }
 
-        if (procedureType() == ADAPTIVE) {
+        if (procedureType() == ADAPTIVE || procedure.type == ADAPTIVE_BK) {
             if (adaptingMaterial() == data::SPEECH && speechCount != 1)
                 throw ApexStringException(tr("SNR not defined"));
             if (adaptingMaterial() == data::NOISE && noiseCount != 1)
@@ -678,10 +667,12 @@ void SpinUserSettings::print() const
     text += QString("procedure type: %1\n")
                 .arg(procedureType() == CONSTANT ? "constant" : "adaptive");
 
-    if (procedureType() == ADAPTIVE) {
+    if (procedureType() == ADAPTIVE || procedure.type == ADAPTIVE_BK) {
         text += QString("adapting material: %1\n")
                     .arg(adaptingMaterial() == SPEECH ? "speech" : "noise");
+    }
 
+    if (procedureType() == ADAPTIVE) {
         QMap<uint, double> steps = stepsizes();
         text += "stepsizes:\n";
 

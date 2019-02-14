@@ -100,8 +100,9 @@ QString TrainingProcedure::firstScreen()
 
 double TrainingProcedure::progress() const
 {
-    return (trialsDone >= totalTrials - 2) ? 100.0 : 100.0 * trialsDone /
-                                                         (totalTrials - 2);
+    return (trialsDone >= totalTrials - 2)
+               ? 100.0
+               : 100.0 * trialsDone / (totalTrials - 2);
 }
 
 ResultHighlight

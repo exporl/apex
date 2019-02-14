@@ -378,12 +378,12 @@ bool OutputWaveFile::mp_bOpen(const QString &fileName,
         bytesPerFrame = channelCount * bytesPerSample;
 
         // RIFF
-        strncpy(riffHeader->riffID, "RIFF", 4);
+        memcpy(riffHeader->riffID, "RIFF", 4);
         riffHeader->riffSIZE = waveHeaderSize - 8;
-        strncpy(riffHeader->riffFORMAT, "WAVE", 4);
+        memcpy(riffHeader->riffFORMAT, "WAVE", 4);
 
         // FMT
-        strncpy(fmtHeader->fmtID, "fmt ", 4);
+        memcpy(fmtHeader->fmtID, "fmt ", 4);
         fmtHeader->fmtSIZE = sizeof(WAVEFORM);
         fmtHeader->fmtFORMAT.wFormatTag = wFormat;
         fmtHeader->fmtFORMAT.channelCount = (short)channelCount;
@@ -393,7 +393,7 @@ bool OutputWaveFile::mp_bOpen(const QString &fileName,
         fmtHeader->fmtFORMAT.wBitsPerSample = wBitsPS;
 
         // DATA
-        strncpy(dataHeader->dataID, "data", 4);
+        memcpy(dataHeader->dataID, "data", 4);
         dataHeader->dataSIZE = 0;
 
         outputFile->write((char *)riffHeader, sizeof(RIFF));

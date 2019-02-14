@@ -5,11 +5,11 @@ Introduction
 ------------
 
 An APEX 4 experiment is defined in an experiment file. Experiment files are
-defined in the XML format see [xml](#xml), and it is advised,
-but not compulsory, to use OxygenXML to edit the XML format see [introduction](../introduction#xmleditor).
+defined in the XML format (see [xml](#xml)), and it is advised,
+but not compulsory, to use OxygenXML to edit the XML format (see [introduction](../introduction#xmleditor)).
 
 While experiment files can have any filename and any extension, it is
-advised to give your experiment file the extension , such that is
+advised to give your experiment file the extension apx, such that is
 immediately associated with APEX 4. Also, there is a clear distinction between
 *experiment* files and *result* files, which will receive the extension *apr*.
 
@@ -122,8 +122,8 @@ be parsed by existing and freely available parsers. Moreover, many tools
 exist for editing, transforming or otherwise processing XML files. In
 addition, a good XML editor can provide suggestions and documentation
 while constructing an experiment file. An XML file consists of a series
-of *elements*. Elements are started by their name surrounded by and ,
-the begin tag, and ended by their name surrounded by and , the end tag.
+of *elements*. Elements are started by their name surrounded by '<' and '>',
+the begin tag, and ended by their name surrounded by '</' and '>', the end tag.
 
 ```xml
         <b>1</b>
@@ -132,13 +132,13 @@ the begin tag, and ended by their name surrounded by and , the end tag.
 Every element can have content. There are two types of content: *simple*
 content, for example a string or a number, and *complex* content: other
 elements. An element can also have attributes: extra properties of the
-element that can be set. In the following example, element is started on
-line 1 and ended on line \[xml:end\]. Element contains *complex*
-content: the elements and . Element contains *simple* content: the
-numerical value 1. Element again contains *complex* content: the
-elements and . Element has an attribute named attrib1 with value 15.
-Element on line \[xml:empty\] shows the special syntax for specifying an
-empty element. This is equivalent to . The reference manual lists all
+element that can be set. In the following example, an element is started on
+line 1 and ended on line \[xml:end\]. Element a contains *complex*
+content: the elements b and c. Element b contains *simple* content: the
+numerical value 1. Element c again contains *complex* content: the
+elements c1 and c2. Element c1 has an attribute named attrib1 with value 15.
+Element c2 on line \[xml:empty\] shows the special syntax for specifying an
+empty element. This is equivalent to '<c2></c2>'. The reference manual lists all
 possible elements and attributes.
 
 ```xml
@@ -169,7 +169,7 @@ done.
 
 A schema describes the structure of the document and specifies where
 each element is allowed to occur. In addition it contains exhaustive
-documentation. The APEX 4 schema’s are located under `/schemas`
+documentation. The APEX 4 schemas are located under `/schemas`
 in the main APEX 4 directory.
 
 A document is called *valid* when it adheres to the associated schema

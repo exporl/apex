@@ -150,6 +150,7 @@ private slots:
     void updateStepsizeBoxTitle();
     void setToAdaptive();
     void setToConstant();
+    void setToAdaptiveBK();
     void insertInStepsizeTable();
     void removeFromStepsizeTable(int row, int col);
 

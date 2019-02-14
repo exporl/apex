@@ -151,8 +151,10 @@ template <class tUnique>
 tUnique *Singleton<tUnique>::sm_pInstance = 0;
 
 template <class tUnique>
-SingletonDestroyer<tUnique> Singleton<
-    tUnique>::sm_Destroyer; // delete the singleton when application exits
+SingletonDestroyer<tUnique> Singleton<tUnique>::sm_Destroyer; // delete the
+                                                              // singleton when
+                                                              // application
+                                                              // exits
 
 /**
   * SingletonDestroyer

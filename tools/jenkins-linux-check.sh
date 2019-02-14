@@ -13,4 +13,6 @@ else
     popd >/dev/null
 fi
 
+npm i
+
 exec common/tools/jenkins-linux-check.sh "$@" --exclude "documentation"

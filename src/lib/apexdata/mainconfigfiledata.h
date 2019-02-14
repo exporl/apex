@@ -42,6 +42,9 @@ public:
     void setStudyShareUrl(const QString &url);
     QString studyShareUrl() const;
 
+    void enableInstallationWideSettings();
+    bool areInstallationWideSettingsEnabled() const;
+
 private:
     QString m_experiment_schema;
     QString m_scripts_path;
@@ -53,6 +56,7 @@ private:
     QMap<QString, QString> interactiveConstraints;
     bool bertha;
     QString shareUrl;
+    bool installationWideSettingsEnabled;
 };
 }
 }

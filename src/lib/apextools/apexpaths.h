@@ -40,11 +40,13 @@ public:
 
     static QString GetNonBinaryPluginPath();
     static QString GetScriptsPath();
-    static QString GetStudiesDirectory();
+    static QString GetStudyManagerDirectory();
+    static QString GetStudyRootPath();
+    static QString GetStudyRootResultsWorkdirPath();
 
 private:
     static QString GetSchemaPath(const QString &filename);
 };
-}
+} // namespace apex
 
 #endif //#ifndef _APEX_SRC_LIB_APEXTOOLS_APEXPATHS_H_

@@ -16,8 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "coh.h"
 #include "cohexpander.h"
+#include "coh.h"
 
 namespace coh
 {

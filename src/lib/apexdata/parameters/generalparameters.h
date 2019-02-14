@@ -57,19 +57,19 @@ public:
     };
 
     /**
-      * Wait for start.
-      * @return true if the start signal has to be emitted before the next trial
+     * Wait for start.
+     * @return true if the start signal has to be emitted before the next trial
      * starts
-      */
+     */
     bool GetWaitForStart() const
     {
         return m_bWaitForStart;
     };
 
     /**
-      * Check if the skip shortcut (F7) can be used.
-      * @return true if allowed
-      */
+     * Check if the skip shortcut (F7) can be used.
+     * @return true if allowed
+     */
     bool GetAllowSkip() const
     {
         return m_bAllowSkip;
@@ -102,7 +102,6 @@ public:
 private:
     bool m_bExitAfter;
     bool m_bAutoSave;
-
     bool m_bWaitForStart;
     bool m_bAllowSkip;
     bool m_bRunOutputTest;
@@ -110,6 +109,6 @@ private:
     QString m_scriptLibrary;
     QVariantMap m_scriptParameters;
 };
-}
-}
+} // namespace data
+} // namespace apex
 #endif

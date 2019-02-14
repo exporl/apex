@@ -16,8 +16,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "coh.h"
 #include "cohlevelchecker.h"
+#include "coh.h"
 
 #include <QtDebug>
 

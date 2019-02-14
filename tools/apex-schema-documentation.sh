@@ -5,7 +5,7 @@ cd "$(dirname $(readlink -f ${BASH_SOURCE[0]}))/.."
 ROOTDIR=$(pwd)
 SCHEMADIR=$ROOTDIR/data/schemas
 OXYGEN=
-OUTPUT="$ROOTDIR"/documentation/apex3-documentation-schemas
+OUTPUT="$ROOTDIR"/documentation/apex-documentation-schemas
 INDEX=false
 
 parsecmd() {

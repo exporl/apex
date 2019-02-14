@@ -98,6 +98,7 @@ fi
 popd
 
 # protobuf
+pushd protobuf
 [ -f protobuf-2.6.1.tar.gz ] || wget -q https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
 [ -d protobuf ] || (tar -xf protobuf-2.6.1.tar.gz && mv protobuf-2.6.1 protobuf)
 if [ ! -f $BUILD_LIBS/bin/protoc ]; then
@@ -244,7 +245,7 @@ dobuild() {
     # xml2
     mkdir -p xml2
     pushd xml2
-    [ -d libxml2 ] || git clone -q git://git.gnome.org/libxml2
+    [ -d libxml2 ] || git clone -q https://gitlab.gnome.org/GNOME/libxml2.git
     if [  ! -f $CURRENT_PREFIX/lib/libxml2.so ]; then
         pushd libxml2
         git checkout bdec2183f34b37ee89ae1d330c6ad2bb4d76605f

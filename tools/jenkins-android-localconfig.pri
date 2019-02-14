@@ -15,7 +15,7 @@
 
 # Uncomment to disable certain modules although all dependencies are available
 # Do not disable flash here!
-CLEBS_DISABLED += src/plugins/matlabfilter src/plugins/ledfeedbackplugin src/plugins/osccontroller src/programs/ledcontrollertest
+CLEBS_DISABLED += src/plugins/matlabfilter src/plugins/ledfeedbackplugin src/plugins/osccontroller src/programs/ledcontrollertest examples
 
 # Use multiple cores in windows
 #win32:QMAKE_CXXFLAGS += /MP2

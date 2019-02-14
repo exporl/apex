@@ -43,6 +43,8 @@ private slots:
     void testRecursiveCopy();
     void testGenerateKeyPair();
     void testRecursiveFind();
+    void settingsFactoryTest_initializeForUserSpecificSettings();
+    void settingsFactoryTest_initializeForInstallationWideSettings();
 };
 
 #endif

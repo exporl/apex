@@ -59,6 +59,10 @@ FlowRunner::FlowRunner() : d(new FlowRunnerPrivate)
         Paths::searchFile(QSL("js/polyfill.js"), Paths::dataDirectories()),
         QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
     ApexTools::recursiveCopy(
+        Paths::searchFile(QSL("resultsviewer/resultsprocessor.js"),
+                          Paths::dataDirectories()),
+        QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
+    ApexTools::recursiveCopy(
         Paths::searchDirectory(QSL("resultsviewer/external"),
                                Paths::dataDirectories()),
         d->temporaryDirectory.path());
@@ -78,6 +82,7 @@ bool FlowRunner::select(const QString &path)
         return false;
     }
     connect(this, SIGNAL(savedFile(QString)), this, SLOT(onSavedFile(QString)));
+    connect(this, SIGNAL(experimentClosed()), this, SLOT(onExperimentClosed()));
 
     d->flowApi.reset(new FlowApi(this, QFileInfo(path).absoluteDir()));
     d->webSocketServer.reset(new WebSocketServer(QSL("FlowRunner")));
@@ -144,10 +149,20 @@ void FlowRunner::onSavedFile(const QString &filePath)
         WebSocketServer::buildInvokeMessage(QSL("savedFile"), arguments));
 }
 
+void FlowRunner::onExperimentClosed()
+{
+    if (d->webSocketServer.isNull())
+        return;
+
+    QVariantList arguments;
+    d->webSocketServer->broadcastMessage(WebSocketServer::buildInvokeMessage(
+        QSL("experimentClosed"), arguments));
+}
+
 void FlowRunner::select(data::ExperimentData *data)
 {
-    makeInvisible();
     Q_EMIT selected(data);
+    makeInvisible();
 }
 
 void FlowRunner::makeInvisible()
@@ -161,4 +176,4 @@ void FlowRunner::makeVisible()
     d->webView->show();
     ApexControl::Get().mainWindow()->quickWidgetBugHide();
 }
-}
+} // namespace apex

@@ -246,12 +246,62 @@ QString SpinConfig::customScreenId(const QString &description) const
     return custScreens[description].id;
 }
 
-const QString &SpinConfig::textId() const
+const QString &SpinConfig::getSpeechtokenTextId() const
 {
-    return txtId;
+    return speechtokenTextId;
 }
 
-const QString &SpinConfig::gainId() const
+const QString &SpinConfig::getSpeechtokenPart1Id() const
+{
+    return speechtokenPart1Id;
+}
+
+const QString &SpinConfig::getNSpeechtokenParts() const
+{
+    return nSpeechtokenParts;
+}
+
+const QString &SpinConfig::getSpeechtokenPart2Id() const
+{
+    return speechtokenPart2Id;
+}
+
+const QString &SpinConfig::getSpeechtokenPart3Id() const
+{
+    return speechtokenPart3Id;
+}
+
+const QString &SpinConfig::getSpeechtokenPart4Id() const
+{
+    return speechtokenPart4Id;
+}
+
+const QString &SpinConfig::getSpeechtokenPart5Id() const
+{
+    return speechtokenPart5Id;
+}
+
+const QString &SpinConfig::getSpeechtokenPart6Id() const
+{
+    return speechtokenPart6Id;
+}
+
+const QString &SpinConfig::getSpeechtokenPart7Id() const
+{
+    return speechtokenPart7Id;
+}
+
+const QString &SpinConfig::getSpeechtokenPart8Id() const
+{
+    return speechtokenPart8Id;
+}
+
+const QString &SpinConfig::getSpeechtokenPart9Id() const
+{
+    return speechtokenPart9Id;
+}
+
+const QString &SpinConfig::getGainId() const
 {
     return snrId;
 }
@@ -382,9 +432,59 @@ void SpinConfig::addCustomScreen(const QString &description, const QString &id,
     custScreens[description] = custScreen;
 }
 
-void SpinConfig::setTextId(const QString &id)
+void SpinConfig::setSpeechtokenTextId(const QString &id)
 {
-    txtId = id;
+    speechtokenTextId = id;
+}
+
+void SpinConfig::setNSpeechtokenParts(const QString &id)
+{
+    nSpeechtokenParts = id;
+}
+
+void SpinConfig::setSpeechtokenPart1Id(const QString &id)
+{
+    speechtokenPart1Id = id;
+}
+
+void SpinConfig::setSpeechtokenPart2Id(const QString &id)
+{
+    speechtokenPart2Id = id;
+}
+
+void SpinConfig::setSpeechtokenPart3Id(const QString &id)
+{
+    speechtokenPart3Id = id;
+}
+
+void SpinConfig::setSpeechtokenPart4Id(const QString &id)
+{
+    speechtokenPart4Id = id;
+}
+
+void SpinConfig::setSpeechtokenPart5Id(const QString &id)
+{
+    speechtokenPart5Id = id;
+}
+
+void SpinConfig::setSpeechtokenPart6Id(const QString &id)
+{
+    speechtokenPart6Id = id;
+}
+
+void SpinConfig::setSpeechtokenPart7Id(const QString &id)
+{
+    speechtokenPart7Id = id;
+}
+
+void SpinConfig::setSpeechtokenPart8Id(const QString &id)
+{
+    speechtokenPart8Id = id;
+}
+
+void SpinConfig::setSpeechtokenPart9Id(const QString &id)
+{
+    speechtokenPart9Id = id;
 }
 
 void SpinConfig::setGainId(const QString &id)

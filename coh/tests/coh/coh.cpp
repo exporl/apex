@@ -260,19 +260,20 @@ void CohTest::coh()
         sequence.data(),
         MapMaker<QPair<Coh::Electrode, Coh::Electrode>, unsigned>()
             << qMakePair(
-                qMakePair(Coh::CI_ELECTRODE_IC1, Coh::CI_ELECTRODE_EC1),
-                100u)));
+                   qMakePair(Coh::CI_ELECTRODE_IC1, Coh::CI_ELECTRODE_EC1),
+                   100u)));
     QVERIFY(!checkCohSequenceLevel(
         sequence.data(),
         MapMaker<QPair<Coh::Electrode, Coh::Electrode>, unsigned>()
             << qMakePair(
-                qMakePair(Coh::CI_ELECTRODE_IC2, Coh::CI_ELECTRODE_EC1),
-                100u)));
+                   qMakePair(Coh::CI_ELECTRODE_IC2, Coh::CI_ELECTRODE_EC1),
+                   100u)));
     QVERIFY(!checkCohSequenceLevel(
         sequence.data(),
         MapMaker<QPair<Coh::Electrode, Coh::Electrode>, unsigned>()
             << qMakePair(
-                qMakePair(Coh::CI_ELECTRODE_IC1, Coh::CI_ELECTRODE_EC1), 99u)));
+                   qMakePair(Coh::CI_ELECTRODE_IC1, Coh::CI_ELECTRODE_EC1),
+                   99u)));
 
     QCOMPARE(ciSequenceLength(sequence.data()), 1e4);
 

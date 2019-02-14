@@ -20,7 +20,9 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_APEXRESULTSINK_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_APEXRESULTSINK_H_
 
-#include "apexmodule.h"
+#include "apextools/global.h"
+
+#include "apexmain/apexmodule.h"
 
 #include <qtextstream.h>
 
@@ -39,11 +41,11 @@ Apex result collector module
 
 @author Tom Francart,,,
 */
-class ApexResultSink : public ApexModule
+class APEX_EXPORT ApexResultSink : public ApexModule
 {
     Q_OBJECT
 public:
-    ApexResultSink(ExperimentRunDelegate &p_rd);
+    ApexResultSink(ExperimentRunDelegate &p_rd, QDateTime experimentStartTime);
 
     ~ApexResultSink();
 
@@ -65,6 +67,11 @@ public: // slot replacements
       * Extra XML will be appended to the results file
       */
     void setExtraXml(const QString &x);
+
+    /**
+      * provide information about how the experiment was stopped
+      */
+    void setStopCondition(const bool &stoppedByUser);
 
     static const QString c_fileFooter;
     static const QString resultsExtension; // .apx
@@ -101,9 +108,11 @@ private:
     //              TrialResult* currentTrial;
     std::vector<TrialResult *> m_Results;
 
+    QDateTime m_startTime;
+    QDateTime m_endTime;
+    QString m_stopCondition;
     QString m_filename;
     QString m_extraXml;
-    QDateTime m_endTime;
     bool m_bSaved;
 
     /*      bool m_bSaturation;

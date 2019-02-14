@@ -17,7 +17,6 @@
  * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apexdata/screen/screen.h"
 #include "apexdata/screen/answerlabelelement.h"
 #include "apexdata/screen/arclayoutelement.h"
 #include "apexdata/screen/buttonelement.h"
@@ -31,6 +30,7 @@
 #include "apexdata/screen/parameterlistelement.h"
 #include "apexdata/screen/pictureelement.h"
 #include "apexdata/screen/picturelabelelement.h"
+#include "apexdata/screen/screen.h"
 #include "apexdata/screen/screenelementvisitor.h"
 #include "apexdata/screen/screensdata.h"
 #include "apexdata/screen/texteditelement.h"

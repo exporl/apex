@@ -1,7 +1,0 @@
-digraph RunningScreen {
-__init__ [shape=point];
-Helper [label="Helper", shape=circle];
-ScreenDone [label="ScreenDone", shape=doublecircle];
-
-__init__ -> Helper;
-}

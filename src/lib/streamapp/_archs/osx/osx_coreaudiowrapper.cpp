@@ -138,8 +138,8 @@ struct tCoreAudioUserData {
             }
             ::free(pBufList);
         }
-        ac_bAsInput ? m_nMaxInputChan = nChannels : m_nMaxOutputChan =
-                                                        nChannels;
+        ac_bAsInput ? m_nMaxInputChan = nChannels
+                    : m_nMaxOutputChan = nChannels;
     }
 
     /**

@@ -110,4 +110,4 @@ F-Droid
 
 To publish the apk to the fdroid repo, simply copy it to the repository folder
 and call the deploy script, see the [release
-guide](apex-release-guide.md#releasing-binaries-android) for more information.
+guide](apex-release-guide.md) for more information.

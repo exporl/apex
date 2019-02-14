@@ -52,10 +52,11 @@ int ArcLayoutPrivate::doLayout(const QRect &rect, bool activate) const
     if (!items.count())
         return 0;
 
-    const double arc =
-        items.count() < 3 ? ARC_PI : arcType == ArcLayout::ARC_FULL
-                                         ? 2 * ARC_PI / (items.count() - 1)
-                                         : ARC_PI / (items.count() - 2);
+    const double arc = items.count() < 3
+                           ? ARC_PI
+                           : arcType == ArcLayout::ARC_FULL
+                                 ? 2 * ARC_PI / (items.count() - 1)
+                                 : ARC_PI / (items.count() - 2);
 
     QSize minimumSize;
     Q_FOREACH (QLayoutItem *item, items)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <?define BaseRegKey="Software\ExpORL\APEX4" ?>
-    <Product Id="5AC5D6AA-B7FC-4CBC-BDBD-DAA945ED1316" UpgradeCode="E7DA4D21-0679-494A-93D5-6865E2E05B6C" Name="Apex" Manufacturer="ExpORL" Version="4.0.0" Language="1033">
+    <Product Id="5AC5D6AA-B7FC-4CBC-BDBD-DAA945ED1316" UpgradeCode="E7DA4D21-0679-494A-93D5-6865E2E05B6C" Name="Apex" Manufacturer="ExpORL" Version="4.0.1" Language="1033">
         <Package Id="*" Description="Apex" Manufacturer="ExpORL" InstallerVersion="200" InstallPrivileges="elevated" InstallScope="perMachine" Compressed="yes"/>
         <MediaTemplate EmbedCab="yes"/>
         <Icon Id="apex.exe" SourceFile="$(env.ApexInstallPath)/bin/apex.exe"/>
@@ -35,10 +35,18 @@
             <Directory Id="PersonalFolder" />
         </Directory>
 
+        <DirectoryRef Id="TARGETDIR">
+            <Merge Id="VCRedist" SourceFile="C:\Program Files (x86)\Common Files\Merge Modules\Microsoft_VC100_CRT_x86.msm" DiskId="1" Language="0"/>
+        </DirectoryRef>
+
         <Feature Id="Complete" Title="Apex" Absent="disallow" AllowAdvertise="no" Description="The complete program.">
             <ComponentRef Id="FiletypeComp"/>
             <ComponentRef Id="ProgramMenuComp"/>
             <ComponentGroupRef Id="AllFilesGroup"/>
+        </Feature>
+
+        <Feature Id="VCRedist" Title="Visual C++ 2010 Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+            <MergeRef Id="VCRedist"/>
         </Feature>
 
         <!-- copy of Minimal UI with WelcomeEulaDlg -> WelcomeDlg -->

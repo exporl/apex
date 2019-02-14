@@ -47,8 +47,6 @@ private Q_SLOTS:
     void testAudioDriver();
 
     void testCalibration();
-
-    void testPluginExperiment();
 };
 
 #endif

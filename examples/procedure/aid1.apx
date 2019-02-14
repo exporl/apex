@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" version="1">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" version="1">
   <!-- @doc
   @what: Regression test - Different stimuli can occur during one trial (according to the difficulty of the experiment ('snr') (- no connections or gain!)
  @description: adaptive procedure, one of the following stimuli are played: 'een', 'twee', 'drie', 'vier' or 'vijf' => If you click correct/false the experiment becomes more difficult/easy corresponding with the 'snr' parameter - the larger the values of snr, the easier the experiment

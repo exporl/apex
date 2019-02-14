@@ -345,7 +345,8 @@ tType **f_InitMem(const unsigned ac_nChannelCount,
     for (unsigned i = 0; i < ac_nChannelCount; ++i) {
         c_pArray[i] = new tType[ac_nBufferSize];
         if (ac_bInitMem)
-            memset(c_pArray[i], 0, sizeof(tType) * ac_nBufferSize);
+            memset(static_cast<void *>(c_pArray[i]), 0,
+                   sizeof(tType) * ac_nBufferSize);
     }
 
     return c_pArray;

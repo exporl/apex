@@ -39,6 +39,7 @@
 #include "gui/mainwindow.h"
 
 #include "runner/experimentrundelegate.h"
+#include "study/studymanager.h"
 
 #include "apexcontrol.h"
 #include "apexresultsink.h"
@@ -96,7 +97,7 @@ void apex::ApexResultSink::SaveAs(bool askFilename)
 
             dlg.setAcceptMode(QFileDialog::AcceptSave);
             QStringList docLocations = QStandardPaths::standardLocations(
-                QStandardPaths::DocumentsLocation);
+                QStandardPaths::GenericDataLocation);
 #ifndef Q_OS_ANDROID
             if (m_filename.isEmpty() && !docLocations.isEmpty())
 #else
@@ -174,8 +175,12 @@ void apex::ApexResultSink::Finished(bool askFilename)
 namespace apex
 {
 
-ApexResultSink::ApexResultSink(ExperimentRunDelegate &p_rd)
-    : ApexModule(p_rd), m_filename(), m_bSaved(false)
+ApexResultSink::ApexResultSink(ExperimentRunDelegate &p_rd,
+                               QDateTime experimentStartTime)
+    : ApexModule(p_rd),
+      m_startTime(experimentStartTime),
+      m_filename(),
+      m_bSaved(false)
 {
     // currentTrial=new TrialResult;
     //      currentTrial=NULL;
@@ -262,7 +267,7 @@ bool apex::ApexResultSink::Save(const QString &p_filename,
 
 void apex::ApexResultSink::PrintXMLHeader(QTextStream &out)
 {
-    QString cfn = ApexControl::Get().GetCurrentExperiment().fileName();
+    QString cfn = m_rd.GetData().fileName();
 
 #ifdef WIN32
     cfn = "/" + cfn;
@@ -300,6 +305,11 @@ void apex::ApexResultSink::PrintIntro(QTextStream &out)
         out << "</parameters>" << endl;
     }
 
+    QString resultscript = m_rd.GetData().resultParameters()->extraScript();
+    if (!resultscript.isEmpty()) {
+        out << "<resultscript>" << resultscript << "</resultscript>" << endl;
+    }
+
     out << "<general>" << endl;
 
     out << "\t<apex_version>" << APEX_SCHEMA_VERSION << "</apex_version>"
@@ -318,21 +328,17 @@ void apex::ApexResultSink::PrintIntro(QTextStream &out)
     out << "\t<device_id>" << ApexTools::getApexGUID().toString()
         << "</device_id>" << endl;
 
-    QString description =
-        ApexControl::Get().GetCurrentExperiment().experimentDescription();
+    QString description = m_rd.GetData().experimentDescription();
     if (!description.isEmpty()) {
         out << "\t<description>" << description << "</description>" << endl;
     }
 
-    out << "\t<startdate>"
-        << xmlEscapedText(
-               ApexControl::Get().GetStartTime().toString(Qt::ISODate))
+    out << "\t<startdate>" << xmlEscapedText(m_startTime.toString(Qt::ISODate))
         << "</startdate>" << endl;
     out << "\t<enddate>" << xmlEscapedText(m_endTime.toString(Qt::ISODate))
         << "</enddate>" << endl;
-    out << "\t<duration unit=\"seconds\">"
-        << ApexControl::Get().GetStartTime().secsTo(m_endTime) << "</duration>"
-        << endl;
+    out << "\t<duration unit=\"seconds\">" << m_startTime.secsTo(m_endTime)
+        << "</duration>" << endl;
     if (m_rd.GetData().resultParameters()) {
         QString rtscript(
             m_rd.GetData().resultParameters()->resultPage().toString());
@@ -364,6 +370,8 @@ void apex::ApexResultSink::PrintIntro(QTextStream &out)
         }
         out << "\t</interactive>" << endl;
     }
+
+    out << "\t<stopped_by>" << m_stopCondition << "</stopped_by>" << endl;
 
     out << "</general>" << endl;
 }
@@ -430,15 +438,27 @@ const QString apex::ApexResultSink::CollectEndResults()
  */
 void apex::ApexResultSink::SetFilename(const QString &p_filename)
 {
-    QRegExp re("\\.\\w{2,4}$");
-    m_filename = p_filename;
 
-    if (re.indexIn(p_filename) == -1) {
-        qCDebug(APEX_RS, "ApexResultSink::SetFilename: No match");
+    /* exception case:
+     * If results are to be saved in an active study
+     * only allow the filename itself to change, but
+     * put the files in the expected results folder */
+    QString expDir = QFileInfo(m_filename).absolutePath();
+    if (StudyManager::instance()->belongsToActiveStudy(expDir)) {
+        if (StudyManager::instance()->activeStudy()->isPrivate())
+            expDir = StudyManager::instance()->activeStudy()->resultsPath();
+        else
+            expDir = ApexPaths::GetStudyRootPath();
+        m_filename = expDir + "/" + QFileInfo(p_filename).fileName();
+    } else
+        m_filename = p_filename;
+
+    QRegExp re("\\.\\w{2,4}$");
+    if (re.indexIn(p_filename) == -1)
         m_filename += resultsExtension;
-    } else {
-        qCDebug(APEX_RS, "ApexResultSink::SetFilename: match");
-    }
+
+    qCDebug(APEX_RS) << QString("Saving results to %1")
+                            .arg(QFileInfo(m_filename).absoluteFilePath());
 
     return;
 }
@@ -446,6 +466,11 @@ void apex::ApexResultSink::SetFilename(const QString &p_filename)
 void apex::ApexResultSink::setExtraXml(const QString &x)
 {
     m_extraXml = x;
+}
+
+void apex::ApexResultSink::setStopCondition(const bool &stoppedByUser)
+{
+    m_stopCondition = QString(stoppedByUser ? "user" : "procedure");
 }
 
 /**
@@ -459,7 +484,7 @@ bool apex::ApexResultSink::MakeFilenameUnique()
 
     if (QFile::exists(m_filename)) {
         tfilename =
-            m_filename.left(m_filename.length() - 4); // remove extention
+            m_filename.left(m_filename.length() - 4); // remove extension
 
         int i = 1;
         while (QFile::exists(

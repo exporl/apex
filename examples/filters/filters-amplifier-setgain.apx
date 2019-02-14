@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!-- @doc
   @what: Adapting device parameters: gain of device varies according to user input
   @description: the stimulus wd1.wav and noise are played simultaneously in the left ear, when you click the button 'higher'/'lower', the stimulus and the noise are played again with a different gain for the noise (= gain + 2/- 2, see output box 'parameterlist')

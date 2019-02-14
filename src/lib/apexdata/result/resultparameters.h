@@ -44,10 +44,8 @@ public:
 
     bool Parse(const QDomElement &p_paramElement);
 
-    virtual bool SetParameter(const QString &arg1, const QString &arg2,
-                              const QString &arg3, const QDomElement &arg4);
-
     const QString &matlabScript() const;
+
     const QString &subject() const;
     void setSubject(const QString &subject);
 
@@ -59,31 +57,30 @@ public:
 
     const QUrl &resultPage() const;
     void setResultPage(const QString &scriptname);
+
     bool showRTResults() const;
 
-    tScriptParameters resultParameters() const;
-
     const QString extraScript() const;
+    void setExtraScript(const QString &extraScript);
 
-    // New functions for version 3.1.1
-
+    tScriptParameters resultParameters() const;
     void setResultParameter(const QString &name, const QString &value);
 
     bool operator==(const ResultParameters &other) const;
 
 private:
+    bool SetParameter(const QString &p_name, const QString &p_value,
+                      const QDomElement &p_elem);
+
     QString m_matlabScript;
     QString m_subject;
-    QString m_extraScript; // javascript code to be executed after loading the
-                           // results page, from tag <resultscript>
+    QString m_extraScript;
+    tScriptParameters m_resultParameters;
 
     QUrl m_resultPage;
     bool m_showRealtime;
     bool m_showAfter;
-
     bool m_bSaveProcessedResults;
-
-    tScriptParameters mResultParameters;
 };
 }
 }

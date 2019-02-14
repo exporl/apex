@@ -53,7 +53,7 @@ void BerthaTest::testFileInput()
 
         processor.prepare();
         processor.start();
-        QTest::qWait(250);
+        QTest::qWait(2000);
         processor.release();
 
         cmn::SndFile outputFilePtr;
@@ -63,6 +63,7 @@ void BerthaTest::testFileInput()
         SF_INFO compareSfinfo;
         outputSfinfo.format = 0;
         compareSfinfo.format = 0;
+        QTest::qWait(200);
         outputFilePtr.reset(outputPath, SFM_READ, &outputSfinfo);
         compareFilePtr.reset(comparePath, SFM_READ, &compareSfinfo);
 
@@ -100,7 +101,7 @@ void BerthaTest::testFileInput()
 
         processor.prepare();
         processor.start();
-        QTest::qWait(250);
+        QTest::qWait(2000);
         processor.release();
 
         cmn::SndFile outputFilePtr;
@@ -110,6 +111,7 @@ void BerthaTest::testFileInput()
         SF_INFO compareSfinfo;
         outputSfinfo.format = 0;
         compareSfinfo.format = 0;
+        QTest::qWait(200);
         outputFilePtr.reset(outputPath, SFM_READ, &outputSfinfo);
         compareFilePtr.reset(comparePath, SFM_READ, &compareSfinfo);
 
@@ -119,6 +121,7 @@ void BerthaTest::testFileInput()
         QVector<float> outputData(4 * nsamples);
         const unsigned outputCount = sf_read_float(
             outputFilePtr.get(), outputData.data(), outputData.size());
+
         QCOMPARE(outputCount, 4 * nsamples);
         QVector<float> compareData(nsamples);
         const unsigned compareCount = sf_read_float(
@@ -151,7 +154,7 @@ void BerthaTest::testFileInput()
 
         processor.prepare();
         processor.start();
-        QTest::qWait(250);
+        QTest::qWait(2000);
         processor.release();
 
         cmn::SndFile outputFilePtr;
@@ -161,6 +164,7 @@ void BerthaTest::testFileInput()
         SF_INFO compareSfinfo;
         outputSfinfo.format = 0;
         compareSfinfo.format = 0;
+        QTest::qWait(200);
         outputFilePtr.reset(outputPath, SFM_READ, &outputSfinfo);
         compareFilePtr.reset(comparePath, SFM_READ, &compareSfinfo);
 
@@ -170,6 +174,7 @@ void BerthaTest::testFileInput()
         QVector<float> outputData(4 * nsamples);
         const unsigned outputCount = sf_read_float(
             outputFilePtr.get(), outputData.data(), outputData.size());
+
         QCOMPARE(outputCount, 4 * nsamples);
         QVector<float> compareData(nsamples);
         const unsigned compareCount = sf_read_float(

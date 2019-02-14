@@ -245,7 +245,8 @@ void ExperimentRunDelegate::makeModules()
         rgFactory.GetRandomGenerators(*this, experiment.randomGenerators()));
     d->studyModule.reset(new StudyModule(*this));
 
-    d->mod_resultsink.reset(new ApexResultSink(*this));
+    d->mod_resultsink.reset(
+        new ApexResultSink(*this, ApexControl::Get().GetStartTime()));
 
     if (!ApexControl::Get().saveFilename().isEmpty())
         d->mod_resultsink->SetFilename(ApexControl::Get().saveFilename());

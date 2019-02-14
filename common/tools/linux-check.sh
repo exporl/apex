@@ -32,7 +32,7 @@ parsecmd() {
             IFS=", " read -r -a EXCLUDES <<< "$2"
             shift
             ;;
-        --checks) # [qdebug|crlf|assert|filenamespaces|tabs|trailingspaces|clangformat]
+        --checks) # [qdebug|crlf|assert|filenamespaces|tabs|trailingspaces|clangformat|eslint]
             # type of checks to run
             CHECKS=$2
             shift
@@ -141,7 +141,7 @@ if [ ! -z "$SUBMODULE" ] && [[ "${EXCLUDES[@]}" =~ "$(basename "$SUBMODULE")" ]]
 fi
 
 if [ -z "$CHECKS" ]; then
-    CHECKS="qdebug crlf assert filenamespaces tabs trailingspaces clangformat"
+    CHECKS="qdebug crlf assert filenamespaces tabs trailingspaces clangformat eslint"
 fi
 if [ "$RECURSING" = "false" ]; then
     echo "Submodule: $SUBMODULE"
@@ -231,11 +231,29 @@ for CHECK in $CHECKS; do
         zero-git-ls $CANDIDATES | zero-grep '\.java$\|\.h$\|\.cpp$' > "$CANDIDATEFILE" || true
         while read -r -d $'\0' i; do
             extension="${i##*.}"
-            ! diff -u "$i" <(clang-format-3.8 "$i") > /dev/null \
+            ! diff -u "$i" <(clang-format-3.9 "$i") > /dev/null \
                 && mark fixable "$i" \
-                && clang-format-3.8 -i "$i" \
+                && clang-format-3.9 -i "$i" \
                 || true
         done < "$CANDIDATEFILE"
+        ;;
+    eslint)
+        FAILMSG="please fix your javascript files to conform to the eslint:recommended profile"
+        CANDIDATES=$([ -z "$SUBMODULE" ] && echo examples data || echo .)
+        TAPOUTPUT="$ROOT/eslint-errors${SUBMODULE:+.${SUBMODULE##*/}}.tap"
+        # For now, only check changed files
+        #zero-git-ls $CANDIDATES \
+        git show -z HEAD --name-only '--pretty=format:' \
+            | zero-grep '\.js$' \
+            | zero-grep -v "data/js/polyfill.js" \
+            | zero-grep -v "data/resultsviewer/external" \
+            | zero-grep -v "examples/flowrunner/test/external" > "$CANDIDATEFILE" || true
+        cp "$ROOT/common/tools/eslintrc" "$ROOT/.eslintrc"
+        echo "ESLint output can be found in $TAPOUTPUT"
+        zero-xargs "$ROOT/node_modules/.bin/eslint" --format "tap" < "$CANDIDATEFILE" | tee "$TAPOUTPUT"
+        test ${PIPESTATUS[0]} -ne 0 \
+            && mark manual \
+            || true
         ;;
     *)
         FAILMSG="unknown check: $CHECK"

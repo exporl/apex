@@ -348,63 +348,6 @@ void SpinTest::testCalibration()
     TEST_EXCEPTIONS_CATCH
 }
 
-void SpinTest::testPluginExperiment()
-{
-    SpinUserSettings s;
-    SpinConfig configuration = spin::parser::SpinConfigFileParser().parse();
-    QString targetSpeechmaterial("LIST");
-    QString targetCategory("vrouw");
-    s.setSpeechmaterial(targetSpeechmaterial);
-    s.setSpeechcategory(targetCategory);
-
-    // Some irrelevant setup
-    SpeakerLevels levels;
-    levels.hasNoise = false;
-    levels.hasSpeech = true;
-    s.setNoisematerial("LISTvrouw_ltass");
-    s.setList("05");
-    s.setSpeakerType(HEADPHONE);
-    levels.speech = 60;
-    s.addLevels(levels, Headphone::LEFT);
-    s.setProcedureType(ADAPTIVE);
-    s.setAdaptingMaterial(SPEECH);
-    s.addStepsize(2);
-    s.setRepeatFirst(true);
-    s.setNoiseStopsBetweenTrials(false);
-    s.setPersonBeforeScreen(EXPERIMENTER);
-    s.setTimeBeforeFirstStimulus(0);
-
-    // Create temporary output file
-    QString dir(createTempDirectory());
-    QString pluginFilename(dir + "/pluginexperiment.apx");
-    QString filename(dir + "/experiment.apx");
-
-    SpinExperimentCreator pluginCreator(configuration, s);
-    pluginCreator.createExperimentFile(pluginFilename);
-    s.setGeneratePluginProcedure(false);
-    SpinExperimentCreator creator(configuration, s);
-    creator.createExperimentFile(filename);
-
-    ExperimentData *pluginExperimentData =
-        ExperimentParser(pluginFilename).parse(false, true);
-    ExperimentData *experimentData = ExperimentParser(filename).parse(false);
-
-    QVERIFY(*(pluginExperimentData->screensData()) ==
-            *(experimentData->screensData()));
-    QVERIFY(*(pluginExperimentData->connectionsData()) ==
-            *(experimentData->connectionsData()));
-    QVERIFY(*(pluginExperimentData->procedureData()) ==
-            *(experimentData->procedureData()));
-    QVERIFY(*(pluginExperimentData->stimuliData()) ==
-            *(experimentData->stimuliData()));
-    QVERIFY(*(pluginExperimentData->datablocksData()) ==
-            *(experimentData->datablocksData()));
-    QVERIFY(*(pluginExperimentData->devicesData()) ==
-            *(experimentData->devicesData()));
-    QVERIFY(*(pluginExperimentData->calibrationData()) ==
-            *(experimentData->calibrationData()));
-}
-
 void SpinTest::testAdaptiveWithoutNoise()
 {
     TEST_EXCEPTIONS_TRY

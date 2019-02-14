@@ -56,7 +56,7 @@ void ApexMainTest::testFlowRunner()
     ErrorHandler errorHandler;
     ApexControl control(true);
     QSignalSpy initializedSpy(&control, SIGNAL(apexInitialized()));
-    QVERIFY(initializedSpy.wait());
+    QVERIFY(initializedSpy.wait(10000));
 
     QString fileName = Paths::searchFile(QSL("tests/libapex/testrunner.apf"),
                                          Paths::dataDirectories());
@@ -72,7 +72,7 @@ void ApexMainTest::testFlowRunner()
     FlowRunner runner;
     QSignalSpy selectedSpy(&runner, SIGNAL(selected(data::ExperimentData *)));
     runner.select(fileName);
-    QVERIFY(selectedSpy.wait());
+    QVERIFY(selectedSpy.wait(10000));
 
     TEST_EXCEPTIONS_CATCH
 }

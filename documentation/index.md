@@ -4,6 +4,7 @@
 ### Astrid van Wieringen
 ### Lot Van Deun
 ### Tom Francart
+### Sanne Raymaekers
 
 ### Contributing
 This is a preliminary version of the APEX 4 user manual. It

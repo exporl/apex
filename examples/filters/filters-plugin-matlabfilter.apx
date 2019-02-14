@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" version="1">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" version="1">
   <!-- @doc
     @what: Example using the matlabfilter plugin.
     @description:  The plugin will use matlab to process data, one buffer at a time. Note that you should make sure your system can find the Matlab eng library.

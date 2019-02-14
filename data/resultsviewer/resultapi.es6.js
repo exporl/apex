@@ -1,4 +1,5 @@
 /*jshint esversion:6, curly: false, devel: true, browser: true */
+/* eslint-disable no-unused-vars, no-undef */
 
 class ResultApi {
     constructor(url, token) {
@@ -27,6 +28,11 @@ class ResultApi {
 
     readFile(path) {
         let msg = this._socket.buildInvokeMessage('readFile', [ path ]);
+        return this._socket.sendBlocking(msg);
+    }
+
+    writeFile(path, content) {
+        let msg = this._socket.buildInvokeMessage('writeFile', [ path, content ]);
         return this._socket.sendBlocking(msg);
     }
 

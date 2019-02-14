@@ -140,6 +140,10 @@ void SpinDialog::setupConnections()
     // procedure tab connections
     connect(widgets->constProcRadio, SIGNAL(toggled(bool)), this,
             SLOT(updateProcedure()));
+    connect(widgets->adapProcRadio, SIGNAL(toggled(bool)), this,
+            SLOT(updateProcedure()));
+    connect(widgets->adapBKProcRadio, SIGNAL(toggled(bool)), this,
+            SLOT(updateProcedure()));
     connect(widgets->addStepsizeBtn, SIGNAL(clicked()), this,
             SLOT(insertInStepsizeTable()));
     connect(widgets->adaptNoiseRadio, SIGNAL(toggled(bool)), this,
@@ -182,6 +186,10 @@ void SpinDialog::setupConnections()
 
     // contents changed connections: procedure
     connect(widgets->constProcRadio, SIGNAL(toggled(bool)), this,
+            SLOT(setContentsChanged()));
+    connect(widgets->adapProcRadio, SIGNAL(toggled(bool)), this,
+            SLOT(setContentsChanged()));
+    connect(widgets->adapBKProcRadio, SIGNAL(toggled(bool)), this,
             SLOT(setContentsChanged()));
     connect(widgets->adaptNoiseRadio, SIGNAL(toggled(bool)), this,
             SLOT(setContentsChanged()));
@@ -307,8 +315,6 @@ const data::SpinUserSettings SpinDialog::currentSettings()
     settings.setList(widgets->listCmb->currentText());
     settings.setLockSpeechlevels(widgets->lockSpeechCheck->isChecked());
     settings.setLockNoiselevels(widgets->lockNoiseCheck->isChecked());
-    settings.setGeneratePluginProcedure(
-        widgets->generatePluginProcedureCheck->isChecked());
 
     if (widgets->freeFieldRadio->isChecked()) {
         settings.setSpeakerType(data::FREE_FIELD);
@@ -367,9 +373,18 @@ const data::SpinUserSettings SpinDialog::currentSettings()
         }
     }
 
-    if (widgets->constProcRadio->isChecked())
+    if (widgets->constProcRadio->isChecked()) {
         settings.setProcedureType(data::CONSTANT);
-    else {
+
+    } else if (widgets->adapBKProcRadio->isChecked()) {
+        settings.setProcedureType(data::ADAPTIVE_BK);
+
+        if (widgets->adaptSpeechRadio->isChecked())
+            settings.setAdaptingMaterial(data::SPEECH);
+        else
+            settings.setAdaptingMaterial(data::NOISE);
+
+    } else if (widgets->adapProcRadio->isChecked()) {
         settings.setProcedureType(data::ADAPTIVE);
 
         if (widgets->adaptSpeechRadio->isChecked())
@@ -653,6 +668,17 @@ void SpinDialog::loadSettings(const QString &name)
         qFatal("Procedure not defined");
     case data::CONSTANT:
         widgets->constProcRadio->setChecked(true);
+        break;
+    case data::ADAPTIVE_BK:
+        widgets->adapBKProcRadio->setChecked(true);
+
+        if (settings.adaptingMaterial() == data::SPEECH)
+            widgets->adaptSpeechRadio->setChecked(true);
+        else
+            widgets->adaptNoiseRadio->setChecked(true);
+
+        widgets->repeatFirstCheck->setChecked(settings.repeatFirst());
+
         break;
     case data::ADAPTIVE:
         widgets->adapProcRadio->setChecked(true);
@@ -1204,8 +1230,12 @@ void SpinDialog::updateProcedure()
 {
     if (widgets->constProcRadio->isChecked())
         setToConstant();
-    else
+    else if (widgets->adapProcRadio->isChecked())
         setToAdaptive();
+    else if (widgets->adapBKProcRadio->isChecked())
+        setToAdaptiveBK();
+    else
+        qFatal("No radio button checked");
 }
 
 void SpinDialog::setToConstant()
@@ -1220,6 +1250,13 @@ void SpinDialog::setToAdaptive()
     // show everything related to adaptive procedures
     widgets->adaptationBox->show();
     widgets->stepsizeBox->show();
+}
+
+void SpinDialog::setToAdaptiveBK()
+{
+    // show everything related to adaptive B&K procedures
+    widgets->adaptationBox->show();
+    widgets->stepsizeBox->hide();
 }
 
 void SpinDialog::insertInStepsizeTable()

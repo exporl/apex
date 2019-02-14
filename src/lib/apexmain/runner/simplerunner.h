@@ -49,6 +49,7 @@ signals:
     void errorMessage(const QString &source, const QString &message);
     void setResultsFilePath(const QString &filePath);
     void savedFile(const QString &filePath);
+    void experimentClosed();
 };
 }
 

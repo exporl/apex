@@ -22,13 +22,6 @@
 #include <QDir>
 #include <QMutex>
 
-#if defined(Q_OS_ANDROID)
-#include <QAndroidJniObject>
-#include <QtAndroid>
-#endif
-
-#include <cstdlib>
-
 namespace cmn
 {
 
@@ -144,11 +137,11 @@ static QString mainDirectory()
 QString Paths::installedBaseDirectory()
 {
     QDir applicationDir(QCoreApplication::applicationDirPath());
-    if (applicationDir.dirName().compare(QL1S("bin"), Qt::CaseInsensitive) ==
-            0 &&
-        applicationDir.cdUp())
-        return applicationDir.path();
-    return QString();
+
+    if (applicationDir.dirName().compare(QL1S("bin"), Qt::CaseInsensitive) == 0)
+        applicationDir.cdUp();
+
+    return applicationDir.path();
 }
 
 QStringList Paths::iconDirectories()
@@ -229,17 +222,6 @@ QString Paths::dataDirectory()
     const QString result = dataDirectories().first();
     QDir().mkpath(result);
     return result;
-}
-
-QString Paths::filesDirectory()
-{
-#if defined(Q_OS_ANDROID)
-    return QtAndroid::androidActivity()
-        .callObjectMethod("getFilesDir", "()Ljava/io/File;")
-        .toString();
-#else
-    return QString();
-#endif
 }
 
 QStringList Paths::pluginDirectories()

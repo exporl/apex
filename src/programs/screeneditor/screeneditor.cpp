@@ -17,9 +17,9 @@
  * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apexdata/screen/screen.h"
 #include "apexdata/screen/emptyelement.h"
 #include "apexdata/screen/gridlayoutelement.h"
+#include "apexdata/screen/screen.h"
 
 #include "apexmain/gui/guidefines.h"
 

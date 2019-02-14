@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.0/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
   <!-- @doc
   @what: Stop after a specified number of reversals (6) - changes between correct-false
   @description: When you click on the button 'correct or wrong', you hear a stimulus 'wd1.wav (een/one)' in both ears. When you click again, the gain of the stimulus Decreases/Increases according to the button (correct/false) and the stepsizes changes after 3 reversals

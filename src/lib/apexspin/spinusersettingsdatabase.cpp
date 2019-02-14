@@ -17,6 +17,8 @@
  * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "apextools/settingsfactory.h"
+
 #include "apextools/exceptions.h"
 
 #include "spinusersettingsdatabase.h"
@@ -248,16 +250,27 @@ public:
 
     static QString procedureType(ProcedureType type)
     {
-        Q_ASSERT(type == CONSTANT || type == ADAPTIVE);
-
-        return type == CONSTANT ? CONSTANT_STR : ADAPTIVE_STR;
+        Q_ASSERT(type == CONSTANT || type == ADAPTIVE || type == ADAPTIVE_BK);
+        if (type == CONSTANT)
+            return CONSTANT_STR;
+        else if (type == ADAPTIVE)
+            return ADAPTIVE_STR;
+        else if (type == ADAPTIVE_BK)
+            return ADAPTIVE_BK_STR;
+        else
+            return 0;
     }
 
     static ProcedureType procedureType(QString type)
     {
-        Q_ASSERT(type == CONSTANT_STR || type == ADAPTIVE_STR);
-
-        return type == CONSTANT_STR ? CONSTANT : ADAPTIVE;
+        Q_ASSERT(type == CONSTANT_STR || type == ADAPTIVE_STR ||
+                 type == ADAPTIVE_BK_STR);
+        if (type == CONSTANT_STR)
+            return CONSTANT;
+        else if (type == ADAPTIVE_STR)
+            return ADAPTIVE;
+        else
+            return ADAPTIVE_BK;
     }
 
     static QString repeatUntilCorrect(bool value)
@@ -344,6 +357,7 @@ private:
     static const QString FREE_FIELD_STR;
     static const QString CONSTANT_STR;
     static const QString ADAPTIVE_STR;
+    static const QString ADAPTIVE_BK_STR;
     static const QString SPEECH_STR;
     static const QString NOISE_STR;
     static const QString LEFT_STR;
@@ -362,6 +376,7 @@ const QString DatabasePrivate::HEADPHONE_STR("headphone");
 const QString DatabasePrivate::FREE_FIELD_STR("freeField");
 const QString DatabasePrivate::CONSTANT_STR("constant");
 const QString DatabasePrivate::ADAPTIVE_STR("adaptive");
+const QString DatabasePrivate::ADAPTIVE_BK_STR("adaptive_bk");
 const QString DatabasePrivate::SPEECH_STR("speech");
 const QString DatabasePrivate::NOISE_STR("noise");
 const QString DatabasePrivate::LEFT_STR("left");
@@ -385,136 +400,143 @@ SpinUserSettingsDatabase::SpinUserSettingsDatabase()
 void SpinUserSettingsDatabase::save(const QString &name,
                                     const SpinUserSettings &settings)
 {
-    QSettings db;
+    QScopedPointer<QSettings> db(apex::SettingsFactory().createSettings());
 
     // remove previous settings with this name
-    db.beginGroup(DatabasePrivate::settings(name));
+    db->beginGroup(DatabasePrivate::settings(name));
 
-    Q_FOREACH (const QString &key, db.allKeys())
-        db.remove(key);
+    Q_FOREACH (const QString &key, db->allKeys())
+        db->remove(key);
 
-    db.endGroup();
+    db->endGroup();
 
     // info
-    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::INFO));
-    db.setValue(DatabasePrivate::name(), settings.subjectName());
-    db.endGroup();
+    db->beginGroup(DatabasePrivate::settings(name, DatabasePrivate::INFO));
+    db->setValue(DatabasePrivate::name(), settings.subjectName());
+    db->endGroup();
 
     // materials
-    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::MATERIALS));
-    db.setValue(DatabasePrivate::speechmaterial(), settings.speechmaterial());
-    db.setValue(DatabasePrivate::speechcategory(), settings.speechcategory());
-    db.setValue(DatabasePrivate::noisematerial(), settings.noisematerial());
-    db.setValue(DatabasePrivate::list(), settings.list());
-    db.endGroup();
+    db->beginGroup(DatabasePrivate::settings(name, DatabasePrivate::MATERIALS));
+    db->setValue(DatabasePrivate::speechmaterial(), settings.speechmaterial());
+    db->setValue(DatabasePrivate::speechcategory(), settings.speechcategory());
+    db->setValue(DatabasePrivate::noisematerial(), settings.noisematerial());
+    db->setValue(DatabasePrivate::list(), settings.list());
+    db->endGroup();
 
     // speakers
-    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::SPEAKERS));
+    db->beginGroup(DatabasePrivate::settings(name, DatabasePrivate::SPEAKERS));
 
-    db.setValue(DatabasePrivate::lockSpeech(), settings.lockSpeechlevels());
-    db.setValue(DatabasePrivate::lockNoise(), settings.lockNoiselevels());
+    db->setValue(DatabasePrivate::lockSpeech(), settings.lockSpeechlevels());
+    db->setValue(DatabasePrivate::lockNoise(), settings.lockNoiselevels());
 
     SpeakerLevels levels;
     // TODO save noise jump
     if (settings.speakerType() == HEADPHONE) {
-        db.setValue(DatabasePrivate::type(),
-                    DatabasePrivate::speakerType(HEADPHONE));
+        db->setValue(DatabasePrivate::type(),
+                     DatabasePrivate::speakerType(HEADPHONE));
 
         Headphone::Speaker speaker = Headphone::LEFT;
 
         for (int i = 0; i < 2; i++) // do twice: each speaker
         {
-            db.beginGroup(DatabasePrivate::speakerSection(speaker));
+            db->beginGroup(DatabasePrivate::speakerSection(speaker));
             levels = settings.speakerLevels(speaker);
 
             if (levels.hasSpeech)
-                db.setValue(DatabasePrivate::speechLevel(), levels.speech);
+                db->setValue(DatabasePrivate::speechLevel(), levels.speech);
             if (levels.hasNoise)
-                db.setValue(DatabasePrivate::noiseLevel(), levels.noise);
+                db->setValue(DatabasePrivate::noiseLevel(), levels.noise);
 
             speaker = Headphone::RIGHT;
-            db.endGroup();
+            db->endGroup();
         }
     } else {
-        db.setValue(DatabasePrivate::type(),
-                    DatabasePrivate::speakerType(FREE_FIELD));
+        db->setValue(DatabasePrivate::type(),
+                     DatabasePrivate::speakerType(FREE_FIELD));
 
         QList<uint> angles = settings.speakerAngles();
 
         QList<uint>::const_iterator it;
         for (it = angles.begin(); it != angles.end(); it++) {
-            db.beginGroup(DatabasePrivate::speakerSection(*it));
+            db->beginGroup(DatabasePrivate::speakerSection(*it));
             levels = settings.speakerLevels(*it);
 
             if (levels.hasSpeech)
-                db.setValue(DatabasePrivate::speechLevel(), levels.speech);
+                db->setValue(DatabasePrivate::speechLevel(), levels.speech);
             if (levels.hasNoise)
-                db.setValue(DatabasePrivate::noiseLevel(), levels.noise);
+                db->setValue(DatabasePrivate::noiseLevel(), levels.noise);
 
-            db.endGroup();
+            db->endGroup();
         }
     }
 
-    db.endGroup();
+    db->endGroup();
 
     // procedure
-    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::PROCEDURE));
+    db->beginGroup(DatabasePrivate::settings(name, DatabasePrivate::PROCEDURE));
 
     if (settings.procedureType() == CONSTANT) {
-        db.setValue(DatabasePrivate::type(),
-                    DatabasePrivate::procedureType(CONSTANT));
-    } else {
-        db.setValue(DatabasePrivate::type(),
-                    DatabasePrivate::procedureType(ADAPTIVE));
-        db.setValue(DatabasePrivate::adaptingMaterial(),
-                    DatabasePrivate::material(settings.adaptingMaterial()));
+        db->setValue(DatabasePrivate::type(),
+                     DatabasePrivate::procedureType(CONSTANT));
+    } else if (settings.procedureType() == ADAPTIVE) {
+        db->setValue(DatabasePrivate::type(),
+                     DatabasePrivate::procedureType(ADAPTIVE));
+        db->setValue(DatabasePrivate::adaptingMaterial(),
+                     DatabasePrivate::material(settings.adaptingMaterial()));
 
-        db.beginGroup(DatabasePrivate::stepsizesSection());
+        db->beginGroup(DatabasePrivate::stepsizesSection());
         QMap<uint, double> stepsizes = settings.stepsizes();
 
         QMap<uint, double>::const_iterator it;
         for (it = stepsizes.begin(); it != stepsizes.end(); it++)
-            db.setValue(QString::number(it.key()), it.value());
+            db->setValue(QString::number(it.key()), it.value());
 
-        db.endGroup();
-        db.setValue(DatabasePrivate::repeatUntilCorrect(),
-                    settings.repeatFirst());
+        db->endGroup();
+        db->setValue(DatabasePrivate::repeatUntilCorrect(),
+                     settings.repeatFirst());
+    } else if (settings.procedureType() == ADAPTIVE_BK) {
+        db->setValue(DatabasePrivate::type(),
+                     DatabasePrivate::procedureType(ADAPTIVE_BK));
+        db->setValue(DatabasePrivate::adaptingMaterial(),
+                     DatabasePrivate::material(settings.adaptingMaterial()));
+        db->setValue(DatabasePrivate::repeatUntilCorrect(),
+                     settings.repeatFirst());
     }
-
-    db.endGroup();
+    db->endGroup();
 
     // options
-    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::OPTIONS));
-    db.setValue(DatabasePrivate::noiseStopsBetweenTrials(),
-                settings.noiseStopsBetweenTrials());
+    db->beginGroup(DatabasePrivate::settings(name, DatabasePrivate::OPTIONS));
+    db->setValue(DatabasePrivate::noiseStopsBetweenTrials(),
+                 settings.noiseStopsBetweenTrials());
 
     if (settings.customScreen().isEmpty()) {
-        db.setValue(
+        db->setValue(
             DatabasePrivate::personBeforeScreen(),
             DatabasePrivate::personBeforeScreen(settings.personBeforeScreen()));
 
-        if (db.contains(DatabasePrivate::customScreen()))
-            db.remove(DatabasePrivate::customScreen());
+        if (db->contains(DatabasePrivate::customScreen()))
+            db->remove(DatabasePrivate::customScreen());
     } else {
-        db.setValue(DatabasePrivate::customScreen(), settings.customScreen());
+        db->setValue(DatabasePrivate::customScreen(), settings.customScreen());
 
-        if (db.contains(DatabasePrivate::personBeforeScreen()))
-            db.remove(DatabasePrivate::personBeforeScreen());
+        if (db->contains(DatabasePrivate::personBeforeScreen()))
+            db->remove(DatabasePrivate::personBeforeScreen());
     }
 
-    db.setValue(DatabasePrivate::timeBeforeFirstStimulus(),
-                settings.timeBeforeFirstStimulus());
-    db.setValue(DatabasePrivate::reinforcement(), settings.reinforcement());
-    db.setValue(DatabasePrivate::showResults(), settings.showResults());
-    db.setValue(DatabasePrivate::autoSaveResults(), settings.autoSaveResults());
-    db.setValue(DatabasePrivate::exitAfter(), settings.exitAfter());
-    db.setValue(DatabasePrivate::nbResponsesThatCount(),
-                settings.nbResponsesThatCount());
-    db.setValue(DatabasePrivate::trialOrder(),
-                DatabasePrivate::trialOrder(settings.trialOrder()));
-    db.setValue(DatabasePrivate::soundCard(),
-                DatabasePrivate::soundCard(settings.soundCard()));
-    db.endGroup();
+    db->setValue(DatabasePrivate::timeBeforeFirstStimulus(),
+                 settings.timeBeforeFirstStimulus());
+    db->setValue(DatabasePrivate::reinforcement(), settings.reinforcement());
+    db->setValue(DatabasePrivate::showResults(), settings.showResults());
+    db->setValue(DatabasePrivate::autoSaveResults(),
+                 settings.autoSaveResults());
+    db->setValue(DatabasePrivate::exitAfter(), settings.exitAfter());
+    db->setValue(DatabasePrivate::nbResponsesThatCount(),
+                 settings.nbResponsesThatCount());
+    db->setValue(DatabasePrivate::trialOrder(),
+                 DatabasePrivate::trialOrder(settings.trialOrder()));
+    db->setValue(DatabasePrivate::soundCard(),
+                 DatabasePrivate::soundCard(settings.soundCard()));
+    db->endGroup();
 }
 
 bool SpinUserSettingsDatabase::remove(const QString &name)
@@ -522,10 +544,10 @@ bool SpinUserSettingsDatabase::remove(const QString &name)
     if (!savedSettings().contains(name))
         return false;
 
-    QSettings db;
-    db.beginGroup(DatabasePrivate::prefix());
+    QScopedPointer<QSettings> db(apex::SettingsFactory().createSettings());
+    db->beginGroup(DatabasePrivate::prefix());
 
-    db.remove(name);
+    db->remove(name);
     return true;
 }
 
@@ -547,43 +569,43 @@ SpinUserSettings SpinUserSettingsDatabase::load(const QString &name)
                                   name));
 
     SpinUserSettings settings;
-    QSettings db;
+    QScopedPointer<QSettings> db(apex::SettingsFactory().createSettings());
 
     // info
-    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::INFO));
-    QString subjectName = db.value(DatabasePrivate::name()).toString();
+    db->beginGroup(DatabasePrivate::settings(name, DatabasePrivate::INFO));
+    QString subjectName = db->value(DatabasePrivate::name()).toString();
     settings.setSubjectName(subjectName);
-    db.endGroup();
+    db->endGroup();
 
 // materials
 // we don't want to write toString() all the time:)
 #define value(str) value(str).toString()
-    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::MATERIALS));
-    settings.setSpeechmaterial(db.value(DatabasePrivate::speechmaterial()));
-    settings.setSpeechcategory(db.value(DatabasePrivate::speechcategory()));
-    settings.setNoisematerial(db.value(DatabasePrivate::noisematerial()));
-    settings.setList(db.value(DatabasePrivate::list()));
-    db.endGroup();
+    db->beginGroup(DatabasePrivate::settings(name, DatabasePrivate::MATERIALS));
+    settings.setSpeechmaterial(db->value(DatabasePrivate::speechmaterial()));
+    settings.setSpeechcategory(db->value(DatabasePrivate::speechcategory()));
+    settings.setNoisematerial(db->value(DatabasePrivate::noisematerial()));
+    settings.setList(db->value(DatabasePrivate::list()));
+    db->endGroup();
 #undef value
 
     // speakers
     // TODO load noise jump
-    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::SPEAKERS));
+    db->beginGroup(DatabasePrivate::settings(name, DatabasePrivate::SPEAKERS));
 
     settings.setLockSpeechlevels(
-        db.value(DatabasePrivate::lockSpeech()).toBool());
+        db->value(DatabasePrivate::lockSpeech()).toBool());
     settings.setLockNoiselevels(
-        db.value(DatabasePrivate::lockNoise()).toBool());
+        db->value(DatabasePrivate::lockNoise()).toBool());
 
     settings.setSpeakerType(DatabasePrivate::speakerType(
-        db.value(DatabasePrivate::type()).toString()));
+        db->value(DatabasePrivate::type()).toString()));
 
-    Q_FOREACH (QString speaker, db.childGroups()) {
-        db.beginGroup(speaker);
+    Q_FOREACH (QString speaker, db->childGroups()) {
+        db->beginGroup(speaker);
         SpeakerLevels levels;
 
-        Q_FOREACH (QString key, db.childKeys()) {
-            double level = db.value(key).toDouble();
+        Q_FOREACH (QString key, db->childKeys()) {
+            double level = db->value(key).toDouble();
 
             if (key == DatabasePrivate::noiseLevel()) {
                 levels.noise = level;
@@ -603,83 +625,84 @@ SpinUserSettings SpinUserSettingsDatabase::load(const QString &name)
             Q_ASSERT(ok);
         }
 
-        db.endGroup();
+        db->endGroup();
     }
 
-    db.endGroup();
+    db->endGroup();
 
     // procedure
-    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::PROCEDURE));
+    db->beginGroup(DatabasePrivate::settings(name, DatabasePrivate::PROCEDURE));
 
     settings.setProcedureType(DatabasePrivate::procedureType(
-        db.value(DatabasePrivate::type()).toString()));
+        db->value(DatabasePrivate::type()).toString()));
 
-    if (settings.procedureType() == ADAPTIVE) {
+    if (settings.procedureType() == ADAPTIVE ||
+        settings.procedureType() == ADAPTIVE_BK) {
         settings.setAdaptingMaterial(DatabasePrivate::material(
-            db.value(DatabasePrivate::adaptingMaterial()).toString()));
+            db->value(DatabasePrivate::adaptingMaterial()).toString()));
+        settings.setRepeatFirst(
+            db->value(DatabasePrivate::repeatUntilCorrect()).toBool());
+    }
+    if (settings.procedureType() == ADAPTIVE) {
+        db->beginGroup(DatabasePrivate::stepsizesSection());
 
-        db.beginGroup(DatabasePrivate::stepsizesSection());
-
-        Q_FOREACH (QString trial, db.childKeys()) {
+        Q_FOREACH (QString trial, db->childKeys()) {
             bool iOk, dOk;
-            settings.addStepsize(db.value(trial).toDouble(&dOk),
+            settings.addStepsize(db->value(trial).toDouble(&dOk),
                                  trial.toUInt(&iOk));
 
             Q_ASSERT(iOk && dOk);
         }
 
-        db.endGroup();
-
-        settings.setRepeatFirst(
-            db.value(DatabasePrivate::repeatUntilCorrect()).toBool());
+        db->endGroup();
     }
 
-    db.endGroup();
-    db.beginGroup(DatabasePrivate::settings(name, DatabasePrivate::OPTIONS));
+    db->endGroup();
+    db->beginGroup(DatabasePrivate::settings(name, DatabasePrivate::OPTIONS));
     settings.setNoiseStopsBetweenTrials(
-        db.value(DatabasePrivate::noiseStopsBetweenTrials()).toBool());
+        db->value(DatabasePrivate::noiseStopsBetweenTrials()).toBool());
 
-    if (db.contains(DatabasePrivate::personBeforeScreen())) {
+    if (db->contains(DatabasePrivate::personBeforeScreen())) {
         settings.setPersonBeforeScreen(DatabasePrivate::personBeforeScreen(
-            db.value(DatabasePrivate::personBeforeScreen()).toString()));
+            db->value(DatabasePrivate::personBeforeScreen()).toString()));
     } else {
         settings.setCustomScreen(
-            db.value(DatabasePrivate::customScreen()).toString());
+            db->value(DatabasePrivate::customScreen()).toString());
     }
 
     settings.setTimeBeforeFirstStimulus(
-        db.value(DatabasePrivate::timeBeforeFirstStimulus()).toDouble());
+        db->value(DatabasePrivate::timeBeforeFirstStimulus()).toDouble());
     settings.setReinforcement(
-        db.value(DatabasePrivate::reinforcement()).toBool());
-    settings.setShowResults(db.value(DatabasePrivate::showResults()).toBool());
+        db->value(DatabasePrivate::reinforcement()).toBool());
+    settings.setShowResults(db->value(DatabasePrivate::showResults()).toBool());
     settings.setAutoSaveResults(
-        db.value(DatabasePrivate::autoSaveResults()).toBool());
-    settings.setExitAfter(db.value(DatabasePrivate::exitAfter()).toBool());
+        db->value(DatabasePrivate::autoSaveResults()).toBool());
+    settings.setExitAfter(db->value(DatabasePrivate::exitAfter()).toBool());
     settings.setNbResponsesThatCount(
-        db.value(DatabasePrivate::nbResponsesThatCount()).toUInt());
+        db->value(DatabasePrivate::nbResponsesThatCount()).toUInt());
     settings.setTrialOrder(DatabasePrivate::trialOrder(
-        db.value(DatabasePrivate::trialOrder()).toString()));
+        db->value(DatabasePrivate::trialOrder()).toString()));
     settings.setSoundCard(DatabasePrivate::soundCard(
-        db.value(DatabasePrivate::soundCard()).toString()));
-    db.endGroup();
+        db->value(DatabasePrivate::soundCard()).toString()));
+    db->endGroup();
 
     return settings;
 }
 
 void SpinUserSettingsDatabase::setLastSavePath(const QString &path)
 {
-    QSettings db;
-    db.beginGroup(DatabasePrivate::prefix());
-    db.setValue(DatabasePrivate::lastSavePath(), path);
-    db.endGroup();
+    QScopedPointer<QSettings> db(apex::SettingsFactory().createSettings());
+    db->beginGroup(DatabasePrivate::prefix());
+    db->setValue(DatabasePrivate::lastSavePath(), path);
+    db->endGroup();
 }
 
 QString SpinUserSettingsDatabase::lastSavePath()
 {
-    QSettings db;
-    db.beginGroup(DatabasePrivate::prefix());
-    QString dir = db.value(DatabasePrivate::lastSavePath()).toString();
-    db.endGroup();
+    QScopedPointer<QSettings> db(apex::SettingsFactory().createSettings());
+    db->beginGroup(DatabasePrivate::prefix());
+    QString dir = db->value(DatabasePrivate::lastSavePath()).toString();
+    db->endGroup();
 
     if (dir.isEmpty())
         return QDir::homePath();
@@ -689,9 +712,9 @@ QString SpinUserSettingsDatabase::lastSavePath()
 
 QStringList SpinUserSettingsDatabase::savedSettings()
 {
-    QSettings db;
-    db.beginGroup(DatabasePrivate::prefix());
-    return db.childGroups();
+    QScopedPointer<QSettings> db(apex::SettingsFactory().createSettings());
+    db->beginGroup(DatabasePrivate::prefix());
+    return db->childGroups();
 }
 
 } // ns data

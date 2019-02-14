@@ -39,8 +39,6 @@ public:
 
     // empty if not installed
     static QString installedBaseDirectory();
-    // android files directory
-    static QString filesDirectory();
 
     // returns the manual temp directory if it is non-empty and if it exists,
     // otherwise the system temp dir

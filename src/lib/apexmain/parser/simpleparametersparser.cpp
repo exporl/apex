@@ -17,8 +17,8 @@
  * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "apexdata/parameters/simpleparameters.h"
 #include "apexdata/parameters/parametermanagerdata.h"
+#include "apexdata/parameters/simpleparameters.h"
 
 #include "apextools/xml/xmlkeys.h"
 #include "apextools/xml/xmltools.h"

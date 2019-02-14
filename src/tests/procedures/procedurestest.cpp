@@ -216,7 +216,7 @@ void ProceduresTest::testConstantProcedureParser()
     QVERIFY(parser.data());
 
     ExperimentParser expParser(Paths::searchFile(
-        QL1S("examples/procedure/idn1.apx"), Paths::dataDirectories()));
+        QL1S("tests/libwriters/idn1.apx"), Paths::dataDirectories()));
     QDomDocument doc = expParser.loadAndUpgradeDom();
 
     QScopedPointer<data::ProcedureData> data(parser->parse(

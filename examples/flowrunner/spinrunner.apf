@@ -7,6 +7,8 @@
   <head>
     <title>SPIN Runner</title>
 
+    <meta name="viewport" content="width=device-width">
+
     <link rel="stylesheet" href="external/themes/apex-theme.min.css" />
     <link rel="stylesheet" href="external/themes/jquery.mobile.icons.min.css" />
     <link rel="stylesheet" href="external/themes/jquery.mobile.structure-1.4.5.min.css" />
@@ -17,6 +19,8 @@
 
     <script src="external/jquery-1.11.1.min.js"></script>
     <script>
+
+        //available experiments for the spin runner
         var materials =
         [{
             name: "LIST Man",
@@ -61,12 +65,14 @@
 
         var noises = [];
 
+        //initial setup, values can be changed by the user
         var setup =
         {
             material: {},
             list: "",
             ear: "",
-            spintype: "",
+            spintype: "noise",
+            adaptarget: "speech",
             noisevol:0,
             speechvol:0
         };
@@ -152,6 +158,7 @@
 
       function spinExperiment(filename)
       {
+        //use 'expressions' to modify apx experiment file, based on user specified setup
         api.absoluteFilePath(filename).then(
               function(filePath) { ///apex:apex/general[1]/scriptparameters[1]/parameter[1]
                   //general stuff
@@ -165,7 +172,7 @@
                         "apex:apex/results[1]/subject[1]" : setup.name
                     });
                   }
-                  // with noise
+                  // set up experiment with noise
                   if(setup.spintype === "noise")
                   {
                       var targetAmp = "apex:apex/filters[1]/filter[@id='amplifier_channel"+otherEar()+"']/basegain[1]";
@@ -178,6 +185,17 @@
                       });
                       expressions[targetAmp] = "-120"; //can't have dynamic keys via object literals
                       expressions[targetNoiseloop] = "-120";
+
+                      //by default speech level will adapt; change that if necessary
+                      if(setup.adaptarget === "noise"){
+                        $.extend(expressions, {
+                          "apex:apex/procedure[1]/parameters[1]/adapt_parameter[1]" : "noisegain_channel0",
+                          "apex:apex/procedure[1]/parameters[1]/adapt_parameter[2]" : "noisegain_channel1",
+                          "apex:apex/filters[1]/filter[4]/invertgain[1]" : "true",
+                          "apex:apex/filters[1]/filter[5]/invertgain[1]" : "true",
+                          "/apex:apex/screens[1]/screen[@id='experimenter_screen_noise']/gridLayout[1]/gridLayout[1]/parameterlabel[@id='snr']/parameter[1]" : "noisegain_channel0"
+                        });
+                      }
                   }
                   // no noise
                   if(setup.spintype === "silence")
@@ -305,25 +323,38 @@
             console.log("clicked ear");
             setup.ear = $("input[name='side_radio']").val();
             showNextScreen();
+
+            //default 'spin_type' is 'spin_type_noise'; set this up right away
+            $("#vol_snr").show();
+            $("#vol_noise").show();
+            $("#vol_speech").show();
+            $(".adap_target_fieldset").show();
         });
 
-        // vol/intensity buttons
+        // spin type: noise or silence. Change displayed volume buttons
         $("input[name='spin_type']").change(function()
         {
-            console.log("clicked spintype");
             //showNextScreen();
             if(this.id === "spin_type_silence")
             {
                 $("#vol_snr").hide();
                 $("#vol_noise").hide();
                 $("#vol_speech").show();
+                $(".adap_target_fieldset").hide();
             }
             else{
                 $("#vol_snr").show();
                 $("#vol_noise").show();
                 $("#vol_speech").show();
+                $(".adap_target_fieldset").show();
             }
             setup.spintype = $("input[name='spin_type']:checked").val();
+        });
+
+        // adap target: adapt speech or noise level (only needed when noise is active!)
+        $("input[name='adap_target']").change(function()
+        {
+            setup.adaptarget = $("input[name='adap_target']:checked").val();
         });
 
         //noise vol/intensity
@@ -401,16 +432,18 @@
 
         showFirstScreen();
 
-        $("#vol_snr").hide();
-        $("#vol_noise").hide();
-        $("#vol_speech").hide();
+        $("#vol_snr").show();
+        $("#vol_noise").show();
+        $("#vol_speech").show();
+        $(".adap_target_fieldset").show();
 
         setup =
         {
             material: {},
             list: "",
             ear: "",
-            spintype: "",
+            spintype: "noise",
+            adaptarget: "speech",
             noisevol:0,
             speechvol:0
         };
@@ -455,6 +488,21 @@
         {
             display: block;
             padding-top: 8px;
+        }
+
+        .fieldset_options{
+            height: 70px;
+        }
+
+        #spin_type_fieldset{
+            float: left;
+            width: 150px;
+        }
+
+        #adap_target_fieldset{
+            float: right;
+            width: 160px;
+            margin-top: -8px;
         }
     </style>
   </head>
@@ -512,14 +560,26 @@
         </div>
 
         <div class="subcontainer" id="vol_screen">
-                <fieldset data-role="controlgroup" data-type="horizontal">
-                    <legend></legend>
+            <div class="fieldset_options">
+                <fieldset data-role="controlgroup" data-type="horizontal" id="spin_type_fieldset">
+                    <legend> </legend>
                     <label for="spin_type_noise">Ruis</label>
-                    <input type="radio" name="spin_type" id="spin_type_noise" value="noise" class="apexreset" selected>
+                    <input type="radio" name="spin_type" id="spin_type_noise" value="noise" class="apexreset" selected checked>
 
                     <label for="spin_type_silence">Stilte</label>
                     <input type="radio" name="spin_type" id="spin_type_silence" value="silence" class="apexreset">
                 </fieldset>
+
+                <fieldset data-role="controlgroup" data-type="horizontal" id="adap_target_fieldset">
+                    <legend>Adaptatie op:</legend>
+                    <label for="adap_target_speech">Spraak</label>
+                    <input type="radio" name="adap_target" id="adap_target_speech" value="speech" class="apexreset" selected checked>
+
+                    <label for="adap_target_noise">Ruis</label>
+                    <input type="radio" name="adap_target" id="adap_target_noise" value="noise" class="apexreset">
+                </fieldset>
+            </div>
+
 
                 <div id="vol_noise">
                     <label for="noisefield" style="text-align:center">Ruis</label>

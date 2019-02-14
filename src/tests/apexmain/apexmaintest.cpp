@@ -80,6 +80,7 @@
 #include <QWebFrame>
 #include <QWebPage>
 #include <QWebView>
+
 #endif
 
 using namespace apex;
@@ -1019,6 +1020,14 @@ QString ApexMainTest::compareXml(const QDomNode &actual,
     }
 
     return QString();
+}
+
+const QString ApexMainTest::readFileAsString(const QString &filePath)
+{
+    QFile file(filePath);
+    file.open(QFile::ReadOnly | QFile::Text);
+    QTextStream in(&file);
+    return in.readAll();
 }
 
 void ApexMainTest::testStandaloneUpgrader()

@@ -19,8 +19,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.                *
  ******************************************************************************/
 
-#include "bertha/blocktree.h"
 #include "bertha/blockdata.h"
+#include "bertha/blocktree.h"
 #include "bertha/connectiondata.h"
 #include "bertha/devicedata.h"
 #include "bertha/experimentdata.h"

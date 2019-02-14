@@ -17,6 +17,7 @@
  * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
+#include "settingsfactory.h"
 #include "common/paths.h"
 #include "common/utils.h"
 
@@ -479,12 +480,12 @@ QUuid ApexTools::getApexGUID()
     QCoreApplication::setOrganizationName(organizationName);
     QCoreApplication::setOrganizationDomain(organizationDomain);
 
-    QSettings settings;
-    if (settings.contains(QSL("GUID"))) {
-        return settings.value(QSL("GUID")).toUuid();
+    QScopedPointer<QSettings> settings(SettingsFactory().createSettings());
+    if (settings->contains(QSL("GUID"))) {
+        return settings->value(QSL("GUID")).toUuid();
     } else {
         QUuid guid = QUuid::createUuid();
-        settings.setValue(QSL("GUID"), guid);
+        settings->setValue(QSL("GUID"), guid);
         return guid;
     }
 }

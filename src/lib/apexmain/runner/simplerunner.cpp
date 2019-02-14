@@ -19,8 +19,6 @@
 
 #include "apexdata/experimentdata.h"
 
-#include "apexdata/result/resultparameters.h"
-
 #include "apextools/apexpaths.h"
 #include "apextools/apextools.h"
 
@@ -68,12 +66,9 @@ void SimpleRunner::selectFromDir(const QString &path)
 bool SimpleRunner::select(const QString &name)
 {
     qCDebug(APEX_RS, "Selecting File %s", qPrintable(name));
-    if (name.endsWith(QL1S(".apr"))) { // show results
-        data::ResultParameters rvparam;
-        rvparam.setShowResultsAfter(true);
-        rvparam.setSaveResults(false);
+    if (name.endsWith(QL1S(".apr"))) {
         QDir::setCurrent(QFileInfo(name).absolutePath());
-        resultViewer.reset(new ResultViewer(&rvparam, name));
+        resultViewer.reset(new ResultViewer(name));
         resultViewer->show(false);
         return true;
     }
@@ -88,6 +83,8 @@ bool SimpleRunner::select(const QString &name)
                 SIGNAL(opened(QString)));
         connect(this, SIGNAL(savedFile(QString)), flowRunner.data(),
                 SIGNAL(savedFile(QString)));
+        connect(this, SIGNAL(experimentClosed()), flowRunner.data(),
+                SIGNAL(experimentClosed()));
         return flowRunner->select(name);
     }
 

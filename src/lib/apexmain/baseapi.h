@@ -41,6 +41,7 @@ public:
 
 public Q_SLOTS:
     QString readFile(const QString &fileName) const;
+    void writeFile(const QString &fileName, const QString &content) const;
     QString absoluteFilePath(const QString &fileName) const;
 
 protected:

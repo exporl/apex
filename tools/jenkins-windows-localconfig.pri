@@ -35,6 +35,7 @@ win32:XALANCROOT = c:/api-vs2010/xml-xalan/c
 win32:XML2ROOT = c:/api-vs2010/xml2
 win32:ICONVROOT = c:/api-vs2010/iconv
 win32:ZLIBROOT = c:/api-vs2010/zlib
+win32:LSLROOT = c:/api-vs2010/lsl
 
 win32:PORTAUDIOROOT = c:/api-vs2010/portaudio
 #win32:PORTAUDIOLIB = portaudio_x86

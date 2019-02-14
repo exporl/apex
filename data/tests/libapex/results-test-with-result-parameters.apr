@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:results xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+
+<parameters>
+    <parameter name="name">expected value</parameter>
+</parameters>
+
+<general>
+    <jscript>apex:resultsviewer.html</jscript>
+</general>
+
+</apex:results>
