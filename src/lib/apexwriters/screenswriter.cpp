@@ -70,6 +70,7 @@ class ElementToXMLVisitor : public ScreenElementVisitor
     void visitPictureLabel(const PictureLabelElement *e);
     void visitTextEdit(const TextEditElement *e);
     void visitParameterLabel(const ParameterLabelElement *e);
+    void visitNumericKeypad(const NumericKeypadElement *e);
 
 public:
     ElementToXMLVisitor(QDomDocument *d) : domDocument(d)
@@ -229,6 +230,12 @@ void ElementToXMLVisitor::visitButton(const ButtonElement *e)
     addFontSizeChild(result, e);
     addTextChild(result, e->text());
     addShortcutChild(result, e);
+}
+
+void ElementToXMLVisitor::visitNumericKeypad(const NumericKeypadElement *e)
+{
+    Q_UNUSED(e);
+    result = domDocument->createElement(QSL("numericKeypad"));
 }
 
 void ElementToXMLVisitor::visitEmpty(const EmptyElement *)

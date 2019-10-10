@@ -19,6 +19,7 @@
 #include "common/exception.h"
 
 #include "abstractprocessor.h"
+#include "deviceinterface.h"
 #include "stringutils.h"
 
 #include <fftw3.h>

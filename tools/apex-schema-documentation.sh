@@ -57,14 +57,16 @@ fi
 if [ -z "$OUTPUT" ]; then
     OUTPUT=$SCHEMADIR
 fi
-if [ ! -d "$OUTPUT" ]; then
-    mkdir -p $OUTPUT
-fi
 
+pushd $OUTPUT
+git rm -rf --ignore-unmatch .
+git clean -fxd
+popd
+
+export OUTPUT
 for SCHEMAPATH in $ROOTDIR/data/schemas/*.xsd; do
     SCHEMA=$(basename $SCHEMAPATH)
-    "$OXYGEN"/schemaDocumentation.sh "$SCHEMAPATH" -format:html \
-             -out:"$OUTPUT/${SCHEMA%.xsd}.html"
+    "$OXYGEN"/schemaDocumentation.sh "$SCHEMAPATH" -cfg:$ROOTDIR/data/schemas/oxygen-schema-documentation-settings.xml
 done
 
 if [ $INDEX = true ]; then
@@ -74,7 +76,7 @@ if [ $INDEX = true ]; then
 
     echo "# Schema documentation" >> $INDEXFILE
     pushd $OUTPUT
-    for X in `ls *.html | grep -vP "(ns|comp)"`; do
+    for X in `ls *.html | grep -vP "^(ns\.html|comp\.html)$"`; do
         echo "- [${X%.html}]($X)" >> $INDEXFILE
     done
     echo >> $INDEXFILE

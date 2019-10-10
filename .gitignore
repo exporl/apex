@@ -11,12 +11,13 @@
 *.autosave
 Makefile
 L34output.xml
-core
 .Rhistory
 .vimsettings
 .clang-format
 /.build
+/cmake-build
 /bin
+/bin-cmake
 /experiments.tap
 /tags
 /tags-qt5
@@ -30,8 +31,7 @@ pkg-config_wrapper.sh
 *.so-deployment-settings.json
 .qmake.stash
 /node_modules
-.eslintrc
+/.eslintrc
 eslint-errors*.tap
 /.idea
-CMakeLists.txt
-/*cmake*
+

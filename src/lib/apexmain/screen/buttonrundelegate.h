@@ -29,14 +29,12 @@ namespace apex
 class ExperimentRunDelegate;
 namespace data
 {
-class ScreenElement;
 class ButtonElement;
 }
 
 namespace rundelegates
 {
 using data::ButtonElement;
-using data::ScreenElement;
 
 /**
  * The ButtonRunDelegate class is an implementation of

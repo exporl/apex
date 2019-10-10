@@ -46,7 +46,9 @@ public:
     const QSharedPointer<Study> &activeStudy() const;
     QStringList studies() const;
     bool belongsToActiveStudy(const QString &path) const;
-    QString newExperiment(const QString &experimentFilePath) const;
+    QString makeResultfilePath(const QString &experimentfilePath,
+                               const QString &relativeResultfilePath) const;
+    QString makeResultsPath(const QString &relativePath) const;
     void afterExperiment(const QString &resultsFilePath);
 
 public Q_SLOTS:

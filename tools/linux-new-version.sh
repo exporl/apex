@@ -30,4 +30,4 @@ find examples -name "*.xml" -o -name "*.apx" -print -exec sed -ri 's#(schemaLoca
 sed -ri 's#( Version=")[^"]*#\1'"$APEX_SCHEMA_VERSION"'#g' tools/jenkins-windows-wix-main.wxs
 sed -ri  's#(apex_)[0-9.x]*(msi)#\1'"$APEX_SCHEMA_VERSION"'.\2#g' tools/jenkins-windows-build.bat
 
-"$ROOTDIR"/tools/apex-schema-documentation.sh "$@"
+"$ROOTDIR"/tools/apex-schema-documentation.sh --index "$@"

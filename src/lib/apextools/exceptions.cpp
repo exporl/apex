@@ -18,6 +18,10 @@
 
 #include "exceptions.h"
 
+ApexException::~ApexException() throw()
+{
+}
+
 ApexStringException::ApexStringException(const QString &message)
     : message(message.toLocal8Bit())
 {
@@ -26,11 +30,6 @@ ApexStringException::ApexStringException(const QString &message)
 const char *ApexStringException::what() const throw()
 {
     return message;
-}
-
-const char *TrialDataNotFoundException::what() const throw()
-{
-    return "TrialDataNotFoundException";
 }
 
 ApexConnectionBetweenDifferentDevicesException::

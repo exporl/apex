@@ -566,8 +566,6 @@ apex::data::FiltersData *SpinExperimentCreator::createFiltersData() const
             apex::data::FilterData *filter = createNoiseFilter(channel);
             QString filterId = filter->id();
 
-            // Scale the noise signal to the internal RMS
-            // [Tom] FIXME: this is equivalent to (internalRMS - noiseRms())
             double gainCorr =
                 config.defaultCalibration() - fullScaleToAccoustic(noiseRms());
             filter->setValueByType("basegain", gainCorr);
@@ -595,8 +593,7 @@ apex::data::FiltersData *SpinExperimentCreator::createFiltersData() const
 
             // calculate levels for SNR=0, because the procedure will set the
             // SNR
-            if ((settings.procedureType() == ADAPTIVE &&
-                 settings.adaptingMaterial() == data::SPEECH) ||
+            if ((isAdaptive() && settings.adaptingMaterial() == data::SPEECH) ||
                 (settings.procedureType() == CONSTANT)) {
                 if (settings.hasNoise())
                     // channel is calibrated to the noise level
@@ -653,15 +650,13 @@ double SpinExperimentCreator::calibrationLevel(uint channel) const
     if (levels.hasNoise) {
         double nlevel = noiseLevel(channel);
         // calculate levels for SNR=0, because the procedure will set the SNR
-        if (settings.procedureType() == ADAPTIVE) {
-            if (settings.adaptingMaterial() == data::NOISE) {
-                // The start value of the adaptive procedure is set in the
-                // interface by setting the noise level to a certain value
-                // relative to the speech level. This means that to find the
-                // noise level for SNR=0, we need to add the SNR to the noise
-                // level given in the interface.
-                nlevel = nlevel + settings.snr();
-            }
+        if (isAdaptive() && settings.adaptingMaterial() == data::NOISE) {
+            // The start value of the adaptive procedure is set in the
+            // interface by setting the noise level to a certain value
+            // relative to the speech level. This means that to find the
+            // noise level for SNR=0, we need to add the SNR to the noise
+            // level given in the interface.
+            nlevel = nlevel + settings.snr();
         }
         return nlevel;
     }
@@ -908,7 +903,7 @@ SpinExperimentCreator::createResultParameters() const
     data->setResultPage(constants::HTML_PAGE);
     if (settings.procedureType() == ADAPTIVE) {
         data->setResultParameter(
-            "reversals for mean",
+            "line_reversalsformean",
             QString::number(settings.nbResponsesThatCount()));
     }
     if (settings.snrDefined())
@@ -938,6 +933,12 @@ QString SpinExperimentCreator::driverString() const
     }
 
     return QString(); // avoid compiler warning
+}
+
+bool SpinExperimentCreator::isAdaptive() const
+{
+    return settings.procedureType() == ADAPTIVE ||
+           settings.procedureType() == ADAPTIVE_BK;
 }
 
 unsigned SpinExperimentCreator::padZero() const

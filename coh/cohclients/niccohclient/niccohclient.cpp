@@ -95,7 +95,8 @@ public:
     virtual Coh::Status status() const;
     virtual bool needsReloadForStop() const;
 
-    // CohCommandWarker implementation
+    // CohCommandWorker implementation
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -121,6 +122,11 @@ void NicCohClient::visit(CohMetaData *command)
 {
     Q_UNUSED(command);
     // ignored
+}
+
+void NicCohClient::visit(CohRfFreeStimulus *command)
+{
+    throw Exception(tr("rf free stimulus not supported for NIC 2"));
 }
 
 void NicCohClient::visit(CohNullStimulus *command)

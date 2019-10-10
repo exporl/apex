@@ -6,13 +6,12 @@ git submodule update --force --init --remote common
 common/tools/jenkins-linux-git-setup.sh
 
 ROOTDIR=$(pwd)
-APIDIR=~jenkins/apex-android-extra-folder
+APIDIR=~jenkins/apex-android-extra-folder-qt5.13
 CLEAN=
 TESTS=true
-SDK_ROOT=~jenkins/apex-android-extra-folder/android/android-sdk-linux
 DEBUGRELEASE=debug
 KEYSTORE=
-KEYSTOREPWD=
+KEYSTORE_PWD_PATH=
 
 parsecmd() {
     while [ $# -gt 0 ]; do
@@ -22,11 +21,6 @@ parsecmd() {
             # The directory containing all the tools needed to compile.
             # If this directory does not exist, the android-prepare-api.sh script will be run.
             APIDIR=${2%/}
-            shift
-            ;;
-        -s|--sdk) #
-            # the directory pointing to the sdk, needed to build an apk
-            SDK_ROOT=${2%/}
             shift
             ;;
         -c|--clean) #
@@ -39,7 +33,7 @@ parsecmd() {
             ;;
         -r|--release) #
             # build an unsigned release package
-            # implies --ks and --ks-pass
+            # implies --ks and --ks-pass-path
             DEBUGRELEASE=release
             ;;
         --ks) #
@@ -47,9 +41,9 @@ parsecmd() {
             KEYSTORE=${2%/}
             shift
             ;;
-        --ks-pass) #
-            # password for the keystore, see apksigner tool for help
-            KEYSTOREPWD=${2%/}
+        --ks-pass-path) #
+            # path to file with the password for the keystore, see apksigner tool for help
+            KEYSTORE_PWD_PATH=${2%/}
             shift
             ;;
         -h|--help) #
@@ -71,24 +65,21 @@ parsecmd() {
 
 parsecmd "$@"
 
-echo "SDK root: $SDK_ROOT"
 echo "API directory: $APIDIR"
 echo "Clean arguments: $CLEAN"
 
-if [ ! -d "$APIDIR" ]; then
-    tools/android-prepare-api.sh --api-dir "$APIDIR"
-fi
+tools/android-prepare-api.sh --api-dir $APIDIR
 
 if [ "$DEBUGRELEASE" = "release" ];then
     cp tools/jenkins-android-release-localconfig.pri localconfig.pri
-    tools/android-build.sh --api-dir "$APIDIR" --build-apk --sdk "$SDK_ROOT" $CLEAN \
-                           --release --ks "$KEYSTORE" --ks-pass "$KEYSTOREPWD"
+    tools/android-build.sh --api-dir "$APIDIR" --build-apk $CLEAN \
+                           --release --ks "$KEYSTORE" --ks-pass-path "$KEYSTORE_PWD_PATH"
 else
     cp tools/jenkins-android-localconfig.pri localconfig.pri
-    tools/android-build.sh --api-dir "$APIDIR" --build-apk --sdk "$SDK_ROOT" $CLEAN
+    tools/android-build.sh --api-dir "$APIDIR" --build-apk $CLEAN
 fi
 
 if [ "$TESTS" = "true" ]; then
-    rm -rf *test-results.xml
-    tools/android-test.sh --apk "$ROOTDIR/bin/android-debug-installed/armv7/apex/bin/QtApp-debug.apk" --jenkins
+    rm -rf *test-results.{xml,txt}
+    tools/android-test.sh --apk "$ROOTDIR/bin/android-debug-installed/armv7/apex/build/outputs/apk/$DEBUGRELEASE/apex-$DEBUGRELEASE.apk"
 fi

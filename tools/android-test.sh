@@ -3,7 +3,7 @@
 cd "$(dirname $(readlink -f ${BASH_SOURCE[0]}))/.."
 
 ROOTDIR=$(pwd)
-APK=bin/android-debug-installed/armv7/apex/bin/QtApp-debug.apk
+APK=bin/android-debug-installed/armv7/apex/build/outputs/apk/debug/apex-debug.apk
 ONJENKINS=false
 
 parsecmd() {
@@ -14,10 +14,6 @@ parsecmd() {
             # the apk file to test
             APK=$2
             shift
-            ;;
-        -j|--jenkins) #
-            # built from jenkins
-            ONJENKINS=true
             ;;
         -h|--help) #
             # this help
@@ -89,11 +85,7 @@ echo "Package: $APK"
         adb shell am force-stop be.kuleuven.med.exporl.apex
         sleep 3
         enablescreenandunlock
-        if [ $ONJENKINS = false ]; then
-            ARGUMENTS="\"-o /sdcard/temp/tests/$TARGET-results.xml,xunitxml -o /sdcard/temp/tests/$TARGET-results.txt,txt\""
-        else
-            ARGUMENTS="-o /sdcard/temp/tests/$TARGET-results.xml,xunitxml -o /sdcard/temp/tests/$TARGET-results.txt,txt"
-        fi
+        ARGUMENTS="\"-o /sdcard/temp/tests/$TARGET-results.xml,xunitxml -o /sdcard/temp/tests/$TARGET-results.txt,txt\""
         adb shell am start -e applicationArguments "$ARGUMENTS" -n be.kuleuven.med.exporl.apex/be.kuleuven.med.exporl.apex.${TARGET^}Activity
         # allow Ctrl-C interrupt by relaying any SIGINT to the process group of timeout, and exiting the script
         trap 'kill -INT -$pid; exit' INT

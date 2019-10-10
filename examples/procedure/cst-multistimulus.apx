@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment">
   <!-- @doc
    @what: multiple stimuli per trial - one should be chosen randomly - 2 presentations (2trials => 2x2 = 4)
    @description: The experiment has 2 trials (trial1: button 1-2-3 - trial2: button a-b-c) => In trial1/trial2=> correct answer is always: button1,buttonb.

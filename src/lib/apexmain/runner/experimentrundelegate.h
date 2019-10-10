@@ -199,7 +199,9 @@ private:
     void MakeFeedback();
     stimulus::Filter *MakeFilter(const QString &ac_sID, const QString &ac_sType,
                                  data::FilterData *const ac_pParams);
+#ifdef ENABLE_COH
     stimulus::CohDevice *MakeCohDevice(data::CohDeviceData *ac_Params);
+#endif
     stimulus::OutputDevice *MakeDummyDevice(data::DeviceData *p_params);
 
     void MakeBerthaExperimentData();

@@ -64,6 +64,4 @@ private Q_SLOTS:
 };
 }
 }
-
-JNIEXPORT jint JNI_OnLoad(JavaVM *, void *);
 #endif

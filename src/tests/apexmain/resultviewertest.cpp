@@ -70,108 +70,41 @@ void ApexMainTest::testUpgradeTo3_1_1()
     TEST_EXCEPTIONS_CATCH
 }
 
-void ApexMainTest::testResultViewerConvertToCSV_data()
+void ApexMainTest::testResultViewerIntegration()
 {
-    QTest::addColumn<QString>("resultFilePath");
-    QTest::addColumn<QString>("testFilePath");
-    QTest::addColumn<QString>("desiredFilePath");
-
-    QTest::newRow("Simple")
-        << Paths::searchFile(QL1S("tests/libapex/subject_test-r.apr"),
-                             Paths::dataDirectories())
-        << Paths::searchFile(QL1S("tests/libapex/testJavascriptResult2.xml"),
-                             Paths::dataDirectories())
-        << Paths::searchFile(QL1S("tests/libapex/desiredJavascriptResult.xml"),
-                             Paths::dataDirectories());
-}
-
-void ApexMainTest::testResultViewerConvertToCSV()
-{
-#if defined(Q_OS_ANDROID)
-    QSKIP("Skipped on Android");
-#elif defined(WITH_WEBENGINE)
-    QSKIP("Skipped with QWebEngine");
-#else
     TEST_EXCEPTIONS_TRY
 
-    // Fetch the filenames:
-    QFETCH(QString, resultFilePath);
-    QFETCH(QString, testFilePath);
-    QFETCH(QString, desiredFilePath);
+    ResultViewer resultViewer(Paths::searchFile(
+        QL1S("tests/libapex/results-test.apr"), Paths::dataDirectories()));
+    WebView &webView = resultViewer.getWebView();
 
-    QFileInfo resultFileInfo(resultFilePath);
-    QString resultFile =
-        resultFileInfo.absoluteFilePath(); // To get the right path on all
-    // operating systems.
+    QVERIFY(QSignalSpy(&webView, &WebView::loadingFinished).wait());
 
-    apex::ResultViewer testViewer(resultFile);
+    connect(&webView, &WebView::javaScriptFinished, [](const QVariant &result) {
+        QCOMPARE(result.toString().replace("\"", "'"),
+                 QString("[{'values':[-5,-3,-1,-3,-1],'reversals':[-1,-3],'"
+                         "meanrevs':-2,'meanrevstd':1,'meantrials':-2.6,'"
+                         "meantrialstd':1.4966629547095767}]"));
+    });
 
-    // Export the contents to a file:
-    QFileInfo testFileInfo(testFilePath);
-    QString testFile = testFileInfo.absoluteFilePath();
-
-    // export the new data to the existing result file.
-    testViewer.addtofile(testFile);
-    QDomDocument testResult = readXmlResults(testFile);
-
-    // Get the comparison values
-    QFileInfo desiredFileInfo(desiredFilePath);
-    QDomDocument desiredContent =
-        readXmlResults(desiredFileInfo.absoluteFilePath());
-
-    QCOMPARE(compareXml(testResult, desiredContent), QString());
-
-    // Now remove the part that has been written to the text file, so the test
-    // can be done again...
-    QFile file(testFile);
-    file.open(QIODevice::ReadWrite);
-    QByteArray fileData = file.readAll();
-    QString fileText(fileData);
-
-    QString processedTag = "<processed>";
-
-    int startIndex = fileText.lastIndexOf(processedTag) + processedTag.length();
-    int endIndex = fileText.lastIndexOf("</processed>");
-
-    fileText.remove(startIndex, endIndex - startIndex);
-
-    // Now clear the old file, and write contents to the new file
-
-    file.resize(0);
-    QTextStream out(&file);
-    out.setCodec("UTF-8");
-    out << fileText;
-    file.close();
+    webView.runJavaScriptAndEmitResult("JSON.stringify(plots.line.data)");
+    QVERIFY(QSignalSpy(&webView, &WebView::javaScriptFinished).wait());
 
     TEST_EXCEPTIONS_CATCH
-#endif
 }
 
 void ApexMainTest::testResultViewer_data()
 {
-    QTest::addColumn<QString>("resultFilePath");
-    QTest::addColumn<QString>("resultViewerPath");
-    QTest::addColumn<QString>("plotConfig"); // sets up config object correctly
-    QTest::addColumn<QString>(
-        "testCommand"); // JSON.stringify(plots.<type>.data) +
-                        // JSON.stringify(plots.text.data)
-    QTest::addColumn<QString>("plotDataJSON"); // Target result JSON
+    // TODO: move detailed tests to javascript
 
-    // Paths::searchFile(QL1S("data/resultsviewer/resultsviewer.html"),
-    // Paths::dataDirectories())
+    QTest::addColumn<QString>("resultFilePath");
+    QTest::addColumn<QString>("testCommand");
+    QTest::addColumn<QString>("plotDataJSON");
+
     QTest::newRow("line")
         << Paths::searchFile(QL1S("tests/libapex/results-test-line.apr"),
                              Paths::dataDirectories())
-        << Paths::searchFile(QL1S("resultsviewer/resultsviewer.html"),
-                             Paths::dataDirectories())
-        << "config = { global: { removefromanswer: "
-           "[\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\","
-           "\"answer\"] }, line: { show: true, parameterkey: "
-           "\"parametervalue\", trialsformean: 6, reversalsformean: 6 }, "
-           "matrix: { show: false }, polar: { show:false }, text: { show: true "
-           "} };"
-        << "JSON.stringify( plots.line.data ) + JSON.stringify( "
-           "plots.text.data );"
+        << "JSON.stringify(plots.line.data) + JSON.stringify(plots.text.data);"
         << "[{\"values\":[-5,-3,-1,-3,-1,-3,-1,1,3,1,-1,1,-1],\"reversals\":[-"
            "1,-3,-1,-3,3,-1,1],\"meanrevs\":-0.6666666666666666,\"meanrevstd\":"
            "2.1343747458109497,\"meantrials\":0.6666666666666666,"
@@ -227,15 +160,6 @@ void ApexMainTest::testResultViewer_data()
     QTest::newRow("matrixpolar")
         << Paths::searchFile(QL1S("tests/libapex/results-test-matrixpolar.apr"),
                              Paths::dataDirectories())
-        << Paths::searchFile(QL1S("resultsviewer/resultsviewer.html"),
-                             Paths::dataDirectories())
-        << "$.extend( config, { global: { stimuli: "
-           "[\"-90\",\"-75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\","
-           "\"30\",\"45\",\"60\",\"75\",\"90\"],  removefromanswer: "
-           "[\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\","
-           "\"answer\"] },line: {show: false }, matrix: { show: true },polar: "
-           "{ show: true, mindegree: -90, maxdegree: 90 }, text: { show: true "
-           "} } );"
         << "JSON.stringify( plots.matrix.data );"
         << "[{\"values\":[{\"x\":0,\"y\":1,\"z\":1},{\"x\":1,\"y\":0,\"z\":1},{"
            "\"x\":2,\"y\":3,\"z\":1},{\"x\":3,\"y\":2,\"z\":2},{\"x\":4,\"y\":"
@@ -256,15 +180,6 @@ void ApexMainTest::testResultViewer_data()
     QTest::newRow("matrixpolartext")
         << Paths::searchFile(QL1S("tests/libapex/results-test-matrixpolar.apr"),
                              Paths::dataDirectories())
-        << Paths::searchFile(QL1S("resultsviewer/resultsviewer.html"),
-                             Paths::dataDirectories())
-        << "$.extend( config, { global: { stimuli: "
-           "[\"-90\",\"-75\",\"-60\",\"-45\",\"-30\",\"-15\",\"0\",\"15\","
-           "\"30\",\"45\",\"60\",\"75\",\"90\"],  removefromanswer: "
-           "[\"_button\",\"button_\",\"button\",\"b_\",\"answer_\",\"_answer\","
-           "\"answer\"] },line: {show: false }, matrix: { show: true },polar: "
-           "{ show: true, mindegree: -90, maxdegree: 90 }, text: { show: true "
-           "} } );"
         << "JSON.stringify( plots.text.data );"
         << "[{\"matrix\":{\"correctpercentage\":\"<tr><tdcolspan=\\\"13\\\">"
            "Totalpercentagecorrect:5.5556%</td></"
@@ -387,107 +302,73 @@ void ApexMainTest::testResultViewer_data()
            "tr><tr><td>18</td><td>90</td><td>75</"
            "td><td><spanclass=\\\"incorrect\\\">Incorrect</span></td></tr></"
            "table>\"}}]";
-
-    QTest::newRow("custom")
-        << Paths::searchFile(QL1S("tests/libapex/results-test-line.apr"),
-                             Paths::dataDirectories())
-        << Paths::searchFile(QL1S("tests/libapex/resultsviewer-custom.html"),
-                             Paths::dataDirectories())
-        << "config = {};"
-        << "customCommand();"
-        << "custom output";
 }
 
 void ApexMainTest::testResultViewer()
 {
-#if defined(Q_OS_ANDROID)
-    QSKIP("Skipped on Android");
-#elif defined(WITH_WEBENGINE)
-    QSKIP("Skipped with QWebEngine");
-#else
     TEST_EXCEPTIONS_TRY
 
     QFETCH(QString, resultFilePath);
-    QFETCH(QString, resultViewerPath);
-    QFETCH(QString, plotConfig);
     QFETCH(QString, testCommand);
     QFETCH(QString, plotDataJSON);
 
-    QUrl ResultViewerUrl = QUrl::fromUserInput(resultViewerPath);
-    ResultParameters parameters;
+    ResultViewer resultViewer(resultFilePath);
+    WebView &webView = resultViewer.getWebView();
 
-    apex::RTResultSink resultSink(ResultViewerUrl,
-                                  parameters.resultParameters(),
-                                  parameters.extraScript());
+    QVERIFY(QSignalSpy(&webView, &WebView::loadingFinished).wait());
 
-    QSignalSpy(&resultSink, SIGNAL(loadingFinished(bool))).wait();
+    connect(&webView, &WebView::javaScriptFinished,
+            [&plotDataJSON](const QVariant &result) {
+                QCOMPARE(result.toString().replace(" ", ""),
+                         plotDataJSON.replace(" ", ""));
+            });
 
-    resultSink.runJavaScript(plotConfig);
-    resultSink.newResults(readFileAsString(resultFilePath));
-    resultSink.plot();
-
-    QString resultJSON = resultSink.runJavaScript(testCommand);
-
-    QCOMPARE(resultJSON.replace(" ", ""), plotDataJSON.replace(" ", ""));
+    webView.runJavaScriptAndEmitResult(testCommand);
+    QSignalSpy(&webView, &WebView::javaScriptFinished).wait();
 
     TEST_EXCEPTIONS_CATCH
-#endif
 }
 
 void ApexMainTest::testResultViewerExtraScriptIsInjected()
 {
-#if defined(Q_OS_ANDROID)
-    QSKIP("Skipped on Android");
-#elif defined(WITH_WEBENGINE)
-    QSKIP("Skipped with QWebEngine");
-#else
     TEST_EXCEPTIONS_TRY
 
-    QString resultfilePath = Paths::searchFile(
+    ResultViewer resultViewer(Paths::searchFile(
         QL1S("tests/libapex/results-test-with-extra-script.apr"),
-        Paths::dataDirectories());
+        Paths::dataDirectories()));
+    WebView &webView = resultViewer.getWebView();
 
-    QDir::setCurrent(QFileInfo(resultfilePath).absolutePath());
-    ResultViewer resultViewer(resultfilePath);
+    QVERIFY(QSignalSpy(&webView, &WebView::loadingFinished).wait());
 
-    RTResultSink *resultSink = resultViewer.getResultSink();
+    connect(&webView, &WebView::javaScriptFinished, [](const QVariant &result) {
+        QCOMPARE(result.toString(), QString("expected value"));
+    });
 
-    QSignalSpy(resultSink, SIGNAL(loadingFinished(bool))).wait();
-
-    QString actualTestCommandResult = resultSink->runJavaScript("extraScript");
-
-    QCOMPARE(actualTestCommandResult, QString("expected value"));
+    webView.runJavaScriptAndEmitResult("extraScript");
+    QSignalSpy(&webView, &WebView::javaScriptFinished).wait();
 
     TEST_EXCEPTIONS_CATCH
-#endif
 }
 
 void ApexMainTest::testResultViewerResultParametersAreInjected()
 {
-#if defined(Q_OS_ANDROID)
-    QSKIP("Skipped on Android");
-#elif defined(WITH_WEBENGINE)
-    QSKIP("Skipped with QWebEngine");
-#else
     TEST_EXCEPTIONS_TRY
 
-    QString resultfilePath = Paths::searchFile(
+    ResultViewer resultViewer(Paths::searchFile(
         QL1S("tests/libapex/results-test-with-result-parameters.apr"),
-        Paths::dataDirectories());
+        Paths::dataDirectories()));
+    WebView &webView = resultViewer.getWebView();
 
-    QDir::setCurrent(QFileInfo(resultfilePath).absolutePath());
-    ResultViewer resultViewer(resultfilePath);
+    QVERIFY(QSignalSpy(&webView, &WebView::loadingFinished).wait());
 
-    RTResultSink *resultSink = resultViewer.getResultSink();
+    connect(&webView, &WebView::javaScriptFinished, [](const QVariant &result) {
+        QCOMPARE(result.toString(), QString("expected value"));
+    });
 
-    QSignalSpy(resultSink, SIGNAL(loadingFinished(bool))).wait();
-
-    QString actualTestCommandResult = resultSink->runJavaScript("params.name");
-
-    QCOMPARE(actualTestCommandResult, QString("expected value"));
+    webView.runJavaScriptAndEmitResult("params.name");
+    QSignalSpy(&webView, &WebView::javaScriptFinished).wait();
 
     TEST_EXCEPTIONS_CATCH
-#endif
 }
 
 void ApexMainTest::testResultViewerCannotBeConstructedWithoutResultFile()
@@ -500,67 +381,24 @@ void ApexMainTest::testResultViewerCannotBeConstructedWithoutResultFile()
     TEST_EXCEPTIONS_CATCH
 }
 
-void ApexMainTest::testResultViewerResultFileWithoutResultPageCanBeLoaded()
-{
-#if defined(Q_OS_ANDROID)
-    QSKIP("Skipped on Android");
-#elif defined(WITH_WEBENGINE)
-    QSKIP("Skipped with QWebEngine");
-#else
-    TEST_EXCEPTIONS_TRY
-
-    QString resultfilePath = Paths::searchFile(
-        QL1S("tests/libapex/results-test-without-result-page.apr"),
-        Paths::dataDirectories());
-
-    ResultViewer resultViewer(resultfilePath);
-
-    RTResultSink *resultSink = resultViewer.getResultSink();
-
-    QSignalSpy(resultSink, SIGNAL(loadingFinished(bool))).wait();
-
-    QString actualTestCommandResult =
-        resultSink->runJavaScript("'expected value'");
-
-    QCOMPARE(actualTestCommandResult, QString("expected value"));
-
-    TEST_EXCEPTIONS_CATCH
-#endif
-}
-
 void ApexMainTest::testResultViewerExtraScriptLoadedBeforeAnswersAreAdded()
 {
-#if defined(Q_OS_ANDROID)
-    QSKIP("Skipped on Android");
-#elif defined(WITH_WEBENGINE)
-    QSKIP("Skipped with QWebEngine");
-#else
     TEST_EXCEPTIONS_TRY
 
-    QString resultfilePath =
+    ResultViewer resultViewer(
         Paths::searchFile(QL1S("tests/libapex/results-test-with-trials.apr"),
-                          Paths::dataDirectories());
+                          Paths::dataDirectories()));
+    WebView &webView = resultViewer.getWebView();
 
-    QDir::setCurrent(QFileInfo(resultfilePath).absolutePath());
-    ResultViewer resultViewer(resultfilePath);
+    QVERIFY(QSignalSpy(&webView, &WebView::loadingFinished).wait());
 
-    RTResultSink *resultSink = resultViewer.getResultSink();
+    connect(&webView, &WebView::javaScriptFinished, [](const QVariant &result) {
+        QCOMPARE(result.toString(),
+                 QString("<trial>trial-1</trial><trial>trial-2</trial>"));
+    });
 
-    QSignalSpy(resultSink, SIGNAL(loadingFinished(bool))).wait();
-
-    QString actualTestCommandResult =
-        resultSink->runJavaScript("document.body.innerHTML");
-
-    QCOMPARE(actualTestCommandResult.trimmed(),
-             QString("<trial>trial-1</trial>, <trial>trial-2</trial>"));
+    webView.runJavaScriptAndEmitResult("document.body.innerHTML");
+    QSignalSpy(&webView, &WebView::javaScriptFinished).wait();
 
     TEST_EXCEPTIONS_CATCH
-#endif
 }
-
-/*
-void ApexMainTest::testResultsProcessor()
-{
-    TODO
-}
-*/

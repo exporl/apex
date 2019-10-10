@@ -19,7 +19,7 @@ sudo pbuilder update --extrapackages "qtbase5-dev-tools qt5-default qt5-qmake  \
          libqt5webenginewidgets5 qtmultimedia5-dev python-protobuf \
          protobuf-compiler libprotobuf-dev xvfb liblo-dev libsndfile1-dev \
          python-soundfile python-numpy libqt5websockets5-dev \
-         libgit2-dev libfftw3-dev libssl-dev libqt5webkit5 libqt5webkit5-dev"
+         libgit2-dev libfftw3-dev libssl-dev"
 
 git submodule update --force --init --remote common
 common/tools/jenkins-linux-git-setup.sh

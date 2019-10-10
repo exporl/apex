@@ -19,9 +19,9 @@
 #include "coh/cohclient.h"
 #include "coh/cohprotoloader.h"
 
+#include "commonprotobuf/slaveclient.h"
 #include "common/commonapplication.h"
 #include "common/exception.h"
-#include "common/slaveclient.h"
 #include "common/utils.h"
 
 #include "protocoh.pb.h"

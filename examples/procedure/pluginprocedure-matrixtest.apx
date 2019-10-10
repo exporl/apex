@@ -1,4 +1,4 @@
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd">
   <procedure xsi:type="apex:pluginProcedure">
     <parameters>
       <presentations>1</presentations>
@@ -850,12 +850,6 @@
       </parameter>
     </parameters>
   </calibration>
-  <results>
-    <page>rtresults-psignifit.html</page>
-    <resultparameters/>
-    <showafterexperiment>true</showafterexperiment>
-    <subject/>
-  </results>
   <interactive>
     <entry expression="/apex:apex/results[1]/subject[1]" description="Subject" type="string" default=""/>
     <entry expression="/apex:apex/procedure[1]/parameters[1]/parameter[2]" description="Start SNR (relatief tov ruisniveau van 65 dB SPL)" type="int" default="-4"/>

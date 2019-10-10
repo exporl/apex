@@ -121,7 +121,6 @@
 
     <results>
         <xsltscript>apexresult.xsl</xsltscript>
-        <saveprocessedresults>true</saveprocessedresults>
     </results>
 
 </apex:apex>

@@ -31,10 +31,6 @@ namespace apex
 {
 namespace data
 {
-/**
- * The ButtonElement is an implementation of a \ref
- * ScreenElement representing a "button".
- */
 class APEXDATA_EXPORT MatrixElement : public ScreenElement
 {
 public:

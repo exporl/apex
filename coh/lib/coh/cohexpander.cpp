@@ -29,6 +29,7 @@ public:
 
     CohSequence *expand();
 
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -61,6 +62,12 @@ void CohCommandExpander::visit(CohMetaData *command)
 {
     if (included.testFlag(Coh::MetaData))
         root->append(new CohMetaData(*command));
+}
+
+void CohCommandExpander::visit(CohRfFreeStimulus *command)
+{
+    if (included.testFlag(Coh::RfFreeStimulus))
+        root->append(new CohRfFreeStimulus(*command));
 }
 
 void CohCommandExpander::visit(CohNullStimulus *command)

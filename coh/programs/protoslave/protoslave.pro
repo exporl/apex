@@ -1,4 +1,4 @@
-CLEBS *= common coh protobuf
+CLEBS *= common commonprotobuf coh protobuf
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)
 
 QT *= network

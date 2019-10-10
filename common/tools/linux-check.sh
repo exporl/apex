@@ -9,7 +9,7 @@ cd "$(dirname ${BASH_SOURCE[0]})/../.."
 
 ROOT=$(pwd)
 SUBMODULE=
-EXCLUDES=
+EXCLUDES=documentation
 CHECKS=
 CONTINUE=false
 RECURSING=false
@@ -197,7 +197,7 @@ for CHECK in $CHECKS; do
         FAILMSG="please replace tab characters by spaces"
         CANDIDATES=$([ -z "$SUBMODULE" ] && echo src tools examples || echo .)
         EXPRESSION="$(printf "\t")"
-        zero-git-ls $CANDIDATES | zero-grep -v '\.gitmodules\|tools/debian/rules' > "$CANDIDATEFILE" || true
+        zero-git-ls $CANDIDATES | zero-grep -v '\.gitmodules\|tools/debian/rules\|external/.*\.js\' > "$CANDIDATEFILE" || true
         zero-xargs git grep -Ilz "$EXPRESSION" < "$CANDIDATEFILE" > "$FOUNDFILE" || true
         zero-xargs git grep -In "$EXPRESSION" < "$FOUNDFILE" > "$RESULTFILE" || true
         [ -s "$RESULTFILE" ] \
@@ -242,12 +242,10 @@ for CHECK in $CHECKS; do
         CANDIDATES=$([ -z "$SUBMODULE" ] && echo examples data || echo .)
         TAPOUTPUT="$ROOT/eslint-errors${SUBMODULE:+.${SUBMODULE##*/}}.tap"
         # For now, only check changed files
-        #zero-git-ls $CANDIDATES \
-        git show -z HEAD --name-only '--pretty=format:' \
-            | zero-grep '\.js$' \
-            | zero-grep -v "data/js/polyfill.js" \
-            | zero-grep -v "data/resultsviewer/external" \
-            | zero-grep -v "examples/flowrunner/test/external" > "$CANDIDATEFILE" || true
+        # zero-git-ls $CANDIDATES \
+        # --diff-filter=d => ignore deleted files
+        git show -z HEAD --name-only '--pretty=format:' --diff-filter=d \
+            | zero-grep '\.js$' > "$CANDIDATEFILE" || true
         cp "$ROOT/common/tools/eslintrc" "$ROOT/.eslintrc"
         echo "ESLint output can be found in $TAPOUTPUT"
         zero-xargs "$ROOT/node_modules/.bin/eslint" --format "tap" < "$CANDIDATEFILE" | tee "$TAPOUTPUT"

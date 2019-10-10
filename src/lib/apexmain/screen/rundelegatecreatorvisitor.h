@@ -31,24 +31,7 @@ namespace apex
 class ExperimentRunDelegate;
 namespace rundelegates
 {
-using data::ScreenElementVisitor;
-using data::AnswerLabelElement;
-using data::ArcLayoutElement;
-using data::ButtonElement;
-using data::EmptyElement;
-using data::FlashPlayerElement;
-using data::GridLayoutElement;
-using data::LabelElement;
-using data::ParameterListElement;
-using data::ParameterLabelElement;
-using data::PictureElement;
-using data::PictureLabelElement;
-using data::TextEditElement;
-using data::SpinBoxElement;
-using data::SliderElement;
-using data::CheckBoxElement;
-using data::MatrixElement;
-using data::HtmlElement;
+using namespace data;
 
 /**
  * The RunDelegateCreatorVisitor class is a class that is used to
@@ -92,6 +75,7 @@ private:
     void visitPictureLabel(const PictureLabelElement *e);
     void visitTextEdit(const TextEditElement *e);
     void visitHtml(const HtmlElement *e);
+    void visitNumericKeypad(const NumericKeypadElement *e);
     ExperimentRunDelegate *m_rd;
 };
 }

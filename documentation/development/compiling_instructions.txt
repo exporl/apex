@@ -11,9 +11,10 @@
 You should install the required packages with the following command (works on Ubuntu 14.04):
     sudo aptitude install qtbase5-dev-tools qt5-default qt5-qmake portaudio19-dev \
         libxml2-dev chrpath libqt5scripttools5 libqt5xmlpatterns5 \
-        libqt5xmlpatterns5-dev qtscript5-dev libqt5svg5-dev libqt5webkit5 libqt5webkit5-dev \
+        libqt5xmlpatterns5-dev qtscript5-dev libqt5svg5-dev \
         qtmultimedia5-dev python-protobuf protobuf-compiler libprotobuf-dev xvfb liblo-dev libsndfile1-dev \
-        python-soundfile python-numpy libqt5websockets5-dev libgit2-dev libfftw3-dev libssl-dev
+        python-soundfile python-numpy libqt5websockets5-dev libgit2-dev libfftw3-dev libssl-dev \
+        qtwebengine5-dev libqt5webenginecore5 libqt5webenginewidgets5
 
 2.1.2. Required development packages on fedora
 

@@ -245,11 +245,10 @@ void ExperimentRunDelegate::makeModules()
         rgFactory.GetRandomGenerators(*this, experiment.randomGenerators()));
     d->studyModule.reset(new StudyModule(*this));
 
-    d->mod_resultsink.reset(
-        new ApexResultSink(*this, ApexControl::Get().GetStartTime()));
+    d->mod_resultsink.reset(new ApexResultSink(*this));
 
     if (!ApexControl::Get().saveFilename().isEmpty())
-        d->mod_resultsink->SetFilename(ApexControl::Get().saveFilename());
+        d->mod_resultsink->setFilename(ApexControl::Get().saveFilename());
 
     if (experiment.resultParameters()->showRTResults()) {
 #ifdef Q_OS_ANDROID
@@ -332,8 +331,6 @@ stimulus::tConnectionsMap &ExperimentRunDelegate::GetConnections() const
 */
 void ExperimentRunDelegate::MakeOutputDevices()
 {
-    qCDebug(APEX_RS, "Making output devices");
-
     const DevicesData *data = experiment.devicesData();
     Q_FOREACH (data::DeviceData *devData, *data) {
         Q_ASSERT(devData != 0);
@@ -359,9 +356,13 @@ void ExperimentRunDelegate::MakeOutputDevices()
             }
         } break;
         case TYPE_COH:
+#ifdef ENABLE_COH
             device =
                 MakeCohDevice(dynamic_cast<data::CohDeviceData *>(devData));
             break;
+#else
+            qFatal("Device type Coh not supported");
+#endif
 
         case TYPE_DUMMY:
             device = MakeDummyDevice(devData);
@@ -384,8 +385,6 @@ void ExperimentRunDelegate::MakeOutputDevices()
 
 void ExperimentRunDelegate::MakeControlDevices()
 {
-    qCDebug(APEX_RS, "Making control devices");
-
     const DevicesData *data = experiment.controlDevices();
     Q_FOREACH (data::DeviceData *devData, *data) {
         device::ControlDevice *device = 0;
@@ -435,6 +434,7 @@ ExperimentRunDelegate::MakeDummyDevice(DeviceData *params)
     return new DummyDevice(*params);
 }
 
+#ifdef ENABLE_COH
 stimulus::CohDevice *ExperimentRunDelegate::MakeCohDevice(CohDeviceData *params)
 {
     QScopedPointer<CohDevice> dev;
@@ -463,10 +463,10 @@ stimulus::CohDevice *ExperimentRunDelegate::MakeCohDevice(CohDeviceData *params)
 
     return dev.take();
 }
+#endif
 
 void ExperimentRunDelegate::MakeDatablocks()
 {
-    qCDebug(APEX_RS, "Making datablocks");
     const DatablocksData *data = experiment.datablocksData();
     for (DatablocksData::const_iterator it = data->begin(); it != data->end();
          ++it) {
@@ -487,8 +487,11 @@ void ExperimentRunDelegate::MakeDatablocks()
                 MakeBerthaDataBlock(*dbData);
             db = new WavDataBlock(*dbData, filename, this);
         } else if (devicetype == TYPE_COH) {
-
+#ifdef ENABLE_COH
             db = new CohDataBlock(*dbData, filename, this);
+#else
+            qFatal("Device type Coh not supported");
+#endif
         } else if (devicetype == TYPE_DUMMY) {
             db = new DataBlock(*dbData, filename, this);
         } else {
@@ -815,7 +818,6 @@ void ExperimentRunDelegate::FixStimuli()
 
 void ExperimentRunDelegate::MakeFilters()
 {
-    qCDebug(APEX_RS, "Making filters");
     const data::FiltersData *data = experiment.filtersData();
     for (FiltersData::const_iterator it = data->begin(); it != data->end();
          ++it) {

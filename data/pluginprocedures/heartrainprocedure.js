@@ -1,177 +1,246 @@
-"use strict";
+/* exported getProcedure */
+/* global module, api, misc, params, ResultHighlight, Trial */
 
- function shuffle(myArray)
- {
-     var i = myArray.length;
-
-     if (i === 0)
-         return false;
-
-     while (--i)
-     {
-         var j = Math.floor( Math.random() * ( i + 1 ) );
-         var tempi = myArray[i];
-         var tempj = myArray[j];
-         myArray[i] = tempj;
-         myArray[j] = tempi;
-     }
- }
-
-
-function heartrainProcedure() // Constructor
-{
-    //trying to mimic an enum :-)
-    this.FIRST_TRIAL = 0;
-    this.AFTER_TRIAL = 1;
-    this.AFTER_CONFIRMATION = 2;
-    this.FINISHED = 3;
-
-    this.currentState = this.FIRST_TRIAL;
-    this.currentTrial = -1;
-    var singleTrials = api.trials();		// all trials without confirmation trials, without repetition
-
-    this.confirmationTrial = singleTrials[singleTrials.length - 1];
-    singleTrials.splice(singleTrials.length - 1, 1);
-
-    this.trials = new Array();
-
-    for (i = 0; i < params.presentations; i++)
-        this.trials = this.trials.concat(singleTrials);
-
-    if (params.order == "random")
-    {
-        shuffle(this.trials);
-    }
-
-    this.nbOfTrials = this.trials.length;
+function createProcedure(api, misc, params, trials) {
     api.registerParameter("correct_answer");
+    api.registerParameter("current_answer");
 
-    this.currentStimulus = "";
+    var confirmationTrial = trials.filter(function(trial) {
+        return trial.id === "confirmation_trial";
+    })[0];
 
-}
+    var trialsToPresent = allTrialsToPresent(trials, confirmationTrial);
 
-heartrainProcedure.prototype = new ScriptProcedureInterface();
+    var state = createTrialState(0);
 
-heartrainProcedure.prototype.processResult = function(screenresult)
-{
-	var r = new ResultHighlight();
-	r.overrideCorrectFalse = true;
+    var nextResultXml = undefined;
 
-	if (this.currentState == this.AFTER_TRIAL) {
-        this.current_answer = screenresult[api.answerElement(this.trials[this.currentTrial].GetID() )];
-        this.current_correct_answer = this.trials[this.currentTrial].GetAnswer()
-		r.correct = this.current_answer == this.current_correct_answer;
-		r.showCorrectFalse = true;
-		r.highlightElement = this.trials[this.currentTrial].GetAnswer();
-	} else  {
-        this.current_answer = screenresult[api.answerElement(this.confirmationTrial.GetID() )];
-		r.correct = true;
-		r.showCorrectFalse = false;
-	}
+    function createTrialState(trialIndex) {
+        function setupNextTrial() {
+            if (trialIndex >= trialsToPresent.length) return new Trial();
 
-    this.current_correctness = r.correct;
-
-	return r;
-}
-
-
-heartrainProcedure.prototype.setupNextTrial = function()
-{
-    //determine which trial to run next
-    var trial;
-    var stimulusParameters = {};
-    var confirmationStimulus = 0;
-
-    if (this.currentState == this.AFTER_TRIAL)
-    {
-        trial = this.confirmationTrial;
-        confirmationStimulus = "dummystimulus";
-        /*answer = api.screenElementText(trials[currentTrial].screen,
-                                       trials[currentTrial].answerString);*/
-		//var thisAnswer = screenresult[]
-        //api.SetParameter("correct_answer", answer);
-        stimulusParameters["correct_answer"] = this.trials[this.currentTrial].GetAnswer();
-        this.currentState = this.AFTER_CONFIRMATION;
-    }
-    else
-    {
-        if (this.current_answer == "again_button")
-        {
-            trial = this.confirmationTrial;
-            confirmationStimulus =
-		      this.trials[this.currentTrial].GetStimulus();
-            this.currentState = this.AFTER_CONFIRMATION;
+            var result = new Trial();
+            result.setId(trial.id);
+            result.addScreen(trial.screen, true, 0);
+            result.addStimulus(trial.GetStimulus(), params["noisegain"] ? {noisegain: params["noisegain"]} : {}, "", 0);
+            return result;
         }
-        else
-        {
-            if (++this.currentTrial >= this.nbOfTrials)
-                return new Trial();
 
-            trial = this.trials[this.currentTrial];
-            this.currentState = this.AFTER_TRIAL;
+        function processResult(screenresult) {
+            var expectedAnswer  = trial.GetAnswer();
+            var actualAnswer    = screenresult[api.answerElement(trial.GetID())];
+            state.nextState     = confirmationTrialsEnabled() ? confirmationTrialStateFactory.initialConfirmationTrial(trialIndex, actualAnswer) : createTrialState(trialIndex + 1);
+            state.resultXml     = createResultXml(expectedAnswer, actualAnswer, trial.GetStimulus());
+
+            var result                  = new ResultHighlight();
+            result.overrideCorrectFalse = true;
+            result.showCorrectFalse     = true;
+            result.correct              = actualAnswer === expectedAnswer;
+            result.highlightElement     = expectedAnswer;
+            return result;
         }
+
+        function confirmationTrialsEnabled() {
+            if (!confirmationTrial) return false;
+
+            return params["heartrain_enabled"] === undefined ? true : params["heartrain_enabled"] === "true";
+        }
+
+        function createResultXml(expectedAnswer, actualAnswer, stimulusId) {
+            var result = "<procedure type='heartrainProcedure'>\n";
+            result += "    <answer>" + actualAnswer + "</answer>\n";
+            result += "    <correct_answer>" + expectedAnswer + "</correct_answer>\n";
+            result += "    <stimulus>" + stimulusId + "</stimulus>\n";
+            result += "    <correct>" + JSON.stringify(actualAnswer === expectedAnswer) + "</correct>\n";
+            result += "</procedure>\n";
+            return result;
+        }
+
+        var trial = trialsToPresent[trialIndex];
+        
+        var state = {
+            trialIndex: trialIndex,
+            setupNextTrial: setupNextTrial,
+            processResult: processResult,
+            resultXml: undefined,
+            nextState: undefined
+        };
+
+        return state;
     }
 
-    var targetScreen = trial.GetScreen();
-    var targetStimulus;
+    var confirmationTrialStateFactory = function() {
+        function initialConfirmationTrial(trialIndex, actualAnswer) {
+            return createConfirmationTrialState(actualAnswer, trialIndex, {
+                noisegain: params["noisegain"] ? -150 : undefined,
+                stimulusId: "dummystimulus"
+            });
+        }
 
-    if (confirmationStimulus === 0)
-        targetStimulus = trial.GetStimulus();
-    else
-        targetStimulus = confirmationStimulus;
+        function replayExpectedStimulus(trialIndex, actualAnswer) {
+            var trial = trialsToPresent[trialIndex];
+            return createConfirmationTrialState(actualAnswer, trialIndex, {
+                noisegain: params["noisegain"] ? params["noisegain"] : undefined,
+                stimulusId: trial.GetStimulus()
+            });
+        }
 
-    var newTrial = new Trial();
+        function replayActualStimulus(trialIndex, actualAnswer) {
+            var stimulusId = extractStimulusFrom(actualAnswer);
+            return createConfirmationTrialState(actualAnswer, trialIndex, {
+                noisegain: params["noisegain"] ? (stimulusExists(stimulusId) ? params["noisegain"] : -150) : undefined,
+                stimulusId: stimulusExists(stimulusId) ? stimulusId : "dummystimulus"
+            });
+        }
 
-    newTrial.addScreen(targetScreen, true, 0);
-    newTrial.addStimulus(targetStimulus, stimulusParameters, "", 0);
-    newTrial.setId("trial");
+        function extractStimulusFrom(id) {
+            return "stimulus_" + id.split(":").shift();
+        }
 
-    this.currentStimulus = targetStimulus;
+        function stimulusExists(stimulusId) {
+            return api.stimuli().indexOf(stimulusId) !== -1;
+        }
 
-    return newTrial;
-}
+        function createConfirmationTrialState(actualAnswer, trialIndex, stimulusSpec) {
+            function setupNextTrial() {
+                var result = new Trial();
+                result.setId(confirmationTrial.id);
+                result.addScreen(confirmationTrial.screen, true, 0);
 
+                var stimulusParams = {};
+                stimulusParams.correct_answer = extractLabelFrom(getExpectedAnswer());
+                stimulusParams.current_answer = extractLabelFrom(actualAnswer);
+                if (stimulusSpec.noisegain) stimulusParams.noisegain = stimulusSpec.noisegain;
 
-heartrainProcedure.prototype.progress = function()
-{
-    return ((this.currentTrial + 1)/this.nbOfTrials) * 100;
-}
+                result.addStimulus(stimulusSpec.stimulusId, stimulusParams, "", 0);
+                return result;
+            }
 
-heartrainProcedure.prototype.firstScreen = function()
-{
-    return this.trials[0].GetScreen();
-}
+            function extractLabelFrom(id) {
+                return removeLeadingUnderscore(id.split(":").pop());
+            }
 
-heartrainProcedure.prototype.checkParameters = function()
-{
-    for (var prop in params)
-    {
-        //console.log("Property " + prop + "=" + params[prop] );
+            function removeLeadingUnderscore(id) {
+                return id[0] === "_" ? id.slice(1) : id;
+            }
 
-        if ( prop == "invalidparameter")
-            return "CheckParameters: Invalid parameter " + prop + "=" + params[prop];
+            function getExpectedAnswer() {
+                return trialsToPresent[trialIndex].GetAnswer();
+            }
+
+            function processResult(screenresult) {
+                var buttonId    = screenresult[api.answerElement(confirmationTrial.GetID())];
+                state.nextState = getNextState(buttonId);
+                state.resultXml = createResultXml(buttonId);
+
+                var result                  = new ResultHighlight();
+                result.overrideCorrectFalse = true;
+                result.showCorrectFalse     = false;
+                result.correct              = true;
+                return result;
+            }
+
+            var confirmationTrialButtonActions = {
+                "ownanswer_button": confirmationTrialStateFactory.replayActualStimulus,
+                "again_button":     confirmationTrialStateFactory.replayExpectedStimulus,
+                "next_button":      function(trialIndex) { return createTrialState(trialIndex + 1); }
+            };
+
+            function getNextState(buttonId) {
+                return confirmationTrialButtonActions[buttonId](trialIndex, actualAnswer);
+            }
+
+            function createResultXml(buttonId) {
+                var result = "<procedure type='heartrainProcedure'>\n";
+                result += "    <answer>" + buttonId + "</answer>\n";
+                result += "    <isConfirmationTrial />\n";
+                result += "</procedure>\n";
+                return result;
+            }
+
+            var state = {
+                trialIndex:     trialIndex,
+                setupNextTrial: setupNextTrial,
+                processResult:  processResult,
+                resultXml:      undefined,
+                nextState:      undefined
+            };
+
+            return state;
+        }
+
+        return {
+            initialConfirmationTrial:   initialConfirmationTrial,
+            replayExpectedStimulus:     replayExpectedStimulus,
+            replayActualStimulus:       replayActualStimulus
+        };
+    }();
+
+    function allTrialsToPresent(trials, confirmationTrial) {
+        var result = trials.filter(function(trial) {
+            return [confirmationTrial ? confirmationTrial.id : undefined, params["firsttrial"]].indexOf(trial.id) === -1;
+        });
+
+        for (var i = 1; i < (params["presentations"] || 1); i++) {
+            result = result.concat(result);
+        }
+
+        if (params["order"] === "random") {
+            misc.shuffleArray(result);
+        }
+
+        var firstTrial = trials.filter(function(trial) {
+            return trial.id === params["firsttrial"];
+        })[0];
+
+        if (firstTrial) {
+            result = [firstTrial].concat(result);
+        }
+
+        return result;
     }
 
-    return "";
-}
-
-
-heartrainProcedure.prototype.resultXml = function()
-{
-    var result = "<procedure type=\"heartrainProcedure\">\n";
-    result += "    <answer>" + this.current_answer + "</answer>\n";
-    if ( !(this.currentState == this.AFTER_CONFIRMATION) ) {
-        result += "    <correct_answer>" + this.current_correct_answer + "</correct_answer>\n";
-        result += "    <stimulus>" + this.currentStimulus + "</stimulus>\n";
-        result += "    <correct>" + JSON.stringify(this.current_correctness) + "</correct>\n";
+    function checkParameters() {
+        return "";
     }
-    result += "    <isConfirmationTrial>" + JSON.stringify(this.currentState == this.AFTER_CONFIRMATION) + "</isConfirmationTrial>\n";
 
-    return result + "</procedure>\n";
+    function firstScreen() {
+        return trialsToPresent[0].screen;
+    }
+
+    function setupNextTrial() {
+        return state.setupNextTrial();
+    }
+
+    function processResult(screenresult) {
+        var result = state.processResult(screenresult);
+        nextResultXml = state.resultXml;
+        state = state.nextState;
+        return result;
+    }
+
+    function resultXml() {
+        return nextResultXml;
+    }
+
+    function progress() {
+        return state.trialIndex / trialsToPresent.length * 100;
+    }
+
+    return {
+        checkParameters:    checkParameters,
+        firstScreen:        firstScreen,
+        setupNextTrial:     setupNextTrial,
+        processResult:      processResult,
+        resultXml:          resultXml,
+        progress:           progress
+    };
 }
 
+function getProcedure() {
+    return createProcedure(api, misc, params, api.trials().slice());
+}
 
-function getProcedure()
-{
-    return new heartrainProcedure();
+if (typeof module !== "undefined") {
+    module.exports.createProcedure = createProcedure;
 }

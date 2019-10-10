@@ -242,8 +242,8 @@ bool FilePlugin::processOutput()
 
     const unsigned readCount =
         sf_readf_float(inputFile.get(), interleavedOutput.data(), blockSize);
-    qFill(interleavedOutput.data() + readCount * outputPortCount,
-          interleavedOutput.data() + blockSize * outputPortCount, 0);
+    std::fill(interleavedOutput.data() + readCount * outputPortCount,
+              interleavedOutput.data() + blockSize * outputPortCount, 0);
     for (unsigned j = 0; j < outputPortCount; ++j)
         processOneOutput(outPorts[j]->outputData.data(), j);
 

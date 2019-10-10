@@ -2896,20 +2896,6 @@ How
 
 ### results
 
-#### results/results-adaptive-saveprocessedresults.apx
-
-Short
-
-:   Demonstrate the use of result parameters
-
-Description
-
-:   The parameters under ’results’ will be written to the results file.
-
-How
-
-:   Use of rtresults-test-procedureparameter.html
-
 #### results/results-confusionmatrix.apx
 
 Short
@@ -2953,22 +2939,6 @@ How
 
 :   Results: show results during experiment
 
-#### results/results-psignifit.apx
-
-Short
-
-:   Demonstrate the use of ’psignifit’ results
-
-Description
-
-:   APEX contains an implementation of the psignifit library, which can
-    fit psychometric functions to data
-
-How
-
-:   Psignifit is called from the resultsviewer and the SRT and slope are
-    shown numerically
-
 #### results/results-resultparameters.apx
 
 Short
@@ -2998,21 +2968,6 @@ Description
 How
 
 :   
-
-#### results/results-saveprocessedresults.apx
-
-Short
-
-:   Demonstrate the use of the saveprocessedresults tag
-
-Description
-
-:   Results in CSV format will be appended to the results file, for easy
-    importing in other software
-
-How
-
-:   &lt;saveprocessedresults&gt; is set to true
 
 #### results/results-subject.apx
 
@@ -5088,7 +5043,6 @@ can be obtained by choosing “Show stimulus connections” under
       <resultparameters/>
       <showduringexperiment>false</showduringexperiment>
       <showafterexperiment>true</showafterexperiment>
-      <saveprocessedresults>true</saveprocessedresults>
      </results>
 ```
 
@@ -5111,11 +5065,6 @@ results file in XML.
     querying whether results should be shown. If the answer is
     affirmative, a new window will be opened and the results will be
     shown after javascript processing.
-
--   If the experimenter will be asked whether the processed results must
-    be appended to the results file. This will only work if the results
-    are successfully saved to disk and your javascript code supports
-    this transformation.
 
 ```xml
     <interactive>
@@ -5730,7 +5679,6 @@ menu bar).
       </resultparameters>
       <showduringexperiment>false</showduringexperiment>
       <showafterexperiment>true</showafterexperiment>
-      <saveprocessedresults>true</saveprocessedresults>
      </results>
 ```
 
@@ -5754,11 +5702,6 @@ results file in XML.
     querying whether results should be shown. If the answer is
     affirmative, a new window will be opened and the results will be
     shown after javascript processing.
-
--   If the experimenter will be asked whether the processed results must
-    be appended to the results file. This will only work if the results
-    are successfully saved to disk and your javascript code supports
-    this transformation.
 
 <!-- -->
 ```xml
@@ -6210,7 +6153,6 @@ menu bar).
       </resultparameters>
       <showduringexperiment>false</showduringexperiment>
       <showafterexperiment>true</showafterexperiment>
-      <saveprocessedresults>true</saveprocessedresults>
      </results>
 ```
 
@@ -6236,11 +6178,6 @@ corresponding gap parameter specified in the experiment file.
     querying whether results should be shown. If the answer is
     affirmative, a new window will be opened and the results will be
     shown after javascript processing.
-
--   If the experimenter will be asked whether the processed results must
-    be appended to the results file. This will only work if the results
-    are successfully saved to disk and your javascript code supports
-    this transformation.
 
 <!-- -->
 ```xml

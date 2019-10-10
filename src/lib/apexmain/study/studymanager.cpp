@@ -410,23 +410,25 @@ bool StudyManager::belongsToActiveStudy(const QString &path) const
     return d->activeStudy && d->activeStudy->belongsToStudy(path);
 }
 
-QString StudyManager::newExperiment(const QString &experimentFilePath) const
+QString
+StudyManager::makeResultfilePath(const QString &experimentfilePath,
+                                 const QString &relativeResultfilePath) const
 {
     if (!d->activeStudy)
-        return QString();
+        throw ApexStringException(
+            tr("No study is active. Can't create resultfile path."));
 
-    try {
-        if (d->activeStudy->isPrivate() &&
-            belongsToActiveStudy(experimentFilePath))
-            return d->activeStudy->makeResultsFilePath(experimentFilePath);
-        else
-            return QString();
-    } catch (std::exception &e) {
-        qCWarning(APEX_RS,
-                  "Unable to make resultsfilepath for experiment %s: %s",
-                  qPrintable(experimentFilePath), e.what());
-    }
-    return QString();
+    return d->activeStudy->makeResultfilePath(experimentfilePath,
+                                              relativeResultfilePath);
+}
+
+QString StudyManager::makeResultsPath(const QString &relativePath) const
+{
+    if (!d->activeStudy)
+        throw ApexStringException(
+            tr("No study is active. Can't create resultfile path."));
+
+    return d->activeStudy->makeResultsPath(relativePath);
 }
 
 void StudyManager::afterExperiment(const QString &resultsFilePath)

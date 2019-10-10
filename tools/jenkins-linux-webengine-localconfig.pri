@@ -6,5 +6,3 @@ CLEBS_DISABLED *= src/plugins/matlabfilter
 
 # Dependencies for Unix:
 unix:MATLABROOT=/opt/matlab
-
-DEFINES=WITH_WEBENGINE

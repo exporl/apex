@@ -3,6 +3,7 @@
 #include "ledcontrollertest.h"
 #include "ui_ledcontrollertest.h"
 
+#include <QButtonGroup>
 #include <QMessageBox>
 
 #ifdef Q_OS_WIN32

@@ -12,7 +12,6 @@
     <enddate>2014-12-23T14:49:53</enddate>
     <duration unit="seconds">190</duration>
     <xsltscript>apexresult.xsl</xsltscript>
-    <jscript>apex:resultsviewer.html</jscript>
 </general>
 <trial id="trial_LIST_vrouw_wdz90">
 <procedure type="apex:adaptiveProcedure">

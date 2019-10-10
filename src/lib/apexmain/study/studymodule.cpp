@@ -60,9 +60,8 @@ QString StudyModule::GetEndXML() const
     return result.join('\n');
 }
 
-void StudyModule::experimentDone()
+void StudyModule::savedResultfile(const QString &resultfilePath)
 {
-    StudyManager::instance()->afterExperiment(
-        ApexControl::Get().saveFilename());
+    StudyManager::instance()->afterExperiment(resultfilePath);
 }
 }

@@ -12,32 +12,15 @@ Requirements
 Other than the requirements found in compiling_instructions you will need the
 following:
 
-##### Qt 5.6 for Android
+##### Qt for Android
 
-Because Qt 5.7 for Android requires C++11 support, and the ndk used does not
-support C++11, Qt 5.6 is required. Ndk r9b is used, newer versions can't build
-some of the libraries required.
+Installation automated by the `tools/android-prepare-api.sh` script.
 
-##### Java 32bit
-
-Qt for Android needs a 32bit java jdk. The script retrieves the location from
-updata-java-alternatives. If no i386 installation is found, no apk can be built
-and installed, but APEX will build.
+##### Java
 
 ##### Android OpenSSL
 
-We compile OpenSSL as a static archive for Android. The SO (shared object) will
-conflict with the system's SO (which is not part of the public api) because of
-similar symbols. The symbols from the system SO will already be loaded, and APEX
-will pick those over the symbols in our SO.
-
-It would work if the SO's had versioned symbols, but there's no way to guarantee
-that the system's SO would have these. It could also work if we manage to build
-a SO with an ABI identical to the system's SO (for each device), but that's an
-impossible task.
-
-By shipping it as a static archive, OpenSSL is simply included within APEX, and
-we avoid any calls to `dlopen`.
+We compile OpenSSL as a shared archive for Android. Special care needs to be taken to avoid loading the system libraries, which are OpenSSL 1.0. See <https://doc.qt.io/qt-5/android-openssl-support.html> for more information about how to build OpenSSL for android.
 
 ##### Build tools
 
@@ -48,13 +31,17 @@ Autotools, CMake, and AutoGen are needed for the `tools/android-prepare-api.sh` 
 No specific Ubuntu version is needed. The scripts should work if all the
 dependencies compile with the build tools available on your platform, any
 platform with recent versions of Autotools and CMake should do. The scripts were
-tested with ubuntu 14, 16, and 18 LTS.
+tested with ubuntu 18.
 
 Dependencies and APEX binaries
 ------------------------------
 
 To crosscompile all the dependencies the `tools/android-prepare-api.sh` script
 is provided.
+
+Most dependencies can be build with cmake and the cmake toolchain provided by the NDK. Other dependencies not using cmake need to be build with instructions described [here](https://developer.android.com/ndk/guides/other_build_systems) and [here](https://android.googlesource.com/platform/ndk/+/HEAD/docs/BuildSystemMaintainers.md). Since NDK r17 care should be taken not to include symbols from `libgcc.a` and `libunwind.a` to avoid problems with stack unwinding after an exception is thrown. This is described [here](https://android.googlesource.com/platform/ndk/+/HEAD/docs/BuildSystemMaintainers.md#unwinding) in detail.
+
+Libc++ is used as the STL. Libc++ expects type information for exception handling and dynamic casts. Providing a [key funcion](http://itanium-cxx-abi.github.io/cxx-abi/abi.html#vague-vtable) ensures type information. This is an extra requirement for C++ code that should run on Android.
 
 Once all the dependencies are compiled run the `tools/android-build.sh`
 script. Run it with the `--help` parameter for all options. Be sure to
@@ -92,13 +79,12 @@ Building release version
 To build a release version you'll need to supply the following parameters to
 `tools/android-build.sh`:
 
-1. `-r`: for release.
+1. `--release`: for release.
 
 2. `--ks`: path to the keystore containing the key which the apk will be signed
    with. This key is stored in a JKS keystore.
 
-3. `--ks-pass`: this is the keystore password. The safest way to specify the
-   password is in a file. The path should be prefixed with "file:".
+3. `--ks-pass-path`: this is the path to a file containing the keystore password.
 
 APKs need to be signed so the user can verify that any next version is issued by
 us. The public key certificate included with the APK is self-signed. The JKS

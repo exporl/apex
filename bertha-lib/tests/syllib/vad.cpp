@@ -676,12 +676,12 @@ void SyllibTest::testVad()
 
         if (i == 0) {
             SpeechInit(&data, VADEnergy);
-            qFill(result.data() + i * bufferSize,
-                  result.data() + (i + 1) * bufferSize, 0);
+            std::fill(result.data() + i * bufferSize,
+                      result.data() + (i + 1) * bufferSize, 0);
         } else {
-            qFill(result.data() + i * bufferSize,
-                  result.data() + (i + 1) * bufferSize,
-                  Speechdet(&data, VADEnergy));
+            std::fill(result.data() + i * bufferSize,
+                      result.data() + (i + 1) * bufferSize,
+                      Speechdet(&data, VADEnergy));
         }
     }
 
@@ -689,7 +689,7 @@ void SyllibTest::testVad()
         VoiceActivityDetector vad(bufferSize, false);
         vad.setWeirdRMSLimiting(true);
         QVector<double> result2(bufferSize * (buffers + 1));
-        qCopy(buffer.constBegin(), buffer.constEnd(), result2.begin());
+        std::copy(buffer.constBegin(), buffer.constEnd(), result2.begin());
         for (unsigned i = 0; i < buffers; ++i)
             vad.process(result2.data() + i * bufferSize, bufferSize);
 
@@ -710,7 +710,7 @@ void SyllibTest::testVad()
         VoiceActivityDetector vad(bufferSize, true);
         vad.setWeirdRMSLimiting(true);
         QVector<double> result2(bufferSize * buffers);
-        qCopy(buffer.constBegin(), buffer.constEnd(), result2.begin());
+        std::copy(buffer.constBegin(), buffer.constEnd(), result2.begin());
         for (unsigned i = 0; i < buffers; ++i)
             vad.process(result2.data() + i * bufferSize, bufferSize);
 

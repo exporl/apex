@@ -23,6 +23,7 @@
 #define _BERTHA_SRC_LIB_BERTHA_DEVICEINTERFACE_H_
 
 #include "blockinterface.h"
+#include "global.h"
 
 #include <QMap>
 #include <QStringList>
@@ -33,15 +34,13 @@
 /**
  * This class is a base class for sound drivers
 */
-class DeviceInterface : public BasicBlockInterface
+class BERTHA_EXPORT DeviceInterface : public BasicBlockInterface
 {
 public:
     typedef void (*Callback)(void *);
 
     /** Virtual destructor to make the compiler happy. */
-    virtual ~DeviceInterface()
-    {
-    }
+    virtual ~DeviceInterface();
 
     /** The default nomenclature of ports is
     *   capture-1, capture-2,

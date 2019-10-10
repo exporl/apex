@@ -48,18 +48,11 @@ public:
 public Q_SLOTS:
 
     void select(data::ExperimentData *data);
-    void setupView();
     void cleanup();
 
 Q_SIGNALS:
-    void savedFile(const QString &filePath);
-    void experimentClosed();
     void errorMessage(const QString &source, const QString &message);
     void setResultsFilePath(const QString &filepath);
-
-private Q_SLOTS:
-    void onSavedFile(const QString &filePath);
-    void onExperimentClosed();
 
 private:
     FlowRunnerPrivate *d;

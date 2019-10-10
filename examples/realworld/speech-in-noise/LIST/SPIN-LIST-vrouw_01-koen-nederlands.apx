@@ -1,4 +1,4 @@
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd">
   <!--  @doc
    @what: LIST 01 sentences
    @description: Noise (male competitive talker) fixed to 55 dB, speech (female) is adapted to 2 dB SNR step size, first sentence is repeated until recognized, final SRT is determined by last 6 trials
@@ -516,7 +516,7 @@
     </parameters>
   </calibration>
   <results>
-    <page>apex:resultviewer.html</page>
+    <page>apex:resultsviewer.html</page>
     <resultparameters>
       <parameter name="reversals for mean">6</parameter>
     </resultparameters>

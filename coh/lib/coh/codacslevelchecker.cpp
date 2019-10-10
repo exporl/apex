@@ -29,6 +29,7 @@ public:
 
     bool check(unsigned amplitude);
 
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -63,6 +64,13 @@ void CodacsCommandLevelChecker::visit(CohMetaData *command)
 {
     Q_UNUSED(command);
     // ignored
+}
+
+void CodacsCommandLevelChecker::visit(CohRfFreeStimulus *command)
+{
+    Q_UNUSED(command);
+
+    this->result = false;
 }
 
 void CodacsCommandLevelChecker::visit(CohNullStimulus *command)

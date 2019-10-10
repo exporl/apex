@@ -607,27 +607,6 @@ will be to use the APEX Matlab or R toolbox, and import your result XML
 file directly. In the R toolbox, a function is also provided to convert
 a series of results XML files into one main CSV file.
 
-### saveprocessedresults
-
-If is in the experiment file the processed data will be appended to the
-XML file under , e.g.:
-
-```xml
-    <processed>
-
-    ExperimentFile=file:/C:/Users/u0047034/Documents/examples/gapdetectionchild.apx
-    Duration=4099 seconds
-    Header=trial;stimulus;correctanswer;corrector;useranswer;adaptiveparameter
-    START
-    ;5
-    END
-    </processed>
-```
-
-The results file contains a lot of information. A summary of the
-relevant results can be obtained through an XSLT transform (see next
-paragraph).
-
 ### Using the APEX Matlab Toolbox
 
 ### Using the APEX R Toolbox

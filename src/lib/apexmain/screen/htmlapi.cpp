@@ -3,8 +3,16 @@
 namespace apex
 {
 
-HtmlAPI::HtmlAPI(QObject *parent) : BaseApi(parent)
+HtmlAPI::HtmlAPI()
 {
 }
 
-} // ns apex
+HtmlAPI::~HtmlAPI()
+{
+}
+
+void HtmlAPI::newAnswer(const QString &text)
+{
+    emit answered(text);
+}
+}

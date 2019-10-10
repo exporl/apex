@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment">
+<apex:apex version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment">
   <!-- @doc
   @what: example of different arc layouts for buttons
   @description: Buttons are placed in several semi-circles on the screen

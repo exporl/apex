@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <?define BaseRegKey="Software\ExpORL\APEX4" ?>
-    <Product Id="5AC5D6AA-B7FC-4CBC-BDBD-DAA945ED1316" UpgradeCode="E7DA4D21-0679-494A-93D5-6865E2E05B6C" Name="Apex" Manufacturer="ExpORL" Version="4.0.1" Language="1033">
-        <Package Id="*" Description="Apex" Manufacturer="ExpORL" InstallerVersion="200" InstallPrivileges="elevated" InstallScope="perMachine" Compressed="yes"/>
+    <Product Id="5AC5D6AA-B7FC-4CBC-BDBD-DAA945ED1316" UpgradeCode="E7DA4D21-0679-494A-93D5-6865E2E05B6C" Name="Apex" Manufacturer="ExpORL" Version="4.1.0" Language="1033">
+        <Package Id="*" Description="Apex" Manufacturer="ExpORL" InstallerVersion="301" InstallPrivileges="elevated" InstallScope="perMachine" Compressed="yes"/>
         <MediaTemplate EmbedCab="yes"/>
         <Icon Id="apex.exe" SourceFile="$(env.ApexInstallPath)/bin/apex.exe"/>
 
@@ -36,7 +36,7 @@
         </Directory>
 
         <DirectoryRef Id="TARGETDIR">
-            <Merge Id="VCRedist" SourceFile="C:\Program Files (x86)\Common Files\Merge Modules\Microsoft_VC100_CRT_x86.msm" DiskId="1" Language="0"/>
+            <Merge Id="VCRedist" SourceFile="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Redist\MSVC\14.16.27012\MergeModules\Microsoft_VC141_CRT_x86.msm" DiskId="1" Language="0"/>
         </DirectoryRef>
 
         <Feature Id="Complete" Title="Apex" Absent="disallow" AllowAdvertise="no" Description="The complete program.">
@@ -45,7 +45,7 @@
             <ComponentGroupRef Id="AllFilesGroup"/>
         </Feature>
 
-        <Feature Id="VCRedist" Title="Visual C++ 2010 Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+        <Feature Id="VCRedist" Title="Visual C++ 2017 Runtime" AllowAdvertise="no" Display="hidden" Level="1">
             <MergeRef Id="VCRedist"/>
         </Feature>
 

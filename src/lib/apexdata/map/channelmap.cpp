@@ -25,8 +25,6 @@
 
 #include "stimulus/nucleus/nicstream/stimulation_mode.h"
 
-#include "coh/cohmapper.h"
-
 #include "channelmap.h"
 
 namespace apex
@@ -182,18 +180,6 @@ int ChannelMap::modeToStimulationModeType(const QString &sMode)
         return RMP1_2;
 
     throw ApexStringException(tr("Invalid mode %1").arg(sMode));
-}
-
-int ChannelMap::triggerToTriggerType(const QString &trigger)
-{
-    if (trigger == "All")
-        return coh::CohSequenceMapper::DefaultTrigger::AllTriggers;
-    else if (trigger == "First")
-        return coh::CohSequenceMapper::DefaultTrigger::FirstTrigger;
-    else if (trigger == "None")
-        return coh::CohSequenceMapper::DefaultTrigger::NoTriggers;
-
-    throw ApexStringException(tr("Invalid trigger %1").arg(trigger));
 }
 
 int ChannelMap::referenceElectrode(int stim) const

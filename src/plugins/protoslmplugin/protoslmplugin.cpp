@@ -21,7 +21,7 @@
 
 #include "apextools/exceptions.h"
 
-#include "common/slaveserver.h"
+#include "commonprotobuf/slaveserver.h"
 
 #include <QObject>
 

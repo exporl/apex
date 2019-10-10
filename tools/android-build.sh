@@ -12,18 +12,19 @@ cd "$(dirname $(readlink -f ${BASH_SOURCE[0]}))/.."
 
 ROOTDIR=$(pwd)
 APIDIR=$ROOTDIR/.build/api-android
-ANDROID_SDK_ROOT=false
 CLEAN=false
 DEBUGRELEASE=debug
 QMAKEARGS=
 ANDROIDDEPLOYQTARGS=
 BUILD_APK=false
 BUILD_TYPE=armv7
-ANDROID_PLATFORM=android-14
+ANDROID_API_LEVEL=
 JOBS=1
 VERSION_CODE=$(git show -s --format="%ct" HEAD)
 KEYSTORE=
-KEYSTOREPWD=
+KEYSTORE_PWD_PATH=
+
+source tools/android-versions.sh
 
 parsecmd() {
     while [ $# -gt 0 ]; do
@@ -42,11 +43,6 @@ parsecmd() {
             # attempts to build an apk
             BUILD_APK=true
             ;;
-        --java-home) #
-            # set the java vm home directory
-            JAVA_HOME=$2
-            shift
-            ;;
         --x86) #
             # builds the x86 version instead of armv7
             BUILD_TYPE=x86
@@ -62,19 +58,14 @@ parsecmd() {
             KEYSTORE=${2%/}
             shift
             ;;
-        --ks-pass) #
-            # password for the keystore, see apksigner tool for help
-            KEYSTOREPWD=${2%/}
+        --ks-pass-path) #
+            # path to file with the password for the keystore, see apksigner tool for help
+            KEYSTORE_PWD_PATH=${2%/}
             shift
             ;;
-        -s|--sdk) #
-            # sdk location, required to build an apk
-            ANDROID_SDK_ROOT=${2%/}
-            shift
-            ;;
-        --android-platform) # [android-14|...]
+        --android-api-level) # [16|...]
             # use a specific android platform target instead of the default one
-            ANDROID_PLATFORM=$2
+            ANDROID_API_LEVEL=$2
             shift
             ;;
         -j|--jobs) # [jobs]
@@ -114,19 +105,16 @@ fi
 if [ "$CLEAN" = "true" ]; then
     rm -rf .build/android-$DEBUGRELEASE .build/android-$DEBUGRELEASE-installed
     rm -rf bin/android-$DEBUGRELEASE bin/android-$DEBUGRELEASE-installed
-    find -name "*.json" -delete -o -name "Makefile" -delete
+    find -name "android-*.so-deployment-settings.json" -delete -o -name "Makefile" -delete
 fi
 
-CURRENT_PREFIX=$APIDIR/host/$BUILD_TYPE/usr
-QT_ROOT=$APIDIR/Qt/5.6/android_$BUILD_TYPE
-ANDROID_TARGET_ARCH=$BUILD_TYPE
-INSTALLDIR=$ROOTDIR/bin/android-$DEBUGRELEASE-installed/$ANDROID_TARGET_ARCH/apex
-ANDROID_NDK_ROOT=$APIDIR/android/android-ndk-r9b
-PKG_CONFIG_LIBDIR=$CURRENT_PREFIX/lib/pkgconfig
-ANT_PATH=$APIDIR/ant/apache-ant-1.9.7/bin/ant
-PATH="$APIDIR/build_libs/usr/bin:$PATH" # protoc
-
-export ANDROID_NDK_ROOT JAVA_HOME PKG_CONFIG_LIBDIR ANDROID_SDK_ROOT PATH
+PREFIX=$APIDIR/host/$BUILD_TYPE/usr
+QT_ROOT=$APIDIR/Qt/$QT_VERSION/android_$BUILD_TYPE
+INSTALLDIR=$ROOTDIR/bin/android-$DEBUGRELEASE-installed/$BUILD_TYPE/apex
+export ANDROID_SDK_ROOT=$APIDIR/android-sdk-linux
+export ANDROID_NDK_ROOT=$APIDIR/android-sdk-linux/ndk/${ANDROID_NDK_VERSION}
+export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
+export PKG_CONFIG_SYSROOT_DIR=/
 
 # Build Android manifest
 rm -rf $ROOTDIR/.build/android-$DEBUGRELEASE/template
@@ -149,51 +137,43 @@ APEX_SCHEMA_VERSION=$(cat "$ROOTDIR/src/lib/apextools/version.h" | grep '#define
 sed "s#-- %%INSERT_TEST_TEMPLATES%% --#$MANIFEST_TESTS#" "$ROOTDIR/tools/android-template/AndroidManifest.xml.in" \
     | sed "s#-- %%INSERT_VERSION_NAME%% --#$APEX_SCHEMA_VERSION#" \
     | sed "s#-- %%INSERT_VERSION_CODE%% --#$VERSION_CODE#" \
+    | sed "s#-- %%INSERT_MIN_SDK_VERSION%% --#$ANDROID_API_LEVEL#" \
+    | sed "s#-- %%INSERT_TARGET_SDK_VERSION%% --#$ANDROID_TARGET_SDK_LEVEL#" \
     > "$ROOTDIR/.build/android-$DEBUGRELEASE/template/AndroidManifest.xml"
 
 cp -r $ROOTDIR/src/java/* $ROOTDIR/.build/android-$DEBUGRELEASE/template/src/be/kuleuven/med/exporl/apex/
-
 cp -r $ROOTDIR/tools/android-template/res $ROOTDIR/.build/android-$DEBUGRELEASE/template/
 
 # Build source tree
-$QT_ROOT/bin/qmake -spec android-g++ $QMAKEARGS \
-                    "PREFIX=$CURRENT_PREFIX" \
-                    "PKG_CONFIG_LIBDIR=$CURRENT_PREFIX/lib/pkgconfig" \
-                    "QT_CONFIG -= no-pkg-config" \
-                    "INCLUDEPATH += $CURRENT_PREFIX/include $QT_ROOT/include" \
-                    "LIBS += -L$CURRENT_PREFIX/lib -L$QT_ROOT/lib" \
-                    "ANDROID_EXTRA_LIBS += $CURRENT_PREFIX/lib/libprotobuf-lite.so $CURRENT_PREFIX/lib/libxml2.so $CURRENT_PREFIX/lib/libportaudio.so $CURRENT_PREFIX/lib/libsndfile.so $CURRENT_PREFIX/lib/libfftw3f.so $CURRENT_PREFIX/lib/libfftw3.so $ROOTDIR/bin/android-$DEBUGRELEASE/libapexmain.so $CURRENT_PREFIX/lib/libgit2.so" \
-                    "ANDROID_PACKAGE_SOURCE_DIR=$ROOTDIR/.build/android-$DEBUGRELEASE/template"
+$QT_ROOT/bin/qmake -spec android-clang $QMAKEARGS \
+    "ANDROID_PACKAGE_SOURCE_DIR=$ROOTDIR/.build/android-$DEBUGRELEASE/template" \
+    "ANDROID_EXTRA_LIBS += \
+        $PREFIX/lib/libxml2.so \
+        $PREFIX/lib/libportaudio.so \
+        $PREFIX/lib/libsndfile.so \
+        $PREFIX/lib/libfftw3f.so \
+        $PREFIX/lib/libfftw3.so \
+        $PREFIX/lib/libgit2.so \
+        $PREFIX/lib/libcrypto_1_1.so \
+        $PREFIX/lib/libssl_1_1.so \
+        $PREFIX/lib/libssh2.so \
+        $PREFIX/lib/libgit2.so \
+        $ROOTDIR/bin/android-$DEBUGRELEASE/libapexmain.so"
+
 make -j "$JOBS" qmake_all
 make -j "$JOBS"
 make -j "$JOBS" install "INSTALL_ROOT=$INSTALLDIR"
 
 if [ "$BUILD_APK" = "true" ]; then
-    if [ "$ANDROID_SDK_ROOT" = "false" ]; then
-        echo "Please specify an sdk location"
-        exit 0
+    if [ "$DEBUGRELEASE" = "release" ] && ([ -z "$KEYSTORE" ] || [ -z "$KEYSTORE_PWD_PATH" ]); then
+        echo "Specify --ks and --ks-pass-path to sign the package" && exit 1
     fi
-
-    $QT_ROOT/bin/androiddeployqt --output "$INSTALLDIR" --verbose --input "$ROOTDIR/src/programs/apex/android-libapex.so-deployment-settings.json" --ant "$ANT_PATH" --android-platform "$ANDROID_PLATFORM" $ANDROIDDEPLOYQTARGS
 
     if [ "$DEBUGRELEASE" = "release" ]; then
-        if [ -z "$KEYSTORE" ] || [ -z "$KEYSTOREPWD" ]; then
-            echo "Specify --ks and --ks-pass to sign the package"
-            exit 1
-        fi
-        "$ANDROID_SDK_ROOT"/build-tools/24.0.3/zipalign -p 4 \
-                           "$INSTALLDIR/bin/QtApp-release-unsigned.apk" \
-                           "$INSTALLDIR/bin/QtApp-release-unsigned-aligned.apk"
-        "$ANDROID_SDK_ROOT"/build-tools/24.0.3/apksigner sign \
-                           --ks "$KEYSTORE" --ks-pass "$KEYSTOREPWD" \
-                           --out "$INSTALLDIR/bin/QtApp-$DEBUGRELEASE.apk" \
-                           "$INSTALLDIR/bin/QtApp-release-unsigned-aligned.apk"
-        "$ANDROID_SDK_ROOT"/build-tools/24.0.3/apksigner verify -v \
-                           "$INSTALLDIR/bin/QtApp-$DEBUGRELEASE.apk"
-    elif [ "$SIGN" = "true" ] && [ "$DEBUGRELEASE" != "release" ]; then
-        echo "Cannot sign debug package"
+        ANDROIDDEPLOYQTARGS="$ANDROIDDEPLOYQTARGS --sign $KEYSTORE apex-release --storepass $(cat $KEYSTORE_PWD_PATH)"
     fi
 
-    echo "To install do: (it takes about 3 minutes)"
-    echo "  adb install -r $INSTALLDIR/bin/QtApp-$DEBUGRELEASE.apk"
+    $QT_ROOT/bin/androiddeployqt --output $INSTALLDIR --input "$ROOTDIR/src/programs/apex/android-libapex.so-deployment-settings.json" --gradle --android-platform android-${ANDROID_API_LEVEL} $ANDROIDDEPLOYQTARGS
+
+    echo "To install do: adb install -r $INSTALLDIR/build/outputs/apk/$DEBUGRELEASE/apex-$DEBUGRELEASE.apk"
 fi

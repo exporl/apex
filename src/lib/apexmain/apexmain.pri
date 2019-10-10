@@ -1,1 +1,2 @@
-CLEBS *= coh streamapp apextools apexdata apexwriters
+CLEBS *= streamapp apextools apexdata apexwriters
+!android:CLEBS += coh

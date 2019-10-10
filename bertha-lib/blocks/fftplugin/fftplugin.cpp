@@ -290,8 +290,8 @@ void FftFilterPlugin::setFilterCoefficients(const QVector<double> &value)
     filterCoefficients = value;
     filterCoefficients.resize((blockSize / 2) + 1);
     if (unsigned(value.size()) < (blockSize / 2) + 1)
-        qFill(filterCoefficients.begin() + value.size(),
-              filterCoefficients.end(), 1);
+        std::fill(filterCoefficients.begin() + value.size(),
+                  filterCoefficients.end(), 1);
 }
 
 void FftFilterPlugin::release()

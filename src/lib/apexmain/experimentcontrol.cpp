@@ -1,5 +1,7 @@
 #include "apexdata/experimentdata.h"
 
+#include "apexdata/parameters/generalparameters.h"
+
 #include "apexdata/procedure/procedureinterface.h"
 #include "apexdata/procedure/trial.h"
 
@@ -120,8 +122,7 @@ signals:
     void dontNeedPause();
     void outroDone();
     void errorMessage(const QString &source, const QString &message);
-    void savedResults(QString filename);
-    void experimentClosed();
+    void doSignalExperimentFinished();
     void resultsShowed();
     /**
      * @brief parametersLoaded sends out the stimulus' params map
@@ -145,8 +146,6 @@ private:
     int currentStimulus;
 
     ResultHighlight lastResponse;
-
-    QDateTime startTime;
 
     bool pauseAfterTrial;
     bool isFirstTrial;
@@ -239,7 +238,8 @@ void ExperimentControlPrivate::setupStates()
             SLOT(disableSelectSoundcard()));
     connect(running, SIGNAL(entered()), io, SLOT(disableStart()));
 
-    if (flags & ExperimentControl::AutoStart)
+    if ((flags & ExperimentControl::AutoStart) ||
+        rd->GetData().generalParameters()->GetAutoStart())
         waitForStart->addTransition(running);
     else {
         waitForStart->addTransition(io, SIGNAL(startRequest()), running);
@@ -634,7 +634,8 @@ void ExperimentControlPrivate::startNextTrial()
 {
     rd->trialStartTime()->setDateTime();
     if (isFirstTrial)
-        startTime = QDateTime::currentDateTime();
+        rd->modResultSink()->setExperimentStartTime(
+            QDateTime::currentDateTime());
 
     io->setProgress(procedure->progress());
     try {
@@ -667,7 +668,7 @@ void ExperimentControlPrivate::afterTrial()
 
         // FIXME check for a better way to collect results
         if (!resultXml.isEmpty())
-            rd->modResultSink()->CollectResults(currentTrial.id(), resultXml);
+            rd->modResultSink()->collectResults(currentTrial.id(), resultXml);
     }
 
     isFirstTrial = false;
@@ -884,17 +885,15 @@ void ExperimentControlPrivate::showOutro()
 void ExperimentControlPrivate::showResult()
 {
     rd->modOutput()->CloseDevices();
-    if (rd->modResultSink() != 0) {
+    if (rd->modResultSink() != nullptr) {
         rd->modResultSink()->setStopCondition(stopped);
         rd->modResultSink()->setExtraXml(procedure->finalResultXml());
-        rd->modResultSink()->Finished();
-        Q_EMIT savedResults(rd->modResultSink()->GetFilename());
+        rd->modResultSink()->setExperimentEndTime(QDateTime::currentDateTime());
+        const QString resultfilePath = rd->modResultSink()->saveResultfile();
 
-        if (rd->modResultSink()->IsSaved()) {
-            if (rd->GetData().resultParameters()->showResultsAfter() ||
-                rd->GetData().resultParameters()->saveResults()) {
-                ResultViewer *rv =
-                    new ResultViewer(rd->modResultSink()->GetFilename());
+        if (!resultfilePath.isEmpty()) {
+            if (rd->GetData().resultParameters()->showResultsAfter()) {
+                ResultViewer *rv = new ResultViewer(resultfilePath);
                 if (rd->GetData().resultParameters()->showResultsAfter())
                     if (rd->modRTResultSink())
                         rd->modRTResultSink()->hide();
@@ -903,10 +902,13 @@ void ExperimentControlPrivate::showResult()
                 connect(rv, SIGNAL(viewClosed()), this,
                         SIGNAL(resultsShowed()));
                 rv->show(true);
-
-                if (rd->GetData().resultParameters()->saveResults())
-                    rv->addtofile(rd->modResultSink()->GetFilename());
             }
+
+            this->disconnect(SIGNAL(doSignalExperimentFinished()));
+            connect(this, &ExperimentControlPrivate::doSignalExperimentFinished,
+                    [this, resultfilePath]() {
+                        emit q->experimentClosed(resultfilePath);
+                    });
         } else {
             Q_EMIT resultsShowed();
         }
@@ -915,8 +917,6 @@ void ExperimentControlPrivate::showResult()
 
 void ExperimentControlPrivate::afterExperiment()
 {
-    Q_EMIT experimentClosed();
-
     io->finish();
     rd->modOutput()->releaseClients();
     rd->modOutput()->StopDevices();
@@ -1012,9 +1012,10 @@ ExperimentControl::ExperimentControl(Flags flags)
     : d(new ExperimentControlPrivate(this, flags))
 {
     connect(&d->machine, SIGNAL(finished()), this, SIGNAL(experimentDone()));
-    connect(d, SIGNAL(savedResults(QString)), this,
-            SIGNAL(savedResults(QString)));
-    connect(d, SIGNAL(experimentClosed()), this, SIGNAL(experimentClosed()));
+    connect(&d->machine, &QStateMachine::finished, d,
+            &ExperimentControlPrivate::doSignalExperimentFinished);
+    connect(d, &ExperimentControlPrivate::doSignalExperimentFinished,
+            [this]() { emit experimentClosed(QString()); });
 }
 
 ExperimentControl::~ExperimentControl()
@@ -1040,11 +1041,6 @@ void ExperimentControl::start()
 bool ExperimentControl::isRunning() const
 {
     return d->machine.isRunning();
-}
-
-QDateTime ExperimentControl::startTime() const
-{
-    return d->startTime;
 }
 
 ExperimentIo *ExperimentControl::io() const

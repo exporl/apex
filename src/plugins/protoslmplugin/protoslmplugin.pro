@@ -1,3 +1,3 @@
-CLEBS *= apextools common buildplugin
+CLEBS *= apextools commonprotobuf buildplugin
 
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)

@@ -1,22 +1,22 @@
 clebsCheck(protobuf) {
     win32 {
-        isEmpty(PROTOBUFROOT):PROTOBUFROOT = $$BASEDIR/../api/protobuf
-        isEmpty(PROTOBUFLIB):PROTOBUFLIB = libprotobuf-lite
-        isEmpty(PROTOBUFLIB_RELEASE):PROTOBUFLIB_RELEASE = $${PROTOBUFLIB}
-        isEmpty(PROTOBUFLIB_DEBUG):PROTOBUFLIB_DEBUG = $${PROTOBUFLIB}
-        isEmpty(PROTOBUFLIB_VERSION):PROTOBUFLIB_VERSION = -8
-        isEmpty(PROTOBUFLIBDIR):PROTOBUFLIBDIR = $${PROTOBUFROOT}
-        isEmpty(PROTOBUFLIBDIR_RELEASE):PROTOBUFLIBDIR_RELEASE = $${PROTOBUFLIBDIR}/release
-        isEmpty(PROTOBUFLIBDIR_DEBUG):PROTOBUFLIBDIR_DEBUG = $${PROTOBUFLIBDIR}/debug
+        isEmpty(PROTOBUFROOT):PROTOBUFROOT = $$BASEDIR/../api/protobuf-cpp-3.6.1
+        isEmpty(PROTOBUFLIB_RELEASE):PROTOBUFLIB_RELEASE = libprotobuf-lite
+        isEmpty(PROTOBUFLIB_DEBUG):PROTOBUFLIB_DEBUG = libprotobuf-lited
+        isEmpty(PROTOBUFLIBDIR):PROTOBUFLIBDIR = $${PROTOBUFROOT}/lib
         isEmpty(PROTOBUFINCLUDEDIR):PROTOBUFINCLUDEDIR = $${PROTOBUFROOT}/include
-        isEmpty(PROTOBUFPROTOC):PROTOBUFPROTOC = $${PROTOBUFROOT}/protoc.exe
-        isEmpty(PROTOBUFPYTHONDIR):PROTOBUFPYTHONDIR = $${PROTOBUFROOT}/python-lib
+        isEmpty(PROTOBUFPROTOC):PROTOBUFPROTOC = $${PROTOBUFROOT}/bin/protoc.exe
+
+        isEmpty(PROTOBUFPYTHONROOT):PROTOBUFPYTHONROOT = $$BASEDIR/../api/protobuf-python-2.5.0
+        isEmpty(PROTOBUFPYTHONDIR):PROTOBUFPYTHONDIR = $${PROTOBUFPYTHONROOT}/python-lib
+        isEmpty(PROTOBUFPYTHONPROTOC):PROTOBUFPYTHONPROTOC = $${PROTOBUFPYTHONROOT}/protoc.exe
 
         exists($${PROTOBUFROOT}):CLEBS_DEPENDENCIES *= protobuf
     }
 
     unix {
         PROTOBUFPROTOC = protoc
+        PROTOBUFPYTHONPROTOC = protoc
         system(pkg-config protobuf-lite):system(which $${PROTOBUFPROTOC} 2>&1 > /dev/null):CLEBS_DEPENDENCIES *= protobuf
     }
 }
@@ -25,9 +25,9 @@ clebsDependency(protobuf) {
     win32 {
         INCLUDEPATH *= $${PROTOBUFINCLUDEDIR}
         CONFIG(debug, debug|release) {
-            LIBS *= -L$${PROTOBUFLIBDIR_DEBUG} -l$${PROTOBUFLIB_DEBUG}
+            LIBS *= -L$${PROTOBUFLIBDIR} -l$${PROTOBUFLIB_DEBUG}
         } else {
-            LIBS *= -L$${PROTOBUFLIBDIR_RELEASE} -l$${PROTOBUFLIB_RELEASE}
+            LIBS *= -L$${PROTOBUFLIBDIR} -l$${PROTOBUFLIB_RELEASE}
         }
     }
 
@@ -51,7 +51,7 @@ clebsDependency(protobuf) {
 
     protobuf_python.input = PYTHON_PROTOS
     protobuf_python.output = $$DESTDIR/${QMAKE_FILE_BASE}_pb2.py
-    protobuf_python.commands = @echo compiling protobuf && $$PROTOBUFPROTOC --python_out=$$DESTDIR $$PROTOPATHS ${QMAKE_FILE_NAME}
+    protobuf_python.commands = @echo compiling protobuf && $$PROTOBUFPYTHONPROTOC --python_out=$$DESTDIR $$PROTOPATHS ${QMAKE_FILE_NAME}
     protobuf_python.variable_out = GENERATED_FILES
     protobuf_python.CONFIG += target_predeps
 
@@ -60,13 +60,6 @@ clebsDependency(protobuf) {
 
 clebsInstall(protobuf) {
     win32 {
-        CONFIG(debug, debug|release) {
-            protobufinstall.files = $${PROTOBUFLIBDIR_DEBUG}/$${PROTOBUFLIB_DEBUG}$${PROTOBUFLIB_VERSION}.dll
-        } else {
-            protobufinstall.files = $${PROTOBUFLIBDIR_RELEASE}/$${PROTOBUFLIB_RELEASE}$${PROTOBUFLIB_VERSION}.dll
-        }
-        protobufinstall.path = $$BINDIR
-
         pbpygoogleinstall.files = $$PROTOBUFPYTHONDIR/google/*.py
         pbpygoogleinstall.path = $$BINDIR/google
 
@@ -79,6 +72,6 @@ clebsInstall(protobuf) {
         pbpyinternalinstall.files = $$PROTOBUFPYTHONDIR/google/protobuf/internal/*.py
         pbpyinternalinstall.path = $$BINDIR/google/protobuf/internal
 
-        INSTALLS *= protobufinstall pbpygoogleinstall pbpyprotobufinstall pbpycompilerinstall pbpyinternalinstall
+        INSTALLS *= pbpygoogleinstall pbpyprotobufinstall pbpycompilerinstall pbpyinternalinstall
     }
 }

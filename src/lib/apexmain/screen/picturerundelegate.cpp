@@ -72,12 +72,12 @@ PictureRunDelegate::PictureRunDelegate(ExperimentRunDelegate *p_exprd,
     setStyleSheet(element->getStyle());
 
     m_button->setBorderSize(5);
-    // connect( this, SIGNAL( released() ), this, SLOT( sendAnsweredSignal() )
-    // );
-    // connect( m_button, SIGNAL( clicked() ), this, SLOT( sendAnsweredSignal()
-    // ) );
     connect(m_button, SIGNAL(mousePressed(const QPointF)), this,
             SLOT(sendAnsweredSignal(const QPointF &)));
+
+    ParameterManager *mgr = p_exprd->GetParameterManager();
+    connect(mgr, SIGNAL(parameterChanged(QString, QVariant)), this,
+            SLOT(updateParameter(QString, QVariant)));
 
     m_pPixMap = new QPixmap(
         ApexTools::addPrefix(element->getDefault(),
@@ -182,25 +182,15 @@ void PictureRunDelegate::mouseReleaseEvent(QMouseEvent * /*event*/)
     Q_EMIT(released());
 }
 
-void PictureRunDelegate::newStimulus(stimulus::Stimulus *stimulus)
+void PictureRunDelegate::updateParameter(const QString &id,
+                                         const QVariant &value)
 {
-    QString value;
-    QString id(element->getFileId());
-    if (id.isEmpty())
+    QString myid(element->getFileId());
+    if (myid != id)
         return;
 
-    ParameterManager *pm = m_rd->GetParameterManager();
-
-    if (stimulus->GetVarParameters()->contains(id)) {
-        value = stimulus->GetVarParameters()->value(id).toString();
-    } else if (pm->parameterValue(id).isValid()) {
-        value = pm->parameterValue(id).toString();
-    } else {
-        qCDebug(APEX_RS) << "Could not find parameter " << id;
-    }
-
     QPixmap *t = new QPixmap(ApexTools::addPrefix(
-        value, FilePrefixConvertor::convert(element->prefix())));
+        value.toString(), FilePrefixConvertor::convert(element->prefix())));
 
     if (t) {
         delete m_pPixMap;
@@ -220,7 +210,8 @@ void PictureRunDelegate::newStimulus(stimulus::Stimulus *stimulus)
         qCWarning(
             APEX_RS, "%s",
             qPrintable(QSL("%1: %2").arg(
-                "Picture", QString("Could not open image %1").arg(value))));
+                "Picture",
+                QString("Could not open image %1").arg(value.toString()))));
     }
 
     qCDebug(APEX_RS) << "PictureRunDelegate: param " << id << " = " << value;

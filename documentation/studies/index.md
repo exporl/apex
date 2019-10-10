@@ -101,8 +101,7 @@ will take precedence. If the latter is not present, one is chosen at random.
 
 ### fetching results
 
-Fetching the results is somewhat complex because the result branches don't have
-any shared history. Result branches are prefixed with `results-`. `git branch
+Result branches are prefixed with `results-`. `git branch
 --list -a origin/results-*` lists all result branches.
 
 ```shell
@@ -113,32 +112,21 @@ any shared history. Result branches are prefixed with `results-`. `git branch
 git clone <url>
 cd <repository>
 
-# Checkout a branch to collect the results on.
-git checkout --orphan collected-results
-git rm --cached -r .
-git clean -fd
-
-# Create a base commit, merging won't work without one.
-git commit --allow-empty -m "Base commit for merge."
+# Checkout 'all-results' branch to collect the results on.
+git checkout all-results
 
 # List all result branches.
 BRANCHES=$(git branch -a --list origin/results-*)
-# Merge all branches onto collected-results.
-# The actual merge will fail,
-# but it will give the right history.
-git merge --allow-unrelated-histories -s octopus $BRANCHES
-# Read the content of each branches into the index.
-git read-tree $BRANCHES
-# Commit them into collected-results.
-git commit -m "Merge $BRANCHES into collected-results."
-# Reset index.
-git reset --hard
+# Merge all branches onto all-results.
+git merge $BRANCHES
+# You can push the merged branches back to origin (optional)
+git push origin HEAD:all-results
 ```
 
-The results should now be collected on the `collected-results` branch, and
+The results should now be collected on the `all-results` branch, and
 present in your working directory. To update the branch with new results, do
-`git fetch origin; git checkout collected-results;` and then repeat the steps in
-the above script starting from *"\#List all result branches."*.
+`git fetch origin` and then repeat the steps in
+the above procedure starting from `# Checkout 'all-results' branch`.
 
 Security
 --------

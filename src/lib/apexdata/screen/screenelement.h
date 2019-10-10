@@ -110,7 +110,8 @@ public:
         TwoPartLayout,
         ParameterLabel,
         Matrix,
-        Html
+        Html,
+        NumericKeypad
     } ElementTypeT;
 
     /**

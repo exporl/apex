@@ -172,7 +172,7 @@ void VoiceActivityDetector::process(double *data, unsigned dataLength)
         memcpy(delay + length - fillNeeded, data + pos,
                fillAvailable * sizeof(double));
         if (!synchronous)
-            qFill(data + pos, data + pos + fillAvailable, d->prevResult);
+            std::fill(data + pos, data + pos + fillAvailable, d->prevResult);
         dataLength -= fillAvailable;
         pos += fillAvailable;
         position += fillAvailable;
@@ -181,7 +181,7 @@ void VoiceActivityDetector::process(double *data, unsigned dataLength)
             d->process(delay);
 
         if (synchronous)
-            qFill(data + pos - length, data + pos, d->prevResult);
+            std::fill(data + pos - length, data + pos, d->prevResult);
     }
 }
 

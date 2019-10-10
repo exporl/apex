@@ -22,19 +22,6 @@
 #include <QObject>
 #include <QString>
 
-class DummyQObject : public QObject
-{
-    Q_OBJECT
-public Q_SLOTS:
-    QString concatSlot(const QString &myString, int myInt)
-    {
-        Q_EMIT dummySignal();
-        return myString + QString::number(myInt);
-    }
-Q_SIGNALS:
-    void dummySignal();
-};
-
 class CommonTest : public QObject
 {
     Q_OBJECT

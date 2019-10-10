@@ -32,7 +32,5 @@ int main(int argc, char *argv[])
     TemporarySettings settings;
 
     CommonTest test;
-    QTest::qExec(&test, argc, argv);
-
-    return 0;
+    return QTest::qExec(&test, argc, argv);
 }

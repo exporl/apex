@@ -78,9 +78,16 @@ public:
                                      const QRegularExpression &regex,
                                      bool includeHidden = false);
 
-    static void ReplaceCharInString(QString &a_StringToSearch,
-                                    const QChar &ac_ToReplace,
-                                    const QString &ac_ReplaceWith);
+    /*
+     * Make a copy of the original file and inject bootstrap values `basePath`
+     * (the original directory where the source file resides) and `serverPort`
+     * (the serverport to initialize a WebSocket). In this directory it's
+     * possible to provide more context to the resulting html file (e.g.
+     * javavascript libraries, css files).
+    */
+    static QString copyAndPrepareAsHtmlFileWithInjectedBootstrapValues(
+        const QString &sourcePath, const QString &destinationDirectory,
+        const quint16 serverPort);
     static QString escapeJavascriptString(const QString &s);
 
     /** Returns the maximum font size possible for fitting the string into
@@ -198,6 +205,10 @@ public:
     {
         return first == second;
     }
+
+private:
+    static void replaceFragmentsInTextFile(
+        const QString &path, const QMap<QString, QString> &fragmentsToReplace);
 };
 }
 

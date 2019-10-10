@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="qwebchannel.js"></script>
+    <script>
+        window.onload = function() {
+            var socket = new WebSocket("ws://127.0.0.1:3456");
+
+            socket.onopen = function() {
+                new QWebChannel(socket, function(channel) {
+                    var api = channel.objects.api;
+
+                    api.signalled.connect(function() {
+                        api.acknowledgeSignal();
+                    });
+                    api.start();
+                });
+            };
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>

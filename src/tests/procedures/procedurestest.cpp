@@ -453,9 +453,7 @@ void ProceduresTest::testScriptProcedureInvalidTrial()
         makeDummyExperimentRunDelegate(mcd));
 
     data::ScriptProcedureData *params = new ScriptProcedureData();
-    params->setScript(
-        Paths::searchFile(QSL("tests/libapex/testprocedureinvalidtrial.js"),
-                          Paths::dataDirectories()));
+    params->setScript("testprocedureinvalidtrial.js");
     params->setDebugger(false);
     params->setPresentations(1);
     params->setSkip(0);

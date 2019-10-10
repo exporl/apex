@@ -2,23 +2,21 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script src="external/jquery-1.11.1.min.js"></script>
-    <script src="external/jquery.mobile-1.4.5.min.js"></script>
+
     <meta name="viewport" content="width=device-width">
 
-    <script src="external/jquery-3.1.1.min.js"></script>
-    <script src="external/highcharts-custom.js"></script>
-    <link rel="stylesheet" type="text/css" href="resultsviewer.css"></link>
-    <script src="resultsprocessor.js" type="text/javascript"> </script>
-    <script src="resultsprinter.js" type="text/javascript"> </script>
-    <script src="rv-internals.js" type="text/javascript"> </script>
-    <script src="resultsviewer-config.js" type="text/javascript"> </script>
-    <script src="js/polyfill.js" type="text/javascript"> </script>
-    <script src="js/commonwebsocket.js" type="text/javascript"> </script>
-    <script src="resultapi.js" type="text/javascript"> </script>
-
+    <link rel="stylesheet" href="resultsviewer.css"/>
     <link rel="stylesheet" href="external/themes/jquery.mobile.icons.min.css"/>
     <link rel="stylesheet" href="external/themes/jquery.mobile.structure-1.4.5.min.css"/>
+
+    <script src="external/jquery-1.11.1.min.js"></script>
+    <script src="external/jquery.mobile-1.4.5.min.js"></script>
+    <script src="external/highcharts-custom.js"></script>
+
+    <script src="resultsprocessor.js"></script>
+    <script src="resultsprinter.js"></script>
+    <script src="rv-internals.js"></script>
+    <script src="resultsviewer-config.js"></script>
 
     <script type="text/javascript">
       $(document).ready(function() {
@@ -27,8 +25,7 @@
     </script>
   </head>
   <body>
-    <div id="chartbuttonscontainer">
-    </div>
+    <div id="chartbuttonscontainer"></div>
     <div style="width:70%;margin: 0 auto;">
       <div id="custombuttonscontainer"></div>
       <hr>

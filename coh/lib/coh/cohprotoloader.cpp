@@ -79,6 +79,9 @@ void CohProtoLoader::parseCommand(const ProtoSlaveCommand &command)
             throw Exception(tr("Unable to load value from meta data command"));
         parent->append(
             new CohMetaData(QString::fromUtf8(metadata.key().data()), value));
+    } else if (command.has_rffree()) {
+        const ProtoSlaveCommand::RfFree &rffree = command.rffree();
+        parent->append(new CohRfFreeStimulus(rffree.period_cycles() / 5.0));
     } else if (command.has_null()) {
         const ProtoSlaveCommand::Stimulus &stimulus = command.stimulus();
         const ProtoSlaveCommand::Null &null = command.null();

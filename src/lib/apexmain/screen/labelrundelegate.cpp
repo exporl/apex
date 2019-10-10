@@ -58,7 +58,7 @@ LabelRunDelegate::LabelRunDelegate(ExperimentRunDelegate *p_exprd,
     if (pos == -1)
         return;
     QFontMetrics fm(minfont);
-    setMinimumWidth(fm.width(l.at(pos)));
+    setMinimumWidth(fm.boundingRect(l.at(pos)).width());
     setMinimumHeight((fm.height() + fm.lineSpacing()) * l.size());
 }
 

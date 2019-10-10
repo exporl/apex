@@ -79,7 +79,6 @@ public:
     bool operator==(const ChannelMap &other) const;
 
     static int modeToStimulationModeType(const QString &sMode);
-    static int triggerToTriggerType(const QString &trigger);
 
 private:
     ChannelMapPrivate *d;

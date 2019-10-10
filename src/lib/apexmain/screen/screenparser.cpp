@@ -30,6 +30,7 @@
 #include "apexdata/screen/htmlelement.h"
 #include "apexdata/screen/labelelement.h"
 #include "apexdata/screen/matrixelement.h"
+#include "apexdata/screen/numerickeypadelement.h"
 #include "apexdata/screen/parameterlabelelement.h"
 #include "apexdata/screen/parameterlistelement.h"
 #include "apexdata/screen/pictureelement.h"
@@ -66,27 +67,7 @@
 #include <QtGlobal>
 
 using namespace apex::XMLKeys;
-using apex::data::ParameterData;
-using apex::data::AnswerLabelElement;
-using apex::data::ArcLayoutElement;
-using apex::data::ButtonElement;
-using apex::data::CheckBoxElement;
-using apex::data::ButtonGroup;
-using apex::data::FlashPlayerElement;
-using apex::data::GridLayoutElement;
-using apex::data::LabelElement;
-using apex::data::ParameterListElement;
-using apex::data::ParameterLabelElement;
-using apex::data::PictureElement;
-using apex::data::PictureLabelElement;
-using apex::data::Screen;
-using apex::data::TextEditElement;
-using apex::data::SliderElement;
-using apex::data::HtmlElement;
-using apex::data::ScreensData;
-
-namespace
-{
+using namespace apex::data;
 
 /**
  * Create a keysequence.
@@ -166,7 +147,6 @@ bool sf_bIsLayout(const QString &ac_sTag)
     return (ac_sTag == gc_sGridLayout || ac_sTag == gc_sVertLayout ||
             ac_sTag == gc_sHoriLayout || ac_sTag == gc_sArcLayout ||
             ac_sTag == gc_sTwoPartLayout);
-}
 }
 
 namespace apex
@@ -1010,6 +990,8 @@ ScreenElement *ScreenParser::createNonLayoutElement(const QDomElement &element,
         if (!te.isNull())
             temp->setText(te.text());
         ret = temp;
+    } else if (tag == gc_sNumericKeypad) {
+        ret = new NumericKeypadElement(id, parent);
     } else
         return 0;
 

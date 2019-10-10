@@ -3,23 +3,22 @@
 
 #include <QObject>
 
-#include "../baseapi.h"
-
 namespace apex
 {
 
-class HtmlAPI : public BaseApi
+class HtmlAPI : public QObject
 {
     Q_OBJECT
 public:
-    explicit HtmlAPI(QObject *parent = 0);
+    explicit HtmlAPI();
+    virtual ~HtmlAPI();
+
+    Q_INVOKABLE void newAnswer(const QString &text);
 
 signals:
-    void javascriptFinished(const QVariant &result);
-
-public slots:
+    void parameterChanged(const QString &name, const QVariant &value);
+    void answered(const QString &text);
 };
+}
 
-} // ns apex
-
-#endif // _EXPORL_SRC_LIB_APEXMAIN_SCREEN_HTMLAPI_H_
+#endif

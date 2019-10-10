@@ -66,8 +66,8 @@ public:
     void connectSlots(gui::ScreenRunDelegate *d) Q_DECL_OVERRIDE;
     void feedBack(const FeedbackMode &mode) Q_DECL_OVERRIDE;
     void enable();
-
     void setEnabled(bool enable) Q_DECL_OVERRIDE;
+
 Q_SIGNALS:
     void answered(ScreenElementRunDelegate *);
 
@@ -75,15 +75,10 @@ protected:
     void resizeEvent(QResizeEvent *e);
     void changeEvent(QEvent *event);
 public Q_SLOTS:
-    void sendAnsweredSignal();
-private Q_SLOTS:
-    void parameterChanged(QString, QVariant);
-    void setup();
+    void collectAnswer(const QString &answer);
 
-public:
+private:
     const HtmlElement *element;
-
-protected:
     HtmlRunDelegatePrivate *const d;
 };
 }

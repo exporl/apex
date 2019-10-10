@@ -45,6 +45,7 @@ class ScreenElement;
 class TextEditElement;
 class TwoPartLayoutElement;
 class HtmlElement;
+class NumericKeypadElement;
 
 /**
  * The ScreenElementVisitor class is a visitor interface for
@@ -104,6 +105,7 @@ public:
     virtual void visitTextEdit(const TextEditElement *e);
     virtual void visitHtml(const HtmlElement *e);
     virtual void visitTwoPartLayout(const TwoPartLayoutElement *e);
+    virtual void visitNumericKeypad(const NumericKeypadElement *e);
 
     virtual void visitAnswerLabel(AnswerLabelElement *e);
     virtual void visitArcLayout(ArcLayoutElement *e);
@@ -123,6 +125,7 @@ public:
     virtual void visitTextEdit(TextEditElement *e);
     virtual void visitHtml(HtmlElement *e);
     virtual void visitTwoPartLayout(TwoPartLayoutElement *e);
+    virtual void visitNumericKeypad(NumericKeypadElement *e);
 };
 }
 }

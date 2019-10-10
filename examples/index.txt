@@ -28,7 +28,9 @@ connections
         connections/connections-negativechannel.apx                   Test the use of channel -1
 controller
         controller/controller-plugincontroller.apx                    Plugincontroller
+        controller/networkdevicecontroller.apx                        NetworkDeviceController
         controller/osccontroller.apx                                 
+        controller/osccontroller_avatar.apx                          
 datablocks
         datablocks/datablocks-combination.apx                         Combination of datablocks using sequential and simultaneous
         datablocks/datablocks-loop.apx                                Use the same datablock multiple times in a stimulus
@@ -62,6 +64,7 @@ filters
         filters/filters-wavfadeinlin.apx                              Regression test for fader (begin/end of stimulus is not abrupt)
         filters/filters-wavfadeoutcos.apx                             Regression test for fader (begin/end of stimulus is not abrupt)
         filters/filters-wavfadeoutlin.apx                             Regression test for fader (begin/end of stimulus is not abrupt)
+        filters/randomjump.apx                                       
 general
         general/general-autosave.apx                                  Automatically save results to apr-file after experiment
         general/general-exitafter.apx                                 Exit experiment when finished
@@ -88,11 +91,12 @@ l34
         l34/r126wizard.apx                                            R126 is the clinical fitting software
         l34/rfgenxs-bilateral.apx                                     Test of synchronized bilateral CI setup with an RFGenXS
         l34/setvolume.apx                                             Change volume of CI stimuli (send simple XML file to L34 device)
+        l34/setvolume-spinbox.apx                                     Change volume of CI stimuli (send simple XML file to L34 device)
         l34/simpleaseq.apx                                           
         l34/simpleaseq-dummy.apx                                     
         l34/simpleaseq-examples.apx                                   power-up test?
         l34/simpleaseq-sp12.apx                                      
-        l34/triggertest.apx                                          
+        l34/triggertest.apx
         l34/wordsaseq.apx                                            
 manual
         manual/closedsetword.apx                                      Closed-set identification of words in noise with figures
@@ -157,6 +161,7 @@ procedure
         procedure/multiprocedure-train-train.apx                      Multiprocedure-order - 2trainingProcedures with DIFFERENT procedure, parameters and trials (different stimuli)
         procedure/multiscreen-idn1.apx                                Multiscreen - 1 procedure with for the first trials: screen 1 and the last trials: screen 2 => Same outcome as sequential Multiprocedure
         procedure/multistandard-unique.apx                            Multiple standards - Unique standard
+        procedure/nback-procedure.apx                                 Adaptive procedure: n-back task phoneme discrimination
         procedure/noanswer.apx                                        Show warning if no answer is defined for a stimulus
         procedure/nostandardfound.apx                                 Show warning if no answer is defined for a stimulus
         procedure/open-set-constant.apx                               Open set experiment - Constant stimuli
@@ -184,14 +189,15 @@ randomgenerator
         randomgenerator/uniform-int-invalid.apx                       Randomgenerator should have integer values, similar to uniform-int.apx
         randomgenerator/uniform-smallint.apx                          Randomgenerator: random gain of stimulus presented in 1 channel, only possible to use integer values, only small range is used
 results
-        results/results-adaptive-saveprocessedresults.apx             Demonstrate the use of result parameters
         results/results-confusionmatrix.apx                           Demonstrate the use of a confusionmatrix
         results/results-procedureparameter-after.apx                  Demonstrate the use of result parameters
         results/results-procedureparameter-during.apx                 Demonstrate the use of real-time results
-        results/results-psignifit.apx                                 Demonstrate the use of 'psignifit' results
         results/results-resultparameters.apx                          Demonstrate the use of resultparameters
-        results/results-saveprocessedresults.apx                      Demonstrate the use of the saveprocessedresults tag
+        results/results-resultparams-localization-polarplot.apx      
         results/results-subject.apx                                   Demonstrate how you can add the subjects name to the results file
+resultsviewer
+        resultsviewer/rv-loadparameters.apx                           Use resultsviewer window to show stimuli by using params
+        resultsviewer/speech-consonant-identification-dutch.apx      
 screen
         screen/button-shortcuts.apx                                   shows how to use shortcuts to answer
         screen/currentfeedback.apx                                    highlighting of the played stimulus
@@ -248,6 +254,7 @@ screen
         screen/screenelements-label-html.apx                          shows how to use a bold font by using html code
         screen/screenelements-label-resize.apx                        shows how to resize the text on a label
         screen/screenelements-matrix.apx                              example of a matrix layout for buttons
+        screen/screenelements-numerickeypad.apx                      
         screen/screenelements-parameterlabel.apx                      shows how to implement a parameterlabel on the screen
         screen/screenelements-parameterlist.apx                       shows how to implement a parameterlist on the screen
         screen/screenelements-picture-changepicture.apx               example of a picture-button
@@ -286,13 +293,14 @@ soundcard
         soundcard/soundcard-portaudio-cardnotfound.apx                Demonstrate the misapplication of <card>
         soundcard/soundcard-portaudio-interactivecard.apx             Demonstrate the misapplication of <card>
         soundcard/soundcard-wav-padzero.apx                           Demonstrate the use of padzero
+stimuli
+        stimuli/playmatrix-emptycell.apx                             
 xmlplugin
         xmlplugin/autostimulus.apx                                    Demonstrate datablocks and stimuli generated by javascript
         xmlplugin/autotrials.apx                                      Demonstrate trials, datablocks and stimuli generated by javascript
         xmlplugin/datablockplugin.apx                                 Demonstrate a datablock generated by javascript
         xmlplugin/datablockplugin_l34.apx                             Demonstrate generating XML code for L34 directly from plugindatablocks and pluginstimuli
         xmlplugin/screenplugin.apx                                    Demonstrate a screen generated by javascript
-        xmlplugin/screenplugin-inlibrary.apx                          Demonstrate the misapplication of a screen generated by javascript
         xmlplugin/screenplugin-invalidscript.apx                      Demonstrate the misapplication of a screen generated by  javascript
         xmlplugin/screenplugin-invalidxml.apx                         Demonstrate the misapplication of a screen generated by javascript
         xmlplugin/screenplugin-multiscreen.apx                        Demonstrate a screen generated by javascript

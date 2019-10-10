@@ -19,8 +19,11 @@
 
 #include "apexdata/map/apexmap.h"
 
+#include "apextools/exceptions.h"
 #include "apextools/xml/xmlkeys.h"
 #include "apextools/xml/xmltools.h"
+
+#include "coh/cohmapper.h"
 
 #include "common/exception.h"
 #include "common/global.h"
@@ -97,8 +100,7 @@ data::ApexMap *MapFactory::GetMap(const QDomElement &p_base)
             } else if (tag == "period") {
                 basemap.setPeriod(value.toDouble());
             } else if (tag == "trigger") {
-                basemap.setTrigger(
-                    data::ChannelMap::triggerToTriggerType(value));
+                basemap.setTrigger(triggerToTriggerType(value));
             } else if (tag == gc_sChannel) { // this should be the last tag
                                              // encountered, so basemap is valid
                 Q_ASSERT(basemap.isBaseValid());
@@ -163,6 +165,18 @@ data::ApexMap *MapFactory::GetMap(const QDomElement &p_base)
 #endif
 
     return result;
+}
+
+int MapFactory::triggerToTriggerType(const QString &trigger)
+{
+    if (trigger == "All")
+        return coh::CohSequenceMapper::DefaultTrigger::AllTriggers;
+    else if (trigger == "First")
+        return coh::CohSequenceMapper::DefaultTrigger::FirstTrigger;
+    else if (trigger == "None")
+        return coh::CohSequenceMapper::DefaultTrigger::NoTriggers;
+
+    throw ApexStringException(tr("Invalid trigger %1").arg(trigger));
 }
 
 /**

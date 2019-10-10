@@ -81,6 +81,7 @@ const QString gc_sCheckBox("checkBox");
 const QString gc_sPictureLabel("picturelabel");
 const QString gc_sAnswerLabel("answerlabel");
 const QString gc_sParameterList("parameterlist");
+const QString gc_sNumericKeypad("numericKeypad");
 
 const QString gc_sText("text");
 const QString gc_sShortcut("shortcut");

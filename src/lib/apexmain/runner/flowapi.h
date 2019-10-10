@@ -20,11 +20,8 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_RUNNER_FLOWAPI_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_RUNNER_FLOWAPI_H_
 
-#include "simplerunner.h"
-
-#include "../baseapi.h"
-
 #include <QDir>
+#include <QJsonObject>
 #include <QMap>
 #include <QObject>
 #include <QString>
@@ -32,29 +29,73 @@
 namespace apex
 {
 class FlowRunner;
+class SimpleRunner;
 
-class FlowApi : public BaseApi
+class FlowApi : public QObject
 {
     Q_OBJECT
 public:
-    FlowApi(FlowRunner *fr, const QDir &baseDir);
+    explicit FlowApi(FlowRunner *fr, const QDir &baseDir);
+    virtual ~FlowApi();
 
-public Q_SLOTS:
-    bool runExperiment(const QString &filePath, const QString &resultsFilePath);
+    /*
+     * Read a file from the local filesystem. When supplying a relative path,
+     * the path is treated as relative to the parent folder of the apf file.
+     * An empty string is returned when the path references an unexisting file.
+     */
+    Q_INVOKABLE QString readFile(const QString &path) const;
 
-    void clearExpressions();
-    void addExpression(const QString &key, const QString &value);
+    /*
+     * Read a file from the local filesystem. When supplying a relative path,
+     * the path is treated as relative to the results folder (which can be
+     * different from the parent folder of the apf file in case of a study).
+     * An empty string is returned when the path references an unexisting file.
+     */
+    Q_INVOKABLE QString readResultsFile(const QString &path) const;
 
-Q_SIGNALS:
-    void setResultsFilePath(QString filePath);
-    void savedFile(QString filePath);
-    void experimentClosed();
+    /*
+     * Write a file to the local filesystem. When supplying a relative path, the
+     * path is treated as relative to the results folder (which can be different
+     * from the parent folder of the apf file in case of a study).
+     */
+    Q_INVOKABLE void writeFile(const QString &path,
+                               const QString &content) const;
+
+    /*
+     * Start an experiment. This will hide the flowrunner until the
+     * `experimentDone` signal is emitted.
+     * This method accepts a json object with the following values:
+     * - experimentfilePath (required): The path to the experiment (apx) file.
+     * When supplying a relative path, the path is treated as relative to the
+     * parent folder of the apf file.
+     * - resultfilePath (optional): The path to the results (apr) file that
+     * should be created after the experiment. When supplying a relative path,
+     * the path is treated as relative to the results folder (which can be
+     * different from the parent folder of the apf file in case of a study).
+     * - expressions (optional): a nested json object that contains all the
+     * expressions that should be applied before starting the experiment.
+     * - autoStart (optional): a boolean value that indicates whether the
+     * experiment should start automatically (default: false)
+     */
+    Q_INVOKABLE bool runExperiment(const QJsonObject &json);
+
+signals:
+    /*
+     * Signal emitted when the experiment started with `runExperiment` is done.
+     * Either because it's completely finished, or it has been stopped by the
+     * user. The path to the result file is passed as an argument. The path is
+     * empty when no result file is created.
+     */
+    void experimentDone(const QString &resultfilePath);
+    void setResultsFilePath(QString path);
 
 private:
     SimpleRunner *sr;
     FlowRunner *fr;
+    QDir baseDir;
 
-    QMap<QString, QString> savedExpressions;
+    QString makeResultsPath(const QString &path) const;
+    QMap<QString, QString> asQMap(QVariantMap &expressions) const;
 };
 }
 

@@ -22,48 +22,31 @@
 #include "common/global.h"
 
 #include <QHostAddress>
-#include <QJsonObject>
 #include <QObject>
+
+class QWebChannel;
+class QWebSocketServer;
+class WebSocketClientWrapper;
 
 namespace cmn
 {
-
-class WebSocketServerPrivate;
 
 class COMMON_EXPORT WebSocketServer : public QObject
 {
     Q_OBJECT
 
 public:
-    WebSocketServer(const QString &serverName);
-
+    WebSocketServer(QObject *api, const QString &name,
+                    const QHostAddress &address = QHostAddress::LocalHost,
+                    quint16 port = 0);
     virtual ~WebSocketServer();
-
     quint16 serverPort();
-    QString csrfToken();
-
-    void on(const QString &method, QObject *object, const QString &slot);
-    void removeListener(const QString &method, QObject *object,
-                        const QString &slot);
-    void removeAllListeners(const QString &method);
-
-    static QJsonObject buildUserMessage(const QString &message);
-    static QJsonObject buildInvokeMessage(const QString &method,
-                                          const QVariantList &arguments);
-public Q_SLOTS:
-    void broadcastMessage(const QJsonObject &message);
-    void start(const QHostAddress &address = QHostAddress::LocalHost,
-               quint16 port = 0);
-    void stop();
-
-Q_SIGNALS:
-    void messageReceived(const QJsonObject &message);
-    void newConnection();
 
 private:
-    DECLARE_PRIVATE(WebSocketServer)
-protected:
-    DECLARE_PRIVATE_DATA(WebSocketServer)
+    QScopedPointer<QWebSocketServer> webSocketServer;
+    QScopedPointer<WebSocketClientWrapper> webSocketClientWrapper;
+    QScopedPointer<QWebChannel> webChannel;
+    void stop();
 };
 }
 

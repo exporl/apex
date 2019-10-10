@@ -21,26 +21,12 @@
 
 #include <QObject>
 
-class DummyQObject : public QObject
-{
-    Q_OBJECT
-public Q_SLOTS:
-    QString dummySlot(const QString &myString)
-    {
-        Q_EMIT dummySignal(myString);
-        return myString;
-    }
-Q_SIGNALS:
-    void dummySignal(QString);
-};
-
 class CommonGuiTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
     void webViewTest();
     void webViewWebSocketsTest();
-
     void listPickerTest();
 };
 

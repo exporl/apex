@@ -63,7 +63,9 @@ QString XMLPluginAPI::readAll(const QString &path)
         addError(tr("Could not open file %1").arg(path));
         return QString();
     }
-    return QTextStream(&f).readAll();
+    QTextStream in(&f);
+    in.setCodec("UTF-8");
+    return in.readAll();
 }
 
 double XMLPluginAPI::stimulusDuration(const QString &path)

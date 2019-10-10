@@ -44,14 +44,32 @@ ResultViewer::ResultViewer(const QString &p_resultfile)
                                           findResultParameters(m_sResultfile),
                                           findExtraScript(m_sResultfile)));
 
-    connect(m_rtResultSink.data(), SIGNAL(loadingFinished(bool)), this,
-            SLOT(loadingFinished(bool)));
-    connect(m_rtResultSink.data(), SIGNAL(viewClosed()), this,
-            SIGNAL(viewClosed()));
+    connect(
+        m_rtResultSink.data(), &RTResultSink::loadingFinished, [this](bool ok) {
+            if (!ok) {
+                qCWarning(APEX_RS, "ResultViewer: cannot load results page");
+                m_rtResultSink->hide();
+                return;
+            }
+
+            QFile resultsfile(m_sResultfile);
+            resultsfile.open(QIODevice::ReadOnly);
+            QTextStream stream(&resultsfile);
+            stream.setCodec("UTF-8");
+            m_rtResultSink->newResults(stream.readAll());
+        });
+
+    connect(m_rtResultSink.data(), &RTResultSink::viewClosed, this,
+            &ResultViewer::viewClosed);
 }
 
 ResultViewer::~ResultViewer()
 {
+}
+
+cmn::WebView &ResultViewer::getWebView() const
+{
+    return m_rtResultSink->getWebView();
 }
 
 RTResultSink *ResultViewer::getResultSink()
@@ -71,49 +89,6 @@ void ResultViewer::show(bool ask)
     }
 
     m_rtResultSink->show();
-}
-
-bool apex::ResultViewer::addtofile(const QString &p_filename)
-{
-    QByteArray result_csv = RTResultSink::createCSVtext(m_sResultfile);
-
-    QFile f(p_filename);
-    if (!f.open(QFile::ReadWrite)) {
-        QMessageBox::warning(
-            0, tr("Can't open file for append"),
-            tr("Can't "
-               "open resultfile for appending processed results, discarding.\n"
-               "You can reprocess them using an XSLT processor"),
-            QMessageBox::Ok, QMessageBox::NoButton);
-        return false;
-    }
-
-    QTextStream out(&f);
-    out.setCodec("UTF-8");
-
-    // see if the "processed" tags are allready present.
-    QByteArray textData = f.readAll();
-    QString fileText(textData);
-
-    int processedIndex = fileText.lastIndexOf("<processed>");
-
-    if (processedIndex < 0) {
-        // overwrite the </apex:results> thing
-        // -1 to account for windows cr/lf
-        f.seek(f.size() - ApexResultSink::c_fileFooter.length() - 1);
-        out << "<processed>" << endl << endl;
-        out << result_csv;
-    } else {
-        f.seek(processedIndex + 11);
-        out << result_csv;
-    }
-
-    out << endl << "</processed>" << endl;
-    out << ApexResultSink::c_fileFooter;
-
-    f.close();
-
-    return true;
 }
 
 QString ResultViewer::findResultPage(const QString &resultFilePath)
@@ -154,20 +129,5 @@ QString ResultViewer::findExtraScript(const QString &resultFilePath)
     QDomElement document =
         XmlUtils::parseDocument(resultFilePath).documentElement();
     return document.firstChildElement("resultscript").text();
-}
-
-void ResultViewer::loadingFinished(bool ok)
-{
-    if (!ok) {
-        qCWarning(APEX_RS, "ResultViewer: cannot load results page");
-        m_rtResultSink->hide();
-        return;
-    }
-
-    QFile resultsfile(m_sResultfile);
-    resultsfile.open(QIODevice::ReadOnly);
-    QTextStream stream(&resultsfile);
-    stream.setCodec("UTF-8");
-    m_rtResultSink->newResults(stream.readAll());
 }
 }

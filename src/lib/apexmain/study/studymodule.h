@@ -37,7 +37,7 @@ public:
     virtual QString GetEndXML() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
-    void experimentDone();
+    void savedResultfile(const QString &resultfilePath);
 };
 }
 

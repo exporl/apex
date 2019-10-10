@@ -1,5 +1,5 @@
 function result=a3general(exitafter)
-% result=a3general(exitafter,showresults,saveprocessedresults)
+% result=a3general(exitafter,showresults)
 
 if (nargin~=1)
     error('Invalid number of parameters');

@@ -37,6 +37,7 @@ public:
 
     QString dump();
 
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -77,6 +78,16 @@ void CohTextDumper::visit(CohMetaData *command)
                   .arg(textIndent(indent, indentSize))
                   .arg(command->key(), command->valueType(),
                        command->value().toString());
+}
+
+void CohTextDumper::visit(CohRfFreeStimulus *command)
+{
+    result +=
+        QString::fromLatin1("%1Rffree: period %2\n")
+            .arg(textIndent(indent, indentSize))
+            .arg(command->availableProperties(Coh::Period) ? command->period()
+                                                           : nan,
+                 0, 'f', 1);
 }
 
 void CohTextDumper::visit(CohNullStimulus *command)

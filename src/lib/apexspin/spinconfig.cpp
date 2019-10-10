@@ -42,7 +42,7 @@ void List::addToken(QString id, QString file, QString text)
 
 void CategoryMap::addList(List list, QString category)
 {
-    Q_ASSERT(list.id != QString::Null());
+    Q_ASSERT(!list.id.isNull());
 
     Category listMap = take(category);
     listMap.insert(list.id, list);

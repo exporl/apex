@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment">
   <!-- @doc
   @what: Loudness growth with numbers
   @description: Participants have to judge the loudness of the stimuli presented in the left ear by typing a number. Stimuli are presented in a pseudorandom order.
@@ -112,7 +112,6 @@
     <page>rtresults-loudness-scaling_text.html</page>
     <resultparameters/>
     <showafterexperiment>false</showafterexperiment>
-    <saveprocessedresults>true</saveprocessedresults>
     <subject/>
   </results>
   <interactive>

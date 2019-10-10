@@ -301,7 +301,7 @@ function printCorrectPercentage(presults, index)
         return "";
 
     // calculate percentage correct
-    var percentage = percentCorrect(resultsAfterFilter);
+    var percentage = percentCorrect(resultsAfterFilter).toFixed(config.global.digitsafterdecimal);
 
     var perStr = "Total percentage correct:  " + percentage + "%";
     var result = tr( td( perStr, attr("colspan", d.xlabels.length)));

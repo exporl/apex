@@ -63,6 +63,7 @@ signals:
     void selected(data::ExperimentData *data);
     void selected(QString);
     void opened(const QString &fileName);
+    void experimentDone(const QString &resultfilePath);
 
 protected:
     QMap<QString, QString> expressions;

@@ -3,6 +3,6 @@
 TEMPLATE = subdirs
 
 testdata.path = $$DATADIR/testdata
-testdata.files = *.wav
+testdata.files = *.wav *.html
 
 INSTALLS *= testdata

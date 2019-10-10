@@ -192,6 +192,5 @@
   <results>
     <xsltscript>apexresult.xsl</xsltscript>
     <showresults>true</showresults>
-    <saveprocessedresults>false</saveprocessedresults>
   </results>
 </apex:apex>

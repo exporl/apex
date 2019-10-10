@@ -28,8 +28,6 @@
 
 #include "apexdata/experimentdata.h"
 
-class QWebFrame;
-
 namespace apex
 {
 class AccessManager;
@@ -61,14 +59,7 @@ private Q_SLOTS:
     void testRandomInterval();
     void testUniformInt();
     void testUniformDouble();
-    void testAccessManagerLoadLocal();
-    void testAccessManagerLoadLocalWithScheme();
-    void testAccessManagerLoadLocalAndApex();
-    void testAccessManagerLoadLocalAndApexWithScheme();
-    void testAccessManagerLoadApex();
-    void testAccessManagerLoadApexAndLocal();
-    void testAccessManagerLoadUnknownLocal();
-    void testAccessManagerLoadUnknownApex();
+    void testAccessManagerPrepare();
     void testInteractive();
     void testInteractiveConstraints();
     void testInteractiveAndExpressions();
@@ -76,14 +67,12 @@ private Q_SLOTS:
 
     void testMainConfigFileParser();
     void testUpgradeTo3_1_1();
-    void testResultViewerConvertToCSV_data();
-    void testResultViewerConvertToCSV();
+    void testResultViewerIntegration();
     void testResultViewer_data();
     void testResultViewer();
     void testResultViewerExtraScriptIsInjected();
     void testResultViewerResultParametersAreInjected();
     void testResultViewerCannotBeConstructedWithoutResultFile();
-    void testResultViewerResultFileWithoutResultPageCanBeLoaded();
     void testResultViewerExtraScriptLoadedBeforeAnswersAreAdded();
     void testStandaloneUpgrader();
     void testSoundcardsDialog();
@@ -104,6 +93,18 @@ private Q_SLOTS:
     void testStudyFull();
     void testManagedDirectory();
     void testManagedDirectoryWithExternalWorkdir();
+    void testStudy_makeResultfilePath_privateStudy();
+    void
+    testStudy_makeResultfilePath_privateStudy_noRelativeResultfilePathSpecified();
+    void testStudy_makeResultfilePath_publicStudy();
+    void
+    testStudy_makeResultfilePath_publicStudy_noRelativeResultfilePathSpecified();
+    void
+    testResultfilePathCreator_defaultAbsolutePath_nextToExperimentFileWithSameBaseName();
+    void
+    testResultfilePathCreator_defaultAbsolutePath_containsSubjectIfAvailable();
+    void testResultfilePathCreator_timestampIsAddedToMakeItUnique();
+    void testResultfilePathCreator_resultfileHasAprExtension();
 
     void testFlowRunner();
 
@@ -112,7 +113,14 @@ private Q_SLOTS:
      */
     void testRepeatButton();
 
-    void testApexResultSink_resultscriptAndResultparameters();
+    void testApexResultSink_resultfileContainsResultscriptAndResultparameters();
+    void testApexResultSink_resultfileContainsExperimentStartTime();
+    void testApexResultSink_byDefaultResultfileIsSavedNextToExperimentFile();
+    void
+    testApexResultSink_locationOfResultfileIsReturnedAndResultfileIsLocatedThere();
+    void testApexResultSink_canSaveResultfileAfterCancelSavingResults();
+    void testApexResultSink_canDiscardResultsAfterCancelSavingResults();
+    void testApexResultSink_canSelectAnotherSaveLocationAfterSavingFails();
     void cleanupTestCase();
 
 private:
@@ -121,29 +129,11 @@ private:
     static QDomDocument readXmlResults(const QString &fileName);
     static QString compareXml(const QDomNode &actual, const QDomNode &expected);
 
-    void wait();
-    QPair<QWebFrame *, apex::AccessManager *> initAccesManager();
     apex::data::ExperimentData createExperimentData();
     const QString readFileAsString(const QString &filePath);
-
-public:
-    bool networkError;
-};
-
-struct LoadChecker : QObject {
-    Q_OBJECT
-public:
-    LoadChecker(ApexMainTest *testSuite) : testSuite(testSuite)
-    {
-    }
-public slots:
-    void check(QNetworkReply *reply)
-    {
-        testSuite->networkError = reply->error();
-    }
-
-private:
-    ApexMainTest *testSuite;
+    void createFile(const QString &path,
+                    const QString &content = QString("some-content"));
+    void testAccessManagerPrepare(const QUrl &input, const QUrl &expected);
 };
 
 #endif

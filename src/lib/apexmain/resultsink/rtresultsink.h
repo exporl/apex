@@ -21,6 +21,7 @@
 #define _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_RTRESULTSINK_H_
 
 #include "apextools/global.h"
+#include "commongui/webview.h"
 
 #include <QObject>
 #include <QString>
@@ -35,15 +36,12 @@ class APEX_EXPORT RTResultSink : public QObject
 {
     Q_OBJECT
 public:
-    RTResultSink(QUrl page, QMap<QString, QString> resultParameters =
-                                QMap<QString, QString>(),
+    RTResultSink(QUrl url, QMap<QString, QString> resultParameters =
+                               QMap<QString, QString>(),
                  QString extraScript = 0);
     ~RTResultSink();
 
-    void plot();
-    QString runJavaScript(QString script) const;
-    void setJavascriptParameters(QMap<QString, QString> resultParameters) const;
-    static QByteArray createCSVtext(const QString &resultFilePath);
+    cmn::WebView &getWebView() const;
     void newResults(QString xml);
 
 public Q_SLOTS:
@@ -60,9 +58,11 @@ Q_SIGNALS:
 
 private:
     RTResultSinkPrivate *d;
+    void plot();
+    void runJavaScript(const QString &script) const;
+    void setJavascriptParameters(QMap<QString, QString> resultParameters) const;
 
 private Q_SLOTS:
-    void setup(bool ok);
     void exportToPdf();
 };
 }

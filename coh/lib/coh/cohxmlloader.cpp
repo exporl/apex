@@ -152,9 +152,15 @@ void CohXmlHandler::readStimulus(CohSequence *parent)
     }
 
     XML_CHECK_NOERROR;
-    QString trigger = parameters.value(QSL("trigger"));
     QString period = parameters.value(QSL("period"));
-    if (type == QL1S("null")) {
+    if (type == QL1S("rffree")) {
+        if (period.isEmpty()) {
+            xml->raiseError(tr("Incomplete rf free stimulus."));
+            return;
+        }
+        parent->append(new CohRfFreeStimulus(period.toDouble()));
+    } else if (type == QL1S("null")) {
+        QString trigger = parameters.value(QSL("trigger"));
         if (trigger.isEmpty() || period.isEmpty()) {
             xml->raiseError(tr("Incomplete null stimulus."));
             return;
@@ -162,6 +168,7 @@ void CohXmlHandler::readStimulus(CohSequence *parent)
         parent->append(
             new CohNullStimulus(period.toDouble(), QVariant(trigger).toBool()));
     } else if (type == QL1S("biphasic")) {
+        QString trigger = parameters.value(QSL("trigger"));
         QString active = parameters.value(QSL("active"));
         QString reference = parameters.value(QSL("reference"));
         QString currentLevel = parameters.value(QSL("currentlevel"));
@@ -178,6 +185,7 @@ void CohXmlHandler::readStimulus(CohSequence *parent)
             currentLevel.toInt(), phaseWidth.toDouble(), phaseGap.toDouble(),
             period.toDouble(), QVariant(trigger).toBool()));
     } else if (type == QL1S("codacs")) {
+        QString trigger = parameters.value(QSL("trigger"));
         QString amplitude = parameters.value(QSL("amplitude"));
         if (trigger.isEmpty() || period.isEmpty() || amplitude.isEmpty()) {
             xml->raiseError(tr("Incomplete codacs stimulus."));

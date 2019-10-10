@@ -1,13 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment">
   <!-- @doc
   @what: Demonstrate how you can add the subjects name to the results file
   @description: When the subject types his/her name in the interactive, this will automatically appear in the results file and be appended to the results filename
   @how: subject function in 'results', 'interactive' entry is added
  -->
-  <description>&#xd;
-  Experiment to demonstrate the use of the saveprocessedresults tag&#xd;
-</description>
   <procedure xsi:type="apex:constantProcedure">
     <parameters>
       <presentations>1</presentations>
@@ -163,7 +160,6 @@
     <resultparameters/>
     <showduringexperiment>false</showduringexperiment>
     <showafterexperiment>true</showafterexperiment>
-    <saveprocessedresults>true</saveprocessedresults>
     <subject/>
   </results>
   <interactive>

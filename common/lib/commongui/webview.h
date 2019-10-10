@@ -27,14 +27,11 @@
 #include <QUrl>
 #include <QVariant>
 
-#if defined(ANDROID)
+#if defined(Q_OS_ANDROID)
 #include <QQuickItem>
 #include <QQuickWidget>
-#elif defined(WITH_WEBENGINE)
-#include <QWebEngineView>
 #else
-#include <QWebFrame>
-#include <QWebView>
+#include <QWebEngineView>
 #endif
 
 namespace cmn
@@ -49,36 +46,22 @@ public:
     WebView();
     ~WebView();
 
-    /* WebView::load is probably not what you need on android, since loading
-     * content from a resource package does not work.
-     * Use WebView::loadHtml instead.
-     */
     void load(const QUrl &url);
     void loadHtml(const QString &html, const QUrl &baseUrl = QUrl());
-    /* Is not blocking with QWebEngine. Always returns default-constructed
-     * QVariant.
-     */
-    QVariant runJavaScript(const QString &script, int timeout = 5000);
+    void runJavaScript(const QString &script);
+    void runJavaScriptAndEmitResult(const QString &script);
 
-    /* Does not work on android */
-    void addToJavaScriptWindowObject(const QString &name, QObject *object);
-    /* Does not work on android */
-    void setNetworkAccessManager(QNetworkAccessManager *accessManager);
-
-#if defined(ANDROID)
-    QQuickWidget
-#elif defined(WITH_WEBENGINE)
-    QWebEngineView
+/* Provided for custom cases, but use sparingly */
+#if defined(Q_OS_ANDROID)
+    QQuickWidget *webView();
 #else
-    QWebView
+    QWebEngineView *webView();
 #endif
-        /* Provided for custom cases, but use sparingly */
-        *
-        webView();
 
 Q_SIGNALS:
     void hidden();
-    void loadingFinished(bool = true);
+    void loadingFinished(bool ok = true);
+    void javaScriptFinished(const QVariant &result);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -87,6 +70,8 @@ private:
     DECLARE_PRIVATE(WebView)
 protected:
     DECLARE_PRIVATE_DATA(WebView)
+private Q_SLOTS:
+    void preventMultipleLoadingFinishedSignals();
 };
 }
 #endif

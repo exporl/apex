@@ -33,6 +33,7 @@ public:
 
     QString dump();
 
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -53,7 +54,7 @@ private:
     QMap<int, QList<unsigned>> amplitudes;
     QMap<double, QList<unsigned>> phaseWidths;
     QMap<double, QList<unsigned>> phaseGaps;
-    QMap<unsigned, QList<unsigned>> currentLevels;
+    QMap<int, QList<unsigned>> currentLevels;
     QMap<QString, QVariantList> metas;
 };
 
@@ -169,6 +170,12 @@ QString CohMatlabDumper::dump()
 void CohMatlabDumper::visit(CohMetaData *command)
 {
     metas[command->key()].append(command->value());
+}
+
+void CohMatlabDumper::visit(CohRfFreeStimulus *command)
+{
+    periods[command->period()].append(index);
+    currentLevels[-1].append(index);
 }
 
 void CohMatlabDumper::visit(CohNullStimulus *command)

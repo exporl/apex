@@ -855,23 +855,12 @@ function prepareText(presults, index)
 
 
 /* Returns rounded percentage of given
- * (filtered) results that were marked as correct
- * define the function dataFilter to filter the results
+ * results that were marked as correct
  */
-function percentCorrect(results)
+function percentCorrect(trials)
 {
-    var resultsAfterFilter = results;
-        if (typeof dataFilter === "function")
-            resultsAfterFilter = results.filter( dataFilter );
-
-    var totalcorrect = 0;
-    for (var i = 0; i < resultsAfterFilter.length; i++) {
-        if (resultsAfterFilter[i].correct)
-            totalcorrect++;
-    }
-
-    var percentage = 100 * totalcorrect / resultsAfterFilter.length;
-    return parseFloat(percentage).toFixed( config.global.digitsafterdecimal );
+    var trialsCorrect = trials.filter(function(trial) { return trial.correct; });
+    return 100 * trialsCorrect.length / trials.length;
 }
 
 
@@ -984,14 +973,8 @@ function resetGroups()
  *  ============================================================================
  */
 
-/**
- * At least the given percentage of all trials were answered correctly
- * @param targetPerc target percentage of correct trials
- */
-function percCorrect(targetPerc){
-    var trials = parseResults(lastResult);
-    var percCor = percentCorrect(trials);
-    return percCor >= targetPerc;
+function percentageCorrect(result, trialFilter) {
+    return percentCorrect(parseResults(result).filter(trialFilter));
 }
 
 /**

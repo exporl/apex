@@ -55,9 +55,11 @@
 
 #include "apextools/xml/xmltools.h"
 
+#ifdef ENABLE_COH
 #include "coh/aseqloader.h"
 #include "coh/cohnicxmldumper.h"
 #include "coh/cohtextdumper.h"
+#endif
 
 #include "common/debug.h"
 #include "common/exception.h"
@@ -75,28 +77,22 @@
 #include <QTest>
 #include <QUrl>
 
-#if !defined(Q_OS_ANDROID)
-#include <QWebElement>
-#include <QWebFrame>
-#include <QWebPage>
-#include <QWebView>
-
-#endif
-
 using namespace apex;
 using namespace apex::stimulus;
 using namespace apex::data;
 using namespace cmn;
+#ifdef ENABLE_COH
 using namespace coh;
+#endif
 
 void ApexMainTest::initTestCase()
 {
     enableCoreDumps(QCoreApplication::applicationFilePath());
-    networkError = false;
 }
 
 void ApexMainTest::testAseq()
 {
+#ifdef ENABLE_COH
     TEST_EXCEPTIONS_TRY
 
     {
@@ -164,10 +160,14 @@ void ApexMainTest::testAseq()
     }
 
     TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Coh disabled");
+#endif
 }
 
 void ApexMainTest::testCohDatablockInvalidFile()
 {
+#ifdef ENABLE_COH
     TEST_EXCEPTIONS_TRY
 
     DatablockData data;
@@ -185,6 +185,9 @@ void ApexMainTest::testCohDatablockInvalidFile()
     }
 
     TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Coh disabled");
+#endif
 }
 
 void ApexMainTest::testCohDatablockAseq_data()
@@ -205,6 +208,7 @@ void ApexMainTest::testCohDatablockAseq_data()
 
 void ApexMainTest::testCohDatablockAseq()
 {
+#ifdef ENABLE_COH
     TEST_EXCEPTIONS_TRY
 
     DatablockData data;
@@ -252,10 +256,14 @@ void ApexMainTest::testCohDatablockAseq()
     file.close();
 
     TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Coh disabled");
+#endif
 }
 
 void ApexMainTest::testAseqParser()
 {
+#ifdef ENABLE_COH
     TEST_EXCEPTIONS_TRY
 
     QFile file(Paths::searchFile(QL1S("tests/libapex/quantization.aseq"),
@@ -280,10 +288,14 @@ void ApexMainTest::testAseqParser()
     QCOMPARE(dumpCohSequenceText(parsed.data()), result);
 
     TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Coh disabled");
+#endif
 }
 
 void ApexMainTest::testCohDatablockAseqMapping()
 {
+#ifdef ENABLE_COH
     TEST_EXCEPTIONS_TRY
 
     DatablockData data;
@@ -325,10 +337,14 @@ void ApexMainTest::testCohDatablockAseqMapping()
     file.close();
 
     TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Coh disabled");
+#endif
 }
 
 void ApexMainTest::testCohDatablock_invalid()
 {
+#ifdef ENABLE_COH
     TEST_EXCEPTIONS_TRY
 
     DatablockData data;
@@ -363,10 +379,14 @@ void ApexMainTest::testCohDatablock_invalid()
     }
 
     TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Coh disabled");
+#endif
 }
 
 void ApexMainTest::testCohInvalidCL()
 {
+#ifdef ENABLE_COH
     TEST_EXCEPTIONS_TRY
 
     ChannelMap basemap;
@@ -401,6 +421,9 @@ void ApexMainTest::testCohInvalidCL()
     }
 
     TEST_EXCEPTIONS_CATCH
+#else
+    QSKIP("Coh disabled");
+#endif
 }
 
 class RandomGeneratorTestParameters : public RandomGeneratorParameters
@@ -519,7 +542,7 @@ void ApexMainTest::testUniformDouble()
         numbers.push_back(value);
     }
 
-    qSort(numbers);
+    std::sort(numbers.begin(), numbers.end());
 
     QVector<double> transformed1;
     QVector<double> transformed2;
@@ -607,194 +630,36 @@ void ApexMainTest::testMainConfigFileParser()
     TEST_EXCEPTIONS_CATCH
 }
 
-#if !defined(Q_OS_ANDROID)
-static QUrl createUrl(const QString &filename)
+void ApexMainTest::testAccessManagerPrepare()
 {
-    return QDir::current().relativeFilePath(Paths::searchFile(
-        QL1S("tests/libapex/") + filename, Paths::dataDirectories()));
-}
-#endif
-
-void ApexMainTest::wait()
-{
-    for (int i = 0; i < 5; ++i) {
-        QCoreApplication::processEvents();
-        QTest::qSleep(100);
-    }
-}
-
-QPair<QWebFrame *, AccessManager *> ApexMainTest::initAccesManager()
-{
-#if !defined(Q_OS_ANDROID)
-    networkError = false;
-    QWebView *webView = new QWebView();
-    QWebPage *page = new QWebPage(webView);
-    AccessManager *am = new AccessManager(page);
-    page->setNetworkAccessManager(am);
-    LoadChecker *loadChecker = new LoadChecker(this);
-    connect(page->networkAccessManager(), SIGNAL(finished(QNetworkReply *)),
-            loadChecker, SLOT(check(QNetworkReply *)));
-
-    return QPair<QWebFrame *, AccessManager *>(page->mainFrame(), am);
-#else
-    return QPair<QWebFrame *, AccessManager *>(NULL, NULL);
-#endif
-}
-
-// Load a local file that loads another local file
-void ApexMainTest::testAccessManagerLoadLocal()
-{
-#if !defined(Q_OS_ANDROID)
     TEST_EXCEPTIONS_TRY
 
-    QUrl p_page = createUrl("test_local.html");
-    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
-
-    pair.first->load(pair.second->prepare(p_page));
-    wait();
-
-    QCOMPARE(networkError, false);
+    testAccessManagerPrepare(QUrl("apex:path/to/file.txt"),
+                             QUrl("apex:path/to/file.txt"));
+    testAccessManagerPrepare(
+        QUrl("path/to/file.txt"),
+        QUrl::fromLocalFile(
+            QDir::current().absoluteFilePath("path/to/file.txt")));
+    testAccessManagerPrepare(
+        QUrl("file:path/to/file.txt"),
+        QUrl::fromLocalFile(
+            QDir::current().absoluteFilePath("path/to/file.txt")));
+    testAccessManagerPrepare(QUrl("/path/to/file.txt"),
+                             QUrl("file:/path/to/file.txt"));
+    testAccessManagerPrepare(QUrl("file:/path/to/file.txt"),
+                             QUrl("file:/path/to/file.txt"));
+    testAccessManagerPrepare(QUrl("/C:/path/to/file.txt"),
+                             QUrl("file:/C:/path/to/file.txt"));
+    testAccessManagerPrepare(QUrl("file:/C:/path/to/file.txt"),
+                             QUrl("file:/C:/path/to/file.txt"));
 
     TEST_EXCEPTIONS_CATCH
-#else
-    QSKIP("Skipped on Android");
-#endif
 }
 
-// Load a local file that loads another local file
-void ApexMainTest::testAccessManagerLoadLocalWithScheme()
+void ApexMainTest::testAccessManagerPrepare(const QUrl &input,
+                                            const QUrl &expected)
 {
-#if !defined(Q_OS_ANDROID)
-    TEST_EXCEPTIONS_TRY
-
-    QUrl p_page = createUrl("test_local.html");
-    p_page.setScheme("file");
-    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
-
-    pair.first->load(pair.second->prepare(p_page));
-    wait();
-
-    QCOMPARE(networkError, false);
-
-    TEST_EXCEPTIONS_CATCH
-#else
-    QSKIP("Skipped on Android");
-#endif
-}
-
-void ApexMainTest::testAccessManagerLoadLocalAndApex()
-{
-#if !defined(Q_OS_ANDROID)
-    TEST_EXCEPTIONS_TRY
-
-    QUrl p_page = createUrl("test_global.html");
-    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
-
-    pair.first->load(pair.second->prepare(p_page));
-    wait();
-
-    QCOMPARE(networkError, false);
-
-    TEST_EXCEPTIONS_CATCH
-#else
-    QSKIP("Skipped on Android");
-#endif
-}
-
-void ApexMainTest::testAccessManagerLoadLocalAndApexWithScheme()
-{
-#if !defined(Q_OS_ANDROID)
-    TEST_EXCEPTIONS_TRY
-
-    QUrl p_page = createUrl("test_global.html");
-    p_page.setScheme("file");
-    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
-
-    pair.first->load(pair.second->prepare(p_page));
-    wait();
-
-    QCOMPARE(networkError, false);
-
-    TEST_EXCEPTIONS_CATCH
-#else
-    QSKIP("Skipped on Android");
-#endif
-}
-
-void ApexMainTest::testAccessManagerLoadApex()
-{
-#if !defined(Q_OS_ANDROID)
-    TEST_EXCEPTIONS_TRY
-
-    QUrl p_page("apex:resultsviewer.html");
-    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
-
-    pair.first->load(pair.second->prepare(p_page));
-    wait();
-
-    QCOMPARE(networkError, false);
-
-    TEST_EXCEPTIONS_CATCH
-#else
-    QSKIP("Skipped on Android");
-#endif
-}
-
-void ApexMainTest::testAccessManagerLoadApexAndLocal()
-{
-#if !defined(Q_OS_ANDROID)
-    TEST_EXCEPTIONS_TRY
-
-    QUrl p_page("apex:resultsviewer-config.js");
-    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
-
-    pair.first->load(pair.second->prepare(p_page));
-    wait();
-
-    QCOMPARE(networkError, false);
-
-    TEST_EXCEPTIONS_CATCH
-#else
-    QSKIP("Skipped on Android");
-#endif
-}
-
-void ApexMainTest::testAccessManagerLoadUnknownLocal()
-{
-#if !defined(Q_OS_ANDROID)
-    TEST_EXCEPTIONS_TRY
-
-    QUrl p_page("unk.html");
-    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
-
-    pair.first->load(pair.second->prepare(p_page));
-    wait();
-
-    QCOMPARE(networkError, true);
-
-    TEST_EXCEPTIONS_CATCH
-#else
-    QSKIP("Skipped on Android");
-#endif
-}
-
-void ApexMainTest::testAccessManagerLoadUnknownApex()
-{
-#if !defined(Q_OS_ANDROID)
-    TEST_EXCEPTIONS_TRY
-
-    QUrl p_page("apex:unk.html");
-    QPair<QWebFrame *, AccessManager *> pair = initAccesManager();
-
-    pair.first->load(pair.second->prepare(p_page));
-    wait();
-
-    QCOMPARE(networkError, true);
-
-    TEST_EXCEPTIONS_CATCH
-#else
-    QSKIP("Skipped on Android");
-#endif
+    QCOMPARE(AccessManager::prepare(input).toString(), expected.toString());
 }
 
 struct MocWarning : public InteractiveParameters::Callback {
@@ -1028,6 +893,14 @@ const QString ApexMainTest::readFileAsString(const QString &filePath)
     file.open(QFile::ReadOnly | QFile::Text);
     QTextStream in(&file);
     return in.readAll();
+}
+
+void ApexMainTest::createFile(const QString &path, const QString &content)
+{
+    QFile file(path);
+    file.open(QIODevice::ReadWrite);
+    file.write(content.toUtf8());
+    file.close();
 }
 
 void ApexMainTest::testStandaloneUpgrader()

@@ -17,27 +17,11 @@ CLEBS *= nosilent
 MATLABROOT=c:/api-vs2008/matlab71
 
 # Dependencies for Windows
-win32:XALANCROOT = c:/api-vs2010/xml-xalan/c
-#win32:XALANCLIB = xalan-c_1
-#win32:XALANCLIB_RELEASE = $${XALANCLIB}
-#win32:XALANCLIB_DEBUG = $${XALANCLIB}d
-#win32:XALANCLIBDIR = $${XALANCROOT}/build/win32/vc7.1
-#win32:XALANCLIBDIR_RELEASE = $${XALANCLIBDIR}/release
-#win32:XALANCLIBDIR_DEBUG = $${XALANCLIBDIR}/debug
-#win32:XALANCDLLS = xalan-c_1_10 xalanmessages_1_10
-#win32:for(i,XALANCDLLS):XALANCDLLS_RELEASE *= $${i}.dll
-#win32:for(i,XALANCDLLS):XALANCDLLS_DEBUG *= $${i}d.dll
-#win32:XALANCDLLDIR = $${XALANCLIBDIR}
-#win32:XALANCDLLDIR_RELEASE = $${XALANCDLLDIR}/release
-#win32:XALANCDLLDIR_DEBUG = $${XALANCDLLDIR}/debug
-#win32:XALANCINCLUDEDIR = $${XALANCROOT}/src
+win32:XML2ROOT = c:/api-vs2017/xml2
+win32:ICONVROOT = c:/api-vs2017/iconv
+win32:ZLIBROOT = c:/api-vs2017/zlib
 
-win32:XML2ROOT = c:/api-vs2010/xml2
-win32:ICONVROOT = c:/api-vs2010/iconv
-win32:ZLIBROOT = c:/api-vs2010/zlib
-win32:LSLROOT = c:/api-vs2010/lsl
-
-win32:PORTAUDIOROOT = c:/api-vs2010/portaudio
+win32:PORTAUDIOROOT = c:/api-vs2017/portaudio
 #win32:PORTAUDIOLIB = portaudio_x86
 #win32:PORTAUDIOLIB_RELEASE = $${PORTAUDIOLIB}
 #win32:PORTAUDIOLIB_DEBUG = $${PORTAUDIOLIB}
@@ -52,11 +36,11 @@ win32:PORTAUDIOROOT = c:/api-vs2010/portaudio
 #win32:PORTAUDIODLLDIR_DEBUG = $${PORTAUDIODLLDIR}/debug
 #win32:PORTAUDIOINCLUDEDIR = $${PORTAUDIOROOT}/include
 
-win32:NUCLEUSROOT = c:/api-vs2010/nucleus/c_c++
+win32:NUCLEUSROOT = c:/api-vs2017/nucleus/c_c++
 win32:NUCLEUSLIBDIR = $${NUCLEUSROOT}/libraries/msvc/v7.1
 win32:NUCLEUSINCLUDEDIR = $${NUCLEUSROOT}/include
 
-win32:FFTW3ROOT = c:/api-vs2010/fftw3
+win32:FFTW3ROOT = c:/api-vs2017/fftw3
 #win32:FFTW3LIB = libfftw3-3
 #win32:FFTW3LIB_RELEASE = $${FFTW3LIB}
 #win32:FFTW3LIB_DEBUG = $${FFTW3LIB}
@@ -65,7 +49,7 @@ win32:FFTW3ROOT = c:/api-vs2010/fftw3
 #win32:FFTW3LIBDIR_DEBUG = $${FFTW3LIBDIR}
 #win32:FFTW3INCLUDEDIR = $${FFTW3ROOT}
 
-win32:FFTW3FROOT = c:/api-vs2010/fftw3
+win32:FFTW3FROOT = c:/api-vs2017/fftw3
 #win32:FFTW3FLIB = libfftw3f-3
 #win32:FFTW3FLIB_RELEASE = $${FFTW3FLIB}
 #win32:FFTW3FLIB_DEBUG = $${FFTW3FLIB}
@@ -74,65 +58,64 @@ win32:FFTW3FROOT = c:/api-vs2010/fftw3
 #win32:FFTW3FLIBDIR_DEBUG = $${FFTW3FLIBDIR}
 #win32:FFTW3FINCLUDEDIR = $${FFTW3FROOT}
 
-# Boost
-win32:BOOSTROOT = c:/api-vs2010/boost
-win32:BOOSTINCLUDEDIR = $${BOOSTROOT}/include
-#win32:BOOSTLIBDIR = $${BOOSTROOT}/lib
-#win32:BOOSTLIBDIR_RELEASE = $${BOOSTLIBDIR}
-#win32:BOOSTLIBDIR_DEBUG = $${BOOSTLIBDIR}
-win32:BOOSTPOLIB_RELEASE = boost_program_options-vc100-mt-1_47
-win32:BOOSTPOLIB_DEBUG = boost_program_options-vc100-mt-gd-1_47
+win32:BOOSTROOT = c:/api-vs2017/boost-1.69.0
+#win32:BOOSTINCLUDEDIR = $${BOOSTROOT}
 
-win32:ASIOROOT = c:/api-vs2010/asio
+win32:ASIOROOT = c:/api-vs2017/asio
 
-win32:SNDFILEROOT = c:/api-vs2010/sndfile
+win32:SNDFILEROOT = c:/api-vs2017/sndfile
 
-win32:IOWKITROOT = c:/api-vs2010/iowkit_1_5
+win32:IOWKITROOT = c:/api-vs2017/iowkit_1_5
 
-win32:PROTOBUFROOT = c:/api-vs2010/protobuf
-#win32:PROTOBUFLIB = libprotobuf-lite
-#win32:PROTOBUFLIB_RELEASE = $${PROTOBUFLIB}
-#win32:PROTOBUFLIB_DEBUG = $${PROTOBUFLIB}
-#win32:PROTOBUFLIB_VERSION = -8
-#win32:PROTOBUFLIBDIR = $${PROTOBUFROOT}
-#win32:PROTOBUFLIBDIR_RELEASE = $${PROTOBUFLIBDIR}/release
-#win32:PROTOBUFLIBDIR_DEBUG = $${PROTOBUFLIBDIR}/debug
+win32:PROTOBUFROOT = c:/api-vs2017/protobuf-cpp-3.6.1
+#win32:PROTOBUFLIB_RELEASE = libprotobuf-lite
+#win32:PROTOBUFLIB_DEBUG = libprotobuf-lited
+#win32:PROTOBUFLIBDIR = $${PROTOBUFROOT}/lib
 #win32:PROTOBUFINCLUDEDIR = $${PROTOBUFROOT}/include
-#win32:PROTOBUFPROTOC = $${PROTOBUFROOT}/protoc.exe
-#win32:PROTOBUFPYTHONDIR = $${PROTOBUFROOT}/python-lib
+#win32:PROTOBUFPROTOC = $${PROTOBUFROOT}/bin/protoc.exe
 
-win32:NIC3ROOT = c:/api-vs2010/nic3
+win32:PROTOBUFPYTHONROOT = c:/api-vs2017/protobuf-python-2.5.0
+#win32:PROTOBUFPYTHONDIR = $${PROTOBUFPYTHONROOT}/python-lib
+#win32:PROTOBUFPYTHONPROTOC = $${PROTOBUFPYTHONROOT}/protoc.exe
+
+win32:NIC3ROOT = c:/api-vs2017/nic3
 #win32:NIC3BINARIESDIR = $$NIC3ROOT/binaries
 #win32:NIC3PYTHONDIR = $$NIC3ROOT/python
 
-win32:DOTROOT = c:/api-vs2010/dot
+win32:NIC4ROOT = c:/api-vs2017/nic4
+#win32:NIC4BINDIR = $${NIC4ROOT}/binaries
+#win32:NIC4LIBDIR = $${NIC4ROOT}/lib/c/Win32
+#win32:NIC4INCLUDEDIR = $${NIC4ROOT}/c/include
+
+win32:DOTROOT = c:/api-vs2017/dot
 #win32:DOTBINDIR = $${DOTROOT}/bin
 #win32:DOTBINEXECUTABLE = $${DOTBIN}/dot.exe
 
-win32:LIBLOROOT = c:/api-vs2010/liblo
-#win32:LIBLOLIB = liblo
-#win32:LIBLOLIB_RELEASE = $${LIBLOLIB}
-#win32:LIBLOLIB_DEBUG = $${LIBLOLIB}_d
-#win32:LIBLOLIBDIR = $${LIBLOROOT}/lib
-#win32:LIBLOLIBDIR_RELEASE = $${LIBLOLIBDIR}/ReleaseDLL
-#win32:LIBLOLIBDIR_DEBUG = $${LIBLOLIBDIR}/DebugDLL
-#win32:LIBLOINCLUDEDIR = $${LIBLOROOT}
+win32:LIBLOROOT = c:/api-vs2017/liblo-0.29
+#win32:LIBLOLIB = lo
+#win32:LIBLOLIBDIR_RELEASE = $${LIBLOROOT}/release/lib
+#win32:LIBLOLIBDIR_DEBUG = $${LIBLOROOT}/debug/lib
+#win32:LIBLOINCLUDEDIR = $${LIBLOROOT}/include
 
-win32:OPENSSLROOT = c:/api-vs2010/openssl
+win32:OPENSSLROOT = c:/api-vs2017/openssl-1.0.2q
 #win32:OPENSSLBINDIR = $${OPENSSLROOT}/bin
 #win32:OPENSSLLIBDIR = $${OPENSSLROOT}/lib
 #win32:LIBSSLLIB = ssleay32
 #win32:LIBCRYPTOLIB = libeay32
 
-win32:LIBSSH2ROOT = c:/api-vs2010/libssh2
+win32:LIBSSH2ROOT = c:/api-vs2017/libssh2-1.8.0
 #win32:LIBSSH2BINDIR = $${LIBSSH2ROOT}/bin
 #win32:LIBSSH2LIBDIR = $${LIBSSH2ROOT}/lib
 #win32:LIBSSH2LIB = libssh2
 
-win32:LIBGIT2ROOT = c:/api-vs2010/libgit2
+win32:LIBGIT2ROOT = c:/api-vs2017/libgit2
 #win32:LIBGIT2BINDIR = $${LIBGIT2ROOT}/bin
 #win32:LIBGIT2LIBDIR = $${LIBGIT2ROOT}/lib
 #win32:LIBGIT2LIB = git2
+
+#win32:LSLROOT = c:/api-vs2017/lsl
+#win32:LSLINCLUDEDIR = $${LSLROOT}
+#win32:LSLLIBDIR = $${LSLROOT}
 
 # Installation paths for Unix
 #unix:PREFIXDIR = /usr/local
@@ -155,3 +138,5 @@ win32:LIBGIT2ROOT = c:/api-vs2010/libgit2
 
 # Streamapp
 #CONFIG += MAC         #use OsX config
+
+DEFINES += WIN32

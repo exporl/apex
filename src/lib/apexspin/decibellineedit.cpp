@@ -89,7 +89,7 @@ QSize DecibelLineEdit::calculateSize()
     for (int i = 0; i < v->decimals(); i++)
         longestString += "9";
 
-    return QSize(fontMetrics().width(longestString) + 15, 0);
+    return QSize(fontMetrics().boundingRect(longestString).width() + 15, 0);
 }
 
 void DecibelLineEdit::emitLevelChange(QString levelText)

@@ -126,8 +126,13 @@ QString ApexPaths::GetStudyRootPath()
 
 QString ApexPaths::GetStudyRootResultsWorkdirPath()
 {
+#if defined(Q_OS_ANDROID)
     QDir appDir(
         QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation));
+#else
+    QDir appDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+#endif
+
     return appDir.absoluteFilePath(QSL("apexstudies"));
 }
 

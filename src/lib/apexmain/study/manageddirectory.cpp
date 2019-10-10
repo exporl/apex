@@ -84,7 +84,7 @@ public:
     QString lastCommitMessage();
 
     void init(const QDir &repoPath, const QDir &workdirPath, bool bare = false);
-    void open(const QDir &repoPath);
+    void open(const QDir &repoPath, const QDir &workdirPath);
     void close();
 
     void setRemote(const QString &url, const QString &branchName);
@@ -290,11 +290,13 @@ void ManagedDirectoryWorker::init(const QDir &repoPath, const QDir &workdirPath,
     setConfigValue(QSL("repostate"), QSL("clean"));
 }
 
-void ManagedDirectoryWorker::open(const QDir &repoPath)
+void ManagedDirectoryWorker::open(const QDir &repoPath, const QDir &workdirPath)
 {
     QMutexLocker locker(&repoMutex);
-    qCWarning(APEX_RS, "apex: opening!");
+
     this->repoPath = repoPath;
+    this->workdirPath = workdirPath;
+
     git_repository *repoPtr = nullptr;
     handleResult(
         git_repository_open(&repoPtr, QFile::encodeName(repoPath.path())),
@@ -873,7 +875,7 @@ void ManagedDirectory::init(bool bare)
 
 void ManagedDirectory::open()
 {
-    d->worker.open(d->repoPath);
+    d->worker.open(d->repoPath, d->workdirPath);
 }
 
 void ManagedDirectory::close()
@@ -885,7 +887,8 @@ void ManagedDirectory::add(const QString &path)
 {
     QString relativePath = path;
     if (QFileInfo(relativePath).isAbsolute())
-        relativePath.remove(d->workdirPath.canonicalPath() + QL1S("/"));
+        relativePath.remove(d->workdirPath.canonicalPath() +
+                            QL1S("/")); // TODO doesn't work on windows!
 
     d->worker.add(relativePath);
     d->worker.commit();

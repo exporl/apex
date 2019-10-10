@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<apex:apex version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment">
+  <!-- @doc
+  @description: demo of the numeric keypad input element
+  @how: <numericKeypad/>
+  -->
+  <procedure xsi:type="apex:constantProcedure">
+    <parameters>
+      <presentations>1</presentations>
+      <order>sequential</order>
+      <corrector xsi:type="apex:isequal"/>
+    </parameters>
+    <trials>
+      <trial id="trial">
+        <answer>123</answer>
+        <screen id="screen"/>
+        <stimulus id="stimulus"/>
+      </trial>
+    </trials>
+  </procedure>
+  <screens>
+    <reinforcement>
+      <progressbar>true</progressbar>
+      <feedback>true</feedback>
+    </reinforcement>
+    <screen id="screen">
+      <gridLayout width="1" height="2">
+        <label id="uitleg" x="1" y="1">
+          <text>Please enter the three digits, followed by &lt;b&gt;OK&lt;/b&gt;</text>
+        </label>
+        <numericKeypad id="numericInput" col="1" row="2">
+          <style>
+            QPushButton#button_ok:enabled       {background-color: #0b5}
+            QPushButton#button_ok:disabled      {background-color: #abe9c7}
+            QPushButton#button_back:enabled     {background-color: #c00}
+            QPushButton#button_back:disabled    {background-color: #eeabab}
+            QLabel                              {background-color: #c5dbf1}
+          </style>
+          <fontsize>75</fontsize>
+        </numericKeypad>
+      </gridLayout>
+      <default_answer_element>numericInput</default_answer_element>
+    </screen>
+  </screens>
+  <datablocks>
+    <prefix>../stimuli</prefix>
+    <datablock id="one">
+      <device>wavdevice</device>
+      <file>wd1.wav</file>
+    </datablock>
+    <datablock id="two">
+      <device>wavdevice</device>
+      <file>wd2.wav</file>
+    </datablock>
+    <datablock id="three">
+      <device>wavdevice</device>
+      <file>wd3.wav</file>
+    </datablock>
+  </datablocks>
+  <devices>
+    <device id="wavdevice" xsi:type="apex:wavDeviceType">
+      <driver>portaudio</driver>
+      <card>interactive</card>
+      <channels>2</channels>
+      <gain>0</gain>
+      <samplerate>44100</samplerate>
+    </device>
+  </devices>
+  <filters/>
+  <stimuli>
+    <stimulus id="stimulus">
+      <datablocks>
+        <sequential>
+          <datablock id="one"/>
+          <datablock id="two"/>
+          <datablock id="three"/>
+        </sequential>
+      </datablocks>
+    </stimulus>
+  </stimuli>
+  <connections/>
+</apex:apex>

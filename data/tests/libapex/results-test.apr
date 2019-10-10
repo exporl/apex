@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<results>
+    <trial>
+        <procedure>
+            <answer>wrong</answer>
+            <correct_answer>correct</correct_answer>
+            <parameter>-5</parameter>
+        </procedure>
+    </trial>
+    <trial>
+        <procedure>
+            <answer>wrong</answer>
+            <correct_answer>correct</correct_answer>
+            <parameter>-3</parameter>
+        </procedure>
+    </trial>
+    <trial>
+        <procedure>
+            <answer>correct</answer>
+            <correct_answer>correct</correct_answer>
+            <parameter>-1</parameter>
+        </procedure>
+    </trial>
+    <trial>
+        <procedure>
+            <answer>wrong</answer>
+            <correct_answer>correct</correct_answer>
+            <parameter>-3</parameter>
+        </procedure>
+    </trial>
+    <trial>
+        <procedure>
+            <answer>correct</answer>
+            <correct_answer>correct</correct_answer>
+            <parameter>-1</parameter>
+        </procedure>
+    </trial>
+</results>

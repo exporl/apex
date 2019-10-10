@@ -1,23 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:results xmlns:apex="http://med.kuleuven.be/exporl/apex/result">
+<results>
 
-<resultscript>
-    var answers = [];
+    <resultscript>
+        var answers = [];
 
-    function newAnswer(answer) {
-        answers.push(answer);
-    }
+        function newAnswer(answer) {
+            answers.push(answer);
+        }
 
-    function plot()  {
-        document.body.innerHTML = answers.join(", ");
-    }
-</resultscript>
+        function plot()  {
+            document.body.innerHTML = answers.join("");
+        }
+    </resultscript>
 
-<general>
-    <jscript>resultsviewer-minimal.html</jscript>
-</general>
+    <general>
+        <jscript>resultsviewer-minimal.html</jscript>
+    </general>
 
-<trial>trial-1</trial>
-<trial>trial-2</trial>
+    <trial>trial-1</trial>
+    <trial>trial-2</trial>
 
-</apex:results>
+</results>

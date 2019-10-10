@@ -21,8 +21,6 @@
 
 #include "calibration/soundlevelmeter.h"
 
-#include "coh/cohclient.h"
-
 #include "common/paths.h"
 #include "common/pluginloader.h"
 #include "common/utils.h"
@@ -38,6 +36,10 @@
 #include "plugindialog.h"
 #include "ui_plugindialog.h"
 
+#ifdef ENABLE_COH
+#include "coh/cohclient.h"
+#endif
+
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QMessageBox>
@@ -45,7 +47,6 @@
 #include <QSettings>
 
 using namespace cmn;
-using namespace coh;
 
 namespace apex
 {
@@ -153,12 +154,15 @@ void PluginDialogPrivate::scanPlugins()
             added = true;
         }
 
-        if (const CohClientCreator *const creator =
-                qobject_cast<CohClientCreator *>(object)) {
+#ifdef ENABLE_COH
+        if (const coh::CohClientCreator *const creator =
+                qobject_cast<coh::CohClientCreator *>(object)) {
             add(object, PluginDialog::tr("CI Clients"),
                 creator->cohDriverName());
             added = true;
         }
+#endif
+
         if (!added) {
             add(object, PluginDialog::tr("Unknown plugins"),
                 PluginDialog::tr("unknown"));

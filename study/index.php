@@ -126,15 +126,20 @@
           $.post('listdevices.php', payload, function(data) {
               var parsed = JSON.parse(data);
               $.each(parsed['personal'].concat(parsed['remaining']), function(index, value) {
+                  var url = 'ssh://' + value + '@exporl-ssh.med.kuleuven.be:8444/' + study;
                   $('#study-deviceslist>tbody')
                       .append('<tr>'
                               +'<td>' + value + '</td>'
-                              +'<td><tt>'
-                              + 'ssh://' + value + '@exporl-ssh.med.kuleuven.be:8444/' + study
+                              +'<td><button class="btn btn-sm" type="button" onclick="copyToClipboard(\'' + url + '\')">&#x1F4CB;</button>&nbsp;<tt>'
+                              + url
                               + '</tt></td></tr>');
               });
               $('#study-deviceslist').show()
           });
+      }
+
+      function copyToClipboard(text) {
+          navigator.clipboard.writeText(text);
       }
 
       function showEditStudy(study) {

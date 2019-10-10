@@ -72,8 +72,6 @@ public:
 
     gui::ApexMainWindow *mainWindow();
 
-    QDateTime GetStartTime() const; //! get time of experiment start
-
     const QString &saveFilename() const;
     bool isExperimentRunning() const;
 

@@ -18,15 +18,11 @@
  *****************************************************************************/
 
 #include "apexdata/experimentdata.h"
-
 #include "apexdata/interactive/parameterdialogresults.h"
-
 #include "apexdata/mainconfigfiledata.h"
-
 #include "apexdata/parameters/generalparameters.h"
-
 #include "apexdata/result/resultparameters.h"
-
+#include "apexmain/resultsink/resultfilepathcreator.h"
 #include "apextools/apextools.h"
 #include "apextools/version.h"
 
@@ -39,7 +35,6 @@
 #include "gui/mainwindow.h"
 
 #include "runner/experimentrundelegate.h"
-#include "study/studymanager.h"
 
 #include "apexcontrol.h"
 #include "apexresultsink.h"
@@ -50,222 +45,133 @@
 #include <QHostInfo>
 #include <QMessageBox>
 #include <QRegExp>
-#include <QStandardPaths>
 
 using namespace cmn;
-
-const QString apex::ApexResultSink::c_fileFooter("</apex:results>\n");
-const QString apex::ApexResultSink::resultsExtension(".apr");
-
-void apex::ApexResultSink::SaveAs(bool askFilename)
-{
-#ifdef SHOWSLOTS
-    qCDebug(APEX_RS, "ApexResultSink::Finished( )");
-#endif
-
-    qCDebug(APEX_RS, "ApexResultSink::SaveAs(): m_filename=%s",
-            qPrintable(m_filename));
-    qCDebug(APEX_RS, "Current path = %s", qPrintable(QDir::current().path()));
-
-    if (m_bSaved) {
-        qCDebug(APEX_RS, "ApexResultSink::SaveAs: not saving, already saved");
-        return;
-    }
-
-    MakeFilenameUnique();
-
-    // save data if any
-    if (m_Results.size() <= 0) {
-        qCDebug(APEX_RS, "Nothing to save, exiting");
-    }
-
-    bool overwrite = false;
-
-#ifndef NOSAVE
-
-    QString saveFileName(m_filename);
-
-    if (m_rd.GetData().generalParameters()->GetAutoSave()) {
-        askFilename = false;
-    }
-    while (1) {
-        if (askFilename) {
-            QFileDialog dlg(
-                ApexControl::Get().mainWindow(), QString(), m_filename,
-                tr("APEX savedata (*%1);;XML Files (*.xml);;All files (*)")
-                    .arg(resultsExtension));
-
-            dlg.setAcceptMode(QFileDialog::AcceptSave);
-            QStringList docLocations = QStandardPaths::standardLocations(
-                QStandardPaths::GenericDataLocation);
-#ifndef Q_OS_ANDROID
-            if (m_filename.isEmpty() && !docLocations.isEmpty())
-#else
-            if ((m_filename.isEmpty() ||
-                 !QFileInfo(QFileInfo(m_filename).dir().canonicalPath())
-                      .isWritable()) &&
-                !docLocations.isEmpty())
-#endif
-                dlg.setDirectory(docLocations.first());
-
-            ApexTools::expandWidgetToWindow(&dlg);
-            saveFileName.clear();
-            if (dlg.exec() == QDialog::Accepted)
-                saveFileName = dlg.selectedFiles().first();
-        }
-
-        if (!saveFileName.isEmpty()) {
-            if (QFile::exists(saveFileName)) {
-                int answer =
-#if defined(Q_OS_ANDROID)
-                    QMessageBox::question(
-                        ApexControl::Get().mainWindow(), tr("File exists"),
-                        tr("File already exists, overwrite?")) ==
-                            QMessageBox::Yes
-                        ? 1
-                        : 2;
-#else
-                    QMessageBox::question(
-                        ApexControl::Get().mainWindow(), tr("File exists"),
-                        tr("File already exists, what should I do?"),
-                        tr("Append"), tr("Overwrite"), tr("Cancel"));
-#endif
-                if (answer == 2) // cancel
-                    continue;
-                else if (answer == 0)
-                    overwrite = false;
-                else
-                    overwrite = true;
-            }
-
-            if (Save(saveFileName, overwrite)) {
-                m_filename = saveFileName;
-                m_bSaved = true;
-                break;
-            } else {
-                int answer = QMessageBox::question(
-                    ApexControl::Get().mainWindow(), tr("Can't write to file"),
-                    tr("I can't write to the requested file.\nCheck whether "
-                       "you have access rights and the disk is not full."),
-                    tr("Retry"), tr("Lose data"));
-                if (answer == 0) // cancel
-                    continue;
-                else
-                    break;
-            }
-        }
-        if (QMessageBox::question(ApexControl::Get().mainWindow(),
-                                  tr("Lose data?"),
-                                  tr("Do you want to discard the results?"),
-                                  QMessageBox::Save | QMessageBox::Discard,
-                                  QMessageBox::Save) == QMessageBox::Discard)
-            break;
-    }
-#endif
-}
-
-void apex::ApexResultSink::Finished(bool askFilename)
-{
-    m_endTime = QDateTime::currentDateTime();
-    SaveAs(askFilename);
-
-    Q_EMIT(Saved());
-}
 
 namespace apex
 {
 
-ApexResultSink::ApexResultSink(ExperimentRunDelegate &p_rd,
-                               QDateTime experimentStartTime)
-    : ApexModule(p_rd),
-      m_startTime(experimentStartTime),
-      m_filename(),
-      m_bSaved(false)
+const QString ApexResultSink::resultfileXmlClosingTag("</apex:results>\n");
+const QString ApexResultSink::resultfileExtension("apr");
+
+ApexResultSink::ApexResultSink(ExperimentRunDelegate &runDelegate)
+    : ApexModule(runDelegate)
 {
-    // currentTrial=new TrialResult;
-    //      currentTrial=NULL;
-    //      m_bSaturation=false;
-
-    // construct filename
-    if (m_filename.isEmpty()) {
-        QString expfile = m_rd.GetData().fileName();
-        QFileInfo file(expfile);
-
-        // get subject name
-        QString subject = p_rd.GetData().resultParameters()->subject();
-
-        if (!subject.isEmpty())
-            m_filename = file.path() + "/" + file.baseName() + "-" + subject +
-                         resultsExtension;
-        else
-            m_filename = file.path() + "/" + file.baseName() + "-results" +
-                         resultsExtension;
-
-        /*        qCDebug(APEX_RS, "ApexResultSink::ApexResultSink -
-           m_filename=%s",
-                        qPrintable(m_filename));
-                qCDebug(APEX_RS, "Current path = %s",
-                        qPrintable(QDir::current().path()));*/
-    }
 }
 
 ApexResultSink::~ApexResultSink()
 {
-    // delete all trials in m_Results
-    for (std::vector<TrialResult *>::const_iterator p = m_Results.begin();
-         p != m_Results.end(); ++p) {
+    // delete all trials in trialResults
+    for (std::vector<TrialResult *>::const_iterator p = trialResults.begin();
+         p != trialResults.end(); ++p) {
         delete *p;
     }
 }
+
+const QString ApexResultSink::saveResultfile()
+{
+    QString suggestedPath;
+    if (resultfilePath.isEmpty()) {
+        suggestedPath = ResultfilePathCreator().createDefaultAbsolutePath(
+            m_rd.GetData().fileName(),
+            m_rd.GetData().resultParameters()->subject());
+    } else {
+        suggestedPath = resultfilePath;
+    }
+
+    bool allowDeviation = !m_rd.GetData().generalParameters()->GetAutoSave();
+
+    return tryToSave(suggestedPath, allowDeviation);
 }
 
-/**
- *
- * @param p_filename
- * @param p_overwrite overwrite the file if already exists or append to it?
- * @return
- */
-bool apex::ApexResultSink::Save(const QString &p_filename,
-                                const bool p_overwrite)
+QString ApexResultSink::tryToSave(const QString &suggestedPath,
+                                  const bool allowDeviationFromSuggestion)
 {
-#ifdef SHOWSLOTS
-    qCDebug(APEX_RS, "SLOT ApexResultSink::Save( const QString & p_filename )");
-#endif
+    const QString resultfilePath = allowDeviationFromSuggestion
+                                       ? askSaveLocation(suggestedPath)
+                                       : suggestedPath;
 
+    if (resultfilePath.isEmpty()) {
+        return askShouldDiscardResults() ? QString() : tryToSave(suggestedPath);
+    }
+
+    if (!save(resultfilePath)) {
+        informSavingFailed(resultfilePath);
+        return tryToSave(suggestedPath);
+    }
+
+    return resultfilePath;
+}
+
+const QString ApexResultSink::askSaveLocation(const QString &suggestedPath)
+{
+    QFileDialog dialog(
+        ApexControl::Get().mainWindow(), QString(), suggestedPath,
+        QSL("APEX savedata (*.%1);;XML Files (*.xml);;All files (*)")
+            .arg(resultfileExtension));
+
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    // allow the filedialog to warn when overwriting
+    dialog.setOption(QFileDialog::DontConfirmOverwrite, false);
+
+    ApexTools::expandWidgetToWindow(&dialog);
+
+    return dialog.exec() == QDialog::Accepted ? dialog.selectedFiles().first()
+                                              : QString();
+}
+
+bool ApexResultSink::askShouldDiscardResults()
+{
+    QString title = tr("Discard results?");
+    QString text = tr("Do you want to discard the results?");
+    return QMessageBox::question(ApexControl::Get().mainWindow(), title, text,
+                                 QMessageBox::Save | QMessageBox::Discard,
+                                 QMessageBox::Save) == QMessageBox::Discard;
+}
+
+void ApexResultSink::informSavingFailed(const QString &path)
+{
+    QString title = tr("Can't write to file");
+    QString text = tr("Can't write to \"%1\".\nCheck whether you "
+                      "have access rights and the disk is not full.")
+                       .arg(path);
+    QMessageBox::critical(ApexControl::Get().mainWindow(), title, text);
+}
+
+bool ApexResultSink::save(const QString &path)
+{
     QString content;
     QTextStream out(&content);
     out.setCodec("UTF-8");
 
-    PrintXMLHeader(out);
+    printXMLHeader(out);
 
-    PrintIntro(out);
+    printIntro(out);
 
     // results per trial
 
-    for (std::vector<TrialResult *>::const_iterator p = m_Results.begin();
-         p != m_Results.end(); ++p) {
+    for (std::vector<TrialResult *>::const_iterator p = trialResults.begin();
+         p != trialResults.end(); ++p) {
         TrialResult *c = *p; // simplify notation
         out << c->toXML();
     }
 
-    out << CollectEndResults() << endl;
-    PrintXMLFooter(out);
+    out << collectEndResults() << endl;
+    printXMLFooter(out);
 
-    bool result = p_overwrite
-                      ? XmlUtils::writeDocument(XmlUtils::parseString(content),
-                                                p_filename)
-                      : XmlUtils::appendDocument(XmlUtils::parseString(content),
-                                                 p_filename);
+    QDir(QFileInfo(path).dir()).mkpath(".");
+    bool result = XmlUtils::writeDocument(XmlUtils::parseString(content), path);
+
     if (!result)
         qCCritical(APEX_RS, "%s",
-                   qPrintable(QSL("%1: %2").arg(metaObject()->className(),
-                                                "Error while writing to file " +
-                                                    p_filename)));
+                   qPrintable(QSL("%1: Error while writing to file %2")
+                                  .arg(metaObject()->className())
+                                  .arg(path)));
 
     return result;
 }
 
-void apex::ApexResultSink::PrintXMLHeader(QTextStream &out)
+void ApexResultSink::printXMLHeader(QTextStream &out) const
 {
     QString cfn = m_rd.GetData().fileName();
 
@@ -280,12 +186,12 @@ void apex::ApexResultSink::PrintXMLHeader(QTextStream &out)
     out << " xmlns:apex=\"http://med.kuleuven.be/exporl/apex/result\">" << endl;
 }
 
-void apex::ApexResultSink::PrintXMLFooter(QTextStream &out)
+void ApexResultSink::printXMLFooter(QTextStream &out) const
 {
-    out << c_fileFooter;
+    out << resultfileXmlClosingTag;
 }
 
-void apex::ApexResultSink::PrintIntro(QTextStream &out)
+void ApexResultSink::printIntro(QTextStream &out) const
 {
     QString ms = m_rd.GetData().resultParameters()->matlabScript();
     if (!ms.isEmpty())
@@ -333,12 +239,15 @@ void apex::ApexResultSink::PrintIntro(QTextStream &out)
         out << "\t<description>" << description << "</description>" << endl;
     }
 
-    out << "\t<startdate>" << xmlEscapedText(m_startTime.toString(Qt::ISODate))
+    out << "\t<startdate>"
+        << xmlEscapedText(experimentStartTime.toString(Qt::ISODate))
         << "</startdate>" << endl;
-    out << "\t<enddate>" << xmlEscapedText(m_endTime.toString(Qt::ISODate))
+    out << "\t<enddate>"
+        << xmlEscapedText(experimentEndTime.toString(Qt::ISODate))
         << "</enddate>" << endl;
-    out << "\t<duration unit=\"seconds\">" << m_startTime.secsTo(m_endTime)
-        << "</duration>" << endl;
+    out << "\t<duration unit=\"seconds\">"
+        << experimentStartTime.secsTo(experimentEndTime) << "</duration>"
+        << endl;
     if (m_rd.GetData().resultParameters()) {
         QString rtscript(
             m_rd.GetData().resultParameters()->resultPage().toString());
@@ -371,7 +280,7 @@ void apex::ApexResultSink::PrintIntro(QTextStream &out)
         out << "\t</interactive>" << endl;
     }
 
-    out << "\t<stopped_by>" << m_stopCondition << "</stopped_by>" << endl;
+    out << "\t<stopped_by>" << stopCondition << "</stopped_by>" << endl;
 
     out << "</general>" << endl;
 }
@@ -379,8 +288,8 @@ void apex::ApexResultSink::PrintIntro(QTextStream &out)
 /**
  * Query all modules for extra XML data
  */
-void apex::ApexResultSink::CollectResults(const QString &trial,
-                                          const QString &extraXml)
+void ApexResultSink::collectResults(const QString &trial,
+                                    const QString &extraXml)
 {
     // TODO is this method still needed?
     // create new TrialData
@@ -388,7 +297,7 @@ void apex::ApexResultSink::CollectResults(const QString &trial,
     TrialResult *currentTrial = new TrialResult;
     currentTrial->name = trial;
 
-    m_Results.push_back(currentTrial);
+    trialResults.push_back(currentTrial);
 
     if (!extraXml.isEmpty())
         currentTrial->extra += extraXml;
@@ -406,7 +315,7 @@ void apex::ApexResultSink::CollectResults(const QString &trial,
     Q_EMIT(collected(currentTrial->toXML()));
 }
 
-QString apex::ApexResultSink::GetResultXML() const
+QString ApexResultSink::GetResultXML() const
 {
     return QString();
 }
@@ -414,14 +323,14 @@ QString apex::ApexResultSink::GetResultXML() const
 /**
  * Query all modules for extra XML data
  */
-const QString apex::ApexResultSink::CollectEndResults()
+const QString ApexResultSink::collectEndResults() const
 {
     QString result;
 
     const ModuleList *modules = m_rd.modules();
 
-    if (!m_extraXml.isEmpty())
-        result += m_extraXml;
+    if (!extraXml.isEmpty())
+        result += extraXml;
 
     for (ModuleList::const_iterator it = modules->begin(); it != modules->end();
          ++it) {
@@ -434,65 +343,36 @@ const QString apex::ApexResultSink::CollectEndResults()
 /**
  * Set filename of results filename
  * resultsExtension will be added if necessary
- * @param p_filename
+ * @param resultfilePath
  */
-void apex::ApexResultSink::SetFilename(const QString &p_filename)
+void ApexResultSink::setFilename(const QString &resultfilePath)
 {
+    this->resultfilePath = resultfilePath;
 
-    /* exception case:
-     * If results are to be saved in an active study
-     * only allow the filename itself to change, but
-     * put the files in the expected results folder */
-    QString expDir = QFileInfo(m_filename).absolutePath();
-    if (StudyManager::instance()->belongsToActiveStudy(expDir)) {
-        if (StudyManager::instance()->activeStudy()->isPrivate())
-            expDir = StudyManager::instance()->activeStudy()->resultsPath();
-        else
-            expDir = ApexPaths::GetStudyRootPath();
-        m_filename = expDir + "/" + QFileInfo(p_filename).fileName();
-    } else
-        m_filename = p_filename;
-
-    QRegExp re("\\.\\w{2,4}$");
-    if (re.indexIn(p_filename) == -1)
-        m_filename += resultsExtension;
-
-    qCDebug(APEX_RS) << QString("Saving results to %1")
-                            .arg(QFileInfo(m_filename).absoluteFilePath());
-
-    return;
-}
-
-void apex::ApexResultSink::setExtraXml(const QString &x)
-{
-    m_extraXml = x;
-}
-
-void apex::ApexResultSink::setStopCondition(const bool &stoppedByUser)
-{
-    m_stopCondition = QString(stoppedByUser ? "user" : "procedure");
-}
-
-/**
- * Add -N after m_filename if it already exists
- */
-bool apex::ApexResultSink::MakeFilenameUnique()
-{
-    QString tfilename;
-    if (!m_filename.endsWith(resultsExtension))
-        return false;
-
-    if (QFile::exists(m_filename)) {
-        tfilename =
-            m_filename.left(m_filename.length() - 4); // remove extension
-
-        int i = 1;
-        while (QFile::exists(
-            QString("%1-%2%3").arg(tfilename).arg(i).arg(resultsExtension)))
-            ++i;
-        m_filename =
-            QString("%1-%2%3").arg(tfilename).arg(i).arg(resultsExtension);
+    if (QRegExp("\\.\\w{2,4}$").indexIn(resultfilePath) == -1) {
+        this->resultfilePath =
+            QSL("%1.%2").arg(resultfilePath).arg(resultfileExtension);
     }
+}
 
-    return true;
+void ApexResultSink::setExtraXml(const QString &extraXml)
+{
+    this->extraXml = extraXml;
+}
+
+void ApexResultSink::setStopCondition(const bool &stoppedByUser)
+{
+    stopCondition = QString(stoppedByUser ? "user" : "procedure");
+}
+
+void ApexResultSink::setExperimentStartTime(
+    const QDateTime &experimentStartTime)
+{
+    this->experimentStartTime = experimentStartTime;
+}
+
+void ApexResultSink::setExperimentEndTime(const QDateTime &experimentEndTime)
+{
+    this->experimentEndTime = experimentEndTime;
+}
 }

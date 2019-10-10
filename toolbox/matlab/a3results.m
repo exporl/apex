@@ -1,4 +1,4 @@
-function result=a3results(type, matlabscript,subject,showresults, saveprocessedresults, xsltscriptparameters)
+function result=a3results(type,matlabscript,subject,showresults,xsltscriptparameters)
 % result=a3results(filename)
 % filename = name of xslt script to be used
 
@@ -16,9 +16,6 @@ if (nargin<4)
     showresults=0;
 end
 if (nargin<5)
-    saveprocessedresults=0;
-end
-if (nargin<6)
     xsltscriptparameters='';
 end
 
@@ -51,7 +48,6 @@ elseif strcmp(type(end-4:end), '.html')
     result=[result '<page>' script '</page>' lf];
     result=[result '<showafterexperiment>'  bool2xml(showresults) '</showafterexperiment>' lf];
 end
-result=[result '<saveprocessedresults>'  bool2xml(saveprocessedresults) '</saveprocessedresults>' lf];
 if (length(matlabscript))
     result=[result wraptag('matlabscript', matlabscript) lf];
 end

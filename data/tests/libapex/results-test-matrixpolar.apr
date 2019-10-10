@@ -7,7 +7,6 @@
     <startdate>2015-11-19T14:52:03</startdate>
     <enddate>2015-11-19T14:55:00</enddate>
     <duration unit="seconds">176</duration>
-    <jscript>apex:resultsviewer.html</jscript>
 </general>
 <trial id="trial-75">
 <procedure type="apex:constantProcedure">
@@ -404,10 +403,26 @@
 </randomgenerators>
 <trial_start_time>2015-11-19T14:53:18</trial_start_time>
 </trial>
-
-
-
-
-<calibration></calibration>
-<processed></processed>
+<resultscript>
+    $.extend(config, {
+        global: {
+            stimuli: ["-90", "-75", "-60", "-45", "-30", "-15", "0", "15", "30", "45", "60", "75", "90"],
+            removefromanswer: ["_button", "button_", "button", "b_", "answer_", "_answer", "answer"]
+        },
+        line: {
+            show: false
+        },
+        matrix: {
+            show: true
+        },
+        polar: {
+            show: true,
+            mindegree: -90,
+            maxdegree: 90
+        },
+        text: {
+            show: true
+        }
+    });
+</resultscript>
 </apex:results>

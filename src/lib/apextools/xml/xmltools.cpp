@@ -89,15 +89,6 @@ bool XmlUtils::writeDocument(const QDomDocument &doc, const QString &fileName)
     return true;
 }
 
-bool XmlUtils::appendDocument(const QDomDocument &doc, const QString &fileName)
-{
-    QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly | QFile::Append | QFile::Text))
-        return false;
-    QByteArray data = doc.toByteArray(2);
-    return file.write(data) == data.size();
-}
-
 QString XmlUtils::nodeToString(const QDomNode &node)
 {
     QDomDocument doc;

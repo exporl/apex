@@ -37,6 +37,7 @@ public:
 
     QByteArray write();
 
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -80,6 +81,14 @@ void CohProtoDumper::visit(CohMetaData *ciCommand)
         throw Exception(tr("Unable to represent type %1 in protobuf format")
                             .arg(value.type()));
     }
+}
+
+void CohProtoDumper::visit(CohRfFreeStimulus *ciCommand)
+{
+    ProtoSlaveCommand *const command = current->add_command();
+
+    ProtoSlaveCommand::RfFree *const rffree = command->mutable_rffree();
+    rffree->set_period_cycles(roundedCohCycles(ciCommand->period()));
 }
 
 void CohProtoDumper::visit(CohNullStimulus *ciCommand)

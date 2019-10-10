@@ -21,6 +21,7 @@
 #define _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_RESULTVIEWER_H_
 
 #include "apextools/global.h"
+#include "commongui/webview.h"
 
 namespace apex
 {
@@ -33,16 +34,13 @@ class APEX_EXPORT ResultViewer : public QObject
 public:
     ResultViewer(const QString &p_resultfile);
     void show(bool ask);
-    bool addtofile(const QString &p_filename);
     RTResultSink *getResultSink();
+    cmn::WebView &getWebView() const;
 
     ~ResultViewer();
 
 Q_SIGNALS:
     void viewClosed();
-
-private Q_SLOTS:
-    void loadingFinished(bool ok);
 
 private:
     QString findResultPage(const QString &resultFilePath);

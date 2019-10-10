@@ -28,9 +28,10 @@ struct AnswerInfo {
 
 /** API for plugin procedures
  */
-class ProcedureApi
+class APEXDATA_EXPORT ProcedureApi
 {
 public:
+    virtual ~ProcedureApi();
     /**
      * Return StimulusData from the current experiment for a given ID
      */

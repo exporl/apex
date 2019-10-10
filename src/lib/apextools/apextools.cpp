@@ -218,6 +218,26 @@ QStringList ApexTools::recursiveFind(const QString &directory,
     return result;
 }
 
+QString ApexTools::copyAndPrepareAsHtmlFileWithInjectedBootstrapValues(
+    const QString &sourcePath, const QString &destinationDirectory,
+    const quint16 serverPort)
+{
+    QString destinationPath =
+        QDir(destinationDirectory)
+            .filePath(QFileInfo(sourcePath).baseName() + QL1S(".html"));
+
+    QFile::copy(sourcePath, destinationPath);
+
+    QMap<QString, QString> fragments;
+    fragments.insert(
+        QSL("{basePath}"),
+        QUrl::fromLocalFile(QFileInfo(sourcePath).absolutePath()).toEncoded());
+    fragments.insert(QSL("{serverPort}"), QString::number(serverPort));
+    replaceFragmentsInTextFile(destinationPath, fragments);
+
+    return destinationPath;
+}
+
 void ApexTools::InitRand(long seed)
 {
     static bool srandDone = false;
@@ -231,18 +251,25 @@ void ApexTools::InitRand(long seed)
     }
 }
 
-void ApexTools::ReplaceCharInString(QString &a_StringToSearch,
-                                    const QChar &ac_ToReplace,
-                                    const QString &ac_ReplaceWith)
+void ApexTools::replaceFragmentsInTextFile(
+    const QString &path, const QMap<QString, QString> &fragmentsToReplace)
 {
-    const unsigned nLen = a_StringToSearch.length();
-    for (unsigned i = 0; i < nLen; ++i) {
-        if (a_StringToSearch.at(i) == ac_ToReplace) {
-            a_StringToSearch.remove(i, 1);
-            a_StringToSearch.insert(i, ac_ReplaceWith);
-            i += ac_ReplaceWith.length();
-        }
+    QFile file(path);
+    file.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray byteArray = file.readAll();
+    QString content(byteArray);
+    file.close();
+
+    QMap<QString, QString>::const_iterator i = fragmentsToReplace.constBegin();
+    while (i != fragmentsToReplace.constEnd()) {
+        content.replace(i.key(), i.value());
+        ++i;
     }
+
+    file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+    file.write(content.toUtf8());
+    file.close();
 }
 
 QString ApexTools::escapeJavascriptString(const QString &text)
@@ -305,7 +332,6 @@ void ApexTools::shrinkTillItFits(QWidget *widget, const QString &text,
 void ApexTools::expandWidgetToWindow(QWidget *widget)
 {
 #if defined(Q_OS_ANDROID)
-    widget->layout()->setSizeConstraint(QLayout::SetMaximumSize);
     widget->showMaximized();
     widget->setMaximumSize(widget->size());
 #else

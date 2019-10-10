@@ -56,14 +56,15 @@ public:
     QString resultsUrl() const;
     QString resultsBranch() const;
     QString experimentsPath() const;
-    QString resultsPath() const;
     QString keyPath() const;
 
     QString indexExperiment() const;
     QStringList experiments() const;
     bool belongsToStudy(const QString &path) const;
-    QString makeResultsFilePath(const QString &experimentPath) const;
-
+    const QString
+    makeResultfilePath(const QString &experimentfilePath,
+                       const QString &relativeResultfilePath) const;
+    const QString makeResultsPath(const QString &relativePath) const;
     QString statusMessage();
 
 Q_SIGNALS:
@@ -76,6 +77,12 @@ Q_SIGNALS:
     void updateResultsFailed();
 
 private:
+    const QString createResultfilePathRoot() const;
+    const QString createUniqueResultfilePathFragmentToAllowOctopusMerge() const;
+    const QString
+    createRelativeResultfilePath(const QString &experimentfilePath,
+                                 const QString &relativeResultfilePath) const;
+
     QScopedPointer<StudyPrivate> d;
 };
 } // namespace apex

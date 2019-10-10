@@ -29,7 +29,6 @@
 #include "../gui/mainwindow.h"
 #include "resultapi.h"
 
-#include "commongui/webview.h"
 #include "common/paths.h"
 #include "common/websocketserver.h"
 
@@ -38,9 +37,7 @@
 #include <QMenuBar>
 #include <QPrintDialog>
 #include <QPrinter>
-#include <QTimer>
 #include <QUrl>
-#include <QXmlStreamReader>
 
 using namespace cmn;
 
@@ -52,68 +49,57 @@ class RTResultSinkPrivate
 public:
     RTResultSinkPrivate()
     {
-        webView.reset(new WebView());
-        QDir rvDataDir = QDir(Paths::searchDirectory(QSL("resultsviewer"),
-                                                     Paths::dataDirectories()));
+        QDir dir = QDir(Paths::searchDirectory(QSL("resultsviewer"),
+                                               Paths::dataDirectories()));
+
         QStringList entries =
-            rvDataDir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot);
+            dir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot);
         Q_FOREACH (const QString &entry, entries) {
-            ApexTools::recursiveCopy(rvDataDir.filePath(entry),
+            ApexTools::recursiveCopy(dir.filePath(entry),
                                      temporaryDirectory.path());
         }
 
-        ApexTools::recursiveCopy(
-            Paths::searchFile(QSL("js/polyfill.js"), Paths::dataDirectories()),
-            QDir(temporaryDirectory.path()).filePath(QSL("js/")));
-        ApexTools::recursiveCopy(
-            Paths::searchFile(QSL("js/commonwebsocket.js"),
-                              Paths::dataDirectories()),
-            QDir(temporaryDirectory.path()).filePath(QSL("js/")));
+        QFile::copy(
+            ":/qtwebchannel/qwebchannel.js",
+            QDir(temporaryDirectory.path()).filePath(QSL("qwebchannel.js")));
     }
 
     QScopedPointer<WebView> webView;
-    QScopedPointer<cmn::WebSocketServer> webSocketServer;
+    QScopedPointer<WebSocketServer> webSocketServer;
     QScopedPointer<ResultApi> resultApi;
+#if !defined(Q_OS_ANDROID)
     QScopedPointer<QPrinter> printer;
+#endif
 
-    QUrl page;
-    QMap<QString, QString> resultParameters;
-    QString extraScript;
     QTemporaryDir temporaryDirectory;
 };
 
-RTResultSink::RTResultSink(QUrl p_page, QMap<QString, QString> resultParameters,
+RTResultSink::RTResultSink(QUrl url, QMap<QString, QString> resultParameters,
                            QString extraScript)
     : d(new RTResultSinkPrivate)
 {
-    d->page = p_page;
-    d->resultParameters = resultParameters;
-    d->extraScript = extraScript;
-
-    AccessManager am;
-    ApexTools::recursiveCopy(am.prepare(d->page).toLocalFile(),
-                             d->temporaryDirectory.path());
-    d->page =
-        QUrl(QDir(d->temporaryDirectory.path()).filePath(d->page.fileName()));
-    d->page.setScheme(QSL("file"));
-
-    connect(d->webView.data(), SIGNAL(hidden()), this, SIGNAL(viewClosed()));
-    connect(d->webView.data(), SIGNAL(hidden()), this, SLOT(hide()));
-
-    connect(d->webView.data(), SIGNAL(loadingFinished(bool)), this,
-            SLOT(setup(bool)));
-    d->webView->load(d->page);
-
     d->resultApi.reset(new ResultApi);
     connect(d->resultApi.data(), SIGNAL(exportToPdf()), this,
             SLOT(exportToPdf()));
-    d->webSocketServer.reset(new WebSocketServer(QSL("RTResultSink")));
-    d->webSocketServer->start();
-    d->resultApi->registerBaseMethods(d->webSocketServer.data());
-    d->webSocketServer->on(QSL("psignifit"), d->resultApi.data(),
-                           QSL("psignifit(QString)"));
-    d->webSocketServer->on(QSL("exportToPdf"), d->resultApi.data(),
-                           QSL("exportToPdf()"));
+
+    d->webSocketServer.reset(
+        new WebSocketServer(d->resultApi.data(), QSL("RTResultSink")));
+
+    d->webView.reset(new WebView());
+    connect(d->webView.data(), SIGNAL(hidden()), this, SIGNAL(viewClosed()));
+    connect(d->webView.data(), SIGNAL(hidden()), this, SLOT(hide()));
+    connect(d->webView.data(), &WebView::loadingFinished,
+            [this, resultParameters, extraScript](bool ok) {
+                setJavascriptParameters(resultParameters);
+                runJavaScript(extraScript);
+                emit loadingFinished(ok);
+            });
+
+    QString htmlPath =
+        ApexTools::copyAndPrepareAsHtmlFileWithInjectedBootstrapValues(
+            AccessManager::prepare(url).toLocalFile(),
+            d->temporaryDirectory.path(), d->webSocketServer->serverPort());
+    d->webView->load(QUrl::fromLocalFile(htmlPath));
 
     if (d->webView->menuBar()->actions().size() >= 1)
         d->webView->menuBar()->actions().at(0)->menu()->addAction(
@@ -125,22 +111,9 @@ RTResultSink::~RTResultSink()
     delete d;
 }
 
-void RTResultSink::setup(bool ok)
-{
-    runJavaScript(QL1S("var api = new ResultApi('ws://127.0.0.1:") +
-                  QString::number(d->webSocketServer->serverPort()) +
-                  QL1S("', '") + d->webSocketServer->csrfToken() + QL1S("');"));
-    runJavaScript("setTimeout(function() { if (typeof initialize === "
-                  "'function') initialize(); }, 1500);");
-    setJavascriptParameters(d->resultParameters);
-    runJavaScript(d->extraScript);
-
-    Q_EMIT loadingFinished(ok);
-}
-
 void RTResultSink::show()
 {
-    d->webView->show();
+    d->webView->showMaximized();
     ApexControl::Get().mainWindow()->quickWidgetBugHide();
 }
 
@@ -258,9 +231,14 @@ void RTResultSink::newResults(QString xml)
     plot();
 }
 
-QString RTResultSink::runJavaScript(QString script) const
+void RTResultSink::runJavaScript(const QString &script) const
 {
-    return d->webView->runJavaScript(script).toString();
+    d->webView->runJavaScript(script);
+}
+
+WebView &RTResultSink::getWebView() const
+{
+    return *d->webView.data();
 }
 
 void RTResultSink::exportToPdf()
@@ -272,53 +250,8 @@ void RTResultSink::exportToPdf()
     d->printer.reset(new QPrinter);
     d->printer->setOutputFormat(QPrinter::PdfFormat);
     d->printer->setOutputFileName(filename);
-#if defined(WITH_WEBENGINE)
     d->webView->webView()->page()->print(d->printer.data(),
                                          [&](bool) { d->printer.reset(); });
-#else
-    d->webView->webView()->print(d->printer.data());
-    d->printer.reset();
 #endif
-#endif
-}
-
-QByteArray RTResultSink::createCSVtext(const QString &resultFilePath)
-{
-    // This function should run the javascript script and put
-    // the output in a variable so it can be added to a file later.
-    // Load the file with the results
-    // Open the xml file and load the contents
-
-    QFile resultsfile(resultFilePath);
-    resultsfile.open(QIODevice::ReadOnly);
-    if (!resultsfile.isOpen()) {
-        qCWarning(APEX_RS, "resultsfile could not be loaded");
-        return QByteArray();
-    }
-    QString xmlString = resultsfile.readAll();
-
-    QTemporaryDir temporaryDirectory;
-
-    ApexTools::recursiveCopy(
-        Paths::searchDirectory(QSL("resultsviewer"), Paths::dataDirectories()),
-        temporaryDirectory.path());
-
-    WebView localWebView;
-    QUrl url =
-        QDir(temporaryDirectory.path()).filePath("resultsviewer/apr2csv.html");
-    url.setScheme(QSL("file"));
-    localWebView.load(url);
-
-    QEventLoop loop;
-    QTimer timer;
-    connect(&localWebView, SIGNAL(loadingFinished(bool)), &loop, SLOT(quit()));
-    connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    timer.start(1000);
-    loop.exec();
-
-    return localWebView
-        .runJavaScript("process(\"" +
-                       ApexTools::escapeJavascriptString(xmlString) + "\")")
-        .toByteArray();
 }
 }

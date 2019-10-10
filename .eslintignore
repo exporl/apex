@@ -1,0 +1,7 @@
+examples/**/*.js
+/bin/**/*.js
+
+/data/**/*.js
+!/data/pluginprocedures/heartrainprocedure.js
+!/data/tests/pluginprocedures/heartrain-procedure.test.js
+!/data/pluginprocedures/spin_suffix.js

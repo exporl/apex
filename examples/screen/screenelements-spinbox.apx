@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!-- @doc
   @what: example of a spinbox
   @description: a spinbox is an input field that only accepts numbers and has 2 buttons to respectively increase or decrease its value

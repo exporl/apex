@@ -113,7 +113,12 @@ prereq() {
 }
 
 runapex() {
-    local APEXPARAMS="--record --virtual-soundcard --deterministic --autoanswer --autostart --autosaveresults --exitafter  $EXTRAPARAMS"
+    local EXPERIMENTSUBDIR="$(dirname $1)"
+    local EXPERIMENTFILENAME="$(basename $1)"
+    local EXPERIMENTBASENAME=${EXPERIMENTFILENAME%%.*}
+    local RESULTSPATH="$EXPERIMENTSUBDIR/$EXPERIMENTBASENAME-results.apr"
+
+    local APEXPARAMS="--record --virtual-soundcard --deterministic --autoanswer --autostart --autosaveresults --exitafter --resultsfile $RESULTSPATH $EXTRAPARAMS"
     brownmsg "Running $APEXEXECUTABLE" $APEXPARAMS "$1"
     # allow Ctrl-C interrupt by relaying any SIGINT to the process group of timeout, and exiting the script
     trap 'kill -INT -$pid; exit' INT

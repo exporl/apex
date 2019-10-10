@@ -5,6 +5,7 @@
         <!--script  src="external/jquery.min.js" type="text/javascript"> </script-->
 
         <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script src="qwebchannel.js"></script>
 
         <style>
             .instruction {font-size:250%}
@@ -14,7 +15,20 @@
         </style>
 
         <script type="text/javascript">
-            $(document).ready(function(){
+            function whenInitialized(callback) {
+                window.onload = function() {
+                    var socket = new WebSocket("ws://127.0.0.1:{serverPort}");
+
+                    socket.onopen = function() {
+                        new QWebChannel(socket, function(channel) {
+                            callback(channel.objects.htmlApi);
+                        });
+                    };
+                };
+            }
+
+            whenInitialized(function(api) {
+                window.api = api;
                 initialDelay = 2;       // Time to wait (s) before asking the first response
                 interval = 20;          // Time to wait after each following response (starting from enabled, ignoring the initialDelay)
                 maxResponses = 16;
@@ -57,11 +71,9 @@
 //                enabled();
             });
 
-            function getResult () {
-                return JSON.stringify(answers);
-            }
-
             function enabled () {
+                reset();
+
                 timeoutID = window.setTimeout(demandResponse, initialDelay*1000);
                 startTime = Date.now();
             }
@@ -121,7 +133,7 @@
                 addAnswer(result);
 
                 if (nresponses >= maxResponses) {
-                    api.answered();
+                    api.newAnswer(JSON.stringify(answers));
                     giveInstruction("De taak is afgelopen. Klik op stop.");
                     deFocus();
                     return;

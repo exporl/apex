@@ -11,6 +11,10 @@ message ProtoSlaveCommand {
         optional bool boolvalue = 5;
     }
 
+    message RfFree {
+        required sint32 period_cycles = 1;
+    }
+
     message Stimulus {
         required bool trigger = 1;
     }
@@ -39,9 +43,10 @@ message ProtoSlaveCommand {
     }
 
     optional Stimulus stimulus = 1;
-    optional Null null = 2;
-    optional Biphasic biphasic = 3;
-    optional Codacs codacs = 4;
-    optional Sequence sequence = 5;
-    optional MetaData metadata = 6;
+    optional RfFree rffree = 2;
+    optional Null null = 3;
+    optional Biphasic biphasic = 4;
+    optional Codacs codacs = 5;
+    optional Sequence sequence = 6;
+    optional MetaData metadata = 7;
 }

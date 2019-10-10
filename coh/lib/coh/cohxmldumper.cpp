@@ -35,6 +35,7 @@ public:
     void write(QXmlStreamWriter *xml);
 
 private:
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -70,6 +71,14 @@ void CohXmlDumper::visit(CohMetaData *command)
     xml->writeAttribute(QSL("type"), command->valueType());
     xml->writeCharacters(command->value().toString());
     xml->writeEndElement();
+    xml->writeEndElement();
+}
+
+void CohXmlDumper::visit(CohRfFreeStimulus *command)
+{
+    xml->writeStartElement(QSL("stimulus"));
+    xml->writeAttribute(QSL("type"), QSL("rffree"));
+    writeParameter(QSL("period"), QString::number(command->period(), 'f', 1));
     xml->writeEndElement();
 }
 

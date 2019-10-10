@@ -31,6 +31,7 @@ GeneralParameters::GeneralParameters()
     : ApexParameters(),
       m_bExitAfter(false),
       m_bAutoSave(false),
+      m_bAutoStart(false),
       m_bWaitForStart(false),
       m_bAllowSkip(true),
       m_bRunOutputTest(false)
@@ -90,6 +91,7 @@ bool GeneralParameters::operator==(const GeneralParameters &other) const
     return ApexParameters::operator==(other) &&
            m_bExitAfter == other.m_bExitAfter &&
            m_bAutoSave == other.m_bAutoSave &&
+           m_bAutoStart == other.m_bAutoStart &&
            m_bWaitForStart == other.m_bWaitForStart &&
            m_bAllowSkip == other.m_bAllowSkip &&
            m_bRunOutputTest == other.m_bRunOutputTest &&

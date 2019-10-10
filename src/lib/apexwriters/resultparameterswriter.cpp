@@ -84,12 +84,6 @@ QDomElement ResultParametersWriter::addElement(QDomDocument *doc,
             doc, "showafterexperiment", ApexTools::boolToString(true)));
     }
 
-    // saveprocessedresults
-    if (data.saveResults()) {
-        result.appendChild(XmlUtils::createTextElement(
-            doc, "saveprocessedresults", ApexTools::boolToString(true)));
-    }
-
     // matlabscript
     QString matlabScript = data.matlabScript();
     if (!matlabScript.isEmpty()) {

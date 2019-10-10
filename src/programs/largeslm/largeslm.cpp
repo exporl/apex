@@ -28,6 +28,7 @@
 #include <QDesktopWidget>
 #include <QLabel>
 #include <QMainWindow>
+#include <QScreen>
 #include <QTimer>
 
 #include <QtDebug>
@@ -54,8 +55,10 @@ private:
 MainWindow::MainWindow(const QString &plugin, QMainWindow *parent)
     : QMainWindow(parent),
       style(QString::fromLatin1("font: %1px; color: black;")
-                .arg(QApplication::desktop()->availableGeometry().width() / 5 *
-                     2))
+                .arg(QGuiApplication::primaryScreen()
+                         ->availableGeometry()
+                         .width() /
+                     5 * 2))
 {
     this->setWindowTitle(tr("Sound Level Meter"));
 

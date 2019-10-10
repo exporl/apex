@@ -22,6 +22,8 @@
 #ifndef _BERTHA_SRC_LIB_BERTHA_BLOCKINTERFACE_H_
 #define _BERTHA_SRC_LIB_BERTHA_BLOCKINTERFACE_H_
 
+#include "global.h"
+
 #include <math.h>
 
 #include <QList>
@@ -124,9 +126,10 @@ public:
     QVariant userData;
 };
 
-class BasicBlockInterface
+class BERTHA_EXPORT BasicBlockInterface
 {
 public:
+    virtual ~BasicBlockInterface();
     virtual QList<BlockInputPort *> inputPorts() = 0;
     virtual QList<BlockOutputPort *> outputPorts() = 0;
 
@@ -136,9 +139,10 @@ public:
     }
 };
 
-class BlockInterface : public BasicBlockInterface
+class BERTHA_EXPORT BlockInterface : public BasicBlockInterface
 {
 public:
+    virtual ~BlockInterface();
     // Your plugin class needs to derive from QObject, implement
     // BlockInterface and provide a least one Q_INVOKABLE constructor like this:
     //

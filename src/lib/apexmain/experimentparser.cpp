@@ -1045,8 +1045,7 @@ bool apex::ExperimentParser::ParseGeneral(const QDomElement &p_base)
 */
 bool apex::ExperimentParser::CheckShowResults()
 {
-    if (m_resultParameters && (m_resultParameters->showResultsAfter() ||
-                               m_resultParameters->saveResults()) &&
+    if (m_resultParameters && (m_resultParameters->showResultsAfter()) &&
         m_resultParameters->resultPage().isEmpty()) {
         qCCritical(APEX_RS,
                    "CheckShowResults: No page specified for analyzing results");

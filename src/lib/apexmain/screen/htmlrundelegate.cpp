@@ -52,12 +52,12 @@ namespace rundelegates
 class HtmlRunDelegatePrivate
 {
 public:
-    QScopedPointer<WebView> webView;
-    QScopedPointer<WebSocketServer> webSocketServer;
     QScopedPointer<HtmlAPI> api;
-
+    QScopedPointer<WebSocketServer> webSocketServer;
+    QScopedPointer<WebView> webView;
+    QString lastAnswer;
     QTemporaryDir temporaryDirectory;
-    AccessManager *accessManager;
+
     bool hasFinishedLoading;
 };
 
@@ -74,7 +74,8 @@ void HtmlRunDelegate::changeEvent(QEvent *event)
 
 void HtmlRunDelegate::setEnabled(bool enable)
 {
-    this->enable();
+    if (enable)
+        this->enable();
     ScreenElementRunDelegate::setEnabled(enable);
 }
 
@@ -82,9 +83,9 @@ void HtmlRunDelegate::enable()
 {
     QString code;
     if (!d->hasFinishedLoading)
-        code = QSL("setTimeout(function() { reset(); enabled(); }, 1000);");
+        code = QSL("setTimeout(function() { enabled(); }, 1000);");
     else
-        code = QSL("reset(); enabled();");
+        code = QSL("enabled();");
     d->webView->runJavaScript(code);
 }
 
@@ -105,24 +106,7 @@ bool HtmlRunDelegate::hasInterestingText() const
 
 const QString HtmlRunDelegate::getText() const
 {
-#if defined(WITH_WEBENGINE)
-    QEventLoop loop;
-    QTimer timer;
-    QVariant result;
-    connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    connect(d->api.data(), &HtmlAPI::javascriptFinished,
-            [&](const QVariant &value) {
-                result = value;
-                loop.quit();
-            });
-    d->webSocketServer->broadcastMessage(WebSocketServer::buildInvokeMessage(
-        QSL("evaluateJavaScript"), QVariantList() << QL1S("getResult();")));
-    timer.start(10000);
-    loop.exec();
-    return result.toString();
-#else
-    return d->webView->runJavaScript("getResult();").toString();
-#endif
+    return d->lastAnswer;
 }
 
 void HtmlRunDelegate::resizeEvent(QResizeEvent *e)
@@ -136,8 +120,9 @@ void HtmlRunDelegate::connectSlots(gui::ScreenRunDelegate *d)
             SIGNAL(answered(ScreenElementRunDelegate *)));
 }
 
-void HtmlRunDelegate::sendAnsweredSignal()
+void HtmlRunDelegate::collectAnswer(const QString &answer)
 {
+    d->lastAnswer = answer;
     Q_EMIT answered(this);
 }
 
@@ -149,68 +134,35 @@ HtmlRunDelegate::HtmlRunDelegate(ExperimentRunDelegate *p_rd, QWidget *parent,
       d(new HtmlRunDelegatePrivate)
 {
     d->hasFinishedLoading = false;
-    ApexTools::recursiveCopy(
-        Paths::searchFile(QSL("js/htmlapi.js"), Paths::dataDirectories()),
-        QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
-    ApexTools::recursiveCopy(
-        Paths::searchFile(QSL("js/commonwebsocket.js"),
-                          Paths::dataDirectories()),
-        QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
-    ApexTools::recursiveCopy(
-        Paths::searchFile(QSL("js/polyfill.js"), Paths::dataDirectories()),
-        QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
-    ApexTools::recursiveCopy(
-        Paths::searchFile(QSL("resultsviewer/resultsprocessor.js"),
-                          Paths::dataDirectories()),
-        QDir(d->temporaryDirectory.path()).filePath(QSL("js/")));
+
     ApexTools::recursiveCopy(
         Paths::searchDirectory(QSL("resultsviewer/external"),
                                Paths::dataDirectories()),
         d->temporaryDirectory.path());
+    QFile::copy(
+        ":/qtwebchannel/qwebchannel.js",
+        QDir(d->temporaryDirectory.path()).filePath(QSL("qwebchannel.js")));
 
     d->api.reset(new HtmlAPI());
+    connect(d->api.data(), &HtmlAPI::answered, this,
+            &HtmlRunDelegate::collectAnswer);
+
+    d->webSocketServer.reset(
+        new WebSocketServer(d->api.data(), QSL("htmlApi")));
+
     d->webView.reset(new WebView());
-    d->webSocketServer.reset(new WebSocketServer(QSL("HtmlRunDelegate")));
-    d->webSocketServer->start();
-    d->api->registerBaseMethods(d->webSocketServer.data());
-    d->webSocketServer->on(QSL("answered"), this, QSL("sendAnsweredSignal()"));
-    d->webSocketServer->on(QSL("javascriptFinished"), d->api.data(),
-                           QSL("javascriptFinished(QVariant)"));
+    connect(d->webView.data(), &WebView::loadingFinished,
+            [this]() { d->hasFinishedLoading = true; });
 
-    d->accessManager = new AccessManager(this);
-    connect(d->webView.data(), SIGNAL(loadingFinished(bool)), this,
-            SLOT(setup()));
+    QUrl sourcePage = AccessManager::prepare(element->page());
+    QString htmlPath =
+        ApexTools::copyAndPrepareAsHtmlFileWithInjectedBootstrapValues(
+            AccessManager::prepare(sourcePage).toLocalFile(),
+            d->temporaryDirectory.path(), d->webSocketServer->serverPort());
+    d->webView->load(QUrl::fromLocalFile(htmlPath));
 
-    QUrl sourcePage = d->accessManager->prepare(element->page());
-    QString targetPage =
-        QDir(d->temporaryDirectory.path())
-            .filePath(QFileInfo(sourcePage.toString()).baseName() +
-                      QL1S(".html"));
-    ApexTools::recursiveCopy(sourcePage.toLocalFile(), targetPage);
-    d->webView->load(QUrl::fromLocalFile(targetPage));
-
-    ParameterManager *mgr = p_rd->GetParameterManager();
-    connect(mgr, SIGNAL(parameterChanged(QString, QVariant)), this,
-            SLOT(parameterChanged(QString, QVariant)));
-}
-
-void HtmlRunDelegate::setup()
-{
-    d->webView->runJavaScript(
-        QL1S("var api = new HtmlApi('ws://127.0.0.1:") +
-        QString::number(d->webSocketServer->serverPort()) + QL1S("', '") +
-        d->webSocketServer->csrfToken() + QL1S("');"));
-    d->webView->runJavaScript("setTimeout(function() { if (typeof initialize "
-                              "=== 'function') initialize(); }, 1500);");
-    d->hasFinishedLoading = true;
-}
-
-void HtmlRunDelegate::parameterChanged(QString name, QVariant value)
-{
-    QVariantList arguments;
-    arguments << QVariant(name) << value;
-    d->webSocketServer->broadcastMessage(WebSocketServer::buildInvokeMessage(
-        QSL("parameterChanged"), arguments));
+    connect(p_rd->GetParameterManager(), &ParameterManager::parameterChanged,
+            d->api.data(), &HtmlAPI::parameterChanged);
 }
 
 HtmlRunDelegate::~HtmlRunDelegate()

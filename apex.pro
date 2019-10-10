@@ -1,5 +1,7 @@
 TEMPLATE = subdirs
-CLEBS_TREES = src bertha-lib mwffilter apex-confidential common coh
+CLEBS_TREES = src bertha-lib mwffilter apex-confidential common
+!android:CLEBS_TREES *= coh
+android:CLEBS_DISABLED *= src/plugins/protoslmplugin
 SUBDIRS = data documentation/manual examples matlab toolbox/matlab
 
 # remove them from CLEBS_DISABLED in localconfig.pri if you want to build them automatically

@@ -29,6 +29,10 @@ Rectangle {
     }
 
     function runJavaScript(script) {
+        webView.runJavaScript(script);
+    }
+
+    function runJavaScriptAndEmitResult(script) {
         webView.runJavaScript(script, function(result) {
             root.javascriptFinished(result);
         });

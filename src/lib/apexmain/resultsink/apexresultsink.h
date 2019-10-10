@@ -20,13 +20,11 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_APEXRESULTSINK_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_RESULTSINK_APEXRESULTSINK_H_
 
+#include "apexmain/apexmodule.h"
 #include "apextools/global.h"
 
-#include "apexmain/apexmodule.h"
-
-#include <qtextstream.h>
-
 #include <QDateTime>
+#include <QTextStream>
 
 #include <vector>
 
@@ -34,7 +32,6 @@ namespace apex
 {
 
 class TrialResult;
-class ScreenResult;
 
 /**
 Apex result collector module
@@ -45,79 +42,53 @@ class APEX_EXPORT ApexResultSink : public ApexModule
 {
     Q_OBJECT
 public:
-    ApexResultSink(ExperimentRunDelegate &p_rd, QDateTime experimentStartTime);
-
+    ApexResultSink(ExperimentRunDelegate &runDelegate);
     ~ApexResultSink();
 
     virtual QString GetResultXML() const;
 
-public: // slot replacements
-    // void NewTrial(const QString& p_name);
-    void SetFilename(const QString &p_filename);
-    const QString &GetFilename() const
-    {
-        return m_filename;
-    }
-    bool IsSaved() const
-    {
-        return m_bSaved;
-    }
+    void setFilename(const QString &resultfilePath);
 
-    /**
-      * Extra XML will be appended to the results file
-      */
-    void setExtraXml(const QString &x);
+    // Extra XML will be appended to the results file
+    void setExtraXml(const QString &extraXml);
 
-    /**
-      * provide information about how the experiment was stopped
-      */
+    // provide information about how the experiment was stopped
     void setStopCondition(const bool &stoppedByUser);
 
-    static const QString c_fileFooter;
-    static const QString resultsExtension; // .apx
+    void setExperimentStartTime(const QDateTime &experimentStartTime);
+    void setExperimentEndTime(const QDateTime &experimentEndTime);
 
-public slots:
-    /*void NewStimulus(const QString& p_name);
-    void Answer(const ScreenResult& p_answer);
-    void NewAnswerCorrect(const bool p_correct);
-    void AnswerTime(const int p_time);*/
-    void Finished(bool askFilename = true);
+    const QString saveResultfile();
+    void collectResults(const QString &trial, const QString &extraXml);
 
-    /*void SetCorrectAnswer(const unsigned p_answer);
-    void SetSaturation();
-    void SetTargetParam(const t_adaptParam p_param);*/
-    void CollectResults(const QString &trial, const QString &extraXml);
+    static const QString resultfileExtension;
+    static const QString resultfileXmlClosingTag;
 
 signals:
-    void Saved(); // is emitted after Finished() did it's job
     void collected(QString xml);
 
-private:
-    void SaveAs(bool askFilename = true);
-    bool Save(const QString &p_filename, const bool p_overwrite);
-    bool MakeFilenameUnique();
-
-    void PrintXMLHeader(QTextStream &out);
-    void PrintXMLFooter(QTextStream &out);
-    void
-    PrintIntro(QTextStream &out); // print general stuff about the experiment
-
-    const QString CollectEndResults();
+protected:
+    virtual const QString askSaveLocation(const QString &suggestedPath);
+    virtual bool askShouldDiscardResults();
+    virtual void informSavingFailed(const QString &path);
+    virtual bool save(const QString &path);
 
 private:
-    //              TrialResult* currentTrial;
-    std::vector<TrialResult *> m_Results;
+    QString tryToSave(const QString &suggestedPath,
+                      const bool allowDeviationFromSuggestion = true);
 
-    QDateTime m_startTime;
-    QDateTime m_endTime;
-    QString m_stopCondition;
-    QString m_filename;
-    QString m_extraXml;
-    bool m_bSaved;
+    void printXMLHeader(QTextStream &out) const;
+    // print general stuff about the experiment
+    void printIntro(QTextStream &out) const;
+    const QString collectEndResults() const;
+    void printXMLFooter(QTextStream &out) const;
 
-    /*      bool m_bSaturation;
-            int p_reversals;
-            bool p_defReversals;*/
+    QString resultfilePath;
+    std::vector<TrialResult *> trialResults;
+    QDateTime experimentStartTime;
+    QDateTime experimentEndTime;
+    QString stopCondition;
+    QString extraXml;
 };
 }
 

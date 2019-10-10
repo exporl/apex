@@ -26,6 +26,7 @@
 #include "apexdata/screen/htmlelement.h"
 #include "apexdata/screen/labelelement.h"
 #include "apexdata/screen/matrixelement.h"
+#include "apexdata/screen/numerickeypadelement.h"
 #include "apexdata/screen/parameterlabelelement.h"
 #include "apexdata/screen/parameterlistelement.h"
 #include "apexdata/screen/pictureelement.h"
@@ -39,11 +40,10 @@
 #include "screen/buttonrundelegate.h"
 #include "screen/checkboxrundelegate.h"
 #include "screen/gridlayoutrundelegate.h"
-
 #include "screen/htmlrundelegate.h"
-
 #include "screen/labelrundelegate.h"
 #include "screen/matrixrundelegate.h"
+#include "screen/numerickeypadrundelegate.h"
 #include "screen/parameterlabelrundelegate.h"
 #include "screen/parameterlistrundelegate.h"
 #include "screen/picturelabelrundelegate.h"
@@ -210,6 +210,15 @@ void RunDelegateCreatorVisitor::visitTextEdit(const TextEditElement *e)
 void RunDelegateCreatorVisitor::visitHtml(const HtmlElement *e)
 {
     HtmlRunDelegate *d = new HtmlRunDelegate(m_rd, parent, e);
+    elementToRunningMap[e] = d;
+    lastcreated = d;
+}
+
+void RunDelegateCreatorVisitor::visitNumericKeypad(
+    const NumericKeypadElement *e)
+{
+    NumericKeypadRunDelegate *d =
+        new NumericKeypadRunDelegate(m_rd, parent, e, defaultFont);
     elementToRunningMap[e] = d;
     lastcreated = d;
 }

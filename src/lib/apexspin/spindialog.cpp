@@ -896,7 +896,7 @@ void SpinDialog::updateSavedSettings()
     widgets->settingsList2->clear();
 
     QStringList savedSettings = data::SpinUserSettingsDatabase::savedSettings();
-    qSort(savedSettings);
+    std::sort(savedSettings.begin(), savedSettings.end());
     bool hasDefault = false, hasPrevious = false;
 
     Q_FOREACH (QString setting, savedSettings) {

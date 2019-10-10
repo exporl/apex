@@ -161,4 +161,14 @@ if [ $? -ne 0 ]; then
     fi
 fi
 popd
-rm -rf tempdir
+rm -rf "$tempdir"
+
+if [ "$STUDYTYPE" = "private" ]; then
+    if [ "$YES" != "true" ]; then
+        read -p "Create results-$DEVICE branch? " -n 1 -r
+        echo
+    fi
+    if [ "$YES" = "true" ] || [[ $REPLY =~ ^[Yy]$ ]]; then
+        sshcommand "gerrit create-branch $STUDY results-$DEVICE results-base"
+    fi
+fi

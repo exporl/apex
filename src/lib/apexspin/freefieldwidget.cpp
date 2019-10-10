@@ -59,7 +59,7 @@ void FreeFieldWidget::setupUi(QVector<data::Speaker> speakers)
     for (it = speakers.begin(); it != speakers.end(); it++)
         angles << it->angle;
 
-    qSort(angles.begin(), angles.end());
+    std::sort(angles.begin(), angles.end());
 
     // an empty widget in the center of the arc
     // TODO replace with image-6.02

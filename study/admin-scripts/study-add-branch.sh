@@ -149,4 +149,4 @@ if [ $? -ne 0 ]; then
     fi
 fi
 popd
-rm -rf tempdir
+rm -rf "$tempdir"

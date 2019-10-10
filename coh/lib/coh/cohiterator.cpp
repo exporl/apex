@@ -29,6 +29,7 @@ class CohIteratorPrivate : public CohCommandVisitor
 {
 public:
     // CohCommandVisitor implementation
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -50,6 +51,11 @@ void CohIteratorPrivate::visit(CohMetaData *command)
 {
     Q_UNUSED(command);
     // ignored
+}
+
+void CohIteratorPrivate::visit(CohRfFreeStimulus *command)
+{
+    currentStimulus = command;
 }
 
 void CohIteratorPrivate::visit(CohNullStimulus *command)

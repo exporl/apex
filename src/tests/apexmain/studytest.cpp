@@ -30,6 +30,7 @@
 #include "apextools/exceptions.h"
 #include "apextools/settingsfactory.h"
 
+#include "common/temporarydirectory.h"
 #include "common/testutils.h"
 
 #include <QAbstractButton>
@@ -42,7 +43,9 @@
 #include <QMessageBox>
 #include <QStackedWidget>
 #include <QTextBrowser>
+
 using namespace apex;
+using namespace cmn;
 
 void ApexMainTest::testStudyDialog()
 {
@@ -385,30 +388,6 @@ void ApexMainTest::testStudy()
             .filePath(
                 QSL("teststudy/experiments/experiments/experiment.apx"))));
 
-    QRegularExpression resultRegex(
-        dir2.path() + QL1S("/teststudy/results/") +
-#ifdef Q_OS_ANDROID
-        QRegularExpression::escape(
-            android::ApexAndroidBridge::getDeviceSerialNumber()) +
-#else
-        QRegularExpression::escape(QString::fromLatin1("%1_%2")
-                                       .arg(ApexTools::getUser())
-                                       .arg(QHostInfo::localHostName())) +
-#endif
-        QL1S("/experiments/experiment-\\d{4}\\d{2}\\d{2}T\\d{"
-             "2}\\d{2}\\d{2}Z.apr"));
-    QVERIFY(
-        resultRegex
-            .match(study.makeResultsFilePath(QSL("experiments/experiment.apx")))
-            .hasMatch());
-    QVERIFY(
-        resultRegex
-            .match(study.makeResultsFilePath(
-                QDir(dir2.path())
-                    .filePath(QSL(
-                        "teststudy/experiments/experiments/experiment.apx"))))
-            .hasMatch());
-
     TEST_EXCEPTIONS_CATCH
 }
 
@@ -550,10 +529,6 @@ void ApexMainTest::testStudyManager()
         dir2.path() + QL1S("/") + publicStudyName +
         QL1S("/experiments/experiments/experiment-2.apx")));
 
-    QVERIFY(manager
-                .newExperiment(dir1.path() + QL1S("/") + privateStudyName +
-                               QL1S("/experiments/experiments/experiment.apx"))
-                .isEmpty());
     /* public study ignores afterExperiment, shouldn't throw */
     manager.afterExperiment(QString());
     studiesUpdatedSpy.clear();
@@ -570,26 +545,12 @@ void ApexMainTest::testStudyManager()
     QVERIFY(manager.activeStudy());
     QVERIFY(manager.activeStudy()->isPrivate());
 
-    QString resultsFilePath =
-        manager.newExperiment(dir2.path() + QL1S("/") + privateStudyName +
-                              QL1S("/experiments/experiments/experiment.apx"));
-    QRegularExpression resultRegex(
-        dir2.path() + QL1S("/") + privateStudyName + QL1S("/results/") +
-#ifdef Q_OS_ANDROID
-        QRegularExpression::escape(
-            android::ApexAndroidBridge::getDeviceSerialNumber()) +
-#else
-        QRegularExpression::escape(QString::fromLatin1("%1_%2")
-                                       .arg(ApexTools::getUser())
-                                       .arg(QHostInfo::localHostName())) +
-#endif
-        QL1S(("/experiments/experiment-\\d{4}\\d{2}\\d{2}T\\d{"
-              "2}\\d{2}\\d{2}Z.apr")));
-    QVERIFY(resultRegex.match(resultsFilePath).hasMatch());
-    QFile resultsFile(resultsFilePath);
-    QVERIFY(resultsFile.open(QIODevice::ReadWrite));
-    resultsFile.write(QL1S("someData\n").data());
-    resultsFile.close();
+    QString resultsFilePath = manager.makeResultfilePath(
+        dir2.path() + QL1S("/") + privateStudyName +
+            QSL("/experiments/experiments/experiment.apx"),
+        QSL("path/to/results.apr"));
+    QDir(QFileInfo(resultsFilePath).dir()).mkpath(".");
+    createFile(resultsFilePath);
 
     QVERIFY(manager.belongsToActiveStudy(resultsFilePath));
     manager.afterExperiment(resultsFilePath);
@@ -699,15 +660,16 @@ void ApexMainTest::testStudyFull()
                 .filePath(manager.activeStudy()->name() +
                           QL1S("/experiments/experiment.apx"))));
 
-        QFile resultsFile(manager.activeStudy()->makeResultsFilePath(
+        QString resultsfilePath = manager.activeStudy()->makeResultfilePath(
             QDir(dir2.path())
                 .filePath(manager.activeStudy()->name() +
-                          QL1S("/experiments/experiment.apx"))));
-        QVERIFY(resultsFile.open(QIODevice::ReadWrite));
-        resultsFile.write(QL1S("someData\n").data());
-        resultsFile.close();
-        QVERIFY(manager.belongsToActiveStudy(resultsFile.fileName()));
-        manager.afterExperiment(resultsFile.fileName());
+                          QL1S("/experiments/experiment.apx")),
+            QSL("path/to/results.apx"));
+        QDir(QFileInfo(resultsfilePath).dir()).mkpath(".");
+        createFile(resultsfilePath);
+
+        QVERIFY(manager.belongsToActiveStudy(resultsfilePath));
+        manager.afterExperiment(resultsfilePath);
         /* push to local non-bare repos is not supported by libgit2,
          * so check by opening the results repo directly.
          */
@@ -716,7 +678,7 @@ void ApexMainTest::testStudyFull()
                 .filePath(manager.activeStudy()->name() + QL1S("/results")));
         resultsDirectory.open();
         QVERIFY(resultsDirectory.lastCommitMessage().contains(
-            QFileInfo(resultsFile.fileName()).fileName()));
+            QFileInfo(resultsfilePath).fileName()));
         resultsDirectory.close();
 
         /* public study */
@@ -753,14 +715,6 @@ void ApexMainTest::testStudyFull()
             manager.activeStudy()->indexExperiment(),
             QDir(dir2.path())
                 .filePath(publicStudyName + QL1S("/experiments/index.apf")));
-
-        /* exception making resultsfilepath with public study */
-        QVERIFY_EXCEPTION_THROWN(
-            manager.activeStudy()->makeResultsFilePath(
-                QDir(dir2.path())
-                    .filePath(publicStudyName +
-                              QL1S("/experiments/experiment.apx"))),
-            ApexException);
 
         dialog->findChild<QAbstractButton *>(QSL("pauseStudyButton"))->click();
         dialog->findChild<QComboBox *>(QSL("studiesComboBox"))
@@ -902,14 +856,14 @@ void ApexMainTest::testManagedDirectoryWithExternalWorkdir()
 {
     TEST_EXCEPTIONS_TRY
 
-    QTemporaryDir repo1;
-    QTemporaryDir workdir1;
+    TemporaryDirectory repo1;
+    TemporaryDirectory workdir1;
     ManagedDirectory managedDirectory1;
-    managedDirectory1.setPath(repo1.path(), workdir1.path());
+    managedDirectory1.setPath(repo1.dir().path(), workdir1.dir().path());
     managedDirectory1.init();
     managedDirectory1.setAuthor(QSL("dummy"), QSL("dummy@dummy.com"));
 
-    QFile newFile(QDir(workdir1.path()).filePath("new-file"));
+    QFile newFile(workdir1.file("new-file"));
     newFile.open(QIODevice::WriteOnly);
     newFile.close();
 
@@ -923,6 +877,120 @@ void ApexMainTest::testManagedDirectoryWithExternalWorkdir()
     managedDirectory1.push(Qt::ConnectionType::DirectConnection);
 
     QVERIFY(managedDirectory2.lastCommitMessage().contains(QSL("new-file")));
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::testStudy_makeResultfilePath_privateStudy()
+{
+    TEST_EXCEPTIONS_TRY
+
+    TemporaryDirectory tempStudyRootDir;
+    TemporaryDirectory tempResultsWorkDir;
+    QString experimentfilePath =
+        tempStudyRootDir.file("study-name/experiments/path/to/experiment.apx");
+
+    Study study("study-name", "http://experiments-url", "experiments-branch",
+                "http://results-url", "results-branch",
+                tempStudyRootDir.dir().path(), tempResultsWorkDir.dir().path(),
+                "/key/path");
+
+    QString actualPath =
+        study.makeResultfilePath(experimentfilePath, "path/to/results.apr");
+
+    QString uniqueResultfilePathFragmentToAllowOctopusMerge =
+#ifdef Q_OS_ANDROID
+        android::ApexAndroidBridge::getDeviceSerialNumber();
+#else
+        QSL("%1_%2").arg(ApexTools::getUser()).arg(QHostInfo::localHostName());
+#endif
+
+    QString expectedPath =
+        tempResultsWorkDir.file("study-name/results/%1/path/to/results.apr")
+            .arg(uniqueResultfilePathFragmentToAllowOctopusMerge);
+
+    QCOMPARE(actualPath, expectedPath);
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::
+    testStudy_makeResultfilePath_privateStudy_noRelativeResultfilePathSpecified()
+{
+    TEST_EXCEPTIONS_TRY
+
+    TemporaryDirectory tempStudyRootDir;
+    TemporaryDirectory tempResultsWorkDir;
+    QString experimentfilePath =
+        tempStudyRootDir.file("study-name/experiments/path/to/experiment.apx");
+
+    Study study("study-name", "http://experiments-url", "experiments-branch",
+                "http://results-url", "results-branch",
+                tempStudyRootDir.dir().path(), tempResultsWorkDir.dir().path(),
+                "/key/path");
+
+    QString actualPath =
+        study.makeResultfilePath(experimentfilePath, QString());
+
+    QString uniqueResultfilePathFragmentToAllowOctopusMerge =
+#ifdef Q_OS_ANDROID
+        android::ApexAndroidBridge::getDeviceSerialNumber();
+#else
+        QSL("%1_%2").arg(ApexTools::getUser()).arg(QHostInfo::localHostName());
+#endif
+
+    QString expectedPath =
+        tempResultsWorkDir.file("study-name/results/%1/path/to/experiment.apr")
+            .arg(uniqueResultfilePathFragmentToAllowOctopusMerge);
+
+    QCOMPARE(actualPath, expectedPath);
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::testStudy_makeResultfilePath_publicStudy()
+{
+    TEST_EXCEPTIONS_TRY
+
+    TemporaryDirectory tempStudyRootDir;
+    QString experimentfilePath =
+        tempStudyRootDir.file("study-name/experiments/path/to/experiment.apx");
+
+    Study study("study-name", "http://experiments-url", "experiments-branch",
+                QString(), QString(), tempStudyRootDir.dir().path(),
+                tempStudyRootDir.dir().path(), "/key/path");
+
+    QString actualPath =
+        study.makeResultfilePath(experimentfilePath, "path/to/results.apr");
+
+    QString expectedPath =
+        tempStudyRootDir.file("study-name/experiments/path/to/results.apr");
+
+    QCOMPARE(actualPath, expectedPath);
+
+    TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::
+    testStudy_makeResultfilePath_publicStudy_noRelativeResultfilePathSpecified()
+{
+    TEST_EXCEPTIONS_TRY
+
+    TemporaryDirectory tempStudyRootDir;
+    QString experimentfilePath =
+        tempStudyRootDir.file("study-name/experiments/path/to/experiment.apx");
+
+    Study study("study-name", "http://experiments-url", "experiments-branch",
+                QString(), QString(), tempStudyRootDir.dir().path(),
+                tempStudyRootDir.dir().path(), "/key/path");
+
+    QString actualPath =
+        study.makeResultfilePath(experimentfilePath, QString());
+
+    QString expectedPath =
+        tempStudyRootDir.file("study-name/experiments/path/to/experiment.apr");
+
+    QCOMPARE(actualPath, expectedPath);
 
     TEST_EXCEPTIONS_CATCH
 }

@@ -77,7 +77,7 @@ signals:
     void released();
 
 public slots:
-    void newStimulus(stimulus::Stimulus *);
+    void updateParameter(const QString &id, const QVariant &value);
 private slots:
     void sendAnsweredSignal(const QPointF &);
 

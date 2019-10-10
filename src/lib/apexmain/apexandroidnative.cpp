@@ -69,6 +69,8 @@ static void networkChanged(JNIEnv *env, jobject object, jboolean available)
     Q_UNUSED(env);
     Q_UNUSED(object);
 
+    qCDebug(APEX_RS, "jni network changed");
+
     QMetaObject::invokeMethod(apexAndroidBridge, "networkChanged",
                               Qt::QueuedConnection,
                               Q_ARG(bool, available == JNI_TRUE));
@@ -214,6 +216,13 @@ void ApexAndroidBridge::onNetworkChanged(bool connected)
 
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)
 {
+
+    static bool initialized = false;
+    if (initialized)
+        return JNI_VERSION_1_6;
+    initialized = true;
+
+    qCDebug(APEX_RS) << "jni onload";
     Q_UNUSED(reserved);
 
     JNIEnv *env;

@@ -33,6 +33,7 @@ public:
     bool check(const QMap<QPair<Coh::Electrode, Coh::Electrode>, unsigned>
                    &electrodes);
 
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -83,6 +84,14 @@ void CohCommandLevelChecker::visit(CohMetaData *command)
 {
     Q_UNUSED(command);
     // ignored
+}
+
+void CohCommandLevelChecker::visit(CohRfFreeStimulus *command)
+{
+    if (!command->isValid()) {
+        this->result = false;
+        return;
+    }
 }
 
 void CohCommandLevelChecker::visit(CohNullStimulus *command)

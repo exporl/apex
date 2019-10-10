@@ -59,7 +59,6 @@ if (~p.fixed_noise && p.ask_snr)
 end
 
 p=ensure_field(p,'exit_after',0);           % exit after experiment is finished
-p=ensure_field(p,'saveprocessedresults',1);           % save xslt processed results at end of results file
 p=ensure_field(p,'addmarkup',0);
 
 p=ensure_field(p,'filter', 0);          % do filtering of speech and noise
@@ -441,9 +440,9 @@ interactive=a3interactive(interactive);
 
 
 if (p.manual_correction)
-    results=a3results('apex:resultsviewer.html','','',1,p.saveprocessedresults);    
+    results=a3results('apex:resultsviewer.html','','',1);
 else
-    results=a3results('apex:resultsviewer.html','','',0,p.saveprocessedresults);    
+    results=a3results('apex:resultsviewer.html','','',0);
 end
 
 

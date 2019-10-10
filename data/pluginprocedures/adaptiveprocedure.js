@@ -1,5 +1,5 @@
 function adaptiveProcedure() {        // Constructor
-    this.stairCase = Array();	    // List of parameter values
+    this.stairCase = Array();        // List of parameter values
     this.nCorrect = 0;
     this.nWrong = 0;
     this.movingUp = 0;
@@ -21,49 +21,49 @@ adaptiveProcedure.prototype.adaptParameter = function(lastAnswer)
     var parameterValue = this.stairCase[this.stairCase.length-1] ;
 
     if (lastAnswer) {
-	++this.nCorrect;
-	this.nWrong = 0;
+    ++this.nCorrect;
+    this.nWrong = 0;
     } else {
-	++this.nWrong;
-	this.nCorrect = 0;
+    ++this.nWrong;
+    this.nCorrect = 0;
     }
 
     if (this.nCorrect == this.nDown) {
-	if (!this.movingUp) {
-	    ++this.nReversals;
-	}
+    if (!this.movingUp) {
+        ++this.nReversals;
+    }
 
-	if (this.largerIsEasier) {
-	    parameterValue -= this.stepSize;
-	} else {
-	    parameterValue += this.stepSize;
-	}
-	this.nCorrect = 0;
-	this.movingUp = true;
+    if (this.largerIsEasier) {
+        parameterValue -= this.stepSize;
+    } else {
+        parameterValue += this.stepSize;
+    }
+    this.nCorrect = 0;
+    this.movingUp = true;
 
     } else if (this.nWrong == this.nUp) {
-	if (this.movingUp) {
-	    ++this.nReversals;
-	}
+    if (this.movingUp) {
+        ++this.nReversals;
+    }
 
-	if (this.largerIsEasier) {
-	    parameterValue += this.stepSize;
-	} else {
-	    parameterValue -= this.stepSize;
-	}
-	this.nWrong = 0;
-	this.movingUp = false;
+    if (this.largerIsEasier) {
+        parameterValue += this.stepSize;
+    } else {
+        parameterValue -= this.stepSize;
+    }
+    this.nWrong = 0;
+    this.movingUp = false;
 
     }
 
 
     if (parameterValue > this.maxValue) {
-	parameterValue = this.maxValue;
-	this.saturated = true;
+    parameterValue = this.maxValue;
+    this.saturated = true;
     }
     if (parameterValue < this.minValue) {
-	parameterValue = this.minValue;
-	this.saturated = true;
+    parameterValue = this.minValue;
+    this.saturated = true;
     }
 
     return parameterValue;
@@ -79,18 +79,18 @@ adaptiveProcedure.prototype.NextTrial = function(answer, screenresult) {
     trials = api.GetTrials();
 
     if (params.order == "random" ) {
-	   nTrial = Math.floor(Math.random()*trials.length);
+       nTrial = Math.floor(Math.random()*trials.length);
     } else {
-	api.Abort( "Order sequential not implemented");
+    api.Abort( "Order sequential not implemented");
     }
 
     trial=trials[nTrial];
 
-    var value;	// value of parameter to be adapted
-    if (screenresult == null) {	    // First trial
+    var value;    // value of parameter to be adapted
+    if (screenresult == null) {        // First trial
         value = parseFloat(params.start_value);
     } else {
-	value = this.adaptParameter(answer);
+    value = this.adaptParameter(answer);
     }
     this.stairCase.push(value);
 
@@ -98,19 +98,19 @@ adaptiveProcedure.prototype.NextTrial = function(answer, screenresult) {
     var stimuli = api.GetStimuli();
     var stimulus;
     for (var i=0; i<stimuli.length; ++i) {
-	if (api.GetFixedParameterValue(stimuli[i], params.adapt_parameter) == value) {
-	    stimulus = stimuli[i];
-	    break
-	}
+    if (api.GetFixedParameterValue(stimuli[i], params.adapt_parameter) == value) {
+        stimulus = stimuli[i];
+        break
+    }
     }
     if (!stimulus) {
-	api.Abort("Could not find stimulus with " + params.adapt_parameter + " ==  " + value);
+    api.Abort("Could not find stimulus with " + params.adapt_parameter + " ==  " + value);
     }
     this.lastStimulus = stimulus;
 
     if (this.nReversals == this.stopAfterReversals) {
-//    	api.Finished();
-	return "";
+//        api.Finished();
+    return "";
     }
 
     api.CreateOutputList(trial.id, stimulus);
@@ -138,26 +138,26 @@ adaptiveProcedure.prototype.CheckParameters = function() {
         //console.log("Property " + prop + "=" + params[prop] );
 
         switch (prop) {
-	    case "nUp":
-		this.nUp = parseInt(params[prop]);
-		break;
-	    case "nDown":
-		this.nDown = parseInt(params[prop]);
-		break;
-	    case "stop_after_reversals":
-		this.stopAfterReversals = parseInt(params[prop]);
-		break;
-	    case "larger_is_easier":
-		this.largerIsEasier = ( params[prop] == "true" );
-		break;
-	    case "stepsize":
-		this.stepSize = parseFloat( params[prop] );
-	    case "min_value":
-		this.minValue = parseFloat( params[prop] );
-	    case "max_value":
-		this.maxValue = parseFloat( params[prop] );
-		break;
-	}
+        case "nUp":
+        this.nUp = parseInt(params[prop]);
+        break;
+        case "nDown":
+        this.nDown = parseInt(params[prop]);
+        break;
+        case "stop_after_reversals":
+        this.stopAfterReversals = parseInt(params[prop]);
+        break;
+        case "larger_is_easier":
+        this.largerIsEasier = ( params[prop] == "true" );
+        break;
+        case "stepsize":
+        this.stepSize = parseFloat( params[prop] );
+        case "min_value":
+        this.minValue = parseFloat( params[prop] );
+        case "max_value":
+        this.maxValue = parseFloat( params[prop] );
+        break;
+    }
 
     }
 
@@ -167,9 +167,9 @@ adaptiveProcedure.prototype.CheckParameters = function() {
 
 adaptiveProcedure.prototype.GetResultXML = function() {
     return "<procedure>\n" +
-	"<stimulus>" + this.lastStimulus + "</stimulus>\n" +
-	"<parameter>" + this.stairCase[this.stairCase.length-1] + "</parameter>\n" +
-	"</procedure>";
+    "<stimulus>" + this.lastStimulus + "</stimulus>\n" +
+    "<parameter>" + this.stairCase[this.stairCase.length-1] + "</parameter>\n" +
+    "</procedure>";
 }
 
 

@@ -28,6 +28,8 @@ class QString;
 
 class APEXTOOLS_EXPORT ApexException : public std::exception
 {
+public:
+    virtual ~ApexException() throw();
 };
 
 class APEXTOOLS_EXPORT ApexStringException : public ApexException
@@ -39,12 +41,6 @@ public:
 
 private:
     const QByteArray message;
-};
-
-class APEXTOOLS_EXPORT TrialDataNotFoundException : public ApexException
-{
-public:
-    virtual const char *what() const throw() Q_DECL_OVERRIDE;
 };
 
 class APEXTOOLS_EXPORT ApexConnectionBetweenDifferentDevicesException

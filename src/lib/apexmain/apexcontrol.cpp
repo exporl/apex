@@ -426,19 +426,12 @@ bool ApexControl::newExperiment(data::ExperimentData *data)
     if (experimentControl && experimentControl->isRunning())
         return false;
 
-    QString resultsFilePath =
-        StudyManager::instance()->newExperiment(data->fileName());
-    if (!resultsFilePath.isEmpty())
-        setResultsFilePath(resultsFilePath);
-
     experimentControl.reset();
     experimentControl.reset(new ExperimentControl(flags));
     connect(experimentControl.data(), SIGNAL(errorMessage(QString, QString)),
             this, SLOT(errorMessage(QString, QString)));
-    connect(experimentControl.data(), SIGNAL(savedResults(QString)),
-            mod_experimentselector.data(), SIGNAL(savedFile(QString)));
-    connect(experimentControl.data(), SIGNAL(experimentClosed()),
-            mod_experimentselector.data(), SIGNAL(experimentClosed()));
+    connect(experimentControl.data(), &ExperimentControl::experimentClosed,
+            mod_experimentselector.data(), &ExperimentRunner::experimentDone);
 
     ErrorHandler::instance()->clearCounters();
 
@@ -537,8 +530,8 @@ void ApexControl::setupIo()
             SLOT(playStimulus(QString, double)));
     connect(stimulusControl.data(), SIGNAL(stimulusPlayed()), io,
             SLOT(onStimulusPlayed()));
-    connect(experimentControl.data(), SIGNAL(experimentDone()),
-            runDelegate->modStudy(), SLOT(experimentDone()));
+    connect(experimentControl.data(), SIGNAL(experimentClosed(QString)),
+            runDelegate->modStudy(), SLOT(savedResultfile(QString)));
 }
 
 bool ApexControl::isExperimentRunning() const
@@ -643,11 +636,6 @@ void ApexControl::StopOutput()
                             "be closed."));
 
     fileExit();
-}
-
-QDateTime ApexControl::GetStartTime() const
-{
-    return experimentControl->startTime();
 }
 
 const ExperimentRunDelegate &ApexControl::GetCurrentExperimentRunDelegate()

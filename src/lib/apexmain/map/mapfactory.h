@@ -52,6 +52,9 @@ public:
     virtual ~MapFactory();
 
     static data::ApexMap *R126ToApexMap(const R126NucleusMAPRecord *p_map);
+
+private:
+    static int triggerToTriggerType(const QString &trigger);
 };
 }
 

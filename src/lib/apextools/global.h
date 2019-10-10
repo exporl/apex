@@ -69,12 +69,6 @@ const QString organizationDomain = QSL("exporl.med.kuleuven.be");
 #define APEXSPIN_EXPORT Q_DECL_IMPORT
 #endif
 
-#ifdef PSIGNIFIT_MAKEDLL
-#define PSIGNIFIT_EXPORT Q_DECL_EXPORT
-#else
-#define PSIGNIFIT_EXPORT Q_DECL_IMPORT
-#endif
-
 #ifdef CALIBRATIONADMIN_MAKEDLL
 #define CALIBRATIONADMIN_EXPORT Q_DECL_EXPORT
 #else

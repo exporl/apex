@@ -149,7 +149,5 @@ int main(int argc, char *argv[])
     TemporarySettings settings;
 
     CohTest test;
-    QTest::qExec(&test, argc, argv);
-
-    return 0;
+    return QTest::qExec(&test, argc, argv);
 }

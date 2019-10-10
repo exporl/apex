@@ -237,5 +237,22 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
+if [ "$STUDYTYPE" = "private" ]; then
+    git checkout --orphan all-results
+    git rm -rfq .
+    git commit --allow-empty -m "initial commit"
+
+    git tag -a -m "common base of all results branches" results-base
+
+    if [ "$YES" != "true" ]; then
+        read -p "Create all-results branch? " -n 1 -r
+        echo
+    fi
+    if [ "$YES" = "true" ] || [[ $REPLY =~ ^[Yy]$ ]]; then
+        gitsshcommand push origin all-results:all-results
+        gitsshcommand push origin results-base:results-base
+    fi
+fi
+
 popd
-rm -rf tempdir
+rm -rf "$tempdir"

@@ -26,37 +26,46 @@
 #include "commongui/webview.h"
 
 #include <QSignalSpy>
-#include <QString>
-#include <QVariantList>
+#include <QTemporaryDir>
 
 using namespace cmn;
 
-static bool wait(const QSignalSpy &spy, unsigned duration = 50,
-                 unsigned count = 20)
+class DummyObject : public QObject
 {
-    for (unsigned i = 0; i < count && spy.count() == 0; ++i) {
-        QCoreApplication::processEvents();
-        QTest::qSleep(duration);
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE void start()
+    {
+        emit DummyObject::started();
     }
-    return spy.count() > 0;
-}
+
+    Q_INVOKABLE void acknowledgeSignal()
+    {
+        emit DummyObject::finished();
+    }
+
+signals:
+    void started();
+    void signalled();
+    void finished();
+};
 
 void CommonGuiTest::webViewTest()
 {
     TEST_EXCEPTIONS_TRY
 
     WebView webView;
-    QSignalSpy spy(&webView, SIGNAL(loadingFinished(bool)));
-    webView.loadHtml(
-        QL1S("<html><head><script>function gimme5() { return 5; } ") +
-        QL1S("</script></head></html>"));
-    webView.show();
-    QVERIFY(spy.count() == 1 || spy.wait());
+    webView.loadHtml(QL1S("<html><head><script>") +
+                     QL1S("function gimme5() { return 5; }") +
+                     QL1S("</script></head></html>"));
+    QVERIFY(QSignalSpy(&webView, &WebView::loadingFinished).wait());
 
-#if !defined(WITH_WEBENGINE)
-    QCOMPARE(QVariant(5),
-             webView.runJavaScript(QString::fromLatin1("gimme5()")));
-#endif
+    connect(&webView, &WebView::javaScriptFinished,
+            [](const QVariant &result) { QCOMPARE(result, QVariant(5)); });
+
+    webView.runJavaScriptAndEmitResult(QSL("gimme5()"));
+    QVERIFY(QSignalSpy(&webView, &WebView::javaScriptFinished).wait());
 
     TEST_EXCEPTIONS_CATCH
 }
@@ -65,45 +74,33 @@ void CommonGuiTest::webViewWebSocketsTest()
 {
     TEST_EXCEPTIONS_TRY
 
-    WebSocketServer wsServer(QSL("webviewtest"));
-    DummyQObject dummy;
-    QSignalSpy spy(&dummy, SIGNAL(dummySignal(QString)));
+    QTemporaryDir temporaryDirectory;
+    QFile::copy(
+        QSL(":/qtwebchannel/qwebchannel.js"),
+        QDir(temporaryDirectory.path()).filePath(QSL("qwebchannel.js")));
+    QFile::copy(
+        Paths::searchFile(QSL("testdata/websocket-test.html"),
+                          Paths::dataDirectories()),
+        QDir(temporaryDirectory.path()).filePath(QSL("websocket-test.html")));
 
-    wsServer.start();
-    wsServer.on(QSL("dummySlot"), &dummy, QSL("dummySlot(QString)"));
-    connect(&dummy, &DummyQObject::dummySignal, [](const QString &myString) {
-        QCOMPARE(myString, QSL("testString"));
-    });
-    QSignalSpy connectedSpy(&wsServer, SIGNAL(newConnection()));
+    DummyObject dummy;
+
+    WebSocketServer wsServer(&dummy, QSL("api"), QHostAddress::LocalHost, 3456);
 
     WebView webView;
-    QSignalSpy loadingSpy(&webView, SIGNAL(loadingFinished()));
-    webView.loadHtml(QSL("<html><head></head></html>"));
-    QVERIFY(loadingSpy.count() == 1 || loadingSpy.wait());
+    webView.load(QUrl::fromLocalFile(
+        QDir(temporaryDirectory.path()).filePath(QSL("websocket-test.html"))));
+    webView.show();
 
-    QFile polyfill(
-        Paths::searchFile(QSL("js/polyfill.js"), Paths::dataDirectories()));
-    QFile webSocket(Paths::searchFile(QSL("js/commonwebsocket.js"),
-                                      Paths::dataDirectories()));
-    polyfill.open(QIODevice::ReadOnly);
-    webSocket.open(QIODevice::ReadOnly);
-    webView.runJavaScript(QString::fromUtf8(polyfill.readAll()));
-    webView.runJavaScript(QString::fromUtf8(webSocket.readAll()));
-    webView.runJavaScript(
-        QSL("var socket = new CommonSocket('ws://127.0.0.1:%1', '%2');")
-            .arg(wsServer.serverPort())
-            .arg(wsServer.csrfToken()) +
-        QSL("socket.open();") +
-        QSL("socket.on('eval', function(js) { eval(js); });"));
-    QVERIFY(wait(connectedSpy));
-    wsServer.broadcastMessage(WebSocketServer::buildInvokeMessage(
-        QSL("eval"),
-        QVariantList() << QL1S("socket.sendAsync(socket.buildInvokeMessage('") +
-                              QL1S("dummySlot', ['testString']));")));
-    QVERIFY(wait(spy));
-    wsServer.stop();
+    QVERIFY(QSignalSpy(&dummy, &DummyObject::started).wait());
+
+    emit dummy.signalled();
+
+    QVERIFY(QSignalSpy(&dummy, &DummyObject::finished).wait());
 
     TEST_EXCEPTIONS_CATCH
 }
 
 QTEST_MAIN(CommonGuiTest)
+
+#include "webviewtest.moc"

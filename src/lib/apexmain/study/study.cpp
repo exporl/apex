@@ -25,6 +25,7 @@
 #include "../apexandroidnative.h"
 #endif
 
+#include "apexmain/resultsink/apexresultsink.h"
 #include "apextools/apextools.h"
 #include "apextools/exceptions.h"
 
@@ -227,11 +228,6 @@ QString Study::experimentsPath() const
     return d->experimentsPath;
 }
 
-QString Study::resultsPath() const
-{
-    return d->resultsWorkdirPath;
-}
-
 QString Study::keyPath() const
 {
     return d->keyPath;
@@ -259,47 +255,65 @@ QStringList Study::experiments() const
 bool Study::belongsToStudy(const QString &path) const
 {
     if (QDir::isAbsolutePath(path))
+
         return (path.startsWith(d->experimentsPath) &&
                 QDir(d->experimentsPath).exists(path)) ||
                (isPrivate() && path.startsWith(d->resultsWorkdirPath) &&
                 QDir(d->resultsWorkdirPath).exists(path));
+
     return QDir(d->experimentsPath).exists(path) ||
            (isPrivate() && QDir(d->resultsWorkdirPath).exists(path));
 }
 
-QString Study::makeResultsFilePath(const QString &experimentPath) const
+const QString
+Study::makeResultfilePath(const QString &experimentfilePath,
+                          const QString &relativeResultfilePath) const
 {
-    if (isPublic())
-        throw ApexStringException(tr("Results not supported by public study."));
-    if (!belongsToStudy(experimentPath))
-        throw ApexStringException(
-            tr("ExperimentPath %1 does not belong to this study")
-                .arg(experimentPath));
+    QString relativePath = createRelativeResultfilePath(experimentfilePath,
+                                                        relativeResultfilePath);
 
-    QFileInfo experimentPathInfo(
-        QDir::isAbsolutePath(experimentPath)
-            ? experimentPath
-            : QDir(d->experimentsPath).filePath(experimentPath));
-    QString relativeResultPath =
-        QString::fromLatin1("%1/%2/%3-%4.apr")
+    return QDir(createResultfilePathRoot()).absoluteFilePath(relativePath);
+}
+
+const QString Study::makeResultsPath(const QString &relativePath) const
+{
+    return QDir(createResultfilePathRoot()).absoluteFilePath(relativePath);
+};
+
+const QString Study::createResultfilePathRoot() const
+{
+    return isPrivate()
+               ? QDir(d->resultsWorkdirPath)
+                     .filePath(
+                         createUniqueResultfilePathFragmentToAllowOctopusMerge())
+               : d->experimentsPath;
+}
+
+const QString
+Study::createUniqueResultfilePathFragmentToAllowOctopusMerge() const
+{
 #ifdef Q_OS_ANDROID
-            .arg(android::ApexAndroidBridge::getDeviceSerialNumber())
+    return android::ApexAndroidBridge::getDeviceSerialNumber();
 #else
-            .arg(QString::fromLatin1("%1_%2")
-                     .arg(ApexTools::getUser())
-                     .arg(QHostInfo::localHostName()))
+    return ApexTools::getUser() + "_" + QHostInfo::localHostName();
 #endif
-            .arg(experimentPathInfo.path().remove(d->experimentsPath))
-            .arg(experimentPathInfo.baseName())
-            .arg(QDateTime::currentDateTimeUtc()
-                     .toString(Qt::ISODate)
-                     .remove(QChar('-'))
-                     .remove(QChar(':')));
-    QString absoluteResultPath = QDir::cleanPath(
-        QDir(d->resultsWorkdirPath).filePath(relativeResultPath));
+}
 
-    QDir(d->resultsWorkdirPath).mkpath(QFileInfo(relativeResultPath).path());
-    return absoluteResultPath;
+const QString
+Study::createRelativeResultfilePath(const QString &experimentfilePath,
+                                    const QString &relativeResultfilePath) const
+{
+    QFileInfo templateFileInfo(
+        relativeResultfilePath.isEmpty()
+            ? QDir(d->experimentsPath).relativeFilePath(experimentfilePath)
+            : relativeResultfilePath);
+
+    return QSL("%1/%2.%3")
+        .arg(templateFileInfo.path())
+        .arg(templateFileInfo.completeBaseName())
+        .arg(relativeResultfilePath.isEmpty()
+                 ? ApexResultSink::resultfileExtension
+                 : templateFileInfo.suffix());
 }
 
 QString Study::statusMessage()

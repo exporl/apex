@@ -20,29 +20,21 @@
 #ifndef _EXPORL_SRC_LIB_APEXMAIN_RESULT_RESULTAPI_H_
 #define _EXPORL_SRC_LIB_APEXMAIN_RESULT_RESULTAPI_H_
 
-#include "../baseapi.h"
-
+#include <QObject>
 #include <QVariant>
 
 namespace apex
 {
-class ResultApiPrivate;
 
-class ResultApi : public BaseApi
+class ResultApi : public QObject
 {
     Q_OBJECT
 public:
-    ResultApi();
-    ~ResultApi();
+    explicit ResultApi();
+    virtual ~ResultApi();
 
-public Q_SLOTS:
-    QVariant psignifit(const QString &data);
-
-Q_SIGNALS:
+signals:
     void exportToPdf();
-
-private:
-    ResultApiPrivate *d;
 };
 }
 

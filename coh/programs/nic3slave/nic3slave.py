@@ -115,6 +115,8 @@ class ProtoSlaveClient:
     def parse(self, command):
         if command.HasField('metadata'):
             pass
+        elif command.HasField('rffree'):
+            raise Exception('rf free stimulus not supported for NIC 3')
         elif command.HasField('null'):
             self.stimtype('electric')
             stimulus = command.stimulus

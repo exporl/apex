@@ -264,7 +264,7 @@ bool FilesPlugin::processOutput()
             completed |=
                 inputSizes.value(i) == sf_seek(inputFile.get(), 0, SEEK_CUR);
         }
-        qFill(data + readCount, data + blockSize, 0);
+        std::fill(data + readCount, data + blockSize, 0);
     }
 
     return !completed;

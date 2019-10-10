@@ -1,4 +1,4 @@
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd">
   <!--  @doc
    @what: Calibration file needed for experiment NVA word list nr. 30 level 65 dB
    @description: To calibrate the noise for the experiment with NVA word list nr. 30 level 65 dB
@@ -443,7 +443,7 @@
     </parameters>
   </calibration>
   <results>
-    <page>apex:resultviewer.html</page>
+    <page>apex:resultsviewer.html</page>
     <resultparameters>
       <parameter name="snr">0</parameter>
     </resultparameters>

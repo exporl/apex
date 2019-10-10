@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QDir dir;
 
     if (argc == 2)
-        dir = argv[1];
+        dir.setPath(argv[1]);
 
     apex::ExperimentControl ec;
     StateMachineVisualizer v;

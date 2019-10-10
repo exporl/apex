@@ -33,7 +33,6 @@ APEX development: getting started
     -- apexwriters: classes to write data structures to XML files
     -- streamapp: audio library, to be removed later on
     -- syllib: various signal processing clases
-    -- psiginfit: psychometric curve fitting
     -- apexmain: everything else (parts of this library such as GUI, parsers, ... should be split into separate libraries), depends on all other libraries
 
 -   For all new code, and code to be refactored, we aim to have reasonable unit test coverage. 

@@ -13,4 +13,3 @@ vc*0.[pi]db
 object_script.*
 pkg-config_wrapper.sh
 *.so-deployment-settings.json
-CMakeLists.txt

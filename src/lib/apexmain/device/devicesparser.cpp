@@ -129,11 +129,15 @@ data::DeviceData *DevicesParser::ParseDevice(const QDomElement &p_base,
         parser.Parse(p_base, pfd);
         result.reset(pfd);
     } else if (sModule == sc_sCohDevice) {
+#ifdef ENABLE_COH
         parser::CohDeviceParser parser;
         parser.SetParameterManagerData(pm);
         data::CohDeviceData *d = new data::CohDeviceData();
         parser.Parse(p_base, d);
         result.reset(d);
+#else
+        throw ApexStringException(tr("No support for %1").arg(sModule));
+#endif
     } else {
         throw ApexStringException(tr("Unknown device type: %1. Does your apex "
                                      "version include this feature?")

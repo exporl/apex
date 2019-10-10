@@ -32,9 +32,11 @@ namespace coh
 
 class CohNicXmlDumper : public CohCommandVisitor
 {
+    Q_DECLARE_TR_FUNCTIONS(CohNicXmlDumper)
 public:
     CohNicXmlDumper(const CohSequence *sequence);
 
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -61,6 +63,13 @@ void CohNicXmlDumper::visit(CohMetaData *command)
 {
     Q_UNUSED(command);
     // ignored
+}
+
+void CohNicXmlDumper::visit(CohRfFreeStimulus *command)
+{
+    Q_UNUSED(command);
+
+    throw Exception(tr("rf free stimulus not supported for NIC XML format"));
 }
 
 void CohNicXmlDumper::visit(CohNullStimulus *command)

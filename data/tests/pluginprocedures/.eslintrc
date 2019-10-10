@@ -1,0 +1,10 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "rules": {
+        "quotes": ["error", "double"],
+        "no-var": "error"
+    }
+}

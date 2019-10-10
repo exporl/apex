@@ -18,6 +18,7 @@
  *****************************************************************************/
 
 #include "apexdata/experimentdata.h"
+#include "apexdata/parameters/generalparameters.h"
 
 #include "apextools/apexpaths.h"
 #include "apextools/apextools.h"
@@ -65,6 +66,11 @@ void SimpleRunner::selectFromDir(const QString &path)
 
 bool SimpleRunner::select(const QString &name)
 {
+    return select(name, false);
+}
+
+bool SimpleRunner::select(const QString &name, const bool autoStart)
+{
     qCDebug(APEX_RS, "Selecting File %s", qPrintable(name));
     if (name.endsWith(QL1S(".apr"))) {
         QDir::setCurrent(QFileInfo(name).absolutePath());
@@ -81,15 +87,15 @@ bool SimpleRunner::select(const QString &name)
                 SIGNAL(setResultsFilePath(QString)));
         connect(flowRunner.data(), SIGNAL(opened(QString)), this,
                 SIGNAL(opened(QString)));
-        connect(this, SIGNAL(savedFile(QString)), flowRunner.data(),
-                SIGNAL(savedFile(QString)));
-        connect(this, SIGNAL(experimentClosed()), flowRunner.data(),
-                SIGNAL(experimentClosed()));
+        connect(this, &SimpleRunner::experimentDone, flowRunner.data(),
+                &FlowRunner::experimentDone);
         return flowRunner->select(name);
     }
 
     if (!name.isEmpty()) { // load experiment file
         data::ExperimentData *data = parseExperiment(name);
+        if (data != Q_NULLPTR)
+            data->generalParameters()->setAutoStart(autoStart);
         Q_EMIT opened(name);
         Q_EMIT selected(data);
         return data != Q_NULLPTR;

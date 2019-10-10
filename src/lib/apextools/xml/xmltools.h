@@ -36,8 +36,6 @@ class APEXTOOLS_EXPORT XmlUtils
     Q_DECLARE_TR_FUNCTIONS(XmlUtils)
 public:
     static bool writeDocument(const QDomDocument &doc, const QString &fileName);
-    static bool appendDocument(const QDomDocument &doc,
-                               const QString &fileName);
     static QString nodeToString(const QDomNode &node);
     static void removeComments(QDomDocument *doc);
     static QDomDocument parseString(const QString &toParse,

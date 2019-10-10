@@ -172,6 +172,28 @@ void CohStimulus::setRoundToRfCycles(bool round)
     CohStimulus::roundToRfCycles = round;
 }
 
+// CohRfFreeStimulus ===========================================================
+
+CohRfFreeStimulus::CohRfFreeStimulus(double interval)
+    : CohStimulus(Coh::RfFreeProperties, Coh::RfFreeProperties, interval, false)
+{
+}
+
+CohRfFreeStimulus::CohRfFreeStimulus()
+    : CohStimulus(0, Coh::RfFreeProperties, 0, false)
+{
+}
+
+CohRfFreeStimulus *CohRfFreeStimulus::incompleteStimulus()
+{
+    return new CohRfFreeStimulus();
+}
+
+void CohRfFreeStimulus::accept(CohCommandVisitor *visitor)
+{
+    visitor->visit(this);
+}
+
 // CohNullStimulus =============================================================
 
 CohNullStimulus::CohNullStimulus(double interval, bool trigger)

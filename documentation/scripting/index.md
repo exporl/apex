@@ -566,28 +566,10 @@ can contain HTML and Javascript, allowing for aded user interaction.
 
 An API is available.
 
-APEX will call the following functions:
-
-When the screen is enabled:
+APEX will call the following function When the screen is enabled:
 
 ```javascript
-    reset(); enabled();
+    enabled();
 ```
 
-When the trial is finished, and the screenresult is needed:
-
-```javascript
-    getResult();    // returns string
-```
-
-When the user has finished answering, should be called.
-
-### HtmlAPI <a name="htmlapi"/>
-
-```c++
-public:
-    explicit HtmlAPI(QObject *parent = 0);
-
-signals:
-    void answered();
-```
+When the user has finished answering, `api.answered(answer)` should be called.

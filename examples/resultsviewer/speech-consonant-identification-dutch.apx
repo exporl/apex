@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/experiment.xsd" version="1">
+<apex:apex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" version="1">
   <!--
         misty.xlm
         File that was actually used to present to the participants.
@@ -444,7 +444,6 @@
     <resultparameters/>
     <showduringexperiment>false</showduringexperiment>
     <showafterexperiment>true</showafterexperiment>
-    <saveprocessedresults>true</saveprocessedresults>
     <subject/>
   </results>
   <!-- Interactive -->

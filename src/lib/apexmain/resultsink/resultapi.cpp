@@ -19,29 +19,14 @@
 
 #include "resultapi.h"
 
-#include "psignifit/psignifitwrapper.h"
-
 namespace apex
 {
 
-class ResultApiPrivate
+ResultApi::ResultApi()
 {
-public:
-    QScopedPointer<PsignifitWrapper> psignifitWrapper;
-};
-
-ResultApi::ResultApi() : d(new ResultApiPrivate)
-{
-    d->psignifitWrapper.reset(new PsignifitWrapper);
 }
 
 ResultApi::~ResultApi()
 {
-    delete d;
-}
-
-QVariant ResultApi::psignifit(const QString &data)
-{
-    return QVariant(d->psignifitWrapper->psignifit(data));
 }
 }

@@ -6,7 +6,9 @@ import org.qtproject.qt5.android.bindings.QtActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -41,6 +43,7 @@ public class ApexActivity extends QtActivity {
         "be.kuleuven.med.exporl.apex.RUNNER";
     private boolean apexInitialized;
     private Intent lastIntent;
+    private AudioTrack backgroundSilenceTrack;
 
     public ApexActivity() {
         super();
@@ -53,6 +56,45 @@ public class ApexActivity extends QtActivity {
         super.onCreate(savedInstanceState);
         lastIntent = getIntent();
         deleteTemporaryFiles();
+        backgroundSilenceTrack =
+            initializeBackgroundAudioTrackToMaintainConnectionWithStreamingDevices();
+    }
+
+    private AudioTrack
+    initializeBackgroundAudioTrackToMaintainConnectionWithStreamingDevices() {
+        int bufferSize =
+            AudioTrack.getMinBufferSize(44100, AudioFormat.CHANNEL_OUT_MONO,
+                                        AudioFormat.ENCODING_PCM_16BIT);
+        AudioTrack result = new AudioTrack(
+            AudioManager.STREAM_MUSIC, 44100, AudioFormat.CHANNEL_OUT_MONO,
+            AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STATIC);
+        byte[] pcmData = getSilence(bufferSize);
+        result.write(pcmData, 0, pcmData.length);
+        result.setLoopPoints(0, bufferSize / 2, -1);
+        return result;
+    }
+
+    private byte[] getSilence(int bytes) {
+        return new byte[bytes];
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        backgroundSilenceTrack.play();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        backgroundSilenceTrack.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        backgroundSilenceTrack.stop();
+        backgroundSilenceTrack.release();
     }
 
     @Override

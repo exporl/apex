@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/4.0.1/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/4.1.0/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment">
 
     <xs:include schemaLocation="datablocks.xsd"/>
     <xs:include schemaLocation="procedure.xsd"/>
@@ -654,12 +654,6 @@
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="saveprocessedresults" type="xs:boolean" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>Save a summary of the results in an easily readable format at the end of the results xml file. This
-                        option will only work if the results are successfully saved to disk and your javascript code supports this transformation.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
             <xs:element name="matlabscript" type="xs:string" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>

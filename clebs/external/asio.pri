@@ -23,7 +23,7 @@ clebsDependency(asio) {
             $${ASIOROOT}/host/pc/asiolist.cpp           \
             $${BASEDIR}/contrib/iasiothiscallresolver/iasiothiscallresolver.cpp \
 
-        LIBS *= $$QMAKE_LIBS_CORE
+        LIBS *= -luser32 -ladvapi32 -lole32 #$$QMAKE_LIBS_CORE
 
         DEFINES *= WINVER=0x0501
     }

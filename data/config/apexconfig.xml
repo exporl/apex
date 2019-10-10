@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.0.1/experiment https://exporl.med.kuleuven.be/apex/schemas/4.0.1/apexconfig.xsd">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/apexconfig.xsd">
   <paths>
     <pluginScriptLibrary>pluginscriptlibrary.js</pluginScriptLibrary>
   </paths>
@@ -47,6 +47,14 @@
     <cohdriver id="nic3-rfgenxs-cic4-mp12-2">protoslave: slave=nic3slave,verbose; platform=RFGenXS,implant=CIC4,auto_pufs=off,go_live=on,min_pulse_width_us=25.0,flagged_electrodes=,latency_ms=1000,mode=MP1+2,signal_path=right</cohdriver>
     <cohdriver id="nic3-l34-cic4-mp12-0">protoslave: slave=nic3slave,verbose; platform=L34,implant=CIC4,auto_pufs=off,go_live=off,min_pulse_width_us=25.0,flagged_electrodes=,latency_ms=1000,mode=MP1+2</cohdriver>
     <cohdriver id="nic3-l34-cic4-mp12-1">protoslave: slave=nic3slave,verbose; platform=L34,implant=CIC4,auto_pufs=off,go_live=on,min_pulse_width_us=25.0,flagged_electrodes=,latency_ms=1000,mode=MP1+2</cohdriver>
+    <cohdriver id="nic4-sp16-cic4-mp12-0">protoslave: nic4: implant=CIC4,latency_ms=200,mode=MP1+2,go_live=off</cohdriver>
+    <cohdriver id="nic4-sp16-cic4-mp12-1">protoslave: nic4: implant=CIC4,latency_ms=200,mode=MP1+2,go_live=on</cohdriver>
+    <cohdriver id="nic4-sp16-cic4-mp1-0">protoslave: nic4: implant=CIC4,latency_ms=200,mode=MP1,go_live=off</cohdriver>
+    <cohdriver id="nic4-sp16-cic4-mp1-1">protoslave: nic4: implant=CIC4,latency_ms=200,mode=MP1,go_live=on</cohdriver>
+    <cohdriver id="nic4-sp16-cic4-mp2-0">protoslave: nic4: implant=CIC4,latency_ms=200,mode=MP2,go_live=off</cohdriver>
+    <cohdriver id="nic4-sp16-cic4-mp2-1">protoslave: nic4: implant=CIC4,latency_ms=200,mode=MP2,go_live=on</cohdriver>
+    <cohdriver id="nic4-sp16-cic4-bp-0">protoslave: nic4: implant=CIC4,latency_ms=200,mode=BP,go_live=off</cohdriver>
+    <cohdriver id="nic4-sp16-cic4-bp-1">protoslave: nic4: implant=CIC4,latency_ms=200,mode=BP,go_live=on</cohdriver>
   </cohdrivers>
   <prefixes>
     <prefix id="regression">../stimuli</prefix>

@@ -17,51 +17,107 @@
  * along with APEX 4.  If not, see <http://www.gnu.org/licenses/>.            *
  *****************************************************************************/
 
-#include "flowapi.h"
-#include "accessmanager.h"
-#include "apextools/apexpaths.h"
+#include "apexmain/resultsink/resultfilepathcreator.h"
 
-#include <QFile>
-#include <QUrl>
+#include "flowapi.h"
+#include "flowrunner.h"
+#include "simplerunner.h"
 
 using namespace apex;
 
 FlowApi::FlowApi(FlowRunner *fr, const QDir &baseDir)
-    : BaseApi(nullptr, baseDir), fr(fr)
+    : sr(new SimpleRunner), fr(fr), baseDir(baseDir)
 {
-    sr = new SimpleRunner;
-
     connect(sr, SIGNAL(selected(data::ExperimentData *)), fr,
             SLOT(select(data::ExperimentData *)));
     connect(this, SIGNAL(setResultsFilePath(QString)), fr,
             SIGNAL(setResultsFilePath(QString)));
 }
 
-bool FlowApi::runExperiment(const QString &filePath,
-                            const QString &resultsFilePath)
+FlowApi::~FlowApi()
 {
-    if (!resultsFilePath.isEmpty())
-        Q_EMIT setResultsFilePath(resultsFilePath);
+}
 
-    AccessManager am;
-    QUrl url = am.transformApexUrl(QUrl(filePath));
+bool FlowApi::runExperiment(const QJsonObject &json)
+{
+    QString experimentfilePath = json["experimentfilePath"].toString();
 
-    sr->setExpressions(savedExpressions);
-    savedExpressions.clear();
+    QString absoluteExperimentfilePath(
+        QDir::isRelativePath(experimentfilePath)
+            ? baseDir.absoluteFilePath(experimentfilePath)
+            : experimentfilePath);
+
+    QString absoluteResultfilePath =
+        ResultfilePathCreator().createAbsolutePathForFlow(
+            baseDir, absoluteExperimentfilePath,
+            json["resultfilePath"].toString());
+
+    if (!absoluteResultfilePath.isEmpty())
+        Q_EMIT setResultsFilePath(absoluteResultfilePath);
+
+    QVariantMap expressions = json["expressions"].toObject().toVariantMap();
+    sr->setExpressions(asQMap(expressions));
 
     fr->makeInvisible();
-    bool result = sr->select(url.toLocalFile());
+
+    bool result =
+        sr->select(absoluteExperimentfilePath, json["autoStart"].toBool(false));
     if (!result)
         fr->makeVisible();
     return result;
 }
 
-void FlowApi::clearExpressions()
+QMap<QString, QString> FlowApi::asQMap(QVariantMap &expressions) const
 {
-    savedExpressions.clear();
+    QMap<QString, QString> expressionsMap;
+    for (QVariantMap::const_iterator iter = expressions.begin();
+         iter != expressions.end(); ++iter) {
+        expressionsMap.insert(iter.key(), iter.value().toString());
+    }
+    return expressionsMap;
 }
 
-void FlowApi::addExpression(const QString &key, const QString &value)
+QString FlowApi::readFile(const QString &path) const
 {
-    savedExpressions.insert(key, value);
+    QFile file(QDir::isRelativePath(path) ? baseDir.absoluteFilePath(path)
+                                          : path);
+    file.open(QIODevice::ReadOnly);
+    QTextStream in(&file);
+    in.setCodec("UTF-8");
+    return in.readAll();
+}
+
+QString FlowApi::readResultsFile(const QString &path) const
+{
+    return readFile(makeResultsPath(path));
+}
+
+void FlowApi::writeFile(const QString &path, const QString &content) const
+{
+    QString resultsPath = makeResultsPath(path);
+
+    QDir(QFileInfo(resultsPath).dir()).mkpath(".");
+
+    QFile file(resultsPath);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate |
+                  QIODevice::Text)) {
+        file.write(content.toUtf8());
+        file.close();
+    } else {
+        qCWarning(APEX_RS, "Could not write file \"%s\"",
+                  qPrintable(resultsPath));
+    }
+
+    StudyManager::instance()->afterExperiment(resultsPath);
+}
+
+QString FlowApi::makeResultsPath(const QString &path) const
+{
+    if (QDir::isAbsolutePath(path))
+        return path;
+
+    if (StudyManager::instance()->belongsToActiveStudy(baseDir.absolutePath()))
+        return StudyManager::instance()->makeResultsPath(path);
+
+    return baseDir.absoluteFilePath(path);
 }

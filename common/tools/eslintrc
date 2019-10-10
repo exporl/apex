@@ -1,11 +1,13 @@
 {
-    "rules": {
-        "no-console": 0
+    "parserOptions": {
+        "ecmaVersion": 3
     },
-    "extends": "eslint:recommended",
-    "env": {
-        "es6": true,
-        "browser": true,
-        "jquery": true
-    }
+    "rules": {
+        "no-console": 0,
+        "semi": "error",
+        "eqeqeq": "error",
+        "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
+        "comma-dangle": ["error", "never"]
+    },
+    "extends": "eslint:recommended"
 }

@@ -106,6 +106,12 @@ void apex::data::ScreenElementVisitor::visitTwoPartLayout(
     visitTwoPartLayout(const_cast<const TwoPartLayoutElement *>(e));
 }
 
+void apex::data::ScreenElementVisitor::visitNumericKeypad(
+    NumericKeypadElement *e)
+{
+    visitNumericKeypad(const_cast<const NumericKeypadElement *>(e));
+}
+
 void apex::data::ScreenElementVisitor::visitHtml(HtmlElement *e)
 {
     visitHtml(const_cast<const HtmlElement *>(e));
@@ -192,6 +198,11 @@ void apex::data::ScreenElementVisitor::visitTextEdit(
 
 void apex::data::ScreenElementVisitor::visitTwoPartLayout(
     const TwoPartLayoutElement * /*e*/)
+{
+}
+
+void apex::data::ScreenElementVisitor::visitNumericKeypad(
+    const NumericKeypadElement * /*e*/)
 {
 }
 

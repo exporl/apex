@@ -28,6 +28,7 @@ public:
 
     double length();
 
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -60,6 +61,11 @@ void CohCommandLengthCalculator::visit(CohMetaData *command)
 {
     Q_UNUSED(command);
     // ignored
+}
+
+void CohCommandLengthCalculator::visit(CohRfFreeStimulus *command)
+{
+    result += command->period();
 }
 
 void CohCommandLengthCalculator::visit(CohNullStimulus *command)

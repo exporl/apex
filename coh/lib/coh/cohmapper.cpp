@@ -69,6 +69,7 @@ class CohSequenceMapperPrivate : public CohCommandVisitor
 {
     Q_DECLARE_TR_FUNCTIONS(CohSequenceMapper)
 public:
+    virtual void visit(CohRfFreeStimulus *command);
     virtual void visit(CohNullStimulus *command);
     virtual void visit(CohBiphasicStimulus *command);
     virtual void visit(CohCodacsStimulus *command);
@@ -123,6 +124,27 @@ void CohSequenceMapperPrivate::visit(CohMetaData *command)
 {
     Q_UNUSED(command);
     // not mapped
+}
+
+void CohSequenceMapperPrivate::visit(CohRfFreeStimulus *command)
+{
+    switch (mode) {
+    case Check:
+        needsMappingResult |= command->missingProperties();
+        break;
+    case Map: {
+        QScopedPointer<CohRfFreeStimulus> mapped(
+            new CohRfFreeStimulus(*command));
+        if (!mapped->isValid()) {
+            if (copyable(mapped, Coh::Period))
+                mapped->setPeriod(period);
+        }
+        current->append(mapped.take());
+        break;
+    }
+    default:
+        throw Exception(tr("Unknown mapping mode"));
+    }
 }
 
 void CohSequenceMapperPrivate::visit(CohNullStimulus *command)

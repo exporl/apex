@@ -1,11 +1,13 @@
-CLEBS *= coh streamapp apextools apexdata apexwriters portaudio psignifit -ctags subdirsources pch asciicast builddll commongui sndfile bertha +libgit2
+CLEBS *= streamapp apextools apexdata apexwriters portaudio -ctags subdirsources asciicast builddll commongui sndfile bertha +libgit2
+!android:CLEBS += coh
 unix_CLEBS *= -jack
 
 DEFINES *= APEX_MAKEDLL
+!android:DEFINES *= ENABLE_COH
 
 !isEmpty(_PRO_FILE_):include(../../../clebs/clebs.pri)
 
-QT += gui network printsupport script scripttools svg webkitwidgets xml xmlpatterns
+QT += gui network printsupport script scripttools svg xml xmlpatterns
 
 win32 {
     QT += axcontainer
@@ -26,15 +28,18 @@ win32 {
 }
 
 android {
-    QT -= webkitwidgets
     QT += androidextras
 
-     HEADERS -= \
+    HEADERS -= \
         gui/flashwidget.h \
         screen/flashplayerrundelegate.h
     SOURCES -= \
         gui/flashwidget.cpp \
-        screen/flashplayerrundelegate.cpp
+        screen/flashplayerrundelegate.cpp \
+        cohstimulus/cohdatablock.cpp \
+        cohstimulus/cohdevice.cpp \
+        device/cohdeviceparser.cpp \
+        map/mapfactory.cpp
 } else {
     HEADERS -= apexandroidnative.h
     SOURCES -= apexandroidnative.cpp
@@ -45,13 +50,12 @@ FORMS += \
     gui/calibrationdialog.ui \
     gui/calibrationsetupsdialog.ui \
     gui/connectiondialog.ui \
-    gui/mapwizard.ui \
     gui/parameterdialog.ui \
     gui/plugindialog.ui \
-    gui/r216settings.ui \
     gui/soundcarddialog.ui \
     gui/soundcardsdialog.ui \
     gui/startupdialog.ui \
     gui/studydialog.ui \
+    screen/numerickeypadwidget.ui \
 
 CTAGSSRCDIRS = $${BASEDIR}/contrib $${BASEDIR}/mwffilter $${BASEDIR}/src $${BASEDIR}/bertha-lib $${BASEDIR}/coh $${BASEDIR}/common

@@ -21,51 +21,61 @@
 #include "common/testutils.h"
 #include "common/websocketserver.h"
 
+#include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QSignalSpy>
-#include <QTest>
 #include <QWebSocket>
 
 using namespace cmn;
+
+class DummyObject : public QObject
+{
+    Q_OBJECT
+public:
+    Q_INVOKABLE QString dummyMethod(const QString &input)
+    {
+        return input;
+    }
+};
 
 void CommonTest::webSocketTest()
 {
     TEST_EXCEPTIONS_TRY
 
-    DummyQObject *dummy = new DummyQObject;
+    DummyObject dummy;
+
+    WebSocketServer wsServer(&dummy, QSL("webSocketTest"));
+
     QWebSocket webSocket;
-    QSignalSpy spy(dummy, SIGNAL(dummySignal()));
-    WebSocketServer wsServer(QSL("dummy"));
-
-    wsServer.on(QSL("concatSlot"), dummy, QSL("concatSlot(QString,int)"));
-    wsServer.start(QHostAddress::LocalHost);
-
     connect(&webSocket, &QWebSocket::textMessageReceived,
             [](const QString &message) {
-                QJsonObject messageObject =
+                QJsonObject actual =
                     QJsonDocument::fromJson(message.toUtf8()).object();
-                QCOMPARE(messageObject.value(QSL("type")).toString(),
-                         QL1S("return"));
-                QCOMPARE(messageObject.value(QSL("data")).toString(),
-                         QL1S("dummyarg10"));
+                QCOMPARE(actual.value("data").toString(), QString("expected"));
             });
 
-    connect(&webSocket, &QWebSocket::connected, [&wsServer, &webSocket]() {
-        QVariantList args;
-        args.append(QVariant(QSL("dummyarg")));
-        args.append(QVariant(10));
-        QJsonObject invokeObject =
-            WebSocketServer::buildInvokeMessage(QSL("concatSlot"), args);
-        invokeObject.insert(QSL("token"), QJsonValue(wsServer.csrfToken()));
+    connect(&webSocket, &QWebSocket::connected, [&webSocket]() {
+        QJsonObject invokeObject;
+        invokeObject.insert(QString("type"), QJsonValue(6)); // 6: invokeMethod
+        invokeObject.insert(QString("object"),
+                            QJsonValue(QString("webSocketTest")));
+        invokeObject.insert(
+            QString("method"),
+            QJsonValue(5)); // 5: dummyMethod TODO: make this more robust
+        invokeObject.insert(
+            QString("args"),
+            QJsonValue(QJsonArray::fromStringList({"expected"})));
+        invokeObject.insert(QString("id"), QJsonValue(1));
         webSocket.sendTextMessage(
             QString::fromUtf8(QJsonDocument(invokeObject).toJson()));
     });
 
-    webSocket.open(QL1S("ws://127.0.0.1:") +
-                   QString::number(wsServer.serverPort()));
-    QTest::qWait(250);
-    QVERIFY(spy.count() == 1);
-    wsServer.stop();
+    webSocket.open(QSL("ws://127.0.0.1:%1").arg(wsServer.serverPort()));
+
+    QVERIFY(QSignalSpy(&webSocket, &QWebSocket::textMessageReceived).wait());
 
     TEST_EXCEPTIONS_CATCH
 }
+
+#include "websockettest.moc"

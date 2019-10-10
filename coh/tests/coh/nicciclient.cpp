@@ -87,6 +87,7 @@ void CohTest::nicCiClient_data()
            "go_live=false"
         << 20u << false << 1115.5;
 
+    /*
     QTest::newRow("protoslave-nic3slave-nic32")
         << "protoslave: "
            "python=2.7,"
@@ -111,6 +112,20 @@ void CohTest::nicCiClient_data()
            "auto_pufs=off,"
            "go_live=false"
         << 20u << false << 1115.5;
+    */
+    QTest::newRow("nic4") << "nic4: "
+                             "implant=CIC4,"
+                             "mode=MP1,"
+                             "min_pulse_width_us=25,"
+                             "go_live=false"
+                          << 3u << false << 1115.0;
+    QTest::newRow("protoslave-nic4") << "protoslave: "
+                                        "nic4: "
+                                        "implant=CIC4,"
+                                        "mode=MP1,"
+                                        "min_pulse_width_us=25,"
+                                        "go_live=false"
+                                     << 3u << false << 1115.0;
 #endif
 }
 
@@ -240,7 +255,7 @@ void CohTest::nicCiClient()
             pos = pos + 1;
         }
         QCOMPARE(pos, 2 * (count1 + count2));
-    } else /*if (dir.dir().exists("dump_test.txt"))*/ {
+    } else if (dir.dir().exists(QL1S("dump_test.txt"))) {
         QFile file(dir.addFile(QL1S("dump_test.txt")));
         QVERIFY(file.open(QFile::ReadOnly | QFile::Text));
 
@@ -265,6 +280,52 @@ void CohTest::nicCiClient()
         result.replace("1115.0",
                        QByteArray::number(roundedCohPeriod(period), 'f', 1));
         QCOMPARE(file.readAll(), result);
+    } else if (dir.dir().exists(QL1S("stream.txt"))) {
+        QFile file(dir.addFile(QL1S("stream.txt")));
+        QVERIFY(file.open(QFile::ReadOnly | QFile::Text));
+
+        client->stop();
+
+        unsigned pos = 0;
+        Q_FOREACH (const auto &line, file.readAll().split('\n')) {
+            if (line.isEmpty() || line.startsWith("#") ||
+                line.contains("NO_RF"))
+                continue;
+            QList<QByteArray> list = line.simplified().split(' ');
+            QCOMPARE(list.size(), 11);
+            if (pos % (count1 + count2) < count1) {
+                QCOMPARE(list[1].data(), "standard");
+                QCOMPARE(list[2].data(), "5cpc");
+                QCOMPARE(list[3].data(), "0");
+                QCOMPARE(list[4].data(), "0");
+                QCOMPARE(list[5].data(), "20");
+                QCOMPARE(list[6].data(), "25.0");
+                QCOMPARE(list[7].data(), "7.0");
+                QCOMPARE(list[8].data(), "25.0");
+                QCOMPARE(list[9],
+                         QByteArray::number(roundedCohPeriod(period), 'f', 1));
+                QCOMPARE(list[10].data(), "RF");
+            } else {
+                QCOMPARE(list[1].data(), "standard");
+                QCOMPARE(list[2].data(), "5cpc");
+                QCOMPARE(list[3].data(), "1");
+                QCOMPARE(list[4].data(), "24");
+                QCOMPARE(list[5].data(), "100");
+                QCOMPARE(list[6].data(), "25.0");
+                QCOMPARE(list[7].data(), "8.0");
+                QCOMPARE(list[8].data(), "25.0");
+                QCOMPARE(list[9].data(), "1000.0");
+                QCOMPARE(list[10].data(), "TRIGGER");
+            }
+            pos = pos + 1;
+        }
+        QCOMPARE(pos, 2 * (count1 + count2));
+    } else {
+        qCDebug(EXPORL_COH, "Available files:");
+        Q_FOREACH (const auto &entry, dir.dir().entryList(QDir::Files)) {
+            qCDebug(EXPORL_COH, "  %s", qPrintable(entry));
+        }
+        QFAIL("Unable to find any known output file");
     }
 
     TEST_EXCEPTIONS_CATCH

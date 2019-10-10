@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/4.0.1/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/4.0.1/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/4.1.0/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment">
     
     <xs:include schemaLocation="prefix.xsd"></xs:include>
     <xs:include schemaLocation="xmlgeneratingplugin.xsd"></xs:include>
@@ -381,6 +381,7 @@
                 <xs:element name="slider" type="apex:screenSliderType" minOccurs="0"/>
                 <xs:element name="matrix" type="apex:screenMatrixType" minOccurs="0"/>
                 <xs:element name="html" type="apex:screenHtmlType" minOccurs="0"/>
+                <xs:element name="numericKeypad" type="apex:screenNumericKeypadType" minOccurs="0"/>
             </xs:choice>
         </xs:sequence>
     </xs:group>
@@ -749,6 +750,16 @@
                         </xs:annotation>
                     </xs:element>
                 </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="screenNumericKeypadType">
+        <xs:annotation>
+            <xs:documentation>Numeric keypad input element.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="apex:screenElementType">
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>

@@ -34,6 +34,7 @@ class SimpleRunner : public ExperimentRunner
 public:
     SimpleRunner();
     virtual bool select(const QString &path) Q_DECL_OVERRIDE;
+    virtual bool select(const QString &path, const bool autoStart);
     void selectFromDir(const QString &path) Q_DECL_OVERRIDE;
     virtual void makeVisible() Q_DECL_OVERRIDE;
 
@@ -48,8 +49,6 @@ private:
 signals:
     void errorMessage(const QString &source, const QString &message);
     void setResultsFilePath(const QString &filePath);
-    void savedFile(const QString &filePath);
-    void experimentClosed();
 };
 }
 

@@ -68,12 +68,6 @@ public:
      */
     bool isRunning() const;
 
-    /**
-     * Returns the time the experiment started. I.e. the time the first
-     * trial was started.
-     */
-    QDateTime startTime() const;
-
     ExperimentIo *io() const;
     const QStateMachine *machine() const;
 
@@ -82,8 +76,7 @@ Q_SIGNALS:
      * Emitted when the experiment is done.
      */
     void experimentDone();
-    void savedResults(QString filename);
-    void experimentClosed();
+    void experimentClosed(const QString &resultfilePath);
     void errorMessage(const QString &source, const QString &message);
 
 private:

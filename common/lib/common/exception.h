@@ -52,9 +52,7 @@ public:
     }
 
     /** Virtual destructor to make the compiler happy. */
-    virtual ~Exception() throw()
-    {
-    }
+    virtual ~Exception() throw();
 
     /** Returns the error message.
      *

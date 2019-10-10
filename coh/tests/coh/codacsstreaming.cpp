@@ -77,6 +77,7 @@ void CohTest::codacsStreaming_data()
            "go_live=false"
         << CohCodacsStimulus::defaultPeriod() << 20u << false;
 
+    /*
     QTest::newRow("protoslave-nic3slave-nic32")
         << "protoslave: "
            "python=2.7,"
@@ -92,6 +93,7 @@ void CohTest::codacsStreaming_data()
            "auto_pufs=off,"
            "go_live=false"
         << CohCodacsStimulus::defaultPeriod() << 20u << false;
+    */
 
     QTest::newRow("nic-52") << "nic: l34-0" << 52.0 << 0u << true;
     QTest::newRow("protoslave-nic-52") << "protoslave: nic: l34-0" << 52.0 << 0u
@@ -114,20 +116,22 @@ void CohTest::codacsStreaming_data()
            "go_live=false"
         << 52.0 << 20u << false;
 
-    QTest::newRow("protoslave-nic3slave-nic32-52")
-        << "protoslave: "
-           "python=2.7,"
-           "slave=nic3slave," // "verbose," for debugging
-           "args=flexibleframeperiods extendedamplituderange "
-           "allowimplantcommands;"
-           "implant=CIC4,"
-           "platform=L34,"
-           "mode=MP1+2,"
-           "min_pulse_width_us=12.0,"
-           "flagged_electrodes=,"
-           "auto_pufs=off,"
-           "go_live=false"
-        << 52.0 << 20u << false;
+/*
+QTest::newRow("protoslave-nic3slave-nic32-52")
+    << "protoslave: "
+       "python=2.7,"
+       "slave=nic3slave," // "verbose," for debugging
+       "args=flexibleframeperiods extendedamplituderange "
+       "allowimplantcommands;"
+       "implant=CIC4,"
+       "platform=L34,"
+       "mode=MP1+2,"
+       "min_pulse_width_us=12.0,"
+       "flagged_electrodes=,"
+       "auto_pufs=off,"
+       "go_live=false"
+    << 52.0 << 20u << false;
+*/
 #endif
 }
 

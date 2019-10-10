@@ -51,6 +51,7 @@ class CohMetaData;
 class CohBiphasicStimulus;
 class CohCodacsStimulus;
 class CohNullStimulus;
+class CohRfFreeStimulus;
 class CohSequence;
 
 class COH_EXPORT Coh : public QObject
@@ -64,10 +65,11 @@ public:
         BiphasicStimulus = 0x0001,
         CodacsStimulus = 0x0002,
         NullStimulus = 0x0004,
-        Sequence = 0x0008,
-        AllStimuli =
-            BiphasicStimulus | CodacsStimulus | NullStimulus | Sequence,
-        MetaData = 0x0010,
+        RfFreeStimulus = 0x0008,
+        Sequence = 0x0010,
+        AllStimuli = BiphasicStimulus | CodacsStimulus | NullStimulus |
+                     RfFreeStimulus | Sequence,
+        MetaData = 0x0020,
         AllCommands = 0xFFFF,
     };
     Q_DECLARE_FLAGS(CommandTypes, CommandType)
@@ -84,6 +86,7 @@ public:
         ChannelMagnitude = 0x0100,
         ChannelIndex = 0x0200,
         NoProperties = 0,
+        RfFreeProperties = Period,
         NullProperties = Trigger | Period,
         BiphasicProperties = Trigger | Period | ActiveElectrode |
                              ReferenceElectrode | CurrentLevel | PhaseWidth |
@@ -257,6 +260,12 @@ public:
     {
     }
 
+    /** Reimplement to handle an instance of CohRfFreeStimulus.
+     *
+     * @param command visited command of type CohRfFreeStimulus
+     */
+    virtual void visit(CohRfFreeStimulus *command) = 0;
+
     /** Reimplement to handle an instance of CohNullStimulus.
      *
      * @param command visited command of type CohNullStimulus
@@ -404,6 +413,33 @@ protected:
     static bool roundToRfCycles;
 };
 
+/** CI RF free stimulus command. Does not deliver a stimulus to the CI. This
+ * type of stimulus command is useful for silence periods which need to have a
+ * precise length.
+ *
+ * @ingroup ci
+ */
+class COH_EXPORT CohRfFreeStimulus : public CohStimulus
+{
+public:
+    /** Creates a new CI RF free stimulus command.
+     *
+     * @param interval distance to the following CI command in us
+     */
+    CohRfFreeStimulus(double interval);
+
+    /** Calls CohCommandVisitor#visit(CohRfFreeStimulus*).
+     *
+     * @param visitor visitor
+     */
+    virtual void accept(CohCommandVisitor *visitor);
+
+    static CohRfFreeStimulus *incompleteStimulus();
+
+private:
+    CohRfFreeStimulus();
+};
+
 /** CI null stimulus command. Delivers a stimulus to the CI, but does not do
  * actual stimulation of electrodes. This type of stimulus command is useful for
  * powerup sequences or silence periods during which the CI should still be
@@ -416,10 +452,9 @@ class COH_EXPORT CohNullStimulus : public CohStimulus
 public:
     /** Creates a new CI null stimulus command.
      *
-     * @param interval distance to the following CI command in us, defaults to
-     * 200 us
+     * @param interval distance to the following CI command in us
      * @param trigger true if a trigger signal should be generated when the CI
-     * stimulus is delivered, defaults to false
+     * stimulus is delivered
      */
     CohNullStimulus(double interval, bool trigger);
 
@@ -451,10 +486,9 @@ public:
      * @param level current level between 0 and 255
      * @param width width of each of the two phases in us
      * @param gap width of the gap between the two phases in us
-     * @param interval distance to the following CI command in us, defaults to
-     * 1000 us
+     * @param interval distance to the following CI command in us
      * @param trigger true if a trigger signal should be generated when the CI
-     * stimulus is delivered, defaults to false
+     * stimulus is delivered
      */
     CohBiphasicStimulus(Coh::Electrode active, Coh::Electrode reference,
                         unsigned level, double width, double gap,

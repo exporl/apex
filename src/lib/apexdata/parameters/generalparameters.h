@@ -56,6 +56,15 @@ public:
         m_bAutoSave = autoSave;
     };
 
+    bool GetAutoStart() const
+    {
+        return m_bAutoStart;
+    }
+    void setAutoStart(bool autoStart)
+    {
+        m_bAutoStart = autoStart;
+    }
+
     /**
      * Wait for start.
      * @return true if the start signal has to be emitted before the next trial
@@ -102,6 +111,7 @@ public:
 private:
     bool m_bExitAfter;
     bool m_bAutoSave;
+    bool m_bAutoStart;
     bool m_bWaitForStart;
     bool m_bAllowSkip;
     bool m_bRunOutputTest;

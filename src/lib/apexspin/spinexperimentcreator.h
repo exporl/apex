@@ -104,6 +104,8 @@ private:
     createGeneralParameters(const QString &jsFile) const;
     apex::data::ResultParameters *createResultParameters() const;
 
+    bool isAdaptive() const;
+
     /** Returns the number of blocks (8192 frames) padding needed to work
      * around soundcard bugs
      */

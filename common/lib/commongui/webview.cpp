@@ -24,11 +24,10 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QMetaObject>
-#include <QMutex>
 #include <QScopedPointer>
 #include <QTimer>
 
-#if defined(WITH_WEBENGINE)
+#if !defined(Q_OS_ANDROID)
 #include <QWebEngineSettings>
 #endif
 
@@ -40,34 +39,18 @@ class WebViewPrivate : public QObject
     Q_OBJECT
 
 public:
-    WebViewPrivate(QObject *parent) : QObject(parent), callbacknr(0)
+    WebViewPrivate(QObject *parent) : QObject(parent)
     {
     }
     ~WebViewPrivate()
     {
     }
 
-public Q_SLOTS:
-    void javascriptFinished(const QVariant &result)
-    {
-        lastJavascriptResult = result;
-        Q_EMIT receivedJavascript();
-    }
-
-Q_SIGNALS:
-    void receivedJavascript();
-
 public:
-    QMutex mutex;
-    int progress;
-    int callbacknr;
-    QVariant lastJavascriptResult;
-#if defined(ANDROID)
+#if defined(Q_OS_ANDROID)
     QQuickWidget *webView;
-#elif defined(WITH_WEBENGINE)
-    QWebEngineView *webView;
 #else
-    QWebView *webView;
+    QWebEngineView *webView;
 #endif
 };
 
@@ -84,28 +67,23 @@ WebView::WebView() : dataPtr(new WebViewPrivate(this))
     fileMenu->addAction(hideWindowAction);
     menuBar()->addMenu(fileMenu);
 
-#if defined(ANDROID)
+#if defined(Q_OS_ANDROID)
     d->webView = new QQuickWidget(this);
     d->webView->setResizeMode(QQuickWidget::SizeRootObjectToView);
     d->webView->setSource(QSL("qrc:/commongui/webview.qml"));
     connect(d->webView->rootObject(), SIGNAL(loadingFinished()), this,
             SIGNAL(loadingFinished()));
-    connect(d->webView->rootObject(), SIGNAL(javascriptFinished(QVariant)), d,
-            SLOT(javascriptFinished(QVariant)));
-#elif defined(WITH_WEBENGINE)
+    connect(this, SIGNAL(loadingFinished()), this,
+            SLOT(preventMultipleLoadingFinishedSignals()));
+    connect(d->webView->rootObject(), SIGNAL(javascriptFinished(QVariant)),
+            this, SIGNAL(javaScriptFinished(QVariant)));
+#else
     d->webView = new QWebEngineView(this);
     d->webView->settings()->setAttribute(
         QWebEngineSettings::LocalContentCanAccessRemoteUrls, true);
-    connect(d->webView, SIGNAL(loadFinished(bool)), this,
-            SIGNAL(loadingFinished(bool)));
-#else
-    QWebSettings::globalSettings()->setAttribute(
-        QWebSettings::DeveloperExtrasEnabled, true);
-    QWebSettings::globalSettings()->setAttribute(
-        QWebSettings::LocalStorageEnabled, true);
-    d->webView = new QWebView(this);
-    connect(d->webView, SIGNAL(loadFinished(bool)), this,
-            SIGNAL(loadingFinished(bool)));
+
+    connect(d->webView, &QWebEngineView::loadFinished, this,
+            &WebView::loadingFinished);
 #endif
     setCentralWidget(d->webView);
 }
@@ -118,80 +96,55 @@ WebView::~WebView()
 void WebView::loadHtml(const QString &html, const QUrl &baseUrl)
 {
     E_D(WebView);
-#if defined(ANDROID)
+#if defined(Q_OS_ANDROID)
     Q_UNUSED(baseUrl);
     QMetaObject::invokeMethod(d->webView->rootObject(), "loadHtml",
                               Q_ARG(QVariant, html));
-#elif defined(WITH_WEBENGINE)
-    d->webView->setHtml(html, baseUrl);
 #else
-    d->webView->page()->mainFrame()->setHtml(html, baseUrl);
+    d->webView->setHtml(html, baseUrl);
 #endif
 }
 
 void WebView::load(const QUrl &url)
 {
     E_D(WebView);
-#if defined(ANDROID)
+#if defined(Q_OS_ANDROID)
     QMetaObject::invokeMethod(d->webView->rootObject(), "load",
                               Q_ARG(QVariant, url));
-#elif defined(WITH_WEBENGINE)
-    d->webView->load(url);
 #else
-    d->webView->page()->mainFrame()->load(url);
+    d->webView->load(url);
 #endif
 }
 
-QVariant WebView::runJavaScript(const QString &script, int timeout)
+void WebView::runJavaScript(const QString &script)
 {
     E_D(WebView);
-#if defined(ANDROID)
-    QEventLoop loop;
-    QTimer timer;
+#if defined(Q_OS_ANDROID)
     QMetaObject::invokeMethod(d->webView->rootObject(), "runJavaScript",
                               Q_ARG(QVariant, script));
-    connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    connect(d, SIGNAL(receivedJavascript()), &loop, SLOT(quit()));
-    timer.start(timeout);
-    loop.exec();
-    return d->lastJavascriptResult;
-#elif defined(WITH_WEBENGINE)
-    Q_UNUSED(timeout);
+#else
     d->webView->page()->runJavaScript(script);
-    return QVariant();
-#else
-    Q_UNUSED(timeout);
-    return d->webView->page()->mainFrame()->evaluateJavaScript(script);
 #endif
 }
 
-void WebView::addToJavaScriptWindowObject(const QString &name, QObject *object)
+void WebView::runJavaScriptAndEmitResult(const QString &script)
 {
-#if defined(ANDROID) || defined(WITH_WEBENGINE)
-    Q_UNUSED(name);
-    Q_UNUSED(object);
-#else
     E_D(WebView);
-    d->webView->page()->mainFrame()->addToJavaScriptWindowObject(name, object);
+#if defined(Q_OS_ANDROID)
+    QMetaObject::invokeMethod(d->webView->rootObject(),
+                              "runJavaScriptAndEmitResult",
+                              Q_ARG(QVariant, script));
+#else
+    d->webView->page()->runJavaScript(
+        script,
+        [this, script](const QVariant &v) { emit javaScriptFinished(v); });
 #endif
 }
 
-void WebView::setNetworkAccessManager(QNetworkAccessManager *accessManager)
-{
-#if defined(ANDROID) || defined(WITH_WEBENGINE)
-    Q_UNUSED(accessManager);
-#else
-    E_D(WebView);
-    d->webView->page()->setNetworkAccessManager(accessManager);
-#endif
-}
-
-#if defined(ANDROID)
+#if defined(Q_OS_ANDROID)
 QQuickWidget
-#elif defined(WITH_WEBENGINE)
-QWebEngineView
 #else
-QWebView
+QWebEngineView
 #endif
 *WebView::webView()
 {
@@ -203,6 +156,17 @@ void WebView::closeEvent(QCloseEvent *event)
 {
     Q_EMIT hidden();
     QWidget::closeEvent(event);
+}
+
+// prevent multiple loadingFinished signals
+// (caused by loading jquery-mobile)
+void WebView::preventMultipleLoadingFinishedSignals()
+{
+#if defined(ANDROID)
+    E_D(WebView);
+    disconnect(d->webView->rootObject(), SIGNAL(loadingFinished()), this,
+               SIGNAL(loadingFinished()));
+#endif
 }
 }
 

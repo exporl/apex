@@ -1,5 +1,4 @@
 /* global api, params */
-/* jshint noarg:true, noempty:true, eqeqeq:true, undef:true, curly:true, devel:true, bitwise:true, onevar:true, maxerr:50 */
 
 /** XML related methods **/
 var xml = {};
@@ -73,7 +72,7 @@ xml.attribute = function(text) {
 xml.tag = function(name) {
     var result = "<" + name,
         startcontents = 1,
-        param, i, j;
+        param, i;
     if (arguments.length > 1 && typeof(arguments[1]) === "object") {
         for (param in arguments[1]) {
             result += " " + param + "=" + xml.attribute(arguments[1][param]);
@@ -83,8 +82,8 @@ xml.tag = function(name) {
     if (startcontents < arguments.length) {
         result += ">";
         for (i = startcontents; i < arguments.length; ++i) {
-            if (typeof(arguments[i]) === "array") {
-                for (j = 0; i < arguments[i].length; ++j) {
+            if (Array.isArray(arguments[i])) {
+                for (var j = 0; j < arguments[i].length; j++) {
                     result += arguments[i][j];
                 }
             } else {

@@ -7,7 +7,7 @@ function Controller() {
 }
 
 Controller.prototype.WelcomePageCallback = function() {
-    gui.clickButton(buttons.NextButton);
+    gui.clickButton(buttons.NextButton, 1500);
 }
 
 Controller.prototype.CredentialsPageCallback = function() {
@@ -20,24 +20,16 @@ Controller.prototype.IntroductionPageCallback = function() {
 
 Controller.prototype.TargetDirectoryPageCallback = function()
 {
-    if (installer.fileExists(installer.environmentVariable("PWD") + "/Qt")) {
-       installer.setDefaultPageVisible(QInstaller.TargetDirectory, false);
-       installer.setDefaultPageVisible(QInstaller.ReadyForInstallation, false);
-       installer.setDefaultPageVisible(QInstaller.ComponentSelection, false);
-       installer.setDefaultPageVisible(QInstaller.StartMenuSelection, false);
-       installer.setDefaultPageVisible(QInstaller.PerformInstallation, false);
-       installer.setDefaultPageVisible(QInstaller.LicenseCheck, false);
-       gui.clickButton(buttons.NextButton);
-    }
     gui.currentPageWidget().TargetDirectoryLineEdit.setText(installer.environmentVariable("PWD") + "/Qt");
     gui.clickButton(buttons.NextButton);
 }
 
 Controller.prototype.ComponentSelectionPageCallback = function() {
     var widget = gui.currentPageWidget();
-    widget.selectComponent("qt.56.android_x86");
-    widget.deselectComponent("qt.56.gcc_64");
-    // widget.deselectComponent("qt.tools"); cannot be disabled
+    widget.deselectAll();
+    widget.selectComponent("qt.qt5.QT_VERSION.android_armv7");
+    widget.selectComponent("qt.qt5.QT_VERSION.android_x86");
+    widget.selectComponent("qt.qt5.QT_VERSION.qtscript");
     gui.clickButton(buttons.NextButton);
 }
 

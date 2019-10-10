@@ -40,6 +40,8 @@ private Q_SLOTS:
     void nicCiClient();
     void nicCiClient_data();
     void nicXmlCreator();
+    void rfFreeStimulus();
+    void rfFreeStimulus_data();
 };
 
 QString nic_test_xml(coh::CohSequence *sequence);

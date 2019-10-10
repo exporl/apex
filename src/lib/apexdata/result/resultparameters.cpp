@@ -32,8 +32,7 @@ using namespace cmn;
 ResultParameters::ResultParameters()
     : m_resultPage(QSL("resultsviewer.html")),
       m_showRealtime(false),
-      m_showAfter(false),
-      m_bSaveProcessedResults(false)
+      m_showAfter(false)
 {
 }
 
@@ -64,8 +63,6 @@ bool ResultParameters::SetParameter(const QString &p_name,
         m_matlabScript = p_value;
     } else if (p_name == "subject") {
         m_subject = p_value;
-    } else if (p_name == "saveprocessedresults") {
-        m_bSaveProcessedResults = ApexTools::bQStringToBoolean(p_value);
     } else if (p_name == "resultparameters") {
         for (QDomElement current = p_elem.firstChildElement();
              !current.isNull(); current = current.nextSiblingElement()) {
@@ -117,16 +114,6 @@ void ResultParameters::setShowResultsAfter(bool show)
     m_showAfter = show;
 }
 
-bool ResultParameters::saveResults() const
-{
-    return m_bSaveProcessedResults;
-}
-
-void ResultParameters::setSaveResults(bool save)
-{
-    m_bSaveProcessedResults = save;
-}
-
 const QUrl &ResultParameters::resultPage() const
 {
     return m_resultPage;
@@ -171,6 +158,5 @@ bool ResultParameters::operator==(const ResultParameters &other) const
            m_resultParameters == other.m_resultParameters &&
            m_resultPage == other.m_resultPage &&
            m_showRealtime == other.m_showRealtime &&
-           m_showAfter == other.m_showAfter &&
-           m_bSaveProcessedResults == other.m_bSaveProcessedResults;
+           m_showAfter == other.m_showAfter;
 }
