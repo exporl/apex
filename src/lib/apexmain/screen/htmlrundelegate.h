@@ -63,9 +63,9 @@ public:
     bool hasText() const Q_DECL_OVERRIDE;
     bool hasInterestingText() const Q_DECL_OVERRIDE;
     const QString getText() const Q_DECL_OVERRIDE;
-    void connectSlots(gui::ScreenRunDelegate *d) Q_DECL_OVERRIDE;
+    void
+    connectSlots(gui::ScreenRunDelegate *screenRunDelegate) Q_DECL_OVERRIDE;
     void feedBack(const FeedbackMode &mode) Q_DECL_OVERRIDE;
-    void enable();
     void setEnabled(bool enable) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
@@ -78,6 +78,8 @@ public Q_SLOTS:
     void collectAnswer(const QString &answer);
 
 private:
+    void enable();
+
     const HtmlElement *element;
     HtmlRunDelegatePrivate *const d;
 };

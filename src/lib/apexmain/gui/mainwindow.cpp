@@ -672,6 +672,13 @@ void ApexMainWindow::closeEvent(QCloseEvent *evt)
     }
 }
 
+void ApexMainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Back) {
+        event->accept();
+    }
+}
+
 QWidget *apex::gui::ApexMainWindow::centralWidget()
 {
     return m_pCentral.data();

@@ -33,7 +33,7 @@ class APEX_EXPORT ResultViewer : public QObject
     Q_OBJECT
 public:
     ResultViewer(const QString &p_resultfile);
-    void show(bool ask);
+    void show(bool confirm);
     RTResultSink *getResultSink();
     cmn::WebView &getWebView() const;
 

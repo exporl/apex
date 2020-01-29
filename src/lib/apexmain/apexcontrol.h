@@ -114,6 +114,7 @@ private:
     void makeModules();
     void deleteModules();
     void setupIo();
+    void ensureSshKeypair();
 
     QScopedPointer<ExperimentRunner> mod_experimentselector;
     gui::ApexMainWindow *const m_Wnd;

@@ -13,11 +13,14 @@ public:
     explicit HtmlAPI();
     virtual ~HtmlAPI();
 
+    Q_INVOKABLE void startExperiment();
     Q_INVOKABLE void newAnswer(const QString &text);
 
 signals:
     void parameterChanged(const QString &name, const QVariant &value);
+
     void answered(const QString &text);
+    void startExperimentRequested();
 };
 }
 

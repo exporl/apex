@@ -50,8 +50,7 @@ class StudyManagerPrivate : public QObject
     Q_OBJECT
 public:
     StudyManagerPrivate(const QString &rootPath,
-                        const QString &resultsWorkdirRootPath,
-                        const QString &keyPath);
+                        const QString &resultsWorkdirRootPath);
 
     void setActiveStudy(const QString &studyName);
     void writeStudies();
@@ -73,7 +72,6 @@ public:
 
     QString rootPath;
     QString resultsWorkdirRootPath;
-    QString keyPath;
     StudyManagerPrivate::State currentState;
     QSharedPointer<Study> activeStudy;
     QMap<QString, QSharedPointer<Study>> studies;
@@ -81,35 +79,11 @@ public:
 };
 
 StudyManagerPrivate::StudyManagerPrivate(const QString &rootPath,
-                                         const QString &resultsWorkdirRootPath,
-                                         const QString &keyPath)
+                                         const QString &resultsWorkdirRootPath)
     : rootPath(rootPath),
       resultsWorkdirRootPath(resultsWorkdirRootPath),
-      keyPath(keyPath),
       currentState(StudyManagerPrivate::IDLE)
 {
-    QDir keyDirectory(keyPath);
-    keyDirectory.mkpath(QSL("."));
-    if (!keyDirectory.exists(keyDirectory.filePath(QSL("id_rsa")))) {
-        try {
-#ifdef Q_OS_ANDROID
-            QString serial =
-                android::ApexAndroidBridge::getDeviceSerialNumber();
-            ApexTools::generateKeyPair(
-                keyDirectory.filePath(QSL("id_rsa")),
-                QString::fromLatin1("%1@%2").arg(serial).arg(serial));
-
-#else
-            ApexTools::generateKeyPair(keyDirectory.filePath(QSL("id_rsa")),
-                                       QString::fromLatin1("%1@%2")
-                                           .arg(ApexTools::getUser())
-                                           .arg(QHostInfo::localHostName()));
-#endif
-        } catch (std::exception &e) {
-            qCWarning(APEX_RS, "Unable to generate keypair %s.", e.what());
-        }
-    }
-
     QScopedPointer<QSettings> settings(SettingsFactory().createSettings());
     settings->beginGroup(QSL("StudyManager"));
     int studyCount = settings->beginReadArray(QSL("studies"));
@@ -122,7 +96,7 @@ StudyManagerPrivate::StudyManagerPrivate(const QString &rootPath,
                       settings->value(QSL("experimentsBranch")).toString(),
                       settings->value(QSL("resultsUrl")).toString(),
                       settings->value(QSL("resultsBranch")).toString(),
-                      rootPath, resultsWorkdirRootPath, keyPath)));
+                      rootPath, resultsWorkdirRootPath)));
     }
     settings->endArray();
     QString current(settings->value(QSL("activeStudy")).toString());
@@ -335,8 +309,7 @@ StudyManager *StudyManager::instance()
 
 StudyManager::StudyManager()
     : d(new StudyManagerPrivate(ApexPaths::GetStudyRootPath(),
-                                ApexPaths::GetStudyRootResultsWorkdirPath(),
-                                ApexPaths::GetStudyManagerDirectory()))
+                                ApexPaths::GetStudyRootResultsWorkdirPath()))
 {
     connect(d.data(), SIGNAL(studiesUpdated(QStringList, QString, QString)),
             this, SIGNAL(studiesUpdated(QStringList, QString, QString)));
@@ -348,7 +321,7 @@ StudyManager::~StudyManager()
 
 void StudyManager::setRootPath(const QString &path)
 {
-    d.reset(new StudyManagerPrivate(path, path, d->keyPath));
+    d.reset(new StudyManagerPrivate(path, path));
     connect(d.data(), SIGNAL(studiesUpdated(QStringList, QString, QString)),
             this, SIGNAL(studiesUpdated(QStringList, QString, QString)));
 }
@@ -356,7 +329,7 @@ void StudyManager::setRootPath(const QString &path)
 void StudyManager::showConfigurationDialog()
 {
     QDir rootDirectory(d->rootPath);
-    QDir keyDirectory(d->keyPath);
+    QDir keyDirectory = ApexPaths::GetSshKeyDirectory();
     QFile file(keyDirectory.filePath(QSL("id_rsa.pub")));
     if (!file.open(QIODevice::ReadOnly))
         qCWarning(APEX_RS, "Unable to open public key file");
@@ -473,9 +446,9 @@ void StudyManager::linkStudy(const QString &name, const QString &experimentsUrl,
 
     d->currentState = StudyManagerPrivate::LINKING;
 
-    QSharedPointer<Study> newStudy(new Study(
-        name, experimentsUrl, experimentsBranch, resultsUrl, resultsBranch,
-        d->rootPath, d->resultsWorkdirRootPath, d->keyPath));
+    QSharedPointer<Study> newStudy(
+        new Study(name, experimentsUrl, experimentsBranch, resultsUrl,
+                  resultsBranch, d->rootPath, d->resultsWorkdirRootPath));
     d->studies.insert(name, newStudy);
     connect(newStudy.data(), SIGNAL(updateExperimentsDone()), d.data(),
             SLOT(updateActiveStudyExperimentsDone()));
@@ -611,11 +584,8 @@ void StudyManager::fetchRemoteBranches(const QString &remote)
 {
     try {
         QDir rootDirectory(d->rootPath);
-        QDir keyDirectory(d->keyPath);
         d->studyDialog->linkStudySetExperimentsBranches(
-            ManagedDirectory::lsRemote(remote,
-                                       keyDirectory.filePath(QSL("id_rsa.pub")),
-                                       keyDirectory.filePath(QSL("id_rsa"))));
+            ManagedDirectory::lsRemote(remote));
         d->studyDialog->linkStudySetResultsBranch(
 #ifdef Q_OS_ANDROID
             QString::fromLatin1("results-%1_%2")
@@ -631,6 +601,17 @@ void StudyManager::fetchRemoteBranches(const QString &remote)
         d->studyDialog->linkStudyStatusUpdate(QString::fromLatin1(e.what()));
         d->studyDialog->linkStudySetExperimentsBranches(QStringList());
     }
+}
+
+std::pair<QString, QString> StudyManager::getUsernameAndEmail() const
+{
+#ifdef Q_OS_ANDROID
+    QString serial = android::ApexAndroidBridge::getDeviceSerialNumber();
+    return {serial, QSL("%1@%2").arg(serial).arg(serial)};
+#else
+    QString user = ApexTools::getUser();
+    return {user, QSL("%1@%2").arg(user).arg(QHostInfo::localHostName())};
+#endif
 }
 } // namespace apex
 

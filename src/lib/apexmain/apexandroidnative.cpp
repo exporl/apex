@@ -64,23 +64,52 @@ static void logDebugItem(JNIEnv *env, jobject object, jstring item)
                            .toString()));
 }
 
-static void networkChanged(JNIEnv *env, jobject object, jboolean available)
+static void networkAvailable(JNIEnv *env, jobject object)
 {
     Q_UNUSED(env);
     Q_UNUSED(object);
 
-    qCDebug(APEX_RS, "jni network changed");
+    qCDebug(APEX_RS, "jni network available");
 
-    QMetaObject::invokeMethod(apexAndroidBridge, "networkChanged",
-                              Qt::QueuedConnection,
-                              Q_ARG(bool, available == JNI_TRUE));
+    QMetaObject::invokeMethod(apexAndroidBridge, "networkAvailable",
+                              Qt::QueuedConnection);
+}
+
+static void linkStudy(JNIEnv *env, jobject object, jstring spec)
+{
+    Q_UNUSED(env);
+    Q_UNUSED(object);
+
+    QString specString =
+        QAndroidJniObject("java/lang/String", "(Ljava/lang/String;)V", spec)
+            .toString();
+
+    QJsonParseError jsonParseError;
+    QJsonDocument jsonDocument =
+        QJsonDocument::fromJson(specString.toUtf8(), &jsonParseError);
+    if (jsonParseError.error) {
+        qCWarning(APEX_RS) << "Failed to parse as JSON object:" << specString
+                           << "Error:" << jsonParseError.errorString();
+        return;
+    }
+
+    QJsonObject json = jsonDocument.object();
+
+    QMetaObject::invokeMethod(
+        apexAndroidBridge, "linkStudy", Qt::QueuedConnection,
+        Q_ARG(QString, json["name"].toString()),
+        Q_ARG(QString, json["experimentsUrl"].toString()),
+        Q_ARG(QString, json["experimentsBranch"].toString()),
+        Q_ARG(QString, json["resultsUrl"].toString()),
+        Q_ARG(QString, json["resultsBranch"].toString()));
 }
 
 static JNINativeMethod methods[]{
     {"fileOpen", "(Ljava/lang/String;)V", (void *)fileOpen},
     {"loadRunner", "(Ljava/lang/String;)V", (void *)loadRunner},
     {"logDebugItem", "(Ljava/lang/String;)V", (void *)logDebugItem},
-    {"networkChanged", "(Z)V", (void *)networkChanged},
+    {"networkAvailable", "()V", (void *)networkAvailable},
+    {"linkStudy", "(Ljava/lang/String;)V", (void *)linkStudy},
 };
 
 ApexAndroidBridge *ApexAndroidBridge::instance()
@@ -145,12 +174,6 @@ void ApexAndroidBridge::shareText(const QString &text)
         "shareText", "(Ljava/lang/String;)V", jniText.object<jstring>());
 }
 
-bool ApexAndroidBridge::hasNetworkConnection()
-{
-    return QtAndroid::androidActivity().callMethod<jboolean>(
-               "hasNetworkConnection") == JNI_TRUE;
-}
-
 void ApexAndroidBridge::sendToast(const QString &text)
 {
     QAndroidJniObject jniText = QAndroidJniObject::fromString(text);
@@ -160,8 +183,10 @@ void ApexAndroidBridge::sendToast(const QString &text)
 
 ApexAndroidBridge::ApexAndroidBridge()
 {
-    connect(this, SIGNAL(networkChanged(bool)), this,
-            SLOT(onNetworkChanged(bool)));
+    connect(this, SIGNAL(networkAvailable()), this, SLOT(onNetworkAvailable()));
+    connect(
+        this, SIGNAL(linkStudy(QString, QString, QString, QString, QString)),
+        this, SLOT(onLinkStudy(QString, QString, QString, QString, QString)));
 }
 
 void ApexAndroidBridge::createShortcutToFile()
@@ -206,10 +231,37 @@ void ApexAndroidBridge::createShortcutToRunner()
     }
 }
 
-void ApexAndroidBridge::onNetworkChanged(bool connected)
+void ApexAndroidBridge::onNetworkAvailable()
 {
-    if (connected && !ApexControl::Get().isExperimentRunning())
+    if (!ApexControl::Get().isExperimentRunning())
         StudyManager::instance()->syncActiveStudy();
+}
+
+void ApexAndroidBridge::onLinkStudy(const QString &name,
+                                    const QString &experimentsUrl,
+                                    const QString &experimentsBranch,
+                                    const QString &resultsUrl,
+                                    const QString &resultsBranch)
+{
+    StudyManager::instance()->linkStudy(name, experimentsUrl, experimentsBranch,
+                                        resultsUrl, resultsBranch);
+}
+
+void ApexAndroidBridge::enableKioskMode()
+{
+    QtAndroid::androidActivity().callMethod<void>("enableKioskMode", "()V");
+}
+
+void ApexAndroidBridge::disableKioskMode()
+{
+    QtAndroid::androidActivity().callMethod<void>("disableKioskMode", "()V");
+}
+
+void ApexAndroidBridge::openBrowser(const QString &uri)
+{
+    QAndroidJniObject jniUri = QAndroidJniObject::fromString(uri);
+    QtAndroid::androidActivity().callMethod<void>(
+        "openBrowser", "(Ljava/lang/String;)V", jniUri.object<jstring>());
 }
 }
 }

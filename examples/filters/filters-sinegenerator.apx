@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.2/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.2/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.2/experiment.xsd" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!-- @doc
   @what: Test of setting frequency parameter of sine generator - frequency of sinus varies according to user input
   @description: A sinus is playing in the left ear when you click on one of the 3 buttons. If you click on 100Hz/1000Hz/defaults, the frequency of the sinus changes to 100Hz/1000Hz/10 000Hz.

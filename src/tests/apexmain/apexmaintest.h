@@ -59,7 +59,7 @@ private Q_SLOTS:
     void testRandomInterval();
     void testUniformInt();
     void testUniformDouble();
-    void testAccessManagerPrepare();
+    void testAccessManagerToLocalFile();
     void testInteractive();
     void testInteractiveConstraints();
     void testInteractiveAndExpressions();
@@ -106,13 +106,6 @@ private Q_SLOTS:
     void testResultfilePathCreator_timestampIsAddedToMakeItUnique();
     void testResultfilePathCreator_resultfileHasAprExtension();
 
-    void testFlowRunner();
-
-    /* This test instantiates ApexControl which doesn't destruct correctly,
-     * run this last.
-     */
-    void testRepeatButton();
-
     void testApexResultSink_resultfileContainsResultscriptAndResultparameters();
     void testApexResultSink_resultfileContainsExperimentStartTime();
     void testApexResultSink_byDefaultResultfileIsSavedNextToExperimentFile();
@@ -121,6 +114,14 @@ private Q_SLOTS:
     void testApexResultSink_canSaveResultfileAfterCancelSavingResults();
     void testApexResultSink_canDiscardResultsAfterCancelSavingResults();
     void testApexResultSink_canSelectAnotherSaveLocationAfterSavingFails();
+
+    /* These tests instantiate ApexControl which doesn't destruct correctly,
+     * run this last.
+     */
+    void testSshKeys();
+    void testFlowRunner();
+    void testRepeatButton();
+
     void cleanupTestCase();
 
 private:
@@ -133,7 +134,9 @@ private:
     const QString readFileAsString(const QString &filePath);
     void createFile(const QString &path,
                     const QString &content = QString("some-content"));
-    void testAccessManagerPrepare(const QUrl &input, const QUrl &expected);
+    void testAccessManagerToLocalFile(const QUrl &input,
+                                      const QString &expected,
+                                      const QString &baseApexPath = QString());
 };
 
 #endif

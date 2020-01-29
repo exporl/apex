@@ -22,6 +22,7 @@
 
 #include "global.h"
 
+#include <QDir>
 #include <QString>
 
 namespace apex
@@ -40,7 +41,7 @@ public:
 
     static QString GetNonBinaryPluginPath();
     static QString GetScriptsPath();
-    static QString GetStudyManagerDirectory();
+    static QDir GetSshKeyDirectory();
     static QString GetStudyRootPath();
     static QString GetStudyRootResultsWorkdirPath();
 

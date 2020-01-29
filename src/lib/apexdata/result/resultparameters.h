@@ -52,6 +52,8 @@ public:
     bool showResultsAfter() const;
     void setShowResultsAfter(bool show);
 
+    bool confirmShowResults() const;
+
     const QUrl &resultPage() const;
     void setResultPage(const QString &scriptname);
 
@@ -77,6 +79,7 @@ private:
     QUrl m_resultPage;
     bool m_showRealtime;
     bool m_showAfter;
+    bool m_confirmShowResults;
 };
 }
 }

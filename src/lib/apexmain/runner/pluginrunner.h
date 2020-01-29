@@ -52,7 +52,7 @@ private:
 
     QString path;
     QMap<QString, PluginRunnerCreator *> creators;
-    QScopedPointer<PluginRunnerInterface> interface;
+    QScopedPointer<PluginRunnerInterface> runnerInterface;
 
 signals:
     void errorMessage(const QString &, const QString &);

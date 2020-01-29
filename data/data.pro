@@ -50,7 +50,7 @@ win32 {
         installfiles *= Qt5MultimediaWidgetsd.dll Qt5Multimediad.dll Qt5OpenGLd.dll
         installfiles *= Qt5PrintSupportd.dll Qt5Quickd.dll Qt5Qmld.dll
         installfiles *= Qt5Sqld.dll Qt5Positioningd.dll Qt5Sensorsd.dll
-        installfiles *= Qt5QuickWidgetsd.dll Qt5WebEngineCored.dll Qt5WebEngined.dll Qt5WebEngineWidgetsd.dll
+        installfiles *= Qt5QuickWidgetsd.dll Qt5WebEngineCored.dll Qt5WebEngined.dll Qt5WebViewd.dll
         installfiles *= libEGLd.dll
     } else {
         installfiles *= Qt5Xml.dll Qt5Core.dll Qt5Gui.dll Qt5Svg.dll
@@ -61,7 +61,7 @@ win32 {
         installfiles *= Qt5MultimediaWidgets.dll Qt5Multimedia.dll Qt5OpenGL.dll
         installfiles *= Qt5PrintSupport.dll Qt5Quick.dll Qt5Qml.dll
         installfiles *= Qt5Sql.dll Qt5Positioning.dll Qt5Sensors.dll
-        installfiles *= Qt5QuickWidgets.dll Qt5WebEngineCore.dll Qt5WebEngine.dll Qt5WebEngineWidgets.dll
+        installfiles *= Qt5QuickWidgets.dll Qt5WebEngineCore.dll Qt5WebEngine.dll Qt5WebView.dll
         installfiles *= libEGL.dll
     }
     win32-g++|win32-x-g++*:installfiles *= mingwm10.dll libgcc_s_dw2-1.dll
@@ -112,6 +112,14 @@ win32 {
     qt5webengine.path = $$BINDIR
     INSTALLS *= qt5webengine
 
+    CONFIG(debug, debug|release) {
+        qt5webviewplugin.files += $$[QT_INSTALL_PLUGINS]/webview/qtwebview_webengined.dll
+    } else {
+        qt5webviewplugin.files += $$[QT_INSTALL_PLUGINS]/webview/qtwebview_webengine.dll
+    }
+    qt5webviewplugin.path = $$BINDIR/webview
+    INSTALLS *= qt5webviewplugin
+
     qt5webengineresources.files += $$[QT_INSTALL_PREFIX]/resources/qtwebengine_*.pak $$[QT_INSTALL_PREFIX]/resources/icudtl.dat
     qt5webengineresources.path = $$BINDIR
     INSTALLS *= qt5webengineresources
@@ -119,4 +127,20 @@ win32 {
     qt5webenginetranslations.files += $$[QT_INSTALL_TRANSLATIONS]/qtwebengine_locales/en-*.pak $$[QT_INSTALL_TRANSLATIONS]/qtwebengine_locales/nl.pak
     qt5webenginetranslations.path = $$BINDIR/qtwebengine_locales
     INSTALLS *= qt5webenginetranslations
+
+    CONFIG(debug, debug|release) {
+        qt5styles.files += $$[QT_INSTALL_PLUGINS]/styles/qwindowsvistastyled.dll
+    } else {
+        qt5styles.files += $$[QT_INSTALL_PLUGINS]/styles/qwindowsvistastyle.dll
+    }
+    qt5styles.path = $$BINDIR/styles
+    INSTALLS *= qt5styles
+
+    qt5qml_qtquick2.files += $$[QT_INSTALL_QML]/QtQuick.2/*
+    qt5qml_qtquick2.path = $$BINDIR/QtQuick.2
+    qt5qml_qtwebengine.files += $$[QT_INSTALL_QML]/QtWebEngine/*
+    qt5qml_qtwebengine.path = $$BINDIR/QtWebEngine
+    qt5qml_qtwebview.files += $$[QT_INSTALL_QML]/QtWebView/*
+    qt5qml_qtwebview.path = $$BINDIR/QtWebView
+    INSTALLS *= qt5qml_qtquick2 qt5qml_qtwebengine qt5qml_qtwebview
 }

@@ -66,15 +66,15 @@ bool PluginRunner::select(const QString &pname)
         return false;
     }
 
-    interface.reset(creator->createRunner(pluginName));
-    if (!interface) {
+    runnerInterface.reset(creator->createRunner(pluginName));
+    if (!runnerInterface) {
         Q_EMIT errorMessage(
             "PluginRunner",
             tr("Cannot creater plugin interface %1").arg(pluginName));
         return false;
     }
 
-    const QString file = interface->getFileName();
+    const QString file = runnerInterface->getFileName();
     if (file.isEmpty())
         return true;
 

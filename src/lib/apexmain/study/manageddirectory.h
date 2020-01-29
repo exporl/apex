@@ -46,8 +46,6 @@ public:
 
     /* Set directory parameters */
     void setPath(const QString &repoPath, const QString &workdirPath);
-    void setKeyPaths(const QString &publicKeyPath,
-                     const QString &privateKeyPath);
     /* May throw */
     void setRemote(const QString &url,
                    const QString &branchName = QL1S("master"));
@@ -73,9 +71,7 @@ public:
 
     static bool exists(const QString &path);
     /* May throw */
-    static QStringList lsRemote(const QString &url,
-                                const QString &publicKeyPath = QString(),
-                                const QString &privateKeyPath = QString());
+    static QStringList lsRemote(const QString &url);
 
 Q_SIGNALS:
     void pullDone();

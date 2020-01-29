@@ -134,6 +134,7 @@ git checkout -t -b config origin/meta/config
 grep "^$GROUPIDEXPDEVICES" groups -q || printf '%s\t%s\n' "$GROUPIDEXPDEVICES" "$GROUPEXPDEVICES" >> groups
 
 git config --file project.config "access.refs/heads/$EXPERIMENTBRANCH.read" "group $GROUPEXPDEVICES"
+git config --file project.config "access.refs/heads/$EXPERIMENTBRANCH.push" "group $GROUPRW"
 
 git diff --quiet HEAD
 if [ $? -ne 0 ]; then

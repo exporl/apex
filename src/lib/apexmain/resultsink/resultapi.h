@@ -33,8 +33,13 @@ public:
     explicit ResultApi();
     virtual ~ResultApi();
 
+    /*
+     * Hide resultsviewer
+     */
+    Q_INVOKABLE void hide();
+
 signals:
-    void exportToPdf();
+    void doHide();
 };
 }
 

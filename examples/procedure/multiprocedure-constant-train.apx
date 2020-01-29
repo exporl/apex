@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.2/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.2/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.2/experiment.xsd">
   <!-- @doc
     @what: Multiprocedure - 2procedures (1constant - 1training) with each their own parameters, procedure and trials
     @description: 2 procedures => constantprocedure1: 4presentations/1trial => 4x - 3intervals: Match the stimulus (place of stimulus within noise) with the correct button

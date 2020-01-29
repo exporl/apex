@@ -12,7 +12,7 @@ xml.stimulus = function(id, db, fp, v) {
                 xml.tag("datablock", {"id" : db})),
             !fp ? '' :
             xml.tag("fixedParameters",
-                xml.tag("parameter", {"id" : fp}, v)));
+                xml.tag("parameter", {"id" : fp}, xml.cdata(v))));
 };
 
 xml.trial = function(id, sc, st, an) {

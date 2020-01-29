@@ -1,4 +1,4 @@
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.2/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.2/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.2/experiment.xsd">
   <procedure xsi:type="apex:pluginProcedure">
     <parameters>
       <presentations>1</presentations>

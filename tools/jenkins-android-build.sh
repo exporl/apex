@@ -6,12 +6,13 @@ git submodule update --force --init --remote common
 common/tools/jenkins-linux-git-setup.sh
 
 ROOTDIR=$(pwd)
-APIDIR=~jenkins/apex-android-extra-folder-qt5.13
+APIDIR=~jenkins/apex-android-extra-folder-qt5.12
 CLEAN=
 TESTS=true
 DEBUGRELEASE=debug
 KEYSTORE=
 KEYSTORE_PWD_PATH=
+JOBS=1
 
 parsecmd() {
     while [ $# -gt 0 ]; do
@@ -46,6 +47,11 @@ parsecmd() {
             KEYSTORE_PWD_PATH=${2%/}
             shift
             ;;
+        -j|--jobs) # [jobs]
+            # specifies the number of jobs to run simultaneously
+            JOBS=$2
+            shift
+            ;;
         -h|--help) #
             # this help
             echo "Usage: $0 [OPTION]..."
@@ -68,18 +74,26 @@ parsecmd "$@"
 echo "API directory: $APIDIR"
 echo "Clean arguments: $CLEAN"
 
-tools/android-prepare-api.sh --api-dir $APIDIR
+tools/android-prepare-api.sh --api-dir $APIDIR -j $JOBS
 
 if [ "$DEBUGRELEASE" = "release" ];then
     cp tools/jenkins-android-release-localconfig.pri localconfig.pri
-    tools/android-build.sh --api-dir "$APIDIR" --build-apk $CLEAN \
+    tools/android-build.sh --api-dir "$APIDIR" --build-apk $CLEAN -j $JOBS \
                            --release --ks "$KEYSTORE" --ks-pass-path "$KEYSTORE_PWD_PATH"
 else
     cp tools/jenkins-android-localconfig.pri localconfig.pri
-    tools/android-build.sh --api-dir "$APIDIR" --build-apk $CLEAN
+    tools/android-build.sh --api-dir "$APIDIR" --build-apk $CLEAN -j $JOBS
+fi
+
+if [ $DEBUGRELEASE = "release" ];then
+    APK_FILENAME_SUFFIX="-signed"
+else
+    APK_FILENAME_SUFFIX=
 fi
 
 if [ "$TESTS" = "true" ]; then
     rm -rf *test-results.{xml,txt}
-    tools/android-test.sh --apk "$ROOTDIR/bin/android-debug-installed/armv7/apex/build/outputs/apk/$DEBUGRELEASE/apex-$DEBUGRELEASE.apk"
+    tools/android-test.sh \
+        --apk "${ROOTDIR}/bin/android-${DEBUGRELEASE}-installed/armv7/apex/build/outputs/apk/${DEBUGRELEASE}/apex-${DEBUGRELEASE}${APK_FILENAME_SUFFIX}.apk" \
+        --buildtype $DEBUGRELEASE
 fi

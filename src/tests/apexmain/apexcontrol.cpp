@@ -18,6 +18,12 @@
 
 #include "apexmaintest.h"
 
+#include "apextools/apexpaths.h"
+#include "apextools/apextools.h"
+
+#ifdef Q_OS_ANDROID
+#include "apexmain/apexandroidnative.h"
+#endif
 #include "apexmain/apexcontrol.h"
 #include "apexmain/errorhandler.h"
 #include "apexmain/experimentio.h"
@@ -31,6 +37,7 @@
 
 #include <QAction>
 #include <QFileDialog>
+#include <QHostInfo>
 #include <QPushButton>
 #include <QSignalSpy>
 
@@ -122,4 +129,38 @@ void ApexMainTest::testRepeatButton()
     QVERIFY(restartSpy.count() == 1);
 
     TEST_EXCEPTIONS_CATCH
+}
+
+void ApexMainTest::testSshKeys()
+{
+    QDir sshKeyDirectory = ApexPaths::GetSshKeyDirectory();
+    sshKeyDirectory.removeRecursively();
+
+    ApexControl control(true);
+    QVERIFY(QSignalSpy(&control, SIGNAL(apexInitialized())).wait());
+
+    QVERIFY(QFile::exists(sshKeyDirectory.filePath(QSL("id_rsa"))));
+    QVERIFY(QFile::exists(sshKeyDirectory.filePath(QSL("id_rsa.pub"))));
+
+    QFile publicKeyFile(sshKeyDirectory.filePath(QSL("id_rsa.pub")));
+    publicKeyFile.open(QIODevice::ReadOnly);
+
+    // We rely on the comment having this format to make adding
+    // a device to a gerrit instance for studies easier.
+    // Account name and email are extracted from this comment.
+    QString keyComment =
+        QString::fromUtf8(publicKeyFile.readAll()).split(' ').last();
+
+#ifdef Q_OS_ANDROID
+    QString expectedKeyComment =
+        QString::fromLatin1("%1@%2")
+            .arg(android::ApexAndroidBridge::getDeviceSerialNumber())
+            .arg(android::ApexAndroidBridge::getDeviceSerialNumber());
+#else
+    QString expectedKeyComment = QString::fromLatin1("%1@%2")
+                                     .arg(ApexTools::getUser())
+                                     .arg(QHostInfo::localHostName());
+#endif
+
+    QCOMPARE(keyComment, expectedKeyComment);
 }

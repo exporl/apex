@@ -3,8 +3,8 @@
 cd "$(dirname $(readlink -f ${BASH_SOURCE[0]}))/.."
 
 ROOTDIR=$(pwd)
-APK=bin/android-debug-installed/armv7/apex/build/outputs/apk/debug/apex-debug.apk
-ONJENKINS=false
+DEBUGRELEASE=debug
+APK=bin/android-$DEBUGRELEASE-installed/armv7/apex/build/outputs/apk/$DEBUGRELEASE/apex-$DEBUGRELEASE.apk
 
 parsecmd() {
     while [ $# -gt 0 ]; do
@@ -13,6 +13,12 @@ parsecmd() {
         -a|--apk) # [apex.apk]
             # the apk file to test
             APK=$2
+            shift
+            ;;
+        -b|--buildtype) # [debug|release]
+            # release: test release apk
+            # debug: test debug apk
+            DEBUGRELEASE=$2
             shift
             ;;
         -h|--help) #
@@ -77,7 +83,7 @@ echo "Package: $APK"
             TARGET=$(basename "$i" .pro)
         fi
         rm -f "$ROOTDIR/$TARGET-results.xml" "$ROOTDIR/$TARGET-results.txt"
-        if [ ! -f "$ROOTDIR/bin/android-debug/lib${TARGET}.so" ]; then
+        if [ ! -f "$ROOTDIR/bin/android-$DEBUGRELEASE/lib${TARGET}.so" ]; then
             echo "test library for $TARGET not found, skipping"
             continue
         fi

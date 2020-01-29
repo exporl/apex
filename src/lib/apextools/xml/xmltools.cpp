@@ -98,6 +98,10 @@ QString XmlUtils::nodeToString(const QDomNode &node)
 
 QString XmlUtils::richText(const QDomElement &node)
 {
+    if (node.firstChild().isCDATASection()) {
+        return node.firstChild().toCDATASection().data();
+    }
+
     QDomDocument doc;
     QDomElement root = doc.createElement(QSL("dummy"));
     doc.appendChild(root);

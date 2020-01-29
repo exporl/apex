@@ -26,6 +26,7 @@
 #include "apextools.h"
 #include "exceptions.h"
 
+#include <QAbstractTextDocumentLayout>
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDialog>
@@ -40,6 +41,7 @@
 #include <QSettings>
 #include <QSize>
 #include <QString>
+#include <QTextDocument>
 #include <QThread>
 #include <QUrl>
 #include <QVariant>
@@ -306,13 +308,21 @@ int ApexTools::maximumFontPointSize(const QString &text, const QSize &box,
 
     Q_FOREVER {
         const int pointSize = font.pointSize();
-        QSize result = QFontMetrics(font).size(0, text);
+        QSize result = getTextSize(text, font);
         if (result.width() < width && result.height() < height)
             return pointSize;
         if (pointSize <= 1)
             return -1;
         font.setPointSize(pointSize - 1);
     }
+}
+
+QSize ApexTools::getTextSize(const QString &text, const QFont &font)
+{
+    QTextDocument doc;
+    doc.setHtml(text);
+    doc.setDefaultFont(font);
+    return doc.documentLayout()->documentSize().toSize();
 }
 
 void ApexTools::shrinkTillItFits(QWidget *widget, const QString &text,

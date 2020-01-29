@@ -46,8 +46,8 @@ public:
     static QString getSSLCertificateDirectory();
     static void startGdbServer();
     static void shareText(const QString &text);
-    static bool hasNetworkConnection();
     static void sendToast(const QString &text);
+    static void openBrowser(const QString &uri);
 
     ApexAndroidBridge();
 
@@ -55,12 +55,20 @@ public Q_SLOTS:
 
     void createShortcutToFile();
     void createShortcutToRunner();
+    void enableKioskMode();
+    void disableKioskMode();
 
 Q_SIGNALS:
-    void networkChanged(bool connected);
+    void networkAvailable();
+    void linkStudy(const QString &name, const QString &experimentsUrl,
+                   const QString &experimentsBranch, const QString &resultsUrl,
+                   const QString &resultsBranch);
 
 private Q_SLOTS:
-    void onNetworkChanged(bool connected);
+    void onNetworkAvailable();
+    void onLinkStudy(const QString &name, const QString &experimentsUrl,
+                     const QString &experimentsBranch,
+                     const QString &resultsUrl, const QString &resultsBranch);
 };
 }
 }

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.2/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.2/experiment.xsd" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.2/experiment" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!--@doc
   @what: More complex processing, can be used for testing skips - 2 noise stimuli (sinus & wivineruis.wav) with different gains (filters)
   @description: When you click on 'wrong' you hear in both ears two noise stimuli and in the left ear 2 times a sentence, the same happens when you click on the 'wrong' button again

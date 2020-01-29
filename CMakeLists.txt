@@ -49,20 +49,19 @@ find_package(Qt5 COMPONENTS
     Multimedia
     Network
     PrintSupport
+    Qml
+    Quick
+    QuickWidgets
     Script
     ScriptTools
     Svg
     Test
-    WebKitWidgets
     WebSockets
-    WebEngineWidgets
+    WebChannel
+    WebView
     Widgets
     Xml
     XmlPatterns
-    #Qml
-    #Quick
-    #WebView
-    #QuickWidgets
     REQUIRED)
 
 add_subdirectory(src)

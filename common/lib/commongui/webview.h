@@ -19,20 +19,14 @@
 #ifndef _EXPORL_COMMON_LIB_COMMONGUI_WEBVIEW_H_
 #define _EXPORL_COMMON_LIB_COMMONGUI_WEBVIEW_H_
 
+#include "webviewwidget.h"
 #include "common/global.h"
 
 #include <QMainWindow>
-#include <QNetworkAccessManager>
-#include <QObject>
+#include <QString>
 #include <QUrl>
 #include <QVariant>
-
-#if defined(Q_OS_ANDROID)
-#include <QQuickItem>
-#include <QQuickWidget>
-#else
-#include <QWebEngineView>
-#endif
+#include <QWidget>
 
 namespace cmn
 {
@@ -44,23 +38,17 @@ class COMMON_EXPORT WebView : public QMainWindow
     Q_OBJECT
 public:
     WebView();
-    ~WebView();
+    virtual ~WebView();
 
     void load(const QUrl &url);
-    void loadHtml(const QString &html, const QUrl &baseUrl = QUrl());
+    void loadHtml(const QString &html);
     void runJavaScript(const QString &script);
     void runJavaScriptAndEmitResult(const QString &script);
-
-/* Provided for custom cases, but use sparingly */
-#if defined(Q_OS_ANDROID)
-    QQuickWidget *webView();
-#else
-    QWebEngineView *webView();
-#endif
+    WebViewWidget *getWebViewWidget();
 
 Q_SIGNALS:
     void hidden();
-    void loadingFinished(bool ok = true);
+    void loadingFinished(bool ok);
     void javaScriptFinished(const QVariant &result);
 
 protected:
@@ -70,8 +58,6 @@ private:
     DECLARE_PRIVATE(WebView)
 protected:
     DECLARE_PRIVATE_DATA(WebView)
-private Q_SLOTS:
-    void preventMultipleLoadingFinishedSignals();
 };
 }
 #endif

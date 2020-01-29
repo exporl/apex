@@ -79,6 +79,13 @@ public:
      */
     Q_INVOKABLE bool runExperiment(const QJsonObject &json);
 
+    Q_INVOKABLE bool inStudy() const;
+
+    /*
+     * Open the accompanying documentation in a separate browser window.
+     */
+    Q_INVOKABLE void openDocumentation() const;
+
 signals:
     /*
      * Signal emitted when the experiment started with `runExperiment` is done.

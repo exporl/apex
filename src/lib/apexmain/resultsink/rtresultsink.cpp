@@ -35,8 +35,6 @@
 #include <QDomElement>
 #include <QFileDialog>
 #include <QMenuBar>
-#include <QPrintDialog>
-#include <QPrinter>
 #include <QUrl>
 
 using namespace cmn;
@@ -67,9 +65,6 @@ public:
     QScopedPointer<WebView> webView;
     QScopedPointer<WebSocketServer> webSocketServer;
     QScopedPointer<ResultApi> resultApi;
-#if !defined(Q_OS_ANDROID)
-    QScopedPointer<QPrinter> printer;
-#endif
 
     QTemporaryDir temporaryDirectory;
 };
@@ -79,15 +74,15 @@ RTResultSink::RTResultSink(QUrl url, QMap<QString, QString> resultParameters,
     : d(new RTResultSinkPrivate)
 {
     d->resultApi.reset(new ResultApi);
-    connect(d->resultApi.data(), SIGNAL(exportToPdf()), this,
-            SLOT(exportToPdf()));
-
     d->webSocketServer.reset(
-        new WebSocketServer(d->resultApi.data(), QSL("RTResultSink")));
+        new WebSocketServer(d->resultApi.data(), QSL("resultApi")));
 
     d->webView.reset(new WebView());
     connect(d->webView.data(), SIGNAL(hidden()), this, SIGNAL(viewClosed()));
     connect(d->webView.data(), SIGNAL(hidden()), this, SLOT(hide()));
+    connect(d->resultApi.data(), SIGNAL(doHide()), this, SLOT(hide()));
+    connect(d->resultApi.data(), SIGNAL(doHide()), d->webView.data(),
+            SIGNAL(hidden()));
     connect(d->webView.data(), &WebView::loadingFinished,
             [this, resultParameters, extraScript](bool ok) {
                 setJavascriptParameters(resultParameters);
@@ -97,13 +92,15 @@ RTResultSink::RTResultSink(QUrl url, QMap<QString, QString> resultParameters,
 
     QString htmlPath =
         ApexTools::copyAndPrepareAsHtmlFileWithInjectedBootstrapValues(
-            AccessManager::prepare(url).toLocalFile(),
+            AccessManager::toLocalFile(
+                url, cmn::Paths::searchDirectory(
+                         QSL("resultsviewer"), cmn::Paths::dataDirectories())),
             d->temporaryDirectory.path(), d->webSocketServer->serverPort());
     d->webView->load(QUrl::fromLocalFile(htmlPath));
 
     if (d->webView->menuBar()->actions().size() >= 1)
         d->webView->menuBar()->actions().at(0)->menu()->addAction(
-            QSL("Print to pdf"), this, SLOT(exportToPdf()));
+            QSL("Print"), this, &RTResultSink::print);
 }
 
 RTResultSink::~RTResultSink()
@@ -241,17 +238,8 @@ WebView &RTResultSink::getWebView() const
     return *d->webView.data();
 }
 
-void RTResultSink::exportToPdf()
+void RTResultSink::print()
 {
-#if !defined(Q_OS_ANDROID)
-    QString filename(QFileDialog::getSaveFileName(
-        0, tr("Export results page to PDF"), "", "*.pdf"));
-
-    d->printer.reset(new QPrinter);
-    d->printer->setOutputFormat(QPrinter::PdfFormat);
-    d->printer->setOutputFileName(filename);
-    d->webView->webView()->page()->print(d->printer.data(),
-                                         [&](bool) { d->printer.reset(); });
-#endif
+    d->webView->getWebViewWidget()->print();
 }
 }

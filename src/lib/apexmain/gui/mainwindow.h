@@ -280,6 +280,7 @@ protected:
       * Override this to do appropriate actions
       */
     void closeEvent(QCloseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     ExperimentRunDelegate *m_rd;

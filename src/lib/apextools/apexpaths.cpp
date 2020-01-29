@@ -106,16 +106,15 @@ QString ApexPaths::GetScriptsPath()
                                   Paths::dataDirectories());
 }
 
-QString ApexPaths::GetStudyManagerDirectory()
+QDir ApexPaths::GetSshKeyDirectory()
 {
-
 #if defined(Q_OS_ANDROID)
     QDir dataDir(
         QStandardPaths::writableLocation(QStandardPaths::DataLocation));
 #else
     QDir dataDir(Paths::dataDirectory());
 #endif
-    return dataDir.filePath(QSL("studymanager"));
+    return QDir(dataDir.filePath(QSL("studymanager")));
 }
 
 QString ApexPaths::GetStudyRootPath()

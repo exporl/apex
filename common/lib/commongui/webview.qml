@@ -1,12 +1,11 @@
 import QtQuick 2.3
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.1
 import QtWebView 1.1
 
 Rectangle {
     id: root
-    signal loadingFinished()
-    signal javascriptFinished(variant result)
+
+    signal loadingFinished(bool ok)
+    signal javaScriptFinished(variant result)
 
     WebView {
         id: webView
@@ -16,7 +15,7 @@ Rectangle {
             if (loadRequest.errorString)
                 console.error(loadRequest.errorString);
             if (loadRequest.status === WebView.LoadSucceededStatus)
-                root.loadingFinished()
+                root.loadingFinished(true);
         }
     }
 
@@ -33,8 +32,6 @@ Rectangle {
     }
 
     function runJavaScriptAndEmitResult(script) {
-        webView.runJavaScript(script, function(result) {
-            root.javascriptFinished(result);
-        });
+        webView.runJavaScript(script, root.javaScriptFinished);
     }
 }

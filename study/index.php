@@ -394,7 +394,7 @@
               <div class="form-group">
                 <label for="addStudy-StudyName">Study name:</label>
                 <input id="addStudy-studyName" class="form-control"
-                       type="text" onchange="checkStudyName()"/>
+                       type="text"/>
               </div>
               <div class="form-group">
                 <label>Study type:</label>

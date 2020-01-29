@@ -9,7 +9,9 @@ function sshcommand {
 }
 
 function gitsshcommand {
-    if [ ! -z $"SSHCONFIG" ]; then
+    if [ ! -z $SSHCONFIG ]; then
         GIT_SSH_COMMAND="ssh -F $SSHCONFIG" git "$@"
+    else
+        git "$@"
     fi
 }

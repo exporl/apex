@@ -1,27 +1,29 @@
 Preparing a release version of APEX
 ===================================
 
-Requirements
-------------
-
 The release script and this guide was made for linux. Furthermore Oxygen should
 be installed to generate the schema documentation.
 
-To release the binaries you'll also need access to the webserver and the build
-server.
+To release the binaries you'll also need access to the webserver and jenkins.
 
-Minor version change
---------------------
+## Code changes when releasing
 
-The `tools/linux-new-version.sh` script makes all the needed changes to the
+### Minor version change
+
+The `linux-new-version.sh` script makes all the needed changes to the
 worktree, it will:
 
 * Spawn an editor to edit the version header.
-* Update the schema version of the XML and XSD files found in data/schema,
-  data/config, and in examples.
+* Update the schema version of the XSD files in data/schemas.
+* Update the XML and APX files found in data/config and examples to use the new schema version.
 * Call the apex-schema-documentation script, which&mdash;when supplied with
   the `--oxygen` directory&mdash;will make the necessary changes to the
   apex-documentation-schemas worktree.
+* Update the wix build and configuration files to make sure the correct version is embedded in the installer and the installer filename.
+
+```shell
+tools/linux-new-version.sh --oxygen path/to/oxygen/directory
+```
 
 The changes will still need to be committed. Start in
 apex-documentation-schemas, which is a submodule of apex-documentation. Then
@@ -35,8 +37,7 @@ git push origin x.x.x
 git ls-remote --tags origin (to review remote tags)
 ```
 
-Major version change
---------------------
+### Major version change
 
 When increasing a major version, some more manual work will be required. The
 following will need to be updated:
@@ -48,10 +49,9 @@ following will need to be updated:
 * Jenkins configurations: archiving artifacts, publishing artifacts.
 
 
-Releasing binaries
-------------------
+## Publishing artefacts
 
-Binaries should be released for Windows and Android. Do this after the
+Binaries should be published for Windows and Android. Do this after the
 changes have been committed and a master build has been completed.
 
 ### Windows
@@ -65,14 +65,10 @@ Then add a link on the downloads page (`/var/www/apex/register/downloads.html`) 
 
 ### Android
 
-To release a new Android version to the F-Droid repository, trigger the
-apex-android-release project on the buildserver. It's best to do this right
-after the master build for the Windows binaries as it will build the latest
-commit of the master branch.
-
-When the build is completed the buildserver will trigger the
-apex-android-release-deploy project on the buildserver. This will call the
-deploy script on the buildserver. See the tools/fdroid folder as an example.
+To publish a new Android version to the F-Droid repository, trigger the
+`apex-publish-to-fdroid` project on jenkins with the parameter `release`. It's best to do this right
+after the master build for the Windows binaries as it will publish the latest
+apk built by the master build. When successful the apk will be available to devices using fdroid.
 
 ### Schema
 
@@ -80,13 +76,10 @@ Copy the xsd files from your local working directory to the webserver so they ar
 through http. From your local apex worktree do:
 
 ```shell
-scp -r data/schemas username@exporl-ssh.med.kuleuven.be:/var/www/apex/schemas/x.x.x
+rsync -r data/schemas/*.xsd username@exporl-ssh.med.kuleuven.be:/var/www/apex/schemas/x.x.x
 ```
 
-### 
-
-Github code dump
-----------------
+### Github code dump
 
 As APEX is open source, the code is uploaded to github with each release. This
 is a simple code dump without git history and without submodules. Note that the

@@ -76,7 +76,6 @@ target_link_libraries(apex-main
     Qt5::XmlPatterns
     Qt5::Network
     Qt5::Widgets
-    Qt5::WebKitWidgets
     Qt5::Svg
     Qt5::Script
     Qt5::ScriptTools
@@ -346,7 +345,6 @@ target_link_libraries(apex-main-tests PRIVATE
     Qt5::XmlPatterns
     Qt5::Network
     Qt5::Widgets
-    Qt5::WebKitWidgets
     Qt5::Svg
     Qt5::Script
     Qt5::ScriptTools

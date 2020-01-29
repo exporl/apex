@@ -104,7 +104,6 @@ unsigned m_nBufferSize;
 unsigned m_nClearSize;
 AudioFormat::mt_eBitMode m_eBitMode;
 bool m_bBusy;
-bool m_bWasInCallback;
 long m_nCurrentBufIndex;
 Callback *m_pCallback;
 
@@ -579,7 +578,6 @@ ASIOTime *bufferSwitchTimeInfo(ASIOTime *timeInfo, long index,
                                ASIOBool /*processNow*/)
 {
     m_bBusy = true;
-    m_bWasInCallback = true;
 
     sc_CallbackLock.mf_Enter();
 
@@ -733,30 +731,10 @@ bool AsioWrapper::mp_bOpenDriver(const unsigned ac_nIChan,
 
             m_nClearSize = size * ac_nBufferSize;
 
-            //! do a little test to see ASIO can run
-            if (bError == ASE_OK) {
-                m_bWasInCallback = false;
-                m_pCallback = 0;
-                std::cout << "Starting ASIO test.." << std::endl;
-                if (ASIOStart() != ASE_OK) {
-                    mv_sError = "Failed to start Asio test";
-                    return false;
-                } else
-                    IThread::sf_Sleep(
-                        4 * m_nBufferSize * 1000 /
-                        ac_nFs); // enough time to zero buffers in callback
-
-                asioDriverInfo.stopped = true;
-                ASIOStop();
-                if (!m_bWasInCallback) {
-                    mv_sError = "Failed to start ASIO streaming";
-                    return false;
-                }
-                std::cout << "->Passed ASIO test" << std::endl;
-            } else if (bError == ASE_InvalidMode) {
+            if (bError == ASE_InvalidMode) {
                 mv_sError = "This bitmode is not supported";
                 return false;
-            } else {
+            } else if (bError != ASE_OK) {
                 mv_sError = "Failed to create buffers";
                 return false;
             }

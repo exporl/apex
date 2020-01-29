@@ -32,7 +32,8 @@ using namespace cmn;
 ResultParameters::ResultParameters()
     : m_resultPage(QSL("resultsviewer.html")),
       m_showRealtime(false),
-      m_showAfter(false)
+      m_showAfter(false),
+      m_confirmShowResults(true)
 {
 }
 
@@ -79,6 +80,8 @@ bool ResultParameters::SetParameter(const QString &p_name,
         m_showRealtime = ApexTools::bQStringToBoolean(p_value);
     } else if (p_name == "showafterexperiment") {
         m_showAfter = ApexTools::bQStringToBoolean(p_value);
+    } else if (p_name == "confirmshowresults") {
+        m_confirmShowResults = ApexTools::bQStringToBoolean(p_value);
     } else if (p_name == "page") {
         m_resultPage = p_value;
     } else {
@@ -112,6 +115,11 @@ bool ResultParameters::showResultsAfter() const
 void ResultParameters::setShowResultsAfter(bool show)
 {
     m_showAfter = show;
+}
+
+bool ResultParameters::confirmShowResults() const
+{
+    return m_confirmShowResults;
 }
 
 const QUrl &ResultParameters::resultPage() const

@@ -360,7 +360,7 @@ void ApexMainTest::testStudy()
 
     QTemporaryDir dir2;
     Study study(QSL("teststudy"), dir1.path(), QSL("master"), dir1.path(),
-                QSL("results"), dir2.path(), dir2.path(), dir2.path());
+                QSL("results"), dir2.path(), dir2.path());
     QVERIFY(study.isPrivate());
     QVERIFY(study.statusMessage().isEmpty());
     QSignalSpy updateExperimentsDoneSpy(&study,
@@ -420,30 +420,6 @@ void ApexMainTest::testStudyManager()
     QTemporaryDir dir2;
     StudyManager manager;
     manager.setRootPath(dir2.path());
-    QDir keyDir(ApexPaths::GetStudyManagerDirectory());
-    QVERIFY(QFile::exists(keyDir.filePath(QSL("id_rsa"))));
-    QVERIFY(QFile::exists(keyDir.filePath(QSL("id_rsa.pub"))));
-
-    /* We rely on the comment having this format to make adding
-     * a device to a gerrit instance for studies easier.
-     * Account name and email are extracted from this comment.
-     */
-    QFile publicKeyFile(keyDir.filePath(QSL("id_rsa.pub")));
-    publicKeyFile.open(QIODevice::ReadOnly);
-    QString publicKeyData = QString::fromUtf8(publicKeyFile.readAll());
-#ifdef Q_OS_ANDROID
-    QCOMPARE(publicKeyData.split(' ').last(),
-             QString::fromLatin1("%1@%2")
-                 .arg(android::ApexAndroidBridge::getDeviceSerialNumber())
-                 .arg(android::ApexAndroidBridge::getDeviceSerialNumber()));
-#else
-    QString shortKeyUser = QHostInfo::localHostName();
-    QString longKeyUser = QString::fromLatin1("%1@%2")
-                              .arg(ApexTools::getUser())
-                              .arg(QHostInfo::localHostName());
-    QString keyUser = publicKeyData.split(' ').last();
-    QVERIFY(keyUser == shortKeyUser || keyUser == longKeyUser);
-#endif
 
     QSignalSpy studiesUpdatedSpy(
         &manager, SIGNAL(studiesUpdated(QStringList, QString, QString)));
@@ -589,9 +565,6 @@ void ApexMainTest::testStudyFull()
     QTemporaryDir dir2;
     StudyManager manager;
     manager.setRootPath(dir2.path());
-    QDir keyDir(ApexPaths::GetStudyManagerDirectory());
-    QVERIFY(QFile::exists(keyDir.filePath(QSL("id_rsa"))));
-    QVERIFY(QFile::exists(keyDir.filePath(QSL("id_rsa.pub"))));
     QVERIFY(!manager.activeStudy());
     QPointer<StudyDialog> dialog = nullptr;
     QTimer::singleShot(500, [&]() {
@@ -892,8 +865,7 @@ void ApexMainTest::testStudy_makeResultfilePath_privateStudy()
 
     Study study("study-name", "http://experiments-url", "experiments-branch",
                 "http://results-url", "results-branch",
-                tempStudyRootDir.dir().path(), tempResultsWorkDir.dir().path(),
-                "/key/path");
+                tempStudyRootDir.dir().path(), tempResultsWorkDir.dir().path());
 
     QString actualPath =
         study.makeResultfilePath(experimentfilePath, "path/to/results.apr");
@@ -926,8 +898,7 @@ void ApexMainTest::
 
     Study study("study-name", "http://experiments-url", "experiments-branch",
                 "http://results-url", "results-branch",
-                tempStudyRootDir.dir().path(), tempResultsWorkDir.dir().path(),
-                "/key/path");
+                tempStudyRootDir.dir().path(), tempResultsWorkDir.dir().path());
 
     QString actualPath =
         study.makeResultfilePath(experimentfilePath, QString());
@@ -958,7 +929,7 @@ void ApexMainTest::testStudy_makeResultfilePath_publicStudy()
 
     Study study("study-name", "http://experiments-url", "experiments-branch",
                 QString(), QString(), tempStudyRootDir.dir().path(),
-                tempStudyRootDir.dir().path(), "/key/path");
+                tempStudyRootDir.dir().path());
 
     QString actualPath =
         study.makeResultfilePath(experimentfilePath, "path/to/results.apr");
@@ -982,7 +953,7 @@ void ApexMainTest::
 
     Study study("study-name", "http://experiments-url", "experiments-branch",
                 QString(), QString(), tempStudyRootDir.dir().path(),
-                tempStudyRootDir.dir().path(), "/key/path");
+                tempStudyRootDir.dir().path());
 
     QString actualPath =
         study.makeResultfilePath(experimentfilePath, QString());

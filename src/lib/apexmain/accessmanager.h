@@ -3,13 +3,16 @@
 
 #include "apextools/global.h"
 
+#include <QString>
+#include <QUrl>
+
 namespace apex
 {
 
 class APEX_EXPORT AccessManager
 {
 public:
-    static QUrl prepare(QUrl url);
+    static QString toLocalFile(const QUrl &url, const QString &apexBaseDir);
 };
 }
 

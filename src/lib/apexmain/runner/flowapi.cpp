@@ -23,6 +23,12 @@
 #include "flowrunner.h"
 #include "simplerunner.h"
 
+#ifdef Q_OS_ANDROID
+#include "apexmain/apexandroidnative.h"
+#else
+#include <QDesktopServices>
+#endif
+
 using namespace apex;
 
 FlowApi::FlowApi(FlowRunner *fr, const QDir &baseDir)
@@ -120,4 +126,25 @@ QString FlowApi::makeResultsPath(const QString &path) const
         return StudyManager::instance()->makeResultsPath(path);
 
     return baseDir.absoluteFilePath(path);
+}
+
+bool FlowApi::inStudy() const
+{
+    return StudyManager::instance()->belongsToActiveStudy(
+        baseDir.absolutePath());
+}
+
+void FlowApi::openDocumentation() const
+{
+#ifdef Q_OS_ANDROID
+    QString documentationPath =
+        inStudy()
+            ? StudyManager::instance()->activeStudy()->getDocumentationPath()
+            : baseDir.filePath("documentation");
+    android::ApexAndroidBridge::openBrowser(QSL("file://") + documentationPath +
+                                            QSL("/index.html"));
+#else
+    QDesktopServices::openUrl(
+        QUrl::fromLocalFile(baseDir.filePath("documentation/index.html")));
+#endif
 }

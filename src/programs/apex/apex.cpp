@@ -27,13 +27,10 @@
 
 #include <QApplication>
 #include <QMessageBox>
+#include <QtWebView>
 
 #ifdef WIN32
 #include <windows.h>
-#endif
-
-#if defined(Q_OS_ANDROID)
-#include <QtWebView/QtWebView>
 #endif
 
 using namespace apex;
@@ -53,9 +50,7 @@ static void coreDumpCallback(const QString &path)
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-#if defined(Q_OS_ANDROID)
     QtWebView::initialize();
-#endif
     app.setApplicationName(applicationName);
     app.setOrganizationName(organizationName);
     app.setOrganizationDomain(organizationDomain);

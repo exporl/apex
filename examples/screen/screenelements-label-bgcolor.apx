@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.2/experiment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.2/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.2/experiment.xsd">
   <!-- @doc
   @what: shows how to change background and font color of a label/button
   @description: screen shows different labels/buttons with a different background color or font color

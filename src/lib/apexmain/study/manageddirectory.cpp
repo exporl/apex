@@ -22,6 +22,7 @@
 #include "../apexandroidnative.h"
 #endif
 
+#include "apextools/apexpaths.h"
 #include "apextools/exceptions.h"
 
 #include <git2.h>
@@ -89,8 +90,6 @@ public:
 
     void setRemote(const QString &url, const QString &branchName);
     void setAuthor(const QString &name, const QString &email);
-    void setKeyPaths(const QString &publicKeyPath,
-                     const QString &privateKeyPath);
 
     void add(const QString &path);
     void commit();
@@ -138,9 +137,6 @@ private:
     QSharedPointer<git_repository> repo;
     QDir repoPath;
     QDir workdirPath;
-
-    QString publicKey;
-    QString privateKey;
 };
 
 bool ManagedDirectoryWorker::isClean()
@@ -362,14 +358,6 @@ void ManagedDirectoryWorker::setAuthor(const QString &name,
     setConfigValue(QSL("email"), email, QSL("user"));
 }
 
-void ManagedDirectoryWorker::setKeyPaths(const QString &publicKeyPath,
-                                         const QString &privateKeyPath)
-{
-    QMutexLocker locker(&repoMutex);
-    publicKey = publicKeyPath;
-    privateKey = privateKeyPath;
-}
-
 void ManagedDirectoryWorker::add(const QString &path)
 {
     if (!repo)
@@ -472,11 +460,13 @@ int ManagedDirectoryWorker::acquireCredentialsCallback(
     unsigned int allowedTypes, void *userData)
 {
     Q_UNUSED(url);
+    Q_UNUSED(userData);
     if (allowedTypes & GIT_CREDTYPE_SSH_KEY) {
+        QDir keyDirectory = ApexPaths::GetSshKeyDirectory();
+
         return git_cred_ssh_key_new(
-            cred, username,
-            ((ManagedDirectoryWorker *)userData)->publicKey.toUtf8(),
-            ((ManagedDirectoryWorker *)userData)->privateKey.toUtf8(), NULL);
+            cred, username, keyDirectory.filePath(QSL("id_rsa.pub")).toUtf8(),
+            keyDirectory.filePath(QSL("id_rsa")).toUtf8(), NULL);
     } else if (allowedTypes & GIT_CREDTYPE_USERNAME) {
         qCWarning(APEX_RS, "GIT CREDTYPE USERNAME not supported");
     } else if (allowedTypes & GIT_CREDTYPE_USERPASS_PLAINTEXT) {
@@ -852,12 +842,6 @@ void ManagedDirectory::setPath(const QString &repoPath,
     d->workdirPath = QDir(workdirPath);
 }
 
-void ManagedDirectory::setKeyPaths(const QString &publicKeyPath,
-                                   const QString &privateKeyPath)
-{
-    d->worker.setKeyPaths(publicKeyPath, privateKeyPath);
-}
-
 void ManagedDirectory::setRemote(const QString &url, const QString &branchName)
 {
     d->worker.setRemote(url, branchName);
@@ -937,9 +921,7 @@ bool ManagedDirectory::exists(const QString &path)
                                    GIT_REPOSITORY_OPEN_NO_SEARCH, nullptr) == 0;
 }
 
-QStringList ManagedDirectory::lsRemote(const QString &url,
-                                       const QString &publicKeyPath,
-                                       const QString &privateKeyPath)
+QStringList ManagedDirectory::lsRemote(const QString &url)
 {
     git_libgit2_init();
     fillSSLCertificates();
@@ -962,7 +944,6 @@ QStringList ManagedDirectory::lsRemote(const QString &url,
     QSharedPointer<git_remote> remote(remotePtr, git_remote_free);
 
     ManagedDirectoryWorker worker;
-    worker.setKeyPaths(publicKeyPath, privateKeyPath);
 
     git_remote_callbacks callbacks;
     result =

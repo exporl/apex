@@ -53,7 +53,6 @@ public:
     const QString getText() const;
     void setText(const QString &text);
 
-    void resizeEvent(QResizeEvent *e);
     virtual void setEnabled(const bool);
 
 private:

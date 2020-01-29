@@ -106,6 +106,12 @@ ApexControl::ApexControl(bool launchStandalone)
     connect(m_Wnd, SIGNAL(createShortcutToRunner()),
             apex::android::ApexAndroidBridge::instance(),
             SLOT(createShortcutToRunner()));
+    connect(m_Wnd, SIGNAL(enableKioskMode()),
+            apex::android::ApexAndroidBridge::instance(),
+            SLOT(enableKioskMode()));
+    connect(m_Wnd, SIGNAL(disableKioskMode()),
+            apex::android::ApexAndroidBridge::instance(),
+            SLOT(disableKioskMode()));
 #endif
     connect(m_Wnd, SIGNAL(startGdbServer()), this, SLOT(startGdbServer()));
     connect(m_Wnd, SIGNAL(openStudyManager()), this, SLOT(openStudyManager()));
@@ -167,10 +173,23 @@ void ApexControl::StartUp()
         qCDebug(APEX_RS) << "Parse commandline done";
     }
 
+    ensureSshKeypair();
+
 #ifdef Q_OS_ANDROID
     android::ApexAndroidBridge::signalApexInitialized();
 #endif
     Q_EMIT apexInitialized();
+}
+
+void ApexControl::ensureSshKeypair()
+{
+    QDir keyDirectory = ApexPaths::GetSshKeyDirectory();
+    keyDirectory.mkpath(QSL("."));
+    if (!keyDirectory.exists(keyDirectory.filePath(QSL("id_rsa")))) {
+        ApexTools::generateKeyPair(
+            keyDirectory.filePath(QSL("id_rsa")),
+            StudyManager::instance()->getUsernameAndEmail().second);
+    }
 }
 
 // parse mainconfig

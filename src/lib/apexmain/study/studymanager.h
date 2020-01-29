@@ -50,6 +50,7 @@ public:
                                const QString &relativeResultfilePath) const;
     QString makeResultsPath(const QString &relativePath) const;
     void afterExperiment(const QString &resultsFilePath);
+    std::pair<QString, QString> getUsernameAndEmail() const;
 
 public Q_SLOTS:
     /* After these wait for the studiesUpdated signal before calling any

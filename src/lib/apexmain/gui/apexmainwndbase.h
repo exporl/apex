@@ -71,6 +71,8 @@ public:
     QAction *selectSoundcardAction;
     QAction *createShortcutToFileAction;
     QAction *createShortcutToRunnerAction;
+    QAction *enableKioskModeAction;
+    QAction *disableKioskModeAction;
     QAction *startGdbServerAction;
     QAction *openStudyManagerAction;
 
@@ -92,6 +94,8 @@ Q_SIGNALS:
     void statusReportingChanged();
     void createShortcutToFile();
     void createShortcutToRunner();
+    void enableKioskMode();
+    void disableKioskMode();
     void startGdbServer();
     void openStudyManager();
 

@@ -1,20 +1,13 @@
 #include "accessmanager.h"
 
 #include <QDir>
-#include <QFileInfo>
-#include <QUrl>
 
-QUrl apex::AccessManager::prepare(QUrl url)
+QString apex::AccessManager::toLocalFile(const QUrl &url,
+                                         const QString &apexBaseDir)
 {
-    if (url.scheme().isEmpty() || url.scheme() == "file") {
-        if (QDir::isRelativePath(url.path())) {
-            QString relativePath = QDir::fromNativeSeparators(url.path());
-            return QUrl::fromLocalFile(
-                QDir::current().absoluteFilePath(relativePath));
-        } else {
-            return QUrl::fromLocalFile(url.path());
-        }
+    if (url.scheme() == "apex") {
+        return QDir(apexBaseDir).absoluteFilePath(url.path());
     }
 
-    return url;
+    return url.path();
 }

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment">
+<apex:apex xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.2/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.2/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.2/experiment">
   <!-- @doc
   @what: Demonstrate generating XML code for L34 directly from plugindatablocks and pluginstimuli
   @description: The datablocks are automatically generated in this experiment using javascript
@@ -49,7 +49,7 @@
     <datablock id="datablock1">
       <device>l34device</device>
       <data>
-        <nic:sequence xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:nic="http://www.cochlear.com/nic" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment">
+        <nic:sequence xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.2/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.2/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns:nic="http://www.cochlear.com/nic" xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.2/experiment">
           <stimulus>
             <parameters>
               <ae>12</ae>

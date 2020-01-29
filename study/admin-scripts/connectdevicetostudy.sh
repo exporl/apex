@@ -91,7 +91,7 @@ if [ -z "$DEVICE" ]; then
     exit 1
 fi
 
-if [ -z EXPERIMENTBRANCHES ]; then
+if [ -z $EXPERIMENTBRANCHES ]; then
     echo "Please specify at least one experiment branch"
     exit 1
 fi

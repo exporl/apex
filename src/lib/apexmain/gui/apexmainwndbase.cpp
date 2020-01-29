@@ -72,6 +72,8 @@ ApexMainWndBase::ApexMainWndBase(QWidget *parent, const char *name)
         new QAction("createShortcutToFileAction", this);
     createShortcutToRunnerAction =
         new QAction("createShortcutToRunnerAction", this);
+    enableKioskModeAction = new QAction("enableKioskModeAction", this);
+    disableKioskModeAction = new QAction("disableKioskModeAction", this);
     startGdbServerAction = new QAction("startGdbServerAction", this);
     openStudyManagerAction = new QAction("openStudyManager", this);
 
@@ -86,6 +88,8 @@ ApexMainWndBase::ApexMainWndBase(QWidget *parent, const char *name)
     fileMenu->addAction(fileSaveAsAction);
     fileMenu->addAction(createShortcutToFileAction);
     fileMenu->addAction(createShortcutToRunnerAction);
+    fileMenu->addAction(enableKioskModeAction);
+    fileMenu->addAction(disableKioskModeAction);
     fileMenu->addAction(showMessageWindowAction);
     fileMenu->addAction(openStudyManagerAction);
     fileMenu->addSeparator();
@@ -169,6 +173,10 @@ ApexMainWndBase::ApexMainWndBase(QWidget *parent, const char *name)
             SIGNAL(createShortcutToFile()));
     connect(createShortcutToRunnerAction, SIGNAL(triggered()), this,
             SIGNAL(createShortcutToRunner()));
+    connect(enableKioskModeAction, SIGNAL(triggered()), this,
+            SIGNAL(enableKioskMode()));
+    connect(disableKioskModeAction, SIGNAL(triggered()), this,
+            SIGNAL(disableKioskMode()));
     connect(startGdbServerAction, SIGNAL(triggered()), this,
             SIGNAL(startGdbServer()));
     connect(openStudyManagerAction, SIGNAL(triggered()), this,
@@ -177,6 +185,8 @@ ApexMainWndBase::ApexMainWndBase(QWidget *parent, const char *name)
 #ifndef Q_OS_ANDROID
     createShortcutToFileAction->setVisible(false);
     createShortcutToRunnerAction->setVisible(false);
+    enableKioskModeAction->setVisible(false);
+    disableKioskModeAction->setVisible(false);
     startGdbServerAction->setVisible(false);
 #endif
 }
@@ -242,6 +252,8 @@ void ApexMainWndBase::languageChange()
 
     createShortcutToFileAction->setText(tr("Create file shortcut"));
     createShortcutToRunnerAction->setText(tr("Create runner shortcut"));
+    enableKioskModeAction->setText(tr("Enable kiosk mode"));
+    disableKioskModeAction->setText(tr("Disable kiosk mode"));
     startGdbServerAction->setText(tr("Start GDB server"));
     openStudyManagerAction->setText(tr("Link a new study"));
 }

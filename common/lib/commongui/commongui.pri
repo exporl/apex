@@ -1,4 +1,1 @@
-QT *= widgets network
-
-!android:QT *= webenginewidgets
-android:QT *= qml quick webview quickwidgets
+QT *= widgets network qml quick webview quickwidgets

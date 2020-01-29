@@ -63,7 +63,7 @@ private:
     void setJavascriptParameters(QMap<QString, QString> resultParameters) const;
 
 private Q_SLOTS:
-    void exportToPdf();
+    void print();
 };
 }
 

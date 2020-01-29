@@ -77,9 +77,9 @@ RTResultSink *ResultViewer::getResultSink()
     return m_rtResultSink.data();
 }
 
-void ResultViewer::show(bool ask)
+void ResultViewer::show(bool confirm)
 {
-    if (ask &&
+    if (confirm &&
         QMessageBox::question(
             0, tr("ResultViewer"),
             tr("Would you like to see an analysis of the results?"),

@@ -2049,7 +2049,7 @@ function getStimuli() {
                     }) + xml.tag("datablock", {"id" : "datablock_silence"}))) +
                     xml.tag("fixedParameters",
                             xml.tag("parameter", {"id" : "sentence"},
-                                    speechmaterial[params.targetlist][i].text)));
+                                    xml.cdata(speechmaterial[params.targetlist][i].text))));
     }
     return r;
 }

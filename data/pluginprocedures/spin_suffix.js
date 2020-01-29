@@ -34,7 +34,7 @@ function getStimuli() {
             else
                 parameter = "";
 
-            xmlParameters = xmlParameters + xml.tag("parameter", {"id" : parameterID},parameter);
+            xmlParameters = xmlParameters + xml.tag("parameter", {"id" : parameterID}, xml.cdata(parameter));
         }
         xmlParameters = xmlParameters + xml.tag("parameter", {"id" : "nSpeechtokenParts"},nSpeechtokenParts);
 

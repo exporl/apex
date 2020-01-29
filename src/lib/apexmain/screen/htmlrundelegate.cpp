@@ -29,8 +29,8 @@
 
 #include "screen/screenrundelegate.h"
 
-#include "accessmanager.h"
-
+#include "apexcontrol.h"
+#include "experimentio.h"
 #include "htmlapi.h"
 #include "htmlrundelegate.h"
 
@@ -54,7 +54,7 @@ class HtmlRunDelegatePrivate
 public:
     QScopedPointer<HtmlAPI> api;
     QScopedPointer<WebSocketServer> webSocketServer;
-    QScopedPointer<WebView> webView;
+    QScopedPointer<WebViewWidget> webViewWidget;
     QString lastAnswer;
     QTemporaryDir temporaryDirectory;
 
@@ -86,12 +86,12 @@ void HtmlRunDelegate::enable()
         code = QSL("setTimeout(function() { enabled(); }, 1000);");
     else
         code = QSL("enabled();");
-    d->webView->runJavaScript(code);
+    d->webViewWidget->runJavaScript(code);
 }
 
 QWidget *HtmlRunDelegate::getWidget()
 {
-    return d->webView->webView();
+    return d->webViewWidget.data();
 }
 
 bool HtmlRunDelegate::hasText() const
@@ -114,10 +114,14 @@ void HtmlRunDelegate::resizeEvent(QResizeEvent *e)
     Q_UNUSED(e);
 }
 
-void HtmlRunDelegate::connectSlots(gui::ScreenRunDelegate *d)
+void HtmlRunDelegate::connectSlots(gui::ScreenRunDelegate *screenRunDelegate)
 {
-    connect(this, SIGNAL(answered(ScreenElementRunDelegate *)), d,
-            SIGNAL(answered(ScreenElementRunDelegate *)));
+    connect(this, SIGNAL(answered(ScreenElementRunDelegate *)),
+            screenRunDelegate, SIGNAL(answered(ScreenElementRunDelegate *)));
+
+    connect(d->api.data(), &HtmlAPI::startExperimentRequested,
+            ApexControl::Get().getCurrentExperimentControl().io(),
+            &ExperimentIo::startRequest);
 }
 
 void HtmlRunDelegate::collectAnswer(const QString &answer)
@@ -150,16 +154,15 @@ HtmlRunDelegate::HtmlRunDelegate(ExperimentRunDelegate *p_rd, QWidget *parent,
     d->webSocketServer.reset(
         new WebSocketServer(d->api.data(), QSL("htmlApi")));
 
-    d->webView.reset(new WebView());
-    connect(d->webView.data(), &WebView::loadingFinished,
+    d->webViewWidget.reset(new WebViewWidget());
+    connect(d->webViewWidget.data(), &WebViewWidget::loadingFinished,
             [this]() { d->hasFinishedLoading = true; });
 
-    QUrl sourcePage = AccessManager::prepare(element->page());
     QString htmlPath =
         ApexTools::copyAndPrepareAsHtmlFileWithInjectedBootstrapValues(
-            AccessManager::prepare(sourcePage).toLocalFile(),
-            d->temporaryDirectory.path(), d->webSocketServer->serverPort());
-    d->webView->load(QUrl::fromLocalFile(htmlPath));
+            element->page(), d->temporaryDirectory.path(),
+            d->webSocketServer->serverPort());
+    d->webViewWidget->loadUrl(QUrl::fromLocalFile(htmlPath));
 
     connect(p_rd->GetParameterManager(), &ParameterManager::parameterChanged,
             d->api.data(), &HtmlAPI::parameterChanged);

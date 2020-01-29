@@ -90,12 +90,6 @@ public:
         const quint16 serverPort);
     static QString escapeJavascriptString(const QString &s);
 
-    /** Returns the maximum font size possible for fitting the string into
-     * the given box.
-     */
-    static int maximumFontPointSize(const QString &text, const QSize &box,
-                                    const QFont &originalFont);
-
     static void shrinkTillItFits(QWidget *widget, const QString &text,
                                  const QSize &border);
 
@@ -209,6 +203,14 @@ public:
 private:
     static void replaceFragmentsInTextFile(
         const QString &path, const QMap<QString, QString> &fragmentsToReplace);
+
+    /** Returns the maximum font size possible for fitting the string into
+     * the given box.
+     */
+    static int maximumFontPointSize(const QString &text, const QSize &box,
+                                    const QFont &originalFont);
+
+    static QSize getTextSize(const QString &text, const QFont &font);
 };
 }
 

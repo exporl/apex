@@ -28,16 +28,17 @@ add_library(apex-commongui SHARED
     lib/commongui/commongui.qrc
     lib/commongui/listpicker.cpp
     lib/commongui/webview.cpp
+    lib/commongui/webviewwidget.cpp
     )
 
 target_link_libraries(apex-commongui
     PUBLIC
     Qt5::Network
-    Qt5::WebEngineWidgets
-    #Qt5::Qml
-    #Qt5::Quick
-    #Qt5::webview
-    #Qt5::QuickWidgets
+    Qt5::PrintSupport
+    Qt5::Qml
+    Qt5::Quick
+    Qt5::QuickWidgets
+    Qt5::WebView
     PRIVATE
     apex-common
     Qt5::Core
@@ -102,7 +103,6 @@ target_link_libraries(apex-commongui-tests PRIVATE
     apex-commongui
     Qt5::Core
     Qt5::Widgets
-    Qt5::WebKitWidgets
     Qt5::Network
     Qt5::Test)
 

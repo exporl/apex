@@ -66,7 +66,7 @@ INSTALL_PREFIX=$APIDIR/host/armv7/usr
 #INSTALL_PREFIX=$APIDIR/host/x86/usr
 
 ################# setup NDK autoconf environment variables
-export ANDROID_NDK_HOME=$APIDIR/android-sdk-linux/ndk/${ANDROID_NDK_VERSION}
+export ANDROID_NDK_HOME=$APIDIR/android-ndk-${ANDROID_NDK_VERSION}
 TOOLCHAIN=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64
 export AR=$TOOLCHAIN/bin/${BINUTILS_PREFIX_TRIPLE}-ar
 export AS=$TOOLCHAIN/bin/${BINUTILS_PREFIX_TRIPLE}-as
@@ -79,6 +79,13 @@ export STRIP=$TOOLCHAIN/bin/${BINUTILS_PREFIX_TRIPLE}-strip
 ################# setup pkg-config
 export PKG_CONFIG_LIBDIR=$INSTALL_PREFIX/lib/pkgconfig
 
+################# android NDK
+mkdir -p $APIDIR
+pushd $APIDIR
+[ -f android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.zip ] || wget https://dl.google.com/android/repository/android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.zip
+[ -d android-ndk-${ANDROID_NDK_VERSION} ] || unzip -q android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.zip
+popd
+
 ################# android SDK
 mkdir -p $APIDIR
 pushd $APIDIR
@@ -87,7 +94,7 @@ if [ ! -d android-sdk-linux ]; then
     mkdir android-sdk-linux
     pushd android-sdk-linux
     unzip -q ../android-sdk-linux-${ANDROID_SDK_VERSION}.zip
-    yes | ./tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" "platforms;android-${ANDROID_API_LEVEL}" "platform-tools" "ndk;${ANDROID_NDK_VERSION}"
+    yes | ./tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" "platforms;android-${ANDROID_API_LEVEL}" "platform-tools"
     popd
 fi
 popd

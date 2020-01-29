@@ -33,7 +33,7 @@ public:
     Study(const QString &name, const QString &experimentsUrl,
           const QString &experimentsBranch, const QString &resultsUrl,
           const QString &resultsBranch, const QString &rootPath,
-          const QString &resultsWorkdirRootPath, const QString &keyPath);
+          const QString &resultsWorkdirRootPath);
     virtual ~Study();
 
     bool isPublic() const;
@@ -56,7 +56,6 @@ public:
     QString resultsUrl() const;
     QString resultsBranch() const;
     QString experimentsPath() const;
-    QString keyPath() const;
 
     QString indexExperiment() const;
     QStringList experiments() const;
@@ -66,6 +65,7 @@ public:
                        const QString &relativeResultfilePath) const;
     const QString makeResultsPath(const QString &relativePath) const;
     QString statusMessage();
+    const QString getDocumentationPath() const;
 
 Q_SIGNALS:
     void updateExperimentsProgress(int received, int total);
@@ -75,6 +75,9 @@ Q_SIGNALS:
     void updateExperimentsFailed();
     void updateResultsDone();
     void updateResultsFailed();
+
+private slots:
+    void makeDocumentationAccessible() const;
 
 private:
     const QString createResultfilePathRoot() const;

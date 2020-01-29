@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en-US"
-    targetNamespace="http://med.kuleuven.be/exporl/apex/4.1.0/experiment"
-    xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment">
+    targetNamespace="http://med.kuleuven.be/exporl/apex/4.1.2/experiment"
+    xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.2/experiment">
 
     <xs:include schemaLocation="datablocks.xsd"/>
     <xs:include schemaLocation="procedure.xsd"/>
@@ -647,9 +647,15 @@
             <xs:element name="showafterexperiment" type="xs:boolean" minOccurs="0" default="false">
                 <xs:annotation>
                     <xs:documentation>
-                        If showafterexperiment is true, when the experiment is finished a dialog box will appear 
-                        querying whether results should be shown. If the answer is affirmative, a new window will
-                        be opened and the results will be shown after javascript processing.
+                        If true a new window will be opened and the results will be shown when the experiment is finished.
+                        Confirmation might still be needed (see 'confirmshowresults').
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="confirmshowresults" type="xs:boolean" minOccurs="0" default="true">
+                <xs:annotation>
+                    <xs:documentation>
+                        If true a dialog will ask for confirmation whether results should be shown.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>

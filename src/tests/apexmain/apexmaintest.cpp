@@ -76,6 +76,7 @@
 #include <QDomNodeList>
 #include <QTest>
 #include <QUrl>
+#include <QtWebView>
 
 using namespace apex;
 using namespace apex::stimulus;
@@ -88,6 +89,7 @@ using namespace coh;
 void ApexMainTest::initTestCase()
 {
     enableCoreDumps(QCoreApplication::applicationFilePath());
+    QtWebView::initialize();
 }
 
 void ApexMainTest::testAseq()
@@ -630,36 +632,36 @@ void ApexMainTest::testMainConfigFileParser()
     TEST_EXCEPTIONS_CATCH
 }
 
-void ApexMainTest::testAccessManagerPrepare()
+void ApexMainTest::testAccessManagerToLocalFile()
 {
     TEST_EXCEPTIONS_TRY
 
-    testAccessManagerPrepare(QUrl("apex:path/to/file.txt"),
-                             QUrl("apex:path/to/file.txt"));
-    testAccessManagerPrepare(
-        QUrl("path/to/file.txt"),
-        QUrl::fromLocalFile(
-            QDir::current().absoluteFilePath("path/to/file.txt")));
-    testAccessManagerPrepare(
-        QUrl("file:path/to/file.txt"),
-        QUrl::fromLocalFile(
-            QDir::current().absoluteFilePath("path/to/file.txt")));
-    testAccessManagerPrepare(QUrl("/path/to/file.txt"),
-                             QUrl("file:/path/to/file.txt"));
-    testAccessManagerPrepare(QUrl("file:/path/to/file.txt"),
-                             QUrl("file:/path/to/file.txt"));
-    testAccessManagerPrepare(QUrl("/C:/path/to/file.txt"),
-                             QUrl("file:/C:/path/to/file.txt"));
-    testAccessManagerPrepare(QUrl("file:/C:/path/to/file.txt"),
-                             QUrl("file:/C:/path/to/file.txt"));
+    testAccessManagerToLocalFile(QUrl("apex:path/to/file.txt"),
+                                 QString("/base/path/to/file.txt"),
+                                 QString("/base"));
+
+    testAccessManagerToLocalFile(QUrl("file:path/to/file.txt"),
+                                 QString("path/to/file.txt"));
+    testAccessManagerToLocalFile(QUrl("file:/path/to/file.txt"),
+                                 QString("/path/to/file.txt"));
+    testAccessManagerToLocalFile(QUrl("file:/C:/path/to/file.txt"),
+                                 QString("/C:/path/to/file.txt"));
+
+    testAccessManagerToLocalFile(QUrl("path/to/file.txt"),
+                                 QString("path/to/file.txt"));
+    testAccessManagerToLocalFile(QUrl("/path/to/file.txt"),
+                                 QString("/path/to/file.txt"));
+    testAccessManagerToLocalFile(QUrl("/C:/path/to/file.txt"),
+                                 QString("/C:/path/to/file.txt"));
 
     TEST_EXCEPTIONS_CATCH
 }
 
-void ApexMainTest::testAccessManagerPrepare(const QUrl &input,
-                                            const QUrl &expected)
+void ApexMainTest::testAccessManagerToLocalFile(const QUrl &input,
+                                                const QString &expected,
+                                                const QString &baseApexPath)
 {
-    QCOMPARE(AccessManager::prepare(input).toString(), expected.toString());
+    QCOMPARE(AccessManager::toLocalFile(input, baseApexPath), expected);
 }
 
 struct MocWarning : public InteractiveParameters::Callback {

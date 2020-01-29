@@ -21,6 +21,7 @@ BUILD_TYPE=armv7
 ANDROID_API_LEVEL=
 JOBS=1
 VERSION_CODE=$(git show -s --format="%ct" HEAD)
+VERSION_NAME=$(git describe --always --tags --dirty)
 KEYSTORE=
 KEYSTORE_PWD_PATH=
 
@@ -112,7 +113,7 @@ PREFIX=$APIDIR/host/$BUILD_TYPE/usr
 QT_ROOT=$APIDIR/Qt/$QT_VERSION/android_$BUILD_TYPE
 INSTALLDIR=$ROOTDIR/bin/android-$DEBUGRELEASE-installed/$BUILD_TYPE/apex
 export ANDROID_SDK_ROOT=$APIDIR/android-sdk-linux
-export ANDROID_NDK_ROOT=$APIDIR/android-sdk-linux/ndk/${ANDROID_NDK_VERSION}
+export ANDROID_NDK_ROOT=$APIDIR/android-ndk-${ANDROID_NDK_VERSION}
 export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
 export PKG_CONFIG_SYSROOT_DIR=/
 
@@ -133,9 +134,8 @@ for i in $ROOTDIR/*/tests/*/*.pro; do
         | sed ':a;N;$!ba;s/\n/\\n/g')"
 done
 
-APEX_SCHEMA_VERSION=$(cat "$ROOTDIR/src/lib/apextools/version.h" | grep '#define APEX_SCHEMA_VERSION' | cut -f 3 -d ' ' | sed 's/"//g')
 sed "s#-- %%INSERT_TEST_TEMPLATES%% --#$MANIFEST_TESTS#" "$ROOTDIR/tools/android-template/AndroidManifest.xml.in" \
-    | sed "s#-- %%INSERT_VERSION_NAME%% --#$APEX_SCHEMA_VERSION#" \
+    | sed "s#-- %%INSERT_VERSION_NAME%% --#$VERSION_NAME#" \
     | sed "s#-- %%INSERT_VERSION_CODE%% --#$VERSION_CODE#" \
     | sed "s#-- %%INSERT_MIN_SDK_VERSION%% --#$ANDROID_API_LEVEL#" \
     | sed "s#-- %%INSERT_TARGET_SDK_VERSION%% --#$ANDROID_TARGET_SDK_LEVEL#" \
@@ -173,7 +173,15 @@ if [ "$BUILD_APK" = "true" ]; then
         ANDROIDDEPLOYQTARGS="$ANDROIDDEPLOYQTARGS --sign $KEYSTORE apex-release --storepass $(cat $KEYSTORE_PWD_PATH)"
     fi
 
+    mkdir -p $INSTALLDIR/assets/doc && git show --stat > $INSTALLDIR/assets/doc/commit.txt
+
     $QT_ROOT/bin/androiddeployqt --output $INSTALLDIR --input "$ROOTDIR/src/programs/apex/android-libapex.so-deployment-settings.json" --gradle --android-platform android-${ANDROID_API_LEVEL} $ANDROIDDEPLOYQTARGS
 
-    echo "To install do: adb install -r $INSTALLDIR/build/outputs/apk/$DEBUGRELEASE/apex-$DEBUGRELEASE.apk"
+    if [ $DEBUGRELEASE = "release" ];then
+        APK_FILENAME_SUFFIX="-signed"
+    else
+        APK_FILENAME_SUFFIX=
+    fi
+
+    echo "To install do: adb install -r ${INSTALLDIR}/build/outputs/apk/${DEBUGRELEASE}/apex-${DEBUGRELEASE}${APK_FILENAME_SUFFIX}.apk"
 fi

@@ -894,14 +894,14 @@ void ExperimentControlPrivate::showResult()
         if (!resultfilePath.isEmpty()) {
             if (rd->GetData().resultParameters()->showResultsAfter()) {
                 ResultViewer *rv = new ResultViewer(resultfilePath);
-                if (rd->GetData().resultParameters()->showResultsAfter())
-                    if (rd->modRTResultSink())
-                        rd->modRTResultSink()->hide();
+                if (rd->modRTResultSink())
+                    rd->modRTResultSink()->hide();
 
                 connect(rv, SIGNAL(viewClosed()), rv, SLOT(deleteLater()));
                 connect(rv, SIGNAL(viewClosed()), this,
                         SIGNAL(resultsShowed()));
-                rv->show(true);
+                rv->show(
+                    rd->GetData().resultParameters()->confirmShowResults());
             }
 
             this->disconnect(SIGNAL(doSignalExperimentFinished()));
@@ -1011,11 +1011,11 @@ void ExperimentControlPrivate::printLeaveState()
 ExperimentControl::ExperimentControl(Flags flags)
     : d(new ExperimentControlPrivate(this, flags))
 {
-    connect(&d->machine, SIGNAL(finished()), this, SIGNAL(experimentDone()));
     connect(&d->machine, &QStateMachine::finished, d,
             &ExperimentControlPrivate::doSignalExperimentFinished);
     connect(d, &ExperimentControlPrivate::doSignalExperimentFinished,
             [this]() { emit experimentClosed(QString()); });
+    connect(&d->machine, SIGNAL(finished()), this, SIGNAL(experimentDone()));
 }
 
 ExperimentControl::~ExperimentControl()

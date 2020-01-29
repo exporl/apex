@@ -62,6 +62,23 @@ function callback(resultfilePath) {
 api.experimentDone.connect(callback);
 ```
 
+## Open flowrunner documentation
+
+The flowrunner API exposes a method to open documentation in an external browser:
+```javascript
+api.openDocumentation();
+```
+
+This mechanism relies on the following convention: the documentation should be located relative to the flowrunner (apf) file, in "documentation/index.html". It's the responsibility of the creator of the flowrunner to make sure the documentation is in the correct location when using this feature.
+
+```
+├─ flowrunner.apf
+├─ documentation
+   ├─ index.html
+``` 
+
+In a desktop environment the html page is opened in the default browser as-is. On Android the html page is opened in the Chrome app. When the flowrunner is part of a study the complete documentation folder is copied to a public part of the Android filesystem to make it accessible to the Chrome app. As a side-effect all relative references to resources outside the documentation folder will be broken in this situation.
+
 ## Slides
 
 Attachment: [Slides of Flowrunner workshop (25/04/2018)](2018-04-25_FlowrunnerInfo_slideshow.pdf)

@@ -21,11 +21,13 @@
 #include "apextools/apextools.h"
 
 #include "gui/guidefines.h"
+#include "gui/mainwindow.h"
 
 #include "screen/screenelementrundelegate.h"
 
 #include "streamapp/utils/dataconversion.h"
 
+#include "apexcontrol.h"
 #include "centralwidget.h"
 
 #include <QGuiApplication>
@@ -56,6 +58,7 @@ ApexCentralWidget::ApexCentralWidget(QMainWindow *a_pParent)
     m_pMainLayout = new QHBoxLayout;
     setLayout(m_pMainLayout);
     m_pMainLayout->setMargin(0);
+    m_pMainLayout->setSpacing(0);
 
 #ifdef Q_OS_ANDROID
     connect(QGuiApplication::primaryScreen(),
@@ -96,6 +99,8 @@ void ApexCentralWidget::setScreenWidget(QWidget *w)
 {
     w->setParent(this);
     m_pMainLayout->insertWidget(0, w, 8);
+    ApexControl::Get().mainWindow()->quickWidgetBugHide();
+    ApexControl::Get().mainWindow()->quickWidgetBugShow();
 
 #if defined(Q_OS_ANDROID)
     w->showMaximized();

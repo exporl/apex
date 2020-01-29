@@ -47,7 +47,7 @@ GridLayoutRunDelegate::GridLayoutRunDelegate(
     ElementToRunningMap &elementToRunningMap, const QFont &font)
     : QGridLayout(), ScreenElementRunDelegate(p_exprd, e), element(e)
 {
-    setMargin(5);
+    setMargin(0);
     setObjectName(element->getID());
 
     //    qCDebug(APEX_RS, "Creating gridlayout with parent %p", parent);

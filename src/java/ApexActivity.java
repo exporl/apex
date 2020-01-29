@@ -3,8 +3,12 @@ package be.kuleuven.med.exporl.apex;
 import be.kuleuven.med.exporl.apex.R;
 import org.qtproject.qt5.android.bindings.QtActivity;
 
+import android.app.ActivityManager;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -41,6 +45,11 @@ public class ApexActivity extends QtActivity {
     private static final String TAG = "APEX";
     private static final String ACTION_LOADRUNNER =
         "be.kuleuven.med.exporl.apex.RUNNER";
+    private static final String ACTION_LINKSTUDY =
+        "be.kuleuven.med.exporl.apex.LINKSTUDY";
+    private static final String START_LOCKED_PREFERENCES_KEY =
+        "be.kuleuven.med.exporl.apex.START_LOCKED";
+
     private boolean apexInitialized;
     private Intent lastIntent;
     private AudioTrack backgroundSilenceTrack;
@@ -58,6 +67,10 @@ public class ApexActivity extends QtActivity {
         deleteTemporaryFiles();
         backgroundSilenceTrack =
             initializeBackgroundAudioTrackToMaintainConnectionWithStreamingDevices();
+
+        if (shouldStartLockTaskAtStartup()) {
+            startLockTask();
+        }
     }
 
     private AudioTrack
@@ -257,16 +270,6 @@ public class ApexActivity extends QtActivity {
         startActivity(Intent.createChooser(shareIntent, "Share via"));
     }
 
-    public boolean hasNetworkConnection() {
-        ConnectivityManager connectivityManager =
-            (ConnectivityManager)getApplicationContext().getSystemService(
-                Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        return activeNetwork != null &&
-            activeNetwork.isConnectedOrConnecting() &&
-            activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
-    }
-
     public void maximizeVolume() {
         AudioManager audioManager =
             (AudioManager)getApplicationContext().getSystemService(
@@ -304,6 +307,9 @@ public class ApexActivity extends QtActivity {
         else if (ACTION_LOADRUNNER.equals(action))
             ApexNativeMethods.loadRunner(
                 lastIntent.getExtras().getString(ACTION_LOADRUNNER));
+        else if (ACTION_LINKSTUDY.equals(action))
+            ApexNativeMethods.linkStudy(
+                lastIntent.getExtras().getString(ACTION_LINKSTUDY));
         lastIntent = null;
     }
 
@@ -374,5 +380,94 @@ public class ApexActivity extends QtActivity {
                 recursiveDelete(child);
         if (!file.delete())
             throw new ApexException("Unable to delete file " + file.getName());
+    }
+
+    public void enableKioskMode() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                if (getDevicePolicyManager().isDeviceOwnerApp(
+                        getPackageName())) {
+                    makePackageLockable(true);
+                    shouldStartLockTaskAtStartup(true);
+                    automaticallyStartActivityWhenBootCompleted(true);
+                    startLockTask();
+                } else {
+                    Toast
+                        .makeText(getApplicationContext(),
+                                  "Kiosk Mode not permitted",
+                                  Toast.LENGTH_SHORT)
+                        .show();
+                }
+            }
+        });
+    }
+
+    public void disableKioskMode() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                if (getDevicePolicyManager().isDeviceOwnerApp(
+                        getPackageName())) {
+                    makePackageLockable(false);
+                    shouldStartLockTaskAtStartup(false);
+                    automaticallyStartActivityWhenBootCompleted(false);
+                    if (getActivityManager().isInLockTaskMode()) {
+                        stopLockTask();
+                    }
+                }
+            }
+        });
+    }
+
+    private ComponentName getDeviceAdminComponentName() {
+        return new ComponentName(this, AdminReceiver.class);
+    }
+
+    private DevicePolicyManager getDevicePolicyManager() {
+        return (DevicePolicyManager)getSystemService(
+            Context.DEVICE_POLICY_SERVICE);
+    }
+
+    private ActivityManager getActivityManager() {
+        return (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+    }
+
+    private void automaticallyStartActivityWhenBootCompleted(boolean value) {
+        ComponentName componentName = new ComponentName(
+            this, StartApexActivityWhenBootCompletedReceiver.class);
+        getPackageManager().setComponentEnabledSetting(
+            componentName,
+            value ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                  : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP);
+    }
+
+    private void makePackageLockable(boolean value) {
+        getDevicePolicyManager().setLockTaskPackages(
+            getDeviceAdminComponentName(),
+            value ? new String[] {getPackageName()} : new String[] {});
+    }
+
+    private boolean shouldStartLockTaskAtStartup() {
+        return getPreferences(Context.MODE_PRIVATE)
+            .getBoolean(START_LOCKED_PREFERENCES_KEY, false);
+    }
+
+    private void shouldStartLockTaskAtStartup(boolean value) {
+        getPreferences(Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(START_LOCKED_PREFERENCES_KEY, value)
+            .commit();
+    }
+
+    public void openBrowser(final String uri) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setClassName("com.android.chrome",
+                                    "com.google.android.apps.chrome.Main");
+                startActivity(intent);
+            }
+        });
     }
 }

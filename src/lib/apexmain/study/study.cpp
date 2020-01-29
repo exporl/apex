@@ -48,21 +48,10 @@ public:
         } else {
             directory.init();
             directory.setRemote(url, branch);
-#ifdef Q_OS_ANDROID
-            QString serial =
-                android::ApexAndroidBridge::getDeviceSerialNumber();
             directory.setAuthor(
-                serial, QString::fromLatin1("%1@%2").arg(serial).arg(serial));
-#else
-            QString user = ApexTools::getUser();
-            directory.setAuthor(user,
-                                QString::fromLatin1("%1@%2").arg(user).arg(
-                                    QHostInfo::localHostName()));
-#endif
+                StudyManager::instance()->getUsernameAndEmail().first,
+                StudyManager::instance()->getUsernameAndEmail().second);
         }
-        QDir keyDir(keyPath);
-        directory.setKeyPaths(keyDir.filePath(QSL("id_rsa.pub")),
-                              keyDir.filePath(QSL("id_rsa")));
     }
 
     QString name;
@@ -73,7 +62,6 @@ public:
 
     QString experimentsPath;
     QString resultsWorkdirPath;
-    QString keyPath;
 
     ManagedDirectory experimentsDirectory;
     ManagedDirectory resultsDirectory;
@@ -82,7 +70,7 @@ public:
 Study::Study(const QString &name, const QString &experimentsUrl,
              const QString &experimentsBranch, const QString &resultsUrl,
              const QString &resultsBranch, const QString &rootPath,
-             const QString &resultsWorkdirRootPath, const QString &keyPath)
+             const QString &resultsWorkdirRootPath)
     : d(new StudyPrivate)
 {
     d->name = name;
@@ -90,7 +78,6 @@ Study::Study(const QString &name, const QString &experimentsUrl,
     d->experimentsBranch = experimentsBranch;
     d->resultsUrl = resultsUrl;
     d->resultsBranch = resultsBranch;
-    d->keyPath = keyPath;
 
     d->experimentsPath = QDir(rootPath).filePath(name + QL1S("/experiments"));
     d->experimentsDirectory.setPath(d->experimentsPath, d->experimentsPath);
@@ -104,6 +91,10 @@ Study::Study(const QString &name, const QString &experimentsUrl,
 
     connect(&d->experimentsDirectory, SIGNAL(pullDone()), this,
             SIGNAL(updateExperimentsDone()));
+#ifdef Q_OS_ANDROID
+    connect(&d->experimentsDirectory, SIGNAL(pullDone()), this,
+            SLOT(makeDocumentationAccessible()));
+#endif
     connect(&d->experimentsDirectory, SIGNAL(pullFailed()), this,
             SIGNAL(updateExperimentsFailed()));
     connect(&d->experimentsDirectory, SIGNAL(progress(int, int)), this,
@@ -137,6 +128,25 @@ void Study::updateExperiments()
         d->openManagedDirectory(d->experimentsDirectory, d->experimentsUrl,
                                 d->experimentsBranch);
     d->experimentsDirectory.pull();
+}
+
+void Study::makeDocumentationAccessible() const
+{
+    QString documentationSrcPath =
+        QDir(d->experimentsPath).filePath(QSL("documentation"));
+    if (QDir(documentationSrcPath).exists()) {
+        QDir documentationDestPath(getDocumentationPath());
+        documentationDestPath.removeRecursively();
+        documentationDestPath.cdUp();
+        ApexTools::recursiveCopy(documentationSrcPath,
+                                 documentationDestPath.path());
+    }
+}
+
+const QString Study::getDocumentationPath() const
+{
+    return QDir(ApexPaths::GetStudyRootResultsWorkdirPath())
+        .filePath(d->name + QSL("/documentation"));
 }
 
 void Study::fetchExperiments(bool blocking)
@@ -226,11 +236,6 @@ QString Study::resultsBranch() const
 QString Study::experimentsPath() const
 {
     return d->experimentsPath;
-}
-
-QString Study::keyPath() const
-{
-    return d->keyPath;
 }
 
 QString Study::indexExperiment() const

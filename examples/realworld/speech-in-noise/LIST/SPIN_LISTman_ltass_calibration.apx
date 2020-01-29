@@ -1,4 +1,4 @@
-<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.0/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.0/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.0/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<apex:apex xmlns:apex="http://med.kuleuven.be/exporl/apex/4.1.2/experiment" xsi:schemaLocation="http://med.kuleuven.be/exporl/apex/4.1.2/experiment https://exporl.med.kuleuven.be/apex/schemas/4.1.2/experiment.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <!--  @doc
    @what: Calibration file needed for experiment SPIN-LIST-vrouw_01-koen-nederlands
    @description: To calibrate the noise for the experiment SPIN-LIST-vrouw_01-koen-nederlands

@@ -29,4 +29,9 @@ ResultApi::ResultApi()
 ResultApi::~ResultApi()
 {
 }
+
+void ResultApi::hide()
+{
+    emit doHide();
+}
 }
